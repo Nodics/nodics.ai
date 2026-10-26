@@ -876,7 +876,7 @@ const backendWorkspaceOwnerSelector = {
       maxLength: 64,
       pattern: "^[A-Z][A-Z0-9_]{0,63}$",
     },
-    publicationRole: { enum: ["STAGED", "ONLINE"] },
+    publicationRole: { enum: ["STAGED", "ONLINE", "OPERATIONAL"] },
   },
 };
 const enterpriseSetupTaskLabels = [
@@ -1074,6 +1074,16 @@ const backendWorkspace = {
     },
   ],
 };
+const publicFeatureAvailability = {
+  type: "object", additionalProperties: false,
+  required: ["contractVersion", "features"],
+  properties: {
+    contractVersion: { const: 1 },
+    features: { type: "object", maxProperties: 32,
+      propertyNames: { pattern: "^[A-Za-z][A-Za-z0-9]{0,63}$" },
+      additionalProperties: { type: "boolean" } },
+  },
+};
 const backofficeMetadata = {
   type: "object",
   additionalProperties: false,
@@ -1087,6 +1097,7 @@ const backofficeMetadata = {
     minimumClientContractVersion: { type: "integer", minimum: 1 },
     roles: { type: "array", uniqueItems: true, items: moduleRole },
     discovery: discovery,
+    publicFeatureAvailability: publicFeatureAvailability,
     uiComposition: uiComposition,
     documentation: { type: "array", maxItems: 32, items: documentationSource },
     requiredPermissions: {
@@ -1994,6 +2005,7 @@ module.exports = {
       "uiComposition",
     ],
     properties: {
+      featureAvailability: { type: "object", additionalProperties: publicFeatureAvailability },
       contractVersion: { type: "integer", minimum: 1 },
       clientContractVersion: { type: "integer", minimum: 1 },
       endpoints: {

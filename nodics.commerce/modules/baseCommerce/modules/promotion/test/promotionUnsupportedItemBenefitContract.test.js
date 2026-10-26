@@ -314,3 +314,19 @@ test("qualified item owner retains exact purchased bundle and never delegates it
   assert.deepEqual(f.coupon.purchasePolicy, retained);
   assert.equal(f.state.writes, 2);
 });
+
+test("ordinary ITEM coupon reservation and purchased rights work with fulfillment integration disabled", async t => {
+  const items = [{ sku: "MENU_TEA", quantity: 1, unit: "EACH" }];
+  const f = purchaseFixture(t, false, { benefitType: "ITEM", items });
+  f.campaign.conditions.storeCodes = ["outlet"];
+  f.campaign.purchasedCouponPolicy = { validityDays: 30, terms: ["Exact tea, no substitutions"] };
+  CONFIG.get = () => ({ merchantBenefits: { enabled: false, qualified: false, itemEvidenceMode: "VERIFIED", itemEvidenceService: null },
+    purchasedRights: { enabled: true, qualified: true, maximumValidityDays: 365 } });
+  SERVICE.DefaultPromotionItemBenefitService = require("../src/service/defaultPromotionItemBenefitService");
+  await f.owner.reserveCouponCodeForCheckout(f.request);
+  const sold = await f.owner.confirmCouponCodeSale(f.request);
+  assert.equal(sold.status, "SOLD");
+  assert.deepEqual(sold.purchasePolicy.actions, { benefitType: "ITEM", items });
+  assert.equal(f.calls.monetary, 0);
+  assert.throws(() => SERVICE.DefaultPromotionItemBenefitService.assertPolicy(f.campaign), { code: "ERR_PROMOTION_BENEFIT_UNCONFIRMED" });
+});

@@ -22,6 +22,82 @@ const catalogue = require('../applicationBuilder/defaultApplicationBuilderCatalo
 const releasePolicy = require('../../../../nData/nImport/import/src/service/release/defaultDataReleaseService');
 
 module.exports = {
+    /** Checks an explicitly selected unreleased source tree without changing manifests or runtime authority.
+     * @param {Object} options projectRoot selects the baseline; dependencyRoots resolve exact external prerequisites.
+     * @returns {Object} Checked owner/section inventory. Throws on stale pins, hashes, non-v001 paths or retained roots.
+     * @override Preserve canonical validation, test isolation and read-only execution; generic release versions are unaffected.
+     */
+    validateUnreleasedBaseline: function ({ projectRoot, dependencyRoots = [] }) {
+        if (typeof projectRoot !== 'string' || !Array.isArray(dependencyRoots))
+            throw new Error('Explicit baseline projectRoot and dependencyRoots required');
+        const selectedRoot = fs.realpathSync(projectRoot);
+        const roots = [...new Set([selectedRoot, ...dependencyRoots.map(root => fs.realpathSync(root))])];
+        const defaults = require('../../../../nData/nImport/import/config/properties').data.dataReleases;
+        const releases = Object.assign(Object.create(releasePolicy), { configuration: () => defaults });
+        const documentation = require('../defaultApplicationDocumentationContractService');
+        const owners = new Map(), checked = [], descriptors = new Map(), candidates = new Map();
+        const inspect = ({ owner, manifestPath, section, code }) => {
+            return releases.inspectSourceManifest(owner, manifestPath, section, code);
+        };
+        for (const root of roots) {
+            for (const item of catalogue.collectPackages(root, root, [])) {
+                if (item.moduleRoot.split(/[\\/]/).some(part => ['test', 'tests', 'fixtures', '__fixtures__'].includes(part))) continue;
+                const owner = { name: item.name, index: item.index, path: path.resolve(root, item.moduleRoot) };
+                const manifestPath = path.join(owner.path, 'data/manifest.json');
+                if (!fs.existsSync(manifestPath)) continue;
+                if (owners.has(owner.name) && owners.get(owner.name).path !== owner.path)
+                    throw new Error('Ambiguous baseline owner: ' + owner.name);
+                owners.set(owner.name, owner);
+                const manifest = releases.readAggregateManifest(owner, manifestPath);
+                const selected = root === selectedRoot;
+                if (selected && Object.hasOwn(manifest, 'retainedRoots'))
+                    throw new Error('Unreleased baseline must not retain superseded roots: ' + owner.name);
+                if (selected) {
+                    const declared = new Set(Object.values(manifest.sections).flatMap(section =>
+                        [...Object.keys(section.files || {}), ...Object.keys(section.generatedHashes || {})]));
+                    for (const entry of fs.readdirSync(path.dirname(manifestPath), { withFileTypes: true })) {
+                        if (entry.isDirectory() && /-v\d+$/.test(entry.name) && !/-v001$/.test(entry.name))
+                            throw new Error('Unreleased baseline requires owner-specific v001: ' + owner.name + '/' + entry.name);
+                        if (entry.isDirectory() && /-v001$/.test(entry.name)) {
+                            for (const file of releases.collectReleaseFiles(path.join(path.dirname(manifestPath), entry.name))) {
+                                if (file !== 'release.descriptor.json' && !declared.has(entry.name + '/' + file))
+                                    throw new Error('Unselected baseline payload: ' + owner.name + '/' + entry.name + '/' + file);
+                            }
+                        }
+                    }
+                }
+                for (const [code, section] of Object.entries(manifest.sections)) {
+                    if (selected && ['DATA_RELEASE', 'CONTENT_PACK'].includes(section.kind)) {
+                        const paths = [section.sourceRoot, section.contentPath, ...Object.keys(section.files || {}), ...Object.keys(section.generatedHashes || {})].filter(Boolean);
+                        if (paths.some(value => !/^[A-Za-z][A-Za-z0-9_-]*-v001(?:\/|$)/.test(value)))
+                            throw new Error('Unreleased baseline section selects non-v001 source: ' + owner.name + ':' + code);
+                    }
+                    if (section.kind === 'DATA_RELEASE') {
+                        const candidate = { owner, manifestPath, section, code };
+                        candidates.set(owner.name + ':' + code, candidate);
+                        if (selected) {
+                            const descriptor = inspect(candidate);
+                            descriptors.set(descriptor.releaseCode, descriptor);
+                        }
+                    } else if (selected && section.kind === 'CONTENT_PACK') {
+                        documentation.validateDataRelease(owner.path, code);
+                    }
+                    if (selected) checked.push({ module: owner.name, section: code, kind: section.kind, version: section.version });
+                }
+            }
+        }
+        if (!checked.length) throw new Error('No shipping baseline manifests found');
+        for (const descriptor of descriptors.values()) {
+            for (const reference of descriptor.prerequisites) {
+                const key = reference.moduleName + ':' + reference.sectionCode;
+                if (!descriptors.has(key) && candidates.has(key)) descriptors.set(key, inspect(candidates.get(key)));
+                const target = descriptors.get(key);
+                if (!target || target.version !== reference.version || target.checksum !== reference.checksum)
+                    throw new Error('Baseline prerequisite drift: ' + descriptor.releaseCode + ' -> ' + reference.moduleName + ':' + reference.sectionCode);
+            }
+        }
+        return { projectRoot: selectedRoot, effects: false, sections: checked };
+    },
     /** Checks a supplied counted owner snapshot and reviewed reference-only changes without writes or invented allocations. This is not runtime authority or import qualification. @param {Object} options Inert inventory and changes. @returns {Object} Redacted preflight with mandatory live-revalidation gate. */
     preflightReferenceChanges: function ({ inventory, changes }) {
         const fail = () => {

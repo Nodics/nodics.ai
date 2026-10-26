@@ -1,9 +1,9 @@
 # commsCore
 
-The selected [v002 CMS outcome-delivery guide](data/docs-v002/records/documentation/communicationDurableOutcomesDocumentationComponentData.js)
+The selected [CMS outcome-delivery guide](data/docs-v001/records/documentation/communicationDurableOutcomesDocumentationComponentData.js)
 covers actual transfer, coupon, auction and gift recipient integrations, current
-Profile permission/consent checks and genuine Employee inboxes. The successor
-preserves v001 source bytes and remains Staged pending explicit review/publication.
+Profile permission/consent checks and genuine Employee inboxes. The consolidated
+docs-v001 source remains Staged pending explicit review/publication.
 
 Source-dependent delivery can require a framework-contributed current eligibility
 owner while retaining the existing durable intent/retry authority. Checks run

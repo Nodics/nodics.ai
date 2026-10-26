@@ -374,9 +374,9 @@ module.exports = {
      */
     installation: async function (context) {
         const { stage, ownerRequest: request } = context, owner = SERVICE.DefaultDataReleaseService;
-        const matches = owner.discoverReleases(stage.release.dataType).filter(release => release.releaseCode === stage.code);
-        if (matches.length !== 1) this.fail();
-        const release = matches[0], pin = stage.release;
+        const pin = stage.release;
+        const release = owner.discoverManifestRelease(pin, pin.dataType);
+        if (!release || release.releaseCode !== stage.code) this.fail();
         if (release.invalidManifest || ['moduleName', 'releaseCode', 'dataType', 'sectionCode', 'version', 'checksum', 'sourceRoot',
             'installer', 'owningDomain', 'lifecycle', 'destinationRole'].some(key => release[key] !== pin[key]) ||
             this.digest(release.environmentScope) !== this.digest(pin.environmentScope) ||
@@ -439,23 +439,52 @@ module.exports = {
             row.domain !== 'cms') this.fail();
         const evidence = await owner.status(plan.baselineCode, request);
         if (evidence?.baselineCode !== plan.baselineCode || evidence.publication?.code !== row.code ||
-            evidence.publication.revision !== row.revision || evidence.publication.targetVersion !== row.targetVersion) this.fail();
+            evidence.publication.revision !== row.revision || evidence.publication.state !== row.state ||
+            evidence.publication.sourceVersion !== row.sourceVersion ||
+            evidence.publication.targetVersion !== row.targetVersion ||
+            row.workflowRef !== undefined && evidence.publication.workflowRef !== row.workflowRef) this.fail();
+        const diagnostic = evidence.publication.approvalDiagnostic;
+        if (diagnostic && (diagnostic.publicationCode !== undefined && diagnostic.publicationCode !== row.code ||
+            diagnostic.publicationRevision !== undefined && diagnostic.publicationRevision !== row.revision ||
+            diagnostic.publicationState !== undefined && diagnostic.publicationState !== row.state ||
+            diagnostic.workflowRef !== undefined && diagnostic.workflowRef !== evidence.publication.workflowRef)) this.fail();
         const provider = SERVICE.DefaultCmsPublicationVersionProviderService;
-        const active = descriptor.rootType === 'site'
+        const active = evidence.readiness !== 'READY' ? undefined : descriptor.rootType === 'site'
             ? await provider.transport().getStatus({ scope: { site: descriptor.rootCode, bundle: true } }, request)
             : await provider.getOnlineVersion(row, request);
-        const ready = Boolean(row.auditTrail?.some(entry => entry.toState === 'APPROVED') &&
+        const ready = Boolean(row.state === 'ONLINE' && this.identifier(row.targetVersion) &&
+            row.auditTrail?.some(entry => entry.toState === 'APPROVED') &&
             active?.version === row.targetVersion && evidence.readiness === 'READY' && evidence.releaseStatus === 'CURRENT' &&
             evidence.publication.state === 'ONLINE' && evidence.mediaDependencies?.qualified === true);
-        const readiness = ready ? 'READY' : evidence.readiness === 'MEDIA_DEPENDENCIES_PENDING'
-            ? 'MEDIA_DEPENDENCIES_PENDING' : 'UNAVAILABLE';
+        const readiness = ready ? 'READY' : ['NOT_IMPORTED', 'IMPORTING', 'IMPORTED', 'PUBLICATION_PENDING',
+            'RETIRED', 'ROLLED_BACK', 'REJECTED', 'FAILED', 'MEDIA_DEPENDENCIES_PENDING'].includes(evidence.readiness)
+            ? evidence.readiness : 'BLOCKED';
         return { ready, authority: { baselineCode: plan.baselineCode, readiness,
+            ...this.baselineFields(evidence, ['releaseCode', 'releaseVersion']),
             releaseStatus: evidence.releaseStatus,
-            publication: { code: row.code, state: row.state, revision: row.revision, sourceVersion: row.sourceVersion, targetVersion: row.targetVersion },
+            publicationDiagnostic: this.baselineFields(evidence.publicationDiagnostic,
+                ['source', 'owner', 'status', 'severity', 'publicationCode', 'publicationState', 'workflowRef',
+                    'approvalStatus', 'message', 'suggestedAction', 'disabledReason']),
+            publication: { code: row.code, state: row.state, revision: row.revision, sourceVersion: row.sourceVersion, targetVersion: row.targetVersion,
+                ...this.baselineFields(evidence.publication, ['workflowRef', 'correlationId']),
+                approvalDiagnostic: this.baselineFields(diagnostic, ['source', 'owner', 'status', 'publicationCode',
+                    'publicationState', 'workflowRef', 'taskCode', 'taskStatus', 'assignee', 'queue',
+                    'message', 'suggestedAction', 'disabledReason'], ['publicationRevision']),
+                approvalTask: this.baselineFields(evidence.publication.approvalTask,
+                    ['code', 'status', 'assignee', 'queue'], [], ['requiresAssignee']) },
             mediaDependencies: { contractVersion: 1, owner: 'media', qualified: evidence.mediaDependencies?.qualified === true,
                 status: evidence.mediaDependencies?.status, dependencies: [].concat(evidence.mediaDependencies?.dependencies || []).map(item => ({
                     owner: item.owner, mediaCode: item.mediaCode, versionId: item.versionId, checksum: item.checksum,
                     publicationCode: item.publicationCode, status: item.status, qualified: item.qualified === true })) } } };
+    },
+    /** Projects only named, bounded scalar owner fields; never returns raw workflow, errors or persistence context. */
+    baselineFields: function (value, strings, integers = [], booleans = []) {
+        if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
+        return Object.fromEntries([
+            ...strings.filter(key => typeof value[key] === 'string' && value[key].length <= 2048),
+            ...integers.filter(key => Number.isSafeInteger(value[key]) && value[key] >= 0),
+            ...booleans.filter(key => typeof value[key] === 'boolean')
+        ].map(key => [key, value[key]]));
     },
     /** Two fresh observations fence drift; every call rechecks policy, plan bytes and configuration. No result is retained. */
     observe: async function (request, input) {

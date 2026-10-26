@@ -335,6 +335,7 @@ global.fetch = async (url, options) => {
           publication: {
           code: "cmsBaseline_nexus_0_0_0",
           state: "PENDING_APPROVAL",
+          revision: 1,
           workflowRef: "workflow-cmsBaseline_nexus_0_0_0-1",
           approvalDiagnostic: {
             status: "TASK_REFERENCE_MISSING",
@@ -365,6 +366,13 @@ global.fetch = async (url, options) => {
       },
     };
   };
+  const missingTaskStatus = await service.status("nexus", {
+    tenant: "default", authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
+  });
+  assert(missingTaskStatus.capability.blockers.some(blocker => blocker.code === "APPROVAL_TASK_MISSING" &&
+    blocker.repair.available === true && blocker.repair.operation === "applicationInitialization.reconcileApproval"),
+    "A retained workflow reference must not hide missing-task recovery");
   const reconciled = await service.reconcileApproval("nexus", {
     tenant: "default",
     requestId: "request-reconcile",
@@ -381,14 +389,14 @@ global.fetch = async (url, options) => {
   );
   assert.strictEqual(
     reconcileRequest.apiName,
-    "/publication/baselines/nexus/initiate",
-    "Approval reconciliation must replay the owning baseline workflow through the target authority",
+    "/publication/baselines/nexus/reconcile-approval",
+    "Approval reconciliation must not replay baseline installation",
   );
-  assert.strictEqual(reconcileRequest.requestBody.forceRefresh, true);
+  assert.strictEqual(reconcileRequest.requestBody.forceRefresh, undefined);
   assert.deepStrictEqual(reconcileRequest.requestBody.approvalRepairBinding, {
     source: "PUBLICATION_APPROVAL",
     publicationCode: "cmsBaseline_nexus_0_0_0",
-    publicationRevision: undefined,
+    publicationRevision: 1,
     workflowRef: "workflow-cmsBaseline_nexus_0_0_0-1",
     taskCode: "missing-approval-task",
     taskStatus: "MISSING",

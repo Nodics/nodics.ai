@@ -44,7 +44,7 @@ function fixture(t) {
   global.CONFIG = { get: key => properties[key] };
   global.SERVICE = { DefaultWasteAssetTransferOperationService: operations, DefaultWasteCertificateBundleComponentService: component,
     DefaultWasteCertificateCouponService: service,
-    DefaultWastePersistenceService: { repository: schema => repositories[schema], context: r => ({ tenant: r.tenant }), records: r => r.result,
+    DefaultWastePersistenceService: { repository: schema => repositories[schema], context: r => ({ tenant: r.tenant }), records: require("../src/service/defaultWastePersistenceService").records,
       list: async (schema, r, query) => schema === "wasteVerification" && query.code === verification.code ? [verification] : [] },
     DefaultDatabaseModelHandlerService: { inspectIndexes: async () => ({ versioned: false, indexes: [{ unique: true, key: { code: 1 } }] }) },
     DefaultModelConcurrencyService: { getField: () => "revision" },
@@ -161,4 +161,77 @@ test("holdings reads reject a repository result outside the exact typed owner", 
   const f = fixture(t);
   SERVICE.DefaultWastePersistenceService.page = async () => ({ items: [f.original], total: 1, page: 1, limit: 25 });
   await assert.rejects(holdings.list(f.request, { ownerRef: owner("other"), page: 1, limit: 25 }), /owner scope/);
+});
+
+test("inspection survives source refusal while mutation fails before asset or event changes", async t => {
+  const f = fixture(t);
+  let calls = 0;
+  SERVICE.DefaultModuleService.invokeModule = async () => {
+    calls++;
+    throw Object.assign(new Error("private-source-detail"), { code: "ERR_DIGITAL_ACQUISITION_UNCONFIRMED" });
+  };
+  assert.equal((await service.invoke(f.request, f.command, "inspect")).certificates[0].available, true);
+  assert.equal(calls, 0);
+  for (const phase of ["reserve", "consume", "release"]) {
+    await assert.rejects(service.invoke(f.request, f.command, phase), error => {
+      assert.equal(error.message, "Certificate coupon source request failed");
+      assert.equal(error.cause, undefined);
+      return true;
+    });
+    assert.deepEqual(f.rows.wasteAsset.get("certificate"), f.original);
+    assert.equal(f.rows.wasteAssetOwnershipEvent.size, 0);
+  }
+  assert.equal(calls, 3);
+});
+
+test('registered source refusal retains original assets and events for every coupon mutation', async t => {
+  const f = fixture(t), before = structuredClone(f.rows);
+  let calls = 0;
+  SERVICE.DefaultModuleService.invokeModule = async () => {
+    calls++;
+    throw Object.assign(Error('PRIVATE_PAYLOAD'), { code: 'ERR_SYS_00000', metadata: {
+      remoteHttpFailure: { code: 'ERR_DIGITAL_COUPON_SOURCE_ALLOCATION_BINDING', httpStatus: 409 } } });
+  };
+  for (const phase of ['reserve', 'consume', 'release']) {
+    await assert.rejects(service.invoke(f.request, f.command, phase), error => {
+      assert.equal(error.message, 'Certificate coupon source proof failed: ALLOCATION_BINDING');
+      assert.equal(error.cause, undefined);
+      return true;
+    });
+    assert.deepEqual(f.rows, before);
+  }
+  assert.equal(calls, 3);
+  await service.invoke(f.request, f.command, 'inspect');
+  assert.equal(calls, 3);
+  assert.deepEqual(f.rows, before);
+});
+
+
+test("coupon ISO event authoring survives canonical records normalization and exact reservation replay", async t => {
+  const f = fixture(t);
+  await service.invoke(f.request, f.command, "reserve");
+  const event = [...f.rows.wasteAssetOwnershipEvent.values()][0];
+  assert.equal(typeof event.occurredAt, "string");
+  assert.equal(new Date(event.occurredAt).toISOString(), event.occurredAt);
+  assert.equal(f.rows.wasteAsset.get("certificate").metadata.pendingTransferEvent.occurredAt, event.occurredAt);
+  const original = structuredClone(event);
+  await service.invoke(f.request, f.command, "reserve");
+  assert.deepEqual([...f.rows.wasteAssetOwnershipEvent.values()], [original]);
+  await service.invoke(f.request, f.command, "consume");
+  assert.equal((await service.invoke(f.request, f.command, "inspect")).certificates[0].consumed, true);
+  assert.equal(f.rows.wasteAssetOwnershipEvent.get(event.code).occurredAt, original.occurredAt);
+});
+
+test("coupon ISO release tombstone survives canonical records normalization and exact replay", async t => {
+  const f = fixture(t);
+  await service.invoke(f.request, f.command, "release");
+  const event = [...f.rows.wasteAssetOwnershipEvent.values()][0];
+  assert.equal(typeof event.occurredAt, "string");
+  assert.equal(new Date(event.occurredAt).toISOString(), event.occurredAt);
+  const asset = structuredClone(f.rows.wasteAsset.get("certificate")), original = structuredClone(event);
+  await service.invoke(f.request, f.command, "release");
+  assert.deepEqual([...f.rows.wasteAssetOwnershipEvent.values()], [original]);
+  assert.deepEqual(f.rows.wasteAsset.get("certificate"), asset);
+  assert.deepEqual(asset.ownerRef, f.original.ownerRef);
+  assert.equal(asset.custodyStatus, f.original.custodyStatus);
 });

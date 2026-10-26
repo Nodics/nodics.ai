@@ -45,3 +45,15 @@ See [Capability-owned exposure defaults](routing-governance-contracts.md#capabil
 ## Configured browser-origin construction
 
 See [Configured browser-origin construction](routing-governance-contracts.md#configured-browser-origin-construction).
+
+## Declared remote module API prefixes
+
+Static outbound URL construction retains a capability's package prefix even when
+its implementation is not in the local raw module graph. For an exact module in
+`runtimeIdentity.remoteModules`, `prepareUrl` reuses nConfig's bounded
+`resolveInstalledSourceDescriptor` only when raw metadata is absent. It reads
+package metadata without registering modules, loading configuration/services or
+activating schemas. Missing/ambiguous selected source fails before URL assembly;
+never return a partial URL or guess its prefix. Existing endpoint selection and
+service-token/permission checks remain separate. No runtime registry snapshot is
+required for this static path. See `test/declaredRemoteModulePrefix.test.js`.

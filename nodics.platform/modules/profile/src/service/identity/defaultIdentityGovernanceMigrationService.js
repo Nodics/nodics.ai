@@ -18,6 +18,7 @@
  */
 const reviewedMigrationPlans = new WeakMap();
 const crypto = require("node:crypto");
+const { isDeepStrictEqual } = require("node:util");
 module.exports = {
   /** Validates one fixed adoption HTTP command without accepting tenant, auth or generated-write selectors from its body. */
   platformAdministratorCommand: function (request, applying) {
@@ -1763,6 +1764,131 @@ module.exports = {
         : "revoked";
     return query;
   },
+  /** Updates the exact retained service principal scope ceiling through generated Employee CAS and stamp hooks; never rotates or returns credential material. */
+  updateServiceScopes: async function (request) {
+    let stage = "POLICY";
+    try {
+      SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
+      const fail = () => { throw new CLASSES.NodicsError("ERR_AUTH_00003", "Service scope update is unconfirmed or not admitted"); };
+      const policy = CONFIG.get("identityGovernance")?.serviceScopeManagement;
+      if (!policy || ![policy.maximumScopeCodes, policy.maximumIdentifierLength, policy.maximumLoginIdLength]
+        .every(value => Number.isSafeInteger(value) && value > 0) || typeof policy.permission !== "string" || !policy.permission) fail();
+      stage = "INPUT";
+      const input = request.identityMigration;
+      const identifier = (value, maximum) => typeof value === "string" && value.length > 0 && value.length <= maximum &&
+        /^[A-Za-z0-9][A-Za-z0-9_.:@-]*$/.test(value);
+      const codes = value => Array.isArray(value) && value.length > 0 && value.length <= policy.maximumScopeCodes &&
+        value.every(code => identifier(code, policy.maximumIdentifierLength)) && new Set(value).size === value.length;
+      if (!input || Object.getPrototypeOf(input) !== Object.prototype || Object.keys(input).sort().join("|") !==
+        "confirmed|expectedAuthVersion|expectedScopeCodes|loginId|principalCode|scopeCodes" || input.confirmed !== true ||
+        !identifier(input.principalCode, policy.maximumIdentifierLength) || !identifier(input.loginId, policy.maximumLoginIdLength) ||
+        !Number.isSafeInteger(input.expectedAuthVersion) || input.expectedAuthVersion < 1 ||
+        !codes(input.expectedScopeCodes) || !codes(input.scopeCodes) || Object.keys(request.query || {}).length ||
+        Object.keys(request.httpRequest?.query || {}).length) fail();
+      const command = structuredClone(input), auth = structuredClone(request.authData), selectedPolicy = structuredClone(policy);
+      const body = request.httpRequest?.body;
+      const bound = () => {
+        const previousStage = stage; stage = "BINDING";
+        if (!isDeepStrictEqual(request.identityMigration, command) || !isDeepStrictEqual(request.authData, auth) ||
+          !isDeepStrictEqual(CONFIG.get("identityGovernance")?.serviceScopeManagement, selectedPolicy) ||
+          request.httpRequest?.body !== body || body !== undefined && !isDeepStrictEqual(body, command)) fail();
+        stage = previousStage;
+      };
+      const authorize = async () => {
+        bound();
+        const previousStage = stage; stage = "NATIVE_PROOF";
+        const proofInput = { permission: policy.permission, nonce: crypto.randomUUID() };
+        const proofRequest = {
+          ...request, body: proofInput, payload: proofInput,
+          httpRequest: { headers: request.httpRequest?.headers, query: request.httpRequest?.query, body: proofInput },
+        };
+        // Carry exact admitted privacy provenance; spreading the HTTP envelope does not copy it.
+        SERVICE.DefaultLoggerService.inheritRequestPrivacy(proofRequest, request);
+        const proof = await SERVICE.DefaultProfilePlatformAdministratorEvidenceService.evidence(proofRequest);
+        bound();
+        if (proof?.platformAdministrator !== true || proof.nonce !== proofInput.nonce ||
+          proof.permission !== policy.permission || proof.tenant !== request.tenant ||
+          proof.actorCode !== auth.loginId || proof.authVersion !== auth.authVersion) fail();
+        stage = previousStage;
+      };
+      await authorize();
+      stage = "POLICY";
+      const version = this.getPolicy().version;
+      if (!Number.isSafeInteger(version) || version < 1) fail();
+      const serviceGroup = CONFIG.get("identityGovernance")?.principalPolicy?.serviceGroup;
+      if (!identifier(serviceGroup, policy.maximumIdentifierLength)) fail();
+      const employee = SERVICE.DefaultEmployeeService;
+      const read = async () => {
+        const result = await employee.get(this.systemRequest(request, {
+          query: { $or: [{ code: command.principalCode }, { loginId: command.loginId }] },
+          searchOptions: { pageSize: 2, pageNumber: 1 },
+        }));
+        bound();
+        if (!/^SUC_/.test(result?.code || "") || result.error || result.success === false ||
+          result.errors && (!Array.isArray(result.errors) || result.errors.length) || result.count !== 1 || result.result?.length !== 1) fail();
+        const person = result.result[0];
+        if (!person?._id || person.code !== command.principalCode || person.loginId !== command.loginId ||
+          person.active !== true || person.disabled || person.registrationSuspended || person.principalType !== "service" ||
+          person.authenticationIdentity || person.apiKey || !person.apiKeyHash || person.apiKeyStatus !== "active" ||
+          !Array.isArray(person.userGroups) || !person.userGroups.includes(serviceGroup) || !codes(person.apiKeyScopes) ||
+          !Number.isSafeInteger(person.authVersion) || person.authVersion < 1) fail();
+        return person;
+      };
+      stage = "TARGET";
+      const principal = await read();
+      stage = "CURRENT_STATE";
+      if (principal.authVersion !== command.expectedAuthVersion || !isDeepStrictEqual(principal.apiKeyScopes, command.expectedScopeCodes)) fail();
+      stage = "VOCABULARY";
+      await SERVICE.DefaultIdentityCatalogueService.requirePermissions([...new Set([...command.expectedScopeCodes, ...command.scopeCodes])]);
+      await authorize();
+      if (isDeepStrictEqual(command.expectedScopeCodes, command.scopeCodes)) {
+        stage = "READBACK";
+        const current = await read();
+        if (String(current._id) !== String(principal._id) || current.authVersion !== command.expectedAuthVersion ||
+          !isDeepStrictEqual(current.apiKeyScopes, command.expectedScopeCodes)) fail();
+        return { code: "SUC_SYS_00000", data: { principalCode: current.code, loginId: current.loginId,
+          authVersion: current.authVersion, scopeCodes: [...current.apiKeyScopes], status: "NO_CHANGES" } };
+      }
+      const protectedState = person => ({
+        _id: String(person._id), code: person.code, loginId: person.loginId, tenant: person.tenant,
+        principalType: person.principalType, userGroups: person.userGroups, active: person.active,
+        disabled: person.disabled, registrationSuspended: person.registrationSuspended,
+        authenticationIdentity: person.authenticationIdentity, enterpriseCode: person.enterpriseCode,
+        metadata: person.metadata, password: person.password,
+        credentials: Object.fromEntries(Object.entries(person).filter(([key]) => key.startsWith("apiKey") && key !== "apiKeyScopes")),
+      });
+      const preserved = structuredClone(protectedState(principal));
+      const auditCode = "serviceScopes_" + crypto.randomUUID();
+      const result = { operation: "SERVICE_SCOPE_UPDATE", principalCode: principal.code, loginId: principal.loginId,
+        expectedAuthVersion: command.expectedAuthVersion, expectedScopeCodes: command.expectedScopeCodes, scopeCodes: command.scopeCodes };
+      stage = "AUDIT_PREPARE";
+      await this.saveAudit(request, { code: auditCode, active: true, migrationVersion: version, status: "APPLYING",
+        tenant: request.tenant, requestedBy: this.getActor(request), result, correlationId: request.correlationId });
+      await authorize();
+      stage = "WRITE";
+      const updated = await employee.update(this.systemRequest(request, {
+        query: { _id: principal._id, code: principal.code, loginId: principal.loginId, active: true,
+          principalType: "service", userGroups: principal.userGroups, apiKeyStatus: "active",
+          authVersion: command.expectedAuthVersion, apiKeyScopes: command.expectedScopeCodes },
+        model: { apiKeyScopes: [...command.scopeCodes] }, options: { returnModified: true },
+      }));
+      bound();
+      SERVICE.DefaultEnterpriseRegistrationService.assertWrite(updated);
+      if (updated.result?.acknowledged !== true || updated.result.matchedCount !== 1) fail();
+      stage = "READBACK";
+      const saved = await read();
+      if (!isDeepStrictEqual(saved.apiKeyScopes, command.scopeCodes) || saved.authVersion <= command.expectedAuthVersion ||
+        !isDeepStrictEqual(structuredClone(protectedState(saved)), preserved)) fail();
+      stage = "AUDIT_FINALIZE";
+      await this.updateAudit(request, auditCode, "APPLYING", { status: "APPLIED", result: { ...result, authVersion: saved.authVersion } });
+      return { code: "SUC_SYS_00000", data: { auditCode, principalCode: saved.code, loginId: saved.loginId,
+        authVersion: saved.authVersion, scopeCodes: [...saved.apiKeyScopes], status: "APPLIED" } };
+    } catch (_) {
+      // Only local static stage vocabulary crosses transport; never forward upstream errors or request data.
+      throw new CLASSES.NodicsError("ERR_PROFILE_SERVICE_SCOPE_" + stage);
+    }
+  },
+
   /** Activates a client-generated replacement key for a verified service principal. */
   rotateServiceKey: function (request) {
     const policy = this.getPolicy();

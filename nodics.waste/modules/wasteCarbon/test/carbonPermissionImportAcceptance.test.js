@@ -29,7 +29,7 @@ test('Carbon permission releases execute through identity-authority import dispa
     } } };
     const releases = [
         ['../data/init-v001/headers/identity/wasteCarbonPermissionHeader', '../data/init-v001/records/identity/wasteCarbonPermissionData'],
-        ['../data/init-v002/headers/identity/wasteCarbonFinalizationPermissionHeader', '../data/init-v002/records/identity/wasteCarbonFinalizationPermissionData'],
+        ['../data/init-v001/headers/identity/wasteCarbonFinalizationPermissionHeader', '../data/init-v001/records/identity/wasteCarbonFinalizationPermissionData'],
     ];
     for (const [headerPath, recordsPath] of releases) {
         delete require.cache[require.resolve(headerPath)];

@@ -13,6 +13,12 @@
 
 /** @module promotion/src/facade/defaultPromotionFacade @description Normalizes authenticated customer promotion API context. @layer facade @owner promotion */
 module.exports = {
+    /** Native review discovery is independently proved, not inferred from token group names. */
+    administrativeReviewCapabilities: function (request) { return SERVICE.DefaultPromotionAdministrativeReviewService.capabilities(request); },
+    /** Reuses the private draft owner for exact issuer review. */
+    administrativeReview: function (request) { return SERVICE.DefaultPromotionDraftService.administrativeReview(request); },
+    /** Reuses existing lifecycle approval and versioned write safeguards. */
+    administrativeApprove: function (request) { return SERVICE.DefaultPromotionDraftService.administrativeReview(request, true); },
     /** Presents owner-defined form metadata without deriving grants in Axis. */
     couponWorkspace: function (request) { return SERVICE.DefaultCouponOfferService.workspace(request); },
     /** Reads one exact offer under original staff scope. */
@@ -117,35 +123,35 @@ module.exports = {
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
-    submitPromotion: function (request) { return SERVICE.DefaultPromotionOperationService.transitionPromotion(this.applyOperatorContext(Object.assign({}, request, { actionCode: 'SUBMIT', targetStatus: 'SUBMITTED' }))); },
+    submitPromotion: function (request) { return SERVICE.DefaultPromotionOperationService.transitionPromotion(this.applyOperatorContext(Object.assign({}, request, { actionCode: 'SUBMIT' }))); },
     /**
      * Executes `approvePromotion` as a loader-visible operation owned by this module.
      * @param {*} request Value defined by the owning module contract.
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
-    approvePromotion: function (request) { return SERVICE.DefaultPromotionOperationService.transitionPromotion(this.applyOperatorContext(Object.assign({}, request, { actionCode: 'APPROVE', targetStatus: 'APPROVED' }))); },
+    approvePromotion: function (request) { return SERVICE.DefaultPromotionOperationService.transitionPromotion(this.applyOperatorContext(Object.assign({}, request, { actionCode: 'APPROVE' }))); },
     /**
      * Executes `schedulePromotion` as a loader-visible operation owned by this module.
      * @param {*} request Value defined by the owning module contract.
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
-    schedulePromotion: function (request) { return SERVICE.DefaultPromotionOperationService.transitionPromotion(this.applyOperatorContext(Object.assign({}, request, { actionCode: 'SCHEDULE', targetStatus: 'SCHEDULED' }))); },
+    schedulePromotion: function (request) { return SERVICE.DefaultPromotionOperationService.transitionPromotion(this.applyOperatorContext(Object.assign({}, request, { actionCode: 'SCHEDULE' }))); },
     /**
      * Executes `suspendPromotion` as a loader-visible operation owned by this module.
      * @param {*} request Value defined by the owning module contract.
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
-    suspendPromotion: function (request) { return SERVICE.DefaultPromotionOperationService.transitionPromotion(this.applyOperatorContext(Object.assign({}, request, { actionCode: 'SUSPEND', targetStatus: 'SUSPENDED' }))); },
+    suspendPromotion: function (request) { return SERVICE.DefaultPromotionOperationService.transitionPromotion(this.applyOperatorContext(Object.assign({}, request, { actionCode: 'SUSPEND' }))); },
     /**
      * Executes `archivePromotion` as a loader-visible operation owned by this module.
      * @param {*} request Value defined by the owning module contract.
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
-    archivePromotion: function (request) { return SERVICE.DefaultPromotionOperationService.transitionPromotion(this.applyOperatorContext(Object.assign({}, request, { actionCode: 'ARCHIVE', targetStatus: 'ARCHIVED' }))); },
+    archivePromotion: function (request) { return SERVICE.DefaultPromotionOperationService.transitionPromotion(this.applyOperatorContext(Object.assign({}, request, { actionCode: 'ARCHIVE' }))); },
     /**
      * Executes `createCouponBatch` as a loader-visible operation owned by this module.
      * @param {*} request Value defined by the owning module contract.

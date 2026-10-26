@@ -108,7 +108,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/shoppingListDocumentationComponentData.js",
-    "sourceChecksum": "c5fd0b2e73214eb1c7c71a7bf330114ff8fd28e5d70e551892b1a75e0dfeffb5",
+    "sourceChecksum": "2d7650f1e020bb9f6cfdbe14a3f73aa1ffdd60cc91f33c6bab367dbb42fb2a0b",
     "sourceWordCount": 1210,
     "audience": [
       "business",
@@ -131,7 +131,7 @@ module.exports = {
     ],
     "accessPolicy": "nodicsDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 1210,
@@ -142,7 +142,7 @@ module.exports = {
       "src/router/routers.js",
       "src/service/defaultShoppingListOperationService.js",
       "../../package.json",
-      "../../../../../nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData.js",
+      "../../../../../nodics.platform/modules/profile/data/init-v001/records/identity/profileUserGroupData.js",
       "src/schemas",
       "src/service"
     ]

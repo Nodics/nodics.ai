@@ -401,8 +401,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
-    "sourceChecksum": "aea3ab941631d88c4f2be49cb0eb2dba8dbbfbc7f2da1d970f5c5f1f31c91806",
-    "sourceWordCount": 4533,
+    "sourceChecksum": "936948176c6b888751fcb1342cc7580bb99b8cb720ce0e2a41370643d64dfffd",
+    "sourceWordCount": 4853,
     "audience": [
       "business",
       "architect",
@@ -427,7 +427,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 4533,
+    "wordCount": 4853,
     "sourceEvidence": [
       "../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json",
@@ -463,12 +463,6 @@ module.exports = {
       "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/staff-access/records/circaCommerceStaffAssignmentData.js",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaCommerceStaffAssignments.test.js",
       "../../../../../../nodics.kickoff/envs/kickoffLocal/platformServer/config/properties.js",
-      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/asset-classification/headers/circaAssetClassificationHeader.js",
-      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/asset-classification/records/circaAssetClassificationLocalizationData.js",
-      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v008/asset-publication/records/publicationPlan.json",
-      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v008/publication/current-catalogue/records/publicationPlan.json",
-      "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaAssetClassificationForwardPack.test.js",
-      "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaCatalogueCurrentPublicationPlan.test.js",
       "../../../../../nodics.loyalty/modules/loyaltyWallet/llm/contracts/sample-credit-admission.md",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-demo-credit.md",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/loyalty-credit/records/loyaltyCredits.json",
@@ -535,10 +529,11 @@ module.exports = {
       "../../../../../nodics.commerce/modules/checkout/modules/checkoutCore/src/service/defaultCheckoutBundleRecoveryService.js",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-participation/headers/circaCustomerParticipationHeader.js",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-participation/records/circaCustomerParticipationData.js",
-      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v005/customer-digital-participation/headers/circaCustomerDigitalParticipationHeader.js",
-      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v005/customer-digital-participation/records/circaCustomerDigitalParticipationData.js",
-      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v006/digital-listing-context/headers/circaDigitalBundleListingContextHeader.js",
-      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v006/digital-listing-context/records/circaDigitalBundleListingContextData.js"
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-digital-participation/headers/circaCustomerDigitalParticipationHeader.js",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-digital-participation/records/circaCustomerDigitalParticipationData.js",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/digital-listing-context/headers/circaDigitalBundleListingContextHeader.js",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/digital-listing-context/records/circaDigitalBundleListingContextData.js",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/catalogue/records/publicationPlan.json"
     ]
   },
   "record3": {
@@ -645,8 +640,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
-    "sourceChecksum": "37b706f1e5a2871bfabedeefee5f0686350a529a60efca934607ac95683eebfc",
-    "sourceWordCount": 2025,
+    "sourceChecksum": "197f7489adbd0c1baca453220085443b32c9dbb0ead55073d2fd7da14881749e",
+    "sourceWordCount": 2026,
     "audience": [
       "business",
       "architect",
@@ -671,7 +666,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 2025,
+    "wordCount": 2026,
     "sourceEvidence": [
       "../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json",
@@ -1526,7 +1521,7 @@ module.exports = {
       "../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
       "../../../../../nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/README.md",
       "../../../../../nodics.commerce/modules/baseCommerce/modules/promotion/config/properties.js",
-      "data/docs-v001/records/documentation/circaDocumentationComponentData.js",
+      "data/docs-v001/records/documentation/circaDocumentationRelease004ComponentData.js",
       "package.json",
       "src/service",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json",
@@ -1778,7 +1773,7 @@ module.exports = {
     "wordCount": 1121,
     "sourceEvidence": [
       "../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
-      "data/docs-v001/records/documentation/circaDocumentationComponentData.js",
+      "data/docs-v001/records/documentation/circaDocumentationRelease004ComponentData.js",
       "../../../../../../nodics.exp/nodics.circa.eWaste/package.json",
       "package.json",
       "src/service",

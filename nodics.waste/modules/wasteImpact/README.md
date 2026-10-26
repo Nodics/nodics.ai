@@ -14,7 +14,7 @@ Mock assessments remain `ESTIMATED` with provenance and
 `publicClaimAllowed: false`. The default factor `1` is illustrative. Real
 provider qualification and public claims require separate domain policy.
 
-- [Canonical provider guide](data/docs-v002/records/documentation/wasteImpactDocumentationComponentData.js)
+- [Canonical provider guide](data/docs-v001/records/documentation/wasteImpactDocumentationComponentData.js)
 - [Provider contract](llm/contracts/README.md)
 - [Examples](llm/examples/README.md)
 
@@ -44,5 +44,5 @@ Provider energy provenance is allowlisted alongside carbon provenance: energy
 factor, source unit, baseline/treatment coefficients, conversion and result bounds.
 The generic dispatcher preserves these scalars; domain providers own their formulas.
 
-Documentation docs-v001 is frozen historical evidence. The selected 0.0.2
-successor in docs-v002 remains STAGED; source checks do not publish it.
+Unreleased documentation is consolidated in docs-v001 with latest content,
+stable identities and current hashes. It remains STAGED; source checks do not publish it.

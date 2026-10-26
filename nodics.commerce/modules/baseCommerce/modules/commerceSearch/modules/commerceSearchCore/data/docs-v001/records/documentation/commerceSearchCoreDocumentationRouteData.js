@@ -21,7 +21,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecommerceSearchGuide",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   }

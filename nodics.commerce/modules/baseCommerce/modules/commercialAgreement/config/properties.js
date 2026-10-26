@@ -31,6 +31,23 @@ module.exports = {
         maximumPageSize: 100,
         readPermission: 'commerce.agreement.read',
         writePermission: 'commerce.agreement.manage',
+        enterpriseReference: {
+            connectionName: 'profile',
+            apiVersion: 'v0',
+            targetAuthority: { runtimeRole: 'PLATFORM' },
+            timeoutMs: 30000,
+            validation: { timeoutMs: { minimum: 1, maximum: 60000 } }
+        },
+        // Catalogue sources may be detached from the operational Agreement runtime.
+        // Deployments select REMOTE only when Product/Pricing authoring lives elsewhere.
+        catalogueReferences: {
+            mode: 'LOCAL',
+            connectionName: 'commerceStaged',
+            apiVersion: 'v0',
+            targetAuthority: { runtimeRole: 'COMMERCE_STAGED' },
+            timeoutMs: 30000,
+            validation: { timeoutMs: { minimum: 1, maximum: 60000 } }
+        },
         workspace: { pageSize: 25 },
         acceptance: { requestTimeoutMs: 30000, maximumAgreements: 50 },
         validation: {

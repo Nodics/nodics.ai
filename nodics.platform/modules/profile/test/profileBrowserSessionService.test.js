@@ -252,6 +252,23 @@ function request(headers) {
         'x-csrf-token': 'csrf-value'
     })), error => error.code === 'ERR_AUTH_00001');
 
+    const originalRotate = SERVICE.DefaultAuthenticationProviderService.rotateRefreshToken;
+    SERVICE.DefaultAuthenticationProviderService.rotateRefreshToken = async () => {
+        throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Native Enterprise binding refused');
+    };
+    const oldScope = request({
+        origin: 'https://axis.example.com',
+        cookie: 'refresh=old-refresh; csrf=csrf-value',
+        'x-csrf-token': 'csrf-value'
+    });
+    oldScope.entCode = 'foreign-enterprise';
+    await assert.rejects(service.restore(oldScope), error => error.code === 'ERR_AUTH_00001');
+    assert.strictEqual(oldScope.responseHeaders['Set-Cookie'], undefined);
+    await service.logout(oldScope);
+    assert.deepStrictEqual(removed, { moduleName: 'profile', token: 'old-refresh' });
+    assert(oldScope.responseHeaders['Set-Cookie'].every(cookie => cookie.includes('Max-Age=0')));
+    SERVICE.DefaultAuthenticationProviderService.rotateRefreshToken = originalRotate;
+
     let loggedOut = request({
         origin: 'https://axis.example.com',
         cookie: 'refresh=old-refresh; csrf=csrf-value',

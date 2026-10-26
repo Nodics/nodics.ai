@@ -28,6 +28,16 @@
  * authority.
  */
 module.exports = {
+  /** Reconciles one original buyer round or its FAILED seller cleanup through fresh owner admission. */
+  reconcileBuyerAuction: function (request, callback) {
+    const http = request.httpRequest || {};
+    request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
+    const promise = Promise.resolve().then(() => SERVICE.DefaultBiddingCloseService.reconcileBuyer({ ...request,
+      code: http.params?.code || request.params?.code,
+      payload: http.body || request.payload,
+      authorization: request.authorization || http.headers?.authorization || http.headers?.Authorization })).then(data => ({ data }));
+    return callback ? promise.then(value => callback(null, value)).catch(callback) : promise;
+  },
   /**
    * Projects only public publication/round coordinates to authenticated owner adapters.
    * @param {Object} request Original owner request with tenant, authData and operation selectors;

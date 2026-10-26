@@ -88,6 +88,7 @@ const enterprise = {
 
 const employee = {
   _id: "employee-id",
+  enterpriseCode: "electronics",
   loginId: "employee@example.com",
   active: true,
   principalType: "human",

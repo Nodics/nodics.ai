@@ -29,10 +29,11 @@ if (oldEnums === undefined) delete global.ENUMS; else global.ENUMS = oldEnums;
 /** Composes the startup release owner with actual bulk-save dispatch and the Enterprise post-save hook, without providers. */
 function startupSeedFixture() {
   global.CONFIG = { get: key => key === "defaultTenant" ? "default" : undefined };
+  global.NODICS = { getSelectedEnvironmentName: () => "projectLocal" };
   const releaseOwner = require("../../../../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService");
   const bulkOwner = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/procs/save/defaultModelsSaveInitializerService");
   const dispatcher = require("../../../../nodics.foundation/modules/nCommon/src/service/interceptor/defaultInterceptorService");
-  const header = require("../data/init-v001/headers/enterprise/defaultEnterpriseHeader").profile.defaultEnterprise;
+  const header = require("./fixtures/unreleasedPredecessor/init-v001/headers/enterprise/defaultEnterpriseHeader").profile.defaultEnterprise;
   const seed = require("../data/init-v001/records/enterprise/defaultEnterpriseData").record0;
   const log = { debug() {}, error() {}, warn() {} };
   const events = { ...require("../src/service/interceptors/defaultEnterpriseUpdateInterceptorService"), LOG: log };
@@ -157,7 +158,7 @@ function fixture() {
   global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
   global.CONFIG = { get: key => ({ defaultTenant: "default", profileModuleName: "profile", profileTenantProvisioning: { enabled: true, permission, inventoryPermission: "profile.enterprise.search" },
     apiExposure: { categories: { profileTenantProvisioning: { enabled: state.enabled } } } })[key] };
-  global.NODICS = { getInternalAuthTokens: () => ({}) };
+  global.NODICS = { getInternalAuthTokens: () => ({}), getSelectedEnvironmentName: () => "projectLocal" };
   const owner = { ...provisioning };
   global.SERVICE = {
     DefaultLoggerService: { runSensitiveOperation: async (request, work) => work() },

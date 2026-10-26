@@ -225,6 +225,29 @@ module.exports = {
         }
     },
     cmsPublicationBaseline: {
+        reconcileApproval: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+            permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+            key: '/publication/baselines/:baselineCode/reconcile-approval', method: 'POST',
+            controller: 'DefaultCmsPublicationBaselineController', operation: 'reconcileApproval',
+            requestBody: { required: true, content: { 'application/json': { schema: {
+                type: 'object', additionalProperties: false, required: ['requestedBy', 'approvalRepairBinding'], properties: {
+                    requestedBy: { type: 'string', minLength: 1, maxLength: 256 },
+                    reason: { type: 'string', maxLength: 1000 },
+                    correlationId: { type: 'string', maxLength: 256 },
+                    approvalRepairBinding: { type: 'object', additionalProperties: false,
+                        required: ['source', 'publicationCode', 'publicationRevision'], properties: {
+                            source: { type: 'string', enum: ['PUBLICATION_APPROVAL'] },
+                            publicationCode: { type: 'string', minLength: 1, maxLength: 128 },
+                            publicationRevision: { type: 'integer', minimum: 0 },
+                            workflowRef: { type: 'string', maxLength: 128 },
+                            taskCode: { type: 'string', maxLength: 128 },
+                            taskStatus: { type: 'string', maxLength: 128 },
+                            approvalStatus: { type: 'string', maxLength: 128 }
+                        } }
+                }
+            } } } }
+        },
         status: {
             secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
             permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',

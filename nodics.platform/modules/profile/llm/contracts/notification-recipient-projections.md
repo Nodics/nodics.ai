@@ -55,8 +55,13 @@ identifiers and missing policy before identity reads.
   partition, active state, explicit opt-in and a bounded exact `[{employeeCode}]`
   roster. Customer mappings, contacts, actor/admin and all-staff fallbacks refuse.
 - Each selected Employee must be an active human in the source tenant with its
-  own per-purpose opt-in. Existing membership resolution checks the canonical
-  identity and lock state. Native employees without an assignment still require
+  own per-purpose opt-in. Native Employees use the existing canonical locator/anchor
+  and lock-state proof, independently of optional cross-enterprise membership
+  enablement, matching ordinary native-session identity validation. An exact
+  bounded assignment read must prove absence; ambiguous or failed reads refuse.
+  A newly linked anchor also refuses. Linked projections and existing assignments
+  retain qualified membership resolution; this does not activate that workflow.
+  Native employees without an assignment still require
   fresh persisted groups and matching Enterprise/tenant/global scope. A linked
   projection requires exactly its current registered, active, COMPLETE accepted
   assignment, canonical identity, target projection and immutable grant digest.

@@ -21,8 +21,8 @@ const digital = require('../../../../digitalCommerce/modules/digitalCore/src/ser
 const ownership = require('../../../../digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceOwnershipService');
 const couponOffer = require('../../promotion/src/service/defaultCouponOfferService');
 const allocation = require('../../promotion/src/service/defaultCouponOfferAllocationService');
-const unknown = { available: false, status: 'OUT_OF_STOCK', acquisitionRequirements: null };
-const known = { available: true, status: 'IN_STOCK', acquisitionRequirements: { type: 'REWARDS' } };
+const unknown = { available: false, status: 'OUT_OF_STOCK', expiry: null, acquisitionRequirements: null };
+const known = { available: true, status: 'IN_STOCK', expiry: { mode: 'NONE' }, acquisitionRequirements: { type: 'REWARDS' } };
 
 /** Installs actual read-only owner orchestration with bounded in-memory persistence doubles. */
 function fixture() {
@@ -163,7 +163,7 @@ test('selected batch values must be exact safe summaries and never fall through 
         { get available() { return true; }, status: 'IN_STOCK' },
         { available: true, get status() { return 'IN_STOCK'; } },
         { available: true, status: 'IN_STOCK', [Symbol('private')]: 'private' }];
-    values.push({ available: true, status: 'IN_STOCK', acquisitionRequirements: null });
+    values.push({ available: true, status: 'IN_STOCK', expiry: null, acquisitionRequirements: null });
     for (const value of values) {
         const f = fixture();
         let digitalCalls = 0, selected = true;
@@ -285,7 +285,7 @@ test('unknown or inconsistent Digital metadata produces only a false listing sum
         const f = fixture(); f.row.payload.localizedAttributes = attributes;
         const result = await enrichment.consumerSummaries(f.request, f.rows);
         assert.deepEqual(result.availability.offer, { available: false, status: 'OUT_OF_STOCK',
-            ...(attributes.digitalDeliveryType === 'COUPON_CODE' ? { acquisitionRequirements: null } : {}) });
+            ...(attributes.digitalDeliveryType === 'COUPON_CODE' ? { expiry: null, acquisitionRequirements: null } : {}) });
         assert.equal(f.calls.pool.length, 0);
         assert.equal(f.calls.inventory.length, 0);
     }
@@ -428,4 +428,40 @@ test('physical-only and empty results work without DigitalCore; legacy CURRENT r
     const legacy = { ...f.reader, activeSelection: async () => undefined, searchSelected: async () => [{ ...f.row, status: 'CURRENT' }] };
     assert.equal((await legacy.search(f.request, {}, {}))[0].status, 'CURRENT');
     assert.equal(f.calls.inventory.length, 1);
+});
+
+test('fixed owner expiry reaches search and PDP for anonymous and signed readers without changing source terms', async t => {
+    t.mock.method(Date, 'now', () => Date.parse('2026-10-24T00:00:00.000Z'));
+    for (const signed of [false, true]) {
+        const f = fixture(), expiry = { mode: 'FIXED', at: '2026-11-08T19:59:59.999Z' };
+        f.request.authData = signed ? { tenant: 't', enterpriseCode: 'e', principalType: 'customer' } : {};
+        f.row.payload.localizedAttributes.expiresAt = '2099-01-01T00:00:00.000Z';
+        const original = structuredClone(f.row), promotions = SERVICE.DefaultPromotionOperationService.promotions;
+        SERVICE.DefaultPromotionOperationService.promotions = async r => {
+            const rows = await promotions(r); rows[0].couponOffer.expiry = expiry; return rows;
+        };
+        SERVICE.DefaultPromotionDistributionAdmissionService = { selected: () => true,
+            publicAvailabilityBatch: async () => new Map([['offer', { ...known, expiry }]]) };
+        const rows = await f.reader.search(f.request, f.reader.query(f.request), {});
+        const detail = await f.reader.detail({ ...f.request, productCode: 'offer' });
+        for (const card of [f.reader.card(rows[0]), detail.product]) {
+            assert.deepEqual(card.availability.expiry, expiry);
+            assert.notEqual(card.availability.expiry, expiry);
+            assert.equal(card.localizedAttributes.expiresAt, undefined);
+        }
+        assert.deepEqual(f.row, original);
+    }
+});
+
+test('malformed and missing selected expiry reject before Digital fallback and never use indexed validity', async () => {
+    const accessor = Object.defineProperty({}, 'mode', { enumerable: true, get: () => assert.fail('No accessor evaluation') });
+    for (const expiry of [undefined, {}, accessor, { mode: 'NONE', private: 'secret' },
+        { mode: 'FIXED', at: 'invalid' }, { mode: 'FIXED', at: '2026-11-08' }, { mode: 'RELATIVE', days: 30 }, null]) {
+        const f = fixture();
+        f.row.payload.localizedAttributes.expiresAt = '2099-01-01T00:00:00.000Z';
+        SERVICE.DefaultPromotionDistributionAdmissionService = { selected: () => true,
+            publicAvailabilityBatch: async () => new Map([['offer', { ...known, expiry }]]) };
+        await assert.rejects(enrichment.consumerSummaries(f.request, f.rows));
+        assert.equal(f.calls.pool.length, 0);
+    }
 });

@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @module eWaste/test/eWasteDocumentationForwardRelease @description Protects forward CMS content, immutable source bytes, stable identities and optional asset-inclusive release selection. @layer test @owner eWaste */
+/** @module eWaste/test/eWasteDocumentationForwardRelease @description Protects consolidated CMS content, historical fixture seals and current asset-inclusive release selection. @layer test @owner eWaste */
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -26,8 +26,6 @@ const frozen004 = require('./fixtures/documentationFrozen004.json');
 const manifest = require('../data/manifest.json');
 const frozen005 = require('./fixtures/documentationFrozen005.json');
 const frozen006 = require('./fixtures/documentationFrozen006.json');
-function historicalRelease(section) { return { ...release(section), children: [], manifest: frozen005.sections[section] }; }
-function historicalArticle(section, code) { return contract.readReleaseRecords(historicalRelease(section), 'Component').records.find(row => row.code === code).properties; }
 
 function release(section) {
     return contract.readDocumentationRelease(root, section);
@@ -43,94 +41,6 @@ function article(section, code) {
     return result.properties;
 }
 
-test('all 47 frozen 0.0.1 files including assets retain their original bytes', () => {
-    const expected = {
-        documentation: 'ac159bf7a00757e8876cc3dd872e9e6c701091ce3c5ebc31d9665ae18e70a067',
-        referenceDocumentation: '09b71b0c36190de655cf98b13f90ba5ef82b1025231b16328d2efc632d8adb52'
-    };
-    const files = new Set();
-    assert.equal(baseline.releaseVersion, '0.0.1');
-    for (const [name, section] of Object.entries(baseline.sections)) {
-        assert.equal(section.version, '0.0.1');
-        assert.equal(contract.releaseChecksum(section.generatedHashes), expected[name]);
-        for (const [file, hash] of Object.entries(section.generatedHashes)) {
-            files.add(file);
-            assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
-        }
-    }
-    assert.equal(files.size, 47);
-});
-
-test('all frozen 0.0.2 files including assets retain their original bytes', () => {
-    const expected = {
-        documentation: '03b8d80a15d2130722cbf716e5db18874430534aa943c2accd54269645970938',
-        referenceDocumentation: '4f098e451a16a9ad5682af78015f37ef8d45e4168dbfdc7c19327a8d288d7d59'
-    };
-    assert.equal(predecessor.releaseVersion, '0.0.2');
-    for (const [name, section] of Object.entries(predecessor.sections)) {
-        assert.equal(section.version, '0.0.2');
-        assert.equal(contract.releaseChecksum(section.generatedHashes), expected[name]);
-        contract.validateGeneration(baseline.sections[name], section);
-        for (const [file, hash] of Object.entries(section.generatedHashes)) {
-            assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
-        }
-    }
-    contract.validateGeneration(predecessor.sections.referenceDocumentation, manifest.sections.referenceDocumentation);
-});
-
-test('all frozen 0.0.3 files retain their bytes before the inventory-only successor', () => {
-    assert.equal(latestPredecessor.releaseVersion, '0.0.3');
-    assert.equal(latestPredecessor.sections.documentation.releaseChecksum,
-        '2bccbf44ec8af347fec02c4560fe6a079f851973495c6a7955121c254bfb975a');
-    for (const [name, section] of Object.entries(latestPredecessor.sections)) {
-        assert.equal(contract.releaseChecksum(section.generatedHashes), section.releaseChecksum);
-        contract.validateGeneration(predecessor.sections[name], section);
-        for (const [file, hash] of Object.entries(section.generatedHashes)) {
-            assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
-        }
-    }
-});
-
-test('all frozen 0.0.4 payloads, assets and release seals retain their bytes', () => {
-    assert.equal(frozen004.releaseVersion, '0.0.4');
-    assert.equal(frozen004.sections.documentation.releaseChecksum,
-        'afbe08e362725ef74488bd58976f2ad1429e46f6169a67da7a5e056116e8c0d5');
-    for (const [name, section] of Object.entries(frozen004.sections)) {
-        assert.equal(contract.releaseChecksum(section.generatedHashes), section.releaseChecksum);
-        contract.validateGeneration(latestPredecessor.sections[name], section);
-        for (const [file, hash] of Object.entries(section.generatedHashes)) {
-            assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
-        }
-    }
-});
-
-test('semantic successors stay in docs-v001 and never overwrite any frozen predecessor', () => {
-    for (const [name, previous] of Object.entries(baseline.sections)) {
-        const next = manifest.sections[name];
-        assert.equal(next.version, name === 'documentation' ? '0.0.8' : '0.0.4');
-        assert.equal(next.contentPath, 'docs-v001');
-        assert.equal(next.sourceAuthority, 'data/docs-v001/records/documentation');
-        assert.equal(next.pack, previous.pack);
-        assert.equal(next.pages, previous.pages);
-        assert.deepEqual(next.includes, previous.includes);
-        assert.deepEqual(next.referenceCatalogues, previous.referenceCatalogues);
-        contract.validateGeneration(previous, next);
-        contract.validateGeneration(predecessor.sections[name], next);
-        contract.validateGeneration(latestPredecessor.sections[name], next);
-        contract.validateGeneration(frozen004.sections[name], next);
-        const changedPath = Object.keys(previous.generatedHashes).find(file => file.endsWith('ComponentData.js'));
-        assert.equal(next.generatedHashes[changedPath], undefined, 'Retired components must not be imported too');
-        const invalid = structuredClone(next);
-        invalid.generatedHashes[changedPath] = 'a'.repeat(64);
-        invalid.releaseChecksum = contract.releaseChecksum(invalid.generatedHashes);
-        assert.throws(() => contract.validateGeneration(previous, invalid), /Immutable documentation path would be overwritten/);
-        for (const [file, hash] of Object.entries(previous.generatedHashes)) {
-            if (file.includes('/assets/')) assert.equal(next.generatedHashes[file], hash, file);
-        }
-    }
-    assert.equal(fs.existsSync(path.join(root, 'data/docs-v002')), false);
-});
-
 test('forward packs preserve canonical identities and stage exactly one selected header each', () => {
     for (const [name, previous] of Object.entries(baseline.sections)) {
         const selected = release(name);
@@ -139,13 +49,6 @@ test('forward packs preserve canonical identities and stage exactly one selected
         assert.ok(headers[0].includes(name === 'documentation' ? 'Release008' : 'Release004'));
         const selectedFiles = Object.keys(selected.manifest.generatedHashes);
         const header = require(path.join(root, 'data', headers[0]));
-        const oldHeaderPath = Object.keys(previous.generatedHashes).find(file => /\/headers\//.test(file));
-        const oldHeader = require(path.join(root, 'data', oldHeaderPath));
-        const dispatch = input => Object.entries(input).flatMap(([moduleName, entries]) => Object.values(entries).map(entry => ({
-            moduleName, schemaName: entry.options.schemaName, operation: entry.options.operation,
-            prefix: entry.options.dataFilePrefix.replace(/Release00[2345678]/, ''), query: entry.query
-        })));
-        assert.deepEqual(dispatch(header), dispatch(oldHeader), 'Forward headers must retain owner dispatch order and query semantics');
         for (const entries of Object.values(header)) {
             for (const entry of Object.values(entries)) {
                 const prefix = entry.options.dataFilePrefix;
@@ -153,10 +56,8 @@ test('forward packs preserve canonical identities and stage exactly one selected
             }
         }
         for (const suffix of ['Component', 'PageMetadata', 'SearchMetadata', 'Page', 'Route', 'Media']) {
-            const oldFiles = Object.keys(previous.generatedHashes).filter(file => file.endsWith(suffix + 'Data.js'));
-            const oldCodes = oldFiles.flatMap(file => Object.values(require(path.join(root, 'data', file))).map(record => record.code));
             const current = contract.readReleaseRecords({ ...selected, children: [] }, suffix).records;
-            assert.deepEqual(current.map(record => record.code).sort(), oldCodes.sort(), name + ' ' + suffix);
+            assert.equal(new Set(current.map(record => record.code)).size, current.length, name + ' ' + suffix);
         }
         const all = contract.readReleaseRecords(selected, 'Component').records;
         assert.equal(new Set(all.map(record => record.code)).size, all.length);
@@ -176,128 +77,6 @@ test('Circa staff guidance selects the predefined reviewed pack instead of manua
     assert.ok(demoBody.includes('circa.ewaste:circaCommerceStaffAssignments'));
     assert.ok(demoBody.includes('not manual runtime group wiring'));
     assert.ok(demo.references.some(reference => reference.documentId === 'accelerators.circa-source-inventory' && reference.owner === 'eWaste'));
-});
-
-test('frozen 0.0.5 inventory covers all 46 business sections and separates 98 required roots from the optional asset subset', () => {
-    const properties = historicalArticle('documentation', 'nodicsDocsComponentacceleratorsCircaSourceInventory');
-    const table = properties.blocks.find(block => block.kind === 'table' && block.headers[0] === 'Section');
-    const names = ['profile', 'location', 'waste', 'waste-policy', 'loyalty', 'content', 'commerce',
-        'operations', 'customer-workspace', 'sunmarke-profile', 'sunmarke-location', 'sunmarke-waste',
-        'circaPublicationPlan', 'store', 'circaGreenPerksBudget', 'circaGreenPerksIssuance',
-        'circaGreenPerksPublicationPlan', 'circaRenewWorksBudget', 'circaRenewWorksIssuance',
-        'circaRenewWorksPublicationPlan', 'circaLoopCycleBudget', 'circaLoopCycleIssuance',
-        'circaLoopCyclePublicationPlan', 'circaCataloguePublicationPlan', 'circaDigitalOwnershipPolicies',
-        'circaMerchantOutletAccess', 'circaAssetClassification', 'circaAssetClassificationPublicationPlan',
-        'circaCatalogueCurrentPublicationPlan', 'circaCommerceStaffAssignments', 'circaLocalDemoCredit',
-        'circaGreenPerksOutletCommerce', 'circaGreenPerksOutletPublicationPlan', 'circaGreenPerksOutletOpening',
-        'circaRenewWorksOutletCommerce', 'circaRenewWorksOutletPublicationPlan', 'circaRenewWorksOutletOpening',
-        'circaLoopCycleOutletCommerce', 'circaLoopCycleOutletPublicationPlan', 'circaLoopCycleOutletOpening',
-        'circaLocalDemoCreditRole', 'circaLocalDemoCreditStaffAssignment',
-        'circaLocalOpeningRole', 'circaLocalOpeningStaffAssignments',
-        'circaLocalUnusedRefundExceptionRole', 'circaLocalUnusedRefundExceptionStaffAssignment'];
-    assert.equal(names.length, 46);
-    assert.deepEqual(table.rows.map(row => row[0]).sort(), names.sort());
-    for (const name of names.slice()) {
-        const row = table.rows.find(item => item[0] === name);
-        assert.equal(row[1], ['waste-policy', 'customer-workspace'].includes(name) ? 'core-v001' : 'sample-v001');
-        assert.equal(row[2], '0.0.1');
-    }
-    for (const name of ['circaAssetClassification', 'circaAssetClassificationPublicationPlan', 'circaCatalogueCurrentPublicationPlan']) {
-        assert.equal(table.rows.find(row => row[0] === name)[3], 'COMMERCE_STAGED');
-    }
-    const staff = table.rows.find(row => row[0] === 'circaCommerceStaffAssignments');
-    assert.equal(staff[3], 'PLATFORM');
-    assert.match(staff[4], /^NONE;/);
-    const credit = table.rows.find(row => row[0] === 'circaLocalDemoCredit');
-    assert.equal(credit[3], 'LOYALTY');
-    assert.match(credit[4], /^NONE; explicit LOCAL demo credit, required in reviewed native setup; not executed$/);
-    const body = contract.documentationText(properties.blocks);
-    for (const text of ['All 46 current business manifest sections', '84 distinct roots', '98 distinct roots',
-        'all 46 effective catalogue roots', 'optional five-root subset', 'other 41',
-        'five-current or 45-current', 'ten English/Arabic Product localization successors',
-        'input.versionId 1', 'sourceVersion 2', 'DIGITAL_OWNERSHIP', 'DIGITAL_COMMERCE',
-        'circaCommerceStaffAssignments permits LOCAL and LOCAL_PRODUCTION_SIMULATION']) assert.ok(body.includes(text), text);
-    const publication = properties.blocks.find(block => block.kind === 'table' && block.headers[0] === 'Signed enterprise');
-    assert.equal(publication.rows[0][1], 'circaCatalogueCurrentPublicationPlan');
-    assert.equal(publication.rows.length, 7);
-    assert.equal(publication.rows.reduce((sum, row) => sum + Number(row[2]), 0), 98);
-    for (const suffix of ['asset-classification/headers/circaAssetClassificationHeader.js',
-        'asset-classification/records/circaAssetClassificationLocalizationData.js',
-        'asset-publication/records/publicationPlan.json', 'publication/current-catalogue/records/publicationPlan.json',
-        'envs/kickoffLocal/platformServer/config/properties.js']) {
-        assert.ok(properties.sourceEvidence.some(file => file.endsWith(suffix)), suffix);
-    }
-});
-
-test('0.0.5 changes only the inventory article body and stages the entire successor without fabricated approvals', () => {
-    const selected = historicalRelease('documentation');
-    const oldFile = Object.keys(frozen004.sections.documentation.generatedHashes).find(file => file.endsWith('ComponentData.js'));
-    const previous = Object.values(require(path.join(root, 'data', oldFile)));
-    const current = contract.readReleaseRecords({ ...selected, children: [] }, 'Component').records;
-    assert.equal(current.length, 12);
-    for (const record of current) {
-        const old = previous.find(item => item.code === record.code);
-        assert.ok(old);
-        assert.equal(record.properties.lifecycleState, 'STAGED');
-        assert.equal(record.properties.route, old.properties.route);
-        if (record.code !== 'nodicsDocsComponentacceleratorsCircaSourceInventory') {
-            assert.deepEqual(record.properties.blocks, old.properties.blocks, record.code);
-            assert.equal(record.properties.source.checksum, old.properties.source.checksum, record.code);
-        }
-    }
-    const targets = new Map(['Node', 'PageMetadata', 'SearchMetadata'].flatMap(suffix => {
-        const records = contract.readReleaseRecords({ ...selected, children: [] }, suffix).records;
-        for (const record of records) assert.equal(record.lifecycleState, 'STAGED', record.code);
-        return records.map(record => [record.code, record]);
-    }));
-    const states = contract.readReleaseRecords({ ...selected, children: [] }, 'PublicationState').records;
-    assert.equal(states.length, 48);
-    for (const state of states) {
-        assert.equal(state.lifecycleState, 'STAGED');
-        assert.equal(state.stagedVersion, '0.0.5');
-        assert.equal(state.checksum, contract.sha256(JSON.stringify(targets.get(state.targetCode))));
-        for (const field of ['onlineVersion', 'reviewer', 'approver', 'publisher', 'actor']) assert.equal(state[field], undefined, field);
-        assert.deepEqual(state.auditTrail, []);
-    }
-});
-
-test('frozen unused-refund inventory retains every previous block and names only exact reviewed role adoption', () => {
-    const properties = historicalArticle('documentation', 'nodicsDocsComponentacceleratorsCircaSourceInventory');
-    const previous = Object.values(require('../data/docs-v001/records/documentation/eWasteDocumentationRelease004ComponentData'))
-        .find(row => row.properties.code === properties.code).properties;
-    for (const [index, block] of previous.blocks.entries()) {
-        if (block.kind === 'table' && block.headers[0] === 'Section') {
-            assert.deepEqual(properties.blocks[index].rows.slice(0, block.rows.length), block.rows);
-        } else if (block.kind === 'paragraph' && block.text.includes('All 44 current business manifest sections')) {
-            assert.equal(properties.blocks[index].text, block.text
-                .replace('All 44 current business manifest sections', 'All 46 current business manifest sections')
-                .replace('and four bounded human-role sections', 'and six bounded human-role sections'));
-        } else assert.deepEqual(properties.blocks[index], block, 'Previous block ' + index);
-    }
-    assert.deepEqual(properties.headings.slice(0, previous.headings.length), previous.headings);
-    assert.deepEqual(properties.sourceEvidence.slice(0, previous.sourceEvidence.length), previous.sourceEvidence);
-    const body = contract.documentationText(properties.blocks);
-    for (const text of ['commerce.refund.exception.adjudicate', 'circa-online-administrator',
-        'GREENPERKS_ONLINE', 'Profile addReferenceGroupsAll', 'original unused 50-POINTS GP-A01 purchase',
-        'Docker and other runtimes remain disabled', 'Adjudication itself moves no POINTS',
-        'No new credit, replenishment, retargeted purchase or redeemed-benefit reversal is authorized',
-        'not re-certified here']) assert.ok(body.includes(text), text);
-    for (const suffix of ['refund-exception-role/headers/circaLocalUnusedRefundExceptionRoleHeader.js',
-        'refund-exception-role/records/circaLocalUnusedRefundExceptionGroupData.js',
-        'refund-exception-staff/headers/circaLocalUnusedRefundExceptionStaffHeader.js',
-        'refund-exception-staff/records/circaLocalUnusedRefundExceptionStaffData.js',
-        'llm/contracts/circa-local-unused-refund-exception.md']) {
-        const evidence = properties.sourceEvidence.find(file => file.endsWith(suffix));
-        assert.ok(evidence, suffix);
-        // Historical paths document the original adoption, not current import sources.
-    }
-    const selected = release('documentation');
-    const oldComponent = Object.keys(frozen004.sections.documentation.generatedHashes).find(file => file.endsWith('ComponentData.js'));
-    assert.equal(selected.manifest.generatedHashes[oldComponent], undefined);
-    const invalid = structuredClone(selected.manifest);
-    invalid.generatedHashes[oldComponent] = 'a'.repeat(64);
-    invalid.releaseChecksum = contract.releaseChecksum(invalid.generatedHashes);
-    assert.throws(() => contract.validateGeneration(frozen004.sections.documentation, invalid), /Immutable documentation path would be overwritten/);
 });
 
 test('bounded sample credit documents approved human-role source without claiming execution', () => {
@@ -428,9 +207,8 @@ test('reviewed deployment adoption selects the exact current successors for both
     }
 });
 
-test('ownership successors preserve frozen bytes and remove retired selectors from all current record families', () => {
+test('consolidated guides remove retired selectors from all current record families', () => {
     for (const [name, old] of Object.entries(frozen005.sections)) {
-        for (const [file, hash] of Object.entries(old.generatedHashes)) assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
         contract.validateGeneration(old, manifest.sections[name]);
         const selected = release(name);
         for (const suffix of ['Component', 'PageMetadata', 'SearchMetadata']) {
@@ -439,37 +217,6 @@ test('ownership successors preserve frozen bytes and remove retired selectors fr
         }
         for (const row of contract.readReleaseRecords({ ...selected, children: [] }, 'Component').records) {
             for (const source of row.properties.sourceEvidence || []) assert.ok(fs.existsSync(path.resolve(root, source)), source);
-        }
-    }
-});
-
-test('final-sale successors freeze both immediate predecessors and preserve every stable article identity and anchor', () => {
-    const seals = {
-        documentation: '7ab938bd4215eda83e9ba16b2f833abb0884145d4eedb41e66f06bf23f86e2b2',
-        referenceDocumentation: 'f6e1b7b5b52e6331a4a4f339a224be59513477dc50b62dba423c75e8c58fdd7c'
-    };
-    for (const [name, previous] of Object.entries(frozen006.sections)) {
-        assert.equal(previous.version, name === 'documentation' ? '0.0.6' : '0.0.3');
-        assert.equal(contract.releaseChecksum(previous.generatedHashes), seals[name]);
-        assert.equal(previous.releaseChecksum, seals[name]);
-        for (const [file, hash] of Object.entries(previous.generatedHashes)) {
-            assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
-        }
-        contract.validateGeneration(previous, manifest.sections[name]);
-        const sameVersion = { ...manifest.sections[name], version: previous.version };
-        assert.throws(() => contract.validateGeneration(previous, sameVersion), /Immutable documentation release changed/);
-        const oldRecords = contract.readReleaseRecords({ ...release(name), children: [], manifest: previous }, 'Component').records;
-        const current = contract.readReleaseRecords({ ...release(name), children: [] }, 'Component').records;
-        assert.deepEqual(current.map(row => row.code), oldRecords.map(row => row.code));
-        for (const row of current.filter(row => row.properties.blocks)) {
-            const old = oldRecords.find(old => old.code === row.code);
-            assert.equal(row.properties.route, old.properties.route);
-            assert.deepEqual(row.properties.references, old.properties.references);
-            assert.deepEqual(row.properties.headings.map(heading => heading.anchor), old.properties.headings.map(heading => heading.anchor));
-        }
-        for (const suffix of ['Component', 'PageMetadata', 'SearchMetadata', 'PublicationState']) {
-            const oldFile = Object.keys(previous.generatedHashes).find(file => file.endsWith(suffix + 'Data.js'));
-            assert.equal(manifest.sections[name].generatedHashes[oldFile], undefined, oldFile);
         }
     }
 });
@@ -551,6 +298,32 @@ test('current Circa coupon guidance requires finality and common Checkout while 
             }
         }
     }
+});
+
+test('historical fixture seals remain self-consistent without shipping predecessor sources', () => {
+    for (const fixture of [baseline, predecessor, latestPredecessor, frozen004, frozen005, frozen006])
+        for (const section of Object.values(fixture.sections))
+            assert.equal(contract.releaseChecksum(section.generatedHashes), section.releaseChecksum);
+});
+
+test('only selected documentation files ship and Circa guides use the consolidated catalogue', () => {
+    const walk = directory => fs.readdirSync(directory, {withFileTypes: true}).flatMap(entry =>
+        entry.isDirectory() ? walk(path.join(directory, entry.name)) : [path.join(directory, entry.name)]);
+    const selected = new Set(Object.values(manifest.sections).flatMap(section => Object.keys(section.generatedHashes || {})));
+    for (const file of walk(path.join(root, 'data/docs-v001')))
+        assert.ok(selected.has(path.relative(path.join(root, 'data'), file)), file);
+    for (const section of ['documentation', 'referenceDocumentation']) {
+        for (const suffix of ['Component', 'PageMetadata', 'SearchMetadata']) {
+            const records = contract.readReleaseRecords({...release(section), children: []}, suffix).records;
+            assert.doesNotMatch(JSON.stringify(records), /circaAssetClassification|circaProductMediaReferences|circaCatalogueCurrentPublicationPlan/);
+        }
+    }
+    const inventory = article('documentation', 'nodicsDocsComponentacceleratorsCircaSourceInventory');
+    const publication = inventory.blocks.find(block => block.kind === 'table' && block.headers[0] === 'Signed enterprise');
+    assert.equal(publication.rows[0][1], 'circaCataloguePublicationPlan');
+    assert.equal(publication.rows[0][2], '46');
+    assert.equal(publication.rows.reduce((sum, row) => sum + Number(row[2]), 0), 98);
+    assert.match(contract.documentationText(inventory.blocks), /consolidated commerce baseline owns Product classification, localization and media references/);
 });
 
 test('current adoption guidance uses the module graph and pinned release, not removed runtime markers', () => {

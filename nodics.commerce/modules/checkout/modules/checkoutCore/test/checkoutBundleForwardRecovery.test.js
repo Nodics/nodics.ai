@@ -205,13 +205,13 @@ test("unacknowledged Cart closure cannot mark purchase completed and original re
   assert.equal(f.rows.Consignment.length, 1); assert.equal(f.rows.DigitalDelivery.length, 1);
 });
 
-test("uncaptured bundle cancellation fences before cleanup and retains listing component holds", async t => {
+test("uncaptured bundle without terminal Payment proof remains fenced and retains listing component holds", async t => {
   const f = await setup(t, false);
   f.checkpoint.completed = ['VALIDATED', 'CALCULATED', 'RESERVED', 'DIGITAL_RESERVED'];
   await f.fail();
-  assert.equal(f.rows.CheckoutCheckpoint[0].status, 'COMPENSATED');
+  assert.equal(f.rows.CheckoutCheckpoint[0].status, 'COMPENSATION_REQUIRED');
   assert.equal((await f.status()).recoveryAction, undefined);
-  assert.equal(f.rows.DigitalBundleOperation.find(row => row.code === f.unit.code).status, 'CANCELLED');
+  assert.equal(f.rows.DigitalBundleOperation.find(row => row.code === f.unit.code).status, 'CANCELLING');
   assert.equal(f.effects.some(x => x.startsWith('release:')), false);
   assert.equal(f.rows.PaymentTransactionEntry.length, 0);
 });

@@ -14,10 +14,34 @@
 const crypto = require('node:crypto');
 const { isDeepStrictEqual } = require('node:util');
 const issuance = new WeakMap();
+const prewriteDenials = new WeakMap();
 /** @module promotion/service/defaultCouponOfferAllocationService @description Owns transactional offer-wide supply, lifetime purchasing-owner allowance and recovery through the existing coupon lifecycle. @layer service @owner promotion */
 module.exports = {
     /** Refuses uncertain authority or acquisition outcomes. */
     fail: function () { throw new CLASSES.NodicsError('ERR_PROMOTION_COUPON_ALLOCATION_UNCONFIRMED'); },
+    /** Consumes only the original request-bound pre-write denial; public codes never prove no effects. */
+    consumePrewriteDenial: function (error, request) {
+        const proof = error && prewriteDenials.get(error);
+        if (!proof || proof.request !== request || !isDeepStrictEqual(proof.binding, this.denialBinding(request))) return false;
+        prewriteDenials.delete(error);
+        return true;
+    },
+    /** Pins original unit authority and payload without exposing private classification on the error. */
+    denialBinding: function (r) {
+        return { tenant: r.tenant, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId,
+            ownerRef: r.ownerRef, idempotencyKey: r.idempotencyKey, authData: r.authData, payload: r.payload };
+    },
+    /** Reads the canonical lifetime allowance before any reservation write. Corrupt evidence stays uncertain. */
+    ownerCapReached: async function (r, campaign, offer) {
+        if (offer.ownerLimit === undefined) return false;
+        const owner = this.owner(r), code = this.code('owner', [r.tenant, campaign.code, owner]);
+        const current = await SERVICE.DefaultCouponAcquisitionPersistenceService.read('couponOwnerAllowance', r, code);
+        if (!current) return false;
+        const e = current.evidence, total = e?.reserved + e?.completed;
+        if (!e || !isDeepStrictEqual(e.offer, offer) || !isDeepStrictEqual(e.ownerRef, owner) ||
+            ![e.reserved, e.completed, total].every(n => Number.isSafeInteger(n) && n >= 0) || total > offer.ownerLimit) this.fail();
+        return total === offer.ownerLimit;
+    },
     /** Stable opaque identity includes tenant, offer and canonical owner or command. */
     code: function (kind, values) { return kind + ':' + crypto.createHash('sha256').update(JSON.stringify(values)).digest('hex'); },
     /** Requires a typed canonical owner; employee identity never becomes Enterprise allowance identity. */
@@ -83,7 +107,10 @@ module.exports = {
             campaign.issuerEnterpriseRef?.code !== campaign.vendorEnterpriseRef?.code) this.fail();
         const code = this.code('acquisition', [r.tenant, campaign.code, r.idempotencyKey]);
         const persistence = SERVICE.DefaultCouponAcquisitionPersistenceService;
-        return persistence.transaction(r, ['couponOfferSupply', 'couponOwnerAllowance', 'couponAcquisitionReservation', 'couponRedeemerAgreement'], async scoped => {
+        let writeAttempted = false, denial;
+        const binding = structuredClone(this.denialBinding(input));
+        try { return await persistence.transaction(r, ['couponOfferSupply', 'couponOwnerAllowance', 'couponAcquisitionReservation', 'couponRedeemerAgreement'], async scoped => {
+            denial = undefined;
             const existing = await persistence.read('couponAcquisitionReservation', scoped, code);
             if (existing) {
                 if (!isDeepStrictEqual(existing.evidence.identity, identity) || existing.evidence.status === 'RELEASED') this.fail();
@@ -91,6 +118,12 @@ module.exports = {
                 if (coupon.offerAllocationCode !== code || coupon.idempotencyKey !== r.idempotencyKey) this.fail();
                 return coupon;
             }
+            if (await this.ownerCapReached(scoped, campaign, offer)) {
+                denial = new CLASSES.NodicsError('ERR_PROMOTION_COUPON_OWNER_LIMIT');
+                throw denial;
+            }
+            // Monotonic across transaction retries; any later failure remains uncertain.
+            writeAttempted = true;
             if (r.ownerRef.type === 'ENTERPRISE') await SERVICE.DefaultDigitalParticipationService.couponUnit(r);
             await rules.eligibility(r, campaign);
             const participation = await SERVICE.DefaultCouponRedeemerParticipationService.capture(scoped, campaign);
@@ -115,7 +148,11 @@ module.exports = {
                 { status: 'RESERVED', identity, couponCode: coupon.code, campaign, participation }));
             await this.context(r);
             return saved;
-        });
+        }); } catch (error) {
+            if (!writeAttempted && error === denial && isDeepStrictEqual(binding, this.denialBinding(input)))
+                prewriteDenials.set(error, { request: input, binding });
+            throw error;
+        }
     },
     /** Reads and validates the original command, never current mutable offer terms for recovery. */
     reservation: async function (r, coupon) {
@@ -239,6 +276,7 @@ module.exports = {
             (remaining === null || remaining > 0) &&
             (offer.expiry.mode === 'NONE' || Date.parse(offer.expiry.at) > Date.now()), availableQuantity: remaining === null ? null : String(remaining),
             supplyMode: offer.supply.mode, strategy: 'COUPON_CODE_POOL', inventoryStrategy: 'COUPON_CODE_POOL', guaranteed: false,
-            reservableAt: 'CHECKOUT_BEFORE_PAYMENT', promotionCode: campaign.code, purchaseRequirements: offer.requirements };
+            reservableAt: 'CHECKOUT_BEFORE_PAYMENT', promotionCode: campaign.code, purchaseRequirements: offer.requirements,
+            expiry: offer.expiry };
     },
 };

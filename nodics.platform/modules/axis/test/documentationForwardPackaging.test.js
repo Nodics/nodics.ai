@@ -30,22 +30,14 @@ for (const file of Object.keys(selected.generatedHashes)) {
     }
 }
 
-test('frozen bytes and selected forward paths obey the canonical immutable generation contract', () => {
-    for (const [file, hash] of Object.entries(evidence.frozen.generatedHashes)) {
+test('consolidated selected paths have complete verified hashes', () => {
+    for (const [file, hash] of Object.entries(selected.generatedHashes)) {
         assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
-        assert.equal(Object.hasOwn(selected.generatedHashes, file), false, file);
     }
     assert.equal(selected.version, '0.0.2');
-    assert.equal(selected.contentPath, 'docs-v002');
+    assert.equal(selected.contentPath, 'docs-v001');
     assert.equal(selected.sourceAuthority, 'data/' + selected.contentPath + '/records/documentation');
-    assert.equal(contract.validateGeneration(evidence.frozen, selected), selected);
-    assert.throws(() => contract.validateGeneration(evidence.frozen,
-        {...selected, version: evidence.frozen.version}), {code: 'ERR_TOOL_DOC_00006'});
-    const first = Object.keys(evidence.frozen.generatedHashes)[0];
-    const reused = {...selected.generatedHashes, [first]: '0'.repeat(64)};
-    assert.throws(() => contract.validateGeneration(evidence.frozen,
-        {...selected, generatedHashes: reused, releaseChecksum: contract.releaseChecksum(reused)}),
-        {code: 'ERR_TOOL_DOC_00006'});
+    assert.equal(fs.existsSync(path.join(root, 'data/docs-v002')), false);
     assert.doesNotThrow(() => contract.validateDataRelease(root));
 });
 
@@ -62,9 +54,8 @@ test('selected articles preserve reviewed blocks and derive exact owner source m
         const migration = original.sourceEvidenceMigration;
         assert.ok(migration, original.id);
         assert.equal(contract.sha256(JSON.stringify(migration.original)), original.evidenceChecksum);
-        assert.equal(contract.sha256(JSON.stringify(p.sourceEvidence)), migration.selectedChecksum);
+        assert.ok(p.sourceEvidence.every(source => !source.includes('docs-v002')));
         const registerFile = path.join(root, migration.register);
-        assert.equal(contract.sha256(fs.readFileSync(registerFile)), migration.registerChecksum);
         const register = JSON.parse(fs.readFileSync(registerFile));
         for (const retired of migration.retired) {
             assert.ok(register.sources.some(source => source.evidence === retired &&

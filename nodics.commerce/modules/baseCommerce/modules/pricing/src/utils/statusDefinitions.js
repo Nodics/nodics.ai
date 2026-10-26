@@ -11,6 +11,10 @@
 
 /** @module pricing/utils/statusDefinitions @description Declares stable negotiated-price and private merchant-evidence validation failures. @layer config @owner pricing */
 module.exports = {
+  ERR_PRICING_AUTHORING_INPUT: { code: "400", message: "Invalid bounded price row command" },
+  ERR_PRICING_AUTHORING_SCOPE: { code: "403", message: "Native Pricing administrator authority could not be confirmed" },
+  ERR_PRICING_AUTHORING_STORAGE: { code: "409", message: "Pricing requires qualified Staged CURRENT versioned storage" },
+  ERR_PRICING_AUTHORING_CONFLICT: { code: "409", message: "Price row outcome could not be confirmed; reconcile by exact owner read before retrying" },
   ERR_PRICE_QUOTE_INVALID: {
     code: "400",
     message: "The negotiated price is unavailable for this checkout",

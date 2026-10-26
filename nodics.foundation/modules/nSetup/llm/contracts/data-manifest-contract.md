@@ -94,12 +94,37 @@ file map, checksum evidence, and kind-specific metadata. Section file paths
 must be relative to the containing `data/` directory, remain inside it, and
 must not be absolute, traverse with `..`, or resolve through symbolic links.
 
-The explicitly rebased, pre-customer source baseline uses `*-v001` folders and
-semantic version `0.0.1` for all executable `DATA_RELEASE` and `CONTENT_PACK`
-sections. `SOURCE_CONTRIBUTION` versions, package versions and business record
-revisions are separate contracts. This one-time maintainer-approved consolidation
-does not permit rewriting installed receipts or future frozen releases. Existing
-local installations need an approved owner-governed fresh reset and re-import;
+## Unreleased Owner Baseline
+
+Before the first production release, authored shipping data uses each concrete
+owner's `init-v001`, `core-v001`, `sample-v001` and `docs-v001` as applicable.
+Merge current authored content into that owner's baseline, remove superseded
+payloads and `retainedRoots` snapshots, and update current consumers. Do not
+retain compatibility packs, aliases or forward-patch sections that duplicate
+the same record identities. Ambiguous conflicting writes require owner review,
+not blind folder renaming. Keep historical test/evidence outside shipping data.
+
+Folder sequence is independent of semantic section versions. Preserve semantic
+versions during consolidation unless separately authorized; package versions,
+SOURCE_CONTRIBUTION versions and business record revisions are separate contracts.
+There is no backwards compatibility obligation for this unreleased baseline.
+Generic multi-version discovery, immutable-release checks, upgrade/downgrade
+policy and retained-root support remain intact for released deployments and
+deliberate isolated versioning tests. Test-owned fixtures may use other versions
+and retained roots, but must not enter a shipping manifest or runtime catalogue.
+Exercise them through canonical discovery and validation in disposable test
+module roots, never special runtime bypasses.
+
+`DefaultProjectDataManifestService.validateUnreleasedBaseline` accepts an explicit
+`projectRoot` and optional `dependencyRoots` for prerequisite resolution. It is a
+read-only source regression, not an importer or deployment qualification. It uses
+existing package discovery and release/documentation validators, excludes test
+fixtures, and rejects non-v001 sources, retained roots, missing files, hash drift
+and stale prerequisite pins. Customer tests invoke this framework owner rather
+than copying traversal or validation logic.
+
+Consolidation never rewrites installed receipts or future frozen releases.
+Existing local installations need separately approved owner-governed recovery;
 never enable downgrade, bypass checksums or replay Init to disguise the rebase.
 Earlier runtime qualification remains evidence only for its recorded identities.
 
@@ -285,9 +310,8 @@ The generator is responsible for:
 - One manifest must never hash or version another module's files.
 - Generated sections must be updated by the owning generator; generated
   manifests must not be hand-edited.
-- Before the first production release, current framework and reference
-  application data may remain in `v001` and be corrected in place while the
-  framework is still being qualified.
+- Before the first production release, shipping framework and reference data
+  must remain in owner-specific `v001`; follow the unreleased owner baseline above.
 - At the first production release, accepted `v001` folders become immutable.
   Any later production data change must create the next release folder, such as
   `core-v002` or `sample-v002`.

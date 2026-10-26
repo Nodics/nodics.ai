@@ -26,3 +26,10 @@ material-value releases only through canonical Loyalty earning.
 Before implementing non-trivial behavior here, record the business outcome,
 owning child module, studied sources, extension path, security/tenant/data/API
 impact, intended files, and validation route.
+
+Platform detached-source placement for Waste-owned Profile data belongs in the
+existing group `config/properties.js` contribution. Carbon's explicit
+`transferFinalizationPermission` must be discoverable alongside its participant
+access group without activating Carbon on Platform. Do not repair missing standard
+section wiring with customer copies; source-root visibility remains deployment
+topology. Catalogue discovery never installs permissions or grants assignments.

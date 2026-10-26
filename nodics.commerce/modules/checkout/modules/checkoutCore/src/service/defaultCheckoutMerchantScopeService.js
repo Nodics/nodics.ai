@@ -44,7 +44,10 @@ module.exports = {
         cart.participant(r);
         const command = r.commandCode, order = r.orderCode;
         if (command && order || !cart.identifier(command || order)) throw new Error('One original Checkout selector is required');
-        const snapshot = cart.state(r), query = { tenant: r.tenant, ownerId: r.ownerId,
+        const snapshot = cart.state(r), query = { tenant: r.tenant,
+            'evidence.ownerRef.module': r.ownerRef.module,
+            'evidence.ownerRef.schema': r.ownerRef.schema,
+            'evidence.ownerRef.code': r.ownerRef.code,
             ...(command ? { idempotencyKey: command } : { orderCode: order, status: 'COMPLETED' }) };
         const rows = cart.records(await SERVICE.DefaultCheckoutCheckpointService.get({ tenant: r.tenant,
             authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(), query,
@@ -53,16 +56,20 @@ module.exports = {
         const row = rows[0];
         if (!row) return r;
         const evidence = row.evidence, scope = cart.binding(evidence?.merchantScope);
-        if (Object.entries(query).some(([key, value]) => row[key] !== value) || !same(evidence.ownerRef, r.ownerRef) ||
+        if (Object.entries(query).some(([key, value]) => key.split('.').reduce((record, part) => record?.[part], row) !== value) ||
+            !cart.identifier(row.ownerId) || !same(evidence.ownerRef, r.ownerRef) ||
+            command && !same(evidence.actorRef, r.actorRef) ||
             evidence.participantEnterpriseCode !== r.participantEnterpriseCode || row.enterpriseCode !== scope.enterpriseCode ||
             !cart.identifier(row.cartCode) || !cart.identifier(evidence.orderCode) ||
             row.orderCode !== evidence.orderCode ||
-            row.status === 'COMPLETED' && row.code !== evidence.orderCode && !SERVICE.DefaultCheckoutBundleRecoveryService?.completed(row) ||
+            row.status === 'COMPLETED' && row.code !== evidence.orderCode && !SERVICE.DefaultCheckoutBundleRecoveryService?.completed(row) &&
+              !SERVICE.DefaultCheckoutPlacementPortsService.completedPaymentJournal(row) ||
             row.status !== 'COMPLETED' && row.code !== row.idempotencyKey)
             throw new Error('Original Checkout merchant scope is unavailable');
         if (expected && (row.cartCode !== expected.cartCode || evidence.orderCode !== expected.orderCode ||
             !same(scope, expected.merchantScope))) throw new Error('Original Checkout command binding cannot change');
-        return cart.apply(r, scope);
+        // Original command storage is immutable. This binding is not used for new placement.
+        return cart.apply({ ...r, ownerId: row.ownerId }, scope);
     },
     /**
      * Keeps selected auction commitments authoritative; ordinary placement uses its retained Cart.

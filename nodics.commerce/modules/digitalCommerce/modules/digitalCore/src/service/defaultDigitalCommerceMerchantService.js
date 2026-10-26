@@ -145,12 +145,18 @@ module.exports = {
   workspace: async function (input) {
     const r = await this.staff(input),
       p = this.policy().storeScope || {};
+    const presentation = this.policy().presentation,
+      itemEvidence = this.itemEvidenceSelected(),
+      mixedEvidence = itemEvidence && this.nativePricingSelected(),
+      simulated = itemEvidence && CONFIG.get("promotion")?.merchantBenefits?.itemEvidenceMode === "SIMULATION";
     const result = {
       storeRequired: p.enabled === true,
       storeLabel: this.policy().presentation?.storeLabel,
       pricedSourceRequired:
         CONFIG.get("promotion")?.merchantBenefits?.enabled === true,
-      pricedSourceLabel: this.policy().presentation?.pricedSourceLabel,
+      pricedSourceLabel: mixedEvidence ? (simulated ? presentation?.mixedSimulatedItemSourceLabel : presentation?.mixedItemSourceLabel) :
+        simulated ? presentation?.simulatedItemSourceLabel :
+        itemEvidence ? presentation?.itemSourceLabel : presentation?.pricedSourceLabel,
       stores: [],
     };
     if (

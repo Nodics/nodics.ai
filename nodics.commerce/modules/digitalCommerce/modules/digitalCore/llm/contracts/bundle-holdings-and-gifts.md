@@ -71,6 +71,29 @@ evidence carries destinationHold HELD, and recipient quantity remains reserved
 until Digital retains every transfer receipt. Mixed certificate/carbon and
 multi-carbon manifests use the normal complete-bundle phases.
 
+Unqualified Carbon transport (or incomplete existing transport settings) refuses
+before RPC with `ERR_DIGITAL_BUNDLE_OWNER_UNAVAILABLE` (HTTP 503). This is owner
+service unavailability, not the 409 component quantity/revision refusal. Keep the
+qualification guard and fixed public message; do not turn downstream failures
+into availability evidence or expose transport internals.
+
+Qualification remains a separate deployment boundary. Digital's Carbon adapter
+calls `DefaultModuleService.invokeModule` without forwarding the human bearer;
+the existing transport obtains its runtime service credential. The selected
+Commerce-to-Waste service principal must be admitted in the same tenant with the
+exact Carbon endpoint permissions: read for inspection, then reserve/transfer/
+release/finalize for their respective phases, with route exposure, target routing
+and private owner persistence independently qualified. Native human Admin Carbon
+reads or synthetic lot availability do not qualify that service-to-service path.
+Human bundle authorization remains an independent Digital/Profile gate. This
+error correction neither activates qualification nor creates a service profile,
+role, runtime grant, or authority substitution. Resolve any missing existing
+service authority separately; never forward Admin credentials as a workaround.
+
+The focused Carbon adapter test uses the real NodicsError/status convention and
+asserts HTTP 503 with zero RPC calls for false qualification and malformed
+existing settings. This is source evidence, not installed transport acceptance.
+
 Finalize calls POST /carbon/transfers/finalize with identical lot, original owner,
 recipient, quantity, unit, operation key and manifest reference. The coordinator
 needs carbon.holdings.finalize; its explicit forward definition is in Carbon's
@@ -167,11 +190,27 @@ never justify a fresh operation key or automatic release. Framework
 later layers may override defined mechanics only, never provide business defaults.
 
 Private participant POST `/gifts/inspect {ownerRef,operationCode}` reads the exact
-gift regardless of page movement. It authorizes sender/recipient, returns current
+gift regardless of page movement. It requires `HOLDINGS_READ`
+(`commerce.digital.own.read`) with fresh Profile admission before and after the
+exact read, then verifies the owner is the retained sender or recipient. Reading
+a gift never requires create, cancel or Enterprise configuration permissions.
+It authorizes sender/recipient, returns current
 revision/decision/status and `canResume` only for that participant's already
 retained decision in TRANSFERRING/TRANSFERRED/RELEASING. Continuing uses existing
 `/gifts/decision` and the server-observed original decision/revision. It never
 offers an inverse or claims acceptance from a PENDING/absent observation.
+`canResume` describes retained-state eligibility only; `/gifts/decision` still
+independently requires the existing sender/recipient decision authority. No
+inspection result grants acceptance, cancellation or configuration privileges.
+Confirmed permission, represented-owner and scope denials use nAuth's existing
+`ERR_AUTH_00003` (HTTP403, Access denied). Exact inspection returns that same
+non-disclosing denial for absent or nonparticipant gifts. Do not catch all errors
+and relabel them as authorization failures: unavailable/malformed Profile evidence,
+incomplete persistence and transport faults remain distinct failures. No customer
+configuration or alternate error-response authority is required.
+Regression coverage uses the real Digital authority and permission matcher with
+isolated Profile/persistence I/O, including a recipient in a different Enterprise
+namespace, missing read permission, foreign owner/tenant and revoked/denied scope.
 
 ## Live Whole-Gift Acceptance
 
@@ -230,3 +269,102 @@ Later layers may replace component providers, keeping receipt identity, locking,
 replay and negative contracts intact. Customer/runtime configuration contains
 only intentional overrides of framework-defined properties. Business participants,
 amounts, selections and receipts remain governed records.
+
+## Prepayment purchase cancellation
+
+Checkout's existing compensation/recover route owns orchestration. Digital's
+`recoverPrepayment` independently requires the exact original prepayment phases,
+false Inventory/true Digital uncertainty, original index-zero key, owner/Cart/Order
+and RUNNING bundle recovery claim (or COMPLETED for read-only replay). Fresh zero
+original Payment reads bracket the operation; attempted Payment denial recovery
+is a separate contract and must never be fabricated for a prepayment failure.
+
+Reuse the canonical deterministic PURCHASE operation. No-claim cleanup inserts a
+CANCELLED purchase fence with original retained listing terms and scope. Claim-only
+interruption uses the same operation and original digest; a real reservation goes
+through `fenceCompensation` and `release`. These operations clear only the original
+purchase claim, never seller listing content holds. The listing revision CAS
+invalidates outstanding pre-cancellation reserve snapshots. Reserve rejects
+CANCELLING/CANCELLED both on initial lookup and final insertion readback.
+
+Read-only replay rechecks original cancelled purchase and no original claim. Wrong
+owner/type, changed digest, late claim, incomplete reads, paid evidence and CAS
+loss fail closed. Coupon absence cannot establish bundle cleanup. No new schema,
+parallel recovery store, Payment execution or second placement key is introduced.
+
+### Same-attempt prepayment reconciliation and the real CAS fence
+
+A no-claim cancellation must write a real bounded `purchaseCancellation` marker
+in the existing listing evidence. The managed concurrency owner deliberately
+returns modifiedCount zero without advancing revision for identical business
+fields; changing updated alone does not create a fence. Do not weaken successor
+readback or force a counter outside its owner. Preserve the listing component
+checkpoints and original purchase cancellation record.
+
+For an original revision-two UNCONFIRMED bundle attempt, read-only
+RECONCILE_PREFLIGHT requires CANCELLED original purchase, full command/digest and
+owner identity, original published listing and no claim. It returns fixed original
+purchase/listing revision and digest pins. After Checkout's same-attempt revision
+three CAS, Digital rechecks these pins and history before the listing marker CAS
+and existing cancellation/release/readback operations. Fresh owner and zero-Payment
+proof remain mandatory. The original attempt UUID and complete prior receipt are
+retained; revision-four failure cannot be automatically retried again.
+
+Owner failures carry only an allowlisted recoveryStage and the common unconfirmed
+error code. Checkout retains that sanitized diagnostic and never raw exceptions.
+Tests use the real updated interceptor, generated update initializer, concurrency
+service and Mongo CAS adapter with isolated BSON storage; no live database writes
+are required to reproduce the suppressed no-op and validate the marker fix.
+
+## Attempted Payment bundle reconciliation
+
+The existing compensation/recover command also admits exactly one original
+DIGITAL_OWNERSHIP reservation. Digital verifies the canonical PURCHASE digest,
+original key, buyer/actor, Cart entry, merchant, listing and matching purchase claim,
+then durably fences the original purchase through its existing compensation owner.
+It never releases seller listing content holds. Changed claims, captured/transferred
+purchases, existing Orders and mixed reservation sets refuse.
+
+Checkout durably inserts and reads back `evidence.originalAuthorization` from the
+exact prepared original Payment request before dispatch: walletCode, programCode,
+rewardTypeCode and amount. The existing original-key checkpoint also retains its
+claim UUID, typed identities, original phases and reservation references. Only the
+successful insertion claimant dispatches; failed/uncertain acknowledgements or
+readback never grant dispatch authority. Success/compensation CAS the same row,
+retaining this evidence without credentials. Recovery never prepares a new
+payment method or reads current Cart totals to reconstruct it. Existing checkpoints
+without that tuple cannot reconcile a historical CANCELLED/noEffects:false decision;
+do not backfill them with caller selections, current balances or a new calculation.
+
+Payment sends the retained tuple and exact original PAYMENT/ORDER key binding to
+`/reward-reservation-decisions/reconcile` through its existing runtime transport,
+with reservationDecisionContract LOYALTY_RESERVATION_DECISION_V1 and one attempt.
+The result must be the distinct LOYALTY_RESERVATION_RECONCILIATION_V1,
+CANCELLED/noEffects:true with identical intent and valid atomic accounting proof.
+Never relabel it DENIED. The existing `paymentDenialDecision` evidence field retains
+the actual typed receipt unchanged apart from canonical ISO proof time formatting.
+Original atomic DENIED receipts remain supported through their existing path.
+
+Fresh reconciliation of the same retained tuple rechecks proof before release,
+after release and on replay. Ordinary cancel/inspect cannot confirm a reconciled
+cancellation; they deliberately return conservative legacy receipts. Digital also
+requires the retained proof independently, including when release is called directly.
+Checkpoint CAS preserves original evidence, advances monotonically, and leaves
+unknown outcomes fenced. No authorization retry, Payment denial fabrication,
+refund, wallet funding, owner replacement or checkpoint reset occurs.
+
+Focused source tests use isolated owner fixtures and synthetic canonical Loyalty
+receipts. They do not establish live adoption, historical authorization retention,
+or native Loyalty transaction qualification.
+
+
+Qualified Carbon delegation obtains the existing internal token for the original
+tenant through nService; it does not mint from a bootstrap key or forward the
+customer token. Registered ERR_DIGITAL_CARBON_* stages distinguish CREDENTIAL,
+TARGET, AUTHORIZATION, TRANSPORT, EVIDENCE and HOLDINGS failures. These expose
+only static diagnostics without dependency messages, headers or payloads. They
+retain failure/no-retry behavior and do not prove whether a mutation occurred.
+
+Transport classification reads nService's retained `remoteHttpFailure.httpStatus`
+before the normalized error status: remote 401/403 remains AUTHORIZATION and
+404 remains TARGET. Remote response contents never cross this boundary.

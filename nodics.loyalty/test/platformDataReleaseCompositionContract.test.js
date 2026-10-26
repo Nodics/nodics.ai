@@ -16,17 +16,21 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const properties = require("../config/properties");
 
-test("Loyalty exposes its Enterprise reference and selected Wallet role release", () => {
+test("Loyalty exposes owner permission definitions, Enterprise reference and selected Wallet role releases", () => {
   assert.deepEqual(
     properties.data.dataReleases.runtimeRoleProfiles.PLATFORM.contributions,
     [
+      {
+        moduleName: "loyaltyProgram",
+        sections: ["partnerEligibilityAdministrationPermission"],
+      },
       {
         moduleName: "loyaltyCore",
         sections: ["core-enterprise-reference"],
       },
       {
         moduleName: "loyaltyWallet",
-        sections: ["specialAccessGroups", "specialAccessRoles", "participantAccessGroups"],
+        sections: ["specialAccessGroups", "specialAccessRoles", "participantAccessGroups", "participantReadAccess", "participantTransactionAccess", "enterpriseParticipationAccess"],
       },
     ],
   );
@@ -39,4 +43,12 @@ test("Loyalty exposes its Enterprise reference and selected Wallet role release"
     .sections.participantAccessGroups;
   assert.equal(participantSection.destinationRole, "PLATFORM");
   assert.equal(participantSection.selectionPolicy, "EXPLICIT");
+  for (const [section, selectionPolicy] of [
+    [require("../modules/loyaltyProgram/data/manifest.json").sections.partnerEligibilityAdministrationPermission, "DEFAULT"],
+    [require("../modules/loyaltyWallet/data/manifest.json").sections.enterpriseParticipationAccess, "EXPLICIT"],
+  ]) {
+    assert.equal(section.destinationRole, "PLATFORM");
+    assert.equal(section.selectionPolicy, selectionPolicy);
+    assert.equal(section.sourceRoot, "init-v001");
+  }
 });

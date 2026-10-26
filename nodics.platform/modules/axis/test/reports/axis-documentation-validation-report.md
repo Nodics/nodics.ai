@@ -1,7 +1,7 @@
 # Documentation Validation Readiness Report
 
 Generated At: 2026-08-26T00:00:00.000Z
-Release: 0.0.3
+Release: 0.0.2
 Source: nodics.platform/modules/axis/data/manifest.json
 Owner: nodics.platform.axis
 
@@ -35,4 +35,4 @@ No blocking or advisory issues were found.
 
 ## Integrity
 
-Checksum: a5290d94780f994c66f4ba1cd036b2a7826b05aadcbcf38d7f7568be575bab75
+Checksum: 242e2d6a6b1d7efb84dddd37efb78c644f20fc81ddce3d3804962f9d35426e95

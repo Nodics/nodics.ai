@@ -49,7 +49,12 @@ Run `node --test nodics.commerce/modules/baseCommerce/modules/commerceSearch/mod
 from the framework root. Tests use synthetic owners/persistence and prove local
 behavior only. Product Catalogue Query now ranks its complete filtered eligible
 set before slicing recommended/relevance pages. The older page-local discovery
-branch is not that complete-set path. Deployment selection, public membership
+branch is not that complete-set path. Indexed rule scans sort on the existing
+sourceHash keyword through provider `options`; generated model scans sort by
+code. `commerceSearchRuntimeComposition.test.js` composes the actual nSearch
+service/processor and Elastic request with Product pagination and Agreement
+resolution using isolated storage, candidate and membership/provider fixtures.
+Deployment selection, public membership
 admission, installed index/interceptor behavior, Axis controls and live acceptance
 remain separately qualified integrations.
 

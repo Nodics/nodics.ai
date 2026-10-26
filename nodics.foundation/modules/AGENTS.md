@@ -22,4 +22,6 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 - Framework modules provide default platform capabilities and must never hardcode customer/project behavior.
 - New framework behavior must expose layered override points through configuration, schemas, routers, services, pipelines, data, tests, or runtime governance.
-- Preserve backward compatibility unless an explicit migration contract is documented and tested.
+- Unreleased shipping data follows nSetup's owner-specific v001 baseline without
+  backwards compatibility or superseded retained roots. Preserve generic versioning
+  and isolated version tests; released contracts require explicit migration review.

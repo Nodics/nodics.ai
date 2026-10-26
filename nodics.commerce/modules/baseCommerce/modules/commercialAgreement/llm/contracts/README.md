@@ -19,11 +19,55 @@ atomic persistence; no new transaction engine, registry or ledger is added.
 
 ## Record Contract
 
+### Detached catalogue source
+
+`commercialAgreement.catalogueReferences` owns the complete reference-read
+configuration. `LOCAL` retains generated Product/Pricing reads. A deployment with
+separate Staged catalogue and operational Commerce databases selects `REMOTE`.
+The existing `commerceStaged` connection and `COMMERCE_STAGED` authority are the
+default source binding; deployments may select their actual connection.
+`catalogueReferences.validation.timeoutMs` owns the complete positive integer
+range for the effective `timeoutMs`; no source-local ceiling or fallback replaces
+it. Later layers can change owner-defined values, including a reviewed range,
+while missing/invalid bounds refuse before either catalogue request.
+
+Only Product and PriceRow references use that transport. Registered owner
+`/capabilities` reads bind the exact module/schema, active canonical `/safe-search`
+route, projected identity fields, EQUALS filters and an advertised page size within
+Agreement's existing maximumPageSize. Safe-search receives the original admitted
+human bearer and signed Enterprise with exact code/version filters. Its canonical
+records/totalCount/page DTO must prove a single exact result. The unselected legacy
+getter group is never used or enabled. No runtime credential,
+system grant, retry, mutable-current substitution or local fallback is introduced.
+Source API permissions still apply independently. Missing or changed authority,
+versions, tenant, source configuration and failed responses refuse the command.
+The agreement party is resolved first through Profile's existing
+`/participants/resolve` port, using the original human bearer and signed Enterprise.
+`commercialAgreement.enterpriseReference` supplies its complete transport binding
+and timeout bounds. The response must identify the exact Enterprise in the same
+tenant; Profile owns fresh actor validation and active-participant eligibility.
+Commerce never assumes that a remote Profile module supplies a local generated
+`DefaultEnterpriseService`. Missing/foreign proof refuses before catalogue reads
+or persistence. Other references and retained Agreement history keep their owners.
+
+Agreement records pin authored versions; recording descriptive terms does not
+publish a package or activate a price for checkout. Product/Pricing publication
+remains their separate governed lifecycle when sale/discovery requires it.
+Search benefit publication remains mandatory before operational ranking changes.
+
 An aggregate has `code`, Profile `enterpriseRef`, managed `revision`, and
 `versions`. Each version retains its full normalized command, business version,
 actor, recorded timestamp, complete terms and an exact agreed-price snapshot.
 One atomic generated update appends history; no separately written head/history
 pair can diverge. A unique code index protects concurrent creation.
+
+Creation uses the normal managed-concurrency save contract without a caller
+revision or `insertOnly` option. Generated initialization preserves the absent
+caller token, assigns revision one, and the concurrency owner creates atomically.
+A competing existing identity cannot become an update without its expected
+revision. The separate `insertOnly` saver is for unmanaged models and must not
+be selected for Agreement. Tests exercise real generated validation, defaulting
+and save dispatch before the synthetic atomic adapter, including creation races.
 
 Terms require the selected model, selected payment terms, version-pinned
 `{module:'product',schema:'product',code,versionId}` package and

@@ -138,6 +138,21 @@ module.exports = {
         "text": "Worked recovery and qualification",
         "anchor": "loyalty-wallets-rewards-ledger-source-depth-3",
         "level": 2
+      },
+      {
+        "text": "Participant transfers and Enterprise test funding",
+        "anchor": "loyalty-wallet-participant-transfers",
+        "level": 2
+      },
+      {
+        "text": "Partner reward conversion and verified choices",
+        "anchor": "loyalty-wallet-partner-conversion",
+        "level": 2
+      },
+      {
+        "text": "Auction funds and verification boundaries",
+        "anchor": "loyalty-wallet-auction-funds",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -180,8 +195,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/loyaltyWalletDocumentationComponentData.js",
-    "sourceChecksum": "f62dfae3427ad17344da2ef3e3216264af9d79c0217bb4d0f613c1e290822faf",
-    "sourceWordCount": 2425,
+    "sourceChecksum": "af6bfb07f37f9f942fa05f1412eb31da80177b9b6370a632f8cfd2fd88f91f3a",
+    "sourceWordCount": 3029,
     "audience": [
       "business",
       "architect",
@@ -203,10 +218,10 @@ module.exports = {
     ],
     "accessPolicy": "nodicsDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 2425,
+    "wordCount": 3029,
     "sourceEvidence": [
       "../../../nodics.docs/data/manifest.json",
       "../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
@@ -225,7 +240,12 @@ module.exports = {
       "src/service",
       "src/service/defaultLoyaltyWalletOperationService.js",
       "test/loyaltyReversalRecoveryContract.test.js",
-      "test/loyaltyWalletProjectionPaging.test.js"
+      "test/loyaltyWalletProjectionPaging.test.js",
+      "src/service/defaultLoyaltyPartnerRewardConversionService.js",
+      "src/service/defaultLoyaltyParticipantTransferService.js",
+      "src/service/defaultLoyaltyAuctionFundsService.js",
+      "test/loyaltyPartnerRewardSelection.test.js",
+      "test/loyaltyPartnerRewardConversionAccounting.test.js"
     ],
     "sourceCoverage": [
       {

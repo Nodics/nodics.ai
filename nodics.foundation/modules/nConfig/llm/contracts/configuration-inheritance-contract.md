@@ -24,7 +24,11 @@ nImport may use the descriptor only for its explicit prerequisite graph. The
 descriptor does not select all owner data, authorize execution, replace frozen
 manifests or remove tenant, version, checksum and capability checks. Do not add it
 to `NODICS`, merge its configuration, load services or broaden selected runtime
-roots. Ordinary startup discovery is unchanged. A later customer module may
+roots. nRouter may use the same metadata-only descriptor to resolve an API prefix for an
+exact `runtimeIdentity.remoteModules` selection absent from the raw module graph.
+It must preserve missing/ambiguous-source refusal and must not register the owner,
+merge configuration, activate services or infer authority from the descriptor.
+Ordinary startup discovery is unchanged. A later customer module may
 customize the exported utility while retaining the same trust and nonactivation
 boundaries. Missing installed dependencies require installation through the normal
 deployment owner, not network fetching or broader startup activation from here.
@@ -107,6 +111,16 @@ arrays. Ordinary contribution arrays still follow the separately documented
 binding/merge contract. Later runtime overrides operate on effective consumer
 keys; consumed profiles are not reapplied. Put environment/server exceptions in
 the selected profile where required by that existing precedence.
+
+Explicit `replace` and `keyed` operations inside top-level capability role
+profiles remain deferred until the selected profile meets the complete base
+namespace. A role contribution may load before the base list's owner; resolving
+its keyed operation against an empty role-local list must not erase inherited
+entries. Preserve operation order across role contributions, including removals
+and later re-additions. References still resolve at their ordinary contribution
+boundary; this defers collection merging only, not references or authority checks.
+Deferred bookkeeping is internal and removed with the role map. Ordinary role
+arrays retain positional contribution merging and replace base arrays at projection.
 
 Data-release role profiles retain their dedicated accumulating `contributions`
 merge. Profiles derived from a selected server's declared `runtimeModuleRoots`

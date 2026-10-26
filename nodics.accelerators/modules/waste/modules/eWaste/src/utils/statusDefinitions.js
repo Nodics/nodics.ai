@@ -11,6 +11,8 @@
 
 /** @module eWaste/utils/statusDefinitions @description Declares owned operation error codes. @layer utility @owner eWaste */
 module.exports = {
+  ERR_EWASTE_CATALOGUE_UNAVAILABLE: { code: "503", message: "The complete product catalogue is temporarily unavailable." },
+  ERR_EWASTE_CATALOGUE_PRICING_UNAVAILABLE: { code: "503", message: "Published catalogue pricing is unavailable. Please try again after pricing delivery is restored." },
   ERR_EWASTE_JOURNEY_UNAVAILABLE: { code: "503", message: "The collection journey is not configured." },
   ERR_EWASTE_POSITION_INVALID: { code: "400", message: "A valid current position is required." },
   ERR_EWASTE_POSITION_STALE: { code: "400", message: "Refresh your position before confirming arrival." },

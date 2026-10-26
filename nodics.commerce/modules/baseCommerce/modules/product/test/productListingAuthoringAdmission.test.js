@@ -34,10 +34,10 @@ const versionedMongodb = require(foundation + "nDatabase/mongodb/vMongodb/src/sc
 const fs = require('node:fs'), vm = require('node:vm');
 
 /** Reuses the actual versioned writer with artificial human/source proof and exact Store ports. @param {Object} t Test lifecycle. @returns {Object} Isolated authoring fixture. */
-function humanFixture(t) {
+function humanFixture(t, expectedEnterprise = 'enterprise-a') {
   const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, NODICS: global.NODICS, UTILS: global.UTILS, CLASSES: global.CLASSES };
   t.after(() => Object.assign(global, previous));
-  const f = fixture(false, true), selectors = { contractVersion: 1, assetCode: 'asset-a', listingKey: 'a'.repeat(64),
+  const f = fixture(false, true, expectedEnterprise), selectors = { contractVersion: 1, assetCode: 'asset-a', listingKey: 'a'.repeat(64),
     expectedRevision: 5, intentDigest: 'b'.repeat(64), storeCode: 'store-a' };
   const command = { ...f.request.payload, idempotencyKey: selectors.listingKey };
   f.request.authData = { tenant: 'tenant-a', entCode: 'enterprise-a', principalType: 'human', tokenType: 'access',
@@ -296,8 +296,8 @@ function listingRuntimeRequest(f, payload, operation) {
   return request;
 }
 
-test('automatic held-bundle preparation uses original private runtime and real versioned Product writes', async t => {
-  const f = humanFixture(t), automatic = require('../src/service/defaultProductBundlePublicationService');
+for (const crossEnterprise of [false, true]) test(`automatic held-bundle preparation uses original private runtime and real versioned Product writes (cross-Enterprise: ${crossEnterprise})`, async t => {
+  const f = humanFixture(t, crossEnterprise ? 'foreign-enterprise' : 'enterprise-a'), automatic = require('../src/service/defaultProductBundlePublicationService');
   f.configuration.product.marketplaceAuthoring.bundlePublication = structuredClone(properties.product.marketplaceAuthoring.bundlePublication);
   f.configuration.product.marketplaceAuthoring.bundlePublication.enabled = true;
   SERVICE.DefaultProductBundlePublicationService = automatic;
@@ -308,6 +308,13 @@ test('automatic held-bundle preparation uses original private runtime and real v
     manifest: { code: 'bundle:' + 'c'.repeat(64), revision: 0, digest: 'd'.repeat(64) },
     terms: { storeCode: 'store-a', name: 'Original bundle', saleMode: 'AUCTION',
       startsAt: '2999-01-01T00:00:00.000Z', endsAt: null, categoryCodes: [] }, product: null, price: null, release: null };
+  if (crossEnterprise) {
+    proof.enterpriseCode = 'foreign-enterprise';
+    f.store.enterpriseRef.code = 'foreign-enterprise';
+    f.placementPair.enterpriseCode = 'foreign-enterprise';
+    SERVICE.DefaultPublicationApprovalWorkflowService = require(foundation + 'nPublish/src/service/defaultPublicationApprovalWorkflowService');
+    f.configuration.publish = { approvalWorkflow: { runtimeEnterpriseScope: { enabled: true, enterpriseCodes: ['foreign-enterprise'] } } };
+  }
   const invoke = SERVICE.DefaultModuleService.invokeModule;
   SERVICE.DefaultModuleService.invokeModule = async input => input.apiName === '/internal/bundle-listings/proof'
     ? { data: structuredClone(proof) } : invoke(input);
@@ -317,6 +324,7 @@ test('automatic held-bundle preparation uses original private runtime and real v
   const result = await automatic.execute(r, 'prepare');
   assert.equal(result.confirmed, true); assert.equal(result.versionId, 0); assert.equal(f.inserts.length, 6);
   const localized = f.records.get('DefaultProductLocalizationService:' + result.productCode + '-en');
+  assert.equal(localized.enterpriseCode, proof.enterpriseCode);
   assert.deepEqual(localized.attributes.listingWindow, { startsAt: proof.terms.startsAt, endsAt: null });
   assert.equal(localized.attributes.commerceBidding.mode, 'AUCTION');
   assert.equal(localized.attributes.commerceBidding.publicationCode, operationCode);
@@ -715,7 +723,7 @@ test('real Product and Pricing evidence projections cross the Waste consumer bou
   });
 });
 
-function fixture(protectedEntry = true, versioned = false) {
+function fixture(protectedEntry = true, versioned = false, expectedEnterprise = 'enterprise-a') {
   const request = {
     tenant: "tenant-a", entCode: "enterprise-a",
     authData: {
@@ -805,9 +813,9 @@ function fixture(protectedEntry = true, versioned = false) {
       await new Promise((resolve, reject) => saveInitializer.checkAccess.call({ LOG: { debug() {} } },
         { ...input, schemaModel: { rawSchema: properties.schemaPolicies.product.tenantOwned } }, {},
         { nextSuccess: resolve, error: (_request, _response, error) => reject(error) }));
-      assert.deepEqual(input.query, { tenant: "tenant-a", enterpriseCode: "enterprise-a", code: input.model.code });
+      assert.deepEqual(input.query, { tenant: "tenant-a", enterpriseCode: expectedEnterprise, code: input.model.code });
       assert.equal(input.model.tenant, "tenant-a");
-      assert.equal(input.model.enterpriseCode, "enterprise-a");
+      assert.equal(input.model.enterpriseCode, expectedEnterprise);
       calls.push({ name, ...structuredClone(input) });
       const key = name + ":" + input.model.code;
       if (versioned) {

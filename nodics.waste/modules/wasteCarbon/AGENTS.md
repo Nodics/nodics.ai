@@ -6,7 +6,7 @@ Own waste-derived credit evidence, original-beneficiary allocations and exact lo
 
 Only qualified, configured provider services may supply authoritative lot and eligibility evidence. No caller paid/issued/transferable flag, customer-selected provider or synthetic fallback. Preserve allocations after certificate transfer or consumption. External adapter qualification and live acceptance are separate from focused unit verification. Do not add retirement or conversion flows.
 
-All defaults belong in config/properties.js. Program, original beneficiary, units, precision, quantity, shares and evidence are governed records. Keep routes service-only for mutations; calling Digital/Profile owners authorize the human and acting owner first, and this owner rechecks service permission, tenant and exact holding ownership.
+All defaults belong in config/properties.js. Program, original beneficiary, units, precision, quantity, shares and evidence are governed records. Mutation routes admit authorized services or canonical native Platform Admin access. Calling Digital/Profile owners authorize originating actors; this owner independently checks capability permission, tenant and exact holding ownership. Native Admin admission uses hasPlatformFullAccess, never a fabricated service principal.
 
 Lifecycle, allocation-kind, operation and eligibility wire definitions belong to
 this owner's `src/utils/enums.js`; runtime consumers use loaded `ENUMS` values.
@@ -25,3 +25,17 @@ must keep external issuance, registry eligibility and external transfer explicit
 use the actual release files and Foundation admitted dispatch without creating Profile assignments.
 
 Participant reads use DefaultWasteCarbonReadAccessService and the existing Profile /customer/identity or /identity/scopes/me API with the unchanged access credential. Do not infer customer identity from loginId, accept a browser owner as authority, broaden Enterprise scopes to a parent, or reuse a service credential for a human read. Preserve explicit denies, current tenant/Enterprise binding and no-store/private read routes. Profile transport defaults belong here, not in a frontend or runtime composition module.
+
+Permanent mock adapters must use the existing provider selectors and generated
+owner-local mock evidence repositories. Both mock.enabled and allowSynthetic
+default false. Preserve synthetic provenance, qualification/tenant isolation,
+original beneficiaries and canonical atomic settlement; never infer external
+issuance/payment or place scenario values in configuration. Read the permanent
+mock section in llm/contracts/README.md before extending these adapters.
+
+Installed HTTP acceptance must remain owner-local, explicit, bounded and native
+Local-only. Consume reviewed selections and operator-supplied native Platform Admin or authorized service bearers;
+never mint credentials, seed fixtures, fund wallets, alter grants or retry an
+uncertain mutation automatically. Preserve exact synthetic receipt and replay
+assertions. Tests inject HTTP/storage; executing an installed suite is a separate
+authorized action with real simulation-state effects.

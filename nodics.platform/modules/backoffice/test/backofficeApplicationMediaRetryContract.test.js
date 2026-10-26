@@ -220,6 +220,40 @@ describe("BackOffice preparation Media retries", function () {
     assert.equal(result.mediaEvidence, undefined);
     assert.doesNotMatch(result.description, /private provider/);
   });
+  it("retains aggregate Media blockers without fabricating an asset or repair", function () {
+    for (const status of [undefined, "UNAVAILABLE", "VERSION_UNPINNED"]) {
+      const media = { contractVersion: 1, owner: "media", qualified: false, dependencies: [] };
+      if (status !== undefined) media.status = status;
+      const before = JSON.stringify(media);
+      const projection = { mediaDependencies: media };
+      const blockers = owner.capabilityBlockers(projection);
+      assert.equal(blockers.length, 1);
+      assert.equal(blockers[0].code, "MEDIA_DEPENDENCY_" + (status || "UNAVAILABLE"));
+      assert.equal(blockers[0].technicalStatus, status || "UNAVAILABLE");
+      assert.equal(blockers[0].severity, "REPAIR_REQUIRED");
+      assert.equal(blockers[0].owner, "media");
+      assert.equal(Object.hasOwn(blockers[0], "mediaDependency"), false);
+      assert.equal(Object.hasOwn(blockers[0], "repair"), false);
+      assert.equal(owner.capabilityBusinessStatus(projection), "NEEDS_ATTENTION");
+      assert.equal(JSON.stringify(media), before);
+    }
+  });
+  it("preserves exact owner asset evidence and skips qualified assets", function () {
+    const dependency = {
+      owner: "media", mediaCode: "hero", versionId: 4,
+      checksum: "a".repeat(64), publicationCode: "cmsMedia_" + "b".repeat(64),
+      status: "NOT_ACTIVATED", qualified: false,
+    };
+    const blockers = owner.capabilityBlockers({ mediaDependencies: {
+      qualified: false, dependencies: [
+        { ...dependency, mediaCode: "ready", qualified: true }, dependency,
+      ],
+    } });
+    assert.equal(blockers.length, 1);
+    assert.equal(blockers[0].mediaDependency, dependency);
+    assert.equal(blockers[0].repair.automaticExecution, false);
+    assert.equal(blockers[0].repair.available, false);
+  });
   it("never maps CMS READY to business ONLINE when Media owner evidence is unqualified", function () {
     const projection = {
       readiness: "READY",

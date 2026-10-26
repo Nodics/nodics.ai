@@ -30,6 +30,11 @@ const messages = [
     "EVIDENCE_PROJECTION", "EVIDENCE_EVENT", "EVIDENCE_GENERATED_CONTEXT", "EVIDENCE_GENERATED_RECORDS"]
     .map(gate => "Exact original digital ownership evidence is unavailable: " + gate),
   "Digital ownership controller operation is unavailable",
+  "Certificate coupon evidence target is unavailable",
+  "Certificate coupon source request failed",
+  "Certificate coupon evidence failed",
+  "Original certificate coupon acquisition is unconfirmed",
+  ...Object.values(require("../../../../../../../nodics.waste/modules/wasteCore/src/utils/couponSourceDiagnostics").messages),
 ];
 const codes = Object.freeze(Object.fromEntries(messages.map((message, index) =>
   [message, "ERR_EWASTE_SALE_DIAGNOSTIC_" + String(index + 1).padStart(3, "0")])));

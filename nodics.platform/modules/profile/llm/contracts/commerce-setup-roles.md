@@ -296,3 +296,25 @@ nRouter's nImport OR semantics, the real generated HTTP mutation-model guard,
 the documented plain-field Employee PATCH, default-off onboarding and Profile's layered role
 resolver. No live installation, employee adoption, outlet creation, publication,
 budget, issuance, purchase, redemption or refund is claimed by these source tests.
+
+## Complete Enterprise Participation Profiles
+
+Digital and Loyalty own explicit `enterpriseParticipationAccess` Init sections.
+These define internal capability groups, not new selectable task profiles.
+Use existing Admin for administrative tests. Profile seeds `ENTERPRISE_ADMIN`
+(Enterprise Admin), `OPERATOR` (Operator), and `VIEWER` (Viewer); native platform
+administrator authority is separate. Do not invent an `ENTERPRISE_USER` alias or
+silently equate it with Operator. The agreed three-profile direction requires a
+reviewed existing-profile mapping before broader assignments. Do not grant reserved `ENTERPRISE_ADMIN` or
+`adminGroup` merely because an application labels an employee Enterprise Admin.
+Generic Profile administration is not a domain participation bundle and must not
+acquire mandatory optional-domain dependencies. Operator responsibilities remain
+separately selected, never inferred from an administrator's profile.
+
+Role installation preserves current records; assignments preserve identity,
+credentials, unrelated groups and scopes. Both require existing governance and
+normal stamp hooks. Missing permission vocabulary belongs to the implementing
+owner. Cross-type Init/Sample ordering belongs to setup, not nImport prerequisite
+edges. Existing installed source/receipt drift requires a reviewed migration, not
+replaying identity or financial snapshots. Domain admission and DENY remain
+independent of the complete role union.

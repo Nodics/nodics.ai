@@ -17,18 +17,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagewasteimpactproviders",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagewasteImpactProviders",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a5d36ea81495ff97f0da902a044b42c4029f419c7d1d8c516ba0ffe624489a6c",
+    "checksum": "aa3974bba49f3cb7ff80877d296763e6630e53239d70c9d058844c545a7b1cb6",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -46,11 +45,8 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
-    "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
+    "actor": "wasteImpact.source-maintainer",
+    "author": "wasteImpact.source-maintainer",
     "auditTrail": [],
     "active": true
   },
@@ -58,18 +54,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatawasteimpactproviders",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawasteImpactProviders",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ab2b4de85e9c0be1d93c4353c356636c59bd641c5bca30ab14834b1f800686e9",
+    "checksum": "4bba04f9178c8487e7e774dfc592c22e93478b66f76c729946c31e75801836e7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -87,11 +82,8 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
-    "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
+    "actor": "wasteImpact.source-maintainer",
+    "author": "wasteImpact.source-maintainer",
     "auditTrail": [],
     "active": true
   },
@@ -99,18 +91,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagewasteimpactproviders",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagewasteimpactproviders",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6d504989456c7ee713fee921d526f5050895698c841fe74ed668412c7ffd928a",
+    "checksum": "231d0426fce7ae00f8c7cefb23633a20ae28a8adbcee4dd6c2bb17fe4b765d2b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -126,11 +117,8 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
-    "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
+    "actor": "wasteImpact.source-maintainer",
+    "author": "wasteImpact.source-maintainer",
     "auditTrail": [],
     "active": true
   },
@@ -138,18 +126,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatawasteimpactproviders",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatawasteimpactproviders",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "7025206d0456be964d82595bf9aaf3edc0e633d9ae4665a3ee83da22b026c510",
+    "checksum": "6564001b3bb5da18a17a88a8e5086fb67100985b415cf561df194ce2df45d391",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -165,11 +152,8 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
-    "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
+    "actor": "wasteImpact.source-maintainer",
+    "author": "wasteImpact.source-maintainer",
     "auditTrail": [],
     "active": true
   }

@@ -15,7 +15,8 @@ const path = require('path');
 
 const moduleRoot = path.resolve(__dirname, '..');
 const privateSchemas = new Set(['rewardTransferOperation', 'rewardTransferUsage', 'rewardTransferPolicy',
-    'loyaltyPartnerRewardIntegration', 'loyaltyPartnerRewardAccount', 'loyaltyPartnerRewardConversionRecord', 'rewardTestCreditOperation']);
+    'loyaltyPartnerRewardIntegration', 'loyaltyPartnerRewardAccount', 'loyaltyPartnerRewardConversionRecord', 'rewardTestCreditOperation',
+    'rewardReservationDecision']);
 const schemaFiles = [
     'modules/loyaltyCore/src/schemas/schemas.js',
     'modules/loyaltyProgram/src/schemas/schemas.js',

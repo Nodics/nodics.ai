@@ -248,3 +248,13 @@ and revision before the normal fenced claim. Custom installers, ambiguous or
 incomplete history, non-Local deployments and any prior record work are excluded;
 never edit receipts or replay financial contributions. Ordinary immutable
 current releases remain non-replayable.
+
+## Offline Source Inspection
+
+`DefaultDataReleaseService.inspectSourceManifest` verifies an aggregate section's
+nonempty declared file map against contained source bytes and reuses canonical
+lifecycle, capability, publication-review and prerequisite validation. It never
+evaluates headers or records, so it needs no bootstrap credentials or runtime
+authentication globals. Its checksum describes only the declared source snapshot;
+it is not installation qualification. Runtime discovery retains reference
+expansion and must independently qualify releases before execution.

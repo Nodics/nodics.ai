@@ -20,7 +20,7 @@ const key = 'checkout:digital:entry:0';
 function fixture() {
     const entry = { tenant: 't', enterpriseCode: 'e', ownerId: 'buyer', code: 'entry', cartCode: 'cart', status: 'ACTIVE',
         quantity: '1', productCode: 'product', sku: 'sku' };
-    const cart = { tenant: 't', enterpriseCode: 'e', ownerId: 'buyer', code: 'cart', status: 'ACTIVE', storeCode: 'store' };
+    const cart = { tenant: 't', enterpriseCode: 'e', ownerId: 'buyer', code: 'cart', status: 'ACTIVE', storeCode: 'store', locale: 'en' };
     const state = { entry, cart, calls: [], mutation: response => response };
     const get = row => async r => {
         assert.equal(r.options.skipItemCache, true);
@@ -28,6 +28,10 @@ function fixture() {
         return state.mutation({ code: 'SUC_GET', count: 1, result: [structuredClone(row)] }, r);
     };
     global.SERVICE = { DefaultCheckoutPlacementPortsService: { serviceAuthData: () => ({ code: 'owner' }) },
+        DefaultProductDiscoveryService: { query: r => r, searchPinned: async () => [] },
+        DefaultProductSearchEnrichmentService: { retainedProjections: async () => [{ tenant: 't', enterpriseCode: 'e', storeCode: 'store',
+            locale: 'en', productCode: 'product', status: 'CURRENT', payload: { variantSkuMap: { variant: 'sku' },
+                localizedAttributes: { productType: 'DIGITAL', digitalDeliveryType: 'COUPON_CODE', inventoryStrategy: 'COUPON_CODE_POOL' } } }] },
         DefaultCartEntryService: { get: get(entry) }, DefaultCartService: { get: get(cart) },
         DefaultPromotionOperationService: { recoverCouponCodeReservation: async r => {
             state.calls.push(r); return { status: 'COMPLETED', reservationKey: r.idempotencyKey };
@@ -36,7 +40,7 @@ function fixture() {
 }
 test('uncertain coupon recovery derives persisted single active Cart scope without caller selectors', async () => {
     const state = fixture(), before = structuredClone(request);
-    assert.deepEqual(await service.recoverUncertainCouponReservation(request, { uncertainKey: key }), {
+    assert.deepEqual(await service.recoverUncertainReservation(request, { uncertainKey: key, reservationType: 'COUPON' }), {
         type: 'DIGITAL_COUPON_RELEASE', status: 'COMPLETED', reservationKey: key,
         cartCode: 'cart', entryCode: 'entry', enterpriseCode: 'e' });
     assert.equal(state.calls.length, 1);
@@ -55,12 +59,22 @@ for (const [name, change] of Object.entries({
     'extra active entry': s => { s.mutation = r => ({ ...r, count: 2, result: [...r.result, r.result[0]] }); },
 })) test('uncertain coupon recovery refuses ' + name + ' before Promotion effects', async () => {
     const state = fixture(); change(state);
-    await assert.rejects(service.recoverUncertainCouponReservation(request, { uncertainKey: key }));
+    await assert.rejects(service.recoverUncertainReservation(request, { uncertainKey: key, reservationType: 'COUPON' }));
     assert.equal(state.calls.length, 0);
 });
 for (const uncertainKey of ['other:digital:entry:0', 'checkout:digital:entry:1', 'checkout:digital::0', key + ':extra'])
     test('uncertain coupon recovery rejects altered original unit key ' + uncertainKey, async () => {
         const state = fixture();
-        await assert.rejects(service.recoverUncertainCouponReservation(request, { uncertainKey }));
+        await assert.rejects(service.recoverUncertainReservation(request, { uncertainKey, reservationType: 'COUPON' }));
         assert.equal(state.calls.length, 0);
     });
+
+test('absent Coupon cannot qualify bundle cleanup or a caller-selected owner', async () => {
+    const state = fixture();
+    SERVICE.DefaultProductSearchEnrichmentService.retainedProjections = async () => [{ tenant: 't', enterpriseCode: 'e', storeCode: 'store',
+        locale: 'en', productCode: 'product', status: 'CURRENT', payload: { variantSkuMap: { variant: 'sku' }, localizedAttributes: {
+            productType: 'DIGITAL', digitalDeliveryType: 'DIGITAL_OWNERSHIP', inventoryStrategy: 'DIGITAL_COMMERCE',
+            bundleRef: { module: 'digitalCore', schema: 'digitalBundleManifest' } } } }];
+    await assert.rejects(service.recoverUncertainReservation(request, { uncertainKey: key, reservationType: 'COUPON' }));
+    assert.equal(state.calls.length, 0);
+});

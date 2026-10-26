@@ -9,9 +9,14 @@
 
  */
 
-'use strict';
-
-/** @description Generated Nodics framework documentation pages. */
+/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
+"use strict";
+/**
+ * @module profile/data/docs-v001/records/documentation/profileDocumentationPageData
+ * @description Owns canonical profileDocumentationPageData successor records; installation and publication remain governed.
+ * @layer data
+ * @owner profile
+ */
 module.exports = {
   "record0": {
     "code": "nodicsDocsPageplatformOverview",

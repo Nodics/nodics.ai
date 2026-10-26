@@ -10,7 +10,7 @@ not installed-runtime qualification or reporting dimension acceptance.
 The explicit `acquisitionRefreshSchedule` manifest section contributes an inactive
 `promotionAcquisitionRefreshJob` through the standard data-release/header import
 path targeting Cron's `cronJob` schema, with no custom installer. It uses a
-new `init-v002` source root; existing releases are unchanged.
+consolidated `init-v001` source root, independently selected from other sections.
 `active` and `runOnInit` are false. `jobDetail.channelCode` is null until an
 operator selects an exact business channel. Tenant, node and cadence are governed
 Cron record selections, not reusable property definitions. The hourly reference
@@ -84,3 +84,19 @@ source failure/truncation/conflict, failed commit, lost acknowledgement and reta
 watermarks. No import, schedule activation, native transaction, server or E2E is
 run. Installed scheduler lifecycle, concurrent database/restart and permissions
 remain final-stage acceptance gates.
+
+Promotion registers `commerce.promotion.analytics` in its v001 permission catalogue
+through Profile `ensureReferenceAll`. A route or group permission reference does
+not create that definition. Catalogue adoption grants no runtime authority: the
+original service principal scope and exact deployment assignment must separately
+admit analytics. Ordinary business groups retain report-read authority only.
+
+
+## Axis report owner selection
+
+The acquisition report workspace selects runtime role `COMMERCE` with publication
+role `OPERATIONAL`. This is the runtime's registry role, not the `ONLINE` state of
+published offer policies. Promotion's descriptor, Axis route admission and report
+transport must agree on this exact pair. Never relabel the deployed runtime or
+accept both roles to repair navigation. Missing or unavailable operational
+connections remain unavailable; Staged authoring keeps `COMMERCE_STAGED/STAGED`.

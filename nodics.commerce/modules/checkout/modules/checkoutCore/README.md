@@ -1,5 +1,8 @@
 # Checkout Core
 
+Explicit [Enterprise participant transaction access](llm/contracts/participant-transaction-access.md)
+contributes parent-free owner roles without assigning users or qualifying finance.
+
 Fixed-price placement and recovery retain merchant scope separately from signed
 participant authority. No repeated Store selector is needed after Cart creation.
 Command status exposes validated original Cart/Order bindings. See

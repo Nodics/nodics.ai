@@ -1,5 +1,12 @@
 # Promotion Agent Contract
 
+Native administrative authoring uses the existing administrative proof owner and
+private draft writer. Read [administrative authoring](llm/contracts/administrative-authoring.md).
+Keep the original Platform bearer/actor and exact same-tenant issuer separate;
+revalidate Profile proof before persistence. Never broaden ordinary headers,
+create issuer profiles/grants, waive maker-checker or borrow publication,
+consent, budget or stock authority. Preserve fixture isolation in draft tests.
+
 For acquisition projection invocation, follow [refresh admission and coverage](llm/contracts/acquisition-report-refresh.md).
 Keep Cron scheduling separate from Promotion projection ownership, retain original
 runtime credentials, and never advance coverage after an incomplete scan. All
@@ -66,6 +73,13 @@ return only complete canonical Product/issuer pairs, preserve original public
 auth, and never use capped mutable campaign enumeration as membership evidence.
 The own-issuer receiver admits only the exact private canonical Product command
 and rereads applied retained publication; it grants no general public root read.
+Store roots are not implicitly owned by the Product enterprise. Own Product
+selection must validate an existing own pointer strictly; only absent own pointers
+with fresh receipt/consent/issuer-activation proof through `productRootOwnership`
+may be classified as delegated-only. Preserve opaque proof readback, missing-root
+failure and mixed own/delegated regressions in the seller-policy bridge suite.
+Never catch activation failures, remove configured roots or broaden ROOT admission
+to make an ordinary Product quote succeed.
 Keep private request identity Product-bound and short-lived; root/coupon/budget
 reads and mutations receive no public grant. Preserve original signed authority,
 use Product's pinned retained visibility rather than caller projections, and
@@ -258,6 +272,19 @@ against the reservation grant revision. Do not copy grants into publication.
 Preserve Commerce ownership, tenant security, exact evidence, idempotency, audit and generation discipline. Read the current active source and owning contracts before changes.
 
 Coupon checkout must retain the selected Store's activated-policy authority.
+Coupon acquisition carries the allocation owner's exact {type,code} reference.
+For the seller-policy read only, validate it through the allocation owner and
+project the canonical Profile {module,schema,code} reference into both read
+contexts. Keep the original typed command for allocation, signed actor/bearer
+unchanged, and ownerId equal to the canonical owner code. Do not admit principal
+ID aliases or relax seller consent/private admission to reconcile these formats.
+Apply this boundary at reservation and retained purchase-rights confirmation;
+test actual Digital confirmSale with live consent validation and captured Payment
+records unchanged, not only the reservation entry or a policy helper.
+The existing non-governed batch path already carries a Profile reference; keep
+that path under the same strict seller-policy guard without requiring CouponOffer.
+Test actual Digital prepare through selected Promotion trustedPolicies, not an
+unselected fixture that skips the seller-policy boundary.
 For legacy fixed-window campaigns, sale retains the approved campaign window
 intersected with the original unit's narrower window. Do not enable the separate
 purchase-relative policy or infer new rights to populate missing expiry evidence.
@@ -291,13 +318,46 @@ shared role-isolation matrix, alongside this owner's behavioral regressions.
 
 ## Public Coupon Requirements
 
+Native Platform cross-enterprise review is explicit and same-tenant only. Use the
+administrative-review/administrative-approve owner routes with issuerEnterpriseCode
+in the body, never signed scope/header substitution. Fresh Profile default-context
+native administrator proof and active same-tenant target resolution gate reads and
+the existing versioned approval writer. Ordinary adminGroup, manage permissions,
+service principals and foreign tenants do not qualify. Keep maker-checker, exact
+version/revision pins and original actor audit; approval never activates, publishes,
+consents or issues. See `llm/contracts/administrative-offer-review.md`.
+
+CouponOffer draft budget authoring accepts only an explicit policy limit, not
+spent, admission receipts or supply-derived financial values. Staged lifecycle
+commands reuse the existing submit/approve/schedule/suspend/archive routes and
+the existing maker-checker assertion, with exact version/revision preconditions
+and original action-specific permissions. Keep these writes in the same private
+versioned draft owner with acknowledgement/readback; never use legacy upsert or
+success-model fallback. Owner inspection advertises available actions; clients
+must not select lifecycle status. Server time controls scheduled/active windows.
+Source ACTIVE remains separate from governed Online publication and issuance.
+
+New CouponOffer drafts may explicitly select a canonical Profile vendor reference.
+Keep issuer/tenant bound to the original signed employee; Platform full access
+does not select another issuer. Resolve explicit vendor activity through the
+existing Profile reference owner, recheck admission after the await, and preserve
+immutable vendor/issuer fields after creation. A vendor selection grants neither
+seller consent nor publication/issuance authority. Omission retains own-enterprise
+vendor behavior. Do not expand draft-write/manage permissions or schema grants.
+See `test/promotionDraftContract.test.js` and the offer authoring contract.
+
 Offer authoring inspection/prefill must include inactive current drafts through
 the scoped generated owner, with before/after employee admission. Active-sales
 campaign reads cannot serve this authoring contract. Preserve the inactive,
 foreign-row and scope-drift regressions in `couponOfferAcquisitionContract.test.js`.
 
 Keep acquisition requirements in the canonical CouponOffer owner. Public supply
-projects only type and bounded certificate criteria; never priceRef or inventory
+also projects validated immutable couponOffer.expiry as FIXED/at or NONE;
+missing expiry is null and unavailable. Preserve it through the private
+distribution read allowlist and both public/scoped Product paths. Never derive
+rights from text, codes, sale windows or current time. Read the catalogue validity
+section of the offer contract and run the composed distribution/bridge tests.
+Requirements project only type and bounded certificate criteria; never priceRef or inventory
 evidence. Missing canonical policy is explicit null and unavailable, never an
 implicit REWARDS default. Product and accelerators consume this live read DTO,
 not copied Product attributes. Preserve private admission and before/after checks.
@@ -309,3 +369,55 @@ keep policy bounds in configuration and authorization in runtime owner services.
 Unlimited on-demand issuance is own-issuer only. Do not advertise or allocate
 delegated unlimited supply until issuer-root receipt provenance and repeated
 issuance discovery are implemented together; seller consent alone is not that proof.
+
+Product membership scans use separate private observation phases for initial and
+final root snapshots. Reuse canonical bounded batch discovery and fresh Profile
+reference batches at each phase boundary; never cache consent, authorization,
+policy or final revalidation across phases or requests. Preserve exact live
+membership identity, per-binding receipt/consent reads, finally cleanup and the
+73-root/concurrent-request call bounds in promotionSellerPolicyBridgeContract.
+
+Coupon acquisition source proof uses `assertAcquisitionIssuance` for a private
+boolean membership check, never secrets from generic lifecycle reads. Preserve
+original request privacy, frozen issuer/vendor binding and coupon/batch readback.
+
+Coupon-offer lifecycle acceptance must be quantity-independent. Read initial
+canonical availability and check each successful one-code purchase changes
+remaining by -1, completed by +1 and reserved by zero. Never require two stock
+units, drain inventory or add owners to manufacture coverage. Probe exhaustion
+only at observed zero remaining. Probe owner-cap refusal only for configured
+limit 1 while stock remains; report other caps NOT_EXERCISED and absent caps
+NOT_APPLICABLE. Keep explicit case coverage in results; no business/configuration
+changes or invented refusal. Preserve existing immutable/withdrawal checks.
+
+Acquisition refresh permission definitions belong in Promotion’s v001 catalogue,
+not deployment configuration. Keep the service route permission resolvable to one
+active owner record and keep ordinary business groups free of refresh grants.
+Preserve exact manifest bytes and prerequisite pins; source changes do not adopt
+the catalogue or expand retained Profile runtime authority.
+
+Keep ordinary owner-cap denial before participation/counter writes, after replay
+lookup, with exact private request/error qualification. Any write-phase attempt
+keeps later failure uncertain. Preserve the atomic counter guard and composed
+Digital couponOwnerCapPrewrite regression; never trust a public error code as
+no-effects evidence.
+
+ITEM catalogue/purchase admission validates immutable terms with assertTerms, not
+optional fulfillment integration policy. Keep assertPolicy/validate mandatory at
+integrated merchant redemption, and preserve the separate admitted staff-recording
+path. Test disabled-integration catalogue/reservation/purchased rights alongside
+strict integrated evidence and malformed-term refusals.
+
+
+Coupon acquisition reporting uses the exact `COMMERCE/OPERATIONAL` registry owner
+pair in the descriptor, route admission and transport. Published offer `ONLINE`
+state does not change the runtime publication role. Preserve strict selection;
+never add an ONLINE fallback or relabel runtime configuration for this workspace.
+
+Search's public coupon issuer membership resolves the selected Store's activated
+Product catalogue independently of the browsing Enterprise selector. Preserve
+original signed authentication and mutation snapshots; derive operational
+Enterprise only from the retained Product projection. This grants no private
+policy enumeration or transaction authority. Direct public availability and Cart
+scope checks retain their existing contracts. Verify the focused Search browsing
+scope regression in `test/promotionDistributionAdmissionContract.test.js`.

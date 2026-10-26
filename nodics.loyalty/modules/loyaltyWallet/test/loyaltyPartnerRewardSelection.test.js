@@ -69,7 +69,7 @@ for (const enterprise of [false, true]) test(`conversion options use exact ${ent
   assert.equal(result.options.length, 1);
   assert.equal(result.walletCode, "wallet");
   assert.deepEqual(result.owner, { ownerType: f.participant.ownerType, ownerCode: f.participant.ownerCode });
-  assert.deepEqual(result.options[0], { integrationCode: "integration", partnerEnterpriseCode: "partner", accountLinkCode: "link",
+  assert.deepEqual(result.options[0], { integrationCode: "integration", partnerEnterpriseCode: "partner", accountLinkCode: "link", simulated: false,
     programCode: "program", rewardTypeCode: "points", sourceScale: 2, termsReference: "terms", termsRevision: "1" });
   assert.doesNotMatch(JSON.stringify(result), /private-|actorCode|providerKey/);
   assert.ok(f.reads.every(({ request }) => request.tenant === "tenant" && request.options.recursive === false));

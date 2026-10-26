@@ -1,5 +1,10 @@
 # Operational Release Admission
 
+Native Platform Admin can author an explicit same-tenant issuer through the
+[governed administrative authoring contract](llm/contracts/administrative-authoring.md).
+Fresh Profile proof preserves original credentials; approval, publication and
+operational admission remain separate gates.
+
 Acquisition projections have an explicit inactive [Cron refresh binding](llm/contracts/acquisition-report-refresh.md).
 It invokes the secured exact-channel Promotion endpoint and commits coverage only
 after complete Digital evidence. Source registration does not enable reporting,
@@ -11,6 +16,12 @@ retains canonical visibility, installed guards, receipt/policy/consent and stock
 checks. There is no auth cache, public flag or financial mutation change. See
 [batch boundaries and failure behavior](llm/contracts/trusted-distribution-read-admission.md#bounded-public-browsing-batch).
 
+Ordinary Product membership scans also consolidate receipt discovery and Profile
+references in independent initial/final observation phases. Each phase retains
+fresh before/after Profile checks and all canonical consent/receipt/policy checks;
+no authorization result survives the phase or request. The owner contract records
+the 73-root bound and revocation/concurrency regressions.
+
 Exact Product distribution reads now have a loader-visible, source-only
 [trusted/public admission owner](llm/contracts/trusted-distribution-read-admission.md).
 It preserves signed caller authority, admits no general service/anonymous scope,
@@ -21,6 +32,10 @@ Independently prepared Stores may select exact retained policy roots through
 `publication.delivery.rootCodesByStore`. See
 [Store-scoped delivery](llm/contracts/promotion-lifecycle-and-publication.md#publication-qualification-boundary);
 selection is not publication or acceptance evidence.
+Ordinary Product quotes resolve mixed own/delegated roots through existing
+receipt-bound ownership, without treating every Store root as marketplace-owned.
+See [Product root ownership](llm/contracts/trusted-distribution-read-admission.md#product-root-ownership)
+for strict failure and source-adoption boundaries.
 
 Immutable operational snapshot releases do not grant coupon issuance. The
 target validator retains existing publication and seller qualification gates
@@ -102,11 +117,14 @@ the project contributes only reviewed channel/campaign scope and original tokens
 The runner does not activate Cron, create events or expose customer attribution.
 
 `acceptance:coupon-offer-lifecycle --execute` owns E08 policy assertions for one
-reviewed two-unit offer and one participation-withdrawal offer. A project-owned
+reviewed limited-stock offer and one participation-withdrawal offer. A project-owned
 adapter invokes the canonical authoring, allocation and retained-rights APIs; the
-framework runner proves immutable benefit terms, one shared supply pool, lifetime
-purchasing-owner allowance, fixed expiry and that withdrawal blocks only new
-purchases. The adapter may hold runtime sessions, but cannot replace these owner
+framework runner checks immutable terms, canonical per-purchase supply deltas,
+fixed expiry and retained rights after withdrawal. It uses at most the two reviewed
+purchasers, without exhausting large stock. Exhaustion is ENFORCED only after
+observed zero remaining; otherwise NOT_EXERCISED. The owner-cap probe runs only
+for configured limit 1 while stock remains; other limits are NOT_EXERCISED and
+absent limits NOT_APPLICABLE. PASSED does not imply every optional case ran. The adapter may hold runtime sessions, but cannot replace these owner
 assertions or contribute defaults, persistence, identities, offers or stock.
 
 Promotion contributes the read-only nImport target validator

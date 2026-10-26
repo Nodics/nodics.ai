@@ -21,3 +21,11 @@ and reconnect recovery. Its provider evidence is synthetic and is not registry i
 identity-authority import dispatch; it defines no assignments and does not perform a live installation.
 
 Transfers retain recipient quantity as reserved until the original operation is explicitly finalized by Digital after all component transfers. POST /carbon/transfers/finalize supports mixed certificate/carbon bundles and multiple lots without onward availability during partial transfer. Select the forward transferFinalizationPermission definition and coordinator grant separately; no shared runtime configuration or live import is implied.
+
+Permanent opt-in simulation adapters are described in the [owner contract](llm/contracts/README.md).
+They use governed mock evidence records and explicit synthetic markers; they do
+not qualify real registry issuance or recycler payment. No Local adoption is automatic.
+
+Installed Local mock acceptance now has an owner command; see the installed HTTP
+section in [the owner contract](llm/contracts/README.md) for exact selections, authorization,
+effects and evidence limits. Plan mode makes no HTTP calls.

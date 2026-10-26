@@ -9,9 +9,14 @@
 
  */
 
-'use strict';
-
-/** @description Generated Nodics framework documentation routes. */
+/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
+"use strict";
+/**
+ * @module commsCore/data/docs-v001/records/documentation/commsCoreDocumentationRouteData
+ * @description Owns canonical commsCoreDocumentationRouteData successor records; installation and publication remain governed.
+ * @layer data
+ * @owner commsCore
+ */
 module.exports = {
   "record0": {
     "code": "nodicsDocsRoutecommunicationProviderRunbooks",
@@ -21,7 +26,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecommunicationProviderRunbooks",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -33,7 +38,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecommunicationOverview",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -45,7 +50,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecommunicationEmailSmsTemplates",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   }

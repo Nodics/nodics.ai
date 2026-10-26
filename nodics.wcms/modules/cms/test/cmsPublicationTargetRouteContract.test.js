@@ -16,6 +16,20 @@ const path = require('node:path');
 const test = require('node:test');
 const routes = require('../src/router/routers').cms.cmsPublicationTarget;
 
+test('retained approval recovery is a bound internal CMS command, not baseline installation', () => {
+    const route = require('../src/router/routers').cms.cmsPublicationBaseline.reconcileApproval;
+    assert.equal(route.key, '/publication/baselines/:baselineCode/reconcile-approval');
+    assert.equal(route.method, 'POST');
+    assert.equal(route.apiExposure, 'moduleInternal');
+    assert.equal(route.secured, true);
+    assert.deepEqual(route.authTokenTypes, ['service']);
+    assert.equal(route.permissionConfig, 'authSecurity.internalToken.routePermission');
+    const schema = route.requestBody.content['application/json'].schema;
+    assert(schema.required.includes('approvalRepairBinding'));
+    assert.equal(schema.additionalProperties, false);
+    assert.equal(schema.properties.forceRefresh, undefined);
+});
+
 test('every publication target route is service-only and uses internal permission policy', () => {
     assert.deepEqual(Object.keys(routes).sort(), ['deployPublication', 'getPublicationStatus', 'verifyPublicationOnline',
         'detectPublicationCollisions', 'getPublicationSupportBundle', 'reconcilePublicationEvidence',

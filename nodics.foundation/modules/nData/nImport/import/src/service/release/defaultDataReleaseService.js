@@ -775,6 +775,7 @@ module.exports = {
   /**
    * Evaluates required init deltas on every startup, independent of operator import enablement.
    * Already-current releases are never replayed merely because the process restarted.
+   * Proven retained same-version source drift defers the selected batch for read-only owner review.
    * @param {Object} request Trusted startup tenant and active module scope.
    * @returns {Promise<Object>} Completed init releases or an explicit no-op.
    */
@@ -862,6 +863,8 @@ module.exports = {
     );
     if (releases.length === 0)
       return { skipped: true, reason: "NO_INIT_RELEASES" };
+    const review = await this.startupSourceReview(request, releases);
+    if (review) return review;
     const operation = Object.assign({}, request, {
       releaseRequest: {
         dataType: "init",
@@ -894,6 +897,73 @@ module.exports = {
         context.active = false;
       }
     });
+  },
+
+  /** Freezes complete generated receipt records while preserving physical Mongo identity: some BSON ObjectId versions lose all bytes under structuredClone. */
+  startupReceiptSnapshot: function (receipts) {
+    return receipts.map(receipt => {
+      const record = { ...receipt }, id = record._id;
+      if (id && ["ObjectId", "ObjectID"].includes(id._bsontype) && typeof id.toHexString === "function") {
+        const hex = id.toHexString();
+        if (!/^[a-f0-9]{24}$/i.test(hex)) throw this.error("ERR_IMP_00003", "Startup receipt identity is invalid");
+        record._id = { bsonType: "ObjectId", hex: hex.toLowerCase() };
+      }
+      return structuredClone(record);
+    });
+  },
+
+  /** Inspects retained startup authority without adopting changed source. Drifted nodes are terminal: their new prerequisite graph is never installed or treated as retained evidence. */
+  startupSourceReview: async function (request, roots) {
+    const maximumModulesPerRun = this.configuration().maximumModulesPerRun;
+    if (!Number.isSafeInteger(maximumModulesPerRun) || maximumModulesPerRun < 1)
+      throw this.error("ERR_IMP_00003", "Startup release review requires a positive integer maximumModulesPerRun");
+    const tenant = this.resolveTenant(request);
+    const partitions = new Map(), visited = new Set(), visiting = new Set();
+    const reviews = [], observed = [];
+    const visit = async (release, partition) => {
+      const key = JSON.stringify([partition, release.releaseCode]);
+      if (visiting.has(key)) throw this.error("ERR_IMP_00003", "Data release prerequisite cycle: " + release.releaseCode);
+      if (visited.has(key)) return;
+      if (visited.size + visiting.size >= maximumModulesPerRun)
+        throw this.error("ERR_IMP_00003", "Data release prerequisite plan exceeds the release limit");
+      visiting.add(key);
+      if (release.invalidManifest) throw this.error("ERR_IMP_00003", "Startup release manifest is invalid: " + release.releaseCode);
+      this.validateDestination(release);
+      if (!partitions.has(partition)) partitions.set(partition, this.startupReceiptSnapshot(await this.getInstallations(partition)));
+      const matches = partitions.get(partition).filter(row => row.code === this.installationCode(partition, release));
+      if (matches.length > 1) throw this.error("ERR_IMP_00003", "Startup installation receipt is ambiguous");
+      const installed = matches[0];
+      const proven = installed?.status === "CURRENT" && installed.tenant === partition &&
+        installed.environment === NODICS.getSelectedEnvironmentName() && installed.moduleName === release.moduleName &&
+        installed.releaseCode === release.releaseCode && installed.dataType === "init" &&
+        /^\d+\.\d+\.\d+$/.test(installed.version || "") && /^[a-f0-9]{64}$/.test(installed.checksum || "");
+      const drift = proven && (installed.version !== release.version ||
+        installed.checksum !== release.checksum && !this.isDevelopmentRelease(release.version));
+      observed.push({ release, installed, proven });
+      if (drift) {
+        reviews.push({ ...this.toCatalogueItem(release, installed, false), tenant: partition });
+      } else {
+        for (const reference of this.validatePrerequisites(release.prerequisites)) {
+          const dependency = this.discoverPrerequisite(reference, "init");
+          if (dependency.version !== reference.version || dependency.checksum !== reference.checksum)
+            throw this.error("ERR_IMP_00003", "Data release prerequisite changed after selection: " + dependency.releaseCode);
+          await visit(dependency, this.prerequisiteTenant(reference, partition));
+        }
+      }
+      visiting.delete(key); visited.add(key);
+    };
+    for (const root of roots) await visit(root, tenant);
+    if (!reviews.length) return undefined;
+    if (this.activeExecutions.has(tenant + ":init") || observed.some(({ proven }) => !proven))
+      throw this.error("ERR_IMP_00003", "Startup source review requires confirmed CURRENT receipts for the retained graph; missing or uncertain authority requires operator review");
+    for (const [partition, snapshot] of partitions) {
+      if (!isDeepStrictEqual(snapshot, this.startupReceiptSnapshot(await this.getInstallations(partition))))
+        throw this.error("ERR_IMP_00003", "Startup installation receipts changed during source review");
+    }
+    // The selected startup batch is atomic for admission: never execute its fresh
+    // prerequisites while another selected authority graph is held for review.
+    return { skipped: true, reason: "INIT_SOURCE_REVIEW_REQUIRED", reviewRequired: true,
+      releases: reviews, deferredReleaseCodes: roots.map(release => release.releaseCode) };
   },
 
   /** Reports only the current awaited startup Init execution, never caller options. @param {string} tenant Canonical target tenant. @returns {boolean} Whether the startup owner currently installs this tenant's Init releases. */
@@ -1783,6 +1853,23 @@ module.exports = {
     return Array.from(selectors.values());
   },
 
+  /** Inspects one aggregate section under normal discovery admission, with fresh source checks and no retained evidence. */
+  discoverManifestRelease: function (reference, dataType) {
+    this.validateDataType(dataType);
+    const selector = this.discoveryOwners().find(item => item.moduleName === reference?.moduleName);
+    if (!selector || (!selector.active && !selector.sections.includes(reference.sectionCode)))
+      throw this.error("ERR_IMP_00004", "Data release owner or section is not selected");
+    const owner = NODICS.getRawModule(selector.moduleName);
+    if (!owner?.path) throw this.error("ERR_IMP_00004", "Data release owner is unavailable");
+    const manifestPath = path.join(owner.path, "data", "manifest.json");
+    const aggregate = this.readAggregateManifest(owner, manifestPath);
+    const section = aggregate?.sections?.[reference.sectionCode];
+    if (!section || section.kind !== "DATA_RELEASE" || section.dataType !== dataType)
+      throw this.error("ERR_IMP_00003", "Data release section is unavailable or has a different data type");
+    return this.inspectManifest(owner, dataType, manifestPath, section, reference.sectionCode,
+      !selector.active, aggregate.retainedRoots?.[section.sourceRoot]);
+  },
+
   /** Discovers active loader-owned releases and explicitly selected destination-qualified contributions. */
   discoverReleases: function (requestedType) {
     if (requestedType) this.validateDataType(requestedType);
@@ -2279,6 +2366,22 @@ module.exports = {
       );
     }
     return { sourceRoot, files };
+  },
+
+  /** Inspects declared source bytes and metadata without executing headers or records. This offline result is not runtime discovery or installation authority. */
+  inspectSourceManifest: function (rawModule, manifestPath, section, sectionCode) {
+    const actual = this.sourceRootFiles(path.dirname(manifestPath), section.sourceRoot);
+    if (!section.files || typeof section.files !== "object" || Array.isArray(section.files) || !Object.keys(section.files).length)
+      throw this.error("ERR_IMP_00003", "Source inspection requires a nonempty declared files map");
+    for (const [file, hash] of Object.entries(section.files)) {
+      if (!Object.hasOwn(actual, file) || actual[file] !== hash)
+        throw this.error("ERR_IMP_00003", "Source missing file or checksum drift: " + rawModule.name + ":" + sectionCode + "/" + file);
+    }
+    // Only this offline inspection uses the exact declared snapshot. Runtime discovery still expands source references.
+    const inspection = Object.assign(Object.create(this), {
+      currentReleaseFiles: () => ({ ...section.files }),
+    });
+    return inspection.inspectManifest(rawModule, section.dataType, manifestPath, section, sectionCode, true);
   },
 
   /** Validates one release section and computes current file integrity from the release folder. */
@@ -3464,6 +3567,14 @@ module.exports = {
     const code =
       release.releaseCode || release.moduleName + ":" + release.dataType;
     if (release.status === "CURRENT") return [];
+    if (release.status === "INVALID_RELEASE" && release.installedVersion === release.version &&
+        release.installedChecksum && release.installedChecksum !== release.checksum) {
+      return [this.releaseReadinessBlocker(release, {
+        code: "VERSION_MISMATCH", repairCode: "INSTALLED_SOURCE_DRIFT", severity: "BLOCKED",
+        message: "Installed release receipt is preserved; same-version source differs. No startup import or grant update was performed.",
+        action: "Review installed authority and source changes with the owning administrator",
+      })];
+    }
     if (release.status === "RUNNING")
       return [
         this.releaseReadinessBlocker(release, {
@@ -3565,6 +3676,8 @@ module.exports = {
           "The previous import attempt failed; retry through the governed nImport operation.",
         DOWNGRADE_AVAILABLE:
           "The installed release version is newer than the available source and requires operator review.",
+        INSTALLED_SOURCE_DRIFT:
+          "Manual import remains blocked by checksum policy. Review source changes and use governed owner operations; do not replay or rewrite installed receipts.",
         INVALID_MANIFEST:
           "The source release manifest is invalid; repair the owning source release before import.",
       }[code] ||
@@ -3577,6 +3690,14 @@ module.exports = {
   /** Projects client-safe repair metadata for release readiness without granting browser import authority. */
   releaseRepairProjection: function (code, owner) {
     const definitions = {
+      INSTALLED_SOURCE_DRIFT: {
+        available: false,
+        label: "Review installed authority and source changes",
+        operation: "dataRelease.reviewInstalledVersion",
+        action: "REVIEW_INSTALLED_VERSION",
+        idempotent: true,
+        requiresConfirmation: true,
+      },
       IMPORT_IN_PROGRESS: {
         available: true,
         label: "Refresh readiness",

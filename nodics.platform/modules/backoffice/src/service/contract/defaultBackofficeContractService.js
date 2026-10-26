@@ -820,7 +820,7 @@ module.exports = {
         (this.isString(selector.runtimeRoleCode, 64) &&
           /^[A-Z][A-Z0-9_]{0,63}$/.test(selector.runtimeRoleCode))) &&
       (selector.publicationRole === undefined ||
-        ["STAGED", "ONLINE"].includes(selector.publicationRole)) &&
+        ["STAGED", "ONLINE", "OPERATIONAL"].includes(selector.publicationRole)) &&
       keys.every((key) => selector[key] !== undefined)
     );
   },
@@ -1255,6 +1255,15 @@ module.exports = {
   isSafeDocumentationRoute: function (value) {
     return this.isSafePath(value) && value.startsWith("/docs");
   },
+  /** Validates explicitly public, inert feature observations; never permission grants. */
+  validatePublicFeatureAvailability: function (value) {
+    return Boolean(value && value.contractVersion === 1 &&
+      Object.keys(value).length === 2 && value.features &&
+      typeof value.features === "object" && !Array.isArray(value.features) &&
+      Object.keys(value.features).length <= 32 &&
+      Object.entries(value.features).every(([key, enabled]) =>
+        /^[A-Za-z][A-Za-z0-9]{0,63}$/.test(key) && typeof enabled === "boolean"));
+  },
   /** Validates optional module-owned BackOffice catalogue metadata. */
   validateBackofficeMetadata: function (metadata) {
     if (metadata === undefined) return true;
@@ -1274,9 +1283,12 @@ module.exports = {
       "documentation",
       "requiredPermissions",
       "navigation",
+      "publicFeatureAvailability",
     ];
     if (Object.keys(metadata).some((key) => !allowed.includes(key)))
       return false;
+    if (metadata.publicFeatureAvailability !== undefined &&
+        !this.validatePublicFeatureAvailability(metadata.publicFeatureAvailability)) return false;
     if (metadata.enabled !== undefined && typeof metadata.enabled !== "boolean")
       return false;
     if (

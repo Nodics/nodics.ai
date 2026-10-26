@@ -9,9 +9,14 @@
 
  */
 
-'use strict';
-
-/** @description Generated Nodics framework documentation hierarchy nodes. */
+/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
+"use strict";
+/**
+ * @module commsCore/data/docs-v001/records/documentation/commsCoreDocumentationNodeData
+ * @description Owns canonical commsCoreDocumentationNodeData successor records; installation and publication remain governed.
+ * @layer data
+ * @owner commsCore
+ */
 module.exports = {
   "record0": {
     "code": "nodicsDocsNodePagecommunicationProviderRunbooks",
@@ -74,7 +79,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "communication",
@@ -154,7 +159,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "communication-and-notifications",
@@ -231,7 +236,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "email",

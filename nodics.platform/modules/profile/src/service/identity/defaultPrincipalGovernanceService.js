@@ -116,7 +116,9 @@ module.exports = {
             return SERVICE.DefaultUserGroupService.get({
                 tenant: request.tenant,
                 authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
-                options: { recursive: false }, query: { code: { $in: requestedGroups }, active: true }
+                options: { recursive: false, skipItemCache: true },
+                searchOptions: { pageSize: requestedGroups.length + 1, pageNumber: 1 },
+                query: { code: { $in: requestedGroups }, active: true }
             }).then(groupResult => {
                 let activeGroups = (groupResult && groupResult.result || []).map(group => group.code);
                 let missing = requestedGroups.filter(group => !activeGroups.includes(group));

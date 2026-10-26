@@ -21,7 +21,7 @@ module.exports = { loyaltyReservation: {
         sourceCode: { type: 'string', required: true , description: 'Stores the source code used to classify, link, or resolve this record.'},
         targetType: { type: 'string', required: false , description: 'Classifies this record by target type for validation and business handling.'},
         targetCode: { type: 'string', required: false , description: 'Stores the target code used to classify, link, or resolve this record.'},
-        expiresAt: { type: 'date', required: false , description: 'Ordinary hold expiry; absent only for owner-protected external outcome holds.'},
+        expiresAt: { type: ['date', 'null'], required: false , description: 'Ordinary hold expiry; explicit null for owner-protected auction holds, absent for protected external outcome holds.'},
         holdPolicy: { type: 'string', required: false, enum: ['EXTERNAL_OUTCOME', 'AUCTION_ROUND'], description: 'Private owner-admitted hold retained until authoritative conversion or auction reconciliation.' },
         createdAt: { type: 'date', required: true , description: 'Records when the created event or value applies.'},
         capturedAt: { type: 'date', required: false , description: 'Records when the captured event or value applies.'},
@@ -34,3 +34,18 @@ module.exports = { loyaltyReservation: {
     } })
 } };
 module.exports.loyaltyReservation.rewardReservation.transaction = { enabled: true, sideEffects: 'none' };
+
+// An immutable original-key fence participates in the same transaction as the reservation and ledger.
+module.exports.loyaltyReservation.rewardReservationDecision = {
+    super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true },
+    router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false },
+    transaction: { enabled: true, sideEffects: 'none' },
+    definition: {
+        binding: { type: 'object', required: true, description: 'Immutable original operation key and source/target references.' },
+        status: { type: 'string', required: true, enum: ['AUTHORIZED', 'DENIED', 'CANCELLED'], description: 'Immutable reservation decision; cancellation never reverses authorization.' },
+        noEffects: { type: 'boolean', required: true, description: 'True for atomic DENIED or CANCELLED with owner-persisted complete accounting reconciliation proof; absence alone never qualifies.' },
+        intent: { type: 'object', required: false, description: 'Original wallet, reward units and exact amount when authorization was evaluated.' },
+        reconciliation: { type: 'object', required: false, description: 'Owner-only append-once atomic accounting proof for an exact CANCELLED authorization; never caller evidence.' },
+        decidedAt: { type: 'date', required: true, description: 'Owner decision time.' }
+    }
+};

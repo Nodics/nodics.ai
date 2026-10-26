@@ -133,5 +133,5 @@ test('read routes declare access tokens, employee/customer groups, privacy and i
     assert.equal(route.permission, 'carbon.holdings.read'); assert.equal(route.apiExposure, 'carbonRead');
     assert.equal(route.requestPrivacy.sensitive, true); assert.equal(route.cache.enabled, false);
     for (const item of all.filter(row => !['holdings', 'getOperation', 'allocations'].includes(row.operation)))
-        assert.deepEqual(item.authTokenTypes, ['service']);
+        assert.deepEqual(item.authTokenTypes, ['service', 'access']);
 });

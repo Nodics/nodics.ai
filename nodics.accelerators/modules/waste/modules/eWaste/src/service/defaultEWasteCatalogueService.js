@@ -12,7 +12,13 @@
 /** @module eWaste/service/defaultEWasteCatalogueService @description Adapts electronics presentation to Product-owned complete available-Shop queries. No local catalogue filtering, sorting, stock or pagination authority. @layer service @owner eWaste */
 module.exports = {
   /** Rejects invalid domain selectors before owner transport. */
-  fail: function (message, status = 400) { throw Object.assign(new Error(message), { statusCode: status }); },
+  fail: function (message, status = 400, code) {
+    code = code || ({ 400: "ERR_EWASTE_CUSTOMER_QUERY", 404: "ERR_EWASTE_OFFER_UNAVAILABLE",
+      409: "ERR_EWASTE_OFFER_CHANGED", 503: "ERR_EWASTE_CATALOGUE_UNAVAILABLE" })[status];
+    const error = typeof CLASSES !== "undefined" && CLASSES.NodicsError
+      ? new CLASSES.NodicsError(code, message) : new Error(message);
+    throw Object.assign(error, { code, statusCode: status });
+  },
   /** Maps domain URL vocabulary to Product's canonical query; all generic validation belongs to Product. */
   query: function (input = {}) {
     if (!["ASSET", "BUNDLE", "COUPON"].includes(input.kind)) this.fail("Choose bundles or coupons");
@@ -44,6 +50,7 @@ module.exports = {
       ? await SERVICE.DefaultWasteItemDescriptorService.catalogue(request) : {};
     const items = [];
     for (const product of response.products) {
+      if (!product.price) this.fail("Published catalogue pricing is unavailable", 503, "ERR_EWASTE_CATALOGUE_PRICING_UNAVAILABLE");
       const offer = await this.offer(request, product, descriptors);
       if (!offer || offer.available !== true) this.fail("Product availability changed; refresh the catalogue", 409);
       items.push(offer);

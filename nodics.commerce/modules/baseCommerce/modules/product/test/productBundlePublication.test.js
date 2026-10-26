@@ -17,6 +17,8 @@ const governed = require('../src/service/defaultProductGovernedPublicationServic
 const lifecycle = require('../../../../../../nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService');
 const publishDefaults = require('../../../../../../nodics.foundation/modules/nPublish/config/properties');
 const productDefaults = require('../config/properties');
+const authoring = require('../src/service/defaultProductListingAuthoringService');
+const workflow = require('../../../../../../nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalWorkflowService');
 const clone = structuredClone;
 
 test('listing windows use effective Product date validation and preserve strict UTC semantics', () => {
@@ -66,14 +68,19 @@ function fixture(t) {
     key === 'runtimeRole' ? { publication: 'STAGED' } : undefined };
   global.NODICS = { getInternalAuthToken: () => 'runtime' };
   global.CLASSES = { NodicsError: class extends Error { constructor(code, text) { super(text); this.code = code; } } };
-  const request = { tenant: 't', authData: { tenant: 't', entCode: 'market', principalType: 'service', tokenType: 'service' },
+  const request = { tenant: 't', authData: { tenant: 't', entCode: 'market', principalType: 'service', tokenType: 'service',
+    runtimeScope: { module: 'product' }, permissions: ['commerce.product.publish', 'commerce.product.read'] },
     payload: { operationCode: code, storeCode: 'store' } };
   global.SERVICE = { DefaultProductBundlePublicationService: automatic, DefaultProductGovernedPublicationService: governed,
     DefaultPublicationLifecycleService: lifecycle,
+    DefaultPublicationApprovalWorkflowService: workflow,
+    DefaultServiceTokenService: { requireRuntimePrincipal: r => r.authData },
+    DefaultLoggerService: { hasPrivateCaptureProtection: () => true },
     DefaultProductListingAuthoringService: {
-      runtimeScope: r => { assert.equal(r.authData.principalType, 'service'); return { tenant: 't', enterpriseCode: 'market' }; },
-      requestState: r => clone(r), listingTerms: () => {},
-      storeContext: async () => ({ store: { enterpriseCode: 'market' } }),
+      runtimeScope: authoring.runtimeScope,
+      requestState: authoring.requestState, listingTerms: authoring.listingTerms, listingDate: authoring.listingDate,
+      storeContext: async () => ({ contractVersion: 1, tenant: 't', store: {
+        code: 'store', enterpriseCode: 'market', active: true, status: 'ACTIVE', revision: 1 } }),
     },
     DefaultModuleService: { invokeModule: async () => ({ data: clone(proof) }) },
     DefaultProductPublicationGraphService: {
@@ -110,7 +117,7 @@ function fixture(t) {
       receipt: { committed: true, operationKey: 'withdraw-original', publicationCode: code, operation: 'WITHDRAW' } }) }),
   };
   SERVICE.Version = provider; SERVICE.DefaultProductPublicationVersionProviderService = provider;
-  return { request, proof, keys, record: () => record, badReceipt: value => { badReceipt = value; },
+  return { request, proof, keys, publishPolicy, record: () => record, badReceipt: value => { badReceipt = value; },
     loseActivation: () => { loseActivation = true; }, loseWithdrawal: () => { loseWithdrawal = true; } };
 }
 
@@ -137,5 +144,61 @@ test('lost activation retries the original immutable operation and withdrawal un
 test('missing original Pricing proof cannot approve or activate', async t => {
   const f = fixture(t); f.proof.price.amount = '11';
   await assert.rejects(automatic.execute(f.request, 'publish'), /Pricing/);
+  assert.equal(f.record(), undefined);
+});
+
+test('selected Store Enterprise publishes under unchanged deployment identity through real runtimeScope and nPublish', async t => {
+  const f = fixture(t);
+  f.request.authData.entCode = 'deployment';
+  f.request.authData.enterpriseCode = 'deployment';
+  f.request.enterpriseCode = 'deployment';
+  f.publishPolicy.approvalWorkflow.runtimeEnterpriseScope = { enabled: true, enterpriseCodes: ['market'] };
+  const original = clone(f.request);
+  SERVICE.DefaultProductListingAuthoringService.create = async r => {
+    assert.deepEqual(automatic.admission(r).scope, { tenant: 't', enterpriseCode: 'market' });
+    assert.deepEqual(r.authData, original.authData);
+    assert.equal(r.enterpriseCode, 'deployment');
+    return clone(f.proof.product);
+  };
+  await automatic.execute(f.request, 'prepare');
+  assert.equal((await automatic.execute(f.request, 'publish')).status, 'ONLINE');
+  assert.equal(f.record().enterpriseCode, 'market');
+  assert.deepEqual(f.request, original);
+});
+
+for (const selection of [undefined, { enabled: false, enterpriseCodes: ['market'] },
+  { enabled: true, enterpriseCodes: ['other'] }]) test('unselected cross-Enterprise automatic publication refuses before authoring', async t => {
+  const f = fixture(t);
+  f.request.authData.entCode = 'deployment';
+  f.publishPolicy.approvalWorkflow.runtimeEnterpriseScope = selection;
+  await assert.rejects(automatic.execute(f.request, 'publish'), /not selected/);
+  assert.equal(f.record(), undefined);
+});
+
+test('Store tenant and independent Digital business scope must match before publication', async t => {
+  const f = fixture(t);
+  f.proof.enterpriseCode = 'other';
+  await assert.rejects(automatic.execute(f.request, 'publish'), /Store placement/);
+  f.proof.enterpriseCode = 'market';
+  const placement = SERVICE.DefaultProductListingAuthoringService.storeContext;
+  SERVICE.DefaultProductListingAuthoringService.storeContext = async r => ({ ...await placement(r), tenant: 'foreign' });
+  await assert.rejects(automatic.execute(f.request, 'publish'), /Store placement/);
+  assert.equal(f.record(), undefined);
+});
+
+test('Product refuses signed alias and deployment selection drift across Store proof', async t => {
+  const f = fixture(t), author = SERVICE.DefaultProductListingAuthoringService;
+  f.request.authData.entCode = 'deployment';
+  f.publishPolicy.approvalWorkflow.runtimeEnterpriseScope = { enabled: true, enterpriseCodes: ['market'] };
+  f.request.enterpriseCode = 'market';
+  await assert.rejects(automatic.execute(f.request, 'publish'), /Scoped Product/);
+  delete f.request.enterpriseCode;
+  const placement = author.storeContext;
+  author.storeContext = async r => { const value = await placement(r); r.authData.enterpriseCode = 'market'; return value; };
+  await assert.rejects(automatic.execute(f.request, 'publish'), /Scoped Product/);
+  delete f.request.authData.enterpriseCode;
+  author.storeContext = async r => { const value = await placement(r);
+    f.publishPolicy.approvalWorkflow.runtimeEnterpriseScope.enterpriseCodes.push('other'); return value; };
+  await assert.rejects(automatic.execute(f.request, 'publish'), /command changed/);
   assert.equal(f.record(), undefined);
 });

@@ -27,7 +27,7 @@ module.exports = {
         return Boolean(owner && Object.keys(owner).sort().join(',') === 'code,module,schema' &&
             owner.module === 'profile' && owner.schema === (auth.principalType === 'human' ? 'enterprise' : 'customer') &&
             this.identityIdentifier(owner.code) && this.identityIdentifier(principal) &&
-            [principal, owner.code].includes(source.ownerId) && request.ownerId === source.ownerId &&
+            source.ownerId === owner.code && request.ownerId === source.ownerId &&
             isDeepStrictEqual(request.ownerRef, owner));
     },
     /** Keeps unselected defaults inert; selection still requires the existing independent qualification policy. @param {Object} request Store scope. @returns {boolean} Selected consent-backed delivery. */
@@ -115,6 +115,29 @@ module.exports = {
             codes.some(code => !expected.references.has(code) || !batch.references.has(code))) this.fail();
         return true;
     },
+    /** Runs one membership observation phase with fresh Profile boundaries; exact private contexts alone share reference evidence. No consent or policy result is retained. */
+    membershipReferencePhase: async function (command, codes, read) {
+        this.resolveMembershipRead(command);
+        const expected = admissions.get(command);
+        if (!expected || expected.batch || typeof read !== 'function' || !Array.isArray(codes) ||
+            !codes.length || codes.length > 2000 || codes.some(code => !this.identifier(code))) this.fail();
+        const batch = { original: command, snapshot: structuredClone(command), phase: 'PREPARE', references: new Set(codes) };
+        expected.batch = batch; expected.references = new Set(codes);
+        try {
+            await SERVICE.DefaultCouponSellerAuthorizationService.activeEnterprises(expected.context, [...batch.references]);
+            this.resolveMembershipRead(command); this.resolveReadContext(command);
+            batch.phase = 'READ';
+            const result = await read();
+            batch.phase = 'VERIFY';
+            this.resolveMembershipRead(command); this.resolveReadContext(command);
+            await SERVICE.DefaultCouponSellerAuthorizationService.activeEnterprises(expected.context, [...batch.references]);
+            this.resolveMembershipRead(command); this.resolveReadContext(command);
+            return result;
+        } finally {
+            batch.phase = 'CLOSED';
+            delete expected.batch; delete expected.references;
+        }
+    },
     /** Restricts private admission to the original Product read, never root enumeration, coupon inspection, budget reads or mutation. Unadmitted callers retain their existing signed authority checks. @param {Object} request Exact owner request. @param {string} purpose Owner operation. @param {string} productCode Original Product for PRODUCT reads. @returns {boolean} Admission or unchanged legacy path. */
     assertReadPurpose: function (request, purpose, productCode) {
         const expected = admissions.get(request);
@@ -199,7 +222,7 @@ module.exports = {
                 result.errors !== undefined && (!Array.isArray(result.errors) || result.errors.length)) this.fail();
             const safe = {};
             for (const key of ['available', 'availableQuantity', 'issuedQuantity', 'inventoryStrategy', 'strategy',
-                'reservableAt', 'guaranteed', 'batchCode', 'couponBatchCode', 'promotionCode', 'purchaseRequirements'])
+                'reservableAt', 'guaranteed', 'batchCode', 'couponBatchCode', 'promotionCode', 'purchaseRequirements', 'expiry'])
                 if (Object.hasOwn(result, key)) safe[key] = structuredClone(result[key]);
             this.resolveReadContext(request);
             if (intent.batch && !isDeepStrictEqual(intent.batch.original, intent.batch.snapshot)) this.fail();
@@ -299,7 +322,12 @@ module.exports = {
             const r = this.publicRequest({ ...request, productCode });
             if (!r || !unchanged()) this.fail();
             await this.assertInstalled(r);
-            const projection = await this.visibleProduct(r);
+            // Browsing selects a public Store, not the caller's operational
+            // Enterprise. Preserve signed identity while resolving catalogue
+            // ownership independently through activated Product evidence.
+            const catalogue = { tenant: r.tenant, storeCode: r.storeCode, locale: r.locale,
+                productCode, authData: structuredClone(r.authData) };
+            const projection = await this.visibleProduct(catalogue);
             const context = { tenant: r.tenant, enterpriseCode: projection.enterpriseCode, storeCode: r.storeCode,
                 authData: structuredClone(r.authData) };
             const command = { ...context, productCode, authData: structuredClone(r.authData) };
@@ -327,11 +355,11 @@ module.exports = {
                 this.resolveReadContext(command);
                 if (!unchanged()) this.fail();
                 result.push(structuredClone(membership));
-                entries.push({ r, projection });
+                entries.push({ r, catalogue, projection });
             } finally { memberships.delete(command); admissions.delete(command); admissions.delete(context); }
         }
         for (const entry of entries) {
-            if (!isDeepStrictEqual(await this.visibleProduct(entry.r), entry.projection)) this.fail();
+            if (!isDeepStrictEqual(await this.visibleProduct(entry.catalogue), entry.projection)) this.fail();
             await this.assertInstalled(entry.r);
         }
         if (!unchanged()) this.fail();

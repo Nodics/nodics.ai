@@ -1,9 +1,45 @@
 # Product Agent Contract
 
+Pricing native publication reads only an exact already-approved dependency through
+`resolvePricingAdministrativeProof`. Pricing proves private fresh native admission
+and exact identity; Product still checks sealed graph, tenant, target and membership.
+The private read scope retires at return and grants no capture, sealing or generic
+access. Preserve composed Pricing and ordinary Product publisher regressions.
+
+Native administrator Product commands use fresh Profile evidence and a separate
+same-tenant `targetEnterpriseCode`; never rewrite the signed Enterprise or infer
+native authority from `adminGroup`. Read the administrative section of
+`llm/contracts/ordinary-product-authoring.md`. Ordinary roots stay root-only;
+new coupon graphs use fixed bounded child owners and qualified CURRENT Staged
+writers. Creation discovery requires independent write proof and schema/storage
+qualification. Partial saves return sanitized confirmed/uncertain/unattempted
+identities and require explicit graph readback, never automatic retry or adoption.
+Run `productAdministrativeAuthoring.test.js`, ordinary authoring, publisher/listing
+and Profile native-evidence tests. Pricing/publication/consent/issuance remain
+separate authorities; this authoring path grants none of them.
+
+Graph recovery uses only explicit `graph-continue` with the original full graph,
+review reason and exact confirmed version-zero pins. Preserve existing roots and
+children; reject changed/foreign/published/unpinned identities and semantic
+collisions. Only absent children may be created through the generated immutable
+writer. Keep expected business snapshots detached from MongoDB-mutated models.
+Partial outcomes are bounded owner `data.result` DTOs at HTTP409, not generic
+error metadata. Cover actual BSON assignment, nRouter serialization and explicit
+continuation failure/recovery; never turn create into an adoption/upsert path.
+
+Publication review TASK nodes explicitly declare Process's typed APPROVAL decision
+contract. Keep it in a forward Product-owned workflow contribution, never inferred
+from names in Axis or grafted onto persisted tasks. Preserve pinned old versions;
+source upgrades do not migrate waiting instances. Run
+`test/productPublicationDecisionContract.test.js` with the Process projection suite.
+
 Isolated discovery fixtures load Product's actual `config/properties` and apply
 only test-specific overrides. Do not repeat inherited pagination defaults.
 
 For bundle automation read `llm/contracts/automatic-bundle-publication.md`.
+Keep signed runtime scope distinct from independently proven Store business
+scope. Reuse `requireRuntimeEnterprise` for cross-Enterprise selection, pin that
+policy across awaits, and never rewrite request/auth aliases or weaken runtimeScope.
 Preserve the private exact-root capability, independent Digital/Store proof,
 explicit automatic nPublish audit and actual Online receipt. Never manufacture
 a human approval or broaden the ordinary publisher path. Run both bundle
@@ -18,6 +54,10 @@ archives a Staged successor, not Online delivery or history. Preserve private
 request admission, signed scope, generated CURRENT version ports, stale-version
 and marketplace-proof guards. Run `test/productBusinessAuthoring.test.js` and
 the publisher/listing suites after changes; do not infer child CRUD authority.
+Ordinary status presentation and implicit create defaults must respect the
+effective schema enum as well as the existing DRAFT/ACTIVE command boundary;
+presentation captions never expand it. Preserve the narrowed-enum writer and
+Axis parser regressions in the ordinary authoring suite.
 
 The module owns explicit ordinary business access definitions in
 `data/manifest.json` sections `businessAccessGroups` and `businessAccessRoles`.
@@ -144,7 +184,10 @@ only, never passed projections as admission. Preserve canonical per-Product
 visibility/readback and Promotion's fresh before/after bounded Profile reference
 checks. Validate every selected Map value as exactly own data fields: Boolean
 `available`, its matching `IN_STOCK`/`OUT_OF_STOCK` status and Promotion-validated
-`acquisitionRequirements` (typed safe DTO or explicit null). Null requires false.
+`acquisitionRequirements` (typed safe DTO or explicit null) and `expiry`
+(Promotion-validated FIXED/NONE or explicit null). Either null requires false.
+Strip copied coupon expiry attributes; catalogue validity filters/sorts use only
+the owner summary. Unknown is not NONE and listing end is not coupon expiry.
 Detach the safe summary; never copy requirements from Product attributes.
 Undefined/inert, malformed or extra-field values reject the entire call before
 any Digital fallback, even if delivery selection changes during the batch await.
@@ -180,3 +223,9 @@ strict real-UTC normalization and interval ordering; do not close this business
 validator inside `listingTerms` or move private publication admission out of its
 owner. Cover effective overrides and invalid calendar dates in
 `test/productBundlePublication.test.js`.
+
+Optional discovery ranking failures retain the configured omit/error behavior and
+emit only a registered-format error code (or UNCLASSIFIED) through the runtime
+logger. Never log provider messages, request payloads or commercial/customer data.
+Cover this boundary with the focused optional-ranking observability regression in
+`test/productDiscoveryApiContract.test.js`.

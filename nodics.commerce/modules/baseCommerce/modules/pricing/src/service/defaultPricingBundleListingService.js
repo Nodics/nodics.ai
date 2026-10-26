@@ -153,7 +153,8 @@ module.exports = {
           item.schema === "priceRow" && item.policy.priceBookCode !== terms.priceBookCode))
       throw new Error("Listing book policy is incompatible");
     const book = books[0].policy;
-    if (book.validFrom && (!terms.startsAt || Date.parse(terms.startsAt) < Date.parse(book.validFrom)) ||
+    const effectiveStart = terms.startsAt ? Date.parse(terms.startsAt) : Date.now();
+    if (book.validFrom && effectiveStart < Date.parse(book.validFrom) ||
         book.validTo && (!terms.endsAt || Date.parse(terms.endsAt) > Date.parse(book.validTo)))
       throw new Error("Listing window exceeds selected book");
     return { publication, records, status: before };

@@ -12,6 +12,54 @@ platform-administrator authority; loyaltyApi remains transport only.
 
 ## Admission And Interface
 
+### Separate Zero-Balance Provisioning
+
+`PUT /nodics/loyaltyApi/v0/admin/enterprise-test-wallets` delegates only to
+`DefaultLoyaltyEnterpriseTestCreditService.provision(request)`. Exact body:
+
+```json
+{
+  "enterpriseCode": "existing-test-enterprise",
+  "programCode": "selected-program",
+  "rewardTypeCode": "selected-point-type",
+  "reason": "Reviewed isolated Enterprise wallet",
+  "confirmed": true
+}
+```
+
+In addition to every native Super Admin, environment, POINT program and persistence
+gate below, `loyalty.enterpriseTestCredits.provisioningEnabled` must be exactly
+true (default false). Profile resolves the existing target Enterprise using the
+original credential. The selector never changes the signed administrator's
+Enterprise or tenant. No amount, test marker, actor, wallet code, environment,
+transaction handle or additional payload field is accepted.
+
+Creation atomically inserts the canonical owner wallet and canonical program/type
+balance using their existing deterministic identity owners. All six counters are
+zero; no ledger or credit receipt is created. The owner supplies test markers and
+immutable `metadata.testProvision` intent, precision, original administrator
+proof references and provision time on both records. The owner wallet identity
+is the replay key: the first program/type/reason intent is retained for that test
+wallet. This command cannot extend it to another program or change its reason.
+
+Exact replay returns CURRENT with the original actor and time, including after
+later credit/spending; it never resets counters. Existing ordinary/unmarked,
+foreign, ambiguous, partial or contradictory wallet/balance evidence refuses.
+There is no adoption, repair or relabeling branch. Lost acknowledgement requires
+the identical PUT. Unique code indexes and one qualified transaction protect
+concurrent requests. Fresh authority is checked before qualification, inside the
+transaction and before the final result.
+
+Response fields: status (PROVISIONED or CURRENT), testOnly, walletCode, balanceCode,
+ownerType, ownerCode, programCode, rewardTypeCode, actorCode and provisionedAt.
+This is provisioning evidence, not funding or a current balance. Funding remains
+the separate confirmed POST below with its own stable key. Service-only `/wallets`
+still opens ordinary wallets and cannot supply test qualification. Neither route
+selection nor an environment label proves production-provider isolation; the
+deployment operator must establish isolation before enabling either command.
+
+### Credit Existing Qualified Balance
+
 The request carries the original verified `tenant`, `authData` and signed
 `authorization`. The exact payload is:
 
@@ -107,6 +155,7 @@ or enable funding:
 ```js
 enterpriseTestCredits: {
   enabled: false,
+  provisioningEnabled: false,
   allowedEnvironments: [],
   maximumReasonLength: 500,
   platformAdministratorEvidencePath: '/identity/platform-administrator/evidence',
@@ -147,6 +196,15 @@ module.exports.loyaltyWallet.rewardTestCreditOperation = {
 ```
 
 The generated service name must be `DefaultRewardTestCreditOperationService`.
+Program and RewardType policy reads retain the same opaque transaction context
+as wallet operations. Their owning schemas explicitly declare side-effect-free
+transaction participation with cache and events disabled. Do not remove the token
+or relax database eligibility to make policy reads succeed. The test-credit suite
+crosses the canonical database transaction owner and Mongo `getItems` boundary
+with actual owner schema definitions and an isolated driver/session double; it
+also rejects missing participation and enabled cache/events. This is not live
+database acceptance.
+
 The existing loop supplies `transaction: { enabled: true, sideEffects: 'none' }`
 and unique code index. Retain no generic router, no cache/event/search, no CMS
 publication or receipt mutation command. Tenant is the runtime partition, not a
@@ -259,6 +317,13 @@ permission definition ungranted. Update Wallet README/contract index and API own
 guidance when integrating shared files; do not change recipient/transfer owners.
 
 ## Verification Boundary
+
+Provisioning coverage includes atomic zero-only creation without ledger effects,
+concurrent replay, lost acknowledgement, post-credit replay, original actor audit,
+default-off/environment/native authority/program/index refusal, invalid fields,
+ordinary-wallet refusal and rollback after incomplete writes. LoyaltyAPI's
+participant contract test verifies PUT routing, original credentials, private
+response, error propagation and that provisioning cannot dispatch credit.
 
 `test/loyaltyEnterpriseTestCredit.test.js` connects the real command, real reward
 operations, real transaction compose/join, real participant transport and real

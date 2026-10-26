@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @description Generated Nodics framework documentation hierarchy nodes. */
+/** @description Owner-authored auction documentation CMS Node records; Staged pending review. */
 module.exports = {
   "record0": {
     "code": "nodicsDocsNodePagecatalogProductDiscoveryManagement",
@@ -74,7 +74,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "product-catalog-and-discovery",

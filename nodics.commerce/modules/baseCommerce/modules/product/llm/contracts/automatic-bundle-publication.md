@@ -21,12 +21,32 @@ Service-only, private, no-store POST routes:
 - `/internal/products/bundle-listings/withdraw`
 
 Each accepts exactly `{operationCode,storeCode}`. Original signed runtime
-authority must include Product publish/read and the exact Store enterprise.
+authority must include Product publish/read. Its deployment Enterprise remains
+unchanged; a different Store business Enterprise requires the existing
+`DefaultPublicationApprovalWorkflowService.requireRuntimeEnterprise` qualification
+under `publish.approvalWorkflow.runtimeEnterpriseScope`. Registration, Store
+placement and a Digital proof do not themselves grant that scope.
 Product independently reads Digital's `/internal/bundle-listings/proof` with its
 own runtime credential and uses the existing Store-placement handoff. No caller
 Product model, approval flags, changed namespace or mutable latest-source lookup
 is admitted. A private request-local capability permits only the exact original
 root and its verified dependency closure; copied/serialized flags cannot mint it.
+
+The owner pins the original `runtimeScope`, signed aliases, request state and
+runtime Enterprise selection policy across awaits. Only after same-tenant active
+Store proof and agreement with Digital's retained business Enterprise does it
+mint the private business scope `{tenant,enterpriseCode:store.enterpriseCode}`.
+The request and `authData` retain the signed deployment Enterprise throughout
+authoring and nPublish. No alias rewriting or broader `runtimeScope` admission is
+permitted. Missing/disabled/unselected cross-Enterprise policy, foreign Store
+evidence, alias drift and selection-policy drift refuse before publication effects.
+Fresh Digital evidence is rechecked before automatic approval and after authoring.
+
+Focused tests exercise both same-Enterprise and selected cross-Enterprise
+preparation through the actual immutable version-zero writer, and publication
+through real nPublish transitions with isolated persistence/transport. Denial and
+drift cases assert no publication creation. These tests do not execute or repair
+any held live operation or qualify installed deployment scope.
 
 Prepare uses the existing insert-only/version-zero listing writer and actual
 version readback. The original binding includes manifest revision/digest,
@@ -57,8 +77,8 @@ Tests combine real versioned Product authoring, actual nPublish transitions and
 isolated storage/transport. They do not qualify installed authentication, graph
 indexes, source/target transport, Pricing deployment, provider concurrency or E2E.
 
-The direct CMS guide is the Staged `data/docs-v002` successor to the unchanged
-`docs-v001` pack. It documents automatic audit, dates, floor/projection ownership,
+The direct CMS guide is the consolidated Staged `data/docs-v001` pack.
+It documents automatic audit, dates, floor/projection ownership,
 future-start original-unit holds and uncertainty recovery. Manifest hashes cover
 normalized final bytes; source metadata and search derive from the canonical
 blocks. This source change does not install or publish documentation.

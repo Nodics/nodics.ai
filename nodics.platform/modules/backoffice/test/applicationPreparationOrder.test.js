@@ -94,6 +94,78 @@ const step = (code, server, order, dataType = "core") => ({
   targetRuntimeRole: server === "waste" ? "WASTE" : "PLATFORM",
   dataType,
 });
+test("explicit batch boundaries separate same-runtime imports without inventing operator scope", () => {
+  const source = step("source:operations", "platform", 90, "init");
+  const dependent = { ...step("assignment:staff", "platform", 100, "init"), batchBoundaryBefore: true };
+  const profile = { code: "partner", preparation: { steps: [dependent, source] } };
+  const normalized = service.preparationSteps(profile);
+  const request = { requestId: "same-original-command" };
+  const groups = service.preparationGroups(profile, request, normalized);
+  assert.deepEqual(groups.map(group => group.steps.map(item => item.code)), [[source.code], [dependent.code]]);
+  assert.equal(normalized.find(item => item.code === source.code).batchBoundaryBefore, false);
+  assert(groups.every(group => group.steps.every(item => item.operatorEnterpriseCode === undefined)));
+  assert.equal(new Set(groups.map(group => group.idempotencyKey)).size, 2);
+  assert.deepEqual(service.preparationGroups(profile, request, normalized), groups);
+  assert.equal(service.preparationGroups(profile, request,
+    normalized.map(item => ({ ...item, batchBoundaryBefore: false }))).length, 1);
+  assert.equal(source.batchBoundaryBefore, undefined);
+});
+test("batch boundary definitions and defaults stay Framework-owned and reject malformed selections", () => {
+  const previous = { CONFIG: global.CONFIG, CLASSES: global.CLASSES };
+  global.CLASSES = { NodicsError: class extends Error {
+    constructor(code, message) { super(message); this.code = code; }
+  } };
+  const source = step("source:operations", "platform", 90, "init");
+  try {
+    global.CONFIG = { get: () => undefined };
+    assert.equal(service.normalizePreparationStep(source, 0).batchBoundaryBefore, false);
+    global.CONFIG = { get: () => ({ preparationStepDefaults: { batchBoundaryBefore: true } }) };
+    assert.equal(service.normalizePreparationStep(source, 0).batchBoundaryBefore, true);
+    assert.equal(service.normalizePreparationStep({ ...source, batchBoundaryBefore: false }, 0).batchBoundaryBefore, false);
+    global.CONFIG = { get: () => undefined };
+    for (const invalid of [null, "true", 1, {}, []]) {
+      assert.throws(() => service.normalizePreparationStep({ ...source, batchBoundaryBefore: invalid }, 0), /batch boundary/);
+      assert.throws(() => service.preparationGroups({ code: "partner" }, {}, [{ ...source, batchBoundaryBefore: invalid }]), /batch boundary/);
+    }
+    assert.throws(() => service.normalizePreparationStep({ ...source, type: "MEDIA_ASSET_MANIFEST", batchBoundaryBefore: true }, 0), /batch boundary/);
+    global.CONFIG = { get: () => ({ preparationStepDefaults: { batchBoundaryBefore: "false" } }) };
+    assert.throws(() => service.normalizePreparationStep(source, 0), /batch boundary/);
+  } finally {
+    for (const [name, value] of Object.entries(previous)) {
+      if (value === undefined) delete global[name]; else global[name] = value;
+    }
+  }
+});
+test("fresh preparation completes the source batch before an independently sorted dependent batch", async () => {
+  const owner = Object.create(service), profile = { code: "partner" };
+  const steps = [step("source:operations", "platform", 90, "init"),
+    { ...step("assignment:staff", "platform", 100, "init"), batchBoundaryBefore: true }];
+  const installed = new Set(), calls = [], request = { authData: { principalId: "original-operator" } };
+  owner.profile = () => profile;
+  owner.human = () => "original-operator";
+  owner.preparationSteps = () => steps;
+  owner.functionalModulePreparationStatus = async () => [];
+  owner.prepareMediaAssets = async () => calls.push(["media"]);
+  owner.invokeDataReleaseOperation = async (mode, group, actual) => {
+    assert.equal(actual, request);
+    calls.push([mode, ...group.steps.map(item => item.code)]);
+    if (mode === "execute") {
+      // nImport is entitled to sort a batch independently of preparation step order.
+      for (const item of group.steps.slice().sort((a, b) => a.code.localeCompare(b.code))) {
+        if (item.code === "assignment:staff") assert(installed.has("source:operations"));
+        installed.add(item.code);
+      }
+    }
+    return { releases: group.steps.map(item => ({ releaseCode: item.code,
+      status: installed.has(item.code) ? "CURRENT" : "NOT_INSTALLED", version: "0.0.1" })) };
+  };
+  owner.status = async () => ({ readiness: "NOT_IMPORTED", preparation: await owner.preparationStatus(profile, request) });
+  const result = await owner.prepareCapability(profile.code, request);
+  assert.deepEqual(calls.slice(0, 5), [["preflight", "source:operations"], ["preflight", "assignment:staff"],
+    ["media"], ["execute", "source:operations"], ["execute", "assignment:staff"]]);
+  assert.equal(result.preparation.status, "CURRENT");
+  assert(result.preparation.groupReceipts.every(receipt => receipt.status === "COMPLETE"));
+});
 test("keeps Waste foundation and policy before Profile despite reverse server/type lexical order", () => {
   const steps = [
     step("profile:employees", "platform", 30),
@@ -249,7 +321,8 @@ test("fresh human preparation preflights and installs once despite enabled share
     assert.equal(actualRequest, request);
     assert.equal(mode, "INSTALLATION");
     calls.push(["observe", selected.code]);
-    return { ready: installed.has(selected.code), version: "0.0.1" };
+    return { ready: installed.has(selected.code),
+      status: installed.has(selected.code) ? "CURRENT" : "NOT_CURRENT", version: "0.0.1" };
   };
   owner.invokeDataReleaseOperation = async (mode, group, actualRequest) => {
     assert.equal(actualRequest, request);
@@ -265,8 +338,8 @@ test("fresh human preparation preflights and installs once despite enabled share
   owner.prepareMediaAssets = async () => calls.push(["media", "assets"]);
   owner.status = async () => ({ readiness: "NOT_IMPORTED", preparation: await owner.preparationStatus(profile, request) });
   const freshGet = await owner.preparationStatus(profile, request);
-  assert.equal(freshGet.status, "BLOCKED");
-  assert(freshGet.steps.every(item => item.status === "VALIDATION_BLOCKED"));
+  assert.equal(freshGet.status, "ACTION_REQUIRED");
+  assert(freshGet.steps.every(item => item.status === "NOT_INSTALLED"));
   calls.length = 0;
   const result = await owner.prepareCapability(profile.code, request);
   assert.deepEqual(calls.slice(0, 7), [

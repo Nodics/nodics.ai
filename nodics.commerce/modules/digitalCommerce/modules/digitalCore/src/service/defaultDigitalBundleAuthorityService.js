@@ -146,24 +146,25 @@ module.exports = {
       throw new Error("Unknown bundle authority action");
     const permission = input.action === "HOLDINGS_READ" ? "commerce.digital.own.read" : input.action === "BUNDLE_BUY" ? "commerce.checkout.place" : ownerRef.schema === "enterprise" && ["GIFT_RECEIVE", "GIFT_CONFIGURE"].includes(input.action)
       ? "commerce.digital.bundle.configure" : "commerce.digital.bundle.manage";
-    if (!security?.isPermissionGranted(permission, security.getGrantedPermissions(r), {})) throw new Error("Bundle permission denied");
+    if (!security?.isPermissionGranted || !security.getGrantedPermissions) throw new Error('Bundle permission service is unavailable');
+    if (!security.isPermissionGranted(permission, security.getGrantedPermissions(r), {})) throw new CLASSES.NodicsError('ERR_AUTH_00003');
     const enterpriseCode = auth.enterpriseCode || auth.entCode;
     if (ownerRef.schema === "customer") {
-      if (auth.principalType !== "customer") throw new Error("Personal customer context is required");
+      if (auth.principalType !== "customer") throw new CLASSES.NodicsError('ERR_AUTH_00003');
       const identity = await this.profile(r, "/customer/identity");
       if (identity?.contractVersion !== 1 || identity.tenant !== r.tenant || identity.enterpriseCode !== enterpriseCode ||
           identity.customer?.loginId !== auth.loginId || identity.customer?.code !== ownerRef.code)
-        throw new Error("Canonical customer owner is unconfirmed");
+        throw new CLASSES.NodicsError('ERR_AUTH_00003');
     } else {
-      if (auth.principalType !== "human" || ownerRef.code !== enterpriseCode) throw new Error("Represented Enterprise context is required");
+      if (auth.principalType !== "human" || ownerRef.code !== enterpriseCode) throw new CLASSES.NodicsError('ERR_AUTH_00003');
       const evidence = await this.profile(r, "/identity/scopes/me");
       if (evidence?.principalCode !== auth.loginId || !Array.isArray(evidence.scopes) || !Array.isArray(evidence.deniedScopes))
         throw new Error("Enterprise actor scope is unconfirmed");
       if (!evidence.scopes.some(scope => this.matchesScope(scope, r, enterpriseCode, permission, input.action)) ||
           evidence.deniedScopes.some(scope => this.matchesScope(scope, r, enterpriseCode, permission, input.action)))
-        throw new Error("Enterprise actor scope denied");
+        throw new CLASSES.NodicsError('ERR_AUTH_00003');
     }
-    if (!security.isPermissionGranted(permission, security.getGrantedPermissions(r), {})) throw new Error("Bundle permission changed");
+    if (!security.isPermissionGranted(permission, security.getGrantedPermissions(r), {})) throw new CLASSES.NodicsError('ERR_AUTH_00003');
     return { authorized: true, tenant: r.tenant, ownerRef, actorRef: { module: "profile", schema: auth.principalType === "customer" ? "customer" : "employee", code: auth.loginId } };
   },
   /**

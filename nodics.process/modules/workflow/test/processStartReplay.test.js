@@ -55,6 +55,35 @@ function fixture() {
     return { service, records, calls, request };
 }
 
+test('native Pricing start retains seller business context independently of original human enterprise', async () => {
+    const f = fixture();
+    const definition = require('../../../../nodics.commerce/modules/baseCommerce/modules/pricing/data/init-v001/records/process/pricingPublicationWorkflowDefinitionData').definitions[0];
+    const version = { ...structuredClone(definition), definitionCode: definition.code, version: 1 };
+    f.service.resolveStartVersion = async () => version;
+    f.request.authData = { tokenType: 'access', principalType: 'human', loginId: 'admin',
+        tenant: 'tenant-a', entCode: 'default' };
+    f.request.httpRequest = { headers: { enterprise: 'default' } };
+    f.request.runtimeOperation = { instanceCode: 'pricing-review', definitionCode: definition.code,
+        context: { enterpriseCode: 'seller-a', tenantCode: 'tenant-a', requestedBy: 'admin', publicationCode: 'pricing-a' } };
+    const original = structuredClone(f.request);
+    await f.service.startInstance(f.request);
+    const instance = f.records.get('tenant-a:pricing-review');
+    assert.deepEqual(instance.context, original.runtimeOperation.context);
+    const policy = f.service.policyOf(version, version.graph.nodes.find(node => node.code === 'policyReview'));
+    assert.equal(policy.actorPolicy, undefined);
+    assert.doesNotThrow(() => f.service.assertTaskActor(f.request, instance, policy));
+    assert.throws(() => f.service.assertTaskActor(f.request, instance, { actorPolicy: {
+        permission: 'pricing.publication.approve', enterpriseContextField: 'enterpriseCode',
+        requesterContextField: 'requestedBy',
+    } }), { code: 'ERR_PROCESS_00029' }, 'an explicit enterprise-bound policy must still refuse the mismatch');
+    assert.deepEqual(f.request, original, 'business target must not replace signed actor or transport headers');
+    const replay = await f.service.startInstance(f.request);
+    assert.equal(replay.data.instance.code, instance.code);
+    assert.equal(f.calls.entered, 1);
+    await assert.rejects(f.service.startInstance({ ...f.request,
+        authData: { ...f.request.authData, entCode: 'seller-a' } }), { code: 'ERR_PROCESS_00026' });
+});
+
 test('exact retry reuses original immutable version and preserves advanced context', async () => {
     const f = fixture();
     await f.service.startInstance(f.request);

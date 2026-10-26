@@ -18,6 +18,27 @@ const settlement = require("../src/service/defaultDigitalBundleSettlementService
 const ownership = require("../src/service/defaultDigitalCommerceOwnershipService");
 const digitalCheckout = require("../src/service/defaultDigitalCommerceCheckoutService");
 
+test("bundle browsing resolves the retained variant without accepting a foreign selection", async t => {
+  const f = await fixture(t);
+  const request = { ...f.r, productCode: "product" };
+  delete request.sku;
+  delete request.variantCode;
+  const original = structuredClone(request);
+  const result = await settlement.availability(request, f.projection);
+  assert.equal(result.available, true);
+  assert.equal(result.sku, "sku");
+  await assert.rejects(settlement.availability({ ...request, sku: "foreign" }, f.projection));
+  await assert.rejects(settlement.availability({ ...request, variantCode: "foreign" }, f.projection));
+  const malformed = structuredClone(f.projection);
+  malformed.payload.variantSkuMap = {};
+  await assert.rejects(settlement.availability(request, malformed));
+  const ambiguous = structuredClone(f.projection);
+  ambiguous.payload.variantCodes.push("another");
+  ambiguous.payload.variantSkuMap.another = "another-sku";
+  await assert.rejects(settlement.availability(request, ambiguous));
+  assert.deepEqual(request, original);
+});
+
 test("bundle capture honors the Payment owner's effective provider and refuses foreign receipts", async t => {
   const f = await fixture(t), unit = await f.reserve();
   f.paymentConfig.loyaltyRewardPayment.providerCode = "selected-reward-provider";
@@ -224,4 +245,47 @@ test("lost capture acknowledgement never admits compensation from an unfenced pu
   assert.equal(f.rows.DigitalBundleOperation.find(row => row.code === unit.code).evidence.capture, undefined);
   await assert.rejects(settlement.fenceCompensation(f.r, unit), /forward recovery/);
   assert.equal((await settlement.confirm(f.r, unit)).status, 'SOLD');
+});
+
+/** Persisted Payment producer contract and actual exact Loyalty ledger evidence; no auction provenance relabeling. */
+async function auctionCaptureFixture(t) {
+ const f=await fixture(t),unit=await f.reserve();await f.seedCapture(unit);
+ const row=f.rows.DigitalBundleOperation.find(r=>r.code===unit.code);
+ const binding={commitmentCode:'commitment',roundCode:'round',bidCode:'bid',priceQuoteCode:'quote',reservationCode:'buyer-reservation'};
+ row.evidence.command.auctionFunds=binding;
+ const ledger=f.loyalty.rows.RewardLedgerEntry.find(r=>r.code==='capture-ledger');
+ Object.assign(ledger,{sourceType:'BIDDING',sourceCode:'bid',targetType:'AUCTION_ROUND',targetCode:'round'});
+ const payment=f.rows.PaymentTransactionEntry.find(r=>r.evidence.operation==='CAPTURE');
+ for(const record of f.rows.PaymentTransactionEntry)record.evidence.auctionFunds={commitmentCode:'commitment'};
+ payment.evidence.auctionCapture={contractVersion:1,commitmentCode:'commitment',redemptionCode:'redemption',captureLedgerEntryCode:'capture-ledger',
+   roundCode:'round',bidCode:'bid',reservationCode:'buyer-reservation',idempotencyKey:'checkout:payment:capture',
+   sourceType:'BIDDING',sourceCode:'bid',targetType:'AUCTION_ROUND',targetCode:'round'};
+ const execution=require('../../../../payment/modules/paymentCore/src/service/defaultPaymentExecutionService');
+ const captured=execution.transactionModel({...payment,auctionFunds:{commitmentCode:'commitment'},
+   walletCode:payment.evidence.walletCode,programCode:payment.evidence.programCode,rewardTypeCode:payment.evidence.rewardTypeCode},
+   {code:payment.providerCode},{reference:'capture-ledger',status:'CAPTURED',auctionCapture:payment.evidence.auctionCapture});
+ Object.assign(payment,structuredClone(captured));
+ return{...f,row,ledger,payment};
+}
+test('auction bundle capture verifies exact Bidding ledger provenance and retains redemption separately',async t=>{
+ const f=await auctionCaptureFixture(t),proof=await settlement.capture(f.r,f.row);
+ assert.equal(proof.ledgerRef.code,'capture-ledger');assert.equal(proof.auctionCapture.redemptionCode,'redemption');
+ assert.equal(proof.auctionCapture.sourceType,'BIDDING');assert.equal(proof.auctionCapture.targetType,'AUCTION_ROUND');
+ assert.equal(f.ledger.sourceCode,'bid');assert.equal(f.ledger.targetCode,'round');
+ assert.deepEqual(await settlement.capture(f.r,f.row),proof);
+});
+for(const defect of ['commitment','bid','round','hold','reference','provenance','amount','missingProof'])
+ test('auction bundle capture refuses '+defect+' before transfer',async t=>{
+ const f=await auctionCaptureFixture(t);
+ if(defect==='commitment')f.payment.evidence.auctionCapture.commitmentCode='foreign';
+ if(defect==='bid')f.payment.evidence.auctionCapture.bidCode='foreign';
+ if(defect==='round')f.ledger.targetCode='foreign';
+ if(defect==='hold')f.ledger.reservationCode='foreign';
+ if(defect==='reference'){f.payment.providerReference='redemption';f.payment.evidence.providerReference='redemption';}
+ if(defect==='provenance'){f.ledger.sourceType='PAYMENT';f.ledger.sourceCode='order';}
+ if(defect==='amount')f.ledger.amount='1';
+ if(defect==='missingProof')delete f.payment.evidence.auctionCapture;
+ await assert.rejects(settlement.capture(f.r,f.row));
+ assert.equal(f.effects.some(e=>e.startsWith('transfer:')),false);
+ assert.equal(f.loyalty.rows.RewardLedgerEntry.some(e=>e.entryType==='EARN'),false);
 });

@@ -37,17 +37,21 @@ test('bundle publication has one secured owner adapter and no duplicate customer
 });
 
 function fixture(t) {
-  const before = { SERVICE: global.SERVICE, CONFIG: global.CONFIG, NODICS: global.NODICS, UTILS: global.UTILS };
+  const before = { SERVICE: global.SERVICE, CONFIG: global.CONFIG, NODICS: global.NODICS, UTILS: global.UTILS, CLASSES: global.CLASSES };
   t.after(() => Object.assign(global, before));
   const policy = clone(defaults.digitalCore); policy.bundleListings.enabled = true;
   policy.bundles.ownerAuthorityService = 'Authority'; policy.bundles.componentProviders.CERTIFICATE = 'Components';
   const rows = {}, effects = [], holds = new Map(); let failPublish = false, failWithdraw = false;
-  global.CONFIG = { get: k => k === 'digitalCore' ? policy : undefined };
+  const publishPolicy = clone(require('../../../../../../nodics.foundation/modules/nPublish/config/properties').publish);
+  global.CONFIG = { get: k => k === 'digitalCore' ? policy : k === 'publish' ? publishPolicy : undefined };
+  global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
   global.UTILS = { createModelName: n => n };
   global.NODICS = { getInternalAuthToken: () => 'runtime', getModels: () => Object.fromEntries(['digitalBundleManifest', 'digitalBundleOperation']
     .map(n => [n, { primaryKey: 'code', rawSchema: {}, compareAndSetItem() {} }])) };
   global.SERVICE = { DefaultDigitalBundleService: bundles, DefaultDigitalCommerceEntitlementService: persistence,
     DefaultDigitalCommerceAuctionService: listing,
+    DefaultServiceTokenService: { requireRuntimePrincipal: r => r.authData },
+    DefaultPublicationApprovalWorkflowService: require('../../../../../../nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalWorkflowService'),
     DefaultDigitalBundleCompositionService: require('../src/service/defaultDigitalBundleCompositionService'),
     DefaultDigitalBundleSettlementService: require('../src/service/defaultDigitalBundleSettlementService'),
     DefaultExactAmountService: exact, DefaultDigitalBundleAuthorityService: require('../src/service/defaultDigitalBundleAuthorityService'),
@@ -61,7 +65,10 @@ function fixture(t) {
   for (const name of ['DefaultDigitalBundleManifestService', 'DefaultDigitalBundleOperationService', 'DefaultDigitalProductBindingService']) {
     rows[name] = [];
     SERVICE[name] = {
-      get: async r => ({ code: 'SUC_TEST', result: clone(rows[name].filter(row => Object.entries(r.query).every(([k, v]) => row[k] === v))) }),
+      get: async r => {
+        const result = clone(rows[name].filter(row => Object.entries(r.query).every(([k, v]) => row[k] === v)));
+        return { code: 'SUC_TEST', result, count: result.length };
+      },
       save: async r => { if (rows[name].some(row => row.code === r.model.code)) throw Error('Duplicate');
         rows[name].push(clone(r.model)); return { code: 'SUC_TEST', result: clone(r.model) }; },
       update: async r => {
@@ -126,7 +133,7 @@ function fixture(t) {
     listingContextRef: { code: 'binding', revision: 3 },
     name: 'Bundle', amount: '10', currency: 'POINTS', priceBookCode: 'rewards', storeCode: 'store', saleMode: 'AUCTION',
     startsAt: '2999-01-01T00:00:00.000Z', endsAt: null, categoryCodes: [], reward: { programCode: 'program', rewardTypeCode: 'points', scale: 2 } });
-  return { request, create, command, rows, row, holds, effects, failPublish: value => { failPublish = value; },
+  return { request, create, command, rows, row, holds, effects, publishPolicy, failPublish: value => { failPublish = value; },
     failWithdraw: value => { failWithdraw = value; } };
 }
 
@@ -200,4 +207,120 @@ test('context changes during owner proof fail before reservation and persisted p
     if (first) { first = false; f.rows.DefaultDigitalBundleListingContextService[0].revision++; } return value; };
   await assert.rejects(listing.publish(f.request, command), /context changed/);
   assert.equal(f.holds.size, 0); assert.equal(f.rows.DefaultDigitalBundleOperationService.length, 0);
+});
+
+async function proofFixture(t) {
+  const f = fixture(t), command = f.command(await f.create());
+  f.failPublish(true);
+  await assert.rejects(listing.publish(f.request, command), /Activation unknown/);
+  f.publishPolicy.approvalWorkflow.runtimeEnterpriseScope = { enabled: true, enterpriseCodes: ['market'] };
+  const request = { tenant: 'tenant', enterpriseCode: 'deployment', authorization: 'Bearer original-runtime',
+    authData: { tenant: 'tenant', entCode: 'deployment', enterpriseCode: 'deployment', tokenType: 'service',
+      principalType: 'service', runtimeScope: { module: 'product' }, permissions: ['commerce.digital.bundle.publish'] },
+    payload: { operationCode: f.row().code, storeCode: 'store' } };
+  return { ...f, proofRequest: request };
+}
+
+test('proof resolves the selected Store namespace with exact bounded reads and unchanged runtime aliases', async t => {
+  const f = await proofFixture(t), r = f.proofRequest, original = clone(r), before = clone(f.effects);
+  const get = SERVICE.DefaultDigitalBundleOperationService.get, queries = [];
+  SERVICE.DefaultDigitalBundleOperationService.get = async request => {
+    queries.push(clone(request.query));
+    assert.deepEqual(request.searchOptions, { pageNumber: 1, pageSize: 2 });
+    assert.equal(request.tenant, 'tenant');
+    return get(request);
+  };
+  const proof = await listing.proof(r, r.payload);
+  assert.equal(proof.enterpriseCode, 'market');
+  assert.equal(proof.operationCode, f.row().code);
+  assert.equal(proof.manifest.code, f.row().manifestCode);
+  assert.deepEqual(queries, Array(2).fill({ tenant: 'tenant', enterpriseCode: 'market', code: f.row().code }));
+  assert.deepEqual(r, original);
+  assert.deepEqual(f.effects, before);
+  assert.equal(f.holds.size, 1);
+});
+
+test('denied or absent business qualification refuses before operation lookup', async t => {
+  const f = await proofFixture(t), r = f.proofRequest;
+  SERVICE.DefaultDigitalBundleOperationService.get = async () => { assert.fail('Denied scope reached persistence'); };
+  for (const policy of [undefined, { enabled: false, enterpriseCodes: ['market'] }, { enabled: true, enterpriseCodes: ['other'] }]) {
+    f.publishPolicy.approvalWorkflow.runtimeEnterpriseScope = policy;
+    await assert.rejects(listing.proof(r, r.payload), /not selected/);
+  }
+  f.publishPolicy.approvalWorkflow.runtimeEnterpriseScope = { enabled: true, enterpriseCodes: ['market'] };
+  delete SERVICE.DefaultPublicationApprovalWorkflowService;
+  await assert.rejects(listing.proof(r, r.payload), /not qualified/);
+});
+
+test('proof rejects tenant and Enterprise alias contradictions before Store access', async t => {
+  const f = await proofFixture(t), r = f.proofRequest;
+  SERVICE.DefaultModuleService.invokeModule = async () => { assert.fail('Invalid aliases reached Store'); };
+  for (const patch of [{ enterpriseCode: 'market' }, { tenantCode: 'foreign' },
+    { httpRequest: { headers: { 'x-enterprise-code': 'market' } } },
+    { httpRequest: { headers: { 'X-Tenant-Code': 'foreign' } } },
+    { authData: { ...r.authData, enterpriseCode: 'market' } }]) {
+    await assert.rejects(listing.proof({ ...r, ...patch }, r.payload), /runtime is required/);
+  }
+  await assert.rejects(listing.proof(r, { ...r.payload, enterpriseCode: 'market' }), /Exact bundle/);
+  await assert.rejects(listing.proof(r, { ...r.payload, operationCode: { $ne: null } }), /Exact bundle/);
+});
+
+test('proof rejects duplicate, truncated, foreign and unrelated Store evidence', async t => {
+  const f = await proofFixture(t), r = f.proofRequest, get = SERVICE.DefaultDigitalBundleOperationService.get;
+  for (const change of [
+    response => { response.result.push(clone(response.result[0])); response.count = 2; },
+    response => { response.count = 2; },
+    response => { delete response.count; },
+    response => { response.acknowledged = false; },
+    response => { response.result[0].tenant = 'foreign'; },
+    response => { response.result[0].enterpriseCode = 'foreign'; },
+    response => { response.result[0].code = 'bundle-operation:' + 'f'.repeat(64); },
+    response => { const listing = response.result[0].evidence.listing;
+      listing.terms.storeCode = 'other'; listing.termsDigest = bundles.digest(listing.terms); },
+  ]) {
+    SERVICE.DefaultDigitalBundleOperationService.get = async request => { const response = await get(request); change(response); return response; };
+    await assert.rejects(listing.proof(r, r.payload), /evidence|terms|Store changed/);
+  }
+});
+
+test('proof rechecks original authority and retained row across asynchronous reads', async t => {
+  const f = await proofFixture(t), r = f.proofRequest, get = SERVICE.DefaultDigitalBundleOperationService.get;
+  SERVICE.DefaultDigitalBundleOperationService.get = async request => {
+    const response = await get(request); r.authData.enterpriseCode = 'market'; return response;
+  };
+  await assert.rejects(listing.proof(r, r.payload), /runtime is required/);
+  r.authData.enterpriseCode = 'deployment';
+  SERVICE.DefaultDigitalBundleOperationService.get = async request => {
+    const response = await get(request); f.publishPolicy.approvalWorkflow.runtimeEnterpriseScope.enterpriseCodes.push('other'); return response;
+  };
+  await assert.rejects(listing.proof(r, r.payload), /authority changed/);
+  SERVICE.DefaultDigitalBundleOperationService.get = get;
+  const manifestGet = SERVICE.DefaultDigitalBundleManifestService.get;
+  SERVICE.DefaultDigitalBundleManifestService.get = async request => {
+    const response = await manifestGet(request); f.row().revision++; return response;
+  };
+  await assert.rejects(listing.proof(r, r.payload), /Listing changed/);
+});
+
+test('same-Enterprise proof retains its existing admission without cross-scope selection', async t => {
+  const f = await proofFixture(t), r = f.proofRequest;
+  r.enterpriseCode = r.authData.entCode = r.authData.enterpriseCode = 'market';
+  delete f.publishPolicy.approvalWorkflow.runtimeEnterpriseScope;
+  delete SERVICE.DefaultPublicationApprovalWorkflowService;
+  assert.equal((await listing.proof(r, r.payload)).enterpriseCode, 'market');
+});
+
+test('Store placement must be same-tenant, exact and stable through proof readback', async t => {
+  const f = await proofFixture(t), r = f.proofRequest, invoke = SERVICE.DefaultModuleService.invokeModule;
+  for (const mutate of [result => { result.tenant = 'foreign'; }, result => { result.store.code = 'other'; }]) {
+    SERVICE.DefaultModuleService.invokeModule = async input => { const result = await invoke(input); mutate(result); return result; };
+    await assert.rejects(listing.proof(r, r.payload), /placement is unavailable/);
+  }
+  let reads = 0;
+  SERVICE.DefaultModuleService.invokeModule = async input => {
+    const result = await invoke(input);
+    if (++reads === 2) result.store.revision++;
+    return result;
+  };
+  await assert.rejects(listing.proof(r, r.payload), /Store placement changed/);
 });

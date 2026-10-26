@@ -40,6 +40,19 @@ See [Maintenance Outage Evidence](tooling-governance-contracts.md#maintenance-ou
 
 ## Forward data releases
 
+The current unreleased source baseline is checked separately through
+`DefaultProjectDataManifestService.validateUnreleasedBaseline({ projectRoot,
+dependencyRoots })`. This opt-in read-only repository assertion uses canonical
+package discovery, nImport source/metadata/checksum and prerequisite validation,
+and documentation content-pack validation. It excludes test fixtures and rejects
+non-v001 shipping roots, retained-root snapshots and unselected payloads remaining
+inside v001. Section semantic versions are preserved independently of folder names.
+Dependency roots resolve exact prerequisites, not additional selected baseline scopes.
+Customer adoption tests call this owner instead of copying traversal logic.
+This method is not called by normal manifest generation, release discovery,
+startup or import execution; it does not prohibit future legitimate v002 releases.
+See the [unreleased baseline](../../../nSetup/llm/contracts/data-manifest-contract.md#unreleased-owner-baseline).
+
 See [Forward data releases](tooling-governance-contracts.md#forward-data-releases).
 
 ## Functional Journey Composition

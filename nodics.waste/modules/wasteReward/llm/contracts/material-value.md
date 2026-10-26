@@ -16,7 +16,7 @@ Waste Reward now owns the narrow release coordinator under the explicitly author
 
 ## APIs and authority
 
-POST /waste/material-value/assessments takes {evidenceRef}; POST /waste/material-value/releases takes {batchCode, allocationCode, paymentEvidenceRef}; POST /waste/material-value/lookup takes {batchCode}. These remain service-only with the respective waste.materialValue.assess/release/read permission. Controllers preserve trusted authData; facades delegate to the effective loader services. An upstream business application must authorize its human actor and operational scope through Profile before internal mutation calls. Body tenant/provider/paid assertions grant nothing. Owner permission definitions are module data; Profile owns assignments. No implicit Super Admin financial bypass.
+POST /waste/material-value/assessments takes {evidenceRef}; POST /waste/material-value/releases takes {batchCode, allocationCode, paymentEvidenceRef}; POST /waste/material-value/lookup takes {batchCode}. These admit existing authorized services or canonical native Platform Admin with the respective waste.materialValue.assess/release/read permission. Controllers preserve trusted authData; facades delegate to the effective loader services. An upstream business application must authorize its human actor and operational scope through Profile before internal mutation calls. Body tenant/provider/paid assertions grant nothing. Owner permission definitions are module data; Profile owns assignments. No implicit Super Admin financial bypass.
 
 POST /waste/material-value/allocations is also available to access-token customers and employees with waste.materialValue.read. Browser input is {page?}; optional ownerRef must exactly match current Profile evidence. Service callers must supply {ownerRef,page?}. DefaultWasteMaterialValueReadAccessService forwards the unchanged signed bearer and Enterprise context to Profile /customer/identity or /identity/scopes/me. Customer identity is the canonical returned code, not loginId. Employees additionally need Profile profile.scope.read plus a matching tenant/Enterprise scope and no matching deny; capability restrictions match waste or wasteReward. Parent/hierarchy and business-unit scopes alone are insufficient. Original customer/Enterprise ownership is independent of the employee and current certificate holder.
 
@@ -73,3 +73,148 @@ Defaults, timeouts, bounds, remote transport and disabled provider selections li
 Back up batch, contribution claims and payment claims together. One canonical payment receipt is bound to one batch; an adapter requiring cross-batch receipts must provide independently authoritative split receipt identities before qualification. The canonical wallet identity is frozen in the release before the first earning, so recovery cannot redirect an uncertain credit into a newly opened wallet. Retain pending releases for original-source reconciliation. Capacity rejects extra contributions before persistence. Operators inspect immutable evidence and release state through read APIs; no paid checkbox or editable reward balance is exposed. Later adapters implement these exact contracts through normal SERVICE/CONFIG composition and require the same positive and negative qualification tests.
 
 Original ownership prefers the uniquely matched asset.originalOwnerRef by sourceSubmissionCode, with canonical submission originalOwnerRef/submitterRef when no asset exists. Conflicting original-owner evidence rejects. Current asset owner/status is never a beneficiary decision. Required local dependencies are wasteCore, wasteSubmission and wasteReceipt; Loyalty is reached through configured remote module authority. Explicit permission definitions live in data/manifest.json permissionCatalogue; importing definitions does not grant users or services access.
+
+## Permanent Mock Valuation And Payment Provider
+
+For E16 simulation, select `DefaultWasteMaterialValueMockProviderService` for both
+existing `wasteMaterialValue.evidence.valuationProviderService` and
+`paymentProviderService`. Set `wasteMaterialValue.mock.enabled:true` and
+`wasteMaterialValue.evidence.allowSynthetic:true`, with an explicit qualificationRef.
+Both flags default false; all provider selections and qualification default null.
+Owner properties define these defaults. Later configuration supplies only choices,
+never scenario amounts, rates, beneficiaries, policies or program defaults.
+
+The provider implements readValuation/readPayment. Each evidenceRef identifies
+wasteReward/wasteMaterialValueMockEvidence, a tenant-isolated governed record with
+code, revision, synthetic:true, matching qualificationRef and evidence. Evidence
+must also declare synthetic:true and kind:'valuation' or kind:'payment'. All other
+fields follow the existing qualified provider contracts. Valuation records retain
+explicit batch/payer/payee/currency/value/policy/contribution evidence. The adapter
+sets valuationRef and confirmationRef to the mock record reference. Payment records
+are separate: they carry explicit status, batchRef, that mock valuationRef,
+payer/payee/currency/amount and exact coverage. The adapter sets paymentRef and
+confirmationRef to the payment mock record reference. It cannot infer payment from
+a valuation, accepted receipt, release request or caller paid flag.
+
+No records, values, imports or assignments are supplied by this implementation.
+Operators provision scenarios through approved owner import/generated services;
+the schema has no public mutation route. Non-synthetic evidence, missing records,
+wrong kind, foreign tenant/qualification, malformed config and aborted reads fail
+closed. Settlement continues to verify currency, payer/payee, complete attributed
+coverage, receipt uniqueness and original beneficiary before freezing intent.
+Synthetic evidence cannot settle a real valuation because synthetic modes must match.
+
+Release responses retain synthetic:true and canonical Loyalty earning metadata
+must return the exact synthetic flag before completion. A missing/changed flag
+leaves CREDIT_PENDING for original-key reconciliation. Turning allowSynthetic off
+blocks unfinished synthetic settlement before further Loyalty calls. Completed
+history remains readable. Mock enablement controls new provider reads; frozen
+intents retain their original payment and earning identity during recovery.
+
+Local adoption requires an isolated simulation tenant/runtime and Loyalty program,
+active wasteReward/wasteCore plus submission/receipt owners, generated mock/policy/
+batch/claim repositories, original beneficiary records, accepted receipts and an
+ACTIVE governed material policy. Canonical Profile permissions/grants, internal
+Loyalty transport, program admission, wallet and qualified atomic transaction
+execution must be installed/validated separately. The mock does not bypass these
+gates. It can invoke real canonical earning within that isolated simulation scope;
+it never executes or proves recycler funds movement. Do not use real financial
+programs or present synthetic rewards as recycler-paid business outcomes.
+
+Maintainers verify wasteMaterialValue.test.js, materialConfiguration.test.js and
+materialTransportContract.test.js: mock gates, missing/insufficient payment,
+tenant/qualification separation, original wallet, real canonical handoff behind
+fake storage, rollback, lost acknowledgement and unchanged idempotency.
+Business users/evaluators must retain the synthetic label; partner developers use
+the existing provider extension point. Local tests do not qualify live payment,
+live Loyalty, native persistence deployment or release readiness.
+
+## Native Platform Admin Admission
+
+Existing command routes also accept access tokens. Owner admission requires the
+canonical nRouter hasPlatformFullAccess(request) gate or the existing authorized
+service principal, plus the exact capability permission. Only native PASSWORD
+human access in the configured default tenant and Platform enterprise with the
+reserved grant qualifies. Ordinary Admin labels, participants, represented or
+linked sessions, foreign tenants, service-group membership and caller flags
+cannot confer this authority. Normal authentication and security-stamp validation
+remain mandatory; this gate is not a new persisted Profile proof RPC and does not
+independently re-read grants during a long-running command.
+
+Controllers retain the original bearer/authData; business ownerRef remains an
+explicit target, not impersonation or an Enterprise-header replacement. Existing
+human actor audit fields remain authoritative. Administrative reads require the
+same exact owner references as service reads; participant self-scoped reads retain
+their existing Profile admission. All evidence/provider, synthetic, ownership,
+quantity/payment, CAS, finalization and original-key recovery checks still apply.
+Waste's canonical post-admission persistence authority and Material's existing
+internal Loyalty transport remain separate boundaries, not new task credentials.
+No new role, profile, permission grant, configuration default or generic CRUD API
+is required. The installed HTTP runner accepts the unchanged existing Admin bearer
+and retains every explicit Local/mock gate. Source tests are not live acceptance.
+
+## Installed Local HTTP Acceptance
+
+This owner contributes a permanent installed HTTP command. It defaults to a
+plan and never authenticates, mints/renews tokens, imports fixtures, assigns
+permissions, funds a wallet, changes budgets or starts a runtime. Explicit
+execution invokes the normal owner business commands and therefore persists
+simulation outcomes. Source delivery does not authorize or perform Local adoption.
+
+Use a reviewed JSON selection with exact keys. Common fields are contractVersion:1,
+approvalReference, environmentCode (native name ending Local, not Docker),
+localDemo:true, isolatedPartition:true, baseUrl (loopback HTTP(S) origin only),
+tenant, enterpriseCode and runCode. These assertions document operator review;
+they do not prove physical data isolation or grant signed tenant/Enterprise rights.
+The existing server must verify the unchanged supplied native Platform Admin or authorized service bearer and scopes.
+Unknown keys, external targets, missing credentials and malformed selections
+reject. Supply no credentials inside selection files.
+
+The owner properties define command wiring, a 10000ms request timeout, 65536-byte
+selection limit, 262144-byte response limit and authorization environment name.
+Transport refuses redirects, disables caching, bounds response envelopes and
+sanitizes failures. Requests are sequential. There is no automatic retry or
+compensating cleanup after timeout/unknown acknowledgement. Retain the original
+selection and keys; inspect owner state before explicitly rerunning.
+Installed providers must already be the enabled permanent mock services with
+allowSynthetic:true and qualification-matched governed records. Real evidence
+cannot pass the runner's synthetic and mock-reference assertions.
+
+Tests use injected HTTP over actual owner services and permanent mock providers,
+without network or live storage. Native persistence tests remain separate and
+do not become installed-HTTP proof. Passing this runner establishes only the
+selected synthetic owner journey, never real registry/recycler qualification.
+
+Run `nodics project:run acceptance:waste-material-value --selection=<reviewed.json>`;
+append `--execute` only for the authorized installed simulation. Supply the
+complete existing `Bearer ...` value in
+`NODICS_WASTE_MATERIAL_ACCEPTANCE_AUTHORIZATION`. The direct executable is
+`src/service/acceptance/defaultWasteMaterialValueHttpAcceptanceService.mjs`.
+
+Additional selection keys: valuationRef, paymentEvidenceRef, batchCode,
+allocationCode, ownerRef, contributionRef, receiptRef, payerRef, payeeRef, currency,
+confirmedValue, attributedValue, paymentAmount, programCode, rewardTypeCode,
+rewardAmount. References are exact module/schema/code objects. Valuation and
+payment are distinct wasteReward/wasteMaterialValueMockEvidence references.
+Contribution and receipt reference their canonical Waste owners; ownerRef is the
+original Profile customer/enterprise. Amounts are positive exact strings matching
+the governed policy's fixed-scale output; currency is a three-letter uppercase code.
+The parent supplies precomputed exact batch/allocation codes from the owner
+identity contract, not values inferred by the runner.
+
+The runner assesses the selected valuation and asserts the original allocation,
+receipt, payer/payee, currency, program and amounts. A deliberately invalid mock
+payment namespace must refuse with the owner evidence error, or original-binding
+conflict during recovery; the persisted batch must remain unchanged. It then
+releases using only the reviewed payment reference. The canonical idempotency key
+is allocationCode + ':material-value', independent of runCode. It checks COMPLETED,
+synthetic payment, original beneficiary, exact coverage, canonical ledger reference,
+and identical replay plus one persisted release with unchanged assessment/policy.
+It does not independently read Loyalty's ledger; reports explicitly mark that limit.
+
+Prerequisites include the active governed policy, accepted receipt, unambiguous
+original contribution, separate mock payment coverage, Waste assess/read/release
+permission under canonical native Admin or service admission, and Waste's existing signed Loyalty wallet.open/rewards.earn
+authority with qualified atomic execution. No payment, receipt, policy or wallet
+funding fixture is provisioned by the runner. A failed/uncertain release remains
+for original-key reconciliation; there is no replacement credit or cleanup.

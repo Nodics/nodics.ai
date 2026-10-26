@@ -13,6 +13,46 @@
 
 /** @module loyaltyApi/src/controller/defaultLoyaltyInternalController @description Maps Loyalty internal HTTP input to the Loyalty internal facade. @layer controller @owner loyaltyApi @override Later modules may adapt transport mapping while preserving resource contracts. */
 module.exports = {
+    /** Sets one governed wallet funding binding with the unchanged native administrator identity. */
+    auctionFundingSelection: function (request, callback) {
+        request.authorization = this.headerValue(request, 'Authorization');
+        request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
+        return this.invoke('auctionFundingSelection', request, callback);
+    },
+    /** Preserves the original administrator bearer and sensitive response for a targeted Program read. */
+    programPartnerEligibilityRead: function (request, callback) {
+        request.authorization = this.headerValue(request, 'Authorization');
+        request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
+        return this.invoke('programPartnerEligibilityRead', request, callback);
+    },
+    /** Delegates the exact Program command without fabricating identity or schema-write context. */
+    programPartnerEligibilityUpdate: function (request, callback) {
+        request.authorization = this.headerValue(request, 'Authorization');
+        request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
+        return this.invoke('programPartnerEligibilityUpdate', request, callback);
+    },
+    /** Reads owner persistence readiness with original native administrator authority and no-store response. */
+    reservationDecisionReadiness: function (request, callback) {
+        if (request.authorization === undefined)
+            request.authorization = this.headerValue(request, 'Authorization');
+        request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
+        return this.invoke('reservationDecisionReadiness', request, callback);
+    },
+    /** Fences only the original unexecuted reservation key through its owning service. */
+    cancelReservationDecision: function (request, callback) {
+        request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
+        return this.invoke('cancelReservationDecision', request, callback);
+    },
+    /** Reconciles original authorization accounting through the canonical owner; never retries spend. */
+    reconcileReservationDecision: function (request, callback) {
+        request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
+        return this.invoke('reconcileReservationDecision', request, callback);
+    },
+    /** Returns durable original-key denial evidence; absence is unconfirmed. */
+    inspectReservationDecision: function (request, callback) {
+        request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
+        return this.invoke('inspectReservationDecision', request, callback);
+    },
     /**
      * Maps private source proof without replacing the verified runtime principal.
      * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
@@ -118,6 +158,12 @@ module.exports = {
         request.authorization = this.headerValue(request, 'Authorization');
         request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
         return this.invoke('enterpriseTestCredit', request, callback);
+    },
+    /** Preserves native Super Admin credentials and private response handling for zero-only test provisioning. */
+    enterpriseTestWallet: function (request, callback) {
+        request.authorization = this.headerValue(request, 'Authorization');
+        request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
+        return this.invoke('enterpriseTestWallet', request, callback);
     },
     /**
      * Reads current-owner transfer controls with original signed identity.

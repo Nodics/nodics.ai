@@ -74,7 +74,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "accelerators",
@@ -155,7 +155,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "commerce-cart-and-checkout",
@@ -232,7 +232,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "store-market-site-and-channel-management",
@@ -308,7 +308,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "commerce",
@@ -673,7 +673,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "nodics",
@@ -748,7 +748,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "start-here",
@@ -859,7 +859,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "nodics-framework",
@@ -970,7 +970,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation-roadmap",
@@ -1093,7 +1093,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "framework-architecture-and-design",
@@ -1180,7 +1180,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "capability-registry-and-lifecycle-management",
@@ -1255,7 +1255,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "foundation-runtime-services",
@@ -1342,7 +1342,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "nodics-application-suite",
@@ -1429,7 +1429,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "solution-use-cases",
@@ -1627,7 +1627,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "accelerators-and-industry-solution-templates",
@@ -1738,7 +1738,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "nodics-installer-and-workspace-setup",
@@ -1813,7 +1813,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "application-builder-and-workspace-generation",
@@ -1900,7 +1900,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-and-backoffice-operations",
@@ -1975,7 +1975,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "business-customization-in-axis",
@@ -2062,7 +2062,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "user-enterprise-and-tenant-management",
@@ -2149,7 +2149,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "security-governance-and-compliance",
@@ -2272,7 +2272,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "application-configuration-and-runtime-behavior-management",
@@ -2347,7 +2347,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "runtime-governance-and-dynamic-change-management",
@@ -2434,7 +2434,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "localization-and-internationalization",
@@ -2509,7 +2509,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "data-modeling-and-schema-management",
@@ -2596,7 +2596,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "database-and-persistence-management",
@@ -2683,7 +2683,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "caching-and-runtime-state-management",
@@ -2806,7 +2806,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "developer-extension-and-project-customization",
@@ -2881,7 +2881,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "store-market-site-and-channel-management",
@@ -3004,7 +3004,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "wcms-and-content-management",
@@ -3091,7 +3091,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "product-catalog-and-discovery",
@@ -3178,7 +3178,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "search-and-discovery",
@@ -3289,7 +3289,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "media-management",
@@ -3364,7 +3364,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "inventory-and-stock-management",
@@ -3439,7 +3439,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "pricing-promotions-and-tax",
@@ -3526,7 +3526,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "commerce-cart-and-checkout",
@@ -3613,7 +3613,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "payment-management",
@@ -3688,7 +3688,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "loyalty-and-rewards",
@@ -3775,7 +3775,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "shipping-and-fulfillment",
@@ -3850,7 +3850,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "order-management",
@@ -3925,7 +3925,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "cancellations-returns-and-refunds",
@@ -4074,7 +4074,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "customer-engagement-and-feedback",
@@ -4173,7 +4173,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "communication-and-notifications",
@@ -4260,7 +4260,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "event-and-messaging-management",
@@ -4402,7 +4402,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "process-and-workflow-automation",
@@ -4501,7 +4501,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "pipeline-and-business-logic-orchestration",
@@ -4643,7 +4643,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "cron-and-scheduled-automation",
@@ -4730,7 +4730,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "data-import-export-and-migration",
@@ -4805,7 +4805,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "system-integration-and-external-connectivity",
@@ -4954,7 +4954,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "operations-monitoring-and-recovery",
@@ -5029,7 +5029,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "quality-testing-and-certification",
@@ -5128,7 +5128,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation-management",
@@ -5215,7 +5215,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "release-staging-and-publication",
@@ -5427,7 +5427,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "ai-and-developer-tooling",
@@ -5538,7 +5538,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "reference",
@@ -5608,7 +5608,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation",
@@ -5688,7 +5688,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "nodics-framework",
@@ -5769,7 +5769,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "nodics-framework",
@@ -5849,7 +5849,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "nodics-framework",
@@ -5929,7 +5929,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "nodics-framework",
@@ -6009,7 +6009,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation-roadmap",
@@ -6089,7 +6089,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation-roadmap",
@@ -6169,7 +6169,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation-roadmap",
@@ -6249,7 +6249,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation-roadmap",
@@ -6329,7 +6329,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "nodics-application-suite",
@@ -6408,7 +6408,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "solution-use-cases",
@@ -6492,7 +6492,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "solution-use-cases",
@@ -6577,7 +6577,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation-management",
@@ -6653,7 +6653,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation-management",
@@ -6732,7 +6732,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation",
@@ -6812,7 +6812,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "internal-source",
@@ -6892,7 +6892,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "reference",
@@ -6970,7 +6970,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation-coverage",
@@ -7050,7 +7050,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation-gap-backlog",
@@ -7130,7 +7130,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "framework-architecture-and-design",
@@ -7210,7 +7210,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "architecture-decision-guide",
@@ -7287,7 +7287,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "foundation-runtime-services",
@@ -7363,7 +7363,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "developer-extension-and-project-customization",
@@ -7442,7 +7442,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "backend-extension-patterns",
@@ -7522,7 +7522,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-content-customization",

@@ -63,6 +63,12 @@ Axis/BackOffice must expose separate permissions for:
 
 Experience Studio may later be integrated with Page Designer, but both surfaces must use the same backend model and permissions.
 
+The capability provider places Experience Studio and its children in the existing
+CMS `content` navigation group (order `200`, label `Content and Experience`).
+Axis composes by group identity, not display label. A separate group with the same
+label is not an integration mechanism. This presentation contract does not change
+routes, parent relationships, PREVIEW state, permissions or deployment activation.
+
 ## 6. Storefront-safe resolver response
 
 Public resolver responses may include only storefront-safe component projections:

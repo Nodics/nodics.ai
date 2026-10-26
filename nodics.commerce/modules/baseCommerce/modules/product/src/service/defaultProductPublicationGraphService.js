@@ -10,6 +10,7 @@
  */
 
 'use strict';
+const pricingProofs = new WeakMap();
 const crypto = require('node:crypto');
 
 // Only verified roots can create a dependency-read capability; request fields cannot supply one.
@@ -46,6 +47,23 @@ const membershipAuthority = {
  * authority.
  */
 module.exports = {
+    /** Resolves only an already-approved exact Pricing dependency under fresh owner admission; never captures or seals. */
+    resolvePricingAdministrativeProof: async function (publication, request) {
+        if (pricingProofs.has(request)) throw new Error('Concurrent Product proof is forbidden');
+        const pricing = SERVICE.DefaultPricingPublicationService;
+        if (!pricing?.administrativeProductScope) throw new Error('Pricing proof owner unavailable');
+        const identity = JSON.stringify(publication);
+        const scope = pricing.administrativeProductScope(publication, request);
+        const check = () => {
+            if (JSON.stringify(publication) !== identity ||
+                !require('node:util').isDeepStrictEqual(pricing.administrativeProductScope(publication, request), scope))
+                throw new Error('Product proof identity changed');
+            return scope;
+        };
+        pricingProofs.set(request, check);
+        try { const result = await this.resolve(publication, request); check(); return result; }
+        finally { pricingProofs.delete(request); }
+    },
     /** Returns the exact schema/code/version/hash key; overrides must preserve every coordinate. @param {Object} reference Sealed source reference. @returns {string} Stable membership key. */
     referenceKey: function (reference) { return JSON.stringify([reference.schema, reference.code, reference.versionId, reference.hash]); },
     /** Returns Product-owned persistence service identities, not a second provider registry. */
@@ -69,6 +87,8 @@ module.exports = {
      * evidence checks described above.
      */
     publisherScope: function (request) {
+        const proof = pricingProofs.get(request);
+        if (proof) return proof();
         const automatic = SERVICE.DefaultProductBundlePublicationService?.admission(request);
         if (automatic) return automatic.scope;
         const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;

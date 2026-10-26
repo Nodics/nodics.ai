@@ -1949,7 +1949,9 @@ module.exports = {
       {},
       block,
       profile,
-      (target, source) => (Array.isArray(source) ? source : undefined),
+      (target, source) => configurationBindings.isRoleCollection(source)
+        ? configurationBindings.applyRoleCollection(target, source)
+        : (Array.isArray(source) ? source : undefined),
     );
     delete resolved[namespace].runtimeRoleProfiles;
     return resolved;

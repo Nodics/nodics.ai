@@ -73,7 +73,7 @@ test("publish owns the explicit companion contribution, not Profile or an applic
   const section = source.section;
   assert.equal(section.kind, "DATA_RELEASE");
   assert.equal(section.dataType, "init");
-  assert.equal(section.version, "0.0.2");
+  assert.equal(section.version, "0.0.4");
   assert.equal(section.sourceRoot, "init-v001");
   assert.equal(section.destinationRole, "PLATFORM");
   assert.equal(section.selectionPolicy, "EXPLICIT");
@@ -105,7 +105,7 @@ test("publish owns the explicit companion contribution, not Profile or an applic
 test("canonical publisher stays pinned and existing release receipts are not silently replayed", () => {
   const publisher = require("./helpers/domainAccessFixture")("product");
   const original = publisher.section;
-  assert.equal(original.version, "0.0.2");
+  assert.equal(original.version, "0.0.4");
   assert.equal(manifest.sections.commerceSetupPublisherRole, undefined);
   assert.equal(manifest.sections.commercePublicationStarterRole, undefined);
   for (const [file, checksum] of Object.entries(original.files))

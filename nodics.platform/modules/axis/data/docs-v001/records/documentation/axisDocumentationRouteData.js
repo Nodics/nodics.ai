@@ -21,7 +21,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPageoverview",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -33,7 +33,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPagearchitecture",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -45,7 +45,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPagetechnologystack",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -57,7 +57,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPagedesignsystem",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -69,7 +69,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPagecmsrenderers",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -81,7 +81,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPagedocumentationcontent",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -93,7 +93,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPageemployeeaccess",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -105,7 +105,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPageassistant",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -117,7 +117,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPageschemaworkbench",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -129,7 +129,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPagepagedesigner",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -141,7 +141,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPageexperiencestudio",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -153,7 +153,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPagemodulehealth",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -165,7 +165,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPageimportsexports",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -177,7 +177,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPagemediamanagement",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -189,7 +189,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPagecustomerengagement",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -201,7 +201,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPageopenapireference",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -213,7 +213,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPagefeaturedelivery",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -225,7 +225,7 @@ module.exports = {
     "channel": "web",
     "page": "axisDocsPageimplementationcontract",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   }

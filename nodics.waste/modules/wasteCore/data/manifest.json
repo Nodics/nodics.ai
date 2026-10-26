@@ -47,20 +47,20 @@
       "sourceRoot": "init-v001",
       "files": {
         "init-v001/headers/identity/wasteCoreUserGroupHeader.js": "a22c2831713384774fc2ab4bb6b6f045aa1c1ea8d739c5a369b0f00f0e16ca96",
-        "init-v001/records/identity/wasteCoreUserGroupData.js": "111b588bcd14c5b7424e31f470035ee3a0cd4a5b935298be8b6cacd38323a722"
+        "init-v001/records/identity/wasteCoreUserGroupData.js": "2c1cf537d04f54be6b3ddc824402688bc6f62cc657c78eb389394dc726cb2919"
       },
       "prerequisites": [
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
-          "checksum": "ab53220ee38bb003b43e3f1ed0723afe8499523a31429abd96ddcc3c328b152a",
+          "version": "0.0.2",
+          "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
         {
@@ -88,20 +88,20 @@
           "moduleName": "profile",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "version": "0.0.3",
+          "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
+          "version": "0.0.3",
+          "checksum": "402b7ebffc05ac529f465c228700437b830cfb0f873a15ac92d5b7b5b9a3a9c8",
           "partition": "DEFAULT"
         },
         {
@@ -145,6 +145,20 @@
           "version": "0.0.1",
           "checksum": "1c10620eebfc5c713eebc6332e49b1f50c80c6c011d191a39e5f817e39d707cc",
           "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteCarbon",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "6a71b997ef08f8e7626d0a32f9d7177d9ef73f51dc4e87b66758f13cc1b09ba3",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteReward",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "7f10365d6fdc95a42c8893a9d05e885d88b4d924a2b7b12e32860b61ecfb4777",
+          "partition": "DEFAULT"
         }
       ]
     },
@@ -176,7 +190,7 @@
           "moduleName": "wasteCore",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "fbe2a4e68099b38f8ade8d09dff1327e79dbfca95ec0b9efa864a141b606b10f"
+          "checksum": "1162e4ca6dc54f5e4271a19431e37d8442f4f26a6a3dc2cb08ab267a06d8523c"
         }
       ]
     },
@@ -240,13 +254,13 @@
           "moduleName": "axis",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "version": "0.0.3",
+          "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
@@ -286,7 +300,7 @@
           "moduleName": "wasteCore",
           "sectionCode": "businessAccessGroups",
           "version": "0.0.2",
-          "checksum": "6dc6023c41878b7d2d803a4e6801256c8473f707efdd611e6d363897a51d52d5"
+          "checksum": "c53ae66a8315b9c61968900076445522c0a1d633908a967587b57909f574c2a2"
         }
       ]
     }

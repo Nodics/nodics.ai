@@ -93,7 +93,7 @@ registerSourceOwnershipTests(repoRoot, [
         ]
     },
     {
-        "header": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/headers/circaDocumentationContentPackHeader.js",
+        "header": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/headers/circaDocumentationRelease004ContentPackHeader.js",
         "sealedHistoricalSource": true,
         "dir": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation",
         "site": "circaDocumentationSite",

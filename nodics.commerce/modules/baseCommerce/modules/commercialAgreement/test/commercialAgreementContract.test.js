@@ -16,6 +16,7 @@ const operation = require('../src/service/defaultCommercialAgreementOperationSer
 const properties = require('../config/properties');
 const schema = require('../src/schemas/schemas').commercialAgreement.commercialAgreement;
 const concurrency = require('../../../../../../nodics.foundation/modules/nDatabase/database/src/service/schema/defaultModelConcurrencyService');
+const saveInitializer = require('../../../../../../nodics.foundation/modules/nDatabase/database/src/service/procs/save/defaultModelSaveInitializerService');
 const controller = require('../src/controller/defaultCommercialAgreementController');
 const facade = require('../src/facade/defaultCommercialAgreementFacade');
 const Enum = require('../../../../../../nodics.foundation/modules/nConfig/bin/enum');
@@ -33,7 +34,7 @@ function terms(model = 'FIXED_PRICE', paymentTerms = 'PREPAID') {
             validTo: '2026-12-01T00:00:00Z', evidenceRef: 'document-1' }] };
 }
 function request(overrides = {}) {
-    return { tenant: 'tenant-a', authData: { tenant: 'tenant-a', enterpriseCode: 'merchant', principalType: 'human', tokenType: 'access',
+    return { tenant: 'tenant-a', authorization: 'Bearer synthetic-agreement-test', authData: { tenant: 'tenant-a', enterpriseCode: 'merchant', principalType: 'human', tokenType: 'access',
         loginId: 'employee', userGroups: ['employeeUserGroup'], permissions: ['commerce.agreement.read', 'commerce.agreement.manage'] },
         payload: { code: 'agreement', enterpriseCode: 'merchant', expectedRevision: 0, commandId: 'create', terms: terms(), ...overrides } };
 }
@@ -42,6 +43,8 @@ test.beforeEach(() => {
     rows = new Map(); writes = 0; fault = undefined; policy = structuredClone(properties.commercialAgreement);
     global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
     global.CONFIG = { get: key => key === 'commercialAgreement' ? policy : undefined };
+    global.UTILS = { isObject: value => value !== null && typeof value === 'object',
+        isBlank: value => !value || Object.keys(value).length === 0 };
     global.ENUMS = Object.fromEntries(Object.entries(enumDefinitions).map(([name, value]) =>
         [name, new Enum(structuredClone(value.definition))]));
     const value = (row, key) => key.split('.').reduce((part, segment) => part?.[segment], row);
@@ -81,11 +84,26 @@ test.beforeEach(() => {
         DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ principalType: 'service' }) },
         DefaultCommercialAgreementService: {
             get: r => model.getItems(r),
-            save: async r => { operation.protect(r); const command = { ...r, schemaModel: model }; concurrency.initializeSave(command);
-                return { result: await concurrency.execute(command, 'save') }; },
+            save: async r => {
+                operation.protect(r);
+                const command = { ...r, schemaModel: model }, response = {};
+                const initializer = Object.assign(Object.create(saveInitializer), { LOG: { debug() {}, error() {} } });
+                for (const step of ['validateModel', 'applyDefaultValues', 'saveModel']) {
+                    await new Promise((resolve, reject) => initializer[step](command, response, {
+                        nextSuccess: resolve, error: (_request, _response, error) => reject(error)
+                    }));
+                }
+                return response.success;
+            },
             update: async r => { operation.protect(r); return { result: await concurrency.execute({ ...r, schemaModel: model }, 'update') }; }
         },
-        DefaultEnterpriseService: { get: async r => ({ result: [{ code: r.query.code, active: false }] }) },
+        DefaultModuleService: { invokeModule: async input => {
+            assert.equal(input.moduleName, 'profile'); assert.equal(input.apiName, '/participants/resolve');
+            assert.equal(input.header.Authorization, 'Bearer synthetic-agreement-test');
+            assert.equal(input.requestBody.ownerType, 'ENTERPRISE');
+            return { code: 'SUC_SYS_00000', data: { contractVersion: 1, tenant: input.tenant,
+                recipient: { ownerType: 'ENTERPRISE', ownerCode: input.requestBody.ownerCode } } };
+        } },
         DefaultProductService: { get: async () => ({ result: [{ code: 'package', versionId: 1, active: true }] }) },
         DefaultPriceRowService: { get: async () => ({ result: [{ code: 'price', productCode: 'package', versionId: 1, unitAmount: '125.00', currency: 'AED' }] }) }
     };
@@ -95,7 +113,7 @@ test.beforeEach(() => {
 test('shared package supports both independent model/payment combinations without charging or changing Profile status', async () => {
     for (const model of ['FIXED_PRICE', 'SUBSCRIPTION']) for (const payment of ['PREPAID', 'INVOICE']) {
         const r = request({ code: model + payment, terms: terms(model, payment) });
-        const response = await controller.record({ authData: r.authData, httpRequest: { body: r.payload } });
+        const response = await controller.record({ authData: r.authData, httpRequest: { body: r.payload, headers: { authorization: r.authorization } } });
         assert.equal(response.data.revision, 1);
         assert.equal(rows.get(r.payload.code).versions[0].agreedPrice.unitAmount, '125.00');
     }
@@ -159,6 +177,32 @@ test('concurrent amendments cannot discard history and stale commands are reject
     assert.equal(results.filter(result => result.status === 'fulfilled').length, 1);
     assert.equal(rows.get('agreement').versions.length, 2);
     await assert.rejects(operation.record(request({ expectedRevision: 0, commandId: 'stale' })), { code: 'ERR_AGREEMENT_CONFLICT' });
+});
+
+test('managed generated create cannot overwrite a competing agreement committed after owner preflight', async () => {
+    const save = SERVICE.DefaultCommercialAgreementService.save;
+    let competing;
+    SERVICE.DefaultCommercialAgreementService.save = async command => {
+        competing = structuredClone(command.model);
+        competing.revision = 1;
+        competing.versions[0].commandId = 'other-create';
+        competing.versions[0].command.commandId = 'other-create';
+        rows.set(competing.code, structuredClone(competing));
+        return save(command);
+    };
+    await assert.rejects(operation.record(request()), { code: 'ERR_CONCURRENCY_00002' });
+    assert.deepEqual(rows.get('agreement'), competing);
+    assert.equal(writes, 0);
+});
+
+test('simultaneous first creations retain exactly one immutable command at generated revision one', async () => {
+    const results = await Promise.allSettled(['first', 'second'].map(commandId => operation.record(request({ commandId }))));
+    assert.equal(results.filter(result => result.status === 'fulfilled').length, 1);
+    const retained = rows.get('agreement');
+    assert.equal(rows.size, 1); assert.equal(retained.revision, 1); assert.equal(retained.versions.length, 1);
+    const before = structuredClone(retained), attempts = writes;
+    const replay = await operation.record(request({ commandId: retained.versions[0].commandId }));
+    assert.equal(replay.replayed, true); assert.deepEqual(rows.get('agreement'), before); assert.equal(writes, attempts);
 });
 
 test('generic CRUD cannot replace, forge or remove agreement history', () => {
@@ -401,5 +445,37 @@ test('negative owner reference envelopes cannot mint an agreed price despite a p
         ] });
         await assert.rejects(operation.record(request()), { code: 'ERR_AGREEMENT_STORAGE' });
     }
+    assert.equal(writes, 0);
+});
+
+test('record resolves detached Profile first without a local Enterprise service and preserves the native actor header', async () => {
+    assert.equal(SERVICE.DefaultEnterpriseService, undefined);
+    const calls = [], invoke = SERVICE.DefaultModuleService.invokeModule;
+    SERVICE.DefaultModuleService.invokeModule = async input => {
+        calls.push('profile'); assert.equal(input.header['X-Enterprise-Code'], 'default');
+        assert.deepEqual(input.requestBody, { ownerType: 'ENTERPRISE', ownerCode: 'merchant' });
+        return invoke(input);
+    };
+    for (const [name, label] of [['DefaultProductService', 'product'], ['DefaultPriceRowService', 'price']]) {
+        const get = SERVICE[name].get;
+        SERVICE[name].get = async input => { calls.push(label); return get(input); };
+    }
+    const r = request(); r.authData.enterpriseCode = 'default'; r.authData.userGroups.push('adminGroup');
+    const result = await operation.record(r);
+    assert.equal(result.revision, 1); assert.deepEqual(calls, ['profile', 'product', 'price']);
+});
+
+test('missing or foreign Profile party proof and changed actor refuse before catalogue reads or writes', async () => {
+    SERVICE.DefaultProductService.get = () => assert.fail('Party proof must precede catalogue reads');
+    for (const proof of [{ contractVersion: 1, tenant: 'tenant-a', recipient: null },
+        { contractVersion: 1, tenant: 'other', recipient: { ownerType: 'ENTERPRISE', ownerCode: 'merchant' } },
+        { contractVersion: 1, tenant: 'tenant-a', recipient: { ownerType: 'ENTERPRISE', ownerCode: 'other' } },
+        { contractVersion: 1, tenant: 'tenant-a', recipient: { ownerType: 'CUSTOMER', ownerCode: 'merchant' } }]) {
+        SERVICE.DefaultModuleService.invokeModule = async () => ({ data: proof });
+        await assert.rejects(operation.record(request()), { code: 'ERR_AGREEMENT_REFERENCE' });
+    }
+    const r = request();
+    SERVICE.DefaultModuleService.invokeModule = async () => { r.authData.enterpriseCode = 'other'; return {}; };
+    await assert.rejects(operation.enterpriseReference(r, { code: 'merchant' }), { code: 'ERR_AGREEMENT_REFERENCE' });
     assert.equal(writes, 0);
 });

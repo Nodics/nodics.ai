@@ -74,7 +74,7 @@ module.exports = {
       checkpoint.completed.push("DIGITAL_RESERVED");
       const paymentRequired = ports.requiresPayment ? await ports.requiresPayment(request, calculation, digitalReservation) : true;
       checkpoint.results.paymentAttempted = paymentRequired;
-      const authorization = paymentRequired ? await ports.authorizePayment(request, calculation, digitalReservation) : undefined;
+      const authorization = paymentRequired ? await ports.authorizePayment(request, calculation, digitalReservation, checkpoint) : undefined;
       checkpoint.results.authorization = authorization;
       if (authorization) checkpoint.completed.push("AUTHORIZED");
       const order = await ports.createOrder(

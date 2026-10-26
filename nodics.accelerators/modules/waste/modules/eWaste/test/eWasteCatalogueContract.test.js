@@ -22,7 +22,7 @@ test("Product owns generic browse policy, totals and facets without a second acc
       assert.equal(query.view, "AVAILABLE_SHOP");
       assert.equal(query.sortCode, "price-asc");
       assert.equal(query.pageSize, undefined);
-      return { products: [{ productCode: "A", localizedAttributes: { kind: "COUPON" } }],
+      return { products: [{ productCode: "A", price: { currency: "POINTS", unitAmount: "10" }, localizedAttributes: { kind: "COUPON" } }],
         total: 2, page: 1, pageSize: 1, facets: { issuers: [{ code: "Partner", label: "Partner" }] }, pagination: { hasNext: true } };
     },
     offer: async (_, product) => ({ code: product.productCode, available: true }),

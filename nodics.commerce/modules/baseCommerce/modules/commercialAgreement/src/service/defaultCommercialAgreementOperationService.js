@@ -36,7 +36,8 @@ module.exports = {
     /** Validates all effective mechanics; no inline replacement defaults. */
     policy: function () {
         const policy = CONFIG.get('commercialAgreement');
-        if (!policy?.validation || typeof policy.validation.identifierPattern !== 'string' ||
+        if (!['LOCAL', 'REMOTE'].includes(policy?.catalogueReferences?.mode) ||
+            !policy?.validation || typeof policy.validation.identifierPattern !== 'string' ||
             !Number.isSafeInteger(policy.validation.maximumConfiguredBound) || policy.validation.maximumConfiguredBound < 1 ||
             !Number.isSafeInteger(policy.validation.maximumTextLength) || policy.validation.maximumTextLength < 1 ||
             policy.validation.maximumTextLength > policy.validation.maximumConfiguredBound ||
@@ -143,15 +144,152 @@ module.exports = {
         if (data?.code) return [data];
         this.fail('STORAGE');
     },
+    /**
+     * Reads an exact catalogue version from the configured detached owner using the original human bearer.
+     * @param {Object} request Admitted Agreement context; authorization is captured by its controller.
+     * @param {Object} ref Exact Product or PriceRow reference, including its managed version.
+     * @param {Object} query Owner query constructed by resolveReference, never a caller query.
+     * @returns {Promise<Object[]>} Bounded generated owner rows; no persistence or credential issuance.
+     * @throws {Error} Invalid topology, missing original authority, transport failure or changed binding.
+     * @override Preserve fixed owner routes, original identity, exact versions and no local fallback.
+     */
+    remoteCatalogueReference: async function (request, ref, query) {
+        const policy = structuredClone(this.policy().catalogueReferences);
+        const timeout = policy.validation?.timeoutMs;
+        const maximumPageSize = this.policy().maximumPageSize;
+        const auth = structuredClone(request.authData), authorization = request.authorization;
+        const tenant = request.tenant, enterprise = auth.enterpriseCode || auth.entCode;
+        const owner = ref.module === 'product' && ref.schema === 'product' ? 'product' :
+            ref.module === 'pricing' && ref.schema === 'priceRow' ? 'pricing' : undefined;
+        const check = () => {
+            if (!owner || !Number.isSafeInteger(ref.versionId) || ref.versionId < 0 ||
+                policy.mode !== 'REMOTE' || typeof policy.connectionName !== 'string' || !policy.connectionName ||
+                !/^v\d+$/.test(policy.apiVersion) || policy.targetAuthority?.runtimeRole !== 'COMMERCE_STAGED' ||
+                !Number.isSafeInteger(timeout?.minimum) || !Number.isSafeInteger(timeout?.maximum) ||
+                timeout.minimum < 1 || timeout.minimum > timeout.maximum ||
+                !Number.isSafeInteger(policy.timeoutMs) || policy.timeoutMs < timeout.minimum || policy.timeoutMs > timeout.maximum ||
+                !/^Bearer \S+$/i.test(authorization || '') || auth.principalType !== 'human' || auth.tokenType !== 'access' ||
+                !tenant || auth.tenant !== tenant || !enterprise || auth.isSystem ||
+                request.tenant !== tenant || request.authorization !== authorization ||
+                !isDeepStrictEqual(request.authData, auth) || !isDeepStrictEqual(this.policy().catalogueReferences, policy) ||
+                this.policy().maximumPageSize !== maximumPageSize) this.fail('REFERENCE');
+        };
+        check();
+        if (typeof SERVICE.DefaultModuleService?.invokeModule !== 'function') this.fail('REFERENCE');
+        const path = owner === 'product' ? '/product' : '/pricerow';
+        const invoke = async (apiName, methodName, requestBody) => {
+            check();
+            let response;
+            try {
+                response = await SERVICE.DefaultModuleService.invokeModule({ local: false,
+                    moduleName: owner, connectionName: policy.connectionName, apiVersion: policy.apiVersion,
+                    targetAuthority: policy.targetAuthority, apiName, methodName, tenant, request: { tenant },
+                    header: { Authorization: authorization, 'X-Enterprise-Code': enterprise },
+                    ...(requestBody === undefined ? {} : { requestBody }),
+                    timeoutMs: policy.timeoutMs, maxAttempts: 1 });
+            } catch { this.fail('REFERENCE'); }
+            check();
+            return this.catalogueReferenceData(response);
+        };
+        const descriptor = await invoke(path + '/capabilities', 'GET');
+        const capabilities = descriptor?.queryCapabilities, route = descriptor?.apiOperations?.search;
+        const requiredFields = ['code', 'tenant', 'versionId', ...Object.keys(query),
+            ...(owner === 'pricing' ? ['productCode', 'unitAmount', 'currency'] : [])];
+        if (descriptor?.moduleName !== owner || descriptor.schemaName !== ref.schema ||
+            !descriptor.operations?.includes('search') || route?.active !== true || route.method !== 'POST' ||
+            route.path !== path + '/safe-search' || route.apiVersion !== policy.apiVersion ||
+            !Array.isArray(descriptor.fields) || requiredFields.some(name => !descriptor.fields.some(field => field.name === name)) ||
+            !Array.isArray(capabilities?.allowedPageSizes) || !Number.isSafeInteger(capabilities.maximumPageSize) || capabilities.maximumPageSize < 1 ||
+            !capabilities.groupOperators?.includes('AND') ||
+            !Array.isArray(capabilities.filterFields) || Object.keys(query).some(field =>
+                !capabilities.filterFields.some(item => item.field === field && item.operators?.includes('EQUALS')))) this.fail('REFERENCE');
+        const pageSize = Math.min(...capabilities.allowedPageSizes.filter(size => Number.isSafeInteger(size) && size > 0 &&
+            size <= capabilities.maximumPageSize && size <= maximumPageSize));
+        if (!Number.isSafeInteger(pageSize)) this.fail('REFERENCE');
+        const response = await invoke(route.path, route.method, { pageNumber: 1, pageSize,
+            filters: { operator: 'AND', items: Object.entries(query).map(([field, value]) => ({ field, operator: 'EQUALS', value })) } });
+        const rows = response?.records;
+        if (!Array.isArray(rows) || rows.length > 2 || rows.some(row => row.tenant !== tenant) ||
+            response.totalCount !== rows.length || response.pageNumber !== 1 || response.pageSize !== pageSize) this.fail('REFERENCE');
+        return rows;
+    },
+    /**
+     * Unwraps only affirmative canonical schema capability/search responses.
+     * @param {Object} response Existing nService HTTP result, possibly wrapped in data envelopes.
+     * @returns {Object} Owner descriptor or safe-search page without transport wrappers.
+     * @throws {Error} Failed, ambiguous or excessively nested response; no error payload is exposed.
+     * @override Preserve failure checks at every envelope and do not reinterpret errors as records.
+     */
+    catalogueReferenceData: function (response) {
+        for (let depth = 0; depth < 5; depth += 1) {
+            if (!response || typeof response !== 'object' || Array.isArray(response) ||
+                response.error || response.success === false || response.acknowledged === false ||
+                response.code !== undefined && !/^SUC_/.test(response.code) ||
+                response.errors != null && (!Array.isArray(response.errors) || response.errors.length) ||
+                response.result !== undefined) this.fail('REFERENCE');
+            if (response.data === undefined) return response;
+            response = response.data;
+        }
+        this.fail('REFERENCE');
+    },
+    /**
+     * Resolves the agreement party through Profile's existing fresh participant evidence port.
+     * @param {Object} request Admitted Agreement context with the original human bearer.
+     * @param {Object} ref Exact Enterprise code selected after Agreement scope admission.
+     * @returns {Promise<Object>} Tenant-bound Enterprise identity, never a local Profile record copy.
+     * @throws {Error} Missing authority, changed context or absent/foreign participant evidence.
+     * @override Preserve Profile ownership, fixed endpoint, original actor and exact response binding.
+     */
+    enterpriseReference: async function (request, ref) {
+        this.identifier(ref.code);
+        const policy = structuredClone(this.policy().enterpriseReference);
+        const auth = structuredClone(request.authData), tenant = request.tenant, authorization = request.authorization;
+        const code = ref.code, enterprise = auth.enterpriseCode || auth.entCode;
+        const bound = () => {
+            const timeout = policy?.validation?.timeoutMs;
+            if (!policy || typeof policy.connectionName !== 'string' || !policy.connectionName ||
+                !/^v\d+$/.test(policy.apiVersion) || policy.targetAuthority?.runtimeRole !== 'PLATFORM' ||
+                !Number.isSafeInteger(timeout?.minimum) || !Number.isSafeInteger(timeout?.maximum) ||
+                timeout.minimum < 1 || timeout.maximum < timeout.minimum ||
+                !Number.isSafeInteger(policy.timeoutMs) || policy.timeoutMs < timeout.minimum || policy.timeoutMs > timeout.maximum ||
+                auth.principalType !== 'human' || auth.tokenType !== 'access' || auth.isSystem || !enterprise ||
+                !tenant || auth.tenant !== tenant || !/^Bearer \S+$/i.test(authorization || '') ||
+                request.tenant !== tenant || request.authorization !== authorization || ref.code !== code ||
+                !isDeepStrictEqual(request.authData, auth) || !isDeepStrictEqual(this.policy().enterpriseReference, policy)) this.fail('REFERENCE');
+        };
+        bound();
+        if (typeof SERVICE.DefaultModuleService?.invokeModule !== 'function') this.fail('REFERENCE');
+        let response;
+        try {
+            response = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: 'profile',
+                connectionName: policy.connectionName, apiVersion: policy.apiVersion, targetAuthority: policy.targetAuthority,
+                apiName: '/participants/resolve', methodName: 'POST', tenant, request: { tenant },
+                header: { Authorization: authorization, 'X-Enterprise-Code': enterprise },
+                requestBody: { ownerType: 'ENTERPRISE', ownerCode: code }, timeoutMs: policy.timeoutMs, maxAttempts: 1 });
+        } catch { this.fail('REFERENCE'); }
+        bound();
+        const proof = this.catalogueReferenceData(response);
+        if (proof.contractVersion !== 1 || proof.tenant !== tenant || proof.recipient?.ownerType !== 'ENTERPRISE' ||
+            proof.recipient.ownerCode !== code) this.fail('REFERENCE');
+        return { code, tenant };
+    },
     /** Reads a single exact owner reference using the original scoped authority. */
     resolveReference: async function (request, ref, serviceName) {
-        const service = SERVICE[serviceName];
-        if (!service?.get) this.fail('REFERENCE');
+        if (serviceName === 'DefaultEnterpriseService') return this.enterpriseReference(request, ref);
         const query = { code: ref.code };
         if (ref.versionId !== undefined) query.versionId = ref.versionId;
         if (ref.catalogVersion !== undefined) query.catalogVersion = ref.catalogVersion;
-        const rows = this.records(await service.get({ tenant: request.tenant, authData: request.authData, query,
-            options: { recursive: false, skipItemCache: true }, searchOptions: { pageSize: 2, limit: 2 } }));
+        const catalogue = ['DefaultProductService', 'DefaultPriceRowService'].includes(serviceName);
+        const mode = this.policy().catalogueReferences.mode;
+        if (!['LOCAL', 'REMOTE'].includes(mode)) this.fail('CONFIG');
+        let rows;
+        if (catalogue && mode === 'REMOTE') rows = await this.remoteCatalogueReference(request, ref, query);
+        else {
+            const service = SERVICE[serviceName];
+            if (!service?.get) this.fail('REFERENCE');
+            rows = this.records(await service.get({ tenant: request.tenant, authData: request.authData, query,
+                options: { recursive: false, skipItemCache: true }, searchOptions: { pageSize: 2, limit: 2 } }));
+        }
         if (rows.length !== 1 || Object.entries(query).some(([key, value]) => rows[0][key] !== value) ||
             rows[0].tenant !== undefined && rows[0].tenant !== request.tenant) this.fail('REFERENCE');
         return rows[0];
@@ -217,7 +355,8 @@ module.exports = {
     },
     /** Persists creation/amendment atomically, with stable command replay and retained financial treatment. */
     record: async function (original) {
-        const request = { tenant: original.tenant, authData: structuredClone(original.authData), payload: structuredClone(original.payload) };
+        const request = { tenant: original.tenant, authData: structuredClone(original.authData),
+            authorization: original.authorization, payload: structuredClone(original.payload) };
         const input = this.object(request.payload, ['code', 'enterpriseCode', 'commandId', 'expectedRevision', 'terms']);
         const scope = this.scope(request, input.enterpriseCode, true);
         this.identifier(input.code); this.identifier(input.commandId);
@@ -251,7 +390,7 @@ module.exports = {
         const mutation = previous
             ? { ...local, query: { code: input.code, 'enterpriseRef.code': scope.enterpriseCode, revision: previous.revision },
                 model, options: { ...local.options, returnModified: true } }
-            : { ...local, model, options: { ...local.options, insertOnly: true } };
+            : { ...local, model };
         writes.add(mutation);
         try { await service[previous ? 'update' : 'save'](mutation); }
         finally { writes.delete(mutation); }

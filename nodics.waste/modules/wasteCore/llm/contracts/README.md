@@ -34,6 +34,22 @@ source does not enable any service principal or import permissions. Tests in
 `test/wasteCertificateCoupon.test.js` exercise real generated-owner CAS helpers
 with isolated repositories, not installed database or end-to-end acceptance.
 
+Source refusal diagnostics use `src/utils/couponSourceDiagnostics.js`, an exact
+allowlist of Digital's eleven registered `ERR_DIGITAL_COUPON_SOURCE_*` codes.
+At the fixed source callback only, Waste maps these to static local messages.
+For normalized nService failures it selects `metadata.remoteHttpFailure.code`
+only with the expected HTTP 409; a present conflicting/invalid marker prevents
+fallback to the outer code. Direct throws and failed response envelopes may carry
+an exact allowlisted code. Never match prefixes, copy remote messages/metadata,
+walk causes or take diagnostics from the submitted command. Unknown transport
+failures retain the generic source-request diagnostic; unknown failed envelopes
+retain the evidence-failed diagnostic. These observations never grant mutation
+or establish root cause. Source failure still precedes all asset/event writes.
+
+The focused registered-source refusal regression in `wasteCertificateCoupon.test.js`
+checks all three mutation phases against isolated existing asset/event storage
+and preserves inspect without callback. No live adoption is implied.
+
 ## Certificate Bundle Holdings
 
 Asset ownerRef, originalOwnerRef, physicalOwnerRef and digitalOwnerRef, plus
@@ -51,6 +67,12 @@ ownership effects for Digital bundle components. Placement follows the existing
 asset lock and transfer-event repositories and their inspected generated CAS,
 unique-code and exact readback requirements. Digital owns the bundle coordinator,
 not a second certificate ledger; eWaste owns domain transport admission.
+
+Reservation event timestamps use ISO strings, including the event retained in
+asset metadata. Waste persistence normalizes readback through JSON; comparing a
+Date object against that readback would reject a successfully persisted lock.
+Tests must exercise the canonical records conversion, not a type-preserving
+mock. Exact successor, original-command recovery and custody checks remain required.
 
 The admitted private phases are `inspect`, `reserve`, `transfer`, `release` and
 `finalize`. Inputs retain the original operation key, wasteAsset reference,
@@ -249,3 +271,21 @@ Waste Core owns the complete protected `acceptance:waste-backoffice` suite.
 It checks existing authorized registration and navigation without identity
 migration, runtime grant expansion, automatic activation or runtime startup.
 Customers supply topology and employee credentials, not replacement assertions.
+
+### Coupon source-proof diagnostics
+
+Inspect does not call Digital source proof. Reserve, consume and release require it before asset/event work. A disabled or unqualified Digital source-proof selection can therefore permit inspection and still refuse mutation. Waste reports fixed target-unavailable, source-request-failed, evidence-failed (returned error envelope), or original-acquisition-unconfirmed (denied or mismatched proof) messages. Transport rejection is not proof of the specific remote cause and is never retried here. No remote payload, error message or cause is exposed. Diagnostics do not release locks or alter recovery authority.
+
+### Coupon event timestamp persistence
+
+Coupon reserve events and release-before-reserve tombstones author occurredAt as
+ISO strings, matching reserveDigitalSale and canonical WastePersistence.records
+JSON normalization. The exact authored event is retained in pendingTransferEvent;
+digitalCreate continues to compare every authored field with generated readback.
+A Date object would change representation at that boundary, potentially leaving
+an applied asset CAS or inserted event with an unconfirmed acknowledgement.
+This correction changes only new event authoring, not strict equality, retained
+intent, event identity, finality, owner/custody fields or recovery authority.
+Tests use the real records normalizer with the actual digitalCreate/digitalUpdate
+owners and cover reservation, consumption and early-release replay. No installed
+record migration or runtime recovery is implied.

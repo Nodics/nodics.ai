@@ -79,7 +79,9 @@ async function fixture() {
         },
       },
     },
-    data: { dataReleases: { destinationEnforced: true } },
+    data: structuredClone(
+      require(foundation + "nData/nImport/import/config/properties").data,
+    ),
   };
   configuration.authSecurity.jwt.secret = crypto
     .randomBytes(64)
@@ -95,6 +97,7 @@ async function fixture() {
   };
   global.UTILS = {
     ...require(foundation + "nCommon/src/utils/utils"),
+    resolveInstalledSourceDescriptor: require(foundation + "nConfig/src/utils/utils").resolveInstalledSourceDescriptor.bind(require(foundation + "nConfig/src/utils/utils")),
     isBlank: (value) => !value,
   };
   const moduleOwner = {
@@ -103,6 +106,8 @@ async function fixture() {
     index: 1,
   };
   global.NODICS = {
+    getNodicsHome: () => path.resolve(__dirname, "../../../../nodics.foundation"),
+    getCustomHome: () => path.resolve(__dirname, "../../../.."),
     getActiveModules: () => ["profile"],
     getActiveTenants: () => ["default"],
     getRawModule: (name) => (name === "profile" ? moduleOwner : undefined),

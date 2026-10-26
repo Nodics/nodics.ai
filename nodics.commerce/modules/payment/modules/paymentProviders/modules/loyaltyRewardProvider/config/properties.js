@@ -24,6 +24,7 @@ module.exports = {
         }
     },
     loyaltyRewardProvider: {
+        reservationDecisionPaths: { cancel: '/reward-reservation-decisions/cancel', inspect: '/reward-reservation-decisions/inspect', reconcile: '/reward-reservation-decisions/reconcile' },
         auctionPaths: { inspect: '/auction-funds/inspect', capture: '/auction-funds/capture', release: '/auction-funds/release' },
         enabled: true,
         providerCode: 'loyalty-reward-points',

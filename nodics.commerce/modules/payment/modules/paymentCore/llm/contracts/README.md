@@ -1,5 +1,11 @@
 # Payment Core contracts
 
+Original authorization decisions use `authorizationDecision` and the existing
+Loyalty provider, not another financial execution. Atomic DENIED receipts are
+validated and retained in Payment evidence. An absent historical decision may
+be fenced as CANCELLED/noEffects:false, but that cannot authorize cleanup.
+See Checkout's [denial contract](../../../../../checkout/modules/checkoutCore/llm/contracts/payment-denial-cleanup.md).
+
 Payment owns original capture evidence, financial replay identity and provider
 outcomes. Order owns signed staff scope, independent refund policy, approval and
 domain checkpoints. Neither browser fields nor a sandbox provider token confer

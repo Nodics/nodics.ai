@@ -17,6 +17,12 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 - Later modules override the smallest runtime service member and preserve tenant
   isolation, node ownership, drain, idempotency, and partial-failure behavior.
 - Do not restore `CronJobContainer` or introduce a parallel scheduler pool.
+- Removing an existing timer forwards the selected `removeJob(tenant, code)`
+  tenant unchanged into `defaultCronJobRemovedHandlerPipeline`. Validator lookup
+  must retain this trusted partition during ordinary reactivation after stop;
+  never infer another tenant or bypass tenant validation. The real-pipeline
+  regression is `test/cronJobRemovalTenantPipeline.test.js`. Same-code jobs in
+  other tenants and existing uncertain lifecycle evidence remain independent.
 
 ## Operational activation and runtime revocation
 

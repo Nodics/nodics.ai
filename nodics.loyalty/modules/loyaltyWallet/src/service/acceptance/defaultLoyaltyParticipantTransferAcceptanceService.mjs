@@ -67,7 +67,16 @@ function limitOperationKey(selection) {
 }
 
 function headers(token, correlationId) {
-  return { Authorization: "Bearer " + token, "x-correlation-id": correlationId };
+  let claims;
+  try {
+    requireEvidence(token.split(".").length === 3, "Invalid session transport");
+    claims = JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString("utf8"));
+  } catch { fail("Participant acceptance requires original signed access sessions"); }
+  requireEvidence(typeof claims.entCode === "string" && identifierPattern.test(claims.entCode) &&
+    (claims.enterpriseCode === undefined || claims.enterpriseCode === claims.entCode),
+  "Session Enterprise transport is missing or contradictory");
+  // This selects matching transport only; every API still verifies the original bearer and live authority.
+  return { Authorization: "Bearer " + token, "x-enterprise-code": claims.entCode, "x-correlation-id": correlationId };
 }
 
 function transferBody(selection, direction, feeAmount, amount) {
@@ -222,12 +231,17 @@ async function completedTransfer({ context, selection, actors, direction, correl
   };
 }
 
-async function verifyLimit({ context, selection, actors, correlationId }) {
-  const effective = (await context.request("LOYALTY", route + "/transfer-policy/read", {
+async function verifyLimit({ context, selection, actors, policyReadToken, correlationId }) {
+  const policy = await context.request("LOYALTY", route + "/transfer-policy/read", {
     method: "POST",
-    headers: headers(actors.enterprise, correlationId + ":policy"),
-    body: JSON.stringify({ programCode: selection.programCode, rewardTypeCode: selection.rewardTypeCode }),
-  }))?.effective;
+    headers: headers(policyReadToken, correlationId + ":policy"),
+    body: JSON.stringify({ enterpriseCode: selection.enterprise.ownerCode,
+      programCode: selection.programCode, rewardTypeCode: selection.rewardTypeCode }),
+  });
+  requireEvidence(policy?.ownerType === "ENTERPRISE" && policy.ownerCode === selection.enterprise.ownerCode &&
+    policy.programCode === selection.programCode && policy.rewardTypeCode === selection.rewardTypeCode,
+  "Policy reader must represent the exact reviewed Enterprise, program and reward type");
+  const effective = policy.effective;
   requireEvidence(effective && effective.enabled === true && effective.outgoingEnabled === true && effective.incomingEnabled === true,
     "Enterprise transfer policy is not enabled");
   for (const key of ["feeAmount", "maximumAmount", "maximumDailyAmount"]) {
@@ -242,19 +256,16 @@ async function verifyLimit({ context, selection, actors, correlationId }) {
   const source = await wallet(context.request, actors.enterprise, selection, "enterprise", correlationId + ":limit-wallet");
   const body = transferBody(selection, direction, source.balance.transferFeeAmount, selection.limitProbeAmount);
   body.idempotencyKey = key;
-  let refusal;
-  try {
-    await context.request("LOYALTY", route + "/reward-transfers", {
-      method: "POST", headers: headers(actors.enterprise, correlationId + ":limit-probe"), body: JSON.stringify(body),
-    });
-  } catch (error) {
-    refusal = error;
-  }
-  requireEvidence(refusal && /Per-transfer limit exceeded/.test(refusal.message),
+  const response = await context.raw("LOYALTY", route + "/reward-transfers", {
+    method: "POST", headers: headers(actors.enterprise, correlationId + ":limit-probe"), body: JSON.stringify(body),
+  });
+  const refusal = await response.json();
+  requireEvidence(response.status === 409 && refusal?.code === "ERR_LOYALTY_TRANSFER_AMOUNT_LIMIT",
     "Configured per-transfer limit did not refuse the reviewed probe");
   const status = await transferStatus(context.request, actors.enterprise, key, correlationId + ":limit-status");
   requireEvidence(status?.status === "UNCONFIRMED", "Rejected limit probe created transfer evidence");
-  return { effective: structuredClone(selection.enterprisePolicy), rejectedAmount: selection.limitProbeAmount };
+  return { effective: structuredClone(selection.enterprisePolicy), rejectedAmount: selection.limitProbeAmount,
+    refusalCode: refusal.code, refusalHttpStatus: response.status, operationStatus: status.status };
 }
 
 /** Validates an operator-reviewed fixture without defining any customer or deployment defaults. */
@@ -328,6 +339,7 @@ export async function runLoyaltyParticipantTransferAcceptance({
   execute = false,
   selection,
   actors,
+  policyReadToken,
   context,
   configuration,
   environment = process.env,
@@ -341,17 +353,22 @@ export async function runLoyaltyParticipantTransferAcceptance({
     requireEvidence(typeof actors[actor] === "string" && actors[actor].length > 0 && actors[actor].length <= 32768,
       actor + " participant bearer token is required");
   requireEvidence(actors.customer !== actors.enterprise, "Customer and Enterprise require distinct participant sessions");
+  requireEvidence(typeof policyReadToken === "string" && policyReadToken.length > 0 && policyReadToken.length <= 32768,
+    "A separate policy-read bearer token is required");
+  requireEvidence(policyReadToken !== actors.customer && policyReadToken !== actors.enterprise,
+    "Policy inspection requires a session distinct from both transfer participants");
+  for (const token of [actors.customer, actors.enterprise, policyReadToken]) headers(token, selected.runCode);
   const live = context || await createAcceptanceContext({ projectRoot, environment, configuration, fetch: fetchRequest });
   requireEvidence(typeof live.request === "function" && typeof live.raw === "function", "Acceptance HTTP context is unavailable");
   const contract = await live.request("LOYALTY", "/nodics/system/v0/contract/openapi", {
-    headers: headers(actors.enterprise, "loyalty-transfer-contract:" + selected.runCode),
+    headers: headers(policyReadToken, "loyalty-transfer-contract:" + selected.runCode),
   });
   const paths = contract?.paths || contract?.openapi?.paths || {};
   for (const [path, method] of [[route + "/wallet", "get"], [route + "/reward-transfers", "post"],
     [route + "/reward-transfers/{operationKey}", "get"], [route + "/transfer-policy/read", "post"]])
     requireEvidence(paths[path]?.[method], "Loyalty API contract is missing " + method.toUpperCase() + " " + path);
   const correlationId = "loyalty-participant-transfer:" + selected.runCode;
-  const policy = await verifyLimit({ context: live, selection: selected, actors, correlationId });
+  const policy = await verifyLimit({ context: live, selection: selected, actors, policyReadToken, correlationId });
   const reports = [];
   for (const direction of directions)
     reports.push(await completedTransfer({ context: live, selection: selected, actors, direction, correlationId: correlationId + ":" + direction.key }));
@@ -372,7 +389,7 @@ export async function runLoyaltyParticipantTransferAcceptance({
 /** Import-inert command CLI owned and registered by Loyalty Wallet. */
 export async function main(argv = process.argv.slice(2)) {
   if (argv.includes("--help")) {
-    console.log("acceptance:loyalty-participant-transfer --execute --selection=<json-file>\nRequires running PLATFORM and LOYALTY runtimes plus NODICS_LOYALTY_ACCEPTANCE_CUSTOMER_TOKEN and NODICS_LOYALTY_ACCEPTANCE_ENTERPRISE_TOKEN. The reviewed owners must have existing OPEN, funded wallets and a configured Enterprise per-transfer maximum. The runner never provisions identity, wallets, rewards, policies or permissions.");
+    console.log("acceptance:loyalty-participant-transfer --execute --selection=<json-file>\nRequires running PLATFORM and LOYALTY runtimes plus NODICS_LOYALTY_ACCEPTANCE_CUSTOMER_TOKEN, NODICS_LOYALTY_ACCEPTANCE_ENTERPRISE_TOKEN and distinct native SuperAdmin NODICS_LOYALTY_ACCEPTANCE_POLICY_READ_TOKEN. Policy read explicitly selects the reviewed Enterprise without changing the administrator context. The reviewed owners must have existing OPEN, funded wallets and a configured Enterprise per-transfer maximum. The runner never provisions identity, wallets, rewards, policies or permissions.");
     return 0;
   }
   const selectionPath = loyaltyParticipantTransferAcceptanceArgument(argv);
@@ -380,6 +397,7 @@ export async function main(argv = process.argv.slice(2)) {
   const report = await runLoyaltyParticipantTransferAcceptance({
     execute: argv.includes("--execute"),
     selection,
+    policyReadToken: process.env.NODICS_LOYALTY_ACCEPTANCE_POLICY_READ_TOKEN,
     actors: {
       customer: process.env.NODICS_LOYALTY_ACCEPTANCE_CUSTOMER_TOKEN,
       enterprise: process.env.NODICS_LOYALTY_ACCEPTANCE_ENTERPRISE_TOKEN,

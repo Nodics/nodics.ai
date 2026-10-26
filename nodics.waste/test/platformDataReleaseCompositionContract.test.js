@@ -15,6 +15,8 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const properties = require("../config/properties");
+const path = require("node:path");
+const releaseService = require("../../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService");
 
 test("Waste exposes Carbon and Material participant groups to Platform authority", () => {
   const contributions =
@@ -31,4 +33,22 @@ test("Waste exposes Carbon and Material participant groups to Platform authority
     assert.equal(section.destinationRole, "PLATFORM");
     assert.equal(section.selectionPolicy, "EXPLICIT");
   }
+});
+
+
+test("inactive Carbon exposes its explicit finalization permission through standard Platform discovery", t => {
+  const previous = global.NODICS;
+  t.after(() => { if (previous === undefined) delete global.NODICS; else global.NODICS = previous; });
+  const owner = { name: "wasteCarbon", path: path.resolve(__dirname, "../modules/wasteCarbon") };
+  global.NODICS = { getActiveModules: () => ["profile"], getRawModule: name => name === owner.name ? owner : undefined };
+  const service = Object.create(releaseService);
+  service.configuration = () => ({ contributions: properties.data.dataReleases.runtimeRoleProfiles.PLATFORM.contributions });
+  service.error = (code, message) => Object.assign(new Error(message), { code });
+  const release = service.discoverManifestRelease({ moduleName: owner.name, sectionCode: "transferFinalizationPermission" }, "init");
+  assert.equal(release.version, "0.0.2");
+  assert.equal(release.destinationRole, "PLATFORM");
+  assert.equal(release.selectionPolicy, "EXPLICIT");
+  assert.notEqual(service.discoveryOwners().find(item => item.moduleName === owner.name).active, true);
+  assert.throws(() => service.discoverManifestRelease({ moduleName: owner.name, sectionCode: "documentation" }, "init"),
+    /not selected/);
 });

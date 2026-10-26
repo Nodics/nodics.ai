@@ -127,7 +127,7 @@ test("default tenant remains unchanged", async () => {
 test("default Init Tenant seed passes actual save guard without private capture admission and reads stay redacted", async () => {
   fixture();
   const seed = require("../data/init-v001/records/enterprise/defaultTenantsData").record0;
-  const header = require("../data/init-v001/headers/enterprise/defaultEnterpriseHeader").profile.defaultTenants;
+  const header = require("./fixtures/unreleasedPredecessor/init-v001/headers/enterprise/defaultEnterpriseHeader").profile.defaultTenants;
   CONFIG.get = name => name === "defaultTenant" ? "default" : name === "log"
     ? { requestPrivacy: { qualified: false, captureMode: "disabled" } } : undefined;
   let privateCalls = 0, reads = 0, result;

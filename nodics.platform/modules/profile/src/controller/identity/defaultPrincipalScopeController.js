@@ -17,7 +17,7 @@ module.exports = {
     const auth = request.authData || {};
     const promise = Promise.resolve().then(() => {
       if (auth.tokenType !== 'access' || auth.principalType !== 'human' || !auth.loginId) throw new CLASSES.NodicsError('ERR_AUTH_00003','A human access token is required');
-      return SERVICE.DefaultPrincipalScopeGovernanceService.getEffectiveScopes({tenant:request.tenant,authData:auth});
+      return SERVICE.DefaultPrincipalScopeGovernanceService.getCurrentPrincipalScopes(request);
     }).then(data=>({code:'SUC_PRFL_00000',data}));
     return callback ? promise.then(result=>callback(null,result)).catch(callback) : promise;
   }

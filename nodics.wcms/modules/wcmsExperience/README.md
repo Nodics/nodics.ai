@@ -30,6 +30,11 @@ The first vertical slice resolves product-listing hero content:
 
 Do not make every WCMS runtime depend on Discovery because this optional capability exists. A server should activate `wcmsExperience` only when it needs targeted, indexed CMS delivery.
 
+Experience Studio appears in CMS's existing Content and Experience navigation
+group (`content`, order `200`). Its owner provider supplies that identity; Axis
+does not merge unrelated groups by label. Routes, child navigation, PREVIEW state
+and separate action permissions remain unchanged.
+
 ## Extension path
 
 Projects customize by adding later-layer placements, renderer contracts, seed data, service overrides, and configuration. They should not edit framework module data.

@@ -66,6 +66,34 @@ or the retained publication plan. A timeout is incomplete observation, not proof
 of a missing or invalid publication; refresh status after owner/transport recovery
 before authorizing any further setup action.
 
+## Preparation Import Batch Boundaries
+
+Adjacent required DATA_RELEASE steps with the same target server, runtime role
+and data type normally share one nImport batch. nImport controls ordering inside
+that batch; a preparation step's `order` alone does not order those imports.
+When a release requires earlier preparation imports to have completed, declare
+`batchBoundaryBefore: true` on the dependent step. BackOffice finishes the earlier
+batch before dispatching the new batch through the existing owner operation.
+Later compatible steps may join the new batch; this flag separates the preceding
+work rather than imposing a singleton policy on every release.
+
+The Framework owns the definition, strict boolean validation and false baseline
+in `backofficeApplicationInitialization.preparationStepDefaults.batchBoundaryBefore`.
+A project selects a true value only on its actual dependency boundary. For example,
+an operations step at order 90 and a dependent assignment step at order 100 can
+keep their same server, runtime role, data type and original human authority while
+the assignment step starts a separate batch. Separated groups receive stable,
+distinct idempotency keys; replay does not create a replacement release identity.
+
+The flag is invalid for non-DATA_RELEASE steps. It grants no permissions, imports
+no data by itself and supplies no operator Enterprise. Existing complete preflight,
+owner authorization, required-stage readiness, failure short-circuiting and later
+publication gates remain mandatory. Invalid values refuse before owner dispatch;
+an earlier failed batch leaves dependent groups unattempted. Recheck owner receipts
+before retrying; never report readiness from grouping alone. Unselected/default
+steps retain normal batching. The focused grouping and sequential execution tests
+are in `test/applicationPreparationOrder.test.js`.
+
 ## Explicit Signed Operator Stages
 
 A profile opts into scoped AFTER_PUBLICATION orchestration by declaring
@@ -218,6 +246,51 @@ Failed shared proof blocks admission. The plan must derive all current prerequis
 (including later additions), not a hardcoded count. Unselected AFTER remains
 read-only; selected local write authority and owner preflight are unchanged.
 
+Shared BEFORE status observations use the validated framework-owner setting
+`backofficeApplicationInitialization.readinessWorkers`, default 4 in
+`config/properties.js`, allowing integers 1–16 through layered configuration.
+`applicationReadinessWork` resolves and validates it before dispatch. Each stage still calls the existing
+observer with the original request and validates the current plan before and
+after its owner read. No proof, rejection or plan is cached across stages or
+requests. Optional stages do not dispatch. All required reads settle, including
+synchronous failures, and results retain input order before functional-module
+readiness is appended. A failed stage remains blocked with its existing bounded
+reason code. No import, approval or other mutation is parallelized by this path.
+
+The bound is per composition, not global. The exact-request profile reader also
+queues documentation reads; nested BEFORE observations stay serial, with the
+private scheduling marker inherited through owner request clones. Direct profile
+reads use the stage budget. Separate HTTP requests and internal owner work can
+still exceed it. No marker contains authority evidence. This removes serial transport wait between
+independent reads but does not establish a registry-heartbeat latency guarantee.
+`test/sharedPreparationObservationConcurrency.test.js` proves 12 gated owner
+reads settle in three waves, with peak concurrency four, ordered results,
+failure isolation and fresh observations after authority changes. Overrides and
+invalid values are covered. A 74-profile, six-stage composition performs 444
+reads with peak owner concurrency equal to the budget (1, 2 or 4), not its square.
+These controlled regressions establish scheduling, not a live bottleneck. Runtime
+latency and heartbeat recovery require separate coordinated live verification.
+
+A valid reviewed foreign observation with `ready: false` and typed `NOT_CURRENT`
+means work remains with that enterprise's operator: project `AUTHORITY_PENDING`,
+not a validation refusal. Installation requires the explicit status; publication
+requires exactly the intended members with only CURRENT/NOT_CURRENT statuses and
+at least one NOT_CURRENT. Target absence still requires the source recheck to
+remain stable. Refused, missing or contradictory readiness stays
+`VALIDATION_BLOCKED`; observation exceptions retain their bounded reason code.
+Neither pending nor blocked foreign evidence is selectable or executable, and
+neither establishes aggregate READY. Local owner preflight refusals remain blocked.
+Aggregate blockers preserve `AUTHORITY_PENDING` instead of converting it to
+`READINESS_UNKNOWN`. Their next action directs an authorized human operator to
+sign in to the owning enterprise and select its stage. The diagnostic repair
+`REVIEW_SETUP_AUTHORITY` is unavailable and carries no operation; refreshing a
+default-admin session cannot grant foreign execution. Axis consumes this existing
+diagnostic-only contract and keeps the stage selector disabled without eligible
+local stages. This is application-preparation evidence, not an import refusal.
+The contribution-readiness regressions cover this distinction, source drift and
+rejected foreign selection; Media projection is independently covered by
+`test/backofficeApplicationMediaRetryContract.test.js`.
+
 Required acceptance includes wrong tenant, principal/service assignment,
 foreign enterprise/source, application/stage/target, plan membership/digest and
 source/installation revision; stale prior CURRENT; revocation/expiry; ambiguous
@@ -230,3 +303,20 @@ Source regression coverage lives in `test/applicationContributionReadiness.test.
 alongside the existing preparation-order, receipt and readiness suites. No live
 identity, credentials, publication approval or owner qualification follows from
 these fixtures.
+# Retained Publication Approval Recovery
+
+`POST /applications/:profileCode/initialization/reconcile-approval` retains its
+existing human administrator admission and dedicated reconciliation permission.
+For `TASK_REFERENCE_MISSING`, the owner projects `RECONCILE_APPROVAL_TASK` as an
+available explicit repair even when the publication retains a workflow reference.
+A workflow reference alone is neither actionable task evidence nor repair success.
+
+BackOffice reads the target's current publication identity and sends its bounded
+`approvalRepairBinding` to CMS baseline `reconcile-approval`, never `initiate`.
+No forced baseline refresh, source installation or AFTER-publication stage is
+part of this command. Failed/missing identity reads stop dispatch. CMS rechecks
+the retained pending identity and Process diagnosis before requesting its existing
+workflow owner to recover. Fresh `WAITING_REVIEWER` confirms repair; a reference
+without that diagnostic remains `NEEDS_PROCESS_REVIEW`. Normal approval remains
+a separate explicit Process decision. Startup/prerequisite unavailability is not
+proof of a missing task and must be refreshed before deciding on recovery.

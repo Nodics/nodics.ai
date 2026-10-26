@@ -16,6 +16,32 @@ const binding = require("../../../../../../nodics.foundation/modules/nConfig/src
 const properties = require("../config/properties");
 const service = require("../src/service/defaultEWasteJourneyContractService");
 
+test("outcome link defaults remain unconfigured and deployment links use the owner validator", () => {
+  const outcome = require("../src/service/defaultEWasteOutcomeCommunicationService");
+  const defaults = properties.eWaste.outcomeCommunication;
+  assert.deepEqual(defaults.detailLinks, {});
+  assert.equal(defaults.enabled, false);
+  assert.equal(defaults.connectionName, null);
+  assert.equal(outcome.detailLink(defaults, "IN_APP", "WST_A"), null);
+  const customized = binding.merge(properties, {
+    eWaste: {
+      outcomeCommunication: {
+        detailLinks: {
+          IN_APP: { url: "https://example.test/items", parameter: "record" },
+        },
+      },
+    },
+  }).eWaste.outcomeCommunication;
+  assert.equal(customized.enabled, false);
+  assert.equal(
+    outcome.detailLink(customized, "IN_APP", "WST_A"),
+    "https://example.test/items?record=WST_A",
+  );
+  assert.equal(outcome.detailLink(customized, "TELEGRAM", "WST_A"), null);
+  assert.throws(() => outcome.detailLink(customized, "IN_APP", "../foreign"));
+  assert.deepEqual(defaults.detailLinks, {});
+});
+
 test("eWaste owns neutral metadata profiles and evidence protocol without activation", () => {
   assert.deepEqual(properties.copilot.providers.profiles.eWastePhotoMetadata, {
     maximumOutputTokens: 2400,

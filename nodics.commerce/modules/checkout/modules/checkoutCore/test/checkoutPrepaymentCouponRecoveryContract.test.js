@@ -19,7 +19,8 @@ const recovery = require("../src/service/defaultCheckoutCompensationRecoveryServ
 const ports = require("../src/service/defaultCheckoutPlacementPortsService");
 const digital = require("../../../../digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceCheckoutService");
 const copy = value => structuredClone(value);
-const matches = (row, query) => Object.entries(query).every(([key, value]) => isDeepStrictEqual(row[key], value));
+const matches = (row, query) => Object.entries(query).every(([key, value]) =>
+  isDeepStrictEqual(key.split('.').reduce((record, part) => record?.[part], row), value));
 const failure = { code: "ERR_CHECKOUT_COMPENSATION_UNCONFIRMED" };
 
 function fixture() {
@@ -36,10 +37,10 @@ function fixture() {
   const outcome = { type: "DIGITAL_COUPON_RELEASE", status: "COMPLETED", reservationKey: uncertainKey,
     cartCode: "original-cart", entryCode, enterpriseCode: "e" };
   const state = { rows: [row], reads: 0, paymentReads: [], writes: [], preflights: 0, cleanups: 0, forbidden: 0,
-    scope: { cartCode: "original-cart", entryCode, productCode: "coupon-product", sku: "sku", enterpriseCode: "e" },
+    scope: { cartCode: "original-cart", entryCode, productCode: "coupon-product", sku: "sku", enterpriseCode: "e", reservationType: "COUPON" },
     outcome, entry: { tenant: "t", enterpriseCode: "e", ownerId: "buyer", code: entryCode, cartCode: outcome.cartCode,
       productCode: "coupon-product", sku: "sku", quantity: "1", status: "ACTIVE" },
-    cart: { tenant: "t", enterpriseCode: "e", ownerId: "buyer", code: outcome.cartCode, status: "ACTIVE", storeCode: "store" } };
+    cart: { tenant: "t", enterpriseCode: "e", ownerId: "buyer", code: outcome.cartCode, status: "ACTIVE", storeCode: "store", locale: "en" } };
   const deny = async () => { state.forbidden++; throw new Error("Forbidden recovery effect"); };
   const envelope = rows => ({ code: "SUC_FIND_00000", count: rows.length, result: copy(rows) });
   global.SERVICE = {
@@ -64,13 +65,13 @@ function fixture() {
       const value = envelope([]);
       return state.onPayment ? state.onPayment(value, r, state.paymentReads.length) : value;
     }, save: deny, update: deny },
-    DefaultDigitalCommerceCheckoutService: { uncertainCouponReservationScope: async (r, selector) => {
+    DefaultDigitalCommerceCheckoutService: { uncertainReservationScope: async (r, selector) => {
       state.preflights++; state.preflightSelector = copy(selector);
-      assert.equal(state.writes.length, 0); assert.equal(state.cleanups, 0);
+      assert.ok(state.cleanups <= 1);
       assert.equal(r.idempotencyKey, request.commandCode);
       if (state.preflightError) throw state.preflightError;
       return copy(state.scope);
-    }, recoverUncertainCouponReservation: async (r, selector) => {
+    }, recoverUncertainReservation: async (r, selector) => {
       state.cleanups++; state.ownerRequest = r; state.selector = copy(selector);
       assert.equal(row.revision, 1); assert.equal(row.evidence.compensationRecovery.status, "RUNNING");
       assert.ok(state.paymentReads.length >= 8);
@@ -85,6 +86,68 @@ function fixture() {
   return { request, row, state, uncertainKey, entryCode };
 }
 test.afterEach(() => { delete global.SERVICE; });
+
+test("fresh canonical customer admission inspects and reconciles only the exact original actor-bound prepayment command", async t => {
+  const f = fixture(), { request, row, state, uncertainKey } = f;
+  const previous = ["CONFIG", "FACADE"].map(key => [key, Object.hasOwn(global, key), global[key]]);
+  t.after(() => { for (const [key, present, value] of previous) {
+    if (present) global[key] = value; else delete global[key];
+  } });
+  const ownerRef = { module: "profile", schema: "customer", code: "canonical-customer" };
+  const actorRef = { principalType: "customer", code: "buyer", loginId: "login", enterpriseCode: "e" };
+  const merchantScope = { contractVersion: 1, storeCode: "store", enterpriseCode: "e", revision: 1 };
+  Object.assign(request.authData, { tokenType: "access", loginId: "login" });
+  request.authorization = "Bearer original";
+  Object.assign(row, { enterpriseCode: "e", cartCode: state.cart.code, orderCode: "original-order" });
+  Object.assign(row.evidence, { ownerRef, actorRef, participantEnterpriseCode: "e", merchantScope, orderCode: row.orderCode });
+  Object.assign(state.cart, { ownerRef, participantEnterpriseCode: "e", merchantScope });
+  Object.assign(state.entry, { ownerRef });
+  global.CONFIG = { get: key => key === "cart" ? require("../../cart/config/properties").cart : undefined };
+  global.FACADE = { DefaultCartCustomerFacade: require("../../cart/src/facade/defaultCartCustomerFacade") };
+  const facade = require("../src/facade/defaultCheckoutCustomerFacade");
+  SERVICE.DefaultCheckoutOperationService = require("../src/service/defaultCheckoutOperationService");
+  SERVICE.DefaultCheckoutMerchantScopeService = require("../src/service/defaultCheckoutMerchantScopeService");
+  SERVICE.DefaultCartMerchantScopeService = require("../../cart/src/service/defaultCartMerchantScopeService");
+  SERVICE.DefaultStoreContextService = { resolveStoreCode: (_r, code) => code };
+  SERVICE.DefaultIdentityGovernanceService = { getSystemAuthData: () => ({ isSystem: true }) };
+  SERVICE.DefaultSecuredRequestPipelineService = { getGrantedPermissions: () => ["commerce.checkout.place"], isPermissionGranted: () => true };
+  SERVICE.DefaultModuleService = { invokeModule: async () => ({ contractVersion: 1, tenant: "t", enterpriseCode: "e",
+    customer: { code: ownerRef.code, loginId: "login" } }) };
+  SERVICE.DefaultDigitalCommerceCheckoutService = digital;
+  SERVICE.DefaultCartEntryService = { get: async r => {
+    const rows = [state.entry].filter(row => matches(row, r.query));
+    return { code: "SUC_READ", count: rows.length, result: copy(rows) };
+  } };
+  SERVICE.DefaultCartService = { get: async r => {
+    const rows = [state.cart].filter(row => matches(row, r.query));
+    return { code: "SUC_READ", count: rows.length, result: copy(rows) };
+  } };
+  SERVICE.DefaultProductDiscoveryService = { query: r => r, searchPinned: async () => [] };
+  SERVICE.DefaultProductSearchEnrichmentService = { retainedProjections: async () => [{ tenant: 't', enterpriseCode: 'e',
+    storeCode: 'store', locale: 'en', productCode: 'coupon-product', status: 'CURRENT', payload: {
+      variantSkuMap: { variant: 'sku' }, localizedAttributes: { productType: 'DIGITAL', digitalDeliveryType: 'COUPON_CODE', inventoryStrategy: 'COUPON_CODE_POOL' } } }] };
+  let releases = 0;
+  SERVICE.DefaultPromotionOperationService = { recoverCouponCodeReservation: async r => {
+    assert.equal(r.ownerId, "buyer"); assert.equal(r.idempotencyKey, uncertainKey);
+    releases++; return { status: "COMPLETED", reservationKey: uncertainKey };
+  } };
+  const original = copy(row), auth = copy(request.authData);
+  assert.equal((await FACADE.DefaultCartCustomerFacade.resolveContext(request, "commerce.checkout.place")).ownerId, "canonical-customer");
+  assert.equal((await facade.commandStatus(request)).status, "COMPENSATION_REQUIRED");
+  assert.equal(state.writes.length, 0); assert.equal(releases, 0);
+  await assert.rejects(facade.recoverCompensation({ ...request, authData: { ...request.authData, principalId: "foreign-actor" } }));
+  assert.equal(state.writes.length, 0);
+  const result = await facade.recoverCompensation(request);
+  assert.equal(result.status, "COMPENSATED"); assert.equal(result.originalPaymentRecordCount, 0);
+  assert.deepEqual(await facade.recoverCompensation(request), result);
+  assert.equal(releases, 1); assert.equal(state.forbidden, 0);
+  const { compensationRecovery, ...retained } = row.evidence;
+  assert.deepEqual(retained, original.evidence); assert.equal(row.ownerId, original.ownerId);
+  assert.deepEqual(request.authData, auth);
+  await assert.rejects(facade.place({ ...request, commandCode: undefined, idempotencyKey: request.commandCode,
+    payload: { cartCode: state.cart.code, orderCode: row.orderCode } }));
+  assert.equal(state.forbidden, 0);
+});
 
 for (const owner of ['DefaultCommerceOrderService', 'DefaultDigitalEntitlementService']) {
   for (const [name, response] of Object.entries({
@@ -112,7 +175,7 @@ test("prepayment recovery fences exact original cleanup, preserves legacy audit 
   assert.deepEqual(compensationRecovery.outcome, state.outcome);
   assert.equal(compensationRecovery.cartCode, state.outcome.cartCode);
   assert.deepEqual(state.preflightSelector, { uncertainKey }); assert.equal(state.preflights, 1);
-  assert.deepEqual(state.selector, { uncertainKey }); assert.equal(state.ownerRequest.idempotencyKey, request.commandCode);
+  assert.deepEqual(state.selector, { uncertainKey, reservationType: "COUPON" }); assert.equal(state.ownerRequest.idempotencyKey, request.commandCode);
   assert.equal(state.ownerRequest.commandCode, request.commandCode); assert.deepEqual(request.authData, auth);
   assert.equal(state.writes.length, 2); assert.equal(state.cleanups, 1); assert.equal(state.paymentReads.length, 12);
   for (const write of state.writes) {
@@ -120,7 +183,7 @@ test("prepayment recovery fences exact original cleanup, preserves legacy audit 
     assert.equal(write.options.upsert, false); assert.equal(write.query.idempotencyKey, request.commandCode);
   }
   assert.deepEqual(await recovery.recover(request), result);
-  assert.equal(state.paymentReads.length, 16); assert.equal(state.writes.length, 2); assert.equal(state.cleanups, 1); assert.equal(state.preflights, 1);
+  assert.equal(state.paymentReads.length, 16); assert.equal(state.writes.length, 2); assert.equal(state.cleanups, 1); assert.equal(state.preflights, 2);
   await assert.rejects(recovery.assertPlacementAllowed({ ...request, idempotencyKey: request.commandCode }), { code: "ERR_CHECKOUT_COMPENSATION_REQUIRED" });
   assert.equal(state.forbidden, 0); assert.equal(JSON.stringify(result).includes("PRIVATE"), false);
 });
@@ -132,6 +195,10 @@ test("actual scoped compensate writer and real Digital Cart resolver conform to 
   await ports.create().compensate({ ...request, idempotencyKey: request.commandCode, completed: ["VALIDATED", "CALCULATED", "RESERVED"],
     results: { digitalReservationRecoveryRequired: true, inventoryReservationRecoveryRequired: false, digitalReservationUncertainKey: uncertainKey } },
   Object.assign(new Error("PRIVATE"), { code: "ORIGINAL_FAILURE" }), request);
+  SERVICE.DefaultProductDiscoveryService = { query: r => r, searchPinned: async () => [] };
+  SERVICE.DefaultProductSearchEnrichmentService = { retainedProjections: async () => [{ tenant: 't', enterpriseCode: 'e',
+    storeCode: 'store', locale: 'en', productCode: 'coupon-product', status: 'CURRENT', payload: {
+      variantSkuMap: { variant: 'sku' }, localizedAttributes: { productType: 'DIGITAL', digitalDeliveryType: 'COUPON_CODE', inventoryStrategy: 'COUPON_CODE_POOL' } } }] };
   let releases = 0;
   SERVICE.DefaultDigitalCommerceCheckoutService = digital;
   SERVICE.DefaultCartEntryService = { get: async r => ({ code: "SUC_FIND_00000", count: 1, result: [copy(state.entry)] }) };
@@ -175,7 +242,7 @@ for (const [name, mutate] of Object.entries({
   "unsafe revision": f => { f.row.revision = Number.MAX_SAFE_INTEGER; },
   "already compensated without receipt": f => { f.row.status = "COMPENSATED"; },
   "owner missing": f => { delete SERVICE.DefaultDigitalCommerceCheckoutService; },
-  "preflight missing": f => { delete SERVICE.DefaultDigitalCommerceCheckoutService.uncertainCouponReservationScope; },
+  "preflight missing": f => { delete SERVICE.DefaultDigitalCommerceCheckoutService.uncertainReservationScope; },
 })) test(`prepayment static refusal: ${name}`, async () => {
   const f = fixture(); mutate(f);
   await assert.rejects(recovery.recover(f.request));

@@ -370,7 +370,9 @@ targetReceiptContract: 'v1',
                 query: { ...this.scope(request), code: ref.code, versionId: ref.versionId }, searchOptions: { limit: 2 } });
             if (!response || !Array.isArray(response.result) || response.result.length !== 1 ||
                 response.result[0].code !== ref.code || response.result[0].versionId !== ref.versionId) throw new Error('Exact policy version unavailable');
-            records.push({ schema: ref.schema, policy: this.capturePolicy(ref.schema, response.result[0], request) });
+            const policy = this.capturePolicy(ref.schema, response.result[0], request);
+            this.assertPublishableCouponOffer(policy);
+            records.push({ schema: ref.schema, policy });
         }
         if (!seen.has(input.rootType + ':' + input.rootCode)) throw new Error('Policy root is missing');
         records.sort((a,b) => (a.schema + ':' + a.policy.code).localeCompare(b.schema + ':' + b.policy.code));
@@ -399,7 +401,17 @@ targetReceiptContract: 'v1',
     /** Validates retained content for the existing nPublish adapter hook. */
     validate: async function (publication, release, request) {
         const retained = await this.getVersion(publication, request);
+        for (const item of retained.payload.records) this.assertPublishableCouponOffer(item.policy);
         return { valid: retained.fingerprint === release.fingerprint };
+    },
+    /** New Product-bound coupon publications require explicit current acquisition rights; retained reads stay unchanged. */
+    assertPublishableCouponOffer: function (policy) {
+        if (policy.couponOffer !== undefined && policy.purchasedCouponPolicy !== undefined)
+            throw new CLASSES.NodicsError('ERR_PROMOTION_COUPON_OFFER_INVALID');
+        if (policy.couponOffer !== undefined || policy.conditions?.sourceProductCode !== undefined ||
+            policy.purchasedCouponPolicy !== undefined) {
+            SERVICE.DefaultCouponOfferService.validate(policy.couponOffer);
+        }
     },
     /** Resolves the configured owner transport. An absent transport never falls back to local source. */
     transport: function () {
@@ -420,6 +432,7 @@ targetReceiptContract: 'v1',
             this.fingerprint(release.payload) !== release.code || release.fingerprint !== release.code ||
             release.tenant !== request.tenant || release.enterpriseCode !== this.scope(request).enterpriseCode) throw new Error('Target policy scope or fingerprint mismatch');
         for (const item of release.payload.records) {
+            this.assertPublishableCouponOffer(item.policy);
             if (this.fingerprint(this.capturePolicy(item.schema, item.policy, request)) !== this.fingerprint(item.policy)) throw new Error('Target policy contains non-policy fields');
         }
         return this.retain(this.targetServices().release, { ...this.scope(request), code: release.code,
@@ -607,22 +620,32 @@ targetReceiptContract: 'v1',
         const admission = SERVICE.DefaultPromotionDistributionAdmissionService;
         const { request, projection } = admission.resolveMembershipRead(command);
         this.requireTarget();
-        const roots = this.deliveryRoots(request), maximum = this.publicationSettings().maxDependencies;
+        const roots = [...this.deliveryRoots(request)], maximum = this.publicationSettings().maxDependencies;
         if (!this.deliveryEnabled(request) || !Array.isArray(roots) || !roots.length || !Number.isSafeInteger(maximum) ||
             maximum < 1 || roots.length > maximum || new Set(roots).size !== roots.length ||
             request.enterpriseCode !== projection.enterpriseCode || request.productCode !== projection.productCode)
             throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
-        await SERVICE.DefaultCouponSellerAuthorizationService.activeEnterprise(request, projection.enterpriseCode);
         const authData = SERVICE.DefaultIdentityGovernanceService?.getSystemAuthData();
         if (authData?.isSystem !== true) throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
         const owner = { tenant: request.tenant, enterpriseCode: projection.enterpriseCode, authData };
         const snapshots = [], policies = [];
-        for (const rootCode of roots) {
-            const root = { rootType: 'promotion', rootCode }, records = await this.readSellerActivated(root, owner);
-            snapshots.push({ root, records });
-            for (const row of records) if (row.schema === 'promotion' && row.policy?.conditions?.sourceProductCode === request.productCode)
-                policies.push(row.policy);
-        }
+        await SERVICE.DefaultPromotionSellerPolicyService.productRootPhase(command, async () => {
+            for (const rootCode of roots) {
+                const root = { rootType: 'promotion', rootCode };
+                const pointer = await this.readRecord(this.targetServices().pointer, this.pointerCode(root, owner), owner);
+                if (!pointer) {
+                    const delegated = await SERVICE.DefaultPromotionSellerPolicyService.productRootOwnership(command, rootCode);
+                    if (delegated !== undefined) {
+                        snapshots.push({ root, delegated });
+                        continue;
+                    }
+                }
+                const records = await this.readSellerActivated(root, owner);
+                snapshots.push({ root, records });
+                for (const row of records) if (row.schema === 'promotion' && row.policy?.conditions?.sourceProductCode === request.productCode)
+                    policies.push(row.policy);
+            }
+        });
         if (policies.length > 1) throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
         const policy = policies[0], same = require('node:util').isDeepStrictEqual;
         const ref = { moduleName: 'profile', schemaName: 'enterprise', code: owner.enterpriseCode };
@@ -637,10 +660,19 @@ targetReceiptContract: 'v1',
                 throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
             selected.budget.spent = current.budget.spent;
         }
-        for (const snapshot of snapshots) if (!same(await this.readSellerActivated(snapshot.root, owner), snapshot.records))
-            throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
-        await SERVICE.DefaultCouponSellerAuthorizationService.activeEnterprise(request, projection.enterpriseCode);
+        await SERVICE.DefaultPromotionSellerPolicyService.productRootPhase(command, async () => {
+            for (const snapshot of snapshots) {
+                if (snapshot.delegated !== undefined) {
+                    if (await this.readRecord(this.targetServices().pointer, this.pointerCode(snapshot.root, owner), owner) ||
+                        await SERVICE.DefaultPromotionSellerPolicyService.productRootOwnership(command, snapshot.root.rootCode) !== snapshot.delegated)
+                        throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+                } else if (!same(await this.readSellerActivated(snapshot.root, owner), snapshot.records))
+                    throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+            }
+        });
         admission.resolveMembershipRead(command);
+        if (!this.deliveryEnabled(request) || !same(this.deliveryRoots(request), roots))
+            throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
         if (!selected) return undefined;
         return includePolicy ? selected : { productCode: request.productCode, issuerEnterpriseCode: owner.enterpriseCode };
     },

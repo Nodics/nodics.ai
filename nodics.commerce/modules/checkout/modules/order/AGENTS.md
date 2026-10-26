@@ -94,3 +94,21 @@ Advanced `specialAccessGroups` and `specialAccessRoles` definitions are owner da
 Keep them separate from ordinary business access levels. Assignments and exact
 approval/source/deployment pins stay with the consuming project; these roles
 never waive owner admission or activate operations.
+
+
+Own lifecycle preview/create routes admit the existing Customer or Enterprise
+employee groups only with their existing own-action permissions and current
+Profile participant scope. Resolve typed ownerRef, then verify the retained Order
+before changing to its merchant partition. Preview/create use Digital's canonical
+ownership refund preview for completed bundles; return its final-sale refusal and
+reject create with ERR_ORDER_LIFECYCLE_INELIGIBLE before persistence. Never replace
+that decision with a caller flag, an Order flag or route-level access denial.
+Missing expected Digital evidence fails closed. Manual disputes and operator
+refund permissions remain separately guarded; this path grants no financial action.
+
+The same participant preview/create boundary must consult Digital.revocationPolicy
+for retained COUPON_CODE entitlements. DIGITAL_COUPON_PURCHASE_FINAL denies all
+reverse intents before lifecycle lookup/save, including unused/redeemed/expired
+coupons; clear advertised refund/return methods and financial preview. Preserve
+bundle policy ordering, original Profile authority and APPEAL review separation.
+Missing/malformed coupon policy fails closed; never infer it from caller flags.

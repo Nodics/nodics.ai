@@ -30,14 +30,17 @@ module.exports = {
     return structuredClone(p);
   },
   /** Independent Digital callback binds current entitlement, coupon, original owner and expiry. */
-  source: async function (scope, body, p) {
+  source: async function (scope, body, p, checkpoint = () => {}) {
     const call = { local: false, moduleName: "digitalCore", connectionName: p.sourceConnectionName, targetAuthority: { runtimeRole: "COMMERCE" },
       apiName: "/internal/coupons/reminder-source", methodName: "POST", tenant: scope.tenant, request: { tenant: scope.tenant },
       requestBody: { ...body.source, channel: body.channel }, requireInternalAuth: true, timeoutMs: p.timeoutMs,
       maxAttempts: 1, maxResponseBytes: p.maxResponseBytes, followRedirects: false,
       secureTransport: { required: true, allowInsecureLoopback: p.allowInsecureLoopback } };
-    const proof = SERVICE.DefaultProfileCommerceNotificationRecipientService.unwrap(await SERVICE.DefaultLoggerService.runSensitiveOperation(call,
-      () => SERVICE.DefaultModuleService.invokeModule(call)));
+    checkpoint("SOURCE_RPC");
+    const response = await SERVICE.DefaultLoggerService.runSensitiveOperation(call,
+      () => SERVICE.DefaultModuleService.invokeModule(call));
+    checkpoint("SOURCE_PROOF");
+    const proof = SERVICE.DefaultProfileCommerceNotificationRecipientService.unwrap(response);
     if (proof.contractVersion !== 1 || proof.tenant !== scope.tenant || proof.sourceModule !== "digitalCore" ||
         proof.sourceType !== "DIGITAL_COUPON_EXPIRING" || !same(proof.source, call.requestBody) || typeof proof.eligible !== "boolean") this.fail();
     if (proof.eligible && (!proof.ownerRef || Object.keys(proof.ownerRef).sort().join(",") !== "code,type" ||
@@ -50,17 +53,28 @@ module.exports = {
   active: function (row) { return row?.active === true && row.disabled !== true && row.registrationSuspended !== true; },
   /** Source-proofed recipient resolution; rechecks source, roster, authority, preferences and request policy across awaits. */
   resolve: async function (request) {
+    let admitted = false, stage = "BOUND";
+    const checkpoint = value => { stage = value; };
     try {
       SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
-      const p = this.policy(), auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "profile");
+      const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "profile");
+      if (auth.principalType !== "service" || auth.isSystem || auth.tenant !== request.tenant || !Array.isArray(auth.modules) || !auth.modules.includes("digitalCore")) this.fail();
+      admitted = true;
+      checkpoint("POLICY");
+      const p = this.policy();
+      if (!Array.isArray(auth.permissions) || !auth.permissions.includes(p.permission)) {
+        admitted = false;
+        this.fail();
+      }
+      checkpoint("INPUT");
       const body = request.body ?? request.payload ?? request.httpRequest?.body, tenant = this.identifier(request.tenant);
-      if (auth.principalType !== "service" || auth.isSystem || auth.tenant !== tenant || !Array.isArray(auth.modules) || !auth.modules.includes("digitalCore") ||
-          !Array.isArray(auth.permissions) || !auth.permissions.includes(p.permission) || !body || Object.keys(body).sort().join(",") !== "channel,source" ||
+      if (!body || Object.keys(body).sort().join(",") !== "channel,source" ||
           body.channel !== "IN_APP" || !body.source || Object.keys(body.source).sort().join(",") !== "enterpriseCode,entitlementCode,occurrenceKey" ||
           !/^COUPON_EXPIRY_[a-f0-9]{64}$/.test(body.source.occurrenceKey)) this.fail();
       this.identifier(body.source.enterpriseCode); this.identifier(body.source.entitlementCode); this.identifier(body.source.occurrenceKey);
       const pin = structuredClone({ auth, body, headers: request.httpRequest?.headers }), enterprise = auth.entCode || auth.enterpriseCode;
       const bound = () => {
+        checkpoint("BOUND");
         SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
         if (!same(p, this.policy()) || !same(pin.auth, request.authData) || !same(pin.body, body) || request.tenant !== tenant ||
             !same(pin.headers, request.httpRequest?.headers) ||
@@ -70,19 +84,28 @@ module.exports = {
             Object.keys(request.query || {}).length || Object.keys(request.httpRequest?.query || {}).length) this.fail();
       };
       bound();
-      const proof = await this.source({ tenant }, pin.body, p); bound();
+      const proof = await this.source({ tenant }, pin.body, p, checkpoint); bound();
       const policy = { ...p.recipientSelection, maximumRecipients: p.maximumRecipients };
       const selector = SERVICE.DefaultProfileNotificationRecipientService;
+      checkpoint("SELECTION");
       const selected = proof.eligible ? await selector.select(request, proof.ownerRef, policy) : []; bound();
-      const current = await this.source({ tenant }, pin.body, p); bound();
+      const current = await this.source({ tenant }, pin.body, p, checkpoint); bound();
+      checkpoint("SOURCE_PROOF");
       if (!same(proof, current)) this.fail();
+      checkpoint("SELECTION");
       const refreshed = proof.eligible ? await selector.select(request, current.ownerRef, policy) : []; bound();
+      checkpoint("SELECTION");
       if (!same(selected, refreshed)) this.fail();
       const recipients = selected.map(recipientId => ({ recipientId, recipientAddressReference: "profile-inbox:" + crypto.createHash("sha256")
         .update(JSON.stringify([tenant, pin.body.source, proof.ownerRef, recipientId])).digest("hex") }));
       return { contractVersion: 1, tenant, source: pin.body.source, channel: "IN_APP", eligible: proof.eligible, recipients,
         ...(proof.eligible ? { ownerRef: proof.ownerRef, expiresAt: proof.expiresAt } : {}) };
-    } catch (_) { this.fail(); }
+    } catch (_) {
+      // Only local fixed stages survive; dependency errors and private coordinates never do.
+      if (admitted && ["POLICY", "INPUT", "SOURCE_RPC", "SOURCE_PROOF", "SELECTION", "BOUND"].includes(stage))
+        throw new CLASSES.NodicsError("ERR_PROFILE_COUPON_RECIPIENT_" + stage);
+      this.fail();
+    }
   },
   /** Resolves the authenticated Employee's own inbox namespace, never a body-selected recipient. */
   inboxIdentity: async function (request) {

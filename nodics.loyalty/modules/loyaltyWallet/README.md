@@ -1,5 +1,22 @@
 # Loyalty Wallet
 
+[Durable reservation decisions](llm/contracts/reservation-decisions.md) retain
+atomic Payment denials and fence original unknown keys without claiming that
+historical balance effects are absent. Completed purchases cannot be cancelled.
+
+The explicit Super Admin [test-wallet PUT](llm/contracts/enterprise-test-credit.md#separate-zero-balance-provisioning)
+creates only a qualified zero-balance test wallet. Separate test credit supplies
+funding; replay never resets balances or relabels ordinary wallets.
+
+Explicit [Enterprise participant transaction access](llm/contracts/participant-transaction-access.md)
+contributes parent-free owner roles without assigning users or qualifying finance.
+
+The explicit `participantReadAccess` release defines `LOYALTY_WALLET_READER` with only
+`loyalty.wallet.read` and no inherited groups. It installs definitions through
+Profile; assignment requires a separately reviewed Enterprise-scoped operation.
+It grants no mutation, provisioning, funding or reveal authority. See
+[participant reader access](llm/contracts/participant-read-access.md).
+
 `loyaltyWallet` defines reward wallet ownership and balance projections per program and reward type. Balance changes must be explained by ledger entries.
 
 Authenticated participant transfers reuse the same accounting primitive as private
@@ -12,16 +29,29 @@ unknown results never authorize a fresh transfer. Completed owner evidence clear
 the matching reference without blocking legitimate new transfers.
 `acceptance:loyalty-participant-transfer` is the Loyalty-owned live command. It
 requires explicit execution, one reviewed project JSON selection and existing
-Customer and Enterprise sessions. It verifies fees, limits, owner separation,
+Customer and Enterprise sessions plus a separate existing authorized policy-reader
+native Super Admin session (`NODICS_LOYALTY_ACCEPTANCE_POLICY_READ_TOKEN`). Policy
+inspection explicitly selects the reviewed Enterprise/program/type, retaining
+the administrator's original context and fresh Profile proof. No participant permission expansion is needed
+or permitted for acceptance convenience. It verifies fees, limits, owner separation,
 uncertain recovery and replay without provisioning identities, wallets, rewards,
 policies or permissions.
+Native Super Admin may separately read and update an explicit Enterprise's
+governed transfer-policy selections through the existing policy APIs. Updates
+require the exact current revision and fresh Profile proof; framework ceilings,
+participant permissions and balances remain unchanged. See the administrative
+shapes and recovery rules in [Participant Transfers](llm/contracts/participant-transfers.md).
 Partner reward conversion uses protected outcome-based holds and qualified adapters;
 it is disabled by default. See [Partner Conversion](llm/contracts/partner-reward-conversion.md).
+The permanent `mock` adapter uses that same interface for explicitly simulated
+outcomes on sample/test-only wallets. It is separately disabled by default;
+local accounting remains real while no external partner credit occurs. See the
+[configuration and recovery contract](llm/contracts/partner-reward-conversion.md#permanent-simulated-adapter).
 Its participant choice projection reads existing verified owner links and eligible
 issuer rewards without opening a wallet or contacting a partner for credit. The
 Circa consumer uses retained quotes and original-reference reconciliation; empty
 provider selection remains unavailable. Canonical public documentation now uses
-the Staged `docs-v002` successor; prior release bytes remain retained.
+the consolidated Staged `docs-v001` source with latest content and stable identities.
 
 Axis has source-wired participant wallet, Enterprise transfer-settings and Super
 Admin test-credit views. Wallet registers exact `loyalty.participation` native
@@ -59,3 +89,8 @@ does not treat a ledger reference alone as independent lifecycle proof.
 
 This capability contributes an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.
+
+The explicit [Enterprise participation role](llm/contracts/enterprise-participation-role.md)
+retains internal own-settings and parent-free partner-conversion capability groups,
+never customer ancestry, funding or provisioning.
+Installing definitions preserves existing governance and assigns nobody.

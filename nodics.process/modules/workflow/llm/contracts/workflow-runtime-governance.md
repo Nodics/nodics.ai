@@ -286,11 +286,28 @@ instance context. Published version records do not contain `ownerModule`;
 bind `context.ownerModule` to exactly one matching ACTION in the pinned graph,
 not to a nonexistent version field or a mutable current definition.
 These reads also work for already-pending tasks without rewriting their context.
-The projection excludes
-requester, contact or credentials. For Media, `rootCode` is
+The current CMS `cmsPublicationApproval` start contract stores `siteCode`,
+publicationCode and sourceVersion under its published context allowlist. Its
+read adapter normalizes these into the same envelope (owner cms, rootType site)
+and applies the same exact pinned definition/version/action validation. This is
+the current CMS contract, not a retired-version fallback. It also works for
+already-pending instances without backfill or changing their decision contract.
+Only the fixed publicationReview task can receive this context without an
+approval descriptor. A generic persisted envelope for future CMS starts requires
+a governed definition successor; never change the allowlist of a pinned version.
+
+CMS may additionally project the stored `requestedBy` identifier: 1-128 characters,
+no leading/trailing whitespace or control characters. Missing/invalid values
+are omitted; never substitute the reader, task assignee or current login.
+This explicit provenance field grants no decision authority. Other private
+context, contacts and credentials remain excluded. For Media, `rootCode` is
 the asset code and `sourceVersion` is the immutable retained manifest version,
 not numeric metadata `versionId`. Historical tasks lacking numeric versions must
 not fabricate one or query mutable CURRENT metadata as a substitute.
+SourceVersion is not a data-release version. A consumer may enrich CMS review
+evidence from an authorized application status only on exact site, publication
+code and workflow-reference equality. A failed, ambiguous or mismatched read
+must not provide release evidence or relabel an unrelated website as documentation.
 
 `GET /tasks`, `GET /tasks/:taskCode` and the task array in instance detail
 project `task.decisionContract` through the exported

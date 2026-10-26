@@ -49,6 +49,7 @@ function fixture(t) {
   let queue = Promise.resolve();
   global.SERVICE = { DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"),
     DefaultLoyaltyRewardOperationService: operations,
+    DefaultLoyaltyWalletOperationService: require("../src/service/defaultLoyaltyWalletOperationService"),
     DefaultLoyaltyTransactionService: transaction,
     DefaultLoyaltySampleCreditContributionService: sample,
     DefaultLoyaltyParticipantService: participant,
@@ -139,6 +140,147 @@ function fixture(t) {
   rows.LoyaltyRewardType.push({ code: "points", active: true, status: "ACTIVE", unitType: "POINT", precision: 2 });
   return { request, state, rows, models, configuration, run: () => credit.credit(request) };
 }
+
+function provisioningFixture(t) {
+  const f = fixture(t);
+  f.configuration.loyalty.enterpriseTestCredits.provisioningEnabled = true;
+  f.rows.LoyaltyWallet = []; f.rows.LoyaltyWalletRewardBalance = [];
+  f.request.payload = { enterpriseCode: "recipient", programCode: "program", rewardTypeCode: "points",
+    reason: "Reviewed isolated Enterprise wallet", confirmed: true };
+  f.run = () => credit.provision(f.request);
+  return f;
+}
+
+test("issuer policy reads cross the real transaction and Mongo model boundary with owner schemas", async t => {
+  const f = fixture(t);
+  const databaseOwner = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/transaction/defaultDatabaseTransactionService");
+  const mongo = require("../../../../nodics.foundation/modules/nDatabase/mongodb/src/schemas/model").default;
+  const database = f.models.loyaltyWallet.dataBase, session = {}, reads = [];
+  database.getOptions = () => ({ connectionHandler: "TestTransactionAdapter" });
+  SERVICE.DefaultDatabaseConfigurationService = { getTenantDatabase: () => ({ master: database }) };
+  SERVICE.TestTransactionAdapter = {
+    transactionCapabilities: () => ({ multiRecordAtomic: true, contextPropagation: true }),
+    executeTransaction: async (_database, _options, work) => work({ session }),
+    transactionOperationOptions: context => ({ session: context.session }),
+  };
+  SERVICE.DefaultDatabaseTransactionService = databaseOwner;
+  global.CLASSES = { NodicsError: class extends Error {
+    constructor(error, message, fallback) { super(message || String(error)); this.code = error instanceof Error ? error.code || fallback : error; this.cause = error; }
+  } };
+  const schemas = {
+    LoyaltyProgram: require("../../loyaltyProgram/src/schemas/schemas").loyaltyProgram.loyaltyProgram,
+    LoyaltyRewardType: require("../../loyaltyRewardType/src/schemas/schemas").loyaltyRewardType.loyaltyRewardType,
+  };
+  for (const [name, rawSchema] of Object.entries(schemas)) {
+    const model = { ...mongo, rawSchema: clone(rawSchema), dataBase: database,
+      find: (query, options) => {
+        assert.equal(options.session, session);
+        assert.equal(options.limit, 2);
+        reads.push(name);
+        return { toArray: async () => clone(f.rows[name].filter(row => row.code === query.code)) };
+      },
+    };
+    f.models[name[0].toLowerCase() + name.slice(1)] = model;
+    SERVICE["Default" + name + "Service"].get = async input => {
+      assert.equal(input.tenant, "tenant");
+      assert.equal(input.authData.principalType, "service");
+      assert.ok(input.transactionContext);
+      assert.deepEqual(input.options, { skipItemCache: true, recursive: false });
+      const result = await model.getItems({ ...input, searchOptions: { limit: input.searchOptions.pageSize } });
+      return { code: "SUC_FIND_00000", ...result };
+    };
+  }
+  const context = credit.context(f.request);
+  assert.equal(await transaction.compose(context, () => credit.scale(context, context.intent)), 2);
+  assert.deepEqual(reads, ["LoyaltyProgram", "LoyaltyRewardType", "LoyaltyProgram"]);
+  assert.equal(context.transactionContext, undefined);
+  for (const name of ["loyaltyProgram", "loyaltyRewardType"]) {
+    const model = f.models[name], original = clone(model.rawSchema);
+    for (const patch of [{ transaction: undefined }, { cache: { enabled: true } }, { event: { enabled: true } }]) {
+      model.rawSchema = { ...original, ...patch };
+      await assert.rejects(transaction.compose(context, () => credit.scale(context, context.intent)), { code: "ERR_MDL_00000" });
+      assert.equal(context.transactionContext, undefined);
+    }
+    model.rawSchema = original;
+  }
+  assert.equal(f.state.writes, 0);
+});
+
+test("test provisioning atomically creates canonical wallet and zero balance with original audit, without ledger", async t => {
+  const f = provisioningFixture(t), before = clone(f.request), result = await f.run();
+  assert.equal(result.status, "PROVISIONED");
+  assert.equal(result.walletCode, SERVICE.DefaultLoyaltyWalletOperationService.walletCode("ENTERPRISE", "recipient"));
+  assert.equal(f.rows.LoyaltyWallet.length, 1);
+  assert.equal(f.rows.LoyaltyWalletRewardBalance.length, 1);
+  for (const field of ["available", "reserved", "earned", "spent", "expired", "reversed"])
+    assert.equal(f.rows.LoyaltyWalletRewardBalance[0][field], "0.00");
+  assert.equal(f.rows.RewardLedgerEntry.length, 0);
+  assert.equal(f.rows.RewardTestCreditOperation.length, 0);
+  assert.equal(f.rows.LoyaltyWallet[0].metadata.testProvision.actor.actorCode, "administrator");
+  assert.deepEqual(f.request, before);
+  const writes = f.state.writes;
+  f.rows.LoyaltyWalletRewardBalance[0].available = "7.00";
+  f.rows.LoyaltyWalletRewardBalance[0].earned = "7.00";
+  f.rows.LoyaltyWalletRewardBalance[0].revision++;
+  f.request.authData.loginId = "another-admin";
+  assert.deepEqual(await f.run(), { ...result, status: "CURRENT" });
+  assert.equal(f.state.writes, writes);
+  assert.equal(f.rows.LoyaltyWalletRewardBalance[0].available, "7.00");
+});
+
+test("provisioning lost commit acknowledgement replays without resetting or duplicate records", async t => {
+  const f = provisioningFixture(t); f.state.loseCommitAck = true;
+  await assert.rejects(f.run(), /lost commit/);
+  const writes = f.state.writes;
+  assert.equal((await f.run()).status, "CURRENT");
+  assert.equal(f.state.writes, writes);
+});
+
+test("concurrent provisioning serializes through canonical transaction and creates once", async t => {
+  const f = provisioningFixture(t);
+  assert.deepEqual((await Promise.all([f.run(), f.run()])).map(r => r.status), ["PROVISIONED", "CURRENT"]);
+  assert.equal(f.rows.LoyaltyWallet.length, 1);
+  assert.equal(f.rows.LoyaltyWalletRewardBalance.length, 1);
+});
+
+for (const [name, change] of Object.entries({
+  "default-off provisioning": f => { f.configuration.loyalty.enterpriseTestCredits.provisioningEnabled = false; },
+  "unselected environment": f => { f.state.environment = "production"; },
+  "missing native permission": f => { f.state.permission = false; },
+  "missing program selection": f => { delete f.rows.LoyaltyProgram[0].testCreditRewardTypeCodes; },
+  "non-POINT unit": f => { f.rows.LoyaltyRewardType[0].unitType = "CARBON"; },
+  "missing unique index": f => { f.state.noIndex = true; },
+  "caller test markers": f => { f.request.payload.metadata = { testOnly: true }; },
+  "caller amount": f => { f.request.payload.amount = "50"; },
+  "service principal": f => { f.request.authData.principalType = "service"; },
+  "missing confirmation": f => { f.request.payload.confirmed = false; },
+})) test("provisioning refuses " + name + " without records", async t => {
+  const f = provisioningFixture(t); change(f);
+  await assert.rejects(f.run());
+  assert.equal(f.rows.LoyaltyWallet.length, 0);
+  assert.equal(f.rows.LoyaltyWalletRewardBalance.length, 0);
+  assert.equal(f.rows.RewardLedgerEntry.length, 0);
+});
+
+test("provisioning never reclassifies an existing ordinary Enterprise wallet", async t => {
+  const f = provisioningFixture(t);
+  f.rows.LoyaltyWallet.push({ code: "ordinary", active: true, status: "OPEN", ownerType: "ENTERPRISE", ownerCode: "recipient" });
+  const original = clone(f.rows);
+  await assert.rejects(f.run());
+  assert.deepEqual(f.rows, original);
+});
+
+test("provisioning changed intent refuses and incomplete write rolls back both records", async t => {
+  const f = provisioningFixture(t);
+  f.state.dropWrite = "LoyaltyWalletRewardBalance";
+  await assert.rejects(f.run());
+  assert.equal(f.rows.LoyaltyWallet.length, 0);
+  f.state.dropWrite = undefined;
+  await f.run(); const original = clone(f.rows);
+  f.request.payload.reason = "Different intent";
+  await assert.rejects(f.run());
+  assert.deepEqual(f.rows, original);
+});
 
 test("real earn, sample safeguards and composition retain original authority and atomically persist test audit", async t => {
   const f = fixture(t), original = clone(f.request), result = await f.run();

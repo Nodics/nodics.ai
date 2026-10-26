@@ -98,3 +98,7 @@ Keep frontend identity restrictions stable across address changes. See the
 and [configuration examples](llm/examples/README.md#configure-browser-origins).
 
 nRouter supplies the framework browser origins, Axis 3100 and Nexus 3200. Customer application origins belong in project/environment CORS properties so all intended API compositions receive them independently of application activation or frontend health. Server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.
+
+Outbound routing resolves package API prefixes for explicitly declared remote
+modules through existing metadata-only source discovery when they are not loaded
+locally. This does not activate the target or grant service access.

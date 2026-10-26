@@ -540,18 +540,56 @@ module.exports = {
       }),
     );
   },
+  /** Invokes an explicitly contributed remote domain owner; no local fallback or caller-selected transport. */
+  remoteSourceEligibility: async function (request, owner, input) {
+    const p = CONFIG.get('communication')?.sourceEligibilityTransport;
+    const bytes = p?.validation?.responseBytes;
+    if (!owner || Object.keys(owner).sort().join(',') !== 'apiName,connectionName,moduleName,runtimeRole' ||
+        owner.moduleName !== input.sourceModule || !/^[A-Za-z][A-Za-z0-9]*$/.test(owner.moduleName) ||
+        !/^[A-Za-z][A-Za-z0-9_.-]*$/.test(owner.connectionName) || owner.connectionName === 'default' ||
+        !/^[A-Z][A-Z0-9_]{0,63}$/.test(owner.runtimeRole) ||
+        !/^\/internal\/[A-Za-z0-9/-]+$/.test(owner.apiName) || owner.apiName.includes('..') ||
+        !p || !Number.isSafeInteger(p.validation?.minimum) || !Number.isSafeInteger(p.validation?.maximum) ||
+        p.validation.minimum < 1 || p.validation.minimum > p.validation.maximum ||
+        !Number.isSafeInteger(p.timeoutMs) || p.timeoutMs < p.validation.minimum || p.timeoutMs > p.validation.maximum ||
+        !Number.isSafeInteger(bytes?.minimum) || !Number.isSafeInteger(bytes?.maximum) ||
+        bytes.minimum < 1 || bytes.minimum > bytes.maximum ||
+        !Number.isSafeInteger(p.maxResponseBytes) || p.maxResponseBytes < bytes.minimum || p.maxResponseBytes > bytes.maximum ||
+        typeof p.allowInsecureLoopback !== 'boolean') throw new Error('COMMUNICATION_SOURCE_ELIGIBILITY_UNCONFIRMED');
+    const { tenant, authData, ...body } = input;
+    const call = { local: false, moduleName: owner.moduleName, connectionName: owner.connectionName,
+      targetAuthority: { runtimeRole: owner.runtimeRole }, tenant, request: { tenant }, requireInternalAuth: true,
+      methodName: 'POST', apiName: owner.apiName, requestBody: body, timeoutMs: p.timeoutMs,
+      maxAttempts: 1, followRedirects: false, maxResponseBytes: p.maxResponseBytes,
+      secureTransport: { required: true, allowInsecureLoopback: p.allowInsecureLoopback } };
+    let response = await SERVICE.DefaultLoggerService.runSensitiveOperation(call, () => SERVICE.DefaultModuleService.invokeModule(call));
+    for (let depth = 0; depth < 6; depth++) {
+      if (!response || typeof response !== 'object' || Array.isArray(response) || response.error || response.success === false ||
+          /^ERR_/.test(response.code || '') || response.errors?.length) throw new Error('COMMUNICATION_SOURCE_ELIGIBILITY_UNCONFIRMED');
+      if (response.data !== undefined) response = response.data;
+      else if (response.result !== undefined) response = response.result;
+      else return response;
+    }
+    throw new Error('COMMUNICATION_SOURCE_ELIGIBILITY_UNCONFIRMED');
+  },
   /** Calls only a framework-contributed read-only owner using original frozen intent coordinates, never content or caller handlers. */
   sourceEligible: async function (request, intent, policy) {
     const ownerName = policy.dispatchEligibilityOwners?.[intent.sourceModule]?.[intent.sourceType];
     if (!intent.requiresSourceEligibility && ownerName === undefined) return true;
-    if (typeof ownerName !== 'string' || !/^Default[A-Za-z0-9]+Service$/.test(ownerName) ||
-        typeof SERVICE[ownerName]?.isDispatchEligible !== 'function' || intent.tenant !== request.tenant)
-      throw new Error('COMMUNICATION_SOURCE_ELIGIBILITY_UNCONFIRMED');
-    const evidence = await SERVICE[ownerName].isDispatchEligible({ tenant: request.tenant,
+    if (intent.tenant !== request.tenant) throw new Error('COMMUNICATION_SOURCE_ELIGIBILITY_UNCONFIRMED');
+    const input = { tenant: request.tenant,
       authData: structuredClone(request.authData), intentCode: intent.code, sourceModule: intent.sourceModule,
       sourceType: intent.sourceType, sourceCode: intent.sourceCode, recipientId: intent.recipientId,
       recipientAddressReference: intent.recipientAddressReference, purpose: intent.purpose, channel: intent.channel,
-      idempotencyKey: intent.idempotencyKey, expiresAt: intent.expiresAt });
+      idempotencyKey: intent.idempotencyKey, expiresAt: intent.expiresAt };
+    let evidence;
+    if (typeof ownerName === 'string') {
+      if (!/^Default[A-Za-z0-9]+Service$/.test(ownerName) || typeof SERVICE[ownerName]?.isDispatchEligible !== 'function')
+        throw new Error('COMMUNICATION_SOURCE_ELIGIBILITY_UNCONFIRMED');
+      evidence = await SERVICE[ownerName].isDispatchEligible(input);
+    } else {
+      evidence = await this.remoteSourceEligibility(request, ownerName, input);
+    }
     if (!evidence || typeof evidence.eligible !== 'boolean' || evidence.tenant !== intent.tenant ||
         evidence.sourceCode !== intent.sourceCode || evidence.recipientId !== intent.recipientId ||
         evidence.recipientAddressReference !== intent.recipientAddressReference)

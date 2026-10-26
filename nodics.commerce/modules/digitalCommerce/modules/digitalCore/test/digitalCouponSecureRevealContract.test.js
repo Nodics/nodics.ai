@@ -135,6 +135,47 @@ test('only the signed delivered purchaser receives the same retained token on re
     assert.ok(!JSON.stringify([f.rows, f.records]).includes(first.token)); assert.equal(f.state.writes, writes);
 });
 
+test('fresh Profile canonical customer owns reveal when signed actor identity differs', async t => {
+    const f = await purchased(t);
+    f.customer.authData.principalId = 'signed-customer-actor';
+    const before = structuredClone(f.customer.authData);
+    const first = await f.reveal();
+    assert.equal(first.status, 'REVEALED');
+    assert.deepEqual(f.customer.authData, before);
+    const routeLike = structuredClone(f.customer);
+    delete routeLike.ownerId;
+    assert.equal((await f.reveal(routeLike)).token, first.token);
+    await assert.rejects(f.reveal({ ...structuredClone(f.customer), ownerId: 'signed-customer-actor' }),
+        { code: 'ERR_DIGITAL_REVEAL_FORBIDDEN' });
+});
+
+for (const field of ['ownerId', 'authorization', 'authData', 'payload'])
+    test(`canonical reveal refuses original request ${field} drift during Profile resolution`, async t => {
+        const f = await purchased(t), request = structuredClone(f.customer);
+        request.authData.principalId = 'signed-customer-actor';
+        const invoke = SERVICE.DefaultModuleService.invokeModule;
+        SERVICE.DefaultModuleService.invokeModule = async input => {
+            const result = await invoke(input);
+            if (field === 'authData') request.authData.principalId = 'foreign';
+            else if (field === 'payload') request.payload.entitlementCode = 'foreign';
+            else request[field] = 'foreign';
+            return result;
+        };
+        await assert.rejects(f.reveal(request), { code: 'ERR_DIGITAL_REVEAL_FORBIDDEN' });
+    });
+
+test('copied canonical owner and altered Profile identity cannot admit a foreign reveal', async t => {
+    const f = await purchased(t);
+    f.customer.authData.principalId = 'signed-customer-actor';
+    const invoke = SERVICE.DefaultModuleService.invokeModule;
+    SERVICE.DefaultModuleService.invokeModule = async input => {
+        const result = await invoke(input);
+        result.customer.code = 'foreign-owner';
+        return result;
+    };
+    await assert.rejects(f.reveal(), { code: 'ERR_DIGITAL_REVEAL_FORBIDDEN' });
+});
+
 test('checkout consumption and reversal use the protected lifecycle owner, preserving encrypted purchase identity', async t => {
     const f = await purchased(t), owner = SERVICE.DefaultPromotionOperationService;
     const original = structuredClone(f.coupon.protectedToken), token = (await f.reveal()).token;

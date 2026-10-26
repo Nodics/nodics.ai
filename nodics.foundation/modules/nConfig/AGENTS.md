@@ -96,6 +96,9 @@ and distinguish contributing server paths from canonical capability ownership.
 See the configuration-inheritance contract's effective behavior diagnostics.
 
 Use explicit collection replacement/keyed changes and preserve ordinary-array compatibility, reference timing and tenant isolation. See the configuration-inheritance contract.
+Top-level capability role collection operations must meet the complete base at
+role projection, not an empty role-local list during contribution loading.
+Preserve deferred operation ordering and never expose internal bookkeeping in CONFIG.
 
 Do not repeat the selected environment/server/node in additional capability activation lists. Inherit unchanged defaults and environment connections; preserve explicit policy pins and reference timing. Apply the [customer configuration rule](../nSetup/llm/contracts/customer-config-classification-contract.md#structural-facts-and-repeated-deployment-values) to generators, examples and review.
 

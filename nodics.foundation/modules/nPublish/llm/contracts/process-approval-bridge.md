@@ -1,5 +1,24 @@
 # Process Approval Bridge
 
+## Native Domain Continuation
+
+A configured domain may expose `authorizeAdministrativeOperation` and
+`administrativeApprovalScope` backed by its own fresh private native admission.
+`executeAdministrativeOperation` supports validate, requestApproval and activate
+only; ordinary state policy, repository CAS and Process approval remain decisive.
+Before/after native journal writes, recheck the domain, canonical identity and
+original credentials. Only lifecycle-owned revision copies retain the private
+guard; cleanup retires every copy at return. No cross-request context is authority.
+
+The business Enterprise may differ from the original signed native administrator
+only after owner proof. Process transport keeps the original signed Enterprise
+header and bearer; the target remains in the validated workflow context. Selected
+NATIVE_ACTOR provenance checks still apply. No task decision, deployment callback
+grant, approval-state transition or runtime-enterprise selection is bypassed.
+Pricing's composed native publication regression includes separate-request
+validation, approved activation, real callback/target receipt replay and failure
+reconciliation; Process runtime tests independently verify start/decision semantics.
+
 ## Ownership And Interfaces
 
 `DefaultPublicationApprovalWorkflowService` implements the existing nPublish

@@ -21,6 +21,7 @@ module.exports = {
     ERR_PRODUCT_AUTHORING_INPUT: { code: '400', message: 'Product command input is invalid' },
     ERR_PRODUCT_AUTHORING_STORAGE: { code: '503', message: 'Qualified Product source storage is unavailable' },
     ERR_PRODUCT_AUTHORING_CONFLICT: { code: '409', message: 'Product source changed or requires its owning lifecycle command' },
+    ERR_PRODUCT_AUTHORING_PARTIAL: { code: '409', message: 'Product graph write outcome requires explicit readback; do not retry creation' },
     ERR_PRODUCT_AUTHORING_MISSING: { code: '404', message: 'Product source is unavailable in this enterprise' },
     ERR_PRODUCT_L10N_0001: { code: '400', message: 'Product locale is invalid' },
     ERR_PRODUCT_L10N_0002: { code: '400', message: 'Tenant-scoped Product localization identity is required' },

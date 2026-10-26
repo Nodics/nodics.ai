@@ -1,5 +1,13 @@
 # import Agent Contract
 
+Incremental acceptance payloads and coordinator live under test fixtures/helpers,
+never the shipping data manifest or runtime source. Isolated module roots must use
+canonical release discovery, checksums and retained-root validation. Generic
+versioning remains supported; shipping unreleased owner baselines stay v001.
+The isolated acceptance composition inherits security defaults and asserts their
+effective values. Never add deployment grants or a registry shadow to make tests
+start. Retain provider state after execution; offline cleanup must refuse it.
+
 Installed migration evidence stays in the existing `importRun` model through
 `DefaultInstalledMigrationJournalService`, never `recordRun` or a new collection.
 Require immutable scoped plans, explicit provenance, insert-only begin, and
@@ -174,3 +182,12 @@ Advanced `specialAccessGroups` and `specialAccessRoles` definitions are owner da
 Keep them separate from ordinary business access levels. Assignments and exact
 approval/source/deployment pins stay with the consuming project; these roles
 never waive owner admission or activate operations.
+
+Retained CURRENT Init receipts with same-version source drift are a no-write
+startup review boundary, not an import plan. Preserve exact receipt identity and
+checksums; stop at drifted nodes without installing new prerequisites. Defer the
+selected batch only with confirmed retained evidence, reread before return, and
+keep catalogue readiness non-CURRENT/actionable. Missing/uncertain authority and
+manual checksum guards remain fail-closed. Do not require a customer startup-skip
+override to expose administrator review of this case. See the retained startup
+source-review section in `llm/contracts/import-release-contracts.md`.

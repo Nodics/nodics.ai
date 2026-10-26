@@ -20,6 +20,8 @@ const fs = require("fs");
 const path = require("path");
 const configurationInitializer = require("../../../../../nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService");
 const crypto = require("crypto");
+const readinessWork = require("../utils/applicationReadinessWork");
+const initializationDefaults = require("../../config/properties").backofficeApplicationInitialization;
 
 module.exports = {
   /** Executes the documented bounded module operation. */
@@ -347,6 +349,16 @@ module.exports = {
         "Application preparation step type is unsupported",
       );
     }
+    const configured = typeof CONFIG === "undefined" ? undefined : CONFIG.get("backofficeApplicationInitialization");
+    const boundaryDefault = configured?.preparationStepDefaults?.batchBoundaryBefore === undefined
+      ? initializationDefaults.preparationStepDefaults.batchBoundaryBefore
+      : configured.preparationStepDefaults.batchBoundaryBefore;
+    const batchBoundaryBefore = step.batchBoundaryBefore === undefined
+      ? type === "DATA_RELEASE" && boundaryDefault : step.batchBoundaryBefore;
+    if (typeof boundaryDefault !== "boolean" || typeof batchBoundaryBefore !== "boolean" ||
+        batchBoundaryBefore && type !== "DATA_RELEASE") {
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation batch boundary is invalid");
+    }
     let code = String(step.code || "");
     const phase = step.phase === undefined ? "BEFORE_PUBLICATION" : step.phase;
     if (!["BEFORE_PUBLICATION", "AFTER_PUBLICATION"].includes(phase) ||
@@ -394,6 +406,7 @@ module.exports = {
     }
     let normalized = {
       order: Number(step.order || index + 1),
+      batchBoundaryBefore,
       type: type,
       phase,
       operatorEnterpriseCode: step.operatorEnterpriseCode,
@@ -922,7 +935,7 @@ module.exports = {
         response && (response.data || response.result || response),
     });
   },
-  /** Batches adjacent compatible releases without changing the configured dependency order. */
+  /** Batches adjacent compatible releases while honoring explicit owner-independent dependency boundaries. */
   preparationGroups: function (profile, request, steps) {
     let input = request.applicationInitialization || {};
     let correlationId =
@@ -936,6 +949,9 @@ module.exports = {
       .sort((left, right) => left.order - right.order)
       .filter((step) => step.required !== false && step.type === "DATA_RELEASE")
       .forEach((step) => {
+        if (step.batchBoundaryBefore !== undefined && typeof step.batchBoundaryBefore !== "boolean") {
+          throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation batch boundary is invalid");
+        }
         let key = [
           step.targetServer,
           step.targetRuntimeRole,
@@ -944,6 +960,7 @@ module.exports = {
         let group = groups[groups.length - 1];
         if (
           !group ||
+          step.batchBoundaryBefore === true ||
           group.targetServer !== step.targetServer ||
           group.targetRuntimeRole !== step.targetRuntimeRole ||
           group.dataType !== step.dataType ||
@@ -1178,7 +1195,7 @@ module.exports = {
         ? dependencies
         : [{ status: media.status }]) {
         if (item.qualified === true) continue;
-        blockers.push({
+        const blocker = {
           blockerCode:
             "MEDIA_DEPENDENCY_" + String(item.status || "UNAVAILABLE"),
           code: "MEDIA_DEPENDENCY_" + String(item.status || "UNAVAILABLE"),
@@ -1189,10 +1206,13 @@ module.exports = {
           message:
             media.message ||
             "Referenced Media is not qualified for Online delivery.",
-          technicalStatus: item.status,
+          technicalStatus: item.status || "UNAVAILABLE",
           action: item.nextAction || "Review Media publication",
-          mediaDependency: item,
-          repair:
+        };
+        // Aggregate unavailability is not evidence for an individual Media asset.
+        if (dependencies.length) {
+          blocker.mediaDependency = item;
+          blocker.repair =
             item.status === "VERSION_UNPINNED"
               ? {
                   available: true,
@@ -1217,8 +1237,9 @@ module.exports = {
                   requiresConfirmation: true,
                   automaticExecution: false,
                   publicationRequest: item.publicationRequest,
-                },
-        });
+                };
+        }
+        blockers.push(blocker);
       }
     }
     let preparation = projection && projection.preparation;
@@ -1249,9 +1270,11 @@ module.exports = {
                         ? "READINESS_RATE_LIMITED"
                         : step.status === "VALIDATION_BLOCKED"
                           ? "READINESS_VALIDATION_BLOCKED"
-                          : step.status === "UNAVAILABLE"
-                            ? "READINESS_UNAVAILABLE"
-                            : "READINESS_UNKNOWN";
+                          : step.status === "AUTHORITY_PENDING"
+                            ? "AUTHORITY_PENDING"
+                            : step.status === "UNAVAILABLE"
+                              ? "READINESS_UNAVAILABLE"
+                              : "READINESS_UNKNOWN";
       let repair = this.capabilityRepairProjection(code, {
         owner: step.code,
         targetServer: step.targetServer,
@@ -1390,7 +1413,7 @@ module.exports = {
             : approvalDiagnostic.status === "TASK_NOT_ACTIONABLE"
               ? "APPROVAL_TASK_UNACTIONABLE"
               : "APPROVAL_IN_PROGRESS";
-      let repair = publication.workflowRef
+      let repair = code !== "APPROVAL_TASK_MISSING"
         ? this.capabilityRepairProjection("APPROVAL_IN_PROGRESS", {
             owner: publication.code || projection.releaseCode,
           })
@@ -1441,6 +1464,7 @@ module.exports = {
   /** Classifies which readiness source produced one blocker. */
   capabilityBlockerSource: function (step) {
     if (!step) return "UNKNOWN";
+    if (step.status === "AUTHORITY_PENDING") return "APPLICATION_PREPARATION";
     if (step.type === "FUNCTIONAL_MODULE") return "MODULE_REGISTRY";
     if (step.type === "MEDIA_ASSET_MANIFEST") return "MEDIA_MANIFEST";
     if (step.type === "DATA_RELEASE") return "IMPORT_PREFLIGHT";
@@ -1449,6 +1473,10 @@ module.exports = {
   /** Returns a concise disabled-action explanation for Axis buttons/tooltips. */
   capabilityBlockerDisabledReason: function (code, step) {
     let target = step && (step.targetServer || step.targetRuntimeRole);
+    if (code === "AUTHORITY_PENDING")
+      return "An authorized human operator for " +
+        String(step?.operatorEnterpriseCode || "the owning enterprise") +
+        " must sign in to that enterprise and select its required setup stage. This session cannot execute foreign enterprise stages; refresh after the operator completes the work.";
     return (
       {
         MODULE_INACTIVE:
@@ -1501,6 +1529,7 @@ module.exports = {
         READINESS_UNKNOWN: "Refresh readiness",
         READINESS_RATE_LIMITED: "Wait and refresh readiness",
         READINESS_VALIDATION_BLOCKED: "Review setup prerequisites",
+        AUTHORITY_PENDING: "Continue setup as the authorized enterprise operator",
       }[code] || "Review capability readiness"
     );
   },
@@ -1516,6 +1545,13 @@ module.exports = {
         ? String(context.targetRuntimeRole)
         : undefined;
     let definitions = {
+      AUTHORITY_PENDING: {
+        available: false,
+        label: "Review enterprise setup authority",
+        action: "REVIEW_SETUP_AUTHORITY",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
       READINESS_VALIDATION_BLOCKED: {
         available: false,
         label: "Review setup prerequisites",
@@ -2999,7 +3035,7 @@ module.exports = {
   },
   /** Returns the target baseline operation used for one BackOffice application operation. */
   targetBaselineOperation: function (operation) {
-    return operation === "reconcileApproval" ? "initiate" : operation;
+    return operation === "reconcileApproval" ? "reconcile-approval" : operation;
   },
   /** Returns the target baseline API suffix for one BackOffice application operation. */
   targetBaselineSuffix: function (operation) {
@@ -3018,7 +3054,7 @@ module.exports = {
     return {
       action: "RECONCILE_APPROVAL_TASK",
       status:
-        repairedDiagnostic.status === "WAITING_REVIEWER" || repairedWorkflowRef
+        repairedDiagnostic.status === "WAITING_REVIEWER"
           ? "REPAIRED_OR_REPLAYED"
           : "NEEDS_PROCESS_REVIEW",
       idempotent: true,
@@ -3037,7 +3073,7 @@ module.exports = {
         : previousPublication.code
           ? String(previousPublication.code)
           : undefined,
-      message: repairedWorkflowRef
+      message: repairedDiagnostic.status === "WAITING_REVIEWER"
         ? "Publication approval workflow was reconciled. Review the Process task for decision."
         : "Publication approval could not be reconciled automatically. Review Process workflow state.",
     };
@@ -3046,7 +3082,7 @@ module.exports = {
   approvalRepairBinding: function (status) {
     let publication = (status && status.publication) || {};
     let diagnostic = publication.approvalDiagnostic || {};
-    if (!diagnostic.workflowRef && !publication.workflowRef) return undefined;
+    if (!publication.code || !Number.isInteger(publication.revision)) return undefined;
     return {
       source: "PUBLICATION_APPROVAL",
       publicationCode: publication.code ? String(publication.code) : undefined,
@@ -3216,8 +3252,14 @@ module.exports = {
     try {
       if (step.type === "GOVERNED_PUBLICATIONS") {
         const source = await this.setupObservation(profile, request, step, "SOURCE");
-        if (!source.ready) return { ...pending, status: "VALIDATION_BLOCKED" };
         const intended = step.publicationPlan.items;
+        // Exact reviewed absence is pending foreign work, not an owner validation refusal.
+        const isNotCurrent = evidence => evidence.ready === false && Array.isArray(evidence.items) &&
+          evidence.items.length === intended.length && evidence.items.some(item => item?.status === "NOT_CURRENT") &&
+          intended.every(item => evidence.items.filter(actual => actual?.code === item.code &&
+            ["CURRENT", "NOT_CURRENT"].includes(actual.status)).length === 1);
+        if (source.ready !== true)
+          return isNotCurrent(source) ? pending : { ...pending, status: "VALIDATION_BLOCKED" };
         if (!Array.isArray(source.items) || source.items.length !== intended.length ||
             intended.some(item => source.items.filter(actual => ["code", "domain", "rootType", "rootCode", "sourceVersion"]
               .every(key => actual[key] === item[key]) && actual.status === "CURRENT").length !== 1))
@@ -3226,7 +3268,10 @@ module.exports = {
           source.items.map(item => ({ code: item.code, operationKey: item.operationKey })));
         const final = await this.setupObservation(profile, request, step, "SOURCE");
         const owner = SERVICE.DefaultPublicationSetupObservationService;
-        if (owner.digest(source) !== owner.digest(final) || !Array.isArray(target.items) || target.items.length !== source.items.length ||
+        if (owner.digest(source) !== owner.digest(final)) throw new CLASSES.NodicsError("ERR_BOF_00081");
+        if (target.ready !== true)
+          return isNotCurrent(target) ? pending : { ...pending, status: "VALIDATION_BLOCKED" };
+        if (!Array.isArray(target.items) || target.items.length !== source.items.length ||
             source.items.some(item => target.items.filter(actual => ["code", "domain", "rootType", "rootCode", "sourceVersion",
               "targetVersion", "operationKey", "previousOnlineVersion"].every(key => actual[key] === item[key]) &&
                 actual.status === "CURRENT").length !== 1)) throw new CLASSES.NodicsError("ERR_BOF_00081");
@@ -3234,7 +3279,8 @@ module.exports = {
           evidenceKind: "EXACT_PLAN_OWNER_OBSERVATION", publications: source.items };
       }
       const evidence = await this.setupObservation(profile, request, step, "INSTALLATION");
-      return { ...pending, status: evidence.ready ? "CURRENT" : "VALIDATION_BLOCKED",
+      if (evidence.ready === false && evidence.status === "NOT_CURRENT") return pending;
+      return { ...pending, status: evidence.ready === true && evidence.status === "CURRENT" ? "CURRENT" : "VALIDATION_BLOCKED",
         installedVersion: evidence.version, evidenceKind: "EXACT_PLAN_INSTALLED_RELEASE" };
     } catch (error) { return { ...pending, reasonCode: this.setupObservationReasonCode(error) }; }
   },
@@ -3256,19 +3302,26 @@ module.exports = {
     }
     return "VALIDATION_BLOCKED";
   },
-  /** Shared BEFORE inspection does not borrow a narrow human's import/CMS/Media mutation grants. */
+  /** Settles shared BEFORE reads under the owner worker policy without multiplying outer composition fanout. */
   sharedPreparationObservation: async function (profile, request) {
-    const steps = [];
-    for (const step of this.preparationSteps(profile).filter(item => item.phase === "BEFORE_PUBLICATION")) {
-      if (step.required === false) { steps.push({ ...step, status: "OPTIONAL" }); continue; }
-      try {
-        const evidence = await this.setupObservation(profile, request, step,
-          step.type === "MEDIA_ASSET_MANIFEST" ? "MEDIA" : "INSTALLATION");
-        steps.push({ ...step, status: this.sharedPreparationObservationStatus(step, evidence),
-          evidenceKind: step.type === "MEDIA_ASSET_MANIFEST" ? evidence.evidenceKind : "EXACT_PLAN_INSTALLED_RELEASE",
-          installedVersion: evidence.version });
-      } catch (error) { steps.push({ ...step, status: "AUTHORITY_PENDING", reasonCode: this.setupObservationReasonCode(error) }); }
-    }
+    const pending = this.preparationSteps(profile).filter(item => item.phase === "BEFORE_PUBLICATION");
+    const steps = new Array(pending.length);
+    let cursor = 0;
+    const workers = readinessWork.stageWorkers(request);
+    await Promise.all(Array.from({ length: Math.min(workers, pending.length) }, async () => {
+      while (cursor < pending.length) {
+        const index = cursor++;
+        const step = pending[index];
+        if (step.required === false) { steps[index] = { ...step, status: "OPTIONAL" }; continue; }
+        try {
+          const evidence = await this.setupObservation(profile, request, step,
+            step.type === "MEDIA_ASSET_MANIFEST" ? "MEDIA" : "INSTALLATION");
+          steps[index] = { ...step, status: this.sharedPreparationObservationStatus(step, evidence),
+            evidenceKind: step.type === "MEDIA_ASSET_MANIFEST" ? evidence.evidenceKind : "EXACT_PLAN_INSTALLED_RELEASE",
+            installedVersion: evidence.version };
+        } catch (error) { steps[index] = { ...step, status: "AUTHORITY_PENDING", reasonCode: this.setupObservationReasonCode(error) }; }
+      }
+    }));
     const functional = await this.functionalModulePreparationStatus(profile, request);
     steps.push(...functional);
     const required = steps.filter(step => step.required !== false);
@@ -3375,9 +3428,11 @@ module.exports = {
     if (selection) {
       if (selection.code !== undefined && !["status", "initiate"].includes(operation))
         throw new CLASSES.NodicsError("ERR_BOF_00081", "After-publication selection is only valid for initialization");
+      const originalRequest = request;
       request = { ...request, authData: { ...request.authData },
         applicationInitialization: { ...request.applicationInitialization, afterPublicationStepCode: selection.code },
         httpRequest: { ...request.httpRequest, headers: { ...request.httpRequest?.headers } } };
+      readinessWork.inherit(originalRequest, request);
     }
     const deferredSteps = this.preparationSteps(profile).filter(
       (step) => step.phase === "AFTER_PUBLICATION" && step.required !== false,
@@ -3413,9 +3468,8 @@ module.exports = {
             reason: input.reason,
             correlationId: correlationId,
             forceRefresh:
-              operation === "reconcileApproval" ||
-              input.forceRefresh === true ||
-              preparationChanged
+              operation !== "reconcileApproval" && (input.forceRefresh === true ||
+              preparationChanged)
                 ? true
                 : undefined,
             mediaCodes: mediaCodes.length ? mediaCodes : undefined,
@@ -3443,10 +3497,10 @@ module.exports = {
         .then(
           (response) =>
             (response && (response.data || response.result || response)) || {},
-        )
-        .catch(() => undefined);
+        );
       let binding = this.approvalRepairBinding(repairBefore);
-      if (binding) body.approvalRepairBinding = binding;
+      if (!binding) throw new CLASSES.NodicsError("ERR_BOF_00081", "Retained publication identity is required for approval recovery");
+      body.approvalRepairBinding = binding;
     }
     const baselineRequest = {
       moduleName: profile.target.moduleName,

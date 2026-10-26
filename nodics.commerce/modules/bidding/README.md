@@ -1,5 +1,8 @@
 # Bidding
 
+Explicit [Enterprise participant transaction access](llm/contracts/participant-transaction-access.md)
+contributes parent-free owner roles without assigning users or qualifying finance.
+
 Customer identity and human scope calls share validated, fully wired framework
 `profileTransport` defaults. Unknown header/authority overrides and in-flight
 identity or transport drift refuse. Auction grace validates both the duration and

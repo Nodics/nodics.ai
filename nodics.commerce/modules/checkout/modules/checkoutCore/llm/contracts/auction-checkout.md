@@ -158,3 +158,223 @@ winner, offer entry editing, infer completion from a selected bid, or persist be
 tokens in recovery records. Administrators handle unavailable domain phases through
 their owning recovery APIs; business users see completion only after the retained
 Checkout checkpoint. Framework/partner customizations preserve these invariants.
+
+### Managed commitment creation
+
+Prepare creates checkoutAuctionCommitment through the generated managed-save
+protocol without a caller revision token. The owner assigns revision 1. Do not
+pass insertOnly: that separate protocol explicitly refuses managed schemas.
+Exact scoped readback recovers only the same immutable terms and initial revision
+after a race or lost acknowledgement; tokenless save cannot update an existing
+row. Cart and entry retain their existing insert-only protocol. Later commitment
+changes still use strict generated revision CAS. Retained BSON Date deadlines
+compare epoch milliseconds, preserving sub-second precision across ISO input and
+native persistence. The real initializer/concurrency/Mongo tests cover prepare,
+bind, replay, concurrent copies, lost acknowledgement and foreign readback. No
+second hold, Payment or replacement selected purchase is introduced.
+
+Bind re-reads the exact retained Cart in the commitment's merchant partition and
+checks original buyer identity, Store and currency. SKU resolution receives the
+Cart's persisted Store and locale; caller locale or a hardcoded SKU cannot stand
+in for that context. The actual Cart resolver delegates to activated Product's
+pinned variant map. Missing locale, changed Cart owner/Store, absent variant or
+foreign Product projection refuses before entry insertion and commitment BOUND.
+Regression coverage exercises both actual resolvers with isolated publication
+and search evidence, preserving the original commitment, key and reserved hold.
+
+New auction Cart/entry participantEnterpriseCode comes from the original selected
+bid actorRef.enterpriseCode, not the seller/scheduler invoking handoff. Missing
+retained participant evidence refuses creation. This sets stored buyer evidence
+without rewriting the invoking credentials or merchant partition. No historical
+Cart/entry migration occurs. Existing auction Cart ownership validation compares
+typed owner; its participantEnterpriseCode comparison is conditional on
+merchantScope (fixed-price context). Auction paymentTerms instead derives the
+participant from fresh signed buyer admission and preserves it across merchant
+partitioning. Consequently historical mislabelled participant metadata is not
+itself the current auction Payment refusal, and must not become payment authority.
+
+### Auction Cart creation context
+
+Checkout owns `checkoutCore.auction.cartContexts` (default empty). Explicit Store
+selections bind tenant, merchant enterpriseCode, currency and jurisdiction.
+Prepare validates the exact binding before creating a commitment or Cart; it
+passes the selected jurisdiction to Cart creation. Unselected Stores retain
+ordinary Cart defaults. This is context selection, not tax-policy publication or
+permission. Local selects only default/GREENPERKS_ONLINE/circaMainStore/POINTS
+with the already-approved CIRCA_SAMPLE jurisdiction; shared defaults and Docker
+remain unchanged.
+
+Existing selected-auction Carts/entries are immutable. No current public owner
+operation safely corrects retained participantEnterpriseCode and jurisdiction.
+Prepare replay does not rewrite them; changing configuration does not repair
+retained AE jurisdiction. Calculation reads cart.jurisdiction. The original E06
+selected Cart/entry/commitment/hold therefore remain retained and blocked; this
+change neither migrates them nor creates a replacement purchase/key. No special
+historical repair, raw update, compatibility path or new tax policy is provided.
+
+### Canonical placement journal command
+
+Build the existing allowlisted placement command with undefined fields omitted
+before hashing, managed CAS and exact readback. BSON removes absent optional
+wallet/program/reward/coupon/customerGroup selectors; an in-memory undefined key
+must not cause a successful intent write to fail strict verification. Preserve
+supplied null/empty values and expectedCartRevision zero. This does not change
+selector validation, hash serialization, owner admission or assertFields.
+
+An already-persisted original command whose JSON digest matches its retained
+command remains eligible for existing original-key recovery, subject to all fresh
+owner/selection checks. Do not rewrite/backfill its intent, replace its key or
+infer successful acquisition from journal persistence. Focused `auction placement
+command` tests use the actual managed initializer/Mongo adapter and BSON storage,
+including exact replay, selector drift, strict proof and retained-journal recovery.
+
+### Selected reward proof for Digital reservation
+
+`DefaultCheckoutAuctionService.rewardPaymentTerms` is the shared internal read
+used by Payment preparation and Digital bundle reservation. It re-admits the
+original signed participant, requires the exact canonical commitment and selected
+quote, and compares the quote/hold amount and retained funding selections. Caller
+wallet/program/type/amount/currency/provider selectors are refused, even when they
+match the hold. It returns CHECKOUT_AUCTION_REWARD_V1, including original
+commitment, round, publication, quote, hold, buyer/actor, Cart/Order/key and selected
+amount/currency/scale. It does not rewrite caller payload or placement journal.
+
+Digital independently requires that proof to match its listing and single entry.
+An above-floor selected bid uses the selected quote/hold amount for purchase gross
+and net; the listing floor remains only a lower bound. An admitted selection may
+continue after auction intake ends, but released listings and conflicting claims
+remain forbidden. Existing fixed-price reward validation does not accept an
+auction binding. No reservation, Payment success, transfer or earning is implied
+by this read; those owners still confirm their own effects.
+
+### Interrupted phase fence replay
+
+Before each wrapped owner phase, read the original commitment afresh. If its
+pending phase and acquisitionStarted fence already equal the intended next
+placement, resume the same owner operation without writing identical values.
+Managed persistence suppresses no-op revision increments; requiring a successor
+for that replay incorrectly blocks recovery before reaching the owner. Competing
+pending phases still refuse. Actual fence changes and recording completed owner
+results still use strict managed CAS and exact successor readback. No generic
+update equality relaxation, replacement key, funding repeat or lock takeover is
+introduced. Actual initializer/Mongo/BSON tests cover interrupted owner dispatch,
+exact pending replay, completed replay, competing phase and real fence change.
+
+### Calculated entry quote propagation
+
+Cart calculation returns negotiated quote identity at
+`entry.priceDecision.priceQuoteCode` (and `quoteOrderCode`), not a top-level
+`entry.priceQuoteCode`. Checkout's Digital reservation port reads the current
+canonical Cart, matches unique entry code/Product/variant/SKU/quantity, compares
+its retained quote with that calculated decision and original Order, and projects
+the retained quote into a new Digital entry. Any supplied top-level quote must
+also match. The original calculation, pending phase journal and placement key stay
+unchanged. Digital still compares entry quote to canonical selected commitment
+and independently verifies persisted Cart variant/quote before claiming a listing.
+Regression uses the actual Cart calculation engine, Checkout port, Digital checkout,
+ownership and bundle reserve; remote publication/storage boundaries remain isolated.
+
+The internal selected reward proof also carries bidCode from canonical commitment
+terms so Digital retains original Bidding accounting provenance with its purchase.
+This is an owner-derived binding, not a caller funding field or journal rewrite.
+
+### Durable phase receipt representation
+
+All wrapped phase results use phaseResult before result CAS. Undefined object
+members are omitted; absent root/array values become null. Dates become ISO strings
+with millisecond precision, generated Mongo ObjectIds become their hexadecimal
+value, and null/zero/false/empty values remain intact. Invalid dates, nonfinite
+numbers, executable values, unsupported classes and cycles refuse completion.
+Business receipt fields and reference identities are preserved. This projection
+is owner-side before persistence, never a loose readback comparison.
+
+The assessed phase inventory is: Cart validation/spend decision objects;
+calculation records with Dates/generated IDs and nested decisions; inventory and
+Digital reservation arrays (Digital units may contain undefined capture/settlement);
+Payment authorization/capture records with dates and optional evidence; Order and
+Consignment records; optional Promotion return; Digital sale/delivery arrays with
+receipt dates; and final checkpoint result. All use this same durable shape.
+First return and replay both project to that representation. Existing retained
+receipts are projected only in memory, never backfilled, and completed phases do
+not redispatch owners. Strict expected-field equality and successor CAS remain
+unchanged. Managed initializer/Mongo/BSON regressions exercise every phase shape,
+actual Digital unit construction, exact replay, retained BSON projection without
+writes, unsupported values and contradictory readback refusal.
+
+### Selected authorization inspection handshake
+
+Payment AUTHORIZE maps to Loyalty inspect of the original hold. Bidding freshly
+admits the original selected buyer AND actor, exact selected bid/order/hold command
+and returns checkoutRequired:true. Checkout's existing evidence endpoint supports
+inspect as read-only: require BOUND with no cancellation/terminal, exact canonical
+selection/quote/hold and original actor; journal command/digest/Cart/Order/method
+must match, pending must be authorizePayment, DIGITAL_RESERVED must be completed
+with its retained result, and the key must be placement.key+:payment. The shared
+reward owner read revalidates canonical quote/funding. No command is persisted.
+
+The receipt binds tenant/operation/order/round/bid/hold/amount/key, with decision
+INSPECT, authorizationFence true, terminalFence false and a deterministic original
+commitment/key receiptCode. Loyalty checks this independently after Bidding proof;
+it must not assign a terminal purchaseReceipt for inspect. Capture/release still
+require their actual terminal fence and cannot consume inspection evidence.
+Checkout fence() refuses inspect. Original pending selection inspection is unchanged.
+Focused regression composes actual Payment adapter, Loyalty authorization validation,
+Bidding evidence and Checkout evidence with isolated Profile/funding transport.
+
+### Canonical immutable insert models
+
+Auction insert canonicalizes the owner-authored model before existence lookup/save,
+using the same durable-data traversal as phase receipts with native model values:
+omit undefined object members recursively; preserve explicit null, zero, false,
+Dates and generated IDs. The save receives a separate model copy. Framework
+interceptors may add created/updated values without changing the expected authored
+snapshot. Exact readback equality and insert-only authority stay unchanged.
+
+The complete insert inventory is Cart, CartEntry, CommerceOrder, CommerceOrderEntry,
+Consignment and CheckoutCheckpoint. Order has optional promotion/coupon and merchant
+scope; OrderEntry has optional promotion/tax decisions; completion has optional
+promotion evidence. These absences are canonical omissions before persistence,
+not wildcard comparisons. Existing records are only read and validated, never
+backfilled. Native Dates preserve epoch milliseconds; JSON phase receipts still
+use ISO/hex projections. Tests run actual owner-authored prepare/bind/createOrder/
+releaseFulfillment/complete models through timestamp interceptor, insert-only save
+initializer, Mongo adapter and BSON, plus exact replay, lost acknowledgement,
+explicit-null/native-date preservation and foreign readback refusal.
+
+### Original purchase correlation ownership
+
+HTTP retries receive new request correlation IDs. They must not change deterministic
+auction Order models. CreateOrder obtains correlation from the retained original
+authorization receipt and verifies that receipt's Cart, Order and original
+placement.key+:payment identity. Missing original correlation fails closed.
+OrderEntry, Consignment and completion checkpoint inherit the retained Order's
+correlation. This does not alter request tracing, a persisted authorization, the
+placement command or any existing row. All insert fields, including correlation,
+continue to compare exactly. Changed HTTP tracing is tested across repeated Order,
+entry, fulfillment and completion insertion through the actual BSON pipeline;
+a foreign authorization remains a refusal. Fixed-price correlation behavior is
+unchanged.
+
+
+## Completed original purchase reconciliation
+
+The same exact-round participant reconcile route accepts the original selected buyer
+and actor under fresh existing participant permission. Checkout returns the distinct
+`PURCHASE_COMPLETED` proof only from its original CAPTURE_DECIDED commitment,
+completed immutable journal/digest, exact completed checkpoint and closed Cart proof,
+fresh original Order and captured Payment in the original participant partition.
+Retained Digital units must match SOLD and DELIVERED results and checkpoint codes.
+Pending phases, changed identities/keys/amounts/receipts and incomplete delivery fail closed.
+Bidding re-admits the participant then performs one managed CAS to `COMPLETED`,
+retaining selection and the exact completion receipt. It performs no financial,
+transfer, seller earning, listing release or reaward operation. The projection shows
+COMPLETED, CAPTURED funds and the receipt; it no longer offers purchase. Exact replay
+re-admits the original buyer and returns the retained receipt without another write.
+Original completed Checkout placement replay remains valid after round finalization.
+Cancellation and original seller FAILED cleanup remain separate. No new grant,
+scheduler, profile, configuration or historical repair is introduced.
+
+Regression: checkoutCore/test/checkoutAuctionContract.test.js, `completed purchase
+reconciliation` cases compose actual Checkout/Payment phases and generated Bidding
+managed update/Mongo/BSON persistence, including replay, revoked/foreign admission,
+changed proof, incomplete delivery and CAS conflict.

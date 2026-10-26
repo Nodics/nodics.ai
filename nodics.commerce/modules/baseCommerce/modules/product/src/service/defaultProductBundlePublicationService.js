@@ -113,18 +113,39 @@ module.exports = {
   execute: async function (original, phase) {
     if (!["prepare", "publish", "inspect", "withdraw"].includes(phase)) throw new Error("Unsupported bundle publication phase");
     const author = SERVICE.DefaultProductListingAuthoringService;
-    const scope = author.runtimeScope(original), policy = this.policy(), auth = structuredClone(original.authData);
+    const runtimeScope = author.runtimeScope(original), policy = this.policy(), auth = structuredClone(original.authData);
+    const enterprisePolicy = structuredClone(CONFIG.get('publish')?.approvalWorkflow?.runtimeEnterpriseScope);
+    let store;
     const selectors = structuredClone(original.payload), state = author.requestState(original);
     if (!selectors || Object.keys(selectors).sort().join(',') !== 'operationCode,storeCode' ||
         !/^bundle-operation:[a-f0-9]{64}$/.test(selectors.operationCode || '') ||
         typeof selectors.storeCode !== 'string' || !selectors.storeCode || Object.keys(original.query || {}).length)
       throw new Error("Exact bundle publication selectors are required");
     const check = () => {
-      if (!same(scope, author.runtimeScope(original)) || !same(policy, this.policy()) || !same(state, author.requestState(original)))
+      if (!same(runtimeScope, author.runtimeScope(original)) || !same(policy, this.policy()) || !same(state, author.requestState(original)) ||
+          !same(enterprisePolicy, CONFIG.get('publish')?.approvalWorkflow?.runtimeEnterpriseScope))
         throw new Error("Automatic Product command changed");
+      if (store && store.enterpriseCode !== runtimeScope.enterpriseCode) {
+        const workflow = SERVICE.DefaultPublicationApprovalWorkflowService;
+        if (!workflow?.requireRuntimeEnterprise) throw new Error("Bundle Store Enterprise is not qualified");
+        workflow.requireRuntimeEnterprise(original.authData, store.enterpriseCode);
+      }
     };
     const proof = await this.source(original, selectors); check();
-    if (proof.enterpriseCode !== scope.enterpriseCode) throw new Error("Bundle publication Enterprise changed");
+    // Store business placement is separate from the unchanged signed runtime scope.
+    const savedPayload = original.payload;
+    let placement;
+    try { original.payload = { contractVersion: 1, storeCode: selectors.storeCode };
+      placement = await author.storeContext(original);
+    } finally { original.payload = savedPayload; }
+    check();
+    store = placement?.store;
+    if (placement?.contractVersion !== 1 || placement.tenant !== runtimeScope.tenant || store?.code !== selectors.storeCode ||
+        store.active !== true || store.status !== 'ACTIVE' || typeof store.enterpriseCode !== 'string' || !store.enterpriseCode ||
+        !Number.isSafeInteger(store.revision) || store.revision < 1 ||
+        proof.enterpriseCode !== store.enterpriseCode) throw new Error("Bundle Store placement changed");
+    check();
+    const scope = { tenant: runtimeScope.tenant, enterpriseCode: store.enterpriseCode };
     const sourceRef = { module: "digitalCore", schema: "digitalBundleManifest", code: proof.manifest.code };
     const command = { sourceRef, ownerRef: proof.ownerRef, name: proof.terms.name,
       ...(proof.terms.description !== undefined ? { description: proof.terms.description } : {}),
@@ -137,18 +158,11 @@ module.exports = {
     const token = {}, r = { ...original, authData: auth, [capability]: token };
     admissions.set(token, { scope, auth, command, productCode, publicationCode: proof.operationCode, check });
     try {
-      // Store placement is independently re-read through its existing configured owner and original runtime admission.
-      const savedPayload = original.payload;
-      let placement;
-      try { original.payload = { contractVersion: 1, storeCode: selectors.storeCode };
-        placement = await author.storeContext(original);
-      } finally { original.payload = savedPayload; }
-      check();
-      if (placement.store.enterpriseCode !== scope.enterpriseCode) throw new Error("Bundle Store placement changed");
       if (phase === "prepare") {
         if (proof.release) throw new Error("Released listing cannot be authored");
         const product = await author.create(r); check();
-        if (!same(await this.source(original, selectors), proof)) throw new Error("Bundle proof changed during authoring");
+        const freshProof = await this.source(original, selectors); check();
+        if (!same(freshProof, proof)) throw new Error("Bundle proof changed during authoring");
         return { confirmed: true, publicationCode: proof.operationCode, ...product };
       }
       const product = proof.product;
@@ -170,7 +184,8 @@ module.exports = {
         if (publication.state === 'VALIDATING') publication = await lifecycle.validate({ ...r, publicationCode: publication.code,
           expectedRevision: publication.revision });
         if (publication.state === "VALIDATED") {
-          if (!same(await this.source(original, selectors), proof)) throw new Error("Listing proof changed before automatic admission");
+          const freshProof = await this.source(original, selectors); check();
+          if (!same(freshProof, proof)) throw new Error("Listing proof changed before automatic admission");
           publication = await lifecycle.transition(publication, "APPROVED", { ...r, expectedRevision: publication.revision }, {}, {
             automatic: { policy: "HELD_BUNDLE_LISTING", operationCode: proof.operationCode,
               termsDigest: proof.termsDigest, manifestDigest: proof.manifest.digest, priceReceiptCode: proof.price.receiptCode } });

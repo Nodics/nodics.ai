@@ -21,10 +21,15 @@ const participant = require("../src/service/defaultLoyaltyParticipantService");
 const clone = value => structuredClone(value);
 
 function fixture(t) {
-  const previous = ["SERVICE", "CONFIG", "CLASSES"].map(key => [key, Object.getOwnPropertyDescriptor(global, key)]);
+  const previous = ["SERVICE", "CONFIG", "CLASSES", "UTILS"].map(key => [key, Object.getOwnPropertyDescriptor(global, key)]);
   t.after(() => previous.forEach(([key, descriptor]) => descriptor
     ? Object.defineProperty(global, key, descriptor) : delete global[key]));
-  delete global.CLASSES;
+  global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
+  global.UTILS = { isBlank: value => !value || Object.keys(value).length === 0 };
+  const initializer = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/procs/save/defaultModelSaveInitializerService");
+  const interceptor = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/interceptors/defaultInterceptorService");
+  const mongo = require("../../../../nodics.foundation/modules/nDatabase/mongodb/src/schemas/model").default;
+  const { ObjectId } = require("mongodb");
   const rows = {}, state = { sends: 0, commits: 0, activeToken: undefined };
   const base = { tenant: "tenant", authorization: "Bearer original", authData: { tenant: "tenant", entCode: "enterprise", tokenType: "access",
     principalType: "customer", loginId: "customer-login" } };
@@ -84,6 +89,53 @@ function fixture(t) {
     const write = async request => {
       check(request, true);
       if (state.failWrite === name) { state.failWrite = undefined; throw Error("synthetic write interruption"); }
+      if (name === "LoyaltyPartnerRewardConversionRecord") {
+        const prior = rows[name].find(row => row.code === request.model.code);
+        request.model.created ??= new Date("2000-01-01T00:00:00Z");
+        await interceptor.setUpdatedTimestamp(request, {});
+        // Force a distinct prior timestamp without replacing the real interceptor.
+        if (prior && prior.updated.getTime() === request.model.updated.getTime()) {
+          await new Promise(resolve => setTimeout(resolve, 2));
+          await interceptor.setUpdatedTimestamp(request, {});
+        }
+        SERVICE.DefaultModelValidatorService = { validateMandate: async () => true, validateDataType: async () => true };
+        const schemaModel = {
+          ...mongo,
+          rawSchema: require("../src/schemas/schemas").loyaltyWallet.loyaltyPartnerRewardConversionRecord,
+          dataBase: { getOptions: () => ({ modelSaveOptions: { upsert: true, returnDocument: "after" } }) },
+          transactionOptions: input => {
+            if (state.activeToken) assert.equal(input.transactionContext, state.activeToken);
+            return state.activeToken ? { session: state.activeToken } : {};
+          },
+          insertOne: async model => {
+            assert(!rows[name].some(row => row.code === model.code));
+            const _id = new ObjectId();
+            rows[name].push({ ...clone(model), _id });
+            return { acknowledged: true, insertedCount: 1, insertedId: _id };
+          },
+          findOneAndUpdate: async (query, update, options) => {
+            assert.equal(options.upsert, false);
+            if (state.activeToken) assert.equal(options.session, state.activeToken);
+            assert.deepEqual(Object.keys(query).sort(), ["code", "revision", "status"]);
+            assert(!Object.hasOwn(update.$set, "_id"));
+            const old = rows[name].find(row => match(row, query));
+            if (!old) return { ok: 1, value: null };
+            assert.deepEqual(update.$set.created, old.created);
+            assert.deepEqual(update.$set.createdAt, old.createdAt);
+            Object.assign(old, clone(update.$set));
+            if (state.corruptConversionField) {
+              const field = state.corruptConversionField;
+              state.corruptConversionField = undefined;
+              return { ok: 1, value: { ...old, [field]: field === "updated" ? "invalid-date" : "tampered" } };
+            }
+            return { ok: 1, value: { ...old } };
+          },
+        };
+        const result = await initializer.persistModel.call(initializer, {
+          ...request, query: request.query || { code: request.model.code }, schemaModel,
+        });
+        return { code: "SUC_WRITE", result };
+      }
       if (request.query) {
         const row = rows[name].find(row => match(row, request.query));
         if (!row) throw Error("conditional write conflict");
@@ -184,3 +236,31 @@ test("real capture posting failure rolls balance and ledger back while retaining
   assert.equal(f.state.sends, 1);
   assert.equal(f.rows.RewardRedemption.length, 1);
 });
+
+for (const field of ["updated", "created", "createdAt", "revision", "status", "sourceAmount", "ownerType"]) {
+  test(`generated accounting rejects changed ${field} evidence and rolls back before original-key recovery`, async t => {
+    const f = fixture(t), quote = await f.quote();
+    const context = await conversion.context(f.command(quote.conversionCode), "confirm");
+    const original = clone(f.rows.LoyaltyPartnerRewardConversionRecord[0]);
+    const claimed = await conversion.transition(context, original, { status: "HOLDING" });
+    assert.equal(claimed.won, true);
+    f.state.corruptConversionField = field;
+    await assert.rejects(conversion.post(context, claimed.row, "reserve"), { code: "ERR_LOYALTY_CONVERSION_PERSISTENCE" });
+    assert.equal(f.rows.LoyaltyPartnerRewardConversionRecord[0].status, "HOLDING");
+    assert.equal(f.rows.LoyaltyPartnerRewardConversionRecord[0].revision, claimed.row.revision);
+    assert.equal(f.rows.LoyaltyWalletRewardBalance[0].available, "10.00");
+    assert.equal(f.rows.LoyaltyWalletRewardBalance[0].reserved, "0.00");
+    assert.equal(f.rows.RewardLedgerEntry.length, 0);
+    assert.equal(f.rows.RewardReservation.length, 0);
+    assert.equal(f.state.sends, 0);
+    assert.equal((await conversion.status(f.command(quote.conversionCode))).status, "COMPLETED");
+    const completed = f.rows.LoyaltyPartnerRewardConversionRecord[0];
+    assert.deepEqual(completed.created, original.created);
+    assert.deepEqual(completed.createdAt, original.createdAt);
+    assert.equal(f.rows.RewardLedgerEntry.length, 2);
+    assert.equal(f.state.sends, 1);
+    await conversion.status(f.command(quote.conversionCode));
+    assert.equal(f.rows.RewardLedgerEntry.length, 2);
+    assert.equal(f.state.sends, 1);
+  });
+}

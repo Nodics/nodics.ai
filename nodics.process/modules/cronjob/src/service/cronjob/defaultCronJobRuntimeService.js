@@ -562,6 +562,7 @@ module.exports = {
                 this.jobPool[tenant][jobCode].stopJob().then(success => {
                     let definition = this.jobPool[tenant][jobCode].getDefinition();
                     SERVICE.DefaultPipelineService.start('defaultCronJobRemovedHandlerPipeline', {
+                        tenant: tenant,
                         job: this.jobPool[tenant][jobCode],
                         definition: definition
                     }, {}).then(success => {

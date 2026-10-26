@@ -107,6 +107,27 @@ refresh from persisted leases, then reject the original operation. If that recov
 also fails, retain both errors rather than reporting success. A failure after
 publication does not require a duplicate refresh.
 
+Lease expiry follows the same ordering: after atomic compare-and-delete and the
+remaining-lease scan, publish the resolver snapshot and synchronously reconcile
+ephemeral observers before awaiting durable catalogue reconciliation. A delayed
+catalogue write must not overwrite a newer registration snapshot or remove its
+newly scheduled observers. A catalogue failure still rejects the sweep, but must
+not prevent publication of the remaining owners. Keep actual expiry, authority
+checks and operational-state lifetimes unchanged. The batch snapshot regression
+suite also covers expiry interleaving and catalogue failure; this is a coherence
+guarantee, not proof of a live latency improvement.
+
+The existing secured registry diagnostics expose bounded numeric
+`metrics.registrationTiming` for fixed `batch`, `leases`, `catalogue`, `snapshot`,
+`activeCatalogue` and `audit` phases. Each records active/completed/rejected counts
+and last/maximum/total monotonic elapsed milliseconds. These contain no request,
+identity, credential, result or error payload. A completed lease phase means all
+item attempts settled, not that every item succeeded; batch rejection remains
+authoritative. Elapsed time includes contention and is not CPU attribution.
+Measurement must preserve original errors, synchronous dispatch, snapshot ordering,
+authority reads and acknowledgements. It introduces no scheduler, timeout or cache.
+The same regression suite qualifies pending phase visibility and failure cleanup.
+
 The claim-free 72-module registration and renewal budget is one store scan and
 one snapshot refresh per batch. Authority-bearing items retain their required
 independent scans; this optimization does not eliminate those security checks.
@@ -434,6 +455,15 @@ preparation. Mock contract tests do not qualify live runtime or publication.
 
 ### Stored Preparation And Separate Media Approval
 
+Aggregate unqualified `mediaDependencies` with no asset entries remains a
+Media publication blocker, using `UNAVAILABLE` when status is absent. It must
+not carry `mediaDependency` or asset repair/handoff metadata: an aggregate
+status is not an owner asset descriptor or authority to initialize/publicize
+an asset. Only actual owner dependency entries retain per-asset evidence and
+existing explicit repair descriptions; qualified entries produce no blocker.
+Preserve strict frontend descriptor validation and never invent a media code,
+version, checksum or publication identity to satisfy it.
+
 `MEDIA_ASSET_MANIFEST` preparation is not satisfied by a file count or
 `SOURCE_READY`. BackOffice reads each confined file and delegates to Media's
 read-only upload inspection with the initiating human context. The step is
@@ -601,3 +631,10 @@ The returned command path is never executable authority. No automatic mutation,
 approval, activation, retry or timeout takeover is introduced. Target APIs still
 recheck principal, permission, exact version and lifecycle eligibility. Source
 tests prove metadata shape and rejection, not live publication acceptance.
+
+
+Workspace owner selectors admit `STAGED`, `ONLINE` and `OPERATIONAL` publication
+roles. These are runtime registry coordinates, distinct from business publication
+state. Keep schema and registration validation aligned; preserve exact matching
+and reject unknown roles without aliases or fallbacks. The actual Promotion
+capability registration regression covers the `COMMERCE/OPERATIONAL` report.

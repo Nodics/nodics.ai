@@ -97,8 +97,17 @@ module.exports = {
             this.fail('CONFIGURATION', 'Evidence provider must be a registered service name');
         return result;
     },
+    /** Projects the authenticated principal's canonical identity; service credentials never borrow a human login. */
+    actor: function (request) {
+        const auth = request.authData || {};
+        const principalCode = auth.principalType === 'service' ? auth.serviceId
+            : auth.principalType === 'human' ? auth.loginId : undefined;
+        if (typeof principalCode !== 'string' || !principalCode.trim())
+            this.fail('FORBIDDEN', 'Canonical authenticated actor is required');
+        return { principalType: auth.principalType, principalCode };
+    },
     /**
-     * Requires explicit canonical service permission and trusted tenant before any repository access.
+     * Requires exact permission, authorized service or canonical native Platform Admin, and trusted tenant before any repository access.
      * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
      * @param {string} permission Exact owner capability permission; not inferred from roles.
      * @param {Object} owner Canonical beneficiary identity, distinct from the actor or runtime enterprise.
@@ -108,13 +117,14 @@ module.exports = {
      */
     authorize: function (request, permission, owner) {
         const auth = request.authData || {};
-        if (!request.tenant || (auth.tenant && auth.tenant !== request.tenant) || !auth.loginId)
+        if (!request.tenant || (auth.tenant && auth.tenant !== request.tenant))
             this.fail('FORBIDDEN', 'Trusted tenant and principal are required');
+        this.actor(request);
         const security = SERVICE.DefaultSecuredRequestPipelineService;
         if (!security || !security.isPermissionGranted(permission, security.getGrantedPermissions(request), {}))
             this.fail('FORBIDDEN', 'Carbon permission is required');
-        if (auth.principalType === 'service') return;
-        this.fail('FORBIDDEN', 'An authorized owner service is required');
+        if (auth.principalType === 'service' || security.hasPlatformFullAccess?.(request) === true) return;
+        this.fail('FORBIDDEN', 'An authorized owner service or native Platform administrator is required');
     },
     /**
      * Normalizes a Profile owner identity; actor and hierarchy are not ownership.
@@ -353,7 +363,8 @@ module.exports = {
      * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
      */
     project: function (lot, operation) {
-        return { module: 'wasteCarbon', schema: 'wasteCarbonLot', lotCode: lot.code, revision: lot.revision, ...this.copy(operation) };
+        return { module: 'wasteCarbon', schema: 'wasteCarbonLot', lotCode: lot.code, revision: lot.revision,
+            ...this.copy(operation), synthetic: lot.synthetic };
     },
     /**
      * Inspects an original operation, including uncertain-outcome recovery; foreign owners cannot read it.
@@ -384,7 +395,8 @@ module.exports = {
         if (lot.state !== ENUMS.WasteCarbonLotState.REALIZED.value) this.fail('INELIGIBLE', 'Prospective holdings cannot be reserved');
         if (lot.synthetic && !this.settings(request).evidence.allowSynthetic) this.fail('INELIGIBLE', 'Synthetic holdings are not enabled');
         const result = await this.evidence(request, 'eligibility', { lotCode: lot.code, issuanceRef: lot.issuanceRef });
-        if (result?.lotCode !== lot.code || !this.same(result.issuanceRef, lot.issuanceRef) || result.status !== ENUMS.WasteCarbonEligibility.ELIGIBLE.value)
+        if (result?.lotCode !== lot.code || !this.same(result.issuanceRef, lot.issuanceRef) ||
+            (result.synthetic === true && lot.synthetic !== true) || result.status !== ENUMS.WasteCarbonEligibility.ELIGIBLE.value)
             this.fail('INELIGIBLE', 'Current issuance eligibility is unavailable or withdrawn');
         this.reference(result.evidenceRef);
         return result.evidenceRef;
@@ -422,7 +434,7 @@ module.exports = {
             if (existing.destinationHold !== ENUMS.WasteCarbonHoldingState.HELD.value) this.fail('CONFLICT', 'Original destination hold is unconfirmed');
             const completed = { ...existing, status: ENUMS.WasteCarbonHoldingState.COMPLETED.value, destinationHold: ENUMS.WasteCarbonHoldingState.RELEASED.value,
                 finalizedAt: new Date().toISOString(),
-                finalizationActor: { principalType: request.authData.principalType, principalCode: request.authData.loginId } };
+                finalizationActor: this.actor(request) };
             const saved = await this.store().update('wasteCarbonLot', request, lot, {
                 operations: lot.operations.map(item => item.operationKey === body.operationKey ? completed : item)
             });
@@ -458,7 +470,7 @@ module.exports = {
             destinationHold: action === ENUMS.WasteCarbonOperation.TRANSFER.value ? ENUMS.WasteCarbonHoldingState.HELD.value : null,
             recipientRef: recipient || null, eligibilityRef: eligibilityRef || existing?.eligibilityRef,
             actorRef: request.actorRef || null,
-            sourceActor: { principalType: request.authData.principalType, principalCode: request.authData.loginId },
+            sourceActor: this.actor(request),
             recordedAt: new Date().toISOString() };
         const operations = existing ? lot.operations.map(item => item.operationKey === body.operationKey ? next : item) : [...lot.operations, next];
         const saved = await this.store().update('wasteCarbonLot', request, lot, { operations });

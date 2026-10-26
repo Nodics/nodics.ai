@@ -360,6 +360,51 @@ module.exports = {
             return { batchCode: intent.batchCode, quantity: intent.quantity, replayed };
         });
     },
+    /**
+     * Confirms one acquisition coupon's encrypted issuance membership without returning secrets.
+     * @param {Object} request Original capture-protected source callback.
+     * @param {Object} r Independently admitted tenant/merchant scope.
+     * @param {Object} observed Generic lifecycle snapshot (secure fields are normally projected away).
+     * @param {Object} campaign Frozen allocation campaign, including issuer/vendor references.
+     * @returns {Promise<boolean>} True only for exact unchanged coupon and batch evidence; no writes/decryption.
+     * @override Preserve private admission, full public snapshot equality, original receipt associations and readback.
+     */
+    assertAcquisitionIssuance: async function (request, r, observed, campaign) {
+        const logger = SERVICE.DefaultLoggerService, fp = SERVICE.DefaultPromotionPublicationService.fingerprint;
+        if (logger?.hasPrivateCaptureProtection(request) !== true || request.tenant !== r.tenant ||
+            !observed?.code || observed.tenant !== r.tenant || observed.enterpriseCode !== r.enterpriseCode ||
+            campaign?.tenant !== r.tenant || campaign.vendorEnterpriseRef?.code !== r.enterpriseCode) this.fail();
+        const query = { tenant: r.tenant, enterpriseCode: r.enterpriseCode, code: observed.code };
+        const current = (await this.read('DefaultCouponService', r, query))[0];
+        const publicSnapshot = row => {
+            const value = structuredClone(row);
+            delete value.protectedToken; delete value.secureIssuance; delete value.secureIssuanceCode;
+            return value;
+        };
+        if (!current || !current.protectedToken || typeof current.protectedToken !== 'object' ||
+            Array.isArray(current.protectedToken) || !current.secureIssuanceCode ||
+            current.secureIssuanceCode !== current.batchCode ||
+            !isDeepStrictEqual(publicSnapshot(current), publicSnapshot(observed))) this.fail();
+        const batchQuery = { tenant: r.tenant, enterpriseCode: r.enterpriseCode, code: current.secureIssuanceCode };
+        const batch = (await this.read('DefaultCouponBatchService', r, batchQuery))[0];
+        const receipt = batch?.secureIssuance, command = receipt?.command;
+        const units = Array.isArray(receipt?.units) ? receipt.units.filter(unit => unit?.code === current.code) : [];
+        if (!command || command.tenant !== r.tenant || command.enterpriseCode !== campaign.issuerEnterpriseRef?.code ||
+            command.promotionCode !== campaign.code || command.batchCode !== batch.code ||
+            !Number.isSafeInteger(command.quantity) || command.quantity < 1 ||
+            batch.issuedCount !== command.quantity || receipt.units.length !== command.quantity || units.length !== 1 ||
+            !/^[a-f0-9]{64}$/.test(units[0].tokenHash || '') || units[0].tokenHash !== current.tokenHash ||
+            units[0].protectedFingerprint !== fp(current.protectedToken)) this.fail();
+        this.assertStockScope(batch, command, campaign);
+        this.assertStockScope(current, command, campaign);
+        for (const key of ['issuerEnterpriseRef', 'vendorEnterpriseRef'])
+            if (!isDeepStrictEqual(current[key], campaign[key]) || !isDeepStrictEqual(batch[key], campaign[key])) this.fail();
+        const final = (await this.read('DefaultCouponService', r, query))[0];
+        const finalBatch = (await this.read('DefaultCouponBatchService', r, batchQuery))[0];
+        if (!isDeepStrictEqual(current, final) || !isDeepStrictEqual(batch, finalBatch) ||
+            logger.hasPrivateCaptureProtection(request) !== true) this.fail();
+        return true;
+    },
     /** Decrypts only after the existing Digital owner revalidates payment/purchase/delivery and current customer scope. @param {Object} r Privately admitted customer request. @param {Object} observed Already authorized coupon snapshot. @returns {Promise<string>} Raw token only to reveal response. */
     revealToken: async function (r, observed, ownerRequest = r) {
         if (!SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection(r)) this.fail();

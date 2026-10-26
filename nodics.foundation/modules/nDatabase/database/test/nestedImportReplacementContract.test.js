@@ -884,7 +884,7 @@ test("actual inactive bootstrap Customer data and header retain nested insert se
   const models = JSON.parse(JSON.stringify(Object.values(box.exports)));
   assert.equal(models.length, 1);
   assert.equal(models[0].active, false);
-  const headers = require("../../../../../nodics.platform/modules/profile/data/init-v001/headers/user/defaultUsersHeader");
+  const headers = require("../../../../../nodics.platform/modules/profile/data/init-v001/headers/identityBootstrap/preservedUsersHeader");
   const header = Object.values(headers)
     .map((group) => group.defaultCustomer)
     .find(Boolean);
@@ -912,28 +912,63 @@ test("actual inactive bootstrap Customer data and header retain nested insert se
   });
   const observed = [];
   SERVICE.DefaultPasswordService = generated(passwords, observed);
-  const context = Object.assign({}, importer, {
-    ensureLocalSchemaService: async () => generated(customers, []),
+  const customerOwner = require("../../../../../nodics.platform/modules/profile/src/service/customer/defaultCustomerService");
+  SERVICE.DefaultMandatoryIdentityBootstrapService = require("../../../../../nodics.platform/modules/profile/src/service/identity/defaultMandatoryIdentityBootstrapService");
+  SERVICE.DefaultCustomerService = Object.assign({}, customerOwner, {
+    // Isolate the collision-read port; writes still traverse the actual generated nodes.
+    get: async (request) => {
+      assert.deepEqual(request.options, { recursive: false, skipItemCache: true });
+      assert.deepEqual(request.searchOptions, { pageSize: 2, pageNumber: 1 });
+      assert.deepEqual(Object.keys(request.query), ["$or"]);
+      const rows = customers.rows.filter((row) => request.query.$or.some((selector) =>
+        Object.entries(selector).every(([key, value]) => _.isEqual(row[key], value))));
+      return { code: "SUC_FIND_00000", count: rows.length, result: _.cloneDeep(rows) };
+    },
+    save: (request) => {
+      assert.equal(request.options.insertOnly, true);
+      return saveNodes({ ...request, schemaModel: customers });
+    },
   });
-  const result = await context.insertLocalSchemaModel(
+  const context = Object.assign({}, importer, {
+    ensureLocalSchemaService: async () => SERVICE.DefaultCustomerService,
+  });
+  assert.equal(header.options.operation, "ensureBootstrapAll");
+  const execute = (records) => require("../../../../../nodics.platform/modules/profile/test/helpers/bootstrapReleaseExecution")(
+    "customer", "default", (admitted) => context.insertLocalSchemaModel(
     {
-      tenant: "fixture",
+      tenant: "default",
+      importRun: admitted.importRun,
       options: {},
       header: {
         ..._.cloneDeep(header),
         rawSchema: customerSchema,
-        options: { ...header.options, moduleName: "profile" },
+        options: { ...header.options, ...admitted.header.options },
       },
     },
-    models,
+    records,
+    ), { importDispatch: true },
   );
-  assert.equal(result.length, 1);
-  assert.equal(result[0].active, false);
+  const result = await execute(models);
+  assert.deepEqual(result, [{ code: models[0].code }]);
+  assert.equal(customers.rows.length, 1);
+  assert.equal(customers.rows[0].active, false);
   assert.equal(passwords.rows.length, 1);
-  assert.equal(passwords.rows[0].loginId, result[0].loginId);
-  assert.equal(result[0].password, passwords.rows[0]._id);
+  assert.equal(passwords.rows[0].loginId, customers.rows[0].loginId);
+  assert.equal(customers.rows[0].password, passwords.rows[0]._id);
   assert.equal(passwords.calls.insert, 1);
   assert.equal(passwords.calls.updateMany, 0);
   assert.equal(passwords.calls.upsert, 0);
   assert.equal(observed[0].options.replaceAllMatchesByQuery, undefined);
+  const retained = _.cloneDeep({ customers: customers.rows, passwords: passwords.rows,
+    customerWrites: customers.calls, passwordWrites: passwords.calls });
+  await execute([{ ...models[0], active: true, password: { loginId: models[0].loginId, password: "must-not-replace" } }]);
+  assert.deepEqual(customers.rows, retained.customers);
+  assert.deepEqual(passwords.rows, retained.passwords);
+  for (const name of ["insert", "upsert", "updateMany"]) {
+    assert.equal(customers.calls[name], retained.customerWrites[name]);
+    assert.equal(passwords.calls[name], retained.passwordWrites[name]);
+  }
+  await assert.rejects(SERVICE.DefaultCustomerService.ensureBootstrapAll({
+    tenant: "default", authData: { isSystem: true }, models,
+  }), { code: "ERR_PROFILE_CREDENTIAL_OWNERSHIP" });
 });

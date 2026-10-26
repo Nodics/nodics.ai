@@ -535,9 +535,14 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
         const pinned = manifest.sections['init-v001'].prerequisites;
         const catalogues = pinned.filter(item => item.sectionCode === 'permissionCatalogue');
         assert(catalogues.length >= 54, 'the full capability vocabulary remains explicitly pinned');
-        assert.equal(catalogue.length, catalogues.length);
-        assert.equal(plan.prerequisiteReferences.length, pinned.length);
-        assert.equal(plan.releases.length, pinned.length + 1);
+        const additionalCatalogues = catalogue.filter(release =>
+            !catalogues.some(reference => reference.moduleName === release.moduleName));
+        assert.deepEqual(new Set(additionalCatalogues.map(release => release.releaseCode)),
+            new Set(['wasteCarbon:permissionCatalogue', 'wasteReward:permissionCatalogue']),
+            'Carbon and material-value roles carry their own transitive permission catalogues');
+        assert.equal(catalogue.length, catalogues.length + 2);
+        assert.equal(plan.prerequisiteReferences.length, pinned.length + 2);
+        assert.equal(plan.releases.length, pinned.length + 3);
         assert.equal(plan.releases.at(-1).releaseCode, 'profile:init-v001');
         assert.equal(plan.releases.at(-1).version, '0.0.8');
         const cart = plan.releases.find(release => release.moduleName === 'cart');
@@ -730,4 +735,162 @@ test('changed foreign dependency source cannot rely on an old CURRENT receipt', 
     fs.appendFileSync(path.join(f.modules.optionalOwner.path, 'data/init-v001/records/permissionsData.js'), '// changed\n');
     await assert.rejects(f.service.executePreparedPlan(request, plan), /changed before execution/);
     assert.equal(f.imports.length, 0); assert.deepEqual(f.installations, before);
+});
+
+test('retained same-version startup drift is read-only review and never adopts newly added prerequisites', async t => {
+    const f = fixture(t); f.chain();
+    await f.service.installStartupReleases({ tenant: 'default' });
+    const before = structuredClone(f.installations), imports = f.imports.length;
+    const added = f.add('newOwner', 'newPermission');
+    f.manifests.authority.sections.bootstrap.prerequisites.push(added); f.write('authority');
+    const result = await f.service.installStartupReleases({ tenant: 'default' });
+    assert.equal(result.reason, 'INIT_SOURCE_REVIEW_REQUIRED');
+    assert.equal(result.reviewRequired, true);
+    assert.deepEqual(result.deferredReleaseCodes, ['authority:bootstrap']);
+    assert.equal(result.releases[0].status, 'INVALID_RELEASE');
+    assert.equal(result.releases[0].readiness.businessStatus, 'NEEDS_ATTENTION');
+    assert.equal(result.releases[0].readiness.blockers[0].repair.available, false);
+    assert.match(result.releases[0].readiness.blockers[0].message, /receipt is preserved/);
+    assert.deepEqual(f.installations, before); assert.equal(f.imports.length, imports);
+    assert.equal(f.service.isStartupReleaseExecution('default'), false);
+    const catalogue = await f.service.getCatalogue({ tenant: 'default', dataType: 'init' });
+    assert.equal(catalogue.data.find(row => row.releaseCode === 'authority:bootstrap').status, 'INVALID_RELEASE');
+    await assert.rejects(f.service.preparePlan(f.request), /content changed without a version change/);
+    await assert.rejects(f.service.execute(f.request), /content changed without a version change/);
+    assert.deepEqual(f.installations, before); assert.equal(f.imports.length, imports);
+});
+
+test('startup source review cannot hide missing, failed, running or unknown retained root authority', async t => {
+    for (const status of ['MISSING', 'FAILED', 'RUNNING', 'UNKNOWN']) {
+        const f = fixture(t); f.chain();
+        await f.service.installStartupReleases({ tenant: 'default' });
+        const added = f.add('newOwner', 'newPermission');
+        f.manifests.authority.sections.bootstrap.prerequisites.push(added); f.write('authority');
+        // An independent selected root must remain proved even when bootstrap is deferred.
+        f.manifests.authority.sections.baseGroups.selectionPolicy = 'DEFAULT'; f.write('authority');
+        const receipt = f.installations.find(row => row.releaseCode === 'authority:baseGroups');
+        if (status === 'MISSING') f.installations.splice(f.installations.indexOf(receipt), 1);
+        else receipt.status = status;
+        const before = structuredClone(f.installations), imports = f.imports.length;
+        await assert.rejects(f.service.installStartupReleases({ tenant: 'default' }), /confirmed CURRENT receipts/);
+        assert.deepEqual(f.installations, before); assert.equal(f.imports.length, imports);
+    }
+});
+
+test('a new source version preserves confirmed startup authority and leaves its new dependency for operator review', async t => {
+    const f = fixture(t); f.chain(); await f.service.installStartupReleases({ tenant: 'default' });
+    const before = structuredClone(f.installations), imports = f.imports.length;
+    const added = f.add('newOwner', 'newPermission');
+    f.manifests.authority.sections.bootstrap.version = '1.0.1';
+    f.manifests.authority.sections.bootstrap.prerequisites.push(added); f.write('authority');
+    const result = await f.service.installStartupReleases({ tenant: 'default' });
+    assert.equal(result.reason, 'INIT_SOURCE_REVIEW_REQUIRED');
+    assert.equal(result.reviewRequired, true);
+    assert(result.releases.some(row => row.releaseCode === 'authority:bootstrap' && row.version === '1.0.1'));
+    assert.deepEqual(f.installations, before);
+    assert.equal(f.imports.length, imports);
+    assert(!f.installations.some(row => row.releaseCode === 'newOwner:newPermission'));
+});
+
+test('startup drift review requires exact receipt identity and readable durable evidence', async t => {
+    const f = fixture(t); f.chain(); await f.service.installStartupReleases({ tenant: 'default' });
+    f.manifests.authority.sections.bootstrap.prerequisites.push(f.add('newOwner', 'newPermission')); f.write('authority');
+    const receipt = f.installations.find(row => row.releaseCode === 'authority:bootstrap');
+    const original = structuredClone(receipt);
+    for (const change of [{ moduleName: 'foreign' }, { environment: 'foreign' }, { checksum: 'unknown' }]) {
+        Object.assign(receipt, original, change);
+        await assert.rejects(f.service.installStartupReleases({ tenant: 'default' }));
+    }
+    Object.assign(receipt, original);
+    const originalRead = f.service.getInstallations;
+    t.after(() => { f.service.getInstallations = originalRead; });
+    f.service.getInstallations = async () => { throw new Error('receipt owner unavailable'); };
+    await assert.rejects(f.service.installStartupReleases({ tenant: 'default' }), /receipt owner unavailable/);
+});
+
+test('startup source review refuses concurrent receipt changes before returning no-write review', async t => {
+    const f = fixture(t); f.chain(); await f.service.installStartupReleases({ tenant: 'default' });
+    f.manifests.authority.sections.bootstrap.prerequisites.push(f.add('newOwner', 'newPermission')); f.write('authority');
+    const originalRead = f.service.getInstallations;
+    t.after(() => { f.service.getInstallations = originalRead; });
+    const read = originalRead.bind(f.service); let count = 0;
+    f.service.getInstallations = async tenant => {
+        const rows = structuredClone(await read(tenant));
+        if (++count > 1) rows.find(row => row.releaseCode === 'authority:bootstrap').status = 'RUNNING';
+        return rows;
+    };
+    const before = structuredClone(f.installations), imports = f.imports.length;
+    await assert.rejects(f.service.installStartupReleases({ tenant: 'default' }), /receipts changed/);
+    assert.deepEqual(f.installations, before); assert.equal(f.imports.length, imports);
+});
+
+test('drifted root itself must retain a CURRENT receipt and cannot mask active execution', async t => {
+    const f = fixture(t); f.chain(); await f.service.installStartupReleases({ tenant: 'default' });
+    f.manifests.authority.sections.bootstrap.prerequisites.push(f.add('newOwner', 'newPermission')); f.write('authority');
+    const receipt = f.installations.find(row => row.releaseCode === 'authority:bootstrap');
+    for (const status of ['FAILED', 'RUNNING', 'UNKNOWN']) {
+        receipt.status = status;
+        const before = structuredClone(f.installations), imports = f.imports.length;
+        await assert.rejects(f.service.installStartupReleases({ tenant: 'default' }));
+        assert.deepEqual(f.installations, before); assert.equal(f.imports.length, imports);
+    }
+    receipt.status = 'CURRENT';
+    f.service.activeExecutions.set('default:init', true);
+    try { await assert.rejects(f.service.installStartupReleases({ tenant: 'default' }), /confirmed CURRENT/); }
+    finally { f.service.activeExecutions.delete('default:init'); }
+});
+
+test('startup receipt review compares fresh BSON reads symmetrically and refuses real changes', async t => {
+    const BSON = require('bson');
+    const { ObjectId } = BSON;
+    const f = fixture(t); f.chain(); await f.service.installStartupReleases({ tenant: 'default' });
+    f.manifests.authority.sections.bootstrap.prerequisites.push(f.add('newOwner', 'newPermission')); f.write('authority');
+    for (const row of f.installations) {
+        row._id = new ObjectId();
+        row.createdAt = new Date('2026-10-25T00:00:00.000Z');
+    }
+    const originalRead = f.service.getInstallations;
+    t.after(() => { f.service.getInstallations = originalRead; });
+    const read = originalRead.bind(f.service);
+    const before = BSON.serialize({ rows: f.installations }), imports = f.imports.length;
+    let count = 0, change;
+    f.service.getInstallations = async tenant => {
+        // Codec only: independent generated Mongo read shapes, no connection/client.
+        const rows = BSON.deserialize(BSON.serialize({ rows: await read(tenant) })).rows;
+        assert(rows[0]._id instanceof ObjectId);
+        assert.notDeepEqual(structuredClone(rows), rows, 'raw BSON prototypes reproduce the former asymmetric comparison failure');
+        if (++count === 2 && change) change(rows.find(row => row.releaseCode === 'authority:bootstrap'));
+        return rows;
+    };
+    const result = await f.service.installStartupReleases({ tenant: 'default' });
+    assert.equal(result.reason, 'INIT_SOURCE_REVIEW_REQUIRED');
+    assert.equal(count, 2);
+    for (const mutate of [row => { row.revision++; }, row => { row.checksum = 'f'.repeat(64); },
+        row => { row.status = 'RUNNING'; }, row => { row._id = new ObjectId(); },
+        row => { row.createdAt = new Date('2026-10-26T00:00:00.000Z'); }]) {
+        count = 0; change = mutate;
+        await assert.rejects(f.service.installStartupReleases({ tenant: 'default' }), /receipts changed/);
+    }
+    assert.deepEqual(BSON.serialize({ rows: f.installations }), before);
+    assert.equal(f.imports.length, imports);
+});
+
+test('startup source review requires the owner-defined positive integer bound without a fallback', async t => {
+    const f = fixture(t);
+    const permission = f.add('optionalOwner', 'permissions');
+    f.add('authority', 'bootstrap', { selectionPolicy: 'DEFAULT', prerequisites: [permission] });
+    const policy = f.service.configuration();
+    assert.equal(policy.maximumModulesPerRun, require('../config/properties').data.dataReleases.maximumModulesPerRun);
+    const inherited = policy.maximumModulesPerRun;
+    const roots = f.service.discoverReleases('init').filter(row => row.selectionPolicy === 'DEFAULT');
+    for (const value of [undefined, null, 0, -1, 1.5, '256', NaN, Infinity, Number.MAX_SAFE_INTEGER + 1]) {
+        if (value === undefined) delete policy.maximumModulesPerRun;
+        else policy.maximumModulesPerRun = value;
+        await assert.rejects(f.service.installStartupReleases({ tenant: 'default' }), /positive integer maximumModulesPerRun/);
+        assert.equal(f.imports.length, 0); assert.equal(f.installations.length, 0);
+    }
+    policy.maximumModulesPerRun = 1;
+    await assert.rejects(f.service.startupSourceReview({ tenant: 'default' }, roots), /exceeds the release limit/);
+    assert.equal(f.imports.length, 0); assert.equal(f.installations.length, 0);
+    policy.maximumModulesPerRun = inherited;
 });

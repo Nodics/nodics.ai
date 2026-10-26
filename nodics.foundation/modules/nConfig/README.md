@@ -99,6 +99,9 @@ method without exposing its source text. nDynamo governance reports consume the
 same loader metadata. See the [diagnostics contract](llm/contracts/configuration-inheritance-contract.md#effective-behavior-diagnostics).
 
 Use explicit collection replacement/keyed changes and preserve ordinary-array compatibility, reference timing and tenant isolation. See the configuration-inheritance contract.
+Top-level capability role profiles defer explicit collection operations until
+projection against the complete base namespace. A keyed deployment addition does
+not replace inherited entries merely because its contribution loads first.
 
 Use existing layered properties and `runtime`/`ref` projections. Do not read or
 regenerate an environment descriptor. Preserve contribution timing and bounded

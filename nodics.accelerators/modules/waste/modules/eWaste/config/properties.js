@@ -651,6 +651,7 @@ module.exports = {
       enabled: false,
       connectionName: null,
       templateCode: "WASTE_REVIEW_OUTCOME_V1",
+      detailLinks: {},
     },
   },
 

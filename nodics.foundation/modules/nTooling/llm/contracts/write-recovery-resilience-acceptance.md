@@ -37,7 +37,11 @@ Execution requires `--execute`, `--approve-fault-injection`,
 5. performs one bounded restart through project topology tooling;
 6. proves the selected runtimes are ready again;
 7. calls `RECONCILE` with the same deterministic operation key; and
-8. calls `CLEANUP` once after an armed fault, including failure paths.
+8. calls `CLEANUP` once after every attempted `ARM_FAULT`, including a lost or
+   invalid acknowledgement. Cleanup must tolerate a fault that was never armed
+   and disarm only the matching operation key. Failed readiness or `PREPARE`
+   does not arm a fault or invoke cleanup. Cleanup failure stops the run; it
+   never authorizes a retry or a later owner write.
 
 The operation key is `<run-id>:<operation-code>` and is identical in every phase.
 The owner command must treat an expected injected fault as verified acceptance

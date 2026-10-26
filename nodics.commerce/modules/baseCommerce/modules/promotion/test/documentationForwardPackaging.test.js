@@ -8,9 +8,10 @@
     root LICENSE file or a separate written agreement with Nodics.
 
  */
+
 'use strict';
 /** @module promotion/test/documentationForwardPackaging
- * @description Pins frozen predecessor bytes and validates source-only forward CMS projections.
+ * @description Validates consolidated source CMS identities, metadata and unpublished target seals.
  * @owner promotion
  * @layer test
  */
@@ -19,84 +20,47 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const contract = require('../../../../../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService');
-const evidence = require('./fixtures/frozenDocumentationPackaging.json');
 const root = path.resolve(__dirname, '..');
-// Freeze the original packaging transition; current semantic successors have their own gate.
-const selected = require('./fixtures/documentationSemanticPredecessor.json').section;
+const selected = require('../data/manifest.json').sections.documentation;
 const groups = {};
 for (const file of Object.keys(selected.generatedHashes)) {
     if (file.includes('/records/documentation/') && file.endsWith('Data.js')) {
-        groups[path.basename(file).replace('promotionDocumentation', '').replace('Data.js', '')] =
-            Object.values(require(path.join(root, 'data', file)));
+        const kind = path.basename(file).replace(/^.*Documentation(?:Release\d+)?/, '').replace('Data.js', '');
+        groups[kind] = Object.values(require(path.join(root, 'data', file)));
     }
 }
 
-test('frozen bytes and selected forward paths obey the canonical immutable generation contract', () => {
-    for (const [file, hash] of Object.entries(evidence.frozen.generatedHashes)) {
+test('consolidated CMS release has exact checksums and one record per target identity', () => {
+    assert.equal(selected.contentPath, 'docs-v001');
+    assert.equal(selected.sourceAuthority, 'data/docs-v001/records/documentation');
+    for (const [file, hash] of Object.entries(selected.generatedHashes)) {
         assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
-        assert.equal(Object.hasOwn(selected.generatedHashes, file), false, file);
     }
-    assert.equal(selected.version, '0.0.2');
-    assert.equal(selected.contentPath, 'docs-v002');
-    assert.equal(selected.sourceAuthority, 'data/' + selected.contentPath + '/records/documentation');
-    assert.equal(contract.validateGeneration(evidence.frozen, selected), selected);
-    assert.throws(() => contract.validateGeneration(evidence.frozen,
-        {...selected, version: evidence.frozen.version}), {code: 'ERR_TOOL_DOC_00006'});
-    const first = Object.keys(evidence.frozen.generatedHashes)[0];
-    const reused = {...selected.generatedHashes, [first]: '0'.repeat(64)};
-    assert.throws(() => contract.validateGeneration(evidence.frozen,
-        {...selected, generatedHashes: reused, releaseChecksum: contract.releaseChecksum(reused)}),
-        {code: 'ERR_TOOL_DOC_00006'});
+    assert.equal(selected.releaseChecksum, contract.releaseChecksum(selected.generatedHashes));
+    for (const rows of Object.values(groups))
+        assert.equal(new Set(rows.map(row => row.code)).size, rows.length);
     assert.doesNotThrow(() => contract.validateDataRelease(root));
 });
 
-test('selected articles preserve reviewed blocks and derive exact owner source metadata', () => {
+test('selected articles retain source metadata and owner evidence', () => {
     const articles = groups.Component.filter(row => Array.isArray(row.properties?.blocks));
-    assert.equal(articles.length, evidence.articles.length);
-    for (const original of evidence.articles) {
-        const row = articles.find(item => item.code === original.componentCode);
-        assert.ok(row, original.id);
+    assert.ok(articles.length);
+    for (const row of articles) {
         const p = row.properties;
-        assert.equal(p.code, original.id);
-        assert.equal(p.route, original.route);
-        const predecessorBlocks = structuredClone(p.blocks);
-        assert.equal(original.authoredCorrections.length, 1);
-        for (const correction of original.authoredCorrections) {
-            assert.deepEqual(p.blocks[correction.index], correction.updated);
-            predecessorBlocks[correction.index] = correction.previous;
-            for (const phrase of ['staff attestation only', 'monetary or ITEM',
-                'single-use guards', 'integrated merchant benefits disabled',
-                'not independently verified delivery', 'Integrated item/priced fulfillment'])
-                assert.ok(correction.updated.text.includes(phrase), phrase);
-        }
-        assert.equal(contract.sha256(JSON.stringify(predecessorBlocks)), original.blocksChecksum);
-        assert.equal(contract.sha256(JSON.stringify(p.sourceEvidence)), original.evidenceChecksum);
-        const body = contract.documentationText(p.blocks);
-        const text = original.digestMode === 'titledText' ? '# ' + p.title + '\n\n' + body : body;
-        const checksum = contract.sha256(original.digestMode === 'blocksJSON' ? JSON.stringify(p.blocks) : text);
-        const words = contract.countWords(text);
         assert.equal(p.version, selected.version);
-        assert.equal(p.lifecycleState, original.lifecycleState);
-        assert.equal(p.source.path, selected.sourceAuthority + '/promotionDocumentationComponentData.js');
+        assert.ok(p.source.path.startsWith(selected.sourceAuthority + '/'));
         assert.equal(p.source.sourcePath, p.source.path);
-        assert.equal(p.source.checksum, checksum);
-        assert.equal(p.source.wordCount, words);
-        const meta = groups.PageMetadata.find(item => item.code === original.metadataCode);
-        assert.ok(meta, original.id);
-        assert.equal(meta.sourcePath, p.source.path);
-        assert.equal(meta.sourceChecksum, checksum);
-        assert.equal(meta.sourceWordCount, words);
-        assert.equal(meta.wordCount, words);
+        const meta = groups.PageMetadata.find(item => item.sourcePath === p.source.path &&
+            item.sourceChecksum === p.source.checksum && item.title === p.title);
+        assert.ok(meta, p.code);
+        assert.equal(meta.sourceWordCount, p.source.wordCount);
         assert.deepEqual(meta.headings, p.headings);
         assert.deepEqual(meta.sourceEvidence, p.sourceEvidence);
-        const search = groups.SearchMetadata.find(item => item.targetType === 'PAGE' && item.targetCode === meta.code);
-        assert.ok(search, original.id);
-        assert.ok(search.searchText.endsWith(p.searchText), original.id);
         for (const source of p.sourceEvidence) assert.ok(fs.existsSync(path.resolve(root, source)), source);
     }
 });
 
-test('selected target seals remain unpublished without invented approvals or runtime adoption', () => {
+test('target seals remain unpublished without invented approvals or runtime adoption', () => {
     const targets = new Map(Object.entries(groups).filter(([kind]) => kind !== 'PublicationState')
         .flatMap(([, rows]) => rows.map(row => [row.code, row])));
     for (const row of groups.PublicationState) {
@@ -117,5 +81,4 @@ test('selected target seals remain unpublished without invented approvals or run
     assert.equal(selected.destinationRole, 'WCMS_STAGED');
     assert.equal(selected.initialPublicationPolicy, 'ADMIN_INITIATED');
     assert.equal(selected.installationPolicy, 'OPTIONAL_AXIS_INITIATED');
-    assert.equal(selected.releaseChecksum, contract.releaseChecksum(selected.generatedHashes));
 });

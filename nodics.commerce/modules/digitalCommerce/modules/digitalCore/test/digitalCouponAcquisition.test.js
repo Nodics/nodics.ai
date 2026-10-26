@@ -36,9 +36,12 @@ function fixture(type = "REWARDS", enterprise = false) {
     evidence: { completed: ["DIGITAL_RESERVED"], compensation: [] } }];
   const coupon = { ...scope, code: "coupon", offerAllocationCode: "allocation", status: "RESERVED", idempotencyKey: r.idempotencyKey,
     cartCode: "cart", orderCode: "order", sku: "sku" };
-  const allocation = { code: "allocation", evidence: { status: "RESERVED", couponCode: "coupon", identity: { tenant: "t", ownerId, ownerRef,
+  const allocation = { code: "allocation", tenant: 't', enterpriseCode: 'shop', evidence: { status: "RESERVED", couponCode: "coupon", identity: { tenant: "t", ownerId, ownerRef,
     orderCode: "order", entryCode: "entry", productCode: "product", promotionCode: "offer", idempotencyKey: r.idempotencyKey,
-    certificateCodes: r.payload.certificateCodes.slice() }, campaign: { couponOffer: { requirements: { type, ...(type !== "CERTIFICATES" ? { priceRef: "price" } : {}) } } } } };
+    certificateCodes: r.payload.certificateCodes.slice() }, campaign: { code: 'offer',
+      issuerEnterpriseRef: { moduleName: 'profile', schemaName: 'enterprise', code: 'shop' },
+      vendorEnterpriseRef: { moduleName: 'profile', schemaName: 'enterprise', code: 'shop' },
+      couponOffer: { requirements: { type, ...(type !== "CERTIFICATES" ? { priceRef: "price" } : {}) } } } } };
   let consumed = false, reserved = false;
   global.CONFIG = { get: name => name === "digitalCore" ? settings : undefined };
   global.FACADE = { DefaultCartCustomerFacade: { resolveContext: async input => ({ ...input, ownerRef: canonical, ownerId }) } };
@@ -161,4 +164,45 @@ test("explicit NONE retains validity, missing legacy expiry is not NONE, and v2 
   assert.equal(rights.revocationPolicy(item, "REFUND").policyDecision, "BLOCKED");
   assert.throws(() => rights.couponWindow({ purchasedAt: item.purchasedAt }));
   item.validTo = "2027-01-01T00:00:00.000Z"; assert.throws(() => rights.couponWindow(item));
+});
+
+/** Uses the actual merchant writer's Date-valued receipt, rather than a string-only reporting double. */
+function persistedReportFixture() {
+  const f = fixture('REWARDS', true), when = '2026-01-01T00:00:00.697Z';
+  const marker = { receiptCode: 'receipt', code: 'redemption', merchantCode: 'redeemer', mode: 'STAFF', confirmationKey: 'confirm',
+    enterpriseRef: { moduleName: 'profile', schemaName: 'enterprise', code: 'redeemer' },
+    storeRef: { moduleName: 'store', schemaName: 'store', code: 'outlet' }, confirmedAt: when };
+  const item = { ...f.scope, code: 'entitlement', cartCode: 'cart', orderCode: 'order', providerCode: 'coupon',
+    digitalDeliveryType: 'COUPON_CODE', providerOwner: 'promotion', purchasedAt: new Date('2026-01-01T00:00:00.123Z'),
+    purchasePolicy: { version: 2, promotionCode: 'offer', originalOwnerRef: f.ownerRef, issuerEnterpriseRef: { code: 'issuer' } },
+    claimStatus: 'REDEEMED', evidence: { merchantRedemption: marker } };
+  f.db.DefaultDigitalEntitlementService = [item];
+  f.db.DefaultCartService[0].active = false;
+  f.db.DefaultCheckoutCheckpointService.push({ ...f.scope, code: 'completed', orderCode: 'order', status: 'COMPLETED',
+    evidence: { orderCode: 'order', digitalDeliveryCodes: ['coupon'] } });
+  const merchant = require('../src/service/defaultDigitalCommerceMerchantService');
+  const receipt = merchant.merchantReceiptModel({ tenant: 't' }, item, marker,
+    { code: 'redeemer', mode: 'STAFF', store: { code: 'outlet' } }, 'confirm');
+  assert(receipt.deliveredAt instanceof Date);
+  f.db.DefaultDigitalDeliveryService = [{ ...f.scope, code: 'delivery', entitlementCode: item.code, orderCode: 'order',
+    providerCode: 'coupon', status: 'DELIVERED', deliveryType: 'COUPON_CODE' }, receipt];
+  return { ...f, item, marker, receipt, when, reportRequest: { tenant: 't', channelCode: 'channel' } };
+}
+
+test('report preserves milliseconds from actual persisted merchant receipt model', async () => {
+  const f = persistedReportFixture();
+  const events = await f.owner.reportSource(f.reportRequest, '2026-01-01T00:00:01.000Z');
+  assert.equal(events.find(e => e.kind === 'PURCHASE').confirmedAt, '2026-01-01T00:00:00.123Z');
+  assert.equal(events.find(e => e.kind === 'REDEMPTION').confirmedAt, f.when);
+  f.receipt.deliveredAt = new Date('2026-01-01T00:00:00.698Z');
+  await assert.rejects(f.owner.reportSource(f.reportRequest, '2026-01-01T00:00:01.000Z'));
+});
+
+test('report cutoff preserves subsecond boundaries for persisted purchases and receipts', async () => {
+  const f = persistedReportFixture();
+  assert.deepEqual(await f.owner.reportSource(f.reportRequest, '2026-01-01T00:00:00.122Z'), []);
+  const events = await f.owner.reportSource(f.reportRequest, '2026-01-01T00:00:00.696Z');
+  assert.deepEqual(events.map(e => e.kind), ['PURCHASE']);
+  f.receipt.deliveredAt = new Date(NaN);
+  await assert.rejects(f.owner.reportSource(f.reportRequest, '2026-01-01T00:00:01.000Z'));
 });

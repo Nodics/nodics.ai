@@ -103,7 +103,7 @@
           "moduleName": "profile",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "import",
@@ -142,7 +142,7 @@
           "moduleName": "import",
           "sectionCode": "specialAccessGroups",
           "version": "0.0.2",
-          "checksum": "78406c04fd4811ceddd0b955ce9122d2fc1246a7ec39e424a720ff83b7a994d0"
+          "checksum": "eaf36effce30a89ec56eb46e3fcf66646b3ff37d24583fcfb4a8f1b56e8f9613"
         }
       ]
     }

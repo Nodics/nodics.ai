@@ -1,5 +1,68 @@
 # Workflow AI Contracts
 
+## Static Action Diagnostics
+
+An action adapter may return an optional top-level `diagnosticCode`. The existing
+`executeActionNode` audit copies it into `process.action.executed` metadata only
+when it is a string of 1..64 characters starting with an uppercase ASCII letter
+and containing only uppercase ASCII letters, digits or underscores.
+Missing or invalid codes are omitted without changing the action result/status.
+Whitespace, newlines, Unicode, free text and objects are refused by this projection.
+Adapters own their fixed vocabulary; caller input, exception text and identifiers
+must never supply it. Process validates only the generic static-code shape and
+imports no domain module or domain-specific code list.
+
+No output/result object, message, recipient/source/intent identifier, raw response
+or error joins the existing audit fields. The adapter's existing return and failure
+behavior is unchanged; a completion code is not business delivery acceptance.
+Later lifecycle overrides preserve this ceiling. See the new
+`test/processActionDiagnosticAudit.test.js` regression for valid boundary codes,
+invalid values and getters proving private result fields are never read.
+
+## Task Queue Pagination
+
+`GET /nodics/process/v0/tasks?page=2&queue=actionable` reads one bounded page.
+The existing secured route still requires `process.backoffice.view`; tenant,
+authenticated enterprise and user context flow through the generated task service.
+No service identity or new permission is introduced. `instanceCode`, `status` and
+`assignee` retain their existing scalar filters. `queue=actionable` intersects
+those filters with Process-owned OPEN, CLAIMED and ESCALATED states. Omitting
+queue retains the general task list. Unsupported queue selectors are rejected.
+
+The response keeps `data` as the current page of decision-projected tasks and
+adds `pagination: {page, pageSize, total, hasNext, hasPrevious}`. Total is the
+generated service's matching count under the same query and authorization;
+never count an unscoped collection or filter a page after calculating totals.
+Rows use ascending `dueAt`, then unique `code` ordering. Missing, failed or
+malformed count/row envelopes fail closed, not as an empty queue. Existing
+immutable decision identity and reviewer eligibility projection remain mandatory.
+
+Workflow `config/properties.js` owns `process.taskQueue.defaultPageSize` (25) and
+`maximumPageSize` (100). Later layers may intentionally override these values;
+no Kickoff default, frontend copy or extra config authority belongs here.
+Both must be positive integers, default no greater than maximum, and maximum
+must respect the existing 100-task decision-projection bound. `page` defaults to
+1 and `limit` defaults to the effective owner page size. Explicit values must be
+positive safe integers; limit above maximum and unsafe offset arithmetic reject.
+Requests do not silently clamp or accept malformed values. Clients omit limit
+to inherit owner configuration and consume returned navigation flags.
+
+Business users can traverse beyond the first 25 tasks and return to earlier
+pages. The count includes visible actionable tasks, not only tasks the current
+reader can approve; eligibility remains an independent decision gate. An empty
+page beyond the current total remains navigable backwards. Offset pages are
+fresh observations, not a snapshot: concurrent task transitions can move records
+between pages. Refresh or return to page one to re-observe; completion still
+rechecks current authorization and state. A failed read never authorizes a
+cached decision or causes a command replay.
+
+Operators must adopt backend and Axis sources together, backend first. No data
+migration or task mutation is required. Partners customize bounded defaults or
+the exported inspection members while preserving filtering, scope and decision
+projection. Maintainers and AI tools run `processInspectionPagination.test.js`,
+the Process suite and Axis Process tests. These isolated tests establish source
+behavior; installed-runtime and browser acceptance remain separate evidence.
+
 ## Publication Definition Bootstrap
 
 When the CMS approval definition is missing, select only
@@ -10,6 +73,25 @@ bypass immutable-release validation. A catalogue/execution drift rejects the sta
 the existing publication owner can request approval again after inspection.
 Already installed definitions and read-only diagnostics never invoke installation.
 See `test/processPublicationApprovalService.test.js`.
+
+## Native Publication Business Context
+
+Native human `/instances` starts retain business `context.enterpriseCode`
+independently of the original signed actor enterprise. Do not replace actor
+credentials or transport enterprise headers with a publication's seller target.
+Start replay remains bound to the original actor scope and exact input. The
+current Pricing `policyReview` definition has no `actorPolicy`; Process must not
+invent one or rewrite an installed version. An explicitly published actor policy
+still enforces its enterprise and permission checks. Native route authorization,
+task assignment and decision policies remain required.
+
+Remote actions retain the stored business context and completed-task actor while
+using the qualified Process runtime principal. This separation does not grant
+domain publication authority: Pricing must independently validate its native
+administrator proof and target. `processStartReplay.test.js` uses the actual
+Pricing definition; `processRemoteActionAdapter.test.js` exercises decision and
+claim propagation with the existing isolated Editorial target. These are owner
+regressions, not live Pricing publication or HTTP authentication evidence.
 
 ## Trigger Command Receipts
 

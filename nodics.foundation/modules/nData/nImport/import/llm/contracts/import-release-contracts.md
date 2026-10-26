@@ -113,6 +113,14 @@ Independent coverage: `test/dataReleaseRetention.test.js`.
 
 ## Explicit release selection
 
+Owner readiness callers with an exact aggregate module/section pin may use
+`discoverManifestRelease(reference, dataType)`. It admits only active owners or
+explicitly selected contribution sections and reuses fresh aggregate validation
+and the normal source inspector on every invocation. It does not scan unrelated
+owners, enable optional modules, retain authority results, or execute an import.
+Destination, exact version/checksum and receipt checks remain with the caller's
+existing owner contract. Full catalogue discovery remains unchanged.
+
 Optional operational Init releases may declare `selectionPolicy: "EXPLICIT"`
 in their DATA_RELEASE section. nImport validates this metadata independently of
 publication policy; only `DEFAULT` and `EXPLICIT` are accepted. Omission retains
@@ -254,9 +262,47 @@ migration. It does not rewrite old receipts, infer that deleted authority needs
 repair, or recreate missing assignments. A CURRENT graph skips execution. A new
 parent does not force replay of CURRENT dependencies, even with `forceCurrent`.
 
+### Retained startup source review
+
+Startup classifies durable receipts before entering the strict executable import
+planner. A valid CURRENT receipt for the exact tenant, environment, owner and Init
+release, with a different source version or a changed frozen checksum, holds the
+selected startup batch without writes and returns `INIT_SOURCE_REVIEW_REQUIRED`.
+It never labels the available source CURRENT. Same-version drift retains the
+INVALID_RELEASE / NEEDS_ATTENTION blocked review; a new version retains normal
+operator-selected validation/install readiness. Startup does not adopt either.
+
+A drifted node is terminal during this assessment: its new prerequisite graph is
+not traversed or installed. Receipts do not retain old prerequisite pins, so startup
+must not infer that new source prerequisites describe installed authority. All
+other visited roots/dependencies must have confirmed CURRENT receipts;
+missing, failed, running, unknown, ambiguous, changed or unreadable evidence cannot
+qualify this no-write result. Fresh eligible bootstrap follows the original planner.
+Startup source review consumes the existing owner maximumModulesPerRun value
+directly and requires a positive safe integer; it supplies no fallback default.
+Absent dependency receipts beneath unchanged roots retain existing migration holds.
+The selected startup batch is deferred as a unit; no independent fresh root is
+installed as a side effect of an authority review. Receipt snapshots are reread
+before returning; concurrent changes fail the review. Both reads use the same complete-record snapshot: physical Mongo `_id`
+ObjectIds become validated canonical hex identities before structuredClone. This
+preserves ObjectId versions whose internal bytes are non-enumerable, while dates
+and all other receipt fields remain in the strict comparison. Do not omit fields
+or stringify receipts to hide real concurrent changes.
+
+This boundary allows retained identity validation and administrator startup, not
+business capability qualification. Profile still validates retained deployment
+identity and grants. The release catalogue exposes installed/source checksums and
+operator review guidance on every read; startup writes no receipt, grant, status,
+marker or bypass configuration. Operators review source differences and use the
+existing governed capability-owner operations where appropriate. Manual preflight,
+preparePlan and execute retain same-version checksum refusal, destination guards,
+exact prerequisite checks and immutable receipts. No forceCURRENT or version bump
+is an automatic repair. `dataReleasePrerequisites.test.js` covers this boundary.
+
 ### Existing-installation maintenance sequence
 
-An existing installation stays held at startup until the operator-selected
+For a versioned successor migration (not the retained same-version source-review
+case above), an existing installation stays held at startup until the operator-selected
 successor migration completes (for the Profile authority transition, select
 `profile:init-v001` version `0.0.2`). To load the new owner code for that migration,
 use the existing configuration hierarchy to make the bounded maintenance selection

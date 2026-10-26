@@ -106,6 +106,7 @@ function fixture(t) {
   const create = (values = [component("a"), component("b")], key = "manifest") => bundles.create(r("sender"), { ownerRef: owner("sender"), components: values, idempotencyKey: key });
   const send = async manifest => gifts.send(r("sender"), { manifestCode: manifest.code, manifestRevision: manifest.revision,
     recipientRef: owner("recipient"), idempotencyKey: "gift", confirmed: true });
+  require('./helpers/authorizationErrorFixture')(t);
   return { config, rows, effects, holdings, r, create, send,
     failTransfer: value => { failTransfer = value; }, loseReserve: () => { failReserveAcknowledgement = true; } };
 }
@@ -114,11 +115,32 @@ test("nonempty manifests reject duplicates, rewards, coupons, zero carbon and fo
   const f = fixture(t);
   for (const values of [[], [component("a"), component("a")], [{ ...component("a"), kind: "REWARD" }],
     [{ ...component("a"), kind: "COUPON" }], [{ ...component("a"), kind: "REALIZED_CARBON", quantity: "0.0" }]])
-    await assert.rejects(f.create(values));
+    await assert.rejects(f.create(values), { code: 'ERR_DIGITAL_BUNDLE_INPUT' });
   await assert.rejects(bundles.create(f.r("intruder"), { ownerRef: owner("sender"), components: [component("a")], idempotencyKey: "m" }), /denied/);
   const first = await f.create();
   assert.equal((await f.create()).code, first.code);
   await assert.rejects(f.create([component("other")]), /conflicts/);
+});
+
+test('intake distinguishes unavailable components from provider failure without writing a manifest', async t => {
+  const f = fixture(t);
+  const errorStatus = (code, status) => error => {
+    assert.equal(error.code, code);
+    assert.equal(String(error.responseCode), status);
+    return true;
+  };
+  await assert.rejects(f.create([]), errorStatus('ERR_DIGITAL_BUNDLE_INPUT', '400'));
+  f.holdings.set('a', { operationKey: 'existing', status: 'RESERVED' });
+  await assert.rejects(f.create([component('a')]), errorStatus('ERR_DIGITAL_BUNDLE_UNAVAILABLE', '409'));
+  await assert.rejects(f.create([{ ...component('b'), expectedRevision: 2 }]),
+    errorStatus('ERR_DIGITAL_BUNDLE_UNAVAILABLE', '409'));
+  const outage = new Error('Provider unavailable');
+  SERVICE.CertificateOwner.inspect = async () => { throw outage; };
+  await assert.rejects(f.create([component('c')]), error => error === outage);
+  SERVICE.CertificateOwner.inspect = async () => ({});
+  await assert.rejects(f.create([component('c')]), /inspection is unconfirmed/);
+  assert.equal(f.rows.DefaultDigitalBundleManifestService.length, 0);
+  assert.equal(f.effects.length, 0);
 });
 
 test("reserve acknowledgement loss resumes original operation without duplicate holding", async t => {
@@ -215,7 +237,7 @@ test("explicit null expiry and missing component owners fail closed", async t =>
   f.config.bundles.giftExpirySeconds = null;
   await assert.rejects(f.send(manifest), /expiry/);
   f.config.bundles.maximumComponents = 1;
-  await assert.rejects(f.create(), /bounded/);
+  await assert.rejects(f.create(), { code: 'ERR_DIGITAL_BUNDLE_INPUT' });
   f.config.bundles.componentProviders.CERTIFICATE = "Unavailable";
   await assert.rejects(f.create([component("a")], "new"), /owner is unavailable/);
 });

@@ -40,7 +40,7 @@ module.exports = {
       preview: {
         secured: true,
         authTokenTypes: ["access"],
-        accessGroups: ["customerUserGroup"],
+        accessGroups: ["customerUserGroup", "employeeUserGroup"],
         permission: "commerce.lifecycle.own.create",
         apiExposure: "commerceCustomer",
         key: "/orders/:orderCode/lifecycle/preview",
@@ -51,7 +51,7 @@ module.exports = {
       create: {
         secured: true,
         authTokenTypes: ["access"],
-        accessGroups: ["customerUserGroup"],
+        accessGroups: ["customerUserGroup", "employeeUserGroup"],
         permission: "commerce.lifecycle.own.create",
         apiExposure: "commerceCustomer",
         key: "/orders/:orderCode/lifecycle",

@@ -68,10 +68,26 @@ module.exports = {
         (!Array.isArray(c[key]) || !c[key].length || c[key].some(code => !identifier(code)) || new Set(c[key]).size !== c[key].length)) return null;
     return structuredClone(value);
   },
+  /** Reads the bounded Product owner expiry DTO only. Missing/malformed transport is unknown, never NONE.
+   * @param {Object} product Published Product card. @returns {Object|null} Detached fixed/NONE validity.
+   * @override Preserve structured owner authority and unknown refusal; performs no reads or writes.
+   */
+  couponExpiry: function (product) {
+    const value = product.availability?.expiry;
+    if (!value || Object.getPrototypeOf(value) !== Object.prototype ||
+        Reflect.ownKeys(value).some(key => !['mode', 'at'].includes(key) ||
+          !Object.hasOwn(Object.getOwnPropertyDescriptor(value, key), 'value'))) return null;
+    if (value.mode === 'NONE' && Object.keys(value).length === 1) return { mode: 'NONE' };
+    if (value.mode !== 'FIXED' || typeof value.at !== 'string' || !Number.isFinite(Date.parse(value.at)) ||
+        new Date(value.at).toISOString() !== value.at) return null;
+    return { mode: 'FIXED', at: value.at };
+  },
   /** Composes a published product with its current listed asset; private Waste evidence and customer details are excluded. */
   offer: async function (request, product, catalogue) {
     const attrs = product.localizedAttributes || {},
       price = product.price;
+    const expiry = attrs.kind === 'COUPON' ? this.couponExpiry(product) : undefined;
+    const expiresAt = attrs.kind === 'COUPON' ? (expiry?.mode === 'FIXED' ? expiry.at : undefined) : attrs.expiresAt;
     if (
       !["ASSET", "BUNDLE", "COUPON"].includes(attrs.kind) ||
       !price ||
@@ -81,9 +97,9 @@ module.exports = {
     )
       return null;
     if (
-      attrs.expiresAt &&
-      (!Number.isFinite(Date.parse(attrs.expiresAt)) ||
-        Date.parse(attrs.expiresAt) <= Date.now())
+      expiresAt &&
+      (!Number.isFinite(Date.parse(expiresAt)) ||
+        Date.parse(expiresAt) <= Date.now())
     )
       return null;
     const commerce = this.commerceBinding(product);
@@ -157,14 +173,14 @@ module.exports = {
       ...(attrs.ownerRef ? { ownerRef: attrs.ownerRef } : {}),
       imageUrl: gallery[0]?.url,
       gallery,
-      expiresAt: attrs.expiresAt,
+      expiresAt,
       category: categoryCode ? { code: categoryCode, label: product.categories?.find(c => c.code === categoryCode)?.name || categoryCode } : null,
       categoryCodes: product.categoryCodes || [],
       condition: descriptor?.condition?.value || null,
-      available: product.availability?.available === true && (attrs.kind !== 'COUPON' || acquisitionRequirements !== null),
+      available: product.availability?.available === true && (attrs.kind !== 'COUPON' || acquisitionRequirements !== null && expiry !== null),
       ...(attrs.kind === "BUNDLE" ? { bundleRef: attrs.bundleRef, listingWindow: attrs.listingWindow } : {}),
       ...auction,
-      ...(attrs.kind === 'COUPON' ? { acquisitionRequirements } : {}),
+      ...(attrs.kind === 'COUPON' ? { acquisitionRequirements, expiry } : {}),
       terms: this.copyLines(attrs.terms),
       eligibility: this.copyLines(attrs.eligibility),
       exclusions: this.copyLines(attrs.exclusions),
@@ -326,7 +342,7 @@ module.exports = {
       ...(offer.ownerRef ? { ownerRef: offer.ownerRef } : {}),
       ...(offer.bundleRef ? { bundleRef: offer.bundleRef, listingWindow: offer.listingWindow } : {}),
       ...(offer.biddingMode === 'AUCTION' ? { biddingMode: 'AUCTION', ...(offer.auction ? { auction: offer.auction } : {}) } : {}),
-      ...(offer.kind === 'COUPON' ? { acquisitionRequirements: offer.acquisitionRequirements } : {}),
+      ...(offer.kind === 'COUPON' ? { acquisitionRequirements: offer.acquisitionRequirements, expiry: offer.expiry } : {}),
       ...(offer.kind === "ASSET"
         ? {
             assetCode: offer.assetCode,

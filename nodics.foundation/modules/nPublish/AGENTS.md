@@ -1,5 +1,12 @@
 # nPublish Agent Contract
 
+Native domain continuation requires the configured owner's fresh private admission
+and exact stored identity. Preserve per-write checks and lifecycle-owned revision
+copy guards, retiring all at return. The approval bridge consumes private business
+scope but forwards the original human enterprise header/bearer to Process. Payload
+flags and retained contexts confer no approval. Process policy and callback grants
+remain unchanged; see the native domain section of the Process approval contract.
+
 Bounded application intents follow [coordinated setup](llm/contracts/publication-setup.md).
 Keep domain capture, immutable receipts and ordinary Process approval; never add
 bundle approval or automatic activation authority.
@@ -10,6 +17,10 @@ The separate [exact-plan observer](llm/contracts/setup-observation.md) is disabl
 by default: require reviewed deployment/plan authority and the dedicated explicit
 permission before any private canonical owner reads. Never modify signed claims,
 borrow human identity or expose that internal persistence context to actions.
+BASELINE must preserve canonical non-ready CMS states, release identity and safe
+workflow/task diagnostics through an explicit scalar projection. Never turn pending
+approval into UNAVAILABLE, spread raw owner objects, or pass an unproven READY claim.
+Keep exact publication identity, approved journal, Online pointer and Media proof.
 Reviewed DATA_RELEASE pins include the owner-canonical prerequisite list. Recompute
 source integrity with the same file-plus-prerequisite checksum contract as nImport;
 never reinterpret a release checksum as a file-only digest.

@@ -12,18 +12,30 @@
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 /**
  * @module digitalCore/controller/defaultDigitalCouponReminderController
- * @description Provides Profile with private current coupon-expiry source evidence.
+ * @description Exposes private coupon reminder source, claimed Process sweep and Communication eligibility boundaries.
  * Inputs: Exact sensitive runtime callback and source/occurrence coordinates.
  * Outputs: Non-cacheable {data}; callback mode returns a Promise of callback completion.
- * Effects: Read-only source delegation; no recipient choice, message send or coupon mutation.
+ * Effects: Source/eligibility reads are read-only; a claimed sweep delegates source-proven reminder submission, never coupon mutation.
  * Failure behavior: Missing grants, private provenance or stable source proof reject/reach callback.
- * Exported members: source.
+ * Exported members: source, sweep, dispatchEligibility.
  * @owner digitalCore
  * @layer controller
  * @override Retain original runtime request identity and owner-derived source eligibility.
  * @see ../../llm/contracts/coupon-expiry-reminders.md
  */
 module.exports = {
+  /** Executes only an opaque Process claim through the Digital reminder owner. */
+  sweep: function (request, callback) {
+    request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+    const work = Promise.resolve().then(() => SERVICE.DefaultDigitalCouponReminderProcessService.sweep(request)).then(data => ({ data }));
+    return callback ? work.then(value => callback(null, value), error => callback(error)) : work;
+  },
+  /** Rechecks frozen Communication source/recipient coordinates without sending. */
+  dispatchEligibility: function (request, callback) {
+    request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+    const work = Promise.resolve().then(() => SERVICE.DefaultDigitalCouponReminderProcessService.dispatchEligibility(request)).then(data => ({ data }));
+    return callback ? work.then(value => callback(null, value), error => callback(error)) : work;
+  },
   /**
    * Retains runtime context and no-store handling; source coordinates never choose an owner.
    * @param {Object} request Exact private Profile callback request with entitlement/occurrence coordinates

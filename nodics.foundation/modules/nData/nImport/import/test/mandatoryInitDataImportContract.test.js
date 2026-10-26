@@ -52,7 +52,7 @@ const tenantData = require(path.join(repoRoot, 'nodics.platform/modules/profile/
 const groupData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/identity/profileUserGroupData'));
 const userData = {
     ...require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/user/defaultEmployeeData')),
-    ...require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/user/defaultServiceEmployeeData'))
+    ...require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/identityBootstrap/preservedServiceEmployeeData'))
 };
 const importService = require('../src/service/import/defaultImportService');
 const diagnostics = require('../src/service/diagnostics/defaultImportDiagnosticsService');

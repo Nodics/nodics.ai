@@ -30,10 +30,14 @@ selections stay on governed Profile records, not runtime properties.
 ## Execution
 
 `DefaultDigitalCommerceCouponReminderService.sweep(request, execution)` implements
-`digitalCore.couponExpirySweep`. The existing local Process ACTION declaration
-requires the service on the executing runtime; it is not a cross-runtime
-service-name executor. Cron's `jobDetail.processTrigger` starts a reviewed Process.
-No definition, allowed action, schedule, grant or template selection is activated.
+`digitalCore.couponExpirySweep`. The owner declaration uses the existing Process
+remote ACTION protocol, targeting COMMERCE. Cron's `jobDetail.processTrigger`
+starts the reviewed Process. Digital accepts only an opaque instance/execution
+handle, claims its single-use retained Process context, then scans the selected
+business Enterprise. `sweepCallers` must match the original signed runtime and
+reviewed business partition; headers and token namespaces remain unchanged.
+An optional reviewed `entitlementCode` narrows both eligibility reads. No definition,
+allowed action, schedule, grant or template selection activates by default.
 
 Require signed workflow/Digital scope, tenant/Enterprise aliases, Cron provenance,
 bounded trigger age and empty payload. Completely read bounded entitlement pages
@@ -55,6 +59,56 @@ necessarily delivered. Unavailable Profile is never an empty roster. A later swe
 reconciles lost acknowledgement with the same key; Communication's worker retries
 pending intents and preserves uncertain-send review rules. Messaging never changes
 purchase, expiry, supply, lifetime caps or redemption rights.
+
+## Safe scheduled-action diagnostics
+
+`notify` retains `failureStage` only on UNCONFIRMED: POLICY, RECIPIENT_PROOF,
+SOURCE_BINDING, RECIPIENT_RECHECK, SUBMISSION or RECEIPT. The owner chooses the
+stage before the operation; exception fields never choose it or enter the result.
+`deliveryAttempted` remains false before submission and true once submission is
+attempted, including an unknown acknowledgement. These values prove neither
+intent absence nor delivery failure.
+
+An enabled sweep adds top-level `diagnosticCode`: REMINDER_NO_CANDIDATES for an
+empty eligible set, REMINDER_COMPLETE when no outcome is UNCONFIRMED, otherwise
+REMINDER_UNCONFIRMED_<stage> for the first unconfirmed outcome in candidate order.
+Later delivery overrides must retain the fixed failure-stage vocabulary; malformed
+unconfirmed stage evidence refuses instead of becoming audit text. Disabled sweeps
+retain their existing DISABLED result without a diagnostic code. COMPLETED and
+output.sourceStatus semantics are unchanged. REMINDER_COMPLETE includes intentional
+skips and recorded submissions; it is not delivery proof.
+
+Process retains only this optional bounded static code in the existing
+process.action.executed audit metadata. It never copies Digital output, occurrence,
+intent or recipient IDs, errors, messages or raw responses. Source fixtures in
+`digitalCouponReminderDiagnostics.test.js` compose the actual notify/sweep/Process
+audit path with isolated source and RPC boundaries; they do not prove a scheduled
+native run. An original-key manual DELIVERED receipt remains separate evidence.
+
+SUBMISSION may additionally retain a fixed `failureReason`: AUTHORIZATION,
+CREDENTIAL, ENDPOINT, TRANSPORT or OWNER_RESPONSE. RPC creates a fresh fixed-message
+error with only `metadata.digitalReminderDelivery.failureReason`. It never attaches
+the original error, cause, message, response or metadata. Notification copies only
+this allowlisted classification and only at SUBMISSION; the six stages are unchanged.
+
+Original nService `runtimeInvocationDiagnostic.failureCode` values
+INTERNAL_TOKEN_UNAVAILABLE and REMOTE_ENDPOINT_UNAVAILABLE map to CREDENTIAL and
+ENDPOINT. Original numeric HTTP 401/403 maps to AUTHORIZATION, 404 to ENDPOINT and
+500..599 to OWNER_RESPONSE. Read actual `metadata.remoteHttpFailure.httpStatus`,
+then transport HTTP evidence/native status; normalized exception `responseCode`
+is not remote HTTP evidence. Network and other unclassified transport failures
+map to TRANSPORT without echoing their codes. Failed ERR envelopes, invalid
+envelopes and excessive nesting map to OWNER_RESPONSE before details are discarded.
+
+The sweep appends an available reason to the existing code, for example
+REMINDER_UNCONFIRMED_SUBMISSION_AUTHORIZATION. All fixed combinations remain under
+64 characters and satisfy Process's leading-uppercase contract. Invalid later-layer
+reason/stage combinations refuse instead of injecting audit data. Missing reason
+retains the existing stage-only code. These observations never establish no-send,
+authorize a replay or change the original occurrence/key. The new
+`digitalReminderSubmissionClassification.test.js` regression covers classification
+and privacy through actual RPC, notify, sweep and Process audit with isolated
+source/transport fixtures; it does not repeat the earlier eight diagnostic tests.
 
 ## Private Source
 
@@ -80,9 +134,12 @@ Source-bound recipients expose only recipientId and opaque address reference.
 See [Profile recipients](../../../../../../../nodics.platform/modules/profile/llm/contracts/coupon-notification-recipients.md).
 Submit to existing Communication `/internal/communications` with
 `requiresSourceEligibility:true`. The framework dispatch-owner contribution maps
-this purpose to `DefaultDigitalCouponReminderDeliveryService`. The delivery runtime
-must load that contribution/service and reviewed Profile access. Its hook uses
-RPC, not local Commerce persistence; missing owners fail closed.
+this purpose to `DefaultDigitalCouponReminderDeliveryService`. The ENGAGEMENT role contribution selects the remote Digital eligibility endpoint,
+so Communication does not activate Digital services or create shadow Commerce
+persistence. The existing source hook sends only frozen metadata and uses runtime
+internal authentication. `dispatchCallers` separately admits the exact Engagement
+runtime/business binding on Commerce. The Digital hook repeats Profile proof;
+missing owners or unavailable proof fail closed without a local fallback.
 
 ## Defaults
 
@@ -124,3 +181,67 @@ Ownership review: PASS for Digital source/timing/resources, Profile governed
 identities/recipients and Communication inbox/retry reuse. No customer defaults,
 parallel outbox, financial state or unrelated workflow changes. Shared edits
 preserve other agents' contributions. Unit proof is not installed acceptance.
+
+
+## Runtime adoption
+
+Platform needs the existing Profile recipient permission and Digital source-read
+permission definitions; both belong to their v001 owner catalogues, with no
+ordinary group grant. The sending Commerce runtime needs Profile recipient resolve
+and Communication request; Process and Engagement need Digital notification read;
+Platform needs Digital notification read for its callback. Module scopes remain
+independent of permission grants. Reviewed deployment assignments and the existing
+service-principal scope ceiling must permit these exact rights.
+
+The Process claim response size comes from the existing Digital-owned
+`couponReminders.actionAuthority.maxResponseBytes`, validated against
+`couponReminders.validation.claimResponseBytes`. Defaults and range remain in
+Digital config; later layers override only actual choices. Missing/invalid bounds
+refuse at POLICY before the claim, with no inline size fallback or diagnostic change.
+
+Process and Commerce share only opaque claim handles. Domain selection comes from
+the claimed published Process context and explicit `sweepCallers`, never caller
+payload. Communication uses its existing intent/claim/retry/inbox path and the
+owner-selected remote eligibility metadata. Local transport may explicitly allow
+loopback HTTP; secure defaults stay unchanged. A recorded Process outcome or intent
+is not proof of delivery: inspect the persisted Communication outcome.
+
+## Private sweep diagnostics
+
+The remote sweep emits only registered `ERR_DIGITAL_REMINDER_*` stage codes:
+PRIVACY, INPUT, AUTHORITY, POLICY, CLAIM_TRANSPORT, CLAIM_PROOF and SOURCE.
+Stages are selected inside the owner, not from request fields or remote errors.
+No original exception, cause, response, credential, recipient or payload is
+attached. A transport-stage failure does not prove the remote claim was absent;
+inspect the retained Process action before considering recovery. SOURCE does
+not prove delivery absence or permit a replay.
+
+The real private-entry guard requires an admitted exact request object and
+operator-qualified `log.requestPrivacy` with capture disabled. Suppressed logs
+alone do not prove qualification. Missing qualification fails before Process
+claim; the diagnostic does not enable capture or grant private entry. The owner
+regression composes the actual controller, logger and service-token guard and
+checks internal token selection with the canonical ModuleService helper.
+
+Claim transport further distinguishes only fixed CREDENTIAL, ENDPOINT,
+HTTP_NOT_FOUND, HTTP_AUTHORITY, HTTP_CONFLICT, HTTP_SERVER, NETWORK and LOCAL
+classes under `ERR_DIGITAL_REMINDER_CLAIM_*`. Unknown failures retain
+CLAIM_TRANSPORT; remote messages/payloads are discarded. These classes convey
+no no-effects or retry proof. Workflow remains the module identity; its owner
+metadata supplies the `process` URL prefix through nRouter and registry endpoints.
+Never replace the module identity with an HTTP prefix to repair a transport refusal.
+
+The claim connection selects logical `workflow` with target role PROCESS. A
+HTTP-prefix alias such as `process` can reject a valid registry lease whose
+connection/server is `processServer`. A remote identity scope does not load raw
+module metadata, so falling back may then lose the workflow-owned `process`
+prefix. Select the canonical module connection and preserve the registered
+endpoint; do not activate Workflow on Commerce or rename its module identity.
+Before recovery, verify the live workflow registry owner is UP/client-callable
+with the PROCESS role. Source composition tests are not proof of a live lease.
+
+Transport classification consumes nService's bounded `metadata.remoteHttpFailure`
+(code/httpStatus) and `metadata.transportFailure` (code/optional httpStatus).
+Normalization can replace the original top-level code/status; the normalized
+Nodics responseCode is not remote HTTP evidence. Actual fetch/normalization tests
+replace network I/O only and verify no private message/cause is propagated.

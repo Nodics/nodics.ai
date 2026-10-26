@@ -91,6 +91,10 @@ module.exports = {
             publication.fingerprint(policy) !== input.policyFingerprint || !exact?.normalize || !exact?.compare ||
             !/^\d+(?:\.\d+)?$/.test(policy.budget.limit) || exact.compare(exact.normalize(policy.budget.limit), '0') < 0)
             throw this.conflict();
+        if (policy.couponOffer !== undefined) {
+            if (typeof SERVICE.DefaultCouponOfferService?.validate !== 'function') throw this.conflict();
+            SERVICE.DefaultCouponOfferService.validate(policy.couponOffer);
+        }
         return structuredClone(policy);
     },
     /** Verifies original admission identity while preserving current spend/revision on replay. @param {Object} row Current live row. @param {Object} receipt Pinned command. @returns {Object} Safe admission result. */
@@ -148,7 +152,7 @@ module.exports = {
         // Only policy fields enter the live record; source version and approvals are not operational authority.
         const model = SERVICE.DefaultPromotionOperationService.withSchemaBase({
             code: policy.code, tenant: r.tenant, enterpriseCode: r.enterpriseCode, name: policy.name,
-            ...Object.fromEntries(['enterpriseRef', 'issuerEnterpriseRef', 'vendorEnterpriseRef']
+            ...Object.fromEntries(['enterpriseRef', 'issuerEnterpriseRef', 'vendorEnterpriseRef', 'couponOffer']
                 .filter(key => policy[key] !== undefined).map(key => [key, structuredClone(policy[key])])),
             status: policy.status, priority: policy.priority, conditions: policy.conditions, actions: policy.actions,
             validFrom: policy.validFrom ? new Date(policy.validFrom) : undefined,

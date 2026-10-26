@@ -1,15 +1,17 @@
 # profile
 
 Canonical notification guidance is now the selected
-[v002 CMS recipient article](data/docs-v002/records/documentation/profileNotificationRecipientsDocumentationComponentData.js).
-The successor preserves sealed v001 records and remains Staged, not installed or
+[CMS recipient article](data/docs-v001/records/documentation/profileNotificationRecipientsDocumentationComponentData.js).
+The consolidated docs-v001 records remain Staged, not installed or
 published. [Whole-gift recipients](llm/contracts/gift-notification-recipients.md)
 join transfer, coupon and auction wrappers on the existing shared selector.
 
 [Coupon reminder recipients](llm/contracts/coupon-notification-recipients.md) use
 Digital source proof, current preferences and explicit authorized Enterprise staff
 selections. Self-only Employee inbox identity supports Communication without a
-personal Customer account. Defaults remain off; no permissions are assigned.
+personal Customer account. Private admitted failures retain HTTP 403 with fixed
+RPC/proof/selection/binding diagnostics and no dependency details. Defaults remain
+off; no permissions are assigned.
 
 [Auction outcome recipients](llm/contracts/auction-notification-recipients.md)
 resolve Bidding's exact committed event through the same current permission,
@@ -111,8 +113,8 @@ See [Documentation](profile-identity-onboarding-guide.md#documentation).
 
 Canonical framework documentation:
 
-- [Identity and onboarding guide](data/docs-v002/records/documentation/profileDocumentationComponentData.js)
-- [Notification recipients guide](data/docs-v002/records/documentation/profileNotificationRecipientsDocumentationComponentData.js)
+- [Identity and onboarding guide](data/docs-v001/records/documentation/profileDocumentationComponentData.js)
+- [Notification recipients guide](data/docs-v001/records/documentation/profileNotificationRecipientsDocumentationComponentData.js)
 - [Current documentation selection](data/manifest.json)
 
 ## Verification

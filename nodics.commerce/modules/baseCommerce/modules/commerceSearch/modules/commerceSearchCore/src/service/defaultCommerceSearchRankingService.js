@@ -114,6 +114,24 @@ module.exports = {
     },
 
     /**
+     * Builds the nSearch query using supported search DSL rather than model-query operators.
+     * @param {Object} request Discovery tenant, Store and optional locale.
+     * @returns {Object} Exact scope filters including locale-neutral projections.
+     */
+    searchQuery: function (request) {
+        const filter = ['tenant', 'storeCode'].map(key => ({ term: { [key]: request[key] } }));
+        filter.push({ term: { status: 'CURRENT' } });
+        if (request.locale) filter.push({ bool: {
+            should: [
+                { term: { locale: request.locale } },
+                { bool: { must_not: [{ exists: { field: 'locale' } }] } }
+            ],
+            minimum_should_match: 1
+        } });
+        return { bool: { filter } };
+    },
+
+    /**
      * Loads applicable current rule projections for a discovery request.
      *
      * @param {Object} request Discovery request.
@@ -135,6 +153,13 @@ module.exports = {
         const service = SERVICE.DefaultCommerceSearchRuleProjectionService;
         const method = typeof service.doSearch === 'function' ? 'doSearch' : 'get';
         if (typeof service[method] !== 'function') throw new Error('Commerce Search projection reader is unavailable');
+        if (method === 'doSearch') {
+            searchRequest.query = this.searchQuery(request);
+            // nSearch maps searchOptions paging only. Provider options carry the
+            // stable sort; sourceHash is already an explicitly mapped keyword
+            // and binds the rule identity, Store and locale in the owner builder.
+            searchRequest.options = { sort: [{ sourceHash: 'asc' }] };
+        }
         const applicable = [], seen = new Set();
         for (let scanned = 0; scanned < policy.maximumRuleScan;) {
             searchRequest.searchOptions.pageNumber = Math.floor(scanned / policy.rulePageSize) + 1;

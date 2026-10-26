@@ -423,6 +423,7 @@ async function validateAsyncContracts() {
   global.SERVICE.DefaultEnterpriseService = {
     retrieveEnterprise: function () {
       return Promise.resolve({
+        code: "enterprise-a",
         active: true,
         tenant: { code: "tenant-a", active: true },
       });
@@ -434,6 +435,7 @@ async function validateAsyncContracts() {
         {
           _id: "employee-user-a",
           loginId: "user-a",
+          enterpriseCode: "enterprise-a",
           password: originalCredential._id,
         },
       ]),
@@ -445,6 +447,7 @@ async function validateAsyncContracts() {
       return Promise.resolve({
         _id: "employee-user-a",
         loginId: "user-a",
+        enterpriseCode: "enterprise-a",
         active: true,
         password: originalCredential._id,
         principalType: "human",

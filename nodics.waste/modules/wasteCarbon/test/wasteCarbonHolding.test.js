@@ -74,12 +74,12 @@ const customer = code => ref(code, 'customer', 'profile');
 const enterprise = code => ref(code, 'enterprise', 'profile');
 const permissions = ['carbon.holdings.read', 'carbon.holdings.reserve', 'carbon.holdings.transfer', 'carbon.holdings.release', 'carbon.holdings.finalize', 'carbon.evidence.record'];
 let f, settings, evidence, eligibility;
-const request = payload => ({ tenant: 'T', authData: { tenant: 'T', principalType: 'service', loginId: 'digital', permissions }, payload });
+const request = payload => ({ tenant: 'T', authData: { tenant: 'T', principalType: 'service', tokenType: 'service', serviceId: 'digital', permissions }, payload });
 const synchronize = () => subject.synchronize(request({ evidenceRef: ref('proof') }));
 const component = lot => ({ lotCode: lot.code, ownerRef: customer('original'), quantity: '1.250', unitOfMeasure: 'tCO2e',
     operationKey: 'bundle:component:1', manifestRef: { ...ref('bundle', 'digitalBundle', 'digitalCore'), revision: 1 } });
 beforeEach(() => {
-    f = fixture.create(['wasteCarbonLot', 'wasteCarbonAllocationClaim', 'wasteSubmission', 'wasteAsset']);
+    f = fixture.create(['wasteCarbonMockEvidence', 'wasteCarbonLot', 'wasteCarbonAllocationClaim', 'wasteSubmission', 'wasteAsset']);
     global.ENUMS = f.enums;
     f.put('wasteSubmission', { code: 'submission', submitterRef: customer('original') });
     settings = { evidence: { providerService: 'QualifiedFixtureService', qualificationRef: ref('qualification'), allowSynthetic: true } };
@@ -264,7 +264,7 @@ test('explicit permission release has correct bytes and grants no role assignmen
     assert.equal(forward.selectionPolicy, 'EXPLICIT'); assert.equal(forward.version, '0.0.2');
     for (const [file, expected] of Object.entries(forward.files))
         assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.resolve(__dirname, '../data', file))).digest('hex'), expected);
-    const finalization = require('../data/init-v002/records/identity/wasteCarbonFinalizationPermissionData');
+    const finalization = require('../data/init-v001/records/identity/wasteCarbonFinalizationPermissionData');
     assert.equal(finalization.record0.code, 'carbon.holdings.finalize'); assert.equal(finalization.record0.userGroupCode, undefined);
     assert.equal(section.selectionPolicy, 'EXPLICIT');
     for (const [file, expected] of Object.entries(section.files))
@@ -272,4 +272,118 @@ test('explicit permission release has correct bytes and grants no role assignmen
     const records = require('../data/init-v001/records/identity/wasteCarbonPermissionData');
     assert.equal(Object.values(records).length, 5);
     assert.ok(Object.values(records).every(item => item.ownerModule === 'wasteCarbon' && !item.userGroupCode));
+});
+
+function installMock() {
+    const mock = require('../src/service/defaultWasteCarbonMockProviderService');
+    SERVICE.DefaultWasteCarbonMockProviderService = mock;
+    settings.evidence.providerService = 'DefaultWasteCarbonMockProviderService';
+    settings.mock = { enabled: true };
+    f.put('wasteCarbonMockEvidence', { code: 'scenario', synthetic: true,
+        qualificationRef: settings.evidence.qualificationRef, evidence: { ...evidence, eligibility: 'ELIGIBLE' } });
+    return () => subject.synchronize(request({ evidenceRef: mock.reference('scenario') }));
+}
+test('permanent mock preserves beneficiary, synthetic provenance and atomic recipient hold', async () => {
+    const sync = installMock(), lot = await sync();
+    assert.equal(lot.synthetic, true);
+    assert.equal(lot.issuanceRef.schema, 'wasteCarbonMockEvidence');
+    const body = { ...component(lot), recipientRef: customer('buyer') };
+    assert.equal((await subject.reserve(request(body))).synthetic, true);
+    await subject.transfer(request(body));
+    assert.equal((await subject.holdings(request({ ownerRef: customer('buyer') }))).items[0].available, '0.000');
+    f.failures.push({ schema: 'wasteCarbonLot', phase: 'after-update' });
+    await assert.rejects(subject.finalize(request(body)), /injected/);
+    assert.equal((await subject.finalize(request(body))).synthetic, true);
+    assert.equal(f.get('wasteCarbonLot', lot.code).allocations[0].ownerRef.code, 'original');
+    assert.equal((await sync()).issuedQuantity, lot.issuedQuantity);
+});
+test('mock carbon activation and qualified synthetic record gates fail closed', async () => {
+    const sync = installMock();
+    delete settings.mock;
+    await assert.rejects(sync(), { code: 'ERR_CARBON_UNAVAILABLE' });
+    settings.mock = { enabled: true }; settings.evidence.allowSynthetic = false;
+    await assert.rejects(sync(), { code: 'ERR_CARBON_UNAVAILABLE' });
+    settings.evidence.allowSynthetic = true;
+    const row = f.get('wasteCarbonMockEvidence', 'scenario');
+    row.evidence.synthetic = false; f.put('wasteCarbonMockEvidence', row);
+    await assert.rejects(sync(), { code: 'ERR_CARBON_UNAVAILABLE' });
+    row.evidence.synthetic = true; row.qualificationRef = ref('foreign'); f.put('wasteCarbonMockEvidence', row);
+    await assert.rejects(sync(), { code: 'ERR_CARBON_UNAVAILABLE' });
+    assert.equal(f.calls.length, 0);
+});
+test('mock carbon rechecks eligibility and refuses real lots and foreign tenant reads', async () => {
+    const sync = installMock(), lot = await sync();
+    const row = f.get('wasteCarbonMockEvidence', 'scenario');
+    row.evidence.eligibility = 'INELIGIBLE'; f.put('wasteCarbonMockEvidence', row);
+    await assert.rejects(subject.reserve(request(component(lot))), { code: 'ERR_CARBON_INELIGIBLE' });
+    row.evidence.eligibility = 'ELIGIBLE'; f.put('wasteCarbonMockEvidence', row);
+    await assert.rejects(subject.eligible(request({}), { ...lot, synthetic: false }), { code: 'ERR_CARBON_INELIGIBLE' });
+    const mock = SERVICE.DefaultWasteCarbonMockProviderService;
+    await assert.rejects(mock.readLot({ evidenceRef: mock.reference('scenario') },
+        { tenant: 'foreign', qualificationRef: settings.evidence.qualificationRef }), { code: 'ERR_CARBON_EVIDENCE' });
+    const abort = new AbortController(); abort.abort();
+    await assert.rejects(mock.readLot({ evidenceRef: mock.reference('scenario') },
+        { tenant: 'T', qualificationRef: settings.evidence.qualificationRef, signal: abort.signal }), { code: 'ERR_CARBON_UNAVAILABLE' });
+});
+
+test('native Admin uses real route gates and owner admission without replacing identity', async () => {
+    const router = require('../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService');
+    const previous = CONFIG.get;
+    CONFIG.get = key => ({ defaultTenant: 'T', defaultEnterprise: 'platform',
+        identityGovernance: { principalPolicy: { serviceGroup: 'serviceAccountUserGroup' } } }[key] ?? previous(key));
+    SERVICE.DefaultSecuredRequestPipelineService = router;
+    const authData = { tenant: 'T', entCode: 'platform', principalType: 'human', tokenType: 'access',
+        authenticationMethod: 'PASSWORD', loginId: 'existing-admin', authVersion: 1,
+        userGroups: ['platformAdministratorUserGroup'], permissions: ['*'] };
+    const admin = payload => ({ tenant: 'T', authData: structuredClone(authData), authorization: 'Bearer existing-admin', payload });
+    const routes = require('../src/router/routers').wasteCarbon.internal;
+    for (const route of Object.values(routes)) {
+        const req = { ...admin({}), router: route };
+        assert.equal(router.hasAcceptedTokenType(req), true);
+        assert.equal(router.hasAccessGroup(req), true);
+        subject.authorize(req, route.permission);
+        for (const patch of [{ principalType: 'customer' }, { userGroups: ['employeeUserGroup'] },
+            { permissions: [] }, { tenant: 'foreign' }, { entCode: 'foreign' },
+            { tokenType: 'service' }, { authenticationMethod: 'EXTERNAL' }, { sessionContext: {} },
+            { runtimeScope: {} }, { isSystem: true }, { externalIdentityLinkCode: 'linked' }]) {
+            const denied = { ...req, authData: { ...authData, ...patch } };
+            assert.equal(router.hasPlatformFullAccess(denied), false);
+            assert.throws(() => subject.authorize(denied, route.permission));
+        }
+        assert.equal(router.hasAcceptedTokenType({ ...req, authData: { ...authData, tokenType: 'refresh' } }), false);
+    }
+    const lot = await subject.synchronize(admin({ evidenceRef: ref('proof') }));
+    const body = { ...component(lot), recipientRef: customer('buyer') };
+    const command = admin(body), original = structuredClone(command);
+    await subject.reserve(command); await subject.transfer(command);
+    const done = await subject.finalize(command);
+    assert.deepEqual(done.sourceActor, { principalType: 'human', principalCode: 'existing-admin' });
+    assert.deepEqual(done.finalizationActor, done.sourceActor);
+    assert.deepEqual(command, original);
+    assert.equal((await subject.holdings(admin({ ownerRef: customer('buyer') }))).ownerRef.code, 'buyer');
+    assert.equal((await subject.getOperation(admin(body))).status, 'COMPLETED');
+});
+
+
+
+test('canonical runtime serviceId authorizes holdings and all mutations with exact audit actors', async () => {
+    const lot = await synchronize(), body = { ...component(lot), recipientRef: customer('runtime-buyer') };
+    const runtime = payload => ({ ...request(payload), authData: { ...request(payload).authData,
+        serviceId: 'apiAdmin', userGroups: [], modules: ['wasteCarbon'],
+        runtimeInstanceId: 'commerce', runtimeScope: { instanceCode: 'commerce', assignmentCode: 'commerce-runtime' } } });
+    assert.equal(runtime({}).authData.loginId, undefined);
+    assert.equal((await subject.holdings(runtime({ ownerRef: customer('original') }))).items.length, 1);
+    for (const operation of ['reserve', 'transfer', 'finalize']) {
+        const result = await subject[operation](runtime(body));
+        assert.deepEqual(result.sourceActor, { principalType: 'service', principalCode: 'apiAdmin' });
+        if (operation === 'finalize') assert.deepEqual(result.finalizationActor, result.sourceActor);
+    }
+    const released = { ...body, operationKey: 'runtime-release', quantity: '0.500' };
+    await subject.reserve(runtime(released));
+    assert.deepEqual((await subject.release(runtime(released))).sourceActor, { principalType: 'service', principalCode: 'apiAdmin' });
+    for (const patch of [{ serviceId: undefined, loginId: 'borrowed' }, { serviceId: '' },
+        { permissions: [] }, { tenant: 'foreign' }, { principalType: 'human', serviceId: 'apiAdmin', loginId: undefined }]) {
+        const denied = runtime({ ownerRef: customer('original') }); Object.assign(denied.authData, patch);
+        await assert.rejects(subject.holdings(denied), { code: 'ERR_CARBON_FORBIDDEN' });
+    }
 });

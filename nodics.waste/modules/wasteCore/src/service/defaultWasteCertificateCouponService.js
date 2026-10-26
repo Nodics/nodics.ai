@@ -10,6 +10,7 @@
  */
 
 "use strict";
+const sourceDiagnostics = require("../utils/couponSourceDiagnostics");
 const crypto = require("node:crypto"), { isDeepStrictEqual: same } = require("node:util");
 /** @module wasteCore/service/defaultWasteCertificateCouponService
  * @description Reserves and consumes canonical certificates for source-proven Commerce coupon acquisitions without moving rewards, carbon or custody.
@@ -78,15 +79,25 @@ module.exports = {
     const p = CONFIG.get("waste")?.certificateCoupons?.commerce;
     if (!p?.connectionName || !p.targetAuthority || !Number.isSafeInteger(p.timeoutMs) || p.timeoutMs < 1)
       throw new Error("Certificate coupon evidence target is unavailable");
-    let value = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: "digitalCore",
-      connectionName: p.connectionName, targetAuthority: p.targetAuthority, methodName: "POST", tenant: r.tenant,
-      apiName: "/internal/coupons/acquisition/source", request: { tenant: r.tenant },
-      requestBody: { ...command, phase, enterpriseCode: r.enterpriseCode },
-      header: { "Idempotency-Key": command.operationKey, "X-Correlation-Id": r.correlationId || command.operationKey },
-      timeoutMs: p.timeoutMs, maxAttempts: 1 });
+    let value;
+    try {
+      value = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: "digitalCore",
+        connectionName: p.connectionName, targetAuthority: p.targetAuthority, methodName: "POST", tenant: r.tenant,
+        apiName: "/internal/coupons/acquisition/source", request: { tenant: r.tenant },
+        requestBody: { ...command, phase, enterpriseCode: r.enterpriseCode },
+        header: { "Idempotency-Key": command.operationKey, "X-Correlation-Id": r.correlationId || command.operationKey },
+        timeoutMs: p.timeoutMs, maxAttempts: 1 });
+    } catch (error) {
+      // nService preserves response-owned code/status after normalizing remote errors.
+      // A present transport marker is authoritative; do not fall back to a conflicting outer code.
+      const remote = error?.metadata?.remoteHttpFailure;
+      const code = remote === undefined ? error?.code : remote?.httpStatus === 409 ? remote.code : undefined;
+      throw new Error(sourceDiagnostics.message(code) || "Certificate coupon source request failed");
+    }
     for (let n = 0; n < 6 && value; n++) {
       if (value.error || value.success === false || value.acknowledged === false || /^ERR_/.test(value.code || "") ||
-          value.errors && (!Array.isArray(value.errors) || value.errors.length)) throw new Error("Certificate coupon evidence failed");
+          value.errors && (!Array.isArray(value.errors) || value.errors.length))
+        throw new Error(sourceDiagnostics.message(value.code) || "Certificate coupon evidence failed");
       if (value.data !== undefined) value = value.data;
       else if (value.result !== undefined) value = value.result;
       else break;
@@ -172,7 +183,7 @@ module.exports = {
     }
     if (!(await this.projection(r, command, asset)).available) throw new Error("Certificate cannot be reserved");
     event = { code, assetCode: asset.code, fromOwnerRef: asset.ownerRef, toOwnerRef: asset.ownerRef,
-      transferType: "REDEEM", transferStatus: ENUMS.WasteCertificateOperationStatus.RESERVED.key, revision: 0, occurredAt: new Date(),
+      transferType: "REDEEM", transferStatus: ENUMS.WasteCertificateOperationStatus.RESERVED.key, revision: 0, occurredAt: new Date().toISOString(),
       idempotencyKey: command.operationKey, commerceOrderRef: { module: "order", schema: "commerceOrder", code: command.orderCode },
       metadata: { couponConsumption: { command, phase: ENUMS.WasteCertificateOperationStatus.RESERVED.key, previousStatus: asset.assetStatus } } };
     this.authorize(r);
@@ -201,7 +212,7 @@ module.exports = {
       await op.digitalUpdate(r, "wasteAsset", asset, { metadata: { ...asset.metadata, lastCouponOperation: { code, phase: ENUMS.WasteCertificateOperationStatus.RELEASED.key } } });
       this.authorize(r);
       await op.digitalCreate(r, { code, assetCode: asset.code, fromOwnerRef: asset.ownerRef, toOwnerRef: asset.ownerRef,
-        transferType: "REDEEM", transferStatus: ENUMS.WasteCertificateOperationStatus.CANCELLED.key, revision: 0, occurredAt: new Date(), idempotencyKey: command.operationKey,
+        transferType: "REDEEM", transferStatus: ENUMS.WasteCertificateOperationStatus.CANCELLED.key, revision: 0, occurredAt: new Date().toISOString(), idempotencyKey: command.operationKey,
         metadata: { couponConsumption: { command, phase: ENUMS.WasteCertificateOperationStatus.RELEASED.key, previousStatus: asset.assetStatus } } });
       return;
     }

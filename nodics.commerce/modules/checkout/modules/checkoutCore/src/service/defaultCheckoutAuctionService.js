@@ -60,6 +60,27 @@ module.exports = {
     return new Date(timestamp).toISOString();
   },
   /**
+   * Selects an explicit deployment Cart jurisdiction for one exact auction Store binding.
+   * @param {Object} request Admitted tenant and merchant context.
+   * @param {Object} round Original governed Store and currency.
+   * @returns {Object} Selected jurisdiction, or no override for an unselected Store.
+   * @throws {Error} Refuses malformed configuration or a changed tenant/merchant/currency binding.
+   * @override Keep definitions in Checkout and intentional deployment selections in environment configuration.
+   */
+  cartContext: function (request, round) {
+    const selections = CONFIG.get("checkoutCore")?.auction?.cartContexts;
+    if (!selections || Object.getPrototypeOf(selections) !== Object.prototype)
+      this.fail("Auction Cart context definitions are unavailable");
+    if (!Object.hasOwn(selections, round.storeCode)) return {};
+    const selected = selections[round.storeCode];
+    if (!selected || Object.getPrototypeOf(selected) !== Object.prototype ||
+        !same(Object.keys(selected).sort(), ["currency", "enterpriseCode", "jurisdiction", "tenant"]) ||
+        Object.values(selected).some(value => typeof value !== "string" || !value.trim() || value !== value.trim()) ||
+        selected.tenant !== request.tenant || selected.enterpriseCode !== request.enterpriseCode || selected.currency !== round.currency)
+      this.fail("Auction Cart context does not match selected Store");
+    return { jurisdiction: selected.jurisdiction };
+  },
+  /**
    * Builds private generated-persistence context after admission.
    * @param {Object} request Admitted tenant, Enterprise and original auth context.
    * @returns {Object} Tenant, Checkout service authData and uncached/nonrecursive options.
@@ -137,7 +158,7 @@ module.exports = {
    */
   assertFields: function (row, fields) {
     if (!row || Object.keys(fields).some(key => key === "expiresAt"
-      ? Date.parse(row[key]) !== Date.parse(fields[key]) : !same(row[key], fields[key]))) this.fail("Auction purchase terms changed");
+      ? new Date(row[key]).getTime() !== new Date(fields[key]).getTime() : !same(row[key], fields[key]))) this.fail("Auction purchase terms changed");
     return row;
   },
   /**
@@ -151,14 +172,38 @@ module.exports = {
    * @override Preserve insertOnly and this.assertFields; retry must recover the same identity.
    */
   insert: async function (request, service, model) {
+    model = this.durableData(model, true);
     let row = await this.read(request, service, model.code);
     if (!row) {
-      try { this.unwrap(await service.save({ ...this.context(request), model,
+      try { this.unwrap(await service.save({ ...this.context(request), model: this.durableData(model, true),
         options: { insertOnly: true, recursive: false } })); }
       catch (error) { row = await this.read(request, service, model.code); if (!row) throw error; }
       row = row || await this.read(request, service, model.code);
     }
     return this.assertFields(row, model);
+  },
+  /**
+   * Creates the exact commitment through managed create, without a caller revision token.
+   * @param {Object} request Original admitted tenant and merchant context.
+   * @param {Object} model Immutable initial commitment fields, excluding revision.
+   * @returns {Promise<Object>} Exact original commitment at generated revision one.
+   * @throws {Error} Refuses conflicting original identity or unconfirmed insertion.
+   * @sideEffects Creates once; a racing or uncertain insert is recovered only by exact readback.
+   * @override Preserve tokenless managed creation; never route this schema through insertOnly.
+   */
+  insertCommitment: async function (request, model) {
+    const service = SERVICE.DefaultCheckoutAuctionCommitmentService;
+    if (Object.hasOwn(model, "revision")) this.fail("Managed commitment create cannot supply a revision");
+    const expected = { ...model, revision: 1 };
+    let row = await this.read(request, service, model.code);
+    if (!row) {
+      try { this.unwrap(await service.save({ ...this.context(request),
+        query: { tenant: request.tenant, enterpriseCode: request.enterpriseCode, code: model.code },
+        model: { ...model }, options: { recursive: false, skipItemCache: true } })); }
+      catch (error) { row = await this.read(request, service, model.code); if (!row) throw error; }
+      row = row || await this.read(request, service, model.code);
+    }
+    return this.assertFields(row, expected);
   },
   /**
    * CAS-fences a commitment decision and confirms exact readback.
@@ -194,7 +239,7 @@ module.exports = {
    * @sideEffects Reads Bidding/participant evidence; no selection or funds mutation.
    * @override Preserve scheduler/participant admission, exact selection and purchaser-or-seller checks; caller round objects are not authority.
    */
-  selected: async function (input, coordinates) {
+  selected: async function (input, coordinates, completed = false) {
     const auctions = SERVICE.DefaultBiddingAuctionService;
     const base = { ...input, storeCode: coordinates.storeCode, payload: { storeCode: coordinates.storeCode } };
     const request = input.authData?.principalType === "service" ? auctions.scheduler(base) : await auctions.participant(base);
@@ -202,11 +247,13 @@ module.exports = {
     if (round.storeCode !== coordinates.storeCode || CONFIG.get("bidding")?.stores?.[round.storeCode]?.enterpriseCode !== request.enterpriseCode)
       this.fail("Auction Store partition changed");
     const bid = selection && round.bids?.[selection.bidCode];
-    if (round.status !== "SELECTED" || !round.cleanupComplete || !bid || bid.status !== "SELECTED" ||
+    if (!(round.status === "SELECTED" || completed && round.status === "COMPLETED") || !round.cleanupComplete || !bid || bid.status !== "SELECTED" ||
         !same(selection.buyerRef, bid.buyerRef) || !same(selection.reservation, bid.reservation) ||
         selection.amount !== bid.amount || bid.reservation?.status !== "RESERVED" ||
         bid.reservation.expiresAt !== null || bid.reservation.holdUntilRelease !== true ||
         !bid.reservation.code || !selection.commandKey ||
+        typeof bid.actorRef?.enterpriseCode !== "string" || !bid.actorRef.enterpriseCode.trim() ||
+        bid.actorRef.enterpriseCode !== bid.actorRef.enterpriseCode.trim() ||
         input.authData?.principalType !== "service" && !auctions.same(request.buyerRef, bid.buyerRef) && !auctions.isSeller(request, round))
       this.fail("Original selected auction hold is unavailable");
     return { request, round, bid, selection };
@@ -266,8 +313,10 @@ module.exports = {
     const row = await this.read(request, SERVICE.DefaultCheckoutAuctionCommitmentService, request.auctionFunds.commitmentCode);
     if (!row.priceQuoteCode || !["BOUND", "CAPTURE_DECIDED", "RELEASE_DECIDED"].includes(row.status))
       this.fail("Auction purchase has not been bound");
-    const selected = await this.selected(request, row.terms);
-    this.assertFields(row, { terms: this.terms(selected.round, selected.bid, selected.selection) });
+    const selected = await this.selected(request, row.terms, row.placement?.completed?.includes("COMPLETED") &&
+      row.placement?.results?.complete?.status === "COMPLETED" && !row.placement.pending);
+    this.assertFields(row, { terms: this.terms(selected.round, selected.bid, selected.selection),
+      priceQuoteCode: selected.selection.priceQuoteCode });
     if (!same(request.ownerRef, row.terms.ownerRef) || input.orderCode && input.orderCode !== row.orderCode ||
         input.cartCode && input.cartCode !== row.cartCode || input.currency && input.currency !== row.terms.currency ||
         input.amount !== undefined && SERVICE.DefaultExactAmountService.compare(input.amount, row.terms.amount) !== 0)
@@ -275,6 +324,81 @@ module.exports = {
     if (input.operation !== "VOID" && !row.placement && Date.parse(row.expiresAt) <= Date.now()) this.fail("Auction purchase intake expired");
     return { request, row, command: SERVICE.DefaultBiddingAuctionService.fundsPayload(selected.round, selected.bid, input.idempotencyKey),
       binding: { commitmentCode: row.code } };
+  },
+  /**
+   * Derives internal reward terms from the original selected commitment, quote and non-expiring hold.
+   * @param {Object} input Signed original Checkout request; caller funding selectors are forbidden.
+   * @param {Object} calculation Optional calculated amount/currency to compare, never funding authority.
+   * @returns {Promise<Object>} Versioned exact auction reward binding for Payment and Digital.
+   * @throws {Error} Rejects foreign commitment, changed quote/hold, actor or caller funding.
+   * @sideEffects Fresh owner admission and canonical commitment/quote reads only.
+   * @override Preserve original signed authority and selected amount; listing floor is not purchase price.
+   */
+  rewardPaymentTerms: async function (input, calculation = {}) {
+    if (!input.auctionFunds || input.payload?.paymentMethod !== "LOYALTY_REWARD" ||
+        ["walletCode", "programCode", "rewardTypeCode", "rewardAmount", "rewardCurrency", "providerToken"]
+          .some(key => input.payload[key] !== undefined)) this.fail("Selected auction funding is retained by Checkout");
+    const { row, request } = await this.paymentTerms({ ...input, orderCode: input.payload.orderCode,
+      cartCode: input.payload.cartCode, amount: calculation.totalAmount, currency: calculation.currency });
+    if (row.cancellation || row.terminal?.decision === "RELEASE" || !same(request.actorRef, row.terms.actorRef))
+      this.fail("Original auction reward owner changed");
+    const quote = await SERVICE.DefaultNegotiatedPriceService.resolve({ ...request, ownerId: row.terms.ownerId,
+      priceQuoteCode: row.priceQuoteCode, productCode: row.terms.productCode, variantCode: row.terms.variantCode,
+      storeCode: row.terms.storeCode, cartCode: row.cartCode, currency: row.terms.currency, quantity: "1" });
+    this.assertFields(quote, { orderCode: row.orderCode, buyerRef: row.terms.ownerRef,
+      sourceRef: { module: "bidding", schema: "biddingAuctionRound", code: row.terms.roundCode } });
+    const hold = row.terms.reservation, exact = SERVICE.DefaultExactAmountService;
+    if (exact.compare(quote.unitAmount, row.terms.amount) !== 0 || exact.compare(hold.amount, row.terms.amount) !== 0 ||
+        new Date(quote.expiresAt).getTime() !== new Date(row.expiresAt).getTime() ||
+        ["walletCode", "programCode", "rewardTypeCode"].some(key => !hold[key] || hold[key] !== row.terms.funding[key]))
+      this.fail("Original selected reward quote or hold changed");
+    return { contract: "CHECKOUT_AUCTION_REWARD_V1", commitmentCode: row.code,
+      roundCode: row.terms.roundCode, bidCode: row.terms.bidCode, publicationCode: row.terms.publicationCode, priceQuoteCode: row.priceQuoteCode,
+      productCode: row.terms.productCode, variantCode: row.terms.variantCode, storeCode: row.terms.storeCode,
+      cartCode: row.cartCode, orderCode: row.orderCode, ownerRef: row.terms.ownerRef, actorRef: row.terms.actorRef,
+      checkoutIdempotencyKey: row.placement?.key, reservationCode: hold.code,
+      walletCode: hold.walletCode, programCode: hold.programCode, rewardTypeCode: hold.rewardTypeCode,
+      amount: row.terms.amount, currency: row.terms.currency, scale: row.terms.funding.scale };
+  },
+  /**
+   * Projects owner phase receipts into a detached durable JSON representation before exact CAS proof.
+   * @param {*} result Actual owner return value; absent root/array elements become null, absent object members are omitted.
+   * @returns {*} Canonical receipt with ISO Dates and hexadecimal generated ObjectIds; all business fields retained.
+   * @throws {Error} Rejects invalid dates, nonfinite numbers, cycles and unsupported executable/class values.
+   * @sideEffects None; never changes an owner receipt, existing journal or persistence comparison.
+   * @override Keep first-return and replay representation identical; do not normalize readback to conceal drift.
+   */
+  phaseResult: function (result) { return this.durableData(result, false); },
+  /**
+   * Canonicalizes owner-authored durable data, retaining native Dates/IDs for generated model writes.
+   * @param {*} result Owner model or receipt.
+   * @param {boolean} nativeValues True for model fields; false for JSON phase receipts.
+   * @returns {*} Detached data with absent members omitted and explicit supported values preserved.
+   * @throws {Error} Refuses unsupported data; never changes readback equality.
+   * @sideEffects None.
+   * @override Keep model schema values native and receipt values transport-stable.
+   */
+  durableData: function (result, nativeValues) {
+    const seen = new WeakSet();
+    const visit = value => {
+      if (value === undefined || value === null) return null;
+      if (["string", "boolean"].includes(typeof value)) return value;
+      if (typeof value === "number" && Number.isFinite(value)) return value;
+      if (value instanceof Date && Number.isFinite(value.getTime())) return nativeValues ? new Date(value.getTime()) : value.toISOString();
+      if (["ObjectID", "ObjectId"].includes(value?._bsontype) && typeof value.toHexString === "function") {
+        const hex = value.toHexString();
+        if (typeof hex === "string" && /^[a-f0-9]{24}$/.test(hex)) return nativeValues ? value : hex;
+      }
+      if (!value || typeof value !== "object" || seen.has(value) ||
+          !Array.isArray(value) && ![Object.prototype, null].includes(Object.getPrototypeOf(value)))
+        this.fail("Auction phase result is not durable data");
+      seen.add(value);
+      const output = Array.isArray(value) ? Array.from(value, visit) : Object.fromEntries(
+        Object.entries(value).filter(([, item]) => item !== undefined).map(([key, item]) => [key, visit(item)]));
+      seen.delete(value);
+      return output;
+    };
+    return visit(result);
   },
   /**
    * Runs placement ports with a persisted original-command phase journal.
@@ -290,11 +414,13 @@ module.exports = {
       cartCode: request.payload.cartCode, orderCode: request.payload.orderCode });
     let row = initial;
     if (row.cancellation || row.terminal?.decision === "RELEASE") this.fail("Auction purchase was released or cancellation requires recovery");
-    const command = { cartCode: request.payload.cartCode, orderCode: request.payload.orderCode,
+    // Canonical journal shape must match BSON readback before hashing or strict CAS verification.
+    const command = Object.fromEntries(Object.entries({ cartCode: request.payload.cartCode, orderCode: request.payload.orderCode,
       paymentMethod: request.payload.paymentMethod, walletCode: request.payload.walletCode,
       programCode: request.payload.programCode, rewardTypeCode: request.payload.rewardTypeCode,
       couponCode: request.payload.couponCode, customerGroup: request.payload.customerGroup,
-      expectedCartRevision: request.payload.expectedCartRevision, calculationCode: request.payload.calculationCode };
+      expectedCartRevision: request.payload.expectedCartRevision, calculationCode: request.payload.calculationCode })
+      .filter(([, value]) => value !== undefined));
     const digest = this.hash(command);
     if (!row.placement) row = await this.update(admitted, row, { placement: { key: request.idempotencyKey, digest,
       command, actorRef: admitted.actorRef, results: {}, completed: [] } });
@@ -310,11 +436,14 @@ module.exports = {
       wrapped[name] = async (...args) => {
         row = await this.read(admitted, SERVICE.DefaultCheckoutAuctionCommitmentService, row.code);
         if (row.cancellation || row.terminal?.decision === "RELEASE") this.fail("Auction purchase was released or cancellation requires recovery");
-        if (Object.hasOwn(row.placement.results, name)) return structuredClone(row.placement.results[name]);
+        if (Object.hasOwn(row.placement.results, name)) return this.phaseResult(row.placement.results[name]);
         if (row.placement.pending && row.placement.pending !== name) this.fail("Original auction phase requires recovery");
-        row = await this.update(admitted, row, { placement: { ...row.placement, pending: name,
+        const pendingPlacement = { ...row.placement, pending: name,
           acquisitionStarted: row.placement.acquisitionStarted === true ||
-            !["validateCart", "calculateCart", "enforceParticipantSpend"].includes(name) } });
+            !["validateCart", "calculateCart", "enforceParticipantSpend"].includes(name) };
+        // The freshly read original fence already admits same-key owner recovery. Managed no-ops do not advance revision.
+        if (!same(row.placement, pendingPlacement))
+          row = await this.update(admitted, row, { placement: pendingPlacement });
         if (name === "validateCart") {
           const cart = await SERVICE.DefaultCartOperationService.cartSnapshot({ ...request, cartCode: row.cartCode });
           const entry = cart.entries?.[0];
@@ -323,10 +452,10 @@ module.exports = {
               SERVICE.DefaultExactAmountService.compare(String(entry.quantity), "1") !== 0)
             this.fail("Selected auction Cart contents changed");
         }
-        const result = await ports[name](...args);
+        const result = this.phaseResult(await ports[name](...args));
         row = await this.read(admitted, SERVICE.DefaultCheckoutAuctionCommitmentService, row.code);
         row = await this.update(admitted, row, { placement: { ...row.placement, pending: null,
-          completed: [...row.placement.completed, phase], results: { ...row.placement.results, [name]: result ?? null } } });
+          completed: [...row.placement.completed, phase], results: { ...row.placement.results, [name]: result } } });
         return result;
       };
     }
@@ -451,18 +580,20 @@ module.exports = {
     if (payload.idempotencyKey !== selection.commandKey + ":checkout") this.fail("Original auction handoff key is required");
     const code = "AUCTION_CHECKOUT_" + this.hash([request.tenant, request.enterpriseCode, round.code, bid.code]);
     const terms = this.terms(round, bid, selection), service = SERVICE.DefaultCheckoutAuctionCommitmentService;
+    const cartContext = this.cartContext(request, round);
     await this.persistence(request);
     let row = await this.read(request, service, code);
     if (!row) {
       const expiresAt = this.purchaseDeadline(Date.now());
-      row = await this.insert(request, service, { code, tenant: request.tenant, enterpriseCode: request.enterpriseCode,
-        status: "PREPARED", active: true, revision: 0, terms, orderCode: code, cartCode: code + "_CART",
+      row = await this.insertCommitment(request, { code, tenant: request.tenant, enterpriseCode: request.enterpriseCode,
+        status: "PREPARED", active: true, terms, orderCode: code, cartCode: code + "_CART",
         expiresAt, correlationId: round.code });
     }
     this.assertFields(row, { terms });
     const cartOwner = SERVICE.DefaultCartOperationService;
     const cart = cartOwner.cartModel({ ...request, ownerId: bid.buyerId, ownerRef: bid.buyerRef, actorRef: bid.actorRef,
-      cartCode: row.cartCode, payload: { cartCode: row.cartCode, storeCode: round.storeCode, currency: round.currency } });
+      participantEnterpriseCode: bid.actorRef.enterpriseCode,
+      cartCode: row.cartCode, payload: { cartCode: row.cartCode, storeCode: round.storeCode, currency: round.currency, ...cartContext } });
     const existingCart = await this.read(request, SERVICE.DefaultCartService, row.cartCode);
     if (existingCart) this.assertFields(existingCart, { code: cart.code, ownerId: bid.buyerId, ownerRef: bid.buyerRef,
       storeCode: round.storeCode, currency: round.currency });
@@ -492,8 +623,15 @@ module.exports = {
       sourceRef: { module: "bidding", schema: "biddingAuctionRound", code: round.code } });
     if (SERVICE.DefaultExactAmountService.compare(quote.unitAmount, bid.amount) !== 0 ||
         Date.parse(quote.expiresAt) !== Date.parse(row.expiresAt)) this.fail("Selected quote amount or deadline changed");
+    const selectedCart = await this.read(request, SERVICE.DefaultCartService, row.cartCode);
+    this.assertFields(selectedCart, { code: row.cartCode, ownerId: bid.buyerId, ownerRef: bid.buyerRef,
+      storeCode: round.storeCode, currency: round.currency });
+    if (typeof selectedCart.locale !== "string" || !selectedCart.locale.trim() || selectedCart.locale !== selectedCart.locale.trim())
+      this.fail("Selected Cart locale is unavailable");
     const entry = await SERVICE.DefaultCartOperationService.entryModel({ ...request, ownerId: bid.buyerId,
       ownerRef: bid.buyerRef, actorRef: bid.actorRef, cartCode: row.cartCode,
+      participantEnterpriseCode: bid.actorRef.enterpriseCode,
+      storeCode: selectedCart.storeCode, locale: selectedCart.locale,
       payload: { entryCode: row.cartCode + "_ENTRY", productCode: round.productCode, variantCode: round.variantCode,
         priceQuoteCode: quote.code, quantity: "1" } });
     await this.insert(request, SERVICE.DefaultCartEntryService, entry);
@@ -512,7 +650,7 @@ module.exports = {
    * @override Preserve exact command proof and this.selected; callers cannot nominate a replacement hold.
    */
   command: async function (input, operation, command) {
-    if (!["capture", "release"].includes(operation)) this.fail("Unsupported auction terminal operation");
+    if (!["inspect", "capture", "release"].includes(operation)) this.fail("Unsupported auction funds evidence operation");
     const proof = await SERVICE.DefaultBiddingAuctionFundsEvidenceService.authorize({ ...input, payload: { operation, command } });
     if (proof?.confirmed !== true || proof.checkoutRequired !== true || !same(proof.command, command))
       this.fail("Selected auction funds evidence is unavailable");
@@ -534,6 +672,7 @@ module.exports = {
    * @override Keep purchaser/scheduler admission and immutable same-command replay; never switch a prior decision.
    */
   fence: async function (input, operation, command) {
+    if (!["capture", "release"].includes(operation)) this.fail("Unsupported auction terminal operation");
     const { request, row } = await this.command(input, operation, command);
     const decision = operation === "capture" ? "CAPTURE" : "RELEASE";
     if (row.cancellation && (operation !== 'release' || command.idempotencyKey !== row.cancellation.key + ':payment:void'))
@@ -566,6 +705,25 @@ module.exports = {
   evidence: async function (input) {
     const { operation, command } = input.payload || {};
     const { request, row } = await this.command(input, operation, command || {});
+    if (operation === "inspect") {
+      const placement = row.placement;
+      if (row.status !== "BOUND" || row.cancellation || row.terminal ||
+          !same(request.ownerRef || request.buyerRef, row.terms.ownerRef) || !same(request.actorRef, row.terms.actorRef) ||
+          !placement?.command || placement.digest !== this.hash(placement.command) ||
+          !same(placement.actorRef, row.terms.actorRef) || placement.command.cartCode !== row.cartCode ||
+          placement.command.orderCode !== row.orderCode || placement.command.paymentMethod !== "LOYALTY_REWARD" ||
+          placement.pending !== "authorizePayment" || !placement.completed?.includes("DIGITAL_RESERVED") ||
+          !Object.hasOwn(placement.results || {}, "reserveDigitalUnits") ||
+          command.idempotencyKey !== placement.key + ":payment")
+        this.fail("Original auction authorization journal is unavailable");
+      await this.rewardPaymentTerms({ ...input, auctionFunds: { commitmentCode: row.code },
+        idempotencyKey: placement.key, payload: structuredClone(placement.command) });
+      return { confirmed: true, tenant: request.tenant, operation, orderCode: row.orderCode,
+        roundCode: command.roundCode, bidCode: command.sourceCode, reservationCode: command.reservationCode,
+        amount: command.amount, idempotencyKey: command.idempotencyKey, decision: "INSPECT",
+        receiptCode: "AUCTION_AUTHORIZATION_" + this.hash([request.tenant, row.code, command.idempotencyKey]),
+        authorizationFence: true, terminalFence: false };
+    }
     if (!row.terminal || row.terminal.operation !== operation || !same(row.terminal.command, command) ||
         row.status !== row.terminal.decision + "_DECIDED") this.fail("Auction purchase terminal decision is unavailable");
     return { confirmed: true, tenant: request.tenant, operation, orderCode: row.orderCode,
@@ -583,7 +741,7 @@ module.exports = {
    * @override Preserve the retained actor's participant Payment partition, original receipt joins and distinction between completion and re-award permission.
    */
   reconcile: async function (input, payload) {
-    const { request, round, bid, selection } = await this.selected(input, { roundCode: payload.round?.code, storeCode: payload.round?.storeCode });
+    const { request, round, bid, selection } = await this.selected(input, { roundCode: payload.round?.code, storeCode: payload.round?.storeCode }, true);
     const row = await this.read(request, SERVICE.DefaultCheckoutAuctionCommitmentService, selection.checkout?.orderCode);
     this.assertFields(row, { terms: this.terms(round, bid, selection) });
     if (!row.placement?.acquisitionStarted && row.terminal?.decision === "RELEASE") {
@@ -613,9 +771,61 @@ module.exports = {
     const checkpoint = await this.read(request, SERVICE.DefaultCheckoutCheckpointService, row.orderCode);
     if (!checkpoint || checkpoint.ownerId !== row.terms.ownerId || checkpoint.cartCode !== row.cartCode)
       return { confirmed: false, recoveryRequired: true };
+    if (checkpoint.status === "COMPLETED" && row.terminal?.decision === "CAPTURE")
+      return this.completedReconciliation(request, row, checkpoint, bid);
     // Captured or partly acquired purchases must resume; generic compensation is not auction holdings proof.
     return { confirmed: false, orderCode: row.orderCode, recoveryRequired: checkpoint.status !== "COMPLETED",
       purchaseCompleted: checkpoint.status === "COMPLETED" && row.terminal?.decision === "CAPTURE" };
+  },
+  /**
+   * Reads original completed journal/checkpoint/Order/Payment evidence for Bidding's terminal projection.
+   * @param {Object} request Fresh admitted original participant and merchant partition.
+   * @param {Object} row Canonical auction commitment.
+   * @param {Object} checkpoint Canonical completed Checkout checkpoint.
+   * @param {Object} bid Original selected bid.
+   * @returns {Promise<Object>} Exact PURCHASE_COMPLETED receipt; no financial or fulfillment effects.
+   * @throws {Error} Refuses pending, foreign or contradictory completion evidence.
+   * @sideEffects Bounded original Order and captured Payment reads only.
+   * @override Completion is distinct from failed cleanup and never authorizes reaward or release.
+   */
+  completedReconciliation: async function (request, row, checkpoint, bid) {
+    const p = row.placement, evidence = checkpoint.evidence, capture = p?.results?.capturePayment;
+    const required = ["AUTHORIZED", "ORDERED", "PAYMENT_CAPTURED", "RELEASED", "COMPLETED"];
+    if (row.status !== "CAPTURE_DECIDED" || row.cancellation || !p || p.pending ||
+        p.digest !== this.hash(p.command) || !same(p.actorRef, row.terms.actorRef) ||
+        required.some(phase => !p.completed?.includes(phase)) || p.results.complete?.status !== "COMPLETED" ||
+        checkpoint.orderCode !== row.orderCode || checkpoint.idempotencyKey !== p.key ||
+        !same(evidence?.ownerRef, row.terms.ownerRef) || !same(evidence?.actorRef, row.terms.actorRef) ||
+        evidence.participantEnterpriseCode !== row.terms.actorRef.enterpriseCode ||
+        evidence.cartClosure?.cartCode !== row.cartCode || evidence.cartClosure.cartClosed !== true ||
+        row.terminal.command.idempotencyKey !== p.key + ":payment:capture" || !capture?.code)
+      this.fail("Original completed auction journal is unconfirmed");
+    const order = await this.read(request, SERVICE.DefaultCommerceOrderService, row.orderCode);
+    const payment = await this.read({ ...request, enterpriseCode: row.terms.actorRef.enterpriseCode },
+      SERVICE.DefaultPaymentTransactionEntryService, capture.code);
+    if (!order || !["PLACED", "FULFILLED", "COMPLETED"].includes(order.status) || order.cartCode !== row.cartCode ||
+        order.ownerId !== row.terms.ownerId || order.idempotencyKey !== p.key || order.currency !== row.terms.currency ||
+        !same(order.evidence?.ownerRef, row.terms.ownerRef) ||
+        SERVICE.DefaultExactAmountService.compare(order.totalAmount, row.terms.amount) !== 0 ||
+        payment?.status !== "CAPTURED" || payment.code !== row.orderCode + ":capture" || payment.orderCode !== row.orderCode ||
+        payment.cartCode !== row.cartCode || payment.ownerId !== row.terms.ownerId || payment.currency !== row.terms.currency ||
+        payment.idempotencyKey !== row.terminal.command.idempotencyKey || payment.evidence?.operation !== "CAPTURE" ||
+        !same(payment.evidence.auctionFunds, { commitmentCode: row.code }) ||
+        !same(payment.evidence.participant?.ownerRef, row.terms.ownerRef) ||
+        !same(this.phaseResult(payment), this.phaseResult(capture)) ||
+        SERVICE.DefaultExactAmountService.compare(payment.amount, row.terms.amount) !== 0)
+      this.fail("Original completed auction Order or capture is unconfirmed");
+    const units = p.results.reserveDigitalUnits || [], sales = p.results.confirmDigitalSale || [], deliveries = p.results.deliverDigitalUnits || [];
+    if (units.length && (!p.completed.includes("DIGITAL_SOLD") || !p.completed.includes("DIGITAL_DELIVERED") ||
+        units.length !== sales.length || units.length !== deliveries.length || units.some(unit =>
+          !sales.some(sale => sale.code === unit.code && sale.status === "SOLD") ||
+          !deliveries.some(delivery => delivery.code === unit.code && delivery.status === "DELIVERED")) ||
+        !same(evidence.digitalReservationCodes, units.map(unit => unit.code)) ||
+        !same(evidence.digitalSaleCodes, sales.map(unit => unit.code)) || !same(evidence.digitalDeliveryCodes, deliveries.map(unit => unit.code))))
+      this.fail("Original auction digital completion is unconfirmed");
+    return { confirmed: true, outcome: "PURCHASE_COMPLETED", bidCode: bid.code, orderCode: row.orderCode,
+      cartCode: row.cartCode, commandKey: p.key, checkpointCode: checkpoint.code, paymentCode: payment.code,
+      receiptCode: "AUCTION_COMPLETED_" + this.hash([request.tenant, row.code, p.key, "COMPLETED"]) };
   },
   /**
    * Projects original phase recovery without exposing private financial receipts.

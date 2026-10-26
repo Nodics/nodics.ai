@@ -17,18 +17,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageacceleratorsagoraindustrytemplates",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageacceleratorsAgoraIndustryTemplates",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9748b32790e7719d305c3221eb57ea3741a437845cd8a0c4b56b3a1ca4082daa",
+    "checksum": "3d9b268a1bbab1500172f8aadcedeae03b035da627fbd465ca160d7e7f8030a4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -46,11 +45,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -58,18 +53,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataacceleratorsAgoraIndustryTemplates",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f4fbbc4a76a2bb8fbded0cb073462ca085475d32fac037892ab795ff74c1a467",
+    "checksum": "d011946369a2e3d48675ec956f593f2dbf83846ca79ea75ae787cef93a2bac8f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -87,11 +81,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -99,18 +89,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageacceleratorsagoraindustrytemplates",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsagoraindustrytemplates",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1ce03e8985b5b56bcf891194fe4d8b4eefe21cc4a1071d5e38dd339f29ca1226",
+    "checksum": "b610890bbdd4d7f6ac877ad6cdf29f70d4f521a5dcab4e80f6001ed20515e465",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -126,11 +115,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -138,18 +123,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ed7e7e16917e35e7966b00f7327c7b86e29ab14fd05d0236e6870787a6804a45",
+    "checksum": "a2a40d34fa30bd3500910cc87a710381f876669ef72a1b3dd34699284e46f315",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -165,11 +149,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -177,18 +157,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagecommerceoverview",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagecommerceOverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "fd84c02d1a5ab4ea6aff87cbf9bf14adc4e927464e3242423d6a2a656ed9ff26",
+    "checksum": "c366f33dd7b474edc1e8159ca364b7ff48993fb800943656523c2181b7a92c90",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -206,11 +185,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -218,18 +193,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommerceoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceOverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "205c9e801b53160fec0161913f9ba7e34bc7f017750625fd6c6a8f4d992282fc",
+    "checksum": "2604b852e1c8f387f4a4aee1b591851b1f4087375c095776bf662b202615fbd9",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -247,11 +221,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -259,18 +229,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagecommerceoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagecommerceoverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ebb63cba6a8365728c02105e0da8b5e0d794bef621cbec735a089b74c0f4aaa6",
+    "checksum": "862c761e7def6eabf4f103e28ecd7559462678443b269ff535ed526d283b2609",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -286,11 +255,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -298,18 +263,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommerceoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommerceoverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "244aa430ec281d962fbb1895d7be848b099623fe8d8db79777c4dd097ece614d",
+    "checksum": "6e30fc99427980b76707e1bd6322247635dc86ddbccb8bc9853fa41d3a9330e4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -325,11 +289,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -337,18 +297,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagecommercebasefoundations",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagecommerceBaseFoundations",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3d0d9d6f742771cb0f4e4ae03196c6c1ada60906b6c78318e8e796963865b063",
+    "checksum": "29de7105f8947314fda634028c2ee7ed746c9bfab9e94ff8e4c1f9fd359628f7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -366,11 +325,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -378,18 +333,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagecommercedataauthoringfulfillment",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagecommerceDataAuthoringFulfillment",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6676d5a5a8560ebcf189977474db4576f7c740421cbba2f46774ead135a806d5",
+    "checksum": "20ab6daa09fc5915b5fdce6687e6ff15547c59ab57b8ab02ed88dcce39afa91c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -407,11 +361,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -419,18 +369,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommercebasefoundations",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceBaseFoundations",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "11f367f8f3bb07e8d72c13092cf2b8dd6508a66ec6c42ca5598f7fb8150f9c26",
+    "checksum": "032adcd17f6f82bf2c70422d7093bf2c1ee14529a782b3251479c986b5bd0fe1",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -448,11 +397,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -460,18 +405,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommercedataauthoringfulfillment",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceDataAuthoringFulfillment",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e931c27006f3c7b6d48a1e5ba14712c92ce8a58be08181a173ddbbd6c24ad2e6",
+    "checksum": "d464689936f83e8b32775e1a7c31a2eec73840678cd354be32d28219a0de0a41",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -489,11 +433,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -501,18 +441,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagecommercebasefoundations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagecommercebasefoundations",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "350ecd340227863e1a3413c61c604984f8d364c5975215e1de2eb418c1c4f722",
+    "checksum": "63398a612a82ff4cf5ce30246757cb56191fc11c6365a527dda70e9bbb3a8465",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -528,11 +467,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -540,18 +475,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagecommercedataauthoringfulfillment",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagecommercedataauthoringfulfillment",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2e77bd76271dfc0439cc04e6a47a580505fcdb499fd43a8f7112aad765cb290a",
+    "checksum": "1e146d17b4e74a48cf48185372eae8f2f70e19d711aaee735df9371b4eee13bd",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -567,11 +501,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -579,18 +509,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommercebasefoundations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommercebasefoundations",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6488d94ed172e2a0d306f5de2613435322f50b0504b3103d408ffb338381953d",
+    "checksum": "8932043a3e79f59f4ab39e5d1906b5427ab8462db22ee6f070bbf75cd9ebb0f4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -606,11 +535,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -618,18 +543,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommercedataauthoringfulfillment",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommercedataauthoringfulfillment",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "084248148b4a99c332191aa8fc019e0f224485c321c984b001409bbbddb10973",
+    "checksum": "36547b73984cdea18bcfe928b46acf8ccd831d49430ad8f3bae44724d5020566",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -645,11 +569,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -657,18 +577,17 @@ module.exports = {
     "code": "nodicsDocsPublicationproductnodicsdocumentationproduct",
     "targetType": "PRODUCT",
     "targetCode": "nodicsDocumentationProduct",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f894a4eb4861db9aa87bd4c01ffebef2b37b8e2283d09a8e020020cb9229ce89",
+    "checksum": "e18a245fd09b798ccc5dad7ace5688b6a9439e86f0b6e827293f69e2ed6b37b7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -685,11 +604,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -697,18 +612,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnavigationnodicsdocumentationnavigation",
     "targetType": "NAVIGATION",
     "targetCode": "nodicsDocumentationNavigation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "7279580b6604731136d5fd2b1c8834e114e6446e3f4930d25b0dfa00289f33e3",
+    "checksum": "10426c19f77db2fac862864162225d62e15bb1e02a0be40a9d6a2471284deb26",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -724,11 +638,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -736,18 +646,17 @@ module.exports = {
     "code": "nodicsDocsPublicationaccesspolicynodicsdocsaccesspublic",
     "targetType": "ACCESS_POLICY",
     "targetCode": "nodicsDocsAccessPublic",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a78a6c7c8559068483946b2abd6ad36b2742bceffb2cd7f255c69b52f0beb39a",
+    "checksum": "d8693be6ea35bd623cd3fc25aaa823b7bedeaf3dcba28a4f577540f2248484a3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.accessPolicy.update"
@@ -763,11 +672,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -775,18 +680,17 @@ module.exports = {
     "code": "nodicsDocsPublicationaccesspolicynodicsdocsaccessauthenticated",
     "targetType": "ACCESS_POLICY",
     "targetCode": "nodicsDocsAccessAuthenticated",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "225b94463a5b99348877911c9ea633928a73c8b45bfe210a3ffcfc6bcda3a4f0",
+    "checksum": "1bae822f00148c8dd534898c29df0cfa5b937190c7e272d687075d0d915165c5",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.accessPolicy.update"
@@ -802,11 +706,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -814,18 +714,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnoderoot",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeRoot",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b1fbe0d7c58d4d77a6f05f83a96badbedc8ac854e296a9cc64efe5370e705d94",
+    "checksum": "4d6174775ec1f7f1216783f291eada925de4ac00fad82fa81870969f946e6cd1",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -843,11 +742,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -855,18 +750,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecstarthere",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecstartHere",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8c47e69aa05b225679260bd79a9b85bc725f5d1347ba85c44313d575cbccb24f",
+    "checksum": "379088d8d408dd7d8943303e44ddca1c9e07dc15ea722ed08653a03eb39fa5c3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -884,11 +778,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -896,18 +786,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecnodicsframework",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecnodicsFramework",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8650eba02f77c38414962d5066d909a00e7eb9ec2a9daa7f91c01c3e30dd6c4f",
+    "checksum": "1ebe067b15e87b6ded0b6947c720f5d25c5e094cfbec737d3d582a27a89f8fec",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -925,11 +814,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -937,18 +822,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecdocumentationroadmap",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecdocumentationRoadmap",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3623c9a5e93b901211c1a7ff2fe823b8a99e4a84b6be10f0e5dbe8db30ce167c",
+    "checksum": "0a07ddc827d942474aac77d4ae2dd6b269c148fc8d5b378480757876e5e8a62a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -966,11 +850,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -978,18 +858,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecframeworkarchitectureanddesign",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3c7cca0b0f082c3c5d4d6ad8063fd033c3bedf4bc359e6140e35c1e2c396ddf2",
+    "checksum": "9d273f99dba54cecf67376918e0394537376b5cf7d6d8dca5cd1de88ee3dea77",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1007,11 +886,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1019,18 +894,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseccapabilityregistryandlifecyclemanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeccapabilityRegistryAndLifecycleManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2954b5becdf67aacfc1b36db06df919bfaf9d6a3f0c9f58d71627bc186749715",
+    "checksum": "290011b0fd94066d9ab05b7a98cd85a05540f3cb152f6984f000175f7e6faad2",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1048,11 +922,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1060,18 +930,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecfoundationruntimeservices",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecfoundationRuntimeServices",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "566bcac23c7045133a696b908426328c82801b4ce01e3a9d5555c9570a958f3f",
+    "checksum": "73d338951068e491aa98d26ff1cb1e7468aa3eaf0120e84bfb039b7b609d21aa",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1089,11 +958,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1101,18 +966,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecnodicsapplicationsuite",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecnodicsApplicationSuite",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "5ea1f5f686faea76bc5ca94d7f1e91a9e022075c0189aa1ee20a1231546df8f5",
+    "checksum": "8c9910ab2feb4ca3b47c451105a5319f8fdae5a279d6395cb8b09cb6791423fb",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1130,11 +994,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1142,18 +1002,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecsolutionusecases",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecsolutionUseCases",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "aa540dfdbb63d8bd8684c2a9c0bdeff7a81e326af7c7307b20daf3861b7f3105",
+    "checksum": "27c0af5a1a2054c98fd6b27459850651cc94adab5f0436ea4124f85afdf4da5a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1171,11 +1030,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1183,18 +1038,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecacceleratorsandindustrysolutiontemplates",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "41c80fe29b13d3058b475c28ccaf23cabf397486d9df60a9e363e51161e0abef",
+    "checksum": "680bc6af6e653a0c0d410785f4df3e247cb46fc8dc4adbefb06e0ab964020d38",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1212,11 +1066,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1224,18 +1074,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecnodicsinstallerandworkspacesetup",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecnodicsInstallerAndWorkspaceSetup",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8e7f4f4bffe8fe0f63dbf2c54aa36ac99dc23c6cc41da26f4d8ba614def0f8b6",
+    "checksum": "795846e5844c196024c6760a1f73354b737fd519c6b98fad9bb866f6030fe745",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1253,11 +1102,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1265,18 +1110,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecapplicationbuilderandworkspacegeneration",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecapplicationBuilderAndWorkspaceGeneration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "14c79cd61ae3ae01c6735a4f2e874e014428af5dead4ebfed5e3e2b760597219",
+    "checksum": "90d81987d7ebdb3a77617c0c2aa0af7402705afa155e74969f26ba017c921460",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1294,11 +1138,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1306,18 +1146,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecaxisandbackofficeoperations",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecaxisAndBackofficeOperations",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9708c2c5d4dc2c450af5e950bfb554a9d2de9f59cbf6b75f1c78ef26544fec63",
+    "checksum": "d8270431bb9610c8c3f7aa43c5cd984c6afe50ae550ffc0adbbf1a62ed396f43",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1335,11 +1174,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1347,18 +1182,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecbusinesscustomizationinaxis",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecbusinessCustomizationInAxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "01847e0063ed521e1a5c647715cf765d85e08b735c873664b0f3ce6c1faa57d4",
+    "checksum": "258e2e5902a31e469302d627d92e6457ca979d2b7808f7e9fcc69f66ea7ad196",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1376,11 +1210,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1388,18 +1218,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecuserenterpriseandtenantmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecuserEnterpriseAndTenantManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1906b572c70aa2722a128bde52b77ea3301f2a7bf969e963e9b217210c3f8a79",
+    "checksum": "1098a57fbcaf117d6536f78ef241c95f13ba352f4bc0f7c2396df13b75347b68",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1417,11 +1246,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1429,18 +1254,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecsecuritygovernanceandcompliance",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecsecurityGovernanceAndCompliance",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "503a49c2f54645720dcf64bc57cd4d3ffc1b14f2e129719f59932c012253efdd",
+    "checksum": "00e757349ca959b3f09e43cb3eac6349433cb4339309f41c6ef64ff5c908201a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1458,11 +1282,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1470,18 +1290,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecapplicationconfigurationandruntimebehaviormanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecapplicationConfigurationAndRuntimeBehaviorManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d1b69aaf4d98b52676055499b16aeeb6316549736757d3d824a0033d3580b68e",
+    "checksum": "77519d6e6e4c3b4303a29c82e3b7da07140cebf04acbc6457787edf58e375f7c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1499,11 +1318,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1511,18 +1326,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecruntimegovernanceanddynamicchangemanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecruntimeGovernanceAndDynamicChangeManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b7250a842f0f9b8b70b79edcace778cb320f36f7ae150f31cd970e3e264be85d",
+    "checksum": "de206f050c62f45b676f9a8c6e9f29d6df9c7068fbd1fa19a2e7872e21005013",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1540,11 +1354,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1552,18 +1362,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseclocalizationandinternationalization",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeclocalizationAndInternationalization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a1d3a69bd6fbdc233d62c9e1c93b8e66cd84dce1f30b83f8ca0fa5f40072d39a",
+    "checksum": "1dd9ce954866baa3fc931caf44678b3ada5ce821b81acbe6105ce9a0bcc0726d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1581,11 +1390,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1593,18 +1398,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecdatamodelingandschemamanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecdataModelingAndSchemaManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f5dda299920a887b4e7f2070f43527241247d892c1b6ee2718556d97177f9ac8",
+    "checksum": "09c904ea9c3d3ff81c2e83fc36843cfe9b495389d1021020df532340260b51ab",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1622,11 +1426,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1634,18 +1434,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecdatabaseandpersistencemanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecdatabaseAndPersistenceManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e5e0652da74f75f8582d4f28aa856fd50807cfdc271732fb0d8a8ee51a7aa454",
+    "checksum": "3d6e957a9451a7bdc99fe22c65e1b27f3f206eed6bf46b67c99c333d3bbc993c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1663,11 +1462,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1675,18 +1470,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseccachingandruntimestatemanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeccachingAndRuntimeStateManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3b525cc31f00287527e796e9b880f420d8d7b97098b5732ac0de0049bbaf664e",
+    "checksum": "358cb5fb0f050ca4eaf3a43759c45c4fe0120772a69d124f7501af2999cbfc5f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1704,11 +1498,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1716,18 +1506,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecdeveloperextensionandprojectcustomization",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "83acc64469a8d62dd7eda9d76b2396d9a28d6eac368e9e8b69540d5a76fe1b88",
+    "checksum": "6b0fa52c5698803c379bb620b7cff7253da8591a7b9dbbb2c023d60d70cbf135",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1745,11 +1534,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1757,18 +1542,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecstoremarketsiteandchannelmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecstoreMarketSiteAndChannelManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9921f1030a8cfe4d25819612b3927df0b517a6a998875ef2b1416ed68e8511f0",
+    "checksum": "17af2bcae88a02a7ef6d3e4a4ba07184baa94a4037da8b08baffe65a1a2c1dd2",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1786,11 +1570,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1798,18 +1578,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecwcmsandcontentmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecwcmsAndContentManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "820ada332c5e773204562ceee60534c87f7904397ca0a9f60fbe129767595dd6",
+    "checksum": "843c2d56cc53ef21cde78866f1c4b1d476a8a270a8af2fb433c9ce7682e7f584",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1827,11 +1606,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1839,18 +1614,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecproductcataloganddiscovery",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecproductCatalogAndDiscovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "21b50ff16687f8bbc03f48be8d47bcd89ec62c620120d3203cf8c0331f8512d1",
+    "checksum": "1e9503d62391f6af17c90c85de62ef67414131e2b19699f200b71af2041a8440",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1868,11 +1642,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1880,18 +1650,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecsearchanddiscovery",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecsearchAndDiscovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "107e3d54432757d6e8766a786d601761bc266c94bb48d57f6750023978f39483",
+    "checksum": "d8dcfff7ca7aad2053357399cb788dd2483878506482c7a3855b513324c2baab",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1909,11 +1678,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1921,18 +1686,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecmediamanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecmediaManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a4b8b175171c27d3b3e13b7480fd0292a16ea03ee0faa2e85fec1da4b0713cd9",
+    "checksum": "2837ee1536f307cf0af6acac0e91369627a8e4355e676cc310db5705cc9b6285",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1950,11 +1714,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -1962,18 +1722,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecinventoryandstockmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecinventoryAndStockManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6478083bd7883496a0bcac1b8a1eccdb8e658ec74055829628faf6caca802a77",
+    "checksum": "8eeb7b21988c8b342e61deb8f66d05f7e0c0d1d2e678d010b35fa78d17f6261f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1991,11 +1750,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2003,18 +1758,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecpricingpromotionsandtax",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecpricingPromotionsAndTax",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0f1ea9f19eda80abe33ff12e181f1488de9ee4a289ae3d4e1cbeaf0ac268e775",
+    "checksum": "e779aeff6327724ef2874f08ae43626a8f34a900a1db31af6caca4dfbc5e1cea",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2032,11 +1786,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2044,18 +1794,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseccommercecartandcheckout",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeccommerceCartAndCheckout",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "eefbdf9fd281968b0d78e8a27690a015e2e2d9d6ea9c320ffd9e8fdcc5440104",
+    "checksum": "221677f836e2e764c4b61cbf637cce947c3fc473c7ad496bc02141b2ae475102",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2073,11 +1822,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2085,18 +1830,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecpaymentmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecpaymentManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "622201df96c650d4ed4e191e5340b9c843be0c84afb0dd65b6d888e643e5ff3e",
+    "checksum": "fea1383708f09a1d340d5ba881b41fa23581f2417d808e0021dd2c7d7ab03a9b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2114,11 +1858,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2126,18 +1866,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecloyaltyandrewards",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecloyaltyAndRewards",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "514911ad66bda61ca1a29291ed35fc5870f2da590c874c1fca97e1c51c2a1d07",
+    "checksum": "8a8a8e4b8d7e71a7719699ecf628396017755cb3a5469927a69dad2e6e88b6f5",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2155,11 +1894,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2167,18 +1902,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecshippingandfulfillment",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecshippingAndFulfillment",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "610adf2603e8f859ba48dc0bccdff7d39ef6c760bfbb42097a79b11934a9322b",
+    "checksum": "ef1e6f97effe4d138680ec33b5af0986abdeffbd36bc0caf365551c70e01e3c6",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2196,11 +1930,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2208,18 +1938,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecordermanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecorderManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b785c372ec989a340f904e9ad8de0d0fa4d2af80cfbf4a64f309763031d1123c",
+    "checksum": "40f33bf4e979d5d8dca2942b7ac8a82399145bb4e8682d7f8e822319afd346aa",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2237,11 +1966,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2249,18 +1974,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseccancellationsreturnsandrefunds",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeccancellationsReturnsAndRefunds",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8dc70c1af9c2cf83b73b2cd2c7321240353ddfe0cc4183d50ddbd25061602ef9",
+    "checksum": "0f47abf434f8326b7dd1fc61d97a63a05b4f311d7cd50f7b65356ae0d959b989",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2278,11 +2002,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2290,18 +2010,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseccustomerengagementandfeedback",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "17b9c0809996a34d01599141333e216a4a719d62b68f566b04a82581f1417205",
+    "checksum": "53869018f3f8d608b8b513447bd5c9bfb1e0838fb5dd5eac24f60ed73f95be58",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2319,11 +2038,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2331,18 +2046,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseccommunicationandnotifications",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeccommunicationAndNotifications",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e0b6e1a00758d30c98afc1a38240864e30b061bd525ecae61852f1ce1eb7864a",
+    "checksum": "e12a78ba040fa2e1ee99b461bf1f8ed9fa2f0aaee3eae751d9ac1bca8365fac4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2360,11 +2074,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2372,18 +2082,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseceventandmessagingmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeceventAndMessagingManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "c4f4e8923b412f059722557f08a2299961f01f2c3d87b19bbd058774921211eb",
+    "checksum": "670ca083e94a2d7c03be001a50584023c429e0b6a74148739ae1392d940419d9",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2401,11 +2110,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2413,18 +2118,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecprocessandworkflowautomation",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a2b2079fd120496ee88e1a03e237d8d1969b6a1106a955194360f43133666bb8",
+    "checksum": "37b4e3e9dea8ff790eb1ce227dc267acdd1d2773d1fbf412ac6cc458820c270e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2442,11 +2146,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2454,18 +2154,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecpipelineandbusinesslogicorchestration",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecpipelineAndBusinessLogicOrchestration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f579bfbcb0aa908d3051d4f9fd7fff4d73f2c07fa20a7aa96607702b23f06ee0",
+    "checksum": "f83e69295d9124b5c5fc6d2dc2359a287e0ff69a93b46af2234abc42c77bc581",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2483,11 +2182,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2495,18 +2190,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseccronandscheduledautomation",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeccronAndScheduledAutomation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "710bf2c1dd9662f0a525137bad111df553739f5431307fd8d15042d1c537d9ff",
+    "checksum": "30a0715c5f85e09c6e169f4092fb6d7ace1cb6649d6cc1f40709aca40b37d799",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2524,11 +2218,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2536,18 +2226,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecdataimportexportandmigration",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecdataImportExportAndMigration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8ecc105e2377ca2fc803a561cef27f0276f157ee2f47201f86181098c3d58230",
+    "checksum": "6765011a8002046fb4bc685b2afa5afe868a3e2f6118a8f6a1e91769696f8e65",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2565,11 +2254,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2577,18 +2262,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecsystemintegrationandexternalconnectivity",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecsystemIntegrationAndExternalConnectivity",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "4234f2790189c566405c46ed8e2da34a5f3b63d322b490632a159e328c0dba3e",
+    "checksum": "550fe81a92b17aac735b3cc4a1f8263ca51250bd07abc6532287e2d03c50ee04",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2606,11 +2290,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2618,18 +2298,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecoperationsmonitoringandrecovery",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "5ac8a63c2e63ec3f89655bc9d585f952464cd0e31e8eec411988d4156936eb4f",
+    "checksum": "5a8fd04d2624072baa6407df20441901183970f1016312a2cf884f70aeddf176",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2647,11 +2326,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2659,18 +2334,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecqualitytestingandcertification",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecqualityTestingAndCertification",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "64933e8e728a49e91c7abd489570a8b0329b62e41a9183d7e592821e1d635787",
+    "checksum": "395230502df4c8c2b9871896e3de11aab6d90568f68920a52edec2e9ff11c723",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2688,11 +2362,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2700,18 +2370,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecdocumentationmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecdocumentationManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6d611aa89b9863c7de5a1ec7c0181fb82a5c13ff7e7062819688d2ff4562c40a",
+    "checksum": "0969f35b73f3e220d8da0b61f78cc60a18c71dd1623936cbb0d1a754c10d96f3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2729,11 +2398,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2741,18 +2406,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecreleasestagingandpublication",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecreleaseStagingAndPublication",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6d6488f641f40de56edd0f59ce89b641666e39e2a4afbf836646414e255eedd4",
+    "checksum": "81ced61e3b6d0dd139857b9fab2d56438b42002842e6a6edf041c3724e090e46",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2770,11 +2434,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2782,18 +2442,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecaianddevelopertooling",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecaiAndDeveloperTooling",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "284a2f28bd8e9652285295ba369141cf5bf4596a111d63fef522db0159250fa3",
+    "checksum": "d955e1c84746865bbb1723044401a4800c926e0557abf0985074a43d496acbf0",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2811,11 +2470,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2823,18 +2478,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecreference",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecreference",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "99976e6bee37f527e5db7755266210a4a60ba34b7a0f2398ceb4a0c503e3e766",
+    "checksum": "327f90221dea4cbb389c674ee72d15374a02f4e761026fd8c728f407791c4f79",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2852,11 +2506,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2864,18 +2514,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagedocsgateway",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagedocsGateway",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f23c3ad8fd16cc6d954fc2ff52e83cae1fe071a2767529ea3683aa82a6de5a4e",
+    "checksum": "825ff9b3e6eb88c6ce26538f2003851dc47c404b543c518a58284bb258212217",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2893,11 +2542,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2905,18 +2550,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageframeworkwhatisnodics",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageframeworkWhatIsNodics",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ff80e20182c875bfb977a2d14ad1cb00d9b0306d90ac49a7e74e24237cf1ce64",
+    "checksum": "f882e711d1d7ccd6e258f91d486725a6c02f1503600627c8b7f5cb414bd86b97",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2934,11 +2578,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2946,18 +2586,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageframeworkwhynodicsexists",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageframeworkWhyNodicsExists",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9efd8eb9ff8b7e20b1a3ba77dd9434db400cba27975d69eebb81000069ddd5bd",
+    "checksum": "0a481c759815e98eb0d9d87735912e268783835c5280376aa9c73cc29e923dc2",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -2975,11 +2614,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -2987,18 +2622,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageframeworkhownodicsworks",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageframeworkHowNodicsWorks",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "63f9279d4e9b53c7e74d38a04d7a7487bba3181055cb24fa606b2d99b33000a7",
+    "checksum": "d36915e9360b176c27add3f70ff343c618bd23dbfc08c03e92d31a8808ceb940",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3016,11 +2650,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3028,18 +2658,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageframeworkadoptionandfirstjourney",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageframeworkAdoptionAndFirstJourney",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "bd9a7add58357d70a9adee26712627bb08ff5f8f4f188e0e4148af44d9afe30c",
+    "checksum": "c3c0654ade82c6c1394fab201776248b9593be0506f646ec70adae2bc4710f2b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3057,11 +2686,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3069,18 +2694,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagedocsdocumentationroadmap",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagedocsDocumentationRoadmap",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "be6b0b00b4da062f3cb980557e121cbc275eefc40737f538617acf3ce0f03a58",
+    "checksum": "f8f4f4cc02970faaa26f1001bffe8c7d28c739a83414b603d44aa611a42b8782",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3098,11 +2722,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3110,18 +2730,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagedocsdocumentationprinciples",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagedocsDocumentationPrinciples",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "56bddf86b87e020f2329b8db133e7bf1e644e7dbdc621b11152c8b75dc56874a",
+    "checksum": "aecf15aac2679ea87650c838c4b777b550176ee14d188490e0008e04584175c8",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3139,11 +2758,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3151,18 +2766,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagedocsreaderjourneyandcoverage",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagedocsReaderJourneyAndCoverage",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "312ae8361658f0b5f20698ca299ed806f3cf5ee0b698a36cdfbb42dc598703ca",
+    "checksum": "9814cb07abd67d667df4f9c3bfd1d622dfb2dd67d98d38155d0feea82a7b85ab",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3180,11 +2794,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3192,18 +2802,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagedocsdocumentationpublishingmodel",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagedocsDocumentationPublishingModel",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "31547fd56a41260af9c505549cee191f3449e697968f686053d9b3c771ba9107",
+    "checksum": "dac341ef3a2cd68bacd622f3198c6ad83ce726d31dd32c9fb53e37c94f2209b4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3221,11 +2830,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3233,18 +2838,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageapplicationssuite",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageapplicationsSuite",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f90481ed13ed8b18885f3a6af99eb6b2f21d457804a11b05d687593027107481",
+    "checksum": "68de21bd12ed6f029b5df03cf7c7e71025d3d1bfb787ca54b5ae8b449af08e5a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3262,11 +2866,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3274,18 +2874,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagesolutionstaskexecutionengine",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagesolutionsTaskExecutionEngine",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "786a39f9a16b5ff18939a510d062070d29f1f62ededda9d5c22fbdf9e2a79cb6",
+    "checksum": "ec091062b67ce8c212575dded2baad2db6344fbd5dd96f2bd346b714bd7f3900",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3303,11 +2902,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3315,18 +2910,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagesolutionsdataengineeringanalyticsplatform",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagesolutionsDataEngineeringAnalyticsPlatform",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d8714dace271530b2d280300a49f9e31f3697acdcb60c10a72c66864706e0ace",
+    "checksum": "173c7c2e9f45d8b9681194cc626f3c4ef58007c22b0a05a757ac18bb972465d6",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3344,11 +2938,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3356,18 +2946,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageframeworkcapabilitydocumentationmaturitypattern",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageframeworkCapabilityDocumentationMaturityPattern",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "7c7947009176e450b30d38713cce85e6e034939b5b6a90e2bb7ed8719161a073",
+    "checksum": "ba805ae72610308ce04be2eec425ab0ab03fe8a7fe6d99a87fe3d91922454877",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3385,11 +2974,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3397,18 +2982,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagedocsoverview",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagedocsOverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2bee68d5dcdb331a931fc50436258ac948d9d37a1324a68646e094f31a9323ad",
+    "checksum": "d9b9bc1429692bc15f50a510acc94f77100b93480c7f82050aec185dbe4a6121",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3426,11 +3010,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3438,18 +3018,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagedocsdocumentationpublishingrunbook",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagedocsDocumentationPublishingRunbook",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "eb8dc6b2091f341fa1c89365ec5f458d2412bfb36a4224835706c8ab3c4d2ebf",
+    "checksum": "dd9f40fe4f4f8b5956dc188ee164a9bf84d314243a7a5aa3300dc255a3a6d64b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3467,11 +3046,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3479,18 +3054,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagereferenceinternalsourceboundaryregister",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagereferenceInternalSourceBoundaryRegister",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "06a924899241c24ff164f1d3e4339dbc13a4c609567081438cabf2a7eaa60c7f",
+    "checksum": "f583dcfd35d14951c94c6368231f570284a49c6f55391cd03cb54267700db4d6",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3508,11 +3082,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3520,18 +3090,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagereferencesourcemapglossary",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagereferenceSourceMapGlossary",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a0e1eecb88c2093005773f1d249135d343c56003875ea9c0c66f2f093f196f85",
+    "checksum": "11db863c22833ce694d379dcc537dd3b00de66d597640cf1e2deb7205baa4e23",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3549,11 +3118,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3561,18 +3126,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagereferencesourcebackeddocumentationcoverageaudit",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagereferenceSourceBackedDocumentationCoverageAudit",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "85d5e6b2ce34b9109d0fd0baf029dab4acc6901325c5e00e857231d431276db6",
+    "checksum": "0abe91417ecf425b8fed92d68adf27fe80f11719e04fe3ca2ac99d972b647e04",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3590,11 +3154,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3602,18 +3162,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagereferencedocumentationgapbacklog",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagereferenceDocumentationGapBacklog",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "917172bf20b54cb4a735389f51909ea1651d5645ed59fb17ded2b267037e967a",
+    "checksum": "ec6edd3c7ce50ff3a7f98fcf31d4932170473d2d0cfc2fe431a4d695a7dab5ca",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -3631,11 +3190,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3643,18 +3198,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardproduct",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardProduct",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a1951c07f5204a8a783007604e1c4a18a9c2cce09eb1263a07fc9a956926f80a",
+    "checksum": "c64a9657462857c4d9244eb7af7fd67086f10c2d6d0bc5241d1dfbe02eb6eb2b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -3670,11 +3224,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3682,18 +3232,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardnavigation",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardNavigation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d770e1049ceb85c6e71530edf068d320b6491c7a8b94905de353ae8ef4ee1440",
+    "checksum": "7a21c0bdadf36cd42dbbfc4d40d2d51abb7e8bd12e81d6d75f3fbf583e0cd138",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -3709,11 +3258,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3721,18 +3266,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecstarthere",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecstartHere",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "959bcb20c9b663a01813076295f3627afcd6d6cb458f228ab0627552cb6cb3b2",
+    "checksum": "0ebd6d6071f382510ab621376d7f139e23cce795056d590b4cca28036c9ef226",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -3748,11 +3292,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3760,18 +3300,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecnodicsframework",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecnodicsFramework",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8727fb99f9803d10fb9c7560a2c90b4a2633074e823d591e5cce570b20cadddd",
+    "checksum": "7e8289077bc863876734df844fa2512f26ad9dce589eaf54d469fa20d0e1a4ba",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -3787,11 +3326,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3799,18 +3334,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdocumentationroadmap",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdocumentationRoadmap",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "97ab4b3ae05a35305a72fa50cdf286c8d25c10c3ec8236ac32d5a01559f52470",
+    "checksum": "c232d279280eb2b406974d83447c6bd8ffe4180360240d5ea5ee6479a4905614",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -3826,11 +3360,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3838,18 +3368,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecframeworkArchitectureAndDesign",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "61af50ef5cfbe8aef0b42707f6ca4fbf8b6c64ec1c67d557886a8848d0f91ff9",
+    "checksum": "dcddad1d90cfdd01f946d66d92bcf89f1ce8e23190ca36b206cc957759cdf6be",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -3865,11 +3394,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3877,18 +3402,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccapabilityregistryandlifecyclemanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccapabilityRegistryAndLifecycleManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0b354f2f915b867f9a392182fbac5b2887497b36a3794a26b98bd681dae4a22c",
+    "checksum": "5b7e8a77e93cb72e5e4a407048d96d4ee38a0243b2060e4371528a3bc8be4f15",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -3904,11 +3428,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3916,18 +3436,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecfoundationruntimeservices",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecfoundationRuntimeServices",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0c0f5e88931d589cba4889606fcae15bba901f699f978fc3250a1cff37010051",
+    "checksum": "6ac441837b0cb7a1e78bea40e9275c76ed235ac6cc74c9f2fb6c575b9159e44d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -3943,11 +3462,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3955,18 +3470,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecnodicsApplicationSuite",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "cd12f9d32061368d533afba40906c5702a12682d71af5942bb4c0b1e50868203",
+    "checksum": "5e075ce5719ce74e9f0f773bc37d40f52a1534e5bc43f52f31efff6fbc2fe950",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -3982,11 +3496,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -3994,18 +3504,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecsolutionusecases",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecsolutionUseCases",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2f5788f32a8e2626199ad45960ff2657738d61c3a483ba65d1e9f0d7da20143a",
+    "checksum": "fdf776867731a3cd4d93e4c79ade6841bbcb8c326148d87108c4d248dad3dc67",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4021,11 +3530,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4033,18 +3538,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecacceleratorsandindustrysolutiontemplates",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecacceleratorsAndIndustrySolutionTemplates",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d38c11a6f75a362f8199d79e228fd78360aede96636fd1c1f632bdfc51bfdb39",
+    "checksum": "64fccb0ef77790ad44427f8ddbcef01a68c057055dee8f30ee294449a96786a3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4060,11 +3564,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4072,18 +3572,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecnodicsInstallerAndWorkspaceSetup",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1d7a5a8d833b9a70c345db0b3c722aafb97917feea78d862ca8c4207b9d25109",
+    "checksum": "96c3b4291a47b9b445b4c7b14a3a0361fcd590f2636a47ccbef4473960e61aca",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4099,11 +3598,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4111,18 +3606,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecapplicationbuilderandworkspacegeneration",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecapplicationBuilderAndWorkspaceGeneration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2ecf6da9f9899953d3839be8245f17c7cbfba7a2d7debbd27cebf8372032f7c3",
+    "checksum": "34f5ce1844debcca12a92b6304931f568770adaa615aa15a11d559e5746d7224",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4138,11 +3632,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4150,18 +3640,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecaxisAndBackofficeOperations",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "266371e15f7f57cd82075a92b698bb8be01b8772b528d3d275ab773912ed98eb",
+    "checksum": "4a026eab4fccbd9c47f8c4952582d335fa1e135e40d956061ce995af39b93226",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4177,11 +3666,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4189,18 +3674,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecbusinessCustomizationInAxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1a7efd6db08b05d10387c9bb808db0cc13ec3cd35ae213699a2230214ad5b813",
+    "checksum": "cf08a06dc5926f82d5dbfe02a8fe04db6f32f1bc46ee25e35c838df9b33a5661",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4216,11 +3700,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4228,18 +3708,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecuserEnterpriseAndTenantManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9eeec562d60b2d1cdd8480575cfa738125d6424ae6b072ad84eead6b95a9bd3f",
+    "checksum": "dfe4a58666fe1c23fcc8eda2eca90496b0cb06ed732e0ecf8bf900512a1baac1",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4255,11 +3734,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4267,18 +3742,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecsecurityGovernanceAndCompliance",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "86a1c14616c4404047492ed51e0c5e5618c3b938aecd5b5156918a5c5ec7b444",
+    "checksum": "84cfde9e550a6ba690e76c0dad5f07c7f32131002362e8423f359d99d98f815c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4294,11 +3768,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4306,18 +3776,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecapplicationconfigurationandruntimebehaviormanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecapplicationConfigurationAndRuntimeBehaviorManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e9187fbb9e9c02a8ba753d2712e69b070ad2922eeb9eaa2c3cd8205ebffb3228",
+    "checksum": "86146de809dab2459a9f964c81af22b87f85dbaefd18f797e5d5e0869cf1db9f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4333,11 +3802,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4345,18 +3810,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecruntimegovernanceanddynamicchangemanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecruntimeGovernanceAndDynamicChangeManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "31b1a6f5bf9ce3cf43b07abdfcb2b6bd8266288ad368c155f8135375934626e4",
+    "checksum": "e25f366eac032f89089e1f465f6fb66160865a740eb0b39159f735f7f1cb6dae",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4372,11 +3836,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4384,18 +3844,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseclocalizationandinternationalization",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeclocalizationAndInternationalization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "12510a7822bdedb4b442c65a84ecef04d43df6f81a4fff3e27391c617f3d4761",
+    "checksum": "644887bd7d1f6fbe672f4673bb0f303305fc8eff14ac2e80f9b05f9a7933a360",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4411,11 +3870,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4423,18 +3878,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdataModelingAndSchemaManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "7fd3226190f088b93b83f66b7c9050e6851f7671a6330bcc18c5f81316d9cf34",
+    "checksum": "93f9ac90e8074b495a3c68ed1d2de1bd5c8b57090ceb2dc4e39fecff56839995",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4450,11 +3904,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4462,18 +3912,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdatabaseAndPersistenceManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ec630257256d48f2c7acf1c24d4b2c68d545577c212b46e80990caf83bf18e80",
+    "checksum": "119575ba93c37712844cf153c0211b0a1779600b8947aa499f471ee21e0f699f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4489,11 +3938,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4501,18 +3946,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccachingAndRuntimeStateManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "98a6243e389e43b5d448d3fa2c3deb50d8c1c97f5bfc0cfeea9942a1aee5f099",
+    "checksum": "22800dfb042c3f2ae46188d8b82c8fe006a7f78aca293bca100e985c417cb364",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4528,11 +3972,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4540,18 +3980,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdeveloperextensionandprojectcustomization",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdeveloperExtensionAndProjectCustomization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b7d2b6ee981894b033c34da4a49ecd2768c6baf52b248f21573b7670e30dfbe7",
+    "checksum": "582eb18d424adafacf0d26cb2db74e9c64e726833ff7cd4e43d8ed63e294699b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4567,11 +4006,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4579,18 +4014,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecstoreMarketSiteAndChannelManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "813d8bee3efe35a11a42cc6b57213f117e2ddd7dbede3d8632ff09daa9c5451c",
+    "checksum": "c835699798bb8398df5d76da0e38a205c5ff2e9bc0348ff65a77d7d8ccf4b21f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4606,11 +4040,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4618,18 +4048,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecwcmsAndContentManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ac3ed7718156d50b0b9cfdf283a07cd1e32ce0b999ce28ce0c6011a8c7cdf552",
+    "checksum": "21a7299d8544fed3bb30e0d0e7fa561ece4abd9c497a0d4793dac082f134d673",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4645,11 +4074,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4657,18 +4082,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecproductCatalogAndDiscovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "56f15515dc56b15a956486f4e703d0e8ff89fac530d4e38fca1a328f6f62b28d",
+    "checksum": "134fc1d439fc95147740ba02679d76d1d0e89773cf58e7d3f436d2bb83cd1aaa",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4684,11 +4108,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4696,18 +4116,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecsearchanddiscovery",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecsearchAndDiscovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "09e78c40462ae7b264b3a6da4a03f832cf7dbf6cc008f048f113e9a27f33ad1c",
+    "checksum": "2e8d0eef166c92e690f499ceac2c41a2caf35811dbabf6a324c1cbb115da240d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4723,11 +4142,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4735,18 +4150,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecmediamanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecmediaManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0198e65a609d56d6b173421f5caae82c5bfe0cf4b177bf45925599e266ffa096",
+    "checksum": "ac7731ac19b13e6bf5ebfec7e91bf10553147b455ed64cf84968b958ea363f27",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4762,11 +4176,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4774,18 +4184,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecinventoryAndStockManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "00c71239250186ce5717a6794de7dedb0c39e776ec136f9fa2aa9227a6ea9c08",
+    "checksum": "37c9e90835145f7367a8a99930f8b3becf04a593e9439655995fa1f8db9eb98e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4801,11 +4210,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4813,18 +4218,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecpricingPromotionsAndTax",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "51b3ced1a3b2b949c0adb2145c82f6accf05f14ecdcbb5ecfc77e2b96304e99d",
+    "checksum": "4fe7ec78dc0116194391ecd6b13369bd3cddf2d773c596f74ecff849f2326148",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4840,11 +4244,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4852,18 +4252,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccommercecartandcheckout",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccommerceCartAndCheckout",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "aad4512032e333126acd167ccddce6c03951d5a1a674d21f089622fef2044c69",
+    "checksum": "3b15bac2ef8133c22971e0cd5b7b81cddc2ece78961d26db400ae96ea279ae7e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4879,11 +4278,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4891,18 +4286,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecpaymentmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecpaymentManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ca4d485a65875ac0b423f42f123c3d6108e9b45b9ef51d907c547e13ca9ee025",
+    "checksum": "249a1bc5b076ad4a552ced0396ab3f6b196f32670b0dc17675a684e13dcfed4d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4918,11 +4312,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4930,18 +4320,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecloyaltyandrewards",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecloyaltyAndRewards",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e8ea8c85f0663aa6d665256382bf341d9e766e8bae53f0f9a4e569baf3b28a7f",
+    "checksum": "f652d630c9ffa214449b0adb3262720a3d32095aec723e54d91b63110a102eb5",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4957,11 +4346,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -4969,18 +4354,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecshippingandfulfillment",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecshippingAndFulfillment",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b5f0ea2382a706aa79f1ab0a5796a31d355aeac17f0f5ae6c1b2b863546ac664",
+    "checksum": "b2e67f050e2b099d40423ca11c182479b7b5897d395367d58c29b3cd96220560",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -4996,11 +4380,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5008,18 +4388,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecordermanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecorderManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a7574cd0240e4c52554e7e18ca69eff4a0768d0fa1244e19784eb065a0ed4819",
+    "checksum": "e99789935cc041108cf6fdee85b3b79982662fd54abd8068a8725bab01abdeb4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5035,11 +4414,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5047,18 +4422,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccancellationsReturnsAndRefunds",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0b59b32fb66fb40898cd5da3319a879f95010d89ae72a6dc6e94e2dac49fcdf5",
+    "checksum": "c3f1f6e833614a0fef824531223fadef4bf22845c03e79135bd673fb64e9e16a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5074,11 +4448,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5086,18 +4456,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccustomerEngagementAndFeedback",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "33defb5fd863757e1bbf1330a02ffe38c0adb3a381d5e41abedc792cc6220010",
+    "checksum": "d825896a33f8d4bc526809880c835d032628d724d166ed1d10f4b82849899d39",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5113,11 +4482,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5125,18 +4490,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccommunicationandnotifications",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccommunicationAndNotifications",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0495fca20ae53bd762ea2d5244c67a69063dc69e9540e927c349e851b1216377",
+    "checksum": "7936f059c6ad779018e379183fb916162d363774eb0b37185cb7733ac675f20d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5152,11 +4516,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5164,18 +4524,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseceventandmessagingmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeceventAndMessagingManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1b8c2afe5efbb5d7bdb5ec8e9a3866c5c2c4d775f1ceb0ae8b02710860fd3114",
+    "checksum": "737b44c8a8bf9167c0bdcab8ea7cce2391f0f47fe6c9eb765087ab0f314c9e3f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5191,11 +4550,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5203,18 +4558,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecprocessAndWorkflowAutomation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ec0dd854b7737a1a6c16db7c7ae0891c69c4c0cb675c550fae0b618fd3063230",
+    "checksum": "4130e31985ff67037c04ac3fcaed36c98379b68e120afa7b8e2e4b9b99ed9027",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5230,11 +4584,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5242,18 +4592,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecpipelineAndBusinessLogicOrchestration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "12f2aaf8f0412662e71f638396f8a7da5439bc281a8950112f988a21180c6d82",
+    "checksum": "37c6dd2bb357a4802f2eabce3026ce510455445627bfe44ca00465170d845307",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5269,11 +4618,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5281,18 +4626,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccronandscheduledautomation",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccronAndScheduledAutomation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f9f72beb6f21987e65ccf906ca7b02dfc1fa4ebae3d0654a2b4a153344b117d4",
+    "checksum": "ee653a187960f29a4449e3a2f240f3df1158c5ebf371b92dad9275b8aacc3726",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5308,11 +4652,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5320,18 +4660,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdataimportexportandmigration",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdataImportExportAndMigration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "33dff552f6e5425b832ce7feee4cc0e4c6ceb54e638e5b52d2e0332e30acff6d",
+    "checksum": "0c7a8b3c5e780502ced448120f702b7372ee2ede912ccdb6fe46bcbfcd7b10f5",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5347,11 +4686,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5359,18 +4694,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecsystemintegrationandexternalconnectivity",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecsystemIntegrationAndExternalConnectivity",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ad1e80a990c280b8ad8cd6ed870f695b1e654d51e0fdae180d5e5812c0f43514",
+    "checksum": "3ed32fca22c6f7ca4dcc3e39b4ad59a6af1da72c32f76fc29620c54002106d4c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5386,11 +4720,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5398,18 +4728,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecoperationsMonitoringAndRecovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6889e9ff90dde9d1e33f17d7021f0f52e180d5278ed1110a26ce801101af4070",
+    "checksum": "8f0b231107e8e9d4adaef6bab574f4e454c5d8cb782bdc3c0e006b38db1489e1",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5425,11 +4754,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5437,18 +4762,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecqualitytestingandcertification",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecqualityTestingAndCertification",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "df9997e8d859e75911994e2a0400e3a493dda570171e80073e993874e4e7129f",
+    "checksum": "24d2cacad519ec1b694776ebf43530ec9a72070dcb96ae029b3efd2584bc6ee2",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5464,11 +4788,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5476,18 +4796,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdocumentationmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdocumentationManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "79c30e840ba3062231571c3c04746df81524bb2ff0e2c1aea198052d067a0578",
+    "checksum": "7e36889a9028ae03c1633406dd2dcaf60870df4e41f8fce898fa3e324d06688f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5503,11 +4822,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5515,18 +4830,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecreleasestagingandpublication",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecreleaseStagingAndPublication",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "86e796d79d16436096fd7e99ff028ff60d2441ba6a241e8c8fa9f574a370383e",
+    "checksum": "66646e7d3466f8075a93479bc9f262efa413e025a3341c3cc57311e1e040a1c3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5542,11 +4856,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5554,18 +4864,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecaianddevelopertooling",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecaiAndDeveloperTooling",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "34af50c9544f60bfb42569849e211fd59cd317fe5db3730bcd2dddb1b62835ea",
+    "checksum": "dd2b996faf84a5f7d2a3df4750f13ba655b2d56f46765149f68de1ff53383b6a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5581,11 +4890,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5593,18 +4898,17 @@ module.exports = {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecreference",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecreference",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9493c58d192f07409f858c3a792bfb829ca1119de2d2e3545b787ec7b9a4530a",
+    "checksum": "91a50ff1de6f0ba36e229a68484326a5fa8a6b6d6a51f7a2c0931f62c7d8bdba",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -5620,11 +4924,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5632,18 +4932,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsgateway",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsGateway",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "06b9ab91e43d9d059dd1f9555e91b224e45434bc0be877fa47e0bb79cfb97451",
+    "checksum": "6cd1d995229d17c7448624b9b1ba33a8b47d53cf8ba53ce6d359522608d415e4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -5661,11 +4960,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5673,18 +4968,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkOverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0c42d3f2e5d1479633731249d3d8550fe9111ad19eeea017c1eae0047a4c2866",
+    "checksum": "312682c3738de47dfd163ad33663c8831ebf55d1c5ab678a5f7600f7ffbe2778",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -5702,11 +4996,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5714,18 +5004,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkwhynodicsexists",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkWhyNodicsExists",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a92942a0d7e661e448881c2bd64ce7637a8821b01c472fc43f316ea96152820b",
+    "checksum": "8ed15f1ec68837bbe44367b55b590cf09279503144a1cf66dbef8e5effab5b2c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -5743,11 +5032,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5755,18 +5040,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkhownodicsworks",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkHowNodicsWorks",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "93b9eb1b3687d11e53ad7aa2c46b08050cd1b0c285771be15175b6f9fae465eb",
+    "checksum": "6c6eed45fef29049f58ff355e6d08e7c6a27be315a22ecbf3e98110473018200",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -5784,11 +5068,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5796,18 +5076,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkAdoptionAndFirstJourney",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b4cdac0df9da46d9f6b1f344397cde9e3cfa86de0ec5bc9034adcf1a0deae2ee",
+    "checksum": "7dfbcafdaf35d35c81d0c2e505729051232fdfa6e17ea1830a4d1aa6c50dba8a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -5825,11 +5104,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5837,18 +5112,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsdocumentationroadmap",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsDocumentationRoadmap",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "339b0cbed83a2137bc9348db3e15487fcd3bf7f5dfff0507ddb009ce55ab17cb",
+    "checksum": "bf7723a5ba4fe51b93c43ed1f265cd7cfb76970f6233623ec99d5038471e4f57",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -5866,11 +5140,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5878,18 +5148,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsdocumentationprinciples",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsDocumentationPrinciples",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "06e074ed4a38d8a55180a20ef143f3f162ca4134035abe385ba8b66f6ca4074f",
+    "checksum": "1d6d74a26c1e8fe468ed16231ea0e24114022af6a73e3fdd5ee9dccb9c08c6b7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -5907,11 +5176,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5919,18 +5184,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsReaderJourneyAndCoverage",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a2e7c8034fa86d1f8c716034e31bc4174f9efb187c67690aabd1a31b189d2a5a",
+    "checksum": "3fa3c266a6c24c10523d5b27dcf48ed452666693523adfc7bff6515a2dc142b3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -5948,11 +5212,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -5960,18 +5220,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsDocumentationPublishingModel",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8ae96ff77a81d2d72f6d56f3840c1f2d1a4c98e7e9416f473df4935cb14f7465",
+    "checksum": "6050210cf4f852273b53090be648e99f351824496f7671016b5048f4a0a2e2ef",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -5989,11 +5248,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6001,18 +5256,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataapplicationssuite",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataapplicationsSuite",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "48ce54f3442c5bf9f97f9296495a0b1ebf1f21c05bff8590373396e9c8182819",
+    "checksum": "c666d73d260bb1ecc975dc438ba4fc8f1f6eeda68cbd37a2dba4829a99be3961",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -6030,11 +5284,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6042,18 +5292,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatasolutionstaskexecutionengine",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatasolutionsTaskExecutionEngine",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "67c90cf9333f00f81c054d5fb8dd06aae983dfcb45536ee9a3996f633370492c",
+    "checksum": "6955d5ef4892d7c98f402ca50e87a63d49bc93b634c9e33f280bce504a4994c8",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -6071,11 +5320,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6083,18 +5328,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatasolutionsDataEngineeringAnalyticsPlatform",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "33f1fbe1722b1f4e1b35cee231ad399c0edc0fe8a90e73167e021110e13a9ac7",
+    "checksum": "fcee73cabca5cba1264cd4fd1c4d489a2baf827bda5cee191ab26ef7b1baab98",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -6112,11 +5356,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6124,18 +5364,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkCapabilityDocumentationMaturityPattern",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ae4327efa3bdbab0b192eb660c81e2e1c762c8757f8093cb91586f37ab44dddc",
+    "checksum": "31f48dd67c8744872d7cc6dd61087b716c005736f0780f312499de1d38b1886d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -6153,11 +5392,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6165,18 +5400,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsOverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a4222fbae41f354d298b904923d2b082feef4645ba4e483b503784e2ef39bf4a",
+    "checksum": "4ae4ad97129f2a269f0be7f0b16b8017c05957404df81bc14257eac10cdb5c83",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -6194,11 +5428,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6206,18 +5436,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsDocumentationPublishingRunbook",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1a8961f25f518fb52c34ffc98c241072d08bdaa8c6ad55f1ac5e04d178c6dfa7",
+    "checksum": "9cfcbb04c681fc2fcfaf3c04e5b8eb1a68990bcd9242df3544afc593c1139d06",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -6235,11 +5464,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6247,18 +5472,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatareferenceinternalsourceboundaryregister",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatareferenceInternalSourceBoundaryRegister",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b5590c0fa712182d9634c9d3ccf22ea0404327591bdfee6af43b07a276b20abd",
+    "checksum": "424c229a783c6952c980b1302930911dda9739eed8e502ca1a4ef375a54a9b5a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -6276,11 +5500,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6288,18 +5508,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatareferencesourcemapglossary",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatareferenceSourceMapGlossary",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "76dac2baa093a458bddeba4c68eb4c62e62a914d3c7d063d781ae16b489d9e96",
+    "checksum": "a7d9fa40b4df7f5acc8838b01b195f79bd76270f610e32cf5b715cd80d4b14f0",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -6317,11 +5536,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6329,18 +5544,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatareferenceSourceBackedDocumentationCoverageAudit",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "fb982e948a6122fd7f6d0b552dea35013b6ca4e571fccf8761815a0276f6afa3",
+    "checksum": "9908a25944293c2c566569548a8101b0b31667641a9e64428168b8ba126540e1",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -6358,11 +5572,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6370,18 +5580,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatareferencedocumentationgapbacklog",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatareferenceDocumentationGapBacklog",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ae98ff94a78c3054c11109362e6660a12dbe7ca44be20fb9a5a0be80e796021c",
+    "checksum": "6c16f3e7a0a8fcaed2e4ebde1112c742bd89414206ee7127b72af9843d26938b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -6399,11 +5608,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6411,18 +5616,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchproductnodicsdocumentationproduct",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchproductnodicsdocumentationproduct",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6bc701dd4f4c1ce72923e20467556cf79b371ce1556e410ee774cec6018cd8a3",
+    "checksum": "463c462f96d5bb06cb43fa20c9fea8a63101d3ee8b5a4537e4e649ccde95f186",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6438,11 +5642,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6450,18 +5650,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnavigationnodicsdocumentationnavigation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnavigationnodicsdocumentationnavigation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "7f0292e281c59b5e7ca29209227e67e2e294a2610e176577c570636252ab09ad",
+    "checksum": "236f3f0765067d5feb6bd2a6c04f4672361768c09cf848bfe02dacfde86e18b0",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6477,11 +5676,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6489,18 +5684,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnoderoot",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnoderoot",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "94528757a1fc5072c74294bfa531f9a066e1167ead17cff74fe78fe0254c75c8",
+    "checksum": "6e0c9347f5ddc67ec560dbd9ee3683e6369f8212f5686fe1dc7b237642e3df93",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6516,11 +5710,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6528,18 +5718,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecstarthere",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecstarthere",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2604efb4668c89ed761e6d0f647b56654e66dba96611f76f92cf891bd2251874",
+    "checksum": "6a81f78be1fcaac64a2600fc359662bf9ce6d4105cb1b40033533114c8801dc6",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6555,11 +5744,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6567,18 +5752,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecnodicsframework",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecnodicsframework",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "322bc9f6b4234865aa35c7f22983b7c2db4291a0a007ac9e22cb5baafb339bdd",
+    "checksum": "3d5eccbf28b76638ab739ef63a62e09d0534133501800a05db641bf09b9ff1ae",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6594,11 +5778,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6606,18 +5786,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdocumentationroadmap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdocumentationroadmap",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2e8cff3656d2ce137426c955f33446657d98c8e638d4bb274ebb3252aad8c878",
+    "checksum": "f0f22ec7f4841cdc4a2e2e656f43abc044fb88df4f77c7e546caaeab1dad0777",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6633,11 +5812,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6645,18 +5820,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecframeworkarchitectureanddesign",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecframeworkarchitectureanddesign",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "87601421520d63d00415b76979d69cc70a31f711ac8715164f5e1e57627a0fd6",
+    "checksum": "1354337753ca290bec4f3b74ea79ff1a62f0cafd556c250beda4adf0445a321c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6672,11 +5846,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6684,18 +5854,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccapabilityregistryandlifecyclemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccapabilityregistryandlifecyclemanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "90bc368693960bd75ca03315395e456222a036efbebd86c629bdd080e58c3666",
+    "checksum": "141824e8309c7fab7a6001bad1704f208fd74b83d21de910ddb7fc5bf6516805",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6711,11 +5880,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6723,18 +5888,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecfoundationruntimeservices",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecfoundationruntimeservices",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "343e1f02b5106cd21aa1fd26ce2313e76fc2e5248ac250a20875144e3d214bcc",
+    "checksum": "3e933cbe2f5a4fe9da3e3ed5da1e1e5080db4204ffc9efb138d5a3e4f710ecb0",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6750,11 +5914,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6762,18 +5922,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecnodicsapplicationsuite",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecnodicsapplicationsuite",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "fa7118ff6b762b601ac5907ecfe151629db9ea9eccb2a2e29fec9949d48b1bf4",
+    "checksum": "372da6e48bccca3aab1d2842c2911177f0a6f09a8e503363f1be6386cbc1e11e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6789,11 +5948,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6801,18 +5956,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecsolutionusecases",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecsolutionusecases",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "bc9c7f67946eeb3adb17a4cd2b5df53e65ddbd93b3acaf4adba7e4896803d528",
+    "checksum": "7bd76559f36ac49e433b40b1c68255bac9a65c8e10be5f818f13ff4e08ce0eef",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6828,11 +5982,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6840,18 +5990,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecacceleratorsandindustrysolutiontemplates",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecacceleratorsandindustrysolutiontemplates",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ab3f17edf07f147d00637526518cefe39eeb903ac10678d840ce2e00a5f4cad2",
+    "checksum": "0001262731b55ed207091ddcffab88bda660eac92d587d3d9574c9deefed0db7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6867,11 +6016,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6879,18 +6024,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecnodicsinstallerandworkspacesetup",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecnodicsinstallerandworkspacesetup",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "edde0e2a55c2f0a430e8994f4e95dc29bac255d7cbfd97c82cdc1596cc6aed9b",
+    "checksum": "4e6057771cbd1e73e0347fd6928eca60ffaf244fe75a0482ad1b12d6c6c41e23",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6906,11 +6050,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6918,18 +6058,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecapplicationbuilderandworkspacegeneration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecapplicationbuilderandworkspacegeneration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "176818e262c3dd9d179c0fac7fd61e9d1df4270eef6ef8395e725084f3fe05f0",
+    "checksum": "b14c59466d723f8750fd04fb460e0055030e970fdfb94b8d5c102f26943c448a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6945,11 +6084,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6957,18 +6092,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecaxisandbackofficeoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecaxisandbackofficeoperations",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3189ddab131cf6a950034506e330a060cdb8b50cc6f9f7b4aac6b4a3e1a6d713",
+    "checksum": "ed7c16cdd41643381a77810a2d771a15fdca06126248dea3b87658174623b316",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -6984,11 +6118,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -6996,18 +6126,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecbusinesscustomizationinaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecbusinesscustomizationinaxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "241b76e3719e5e4cb276ddbd5a9484849d2c34e628707657efa18c110b99f48f",
+    "checksum": "53b1bcb341700213fb9e6a619f20efd60222447d2a9b24be94417ff33b7b224c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7023,11 +6152,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7035,18 +6160,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecuserenterpriseandtenantmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecuserenterpriseandtenantmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "709a4225f374c2d2e377108349fd128268b6d6e7798f8c2402049fdeec8e7691",
+    "checksum": "818ff67a8ecabf72e247a50386ece045c86a09095ff475354544be48c2d6652d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7062,11 +6186,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7074,18 +6194,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecsecuritygovernanceandcompliance",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecsecuritygovernanceandcompliance",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9294296c2ffa838629606b77fea8aae7adef6f78eddf494285b3c7787f881411",
+    "checksum": "5e0f021eaa75acde02740ea0faf79951708c84a3ebb6ae485e35e82e24dd9aff",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7101,11 +6220,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7113,18 +6228,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecapplicationconfiguration6f961ec8d84da002",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecapplicationconfigurationandruntimebehaviormanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "15630f26f964d1da8016adc7030555ef044cf2f2563709c0b1d4720694c667b3",
+    "checksum": "5d6bd3b737684c1074bceff22673a195e472a43d4c8dd87179b97da6a221f2fb",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7140,11 +6254,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7152,18 +6262,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecruntimegovernanceanddynamicchangemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecruntimegovernanceanddynamicchangemanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "19722445a28070ea362a4f6e46836ede783d492b5bb98f5df30cc39827626df5",
+    "checksum": "f6a678ce0fa2d98ac3739f4ead634ee02fc862736e8bfed7924135b8d5c00244",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7179,11 +6288,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7191,18 +6296,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseclocalizationandinternationalization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseclocalizationandinternationalization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1faa09c914706606b674fb9eff3b108c07540e3241e716012d6d20418b684a95",
+    "checksum": "a00025af7dc3ef3a96cc62448b2f16d3bf9ff53437677bfe6ee1af885396566e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7218,11 +6322,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7230,18 +6330,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdatamodelingandschemamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdatamodelingandschemamanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "779d7ad7eded7715e68cd2831fba75de1d747b0e9fbf832ff82768c69f4d1c2a",
+    "checksum": "3fbb7fa9f3ec2893f08c641a9840f2a208b46ab90d20b1fb11fde5135b608032",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7257,11 +6356,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7269,18 +6364,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdatabaseandpersistencemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdatabaseandpersistencemanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d769768655422152862b0860cc9f5eaf34bb7a290956aa4aecd0c95577016352",
+    "checksum": "c51f4290f3abc1eacf2d84c8c614edc98c751f6ddf096e47c5c3fb95d6f56567",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7296,11 +6390,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7308,18 +6398,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccachingandruntimestatemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccachingandruntimestatemanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1e8a762838cd9e16c1ccc061a3a04cffb1b7ce6950061eb4e913878fbe56c061",
+    "checksum": "cfb4d62c5f6c48d9febb912c22d229bba65684bbfbce25ceda8ecb995f716f1c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7335,11 +6424,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7347,18 +6432,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdeveloperextensionandprojectcustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdeveloperextensionandprojectcustomization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6d3fbd0c2c86e535e85d30dd793d18c5ea0076eac0b4015078ef18f7e0c76758",
+    "checksum": "c5ee5d414e8b5fba73abf3c37360f4c30f3bd10641eca525cf6d8366da4e2de9",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7374,11 +6458,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7386,18 +6466,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecstoremarketsiteandchannelmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecstoremarketsiteandchannelmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "258cda54532d89fb18bba2c4b116a7e408ecb62410ef63f6166c870f4249e035",
+    "checksum": "081ef659fb6eec32966ef42bf974f12f96955c8df338d7a3e5e58e17e4aa4b69",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7413,11 +6492,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7425,18 +6500,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecwcmsandcontentmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecwcmsandcontentmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6a2d3af005f2a6f6576580a53968455d7e3f9f07e1e7b7be16088f79878dc065",
+    "checksum": "e66d0aa7a56af907f34dda4bc4b82ec7d6e21fcaf20849420e55711c08d88405",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7452,11 +6526,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7464,18 +6534,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecproductcataloganddiscovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecproductcataloganddiscovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8962a2a786fbaac269637c4e38cdb5f630fc271fe471a20ebc7963bfd7993bfe",
+    "checksum": "eea19b21a792eac469768cf12711340914494df8570d1fa1b13afc1fb7b56ba5",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7491,11 +6560,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7503,18 +6568,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecsearchanddiscovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecsearchanddiscovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1a6eae921940986291999d95f15f23325abeb82b3fcab7ef9d6068f047a35198",
+    "checksum": "93d4ffdb58421e242c6e367da7eea019f9e4819dd8f8bce6636ae555e7f593b7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7530,11 +6594,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7542,18 +6602,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecmediamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecmediamanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2883e3fdf09ffbe2c66a2992c5d176fdd2a588180c65ae69bfb2dc8348880f24",
+    "checksum": "d984c7aff81c8022592eb59eede4f8cc43ecf4e2adc1c0cebc2b7d8d1d6f8065",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7569,11 +6628,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7581,18 +6636,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecinventoryandstockmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecinventoryandstockmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "64f7036a64dd168ab67110b49b43c48f045711d47d81a0c2ed0ec7c2cfeaf56c",
+    "checksum": "9c5bdfadb7e1425f183458ed6347703176e26bec158094d666dca009b8605975",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7608,11 +6662,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7620,18 +6670,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecpricingpromotionsandtax",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecpricingpromotionsandtax",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f0ac22ec69197496693e144bf92a40610322bd8fc9fd0d34fd8d54b1164436a0",
+    "checksum": "b7a02e22b0ae713154f9e95c04bc60367f7cee6be21c6a4ce4dcc64559aa4756",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7647,11 +6696,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7659,18 +6704,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccommercecartandcheckout",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccommercecartandcheckout",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "098c4f578bbaa70ff4756902426ca89afbf9752fe239fa0ec24b854ab7b414a6",
+    "checksum": "7006f575b1cb454b8b78acc79cc29f66a45738d161550ac50f1950791e1e383a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7686,11 +6730,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7698,18 +6738,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecpaymentmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecpaymentmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d3d0ab13a932b0a23750139838fa605228641925ec583dc3f32aaa7fed722d3d",
+    "checksum": "440cbed4aefb9670c9a3efa6a5b4a6a4e909f20a1925c63583cf07a791380f2a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7725,11 +6764,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7737,18 +6772,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecloyaltyandrewards",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecloyaltyandrewards",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "07048fbb1ebf5be5fda2833010ba99e808a75a3c2dfe0c50f12c6765483da208",
+    "checksum": "edf65c7d75a9c3406c2496d547f723b731ea64da424dfd2aa02a7340e9cfc3f8",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7764,11 +6798,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7776,18 +6806,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecshippingandfulfillment",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecshippingandfulfillment",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8f6c649704d449731b4e94904f482e95202b1af96c764e3ab7b03472f829a5e1",
+    "checksum": "10a24f1873f1f0cde93b30a1f75128df7fb73449d99973f8ac6954069ec46520",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7803,11 +6832,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7815,18 +6840,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecordermanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecordermanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e683921f349fff8fbf1aa923f35f8c9db1093cc637752cb21a591d9f87303f42",
+    "checksum": "8f6cafb1264c540a739c509f63b41e169e23ba068d79c6c17eeec24e0dc76ab0",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7842,11 +6866,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7854,18 +6874,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccancellationsreturnsandrefunds",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccancellationsreturnsandrefunds",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "bb49dc9ade0ddaeec272d205ae00fa81cd5c220ed8ce3f434def9776aaccb450",
+    "checksum": "9499832368298d124c51e4a72caee048f64579c4132700cc5f1fec943caad2e5",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7881,11 +6900,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7893,18 +6908,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccustomerengagementandfeedback",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccustomerengagementandfeedback",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "35df43f5a1e03771f5a7c96a7e03a99406fe51f75a56e0651be0fa1093e19aab",
+    "checksum": "e8439d79f42552ad75f550ec9f8e427f77bff1e73f6b6212a39956595b3a03d7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7920,11 +6934,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7932,18 +6942,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccommunicationandnotifications",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccommunicationandnotifications",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b631320d9d33e62f8076b2a5dae1097956b63fb3c5eb10817a21bfaf3be4d77c",
+    "checksum": "5b1ea823861900823e64377c7dbc15acb091ad72d56baa9680da899bd6a09267",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7959,11 +6968,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -7971,18 +6976,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseceventandmessagingmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseceventandmessagingmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "fe0cb4fa6012a3bab8bfbf58d5d4ac7b66ddf826ae809a24394c96bed4e3e49d",
+    "checksum": "4a7b6ecba4fbe4a687c786605d0d50ba1435e2067d07eb58e583c9a8ecbd38ca",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -7998,11 +7002,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8010,18 +7010,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecprocessandworkflowautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecprocessandworkflowautomation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a594bea861011d3178e1157560d2a444f87ff18e38e0fe6961faadf2ed19cd43",
+    "checksum": "fb55caf802b3d1e105e99380e1aa96228e5d37c44977f8092fcf80e704ce7a40",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8037,11 +7036,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8049,18 +7044,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecpipelineandbusinesslogicorchestration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecpipelineandbusinesslogicorchestration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "5c25b03ce701f71b0d1c66b9af7815ac654bbb4c055c1926666236d8c8b5331e",
+    "checksum": "e31c533331011a2f9d016650e9396f9112b7f7df3a7ad748ae7030d98bcb4b34",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8076,11 +7070,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8088,18 +7078,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccronandscheduledautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccronandscheduledautomation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e3d9636879d2d4b7320b3284af1178b6e0fe819865eb62cc93d419ed867e60af",
+    "checksum": "f5b7e47b504c4b90f562430582c84f83e563332a4beeda59a6fddbc041058761",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8115,11 +7104,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8127,18 +7112,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdataimportexportandmigration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdataimportexportandmigration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "bcfc64579781c191367b4b2cb90619a7fb7b578c2c47114004885e3e9de44afe",
+    "checksum": "33a0f601b31e6de43633099f53a1bd59a1414bfbf781fdeae703350a377c3ea0",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8154,11 +7138,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8166,18 +7146,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecsystemintegrationandexternalconnectivity",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecsystemintegrationandexternalconnectivity",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2acd8dd19d2de453187b6b6b5394f8d55dbb88c9388de90104c728fdd59b5ab3",
+    "checksum": "7a551a801ca6d439414a5be582ba94e46ba0d47a416c270deb02a650a71ea53e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8193,11 +7172,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8205,18 +7180,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecoperationsmonitoringandrecovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecoperationsmonitoringandrecovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3a60245e24a2284e411444aff16787083e19ca9fe44b14dc139ea395c2d626ac",
+    "checksum": "05335e4eeae624b43ba8329203c6b7940dab8788996c99ed2f8693a1a28e5601",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8232,11 +7206,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8244,18 +7214,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecqualitytestingandcertification",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecqualitytestingandcertification",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "7d308faa722d2be653e2d9aa67497a43c9a642af1b072c356e4d163e92d03e5a",
+    "checksum": "edf56985fd69c39fa389ec7a6d796430c5ae55d16a512680411fe7ce16941112",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8271,11 +7240,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8283,18 +7248,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdocumentationmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdocumentationmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "98a1f60a50dc891d7a34239f7042adac766560c726337b2a58c5fbbca75b3157",
+    "checksum": "58e1a705811106f3eaca125d78576ded44f71e05cf1d25b8456e25887617fcd9",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8310,11 +7274,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8322,18 +7282,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecreleasestagingandpublication",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecreleasestagingandpublication",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "49916a796ff871aaa267dabbfff4f27f08048a1023b6a994498f0da1a32258e9",
+    "checksum": "dd3b536523964ab0a4c0e56cd0969229a0db3f60a628e82b5dfd14a399b894ab",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8349,11 +7308,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8361,18 +7316,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecaianddevelopertooling",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecaianddevelopertooling",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "c12139f91fca07ac755575334a3d085d8562131596f6eced76f6b1ba8ed25a9f",
+    "checksum": "ea8d3e5bde564712616fa1cf4402b9f7618ffa191063782cd79cb8d52ef872ae",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8388,11 +7342,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8400,18 +7350,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecreference",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecreference",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "25858f48e38326873ae64d3c61a2119092f655231047746d6a1c2f8e068e373d",
+    "checksum": "170736d7d3dee27c0fb795a342d7cbc831ecafbb166589900fc11c1cabc3ca00",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8427,11 +7376,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8439,18 +7384,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagedocsgateway",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagedocsgateway",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d17f513f5ab6993d43647b4d9d208fd7ef3c5ccd9eae27f70a83fe93195610d3",
+    "checksum": "aa51a00ba6d2c2b3e28965f925a093d3049ad491d7e5d37991e81aff96d9fd19",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8466,11 +7410,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8478,18 +7418,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageframeworkwhatisnodics",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageframeworkwhatisnodics",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "da766df42ccd9d29de57113fe214474082cba8eadac4c7792984484bee3f8314",
+    "checksum": "6b82d87a38601f0745bb602e7a9114d1fca2526252fff7ad6479242f50b8f3d7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8505,11 +7444,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8517,18 +7452,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageframeworkwhynodicsexists",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageframeworkwhynodicsexists",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "7eb2c72b57ea6373822af2e815c3c6c002e474e64e1cc0a4e6a37b51cb724366",
+    "checksum": "441111913acba2b68bb2a40a337a135b96aaff55480918003fc11a9df199fa15",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8544,11 +7478,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8556,18 +7486,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageframeworkhownodicsworks",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageframeworkhownodicsworks",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ea2630fd449b6b5b3412a47f24e26f0bf1c98d511580d372b985007333340874",
+    "checksum": "92d7c4188f627e0799655f31664e6baba93a513c3b374b9251e08d8038bb6a31",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8583,11 +7512,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8595,18 +7520,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageframeworkadoptionandfirstjourney",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageframeworkadoptionandfirstjourney",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "73b3e0cd241ed046ffe84697af438c55b69af3612dd2c08477228e9fedc455d7",
+    "checksum": "f0aa585e8df6e893012a6c07b0c066c32a96ea2e64c6ceecb34ec59e288b1485",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8622,11 +7546,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8634,18 +7554,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagedocsdocumentationroadmap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationroadmap",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6b44213a025d8b8e0a8ff1324e9903727f870fc6b6db1cd534b3a940f850e982",
+    "checksum": "f92d44182739c9d0782fa7d8469d4f61ab1499f181f367a15682d477a182c34b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8661,11 +7580,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8673,18 +7588,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagedocsdocumentationprinciples",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationprinciples",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "dad6898bbc6a80e400fc2ec9240c6fe8fbd77b081c5ecd5a03e807b5cb37deef",
+    "checksum": "c6da15b449d2799fe7f15992c306d3203874e31b52db0f6fcf29c89291bf53a4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8700,11 +7614,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8712,18 +7622,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagedocsreaderjourneyandcoverage",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagedocsreaderjourneyandcoverage",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2299479c18372a4c3461c22dfbfefc551cc3c4fb11630f83651838fb5634f864",
+    "checksum": "673c1fc257b057223d9cfd21a5624a29826d65ec11fb9fca324c6a9f273f64c8",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8739,11 +7648,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8751,18 +7656,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagedocsdocumentationpublishingmodel",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationpublishingmodel",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "64eea19363c025de44dee63c1b27640b6dcdf393cd2522a1611162314e990515",
+    "checksum": "2fc78c67bdefd0dfa91569bbd38ff3836c8065a2d876cef6081afd1caa072815",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8778,11 +7682,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8790,18 +7690,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageapplicationssuite",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageapplicationssuite",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0797eb8099c94bd9ed8fba3e822afdb343a2e1ed00acd5851e94369a2539e5b8",
+    "checksum": "de2ca4e0313036934fd22c19d6660d323f6832d389855aa5a0d8624ed97fc51a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8817,11 +7716,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8829,18 +7724,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagesolutionstaskexecutionengine",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagesolutionstaskexecutionengine",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "fe3c2aa01ef6968bd21da59e9146f0d08cfe86242d6e916389df15bc2104e7ad",
+    "checksum": "263ca0a40dfed8ad182bcfe938f98e0f31a66c2acdc4fe644d156a625ef2041c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8856,11 +7750,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8868,18 +7758,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagesolutionsdataengineeringanalyticsplatform",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagesolutionsdataengineeringanalyticsplatform",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f0a6a21716e685a074744c37d6c10ee3292ac888c94d8cc5bf4cf3261142cddb",
+    "checksum": "09479ea264355a4f3cceeb68487a1deca64b190522021c3a540acee1d2e020fc",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8895,11 +7784,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8907,18 +7792,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageframeworkcapabilitydocumentationmaturitypattern",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageframeworkcapabilitydocumentationmaturitypattern",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6b5c99522d8f9fda6610c9b8c4a275ec9f46ee3ed3e7b0d57c2e79d07430f1ea",
+    "checksum": "6d48dacf368508c226ff0a70e739a753138b10aca1524ccb43f517995793f7df",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8934,11 +7818,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8946,18 +7826,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagedocsoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagedocsoverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "4f7bbf69c756de8fae5b808477ead90d0b3166e1ff212b276fd75843a6a50245",
+    "checksum": "791813947875caee2cb02c1426b4b9196d892616be9a24c89cbc7acff346add8",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -8973,11 +7852,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -8985,18 +7860,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagedocsdocumentationpublishingrunbook",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationpublishingrunbook",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1715416b1ee89cddb481f15daafcaf516147cedfe9c6ab91c71c0e81292fcd1d",
+    "checksum": "243957eda679f9056140aa528155262df92a195a16b84bbc20b78affefa7bc78",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9012,11 +7886,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9024,18 +7894,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagereferenceinternalsourceboundaryregister",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagereferenceinternalsourceboundaryregister",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "31ccd1db1b1d372303984b3609fa46fbf8d90882774d3e4614324e0ee680818d",
+    "checksum": "4c4038872b64fbcb8a0c3d13f76c5e9595dc75dc20c2568fcf2e850c1fc5babe",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9051,11 +7920,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9063,18 +7928,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagereferencesourcemapglossary",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagereferencesourcemapglossary",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9f04a85f453976fde62e93971e1b8475d4cd87c7406c64961e14449d0a9f6bc1",
+    "checksum": "4ed71cb67ecff890bf76ded5bb7e9d54d2ed33c9ab3dfa098e79a859fa3e9b52",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9090,11 +7954,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9102,18 +7962,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagereferencesourcebackeddocumentationcoverageaudit",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagereferencesourcebackeddocumentationcoverageaudit",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "78236a0e6c411832d8b1c99d311e13b619671ec1fbdce374b70f20a18f61a373",
+    "checksum": "dbb50160ad5a89df9eff4bb4db23040f747d19a849888207fff14429e780f70a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9129,11 +7988,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9141,18 +7996,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagereferencedocumentationgapbacklog",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagereferencedocumentationgapbacklog",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1f8cbf60d5bff6f9fc7e378757d836c8d934fb021fbc8752fcedf6404179af43",
+    "checksum": "647c9f7abc18340235984286c3800218a087e3a907e68fbec748bce56c582f19",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9168,11 +8022,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9180,18 +8030,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardproduct",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardproduct",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "02af62b6f418ca2655b9107e73f9ef857ac38bbc59fcf4997cd412997cda93ac",
+    "checksum": "520aefc26258c85b90767b5aeded15e7e47d37bf4d1913c4eb4c74f2bb3349fd",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9207,11 +8056,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9219,18 +8064,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardnavigation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardnavigation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9891ffbd1553e621da5349dcd9ff5feecc73e810d0ad6dab02a72e13e5eb96d8",
+    "checksum": "a6ba97020323baa9237075df164053bf9f63aa5bac91a5070201202905ca81d8",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9246,11 +8090,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9258,18 +8098,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecstarthere",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstarthere",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f5c910e2eff3ad58f2f66d3b3340c78462a5ac35407ce84d7b8abcc6dc75d5af",
+    "checksum": "be393c1ea312dafec53df4873952d5ffdf07ff3a8c2b5888a75f126b00d2f111",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9285,11 +8124,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9297,18 +8132,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecnodicsframework",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsframework",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "dabe70d34c8e9bb39c806ceb5df8e020c2bda89fde228129a89dd7e5acabb0c8",
+    "checksum": "7b5b0191f839236c4fd0ff69e83ebd9e58a89e126fe84c61edeb7f0ce9fcbcbe",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9324,11 +8158,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9336,18 +8166,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdocumentationroadmap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationroadmap",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "24828830c833c5a29df06e23c9bf1961bb89f9e4236f3f8b8726b5b3905b27f3",
+    "checksum": "07b6b674e00eee9abd3f85ec411ae23b607afac1d87fd0f00d486b208bd3bea8",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9363,11 +8192,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9375,18 +8200,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "fbafe9048b78c2fac6b54eaaece86f0323cd99a899cca8a34f1661423006058c",
+    "checksum": "0a76f9a316edc4235792b3447e91f8d1aa64115383e0f69ff23a4cebe72d5b17",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9402,11 +8226,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9414,18 +8234,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccapabilityregi59b2338c6652d3a4",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccapabilityregistryandlifecyclemanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d1eb7dd401aab897a38e9e8093b5b6b4de8b463485abef8132cabc8b084561eb",
+    "checksum": "2be50ac19253ce87e89b31bde46bb1450369a049c6a7d8effab832c4d36ed423",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9441,11 +8260,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9453,18 +8268,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecfoundationruntimeservices",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecfoundationruntimeservices",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f3333b66dc04e2d3b27bb2f5778345dfc4dcf006d59b4b8eaef584ec2a91f5fe",
+    "checksum": "ac19e294d9c455d814c7dcde16cbd0490f0f9911d8d8500fa771e38bcfb66b5a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9480,11 +8294,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9492,18 +8302,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b296dd7458b01a60b24ffb1681ed1c522581ebc6503d8e3de031fe3f057dd687",
+    "checksum": "afd95f4e496ff65ac03dedda8b51c61bf7c6e51a15a38c0683238fa3ae2d1a0f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9519,11 +8328,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9531,18 +8336,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecsolutionusecases",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsolutionusecases",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ac31f3dc391831aa6fcc0cff51170e22617c555e39038aafac45978d2df34745",
+    "checksum": "eda0baed625062f3c1b26f9826646f1cd19fbcde510a3aef4a11371d2d024216",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9558,11 +8362,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9570,18 +8370,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecacceleratorsan332454bd061de3b5",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecacceleratorsandindustrysolutiontemplates",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2e2889ad28af460cbc676c193b56e1b90f6ed0e2cc7cdba65f1b3d1ed2e0927d",
+    "checksum": "aae81c70d9d9af7503858e399ffe65fcb6af800f513531d409b159eb04b7eba6",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9597,11 +8396,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9609,18 +8404,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6dc17a005ad210df1187d04be4bf7a7b8f893e6cb0940cca59634968f5121e8d",
+    "checksum": "2616a12454858d1c0442e66145c9ff9632fab1d23796e80b7947cd196dd57f8d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9636,11 +8430,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9648,18 +8438,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecapplicationbuic838154b9cee235d",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationbuilderandworkspacegeneration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "386998900552790123a2a91590e5ae24c24544ad36338b0dec3b54a0e12ba8b1",
+    "checksum": "3e79d51f49149c5b202670a46d7811a72d323641273decc552a49fb3b6a183e1",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9675,11 +8464,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9687,18 +8472,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "7a79089f47ef3a4ac6cf36bff71ef9ecc5fa5dc54fbd089bf42d8256a5d8212c",
+    "checksum": "468a92f7e4828e23e36eecabf45b4a7033eee40c277a2971e5baa43f97afc181",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9714,11 +8498,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9726,18 +8506,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f31015ec2e3281bb3f53dc9fe0143fb7da2617e66b12cd1c97e451b41eef4d4a",
+    "checksum": "0501c4012f5f1391f8ede43aa728f6bc7b5884a36064bde10c342822c3ce33c1",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9753,11 +8532,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9765,18 +8540,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "51c6aef95059c8cb99ec1cbd246ee4934644e32aee13d9b6c9970217a293fdec",
+    "checksum": "8cc1bb2086857980696d1a8fa43f2f8c83f1cf9999005747a058c290450e2c48",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9792,11 +8566,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9804,18 +8574,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1e6ce6f9fe9398992700549ee888a133d7684e41be62d70e644ff3ae4613e84c",
+    "checksum": "63e7a7f18ad1d1d85288db82e89302ad62c491b88da5dcc6b9a86acbcbb8eb57",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9831,11 +8600,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9843,18 +8608,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecapplicationconecad26700bb28753",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationconfigurationandruntimebehaviormanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d795625e0747daf9749ed6097af05f2f9339fb858c342a29f7a198596f703d2a",
+    "checksum": "a5aef912045c655f981ab534dc426614ad1b10f0489eda4483f187db6a6dd1f2",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9870,11 +8634,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9882,18 +8642,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecruntimegovernab68e75000f0b94ec",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecruntimegovernanceanddynamicchangemanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8f57421a1991b548bcbfd11cd81a11998002e6775c6ee8d909dc46c808748b71",
+    "checksum": "69429ef1610d9b67ca96e9f96b9467bf511dfa28aa2eb249212a7d73ff8aeac5",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9909,11 +8668,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9921,18 +8676,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseclocalizationandinternationalization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseclocalizationandinternationalization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "c7cfb86057c4b1a072326bc13c51495beb5484a0b8580359a216b1f1f17f91bf",
+    "checksum": "5a6e062841f23e51c67f3da91dec293f8faa585653fc0338ea44aa3d15fce3d9",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9948,11 +8702,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9960,18 +8710,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2463f43b77927fd3eb157b1a545b317ea8b0ea3b14aadab4a8732148ddfe40b9",
+    "checksum": "f01368d65fa67be94a3d2f5b94040bede7185b2f2aa1daab36d0ae208a24a44c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -9987,11 +8736,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -9999,18 +8744,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "10ea44d0df951b8c4c7834d5f9701ace594e47d1a6333cf675c7d59cb8acc78a",
+    "checksum": "3886bd39cf177f100376be175cb0e56a7e9388fa617f2c1a294a443d48b1046a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10026,11 +8770,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10038,18 +8778,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "863308c73e4b6a681f5e38460c5a271000f3e8dd73097eb48131a08557ea0f66",
+    "checksum": "4a94bb04f34ab9c8d7a6fee2b93455d6d6a3f618bace46e705f0da4213a9a4eb",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10065,11 +8804,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10077,18 +8812,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdeveloperexten377603b48ecfbf4b",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdeveloperextensionandprojectcustomization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "05c44a5b8c2a1847f0fdec3824cc2b46ee6a6f04b43833d40ae374701aa081c5",
+    "checksum": "5205bac94722205e43d12129915012da38df6388069704ec971d447fb6c507d2",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10104,11 +8838,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10116,18 +8846,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "03f8a066a953f2dae7e205d4766a8baa0724d6897aff17192ce430bf318a0ff7",
+    "checksum": "067dcc92ebec046ddb8988ad16fa3f3bd8dfc67bf0c56507869304997836ec30",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10143,11 +8872,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10155,18 +8880,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1a6508b8a153b12bc1653837cd9955a5beb8de5b143dc036eea7e7377fe2a5ed",
+    "checksum": "303a67b44e0993d3dc0a6655227097dfc1bb7092f0e92a73382117dc1c5d9dbb",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10182,11 +8906,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10194,18 +8914,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "488bccad8a27dead459e8af61ab1a47503e50e61c0e6637ce2c3e619f359993d",
+    "checksum": "19f1a78dd6979393169171d989f843a9b7042635f7ed9062a9e9db2399f5d4ab",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10221,11 +8940,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10233,18 +8948,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecsearchanddiscovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsearchanddiscovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "451045f42678553d78d69400b4944707ff113a2f1b0a3753acaceedeceb8c038",
+    "checksum": "2fe4d8dc83227c657bb6f4fcef0842cdbb864aa777a50f1b4ae07b52d08be1d8",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10260,11 +8974,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10272,18 +8982,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecmediamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecmediamanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8c76a81c75b4a7cbec80d2c6e67222155a3be87df76982e9faa67c6e657aa232",
+    "checksum": "1fe094f29da59aab3825952f3409224d39f2e557f5bb76190371c5ab55fcb862",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10299,11 +9008,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10311,18 +9016,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a494604d92633ca8ddd3c8a1580efc8e757efc68b72ae43e58828b623acae038",
+    "checksum": "c3bf18877c50861c8a1bbeafcc31a2332a1400046d8afb01b3e68ee83be6a974",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10338,11 +9042,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10350,18 +9050,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3bbeaef8c749e6da5c43b5f50a3c80e9a01c721ad8951c50fee4876a6cf54093",
+    "checksum": "2000dfa4329c1c76827f68cfd9d3ab9f926445d627851da93b78e2c6947afd79",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10377,11 +9076,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10389,18 +9084,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccommercecartandcheckout",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommercecartandcheckout",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d37a1c7c0482dcc62240b0cfabf807607b7c7838bd1840009c9257ba2cce95f3",
+    "checksum": "8c3ec04fe164a7b20441f79fa898868203ed1f5588bcd047e38156bacb8f0562",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10416,11 +9110,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10428,18 +9118,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecpaymentmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpaymentmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "4f4b60d32443bf95fef46dbe8b7cc91e339072f9f99c6f9fa41a42b794cc6f38",
+    "checksum": "1e807148ae67390498b7af544a0b4d53f2f7e4bda898a973baffec507f8d1d10",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10455,11 +9144,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10467,18 +9152,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecloyaltyandrewards",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecloyaltyandrewards",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "00a21d5dfbca7dea6ec3c24fd4c12df9eba6b1bf4fb5aa76b51ab583db6ad7d2",
+    "checksum": "ae621192a1cf7b3e115ed8fd5d6a2b798de5d68023454217ea3957f68f8ccf6b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10494,11 +9178,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10506,18 +9186,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecshippingandfulfillment",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecshippingandfulfillment",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "09b6171c8904e81362d45f946d8f65c74d28d906035b0fffaf9c6c8543044caf",
+    "checksum": "bfff080bb2b0e1a107f00f5d386cc62723c5cf67563e34631b83a5de01367410",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10533,11 +9212,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10545,18 +9220,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecordermanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecordermanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "fce3383920f72d2dc2f8b823f4bbd87438e6914410d07d572ef2d224ecce8065",
+    "checksum": "e9bee321a40b52995c6953e0e27d4d1ac696747018333e657f586985faa51804",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10572,11 +9246,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10584,18 +9254,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "001d20ac0d58ecf54257189674a0656351bb7831a3aa4f3be8fd0a368c485cca",
+    "checksum": "c7769dfe30f0c33a3462febdd7f4085bd5163e9ecebb0e9d3e588e142700fc77",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10611,11 +9280,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10623,18 +9288,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "553b4beaa684e0e07254d33817c0aa98195c70762afe869792cbf33528c237f9",
+    "checksum": "8878fef5b8fc88efaa2c98efdc9930c374d6107f408690752fb54556bb481ebd",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10650,11 +9314,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10662,18 +9322,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccommunicationandnotifications",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommunicationandnotifications",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "4005014e976f4a4cb6644815f0cf2f5215dd9926a0c13e85a787229ba0c82283",
+    "checksum": "94d5e1f08af6e9e5457e1b42b7dd8cedce22191a910990c479756908493332d6",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10689,11 +9348,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10701,18 +9356,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseceventandmessagingmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseceventandmessagingmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "45cbb71859cb11f7e97c06cdac3945ad71401c974273ff5614b837603d41e7ea",
+    "checksum": "6d2ab2f28de5e1e982017d0f6767c82b609939c3be4b37d9c81a9b82a25d22c2",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10728,11 +9382,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10740,18 +9390,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e73998b54fd1a59581ca579cd6eef7333f8f39661e9c3e8980c1d09734eb6eaf",
+    "checksum": "ff0a88fa1572a5792f6d01b362c75d2248806456b23be302aa2aeeed595c3e5d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10767,11 +9416,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10779,18 +9424,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "61d16e4a2426d2dd35fb5b78d66fdaa435aeaaec093aead04a8189c84c99fad5",
+    "checksum": "2ec934106cf13a526bec32483b552124d1fa10192aa89397e05cf862b1adf77e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10806,11 +9450,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10818,18 +9458,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccronandscheduledautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccronandscheduledautomation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "7584d8261d30a08819324c891f8856a7736f30efc1cc9638fb3d368612da6986",
+    "checksum": "84631c9bd42c2f69c28686ad33c2eafb2a20c6a17dd8e35e7bb85d6029061025",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10845,11 +9484,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10857,18 +9492,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdataimportexportandmigration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdataimportexportandmigration",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ca176060be15ba5df3c03d8d0426de3dd6e6c5ce696adc9582b570b768cd4625",
+    "checksum": "4ccb1391c39996561ba629701721cba0fc09b04e96e7f83c83dd2f3e6ad81852",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10884,11 +9518,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10896,18 +9526,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecsystemintegrat148bc853339dd915",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsystemintegrationandexternalconnectivity",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "db63aa0a90e1173e81f08319415c710b65b657b30fa65ecadec8015904141552",
+    "checksum": "02f7206b8822f5c2e44a3d71f4207db5fc298b163958f6b87ede0672dccbe54d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10923,11 +9552,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10935,18 +9560,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a33ba532a83cc6c7189346a8154277f99da04f4d47b9a8e8cc016ff9297a7418",
+    "checksum": "6213a6585d16c4822b85efd5bb6c81667d0deb7e957483000425625e96582f58",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -10962,11 +9586,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -10974,18 +9594,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecqualitytestingandcertification",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecqualitytestingandcertification",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a635f7ca1b8e4c291b9bc72cf4ea3bc180ecde2e968793f1c7f81504d23ac036",
+    "checksum": "bfc77d4072198d0d8130fdcd839bc5c41914852db7b728808c3818fb35f6b2c4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11001,11 +9620,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11013,18 +9628,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdocumentationmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationmanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0a9401e615543a38208500eaee2b2c76a804d5e1976635ce05a1474c48c8eae9",
+    "checksum": "735b77179bfa79fa8e6a795a08adaa70b3622f528e3393262539606706fc6ae7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11040,11 +9654,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11052,18 +9662,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecreleasestagingandpublication",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreleasestagingandpublication",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "4a9445b84b3359fb65bed135cd685aeff2b66add19f7d82d6f0ec37ca2c7bf9c",
+    "checksum": "bbab6b3f5cee68f5a405c35f6434939fa73cec54d5b1690a0dec7d9af2e4312a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11079,11 +9688,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11091,18 +9696,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecaianddevelopertooling",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaianddevelopertooling",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "39c4c3cb63ad8214e9a2935059c08f120d67e000de0135858a2aa1e7e533fa60",
+    "checksum": "fc69dba382350bc92c0e1ac1d90ed087cc31045eeffd9c55351ebf4fbef5e60b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11118,11 +9722,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11130,18 +9730,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecreference",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreference",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "783c3445f8d2ea20b66885224b46da5bd7ea8099fd2a4eeb55072103640b9195",
+    "checksum": "e49b125cfb82d49476fc8dba2af38b4b812e7424ca709b63f4ed08c48d026d65",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11157,11 +9756,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11169,18 +9764,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsgateway",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsgateway",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0eed048844a6f1560c3e5dd226029405753c112971ff05109d73e5dd339616b5",
+    "checksum": "6ae881517aedcc6700dc51880fb583bb7b3b1a0399b745786bcfd66f0e3f0601",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11196,11 +9790,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11208,18 +9798,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkoverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "51d29bcc729c6b15a7c1d08eeb2b27d30ae2ed039de8aaf47a90bfcd68f0545f",
+    "checksum": "37aa70ef69c8972a8d377e299aaedb295a3799e6f9dad7fa295b36c166cf93e6",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11235,11 +9824,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11247,18 +9832,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkwhynodicsexists",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkwhynodicsexists",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0415a3c1ca543953bac9d5610465b8071a215ad6868d59eb206b0cec9e16274a",
+    "checksum": "771f49154aadd1d9c67380f232db4b38a1d77e0b9562065d3e2624d7df45761c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11274,11 +9858,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11286,18 +9866,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkhownodicsworks",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkhownodicsworks",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a239277c0592de0092b9e2cc39372bae7c1211e6b0ee542024b40b98ff9ab1ef",
+    "checksum": "a08061711ae14eeb47a6cc6d86ab4181534877ff9179f9b93c487153c66e59f0",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11313,11 +9892,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11325,18 +9900,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2cbddaf1fd752b1fddcf2cc617625c6a47c21540c2bd33fb8e6500ea4649f6ac",
+    "checksum": "55a296bde69b42d79a1cd78b9883514827918c8e88b0c1eb1eb49d389823546b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11352,11 +9926,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11364,18 +9934,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsdocumentationroadmap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationroadmap",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2c67c1c4253666ed724b93f6a046719f0b44d7e93bd2a214e473c2a7d09453f3",
+    "checksum": "c4727f4123b5caa9b205b9bd1f9989fdb875909072e368844957311b720f13c3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11391,11 +9960,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11403,18 +9968,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsdocumentationprinciples",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationprinciples",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1b2989aea66335c16f1a59f4b1266882f8d4d94ef8708ea2b00a97787a398cfd",
+    "checksum": "e721190040203ccb7d8df16b4b79fa5169e86b27c44d283e81f3c7eca3889b0f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11430,11 +9994,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11442,18 +10002,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8383f8fe99bc630732bf9cbb15d192e40c60995c4dc333e73ef19179d111ce05",
+    "checksum": "6411ddf1bea6c6994f4b7a41a11a3b229d3a9f14b21169cad1737be6831473fd",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11469,11 +10028,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11481,18 +10036,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ab99476a6c4e5c77558427cb55b8f1779dd84164ad641e713fca24ef0195bec4",
+    "checksum": "448e7066ff41485296ef393cf1d7c5ce28713d25d541f388940f967506d58539",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11508,11 +10062,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11520,18 +10070,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataapplicationssuite",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataapplicationssuite",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "75160b3cbff567b828b45707b2f6d9f3523a59c855d637bbe1c5461311c06eb0",
+    "checksum": "df1ab64371fb08201a05c425a814270547785aefefa5e473e21e60bc2354545b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11547,11 +10096,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11559,18 +10104,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatasolutionstaskexecutionengine",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatasolutionstaskexecutionengine",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0b50e21a47ddc3ec7fc1aef2c6becf1e4a6dd9ef517efb34402215c94b20345c",
+    "checksum": "981858f02350ad58e92108d3a03bf47e7be4bb1da46cbf5b80caacf73c40e966",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11586,11 +10130,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11598,18 +10138,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "add5f0b6aec0a70d85005c54c604e07471e8a7dbbc0fbf0d5489902526555cc7",
+    "checksum": "33d00cc85418243c2887c992bc85a541c3fb328a7329da1f389b82b23bea84cb",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11625,11 +10164,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11637,18 +10172,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b3cce182b7e43eda608e1eae7d9db9c407bd7888a18325949242beb7c331e184",
+    "checksum": "c04c28c8f5b6907a087be6a4eeaf967e7a20463bd3ebfbe2e0d58aba2e734154",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11664,11 +10198,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11676,18 +10206,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsoverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "07b328b89fb651fca047f7d3cf11dd957d63cb05f99dc4f6117318527674228b",
+    "checksum": "9f34053549943776b2819a2b4163cd1b6375be6190e0d83ad38733df244a766a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11703,11 +10232,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11715,18 +10240,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "01616a932c39132329f5892b04b91d35a33a7d72c25ec2a99815aa704ad37908",
+    "checksum": "7b74405bd31a82e39755256cbd297413e2d746fdc66a27170053f9137427dd30",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11742,11 +10266,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11754,18 +10274,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatareferenceinternalsourceboundaryregister",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatareferenceinternalsourceboundaryregister",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ba87ebe309a62f357462ac39c31a24b4291626a0d3f7138bd23b1b1f92fa1b92",
+    "checksum": "e0851abad9bdd201d82f1c30bbe0d5a0153ecb6746e76b4d2b8f5d7b787692a7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11781,11 +10300,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11793,18 +10308,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatareferencesourcemapglossary",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcemapglossary",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "92d2d7f56690d2e2b5d68bbc5b2d4034f5b0fb82848977a16cdb1c6409cc2a89",
+    "checksum": "1065a0124a74e88d106462dc4bc682c0a7bd56e984a01d874eb39c89fe9c66ae",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11820,11 +10334,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11832,18 +10342,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "5fced5c4223fe3a507089365fa0b55488e66954167e92fbac07c82f14d6a9d9d",
+    "checksum": "56472b0926d475fe2e0f0e32e27112ea1bc156eba1af2b0a2ce6e38f7cc5041c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11859,11 +10368,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11871,18 +10376,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatareferencedocumentationgapbacklog",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatareferencedocumentationgapbacklog",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "dea7cf6f0b516b906b0c203b2bf6df9868d771cb1c9a3a0e878b73d1ed0eca08",
+    "checksum": "a158fe9490045c9168dfbe0ac918918622282688d102d0459474bcf85a580e51",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -11898,11 +10402,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11910,18 +10410,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageframeworkmodulararchitecture",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageframeworkModularArchitecture",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "666b72969199de526b82d36f911cb46dd88286ab8f71f0d5ebe74bd8df64dbf6",
+    "checksum": "6cb2c29a0bb0aacc71b6f18acc4d852b3b8ea625e69350106c48c25ea880a02a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -11939,11 +10438,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11951,18 +10446,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageframeworkarchitecturedecisionguide",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageframeworkArchitectureDecisionGuide",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "36d5b0bd688ec2d538f15c5c78bdd2a5105eaa7065be0e6248321dfd5dc265bd",
+    "checksum": "f4117e183f381702c4545cf955a3429b2281b72fcd5ac76f24c9c8760f050165",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -11980,11 +10474,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -11992,18 +10482,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagefoundationoverview",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagefoundationOverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8f854c24869e9d3e5bfb7d447990fd88f369c3dcf1806b019cc4427c478eb844",
+    "checksum": "395480fb600d91f8c4ce25968415f567089b430f47e479503856b3790d021e87",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -12021,11 +10510,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12033,18 +10518,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageframeworkcustomizationguide",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageframeworkCustomizationGuide",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "89edafe416838371b32426a0f0c2c28908f911ab2e35a99c4df4847ad3878794",
+    "checksum": "015d19aacfd915032dcb9ab2caff0b027620c8d17c4763a0c939ee9e70405f9f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -12062,11 +10546,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12074,18 +10554,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageframeworkbackendextensionpatterns",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageframeworkBackendExtensionPatterns",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "15bc3fb71d9c270a2a73ef95f9f558f6409e11effc2393d56eacf0c157edfda8",
+    "checksum": "bd10397f0f673541b458b5c4092cbb91d7ae9a6ea944e580c104958559080101",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -12103,11 +10582,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12115,18 +10590,17 @@ module.exports = {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepageframeworkaxiscontentcustomization",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePageframeworkAxisContentCustomization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "da47814c9507a9e2fc92e068be704f12b6b642930f3b00d5b75b40f0d9da9223",
+    "checksum": "8c57232a89b85ab066cf6408c94cc60ff47cc37a31f4c192a15457b22c662831",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -12144,11 +10618,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12156,18 +10626,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkmodulararchitecture",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkModularArchitecture",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "255f4452a9033e629cb152f0b553b4a0171938b6985bf3bf90d5355e0ba9251f",
+    "checksum": "6c7d3e012441eb5252ce120755814036144e5aba78736b92db0da8cf0e38df50",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -12185,11 +10654,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12197,18 +10662,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkArchitectureDecisionGuide",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "807a14900d492f35d556d31a1ab985e5b93c8be4ad96b35279187cfe92dfe691",
+    "checksum": "907d23feccb179d862a0e90ed6ec9d38f408efce0c2ea4092040a582f71cfc96",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -12226,11 +10690,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12238,18 +10698,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatafoundationoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatafoundationOverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "61922758f695febe83c5d818a908dc02f932d73d918544a39109da1cd20e35a3",
+    "checksum": "4d632d615b06fa18b7a26d50534e606099e8bd54ef78e2484596e0cefb5fe328",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -12267,11 +10726,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12279,18 +10734,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkcustomizationguide",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkCustomizationGuide",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "14c438577e9acacdc2f25c8f99f1909d550a0e933f224bbfecfed0e1ce149bd9",
+    "checksum": "445c698a06d0859853ad39db4a5caefcdb8b0fb6e2bf4a903c0afb59c1b30d1c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -12308,11 +10762,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12320,18 +10770,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkbackendextensionpatterns",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkBackendExtensionPatterns",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "98fbe1edfc0809e58f1e3cfd76a814a7c4ddd8cefb0f8eb5c0c4a2defca28336",
+    "checksum": "0a44589f670c14758c46680cea5d810200558e4fdd63f265888f445ad7880a1e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -12349,11 +10798,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12361,18 +10806,17 @@ module.exports = {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkaxiscontentcustomization",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkAxisContentCustomization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3436cfa6dc1a0c18b036222c06aeffa7ff9f5bde1252acf6aa9bcb6f91c150aa",
+    "checksum": "25b00c6d2a70f9a6fe3bbd389d52af1c709e065da64830fb2da1ff3acccc8fb4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -12390,11 +10834,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12402,18 +10842,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageframeworkmodulararchitecture",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageframeworkmodulararchitecture",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "cdf077b2751bef142413d20f1f5f86d3c4f2c01ad6ce307543afc96be9dc7d60",
+    "checksum": "95ada6ca41b931295d06b192796f9943b60a5595041d23a11eaf67ec822af434",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12429,11 +10868,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12441,18 +10876,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageframeworkarchitecturedecisionguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageframeworkarchitecturedecisionguide",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "49231a66442cd8810ab91e54466f589318fad30b1eb2c70a46229b55c8178df4",
+    "checksum": "7f140f2e0f0348aa86feb282c5b18523b8e9394f4d92de7cff99d43a34ed66dc",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12468,11 +10902,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12480,18 +10910,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagefoundationoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagefoundationoverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6bdfc16dd30f05e892c75e3a137a49dc442afd2e5f64e9a8723e9dec6e51d214",
+    "checksum": "96eab059644683f5af7def6d688e95808b1667f46cd58c0faf9c6eaf70e90217",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12507,11 +10936,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12519,18 +10944,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageframeworkcustomizationguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageframeworkcustomizationguide",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "919fb622774af2fbd16fa2f5b892a6c663aa024009b2e12735657e504ec0867b",
+    "checksum": "dca868cf00325eb104bf61fe26c366965b2ca7c8154e465f0a987e81ed0c362b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12546,11 +10970,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12558,18 +10978,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageframeworkbackendextensionpatterns",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageframeworkbackendextensionpatterns",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f4db336ff078a2f79cef1add29605612a16404b0081f84ee114e311a1a8caa9a",
+    "checksum": "9f4ec40e1212698d81d36b0d1bd381dd3905cc14a7647a68280ca35118fdb8a6",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12585,11 +11004,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12597,18 +11012,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepageframeworkaxiscontentcustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepageframeworkaxiscontentcustomization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a2ab344507558219bd09c695f12631075c0d8cd2b3d9e35019079a213f32362f",
+    "checksum": "2f20c5b5c3dafeb4b1876a29f04d4d5ef441c8bddb65abc7ce2aa1ba71e36ac8",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12624,11 +11038,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12636,18 +11046,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkmodulararchitecture",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmodulararchitecture",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2ee0329f843ff8efba556e1b99ec9e1da53de889aea05bd968a493cea8fe2531",
+    "checksum": "3ab69082261319ca27ef15b4c18c78d96e7ad40428b178d69e284ed8e46f039c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12663,11 +11072,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12675,18 +11080,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "7b6045f5216fb290d04e45283a74a6cd795bdcbfb708a2bb68ca8e4a39273ce8",
+    "checksum": "428865d132f568db88501ed1aa2497ff497c8ade83199b16f567f60639ed9e7b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12702,11 +11106,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12714,18 +11114,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatafoundationoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatafoundationoverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "60ad6b41925b3377e04b4c538ad5e7bff21ccdc5872bceb97a2873f2b0e3e0de",
+    "checksum": "b38ce6afabff1ff850fa04e637ac82b8b79103618d2f6798a3d4d36896769091",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12741,11 +11140,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12753,18 +11148,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkcustomizationguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcustomizationguide",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3d1d6fb45d9120eb883366c76b752756403dc3bdd1e6d5d0f53cc8b1e0696451",
+    "checksum": "68911332b3be7c9cffbed3e465015a17a2f9339abaae4ad07e2b9d8d9eb27eee",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12780,11 +11174,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12792,18 +11182,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkbackendextensionpatterns",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkbackendextensionpatterns",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ab128473e51bc2f5e33f8034e1cbd04b011146a03cad8e1cae5a103ce2ee4fe4",
+    "checksum": "2f62428bb42ee84db355a881db21aff3c0f309f42013bd150858cfd6d1d6745b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12819,11 +11208,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   },
@@ -12831,18 +11216,17 @@ module.exports = {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkaxiscontentcustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkaxiscontentcustomization",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "c07d861cd5dee1e9d95834dfec47ac44b3e39212ccf1ab67cf8160ea04d09d4e",
+    "checksum": "bda3ccadb4add58ff07160efec0ef16fa508353ce171594f7d23eb3068f93690",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -12858,11 +11242,7 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
     "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
     "active": true
   }

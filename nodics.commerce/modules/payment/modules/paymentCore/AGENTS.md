@@ -1,5 +1,10 @@
 # Payment Foundation Agent Contract
 
+Original reservation reconciliation calls Loyalty's protected exact-key decision
+owner; never dispatch AUTHORIZE again to discover its outcome. Canonical atomic DENIED/noEffects:true or the distinct proven
+CANCELLED reconciliation contract can authorize cleanup. Preserve its receipt in
+Payment evidence; cancellation of absent historical decisions remains uncertain.
+
 - Follow `../../../../../AGENTS.md` and `../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow ancestor contracts and read local guidance.
 
@@ -24,3 +29,12 @@ and both CARD regressions before changing provider selection.
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Attempted-Payment bundle cleanup requires the exact canonical purchase fence and
+fresh terminal owner proof. Typed CANCELLED/noEffects:true is accepted only from
+LOYALTY_RESERVATION_RECONCILIATION_V1 with matching retained original authorization
+intent and atomic accounting proof. Reconcile through the Payment runtime using
+that original tuple; cancel/inspect remain conservative. Missing retained intent
+blocks historical cancellation cleanup. Never reconstruct it from current Cart,
+caller fields or balances; never relabel cancellation as DENIED or release seller
+listing content holds. Preserve original checkpoint/claim and monotonic CAS.

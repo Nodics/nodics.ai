@@ -15,6 +15,19 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto');
 const provider = require('../src/service/defaultLoyaltyWalletBackofficeCapabilityService');
 const definition = require('../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService');
+const release = require('../../../../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService');
+test('workspace publication review satisfies the canonical contract with presentation-only capabilities', () => {
+    const review = require('../data/manifest.json').sections.participationWorkspace.publicationReview;
+    assert.deepEqual(release.validatePublicationReview(review, 'loyaltyWallet', 'participationWorkspace'), review);
+    assert.deepEqual(review.postPublicationCapabilities, [{
+        title: 'Loyalty participation presentation',
+        description: 'Display localized copy for the existing wallet, transfer-settings and Enterprise test-credit views. Publication does not provision wallets, grant access, enable transfers or test credit, change policy selections or move rewards.'
+    }]);
+    const missingCapabilities = { ...review };
+    delete missingCapabilities.postPublicationCapabilities;
+    assert.throws(() => release.validatePublicationReview(missingCapabilities, 'loyaltyWallet', 'participationWorkspace'),
+        { code: 'ERR_IMP_00003' });
+});
 test('actual module registration advertises exact implemented views and existing secured owner routes without granting anything', async () => {
     let registered;
     global.SERVICE = {

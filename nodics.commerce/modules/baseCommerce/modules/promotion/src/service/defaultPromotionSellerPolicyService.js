@@ -10,7 +10,7 @@
  */
 'use strict';
 const { isDeepStrictEqual } = require('node:util');
-const reads = new WeakMap(), policies = new WeakMap();
+const reads = new WeakMap(), policies = new WeakMap(), membershipPhases = new WeakMap();
 
 /** @module promotion/service/defaultPromotionSellerPolicyService @description Resolves issuer-pinned vendor distribution from existing immutable issuance receipts and fresh consent. Private read identity permits exact publication/budget reads only, never caller scope switching or budget mutation. @layer service @owner promotion @override Later layers may narrow selection through mergeable members; preserve signed seller, exact receipt/root/fingerprint/grant, private identity, unchanged issuer budget and legacy fallback. */
 module.exports = {
@@ -117,6 +117,60 @@ module.exports = {
         const result = [];
         for (const binding of bindings) result.push((await this.readBound(r, binding)).policy);
         return result;
+    },
+    /** Shares only canonical receipt discovery within one private membership phase, with independent uncached discovery and Profile checks at both boundaries. */
+    productRootPhase: async function (command, read) {
+        const admission = SERVICE.DefaultPromotionDistributionAdmissionService;
+        admission.resolveMembershipRead(command);
+        const r = this.context(command);
+        if (!r || membershipPhases.has(command) || typeof read !== 'function') this.fail();
+        const roots = [...SERVICE.DefaultPromotionPublicationService.deliveryRoots(r)];
+        const discover = async () => {
+            const batches = await this.privateRead('DefaultCouponBatchService', r,
+                { tenant: r.tenant, enterpriseCode: r.enterpriseCode, status: 'GENERATED' }, this.maximumBindings());
+            return batches.filter(batch => batch.secureIssuance?.command?.storeCode === r.storeCode &&
+                roots.includes(batch.secureIssuance.command.rootCode) && batch.issuerEnterpriseRef?.code !== r.enterpriseCode)
+                .map(batch => this.binding(r, batch)).sort((a, b) => a.batchCode.localeCompare(b.batchCode));
+        };
+        const bindings = await discover(), references = new Set([r.enterpriseCode]);
+        const byRoot = new Map();
+        for (const binding of bindings) {
+            references.add(binding.issuerEnterpriseCode);
+            const selected = byRoot.get(binding.rootCode) || [];
+            if (selected.some(item => item.promotionCode === binding.promotionCode)) this.fail();
+            selected.push(binding); byRoot.set(binding.rootCode, selected);
+        }
+        const phase = { context: r, snapshot: structuredClone(r), roots, byRoot };
+        membershipPhases.set(command, phase);
+        try {
+            return await admission.membershipReferencePhase(command, [...references], async () => {
+                const result = await read();
+                if (!isDeepStrictEqual(await discover(), bindings) || !isDeepStrictEqual(r, phase.snapshot) ||
+                    !isDeepStrictEqual(SERVICE.DefaultPromotionPublicationService.deliveryRoots(r), roots)) this.fail();
+                return result;
+            });
+        } finally { membershipPhases.delete(command); }
+    },
+    /** Proves delegated ownership only for an exact in-flight Product membership command. Returns an opaque snapshot, never sibling policies or general root authority. */
+    productRootOwnership: async function (command, rootCode) {
+        const admission = SERVICE.DefaultPromotionDistributionAdmissionService;
+        admission.resolveMembershipRead(command);
+        const r = this.context(command);
+        if (!r) return undefined;
+        if (!SERVICE.DefaultPromotionPublicationService.deliveryRoots(r).includes(rootCode)) this.fail();
+        const phase = membershipPhases.get(command);
+        if (phase && (!isDeepStrictEqual(r, phase.snapshot) || !phase.roots.includes(rootCode))) this.fail();
+        const batches = phase ? undefined : await this.privateRead('DefaultCouponBatchService', r,
+            { tenant: r.tenant, enterpriseCode: r.enterpriseCode, status: 'GENERATED' }, this.maximumBindings());
+        const bindings = phase ? (phase.byRoot.get(rootCode) || []) : batches.filter(batch => batch.secureIssuance?.command?.storeCode === r.storeCode &&
+            batch.secureIssuance.command.rootCode === rootCode &&
+            batch.issuerEnterpriseRef?.code !== r.enterpriseCode).map(batch => this.binding(r, batch));
+        if (!bindings.length) return undefined;
+        if (new Set(bindings.map(binding => binding.promotionCode)).size !== bindings.length) this.fail();
+        const retained = [];
+        for (const binding of bindings) retained.push((await this.readBound(r, binding)).retainedPolicy);
+        admission.resolveMembershipRead(command);
+        return SERVICE.DefaultPromotionPublicationService.fingerprint({ bindings, retained });
     },
     /** Resolves a coupon by fresh generated identity before selecting its original delegated policy. Disabled/unselected paths refuse retained consent proof; unprotected legacy stock keeps its existing path. @param {Object} request Signed Storefront context. @param {Object} observed Owner-observed coupon with code/batch identity. @returns {Promise<Object|undefined>} Parent couponPurchaseCampaign result. */
     readCoupon: async function (request, observed) {

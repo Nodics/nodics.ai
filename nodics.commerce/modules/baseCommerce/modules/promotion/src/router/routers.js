@@ -63,6 +63,54 @@ module.exports = {
       },
     },
     backoffice: {
+      administrativeRead: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.read', apiExposure: 'commerceManagement',
+        key: '/business/promotions/administrative/read', method: 'POST', controller: 'DefaultPromotionBusinessWorkbenchController',
+        operation: 'administrativeRead', cache: { enabled: false },
+      },
+      administrativeCreate: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.draft.write', apiExposure: 'commerceManagement',
+        key: '/business/promotions/administrative/create', method: 'POST', controller: 'DefaultPromotionBusinessWorkbenchController',
+        operation: 'administrativeCreate', cache: { enabled: false },
+      },
+      administrativeUpdate: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.draft.write', apiExposure: 'commerceManagement',
+        key: '/business/promotions/administrative/update', method: 'POST', controller: 'DefaultPromotionBusinessWorkbenchController',
+        operation: 'administrativeUpdate', cache: { enabled: false },
+      },
+      administrativeSubmit: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.manage', apiExposure: 'commerceManagement',
+        key: '/business/promotions/administrative/submit', method: 'POST', controller: 'DefaultPromotionBusinessWorkbenchController',
+        operation: 'administrativeSubmit', cache: { enabled: false },
+      },
+      administrativeSchedule: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.manage', apiExposure: 'commerceManagement',
+        key: '/business/promotions/administrative/schedule', method: 'POST', controller: 'DefaultPromotionBusinessWorkbenchController',
+        operation: 'administrativeSchedule', cache: { enabled: false },
+      },
+      administrativeReviewCapabilities: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.approve', apiExposure: 'commerceManagement',
+        key: '/promotions/administrative-review/capabilities', method: 'POST', controller: 'DefaultPromotionController',
+        operation: 'administrativeReviewCapabilities', cache: { enabled: false },
+      },
+      administrativeReview: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.approve', apiExposure: 'commerceManagement',
+        key: '/promotions/:promotionCode/administrative-review', method: 'POST', controller: 'DefaultPromotionController',
+        operation: 'administrativeReview', cache: { enabled: false },
+      },
+      administrativeApprove: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.approve', apiExposure: 'commerceManagement',
+        key: '/promotions/:promotionCode/administrative-approve', method: 'POST', controller: 'DefaultPromotionController',
+        operation: 'administrativeApprove', cache: { enabled: false },
+      },
       couponWorkspace: {
         secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
         permission: 'commerce.promotion.read', apiExposure: 'commerceManagement',

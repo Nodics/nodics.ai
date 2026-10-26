@@ -17,11 +17,40 @@ An immutable `commerceSearchRuleVersion` snapshot is saved before projection
 and index writes. Its APPROVED state records source evidence, not installed
 index success. Retry after an uncertain/failed index write reuses the hash key.
 Generic version creation/update/delete is fenced by owner-only interceptors.
+Publication counts an index write only after nSearch returns exactly one matching
+created/updated acknowledgement with no shard failure, followed by an independent
+bounded indexed read of the exact document ID. Indexed tenant, Store, locale,
+CURRENT status, sourceHash, query scope, dates, actions and benefitRef must match.
+The write requests refresh=wait_for before that search; no debug route or direct
+provider connection is needed. A resolved nSearch errors array is failure, even
+when its outer code is SUC_SRCH_00000. Registered 503 diagnostics INDEX_WRITE,
+INDEX_ACK, INDEX_READ, INDEX_MISSING and INDEX_BINDING contain only static stage
+text, never raw provider errors, documents, credentials or financial terms.
+A failed confirmation retains the existing snapshot; ordinary owner republish
+may retry the same approved source. It must not report success from the database
+projection alone, and no partial publication count substitutes for confirmation.
 
-Ranking scans stable code-ordered pages until completion within maximumRuleScan.
+Projection lookup uses nSearch bool/term/exists DSL for indexed reads and model
+query operators only for generated model reads. Indexed locale matching admits
+the exact locale or an absent/null indexed locale; tenant, Store and CURRENT
+filters remain mandatory. Never pass Mongo `$or`/`$exists` to a search adapter.
+
+Ranking scans stable pages until completion within maximumRuleScan. Generated
+model reads sort by code. Indexed reads pass `options.sort: [{sourceHash:'asc'}]`
+through nSearch to the adapter: its `searchOptions` translator carries pagination
+only. `sourceHash` is an explicitly mapped keyword and the owner builder binds
+rule identity, tenant, Store and locale into it. Do not rely on discarded
+`searchOptions.sort` or on an undeclared/dynamically mapped code sort field.
 It checks tenant, Store, locale, scope and dates before maximumRulesPerRequest.
 Overflow, repeated pages and unknown envelopes reject without partial effects.
 Product's configured fail-open/error behavior applies to that rejection.
+Successful index acknowledgement/readback does not qualify runtime ranking.
+The composed runtime regression exercises the generated nSearch service and
+search processor, actual adapter parameters, Agreement benefit resolution,
+Product pagination, original customer admission and configured omission/error.
+Candidate retrieval, Agreement storage and membership/provider transports are
+isolated fixtures; this does not identify a native refusal or qualify installed
+Promotion membership. Public membership deliberately rejects service principals.
 The caller supplies a complete available/filter-matching candidate set and
 paginates only after ranking; Search neither loads Products nor refills results.
 
@@ -66,6 +95,14 @@ There is no compatibility path through `promotions(request)`. Missing canonical
 ports, unselected/legacy capped reads, missing/ambiguous members and
 unqualified public scope fail closed for ranking. Public availability summaries
 alone are insufficient; the public issuer port is an explicit integration gate.
+
+Resolve current Agreement coverage before issuer membership. For selected coverage,
+read membership only for the union of selected codes intersecting eligible coupon
+candidates. Unrelated coupons cannot block selected coverage. If any current
+benefit covers all Enterprise coupons, retain the complete eligible coupon set;
+exact issuer proof is still required for every selected candidate. Missing or
+foreign-Store coverage contributes no membership selectors. Original caller
+authority, completeness checks and fail-closed selected reads remain unchanged.
 
 Search splits the eligible coupon set using the effective
 `promotion.couponIssuerMembership.maximumProducts` value. Promotion remains the

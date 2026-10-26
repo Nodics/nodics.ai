@@ -1,5 +1,26 @@
 # loyaltyApi
 
+Program eligibility administration uses explicit native Super Admin access-token
+routes under `/admin/programs/partner-conversion-eligibility`, the Program-owned
+permission and service, and the `loyaltyAdministration` exposure category. Preserve
+original header bearer, sensitive/no-store handling and exact bodies; never expose
+Program generic CRUD or delegate this command to funding/participant settings.
+
+GET `/admin/reservation-decisions/readiness` uses existing native Super Admin
+admission and loyalty.wallet.testCredit proof permission without credit enablement.
+Preserve header-only bearer forwarding, conflict refusal, no-store/sensitive
+handling and Wallet delegation. Never widen this route to employee/service groups.
+
+Original reservation decision cancel/inspect routes remain service-only, private,
+no-store and owner-delegated. Preserve release/read permissions and never convert
+CANCELLED/noEffects:false to terminal denial. See Wallet's
+[decision contract](../loyaltyWallet/llm/contracts/reservation-decisions.md).
+
+Super Admin PUT `/admin/enterprise-test-wallets` delegates zero-only provisioning
+to Wallet. Preserve original bearer, private response and the independent
+default-off provisioning selection. Never call credit or service-wallet opening
+from this route. Wallet owns all qualification and replay decisions.
+
 Follow the parent contract: `../../AGENTS.md`.
 Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
@@ -40,3 +61,12 @@ turn these routes into lifecycle mutation, history search or generic schema CRUD
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+`/reward-reservation-decisions/reconcile` is a separate sensitive/no-store,
+service-only release-permission command. Delegate to Wallet's exact original-key
+accounting reconciliation; never accept a human Admin, caller proof or replacement
+wallet terms. Its distinct receipt does not change legacy cancel/inspect semantics.
+
+PUT /admin/wallets/auction-funding delegates the exact native administrative body
+to Wallet, using system.schema.manage and sensitive no-store transport. It does
+not grant permissions, rewrite owner identity or expose a generic metadata patch.

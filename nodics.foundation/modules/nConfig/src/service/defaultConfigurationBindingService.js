@@ -11,6 +11,7 @@
 
 const _ = require("lodash");
 const path = require("node:path");
+const roleCollectionOperations = Symbol("roleCollectionOperations");
 
 /**
  * @module config/service/DefaultConfigurationBindingService
@@ -22,10 +23,13 @@ const path = require("node:path");
 module.exports = {
   /** Applies a resolved contribution atomically with explicit collection semantics; ordinary arrays retain positional compatibility. @param {Object|Array} inherited Earlier configuration. @param {Object|Array} contribution Resolved contribution. @returns {Object|Array} Independent effective configuration. */
   merge: function (inherited, contribution) {
+    const capabilityBlocks = new Set(Object.values(contribution || {}).filter(_.isPlainObject));
     return _.mergeWith(
       _.cloneDeep(inherited),
       contribution,
-      (previous, next) => {
+      (previous, next, key, object, source) => {
+        if (key === "runtimeRoleProfiles" && capabilityBlocks.has(source) && _.isPlainObject(next))
+          return this.mergeRoleProfiles(previous, next);
         if (
           !_.isPlainObject(next) ||
           !["replace", "keyed"].includes(next.$config)
@@ -36,6 +40,30 @@ module.exports = {
         return this.mergeKeyedCollection(previous, next);
       },
     );
+  },
+
+  /** Retains explicit role collection operations until the selected profile meets its effective base namespace. */
+  mergeRoleProfiles: function (inherited, contribution) {
+    return _.mergeWith(_.cloneDeep(inherited || {}), contribution, (previous, next) => {
+      const earlier = previous && previous[roleCollectionOperations];
+      const incoming = next && next[roleCollectionOperations];
+      const operation = _.isPlainObject(next) && ["replace", "keyed"].includes(next.$config);
+      if (!earlier && !incoming && !operation) return undefined;
+      const operations = earlier || (previous === undefined ? [] : [{ $config: "replace", value: previous }]);
+      return { [roleCollectionOperations]: _.cloneDeep(operations.concat(incoming || [next])) };
+    });
+  },
+
+  /** Identifies internal deferred collection state, never an authored binding operator. */
+  isRoleCollection: function (value) {
+    return Boolean(value && value[roleCollectionOperations]);
+  },
+
+  /** Applies deferred collection operations using the existing validated collection semantics. */
+  applyRoleCollection: function (inherited, contribution) {
+    const operations = contribution && contribution[roleCollectionOperations];
+    if (!operations) return undefined;
+    return operations.reduce((value, operation) => this.merge({ value }, { value: operation }).value, inherited);
   },
 
   /** Projects one property through the normal contribution boundaries, resolving only its dependencies. @param {Object[]} layers Authored contributions with their file directories. @param {string|string[]} property Bounded path. @param {Object} context Selected runtime binding context. @returns {*} Independent effective property. */

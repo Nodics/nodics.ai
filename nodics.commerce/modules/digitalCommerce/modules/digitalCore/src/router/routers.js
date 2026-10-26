@@ -29,6 +29,20 @@ module.exports = {
       },
     },
     couponReminder: {
+      sweep: {
+        secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+        permission: "commerce.digital.notification.read", apiExposure: "moduleInternal",
+        requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/workflow/actions/couponExpirySweep", method: "POST",
+        controller: "DefaultDigitalCouponReminderController", operation: "sweep",
+      },
+      dispatchEligibility: {
+        secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+        permission: "commerce.digital.notification.read", apiExposure: "moduleInternal",
+        requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/internal/coupons/reminder-dispatch-eligibility", method: "POST",
+        controller: "DefaultDigitalCouponReminderController", operation: "dispatchEligibility",
+      },
       couponReminderSource: {
         secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
         permission: "commerce.digital.notification.read", apiExposure: "moduleInternal",
@@ -289,6 +303,7 @@ for (const [name, key, operation] of [
   ['giftStatus', '/gifts/inspect', 'giftStatus'],
 ]) module.exports.digitalCore.customer[name] = {
   ...module.exports.digitalCore.customer.bundleCompositionContext, key, operation,
+  permission: name === 'giftStatus' ? 'commerce.digital.own.read' : 'commerce.digital.bundle.manage',
 };
 module.exports.digitalCore.customer.bundleListingProof = {
   secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],

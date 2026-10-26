@@ -21,7 +21,7 @@ const dataRoot = path.resolve(__dirname, "../data");
 const section = require(path.join(dataRoot, "manifest.json")).sections.runtimeEvidencePermissions;
 
 test("Profile owns bounded customer evidence and tenant namespace permission definitions", () => {
-  assert.equal(section.sourceRoot, "init-v003");
+  assert.equal(section.sourceRoot, "init-v001");
   assert.equal(section.selectionPolicy, "EXPLICIT");
   assert.equal(section.destinationRole, "PLATFORM");
   const header = require(path.join(dataRoot, section.sourceRoot,

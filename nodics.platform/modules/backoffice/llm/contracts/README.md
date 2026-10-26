@@ -156,3 +156,20 @@ See [Guided readiness repair provider contract](backoffice-governance-contracts.
 ## Application Preparation Media Retry
 
 See [Application Preparation Media Retry](backoffice-governance-contracts.md#application-preparation-media-retry).
+# Public Feature Observations
+
+Module capability metadata may explicitly opt in to public disclosure through
+`publicFeatureAvailability: {contractVersion: 1, features: {...}}`. Feature names
+are bounded identifiers and values are strictly Boolean, with at most 32 entries.
+The implementing module owns their definitions and qualification defaults;
+BackOffice validates and transports them, never computes domain policy.
+
+`GET /bootstrap/public` projects agreeing observations from current UP leases
+selected by existing required-module configuration into `featureAvailability`,
+keyed by that selection. Configured endpoint fallback supplies no observation.
+Missing or disagreeing contributions are omitted (unknown), never synthesized as
+disabled. Only this explicitly public map is disclosed, not grants, internal
+configuration, navigation or identities. Existing route/exposure enforcement and
+authenticated bootstrap permission filtering are unchanged. Consumers must not
+treat this presentation evidence as authorization or convert transport failure
+into an unavailable Boolean. Later layers override owner policy, not this map.

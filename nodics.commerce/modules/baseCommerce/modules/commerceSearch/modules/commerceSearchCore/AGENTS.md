@@ -11,6 +11,9 @@
 - Rank the complete eligible Product candidate set before caller pagination.
   Scan complete bounded rule pages, apply scope before the applicable-rule bound,
   and reject incomplete reads; never truncate to an arbitrary rule prefix.
+  Indexed paging must send `options.sort` on the mapped sourceHash keyword;
+  nSearch drops `searchOptions.sort`. Preserve the composed runtime regression
+  through Product, the nSearch service/processor and actual Elastic parameters.
 - `commercialAgreement` owns commercial assignments and benefit evidence.
   Re-resolve current coverage at ranking time and deduplicate its stable identity.
   Product/Promotion own coupon issuer membership; related Enterprises do not
@@ -28,6 +31,10 @@
 - Resolve omitted priority only through validated `defaultRulePriority`; retain
   the resolved value in publication snapshots. Canonical Promotion membership
   is required, with no fallback to a different owner read or local policy copy.
+- Require nSearch write acknowledgement and exact indexed readback before reporting
+  publication success. Resolved per-document errors are failures, not success.
+  Keep static registered publisher diagnostics and the real save/read processor
+  regression; never expose provider errors or enable debug routes for confirmation.
 - Preserve immutable publication snapshots and owner-only writer interceptors.
   Source snapshots are not proof of live indexing or governed activation.
 - Snapshot replay and lost-insert acknowledgement validation dispatch through

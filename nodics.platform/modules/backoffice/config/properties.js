@@ -71,6 +71,9 @@ module.exports = {
       },
     },
     dataReleaseTimeoutMs: 120000,
+    preparationStepDefaults: { batchBoundaryBefore: false },
+    readinessWorkers: 4,
+    browserReadiness: { concurrency: 1, priorityBurst: 1 },
     planPresentation: {
       capabilities: { title: "Business capabilities", summary: "Required capabilities are shared with other applications that use them." },
       preparation: { title: "Data and media", summary: "The owning modules define the preparation order and required data. Optional packages remain separate." },

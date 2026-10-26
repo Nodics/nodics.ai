@@ -30,6 +30,7 @@ const providerFiles = [
     'nodics.platform/modules/backoffice/src/service/defaultBackofficeBackofficeCapabilityService.js',
     'nodics.platform/modules/axis/src/service/defaultAxisBackofficeCapabilityService.js',
     'nodics.wcms/modules/cms/src/service/defaultCmsBackofficeCapabilityService.js',
+    'nodics.wcms/modules/wcmsExperience/src/service/defaultWcmsExperienceBackofficeCapabilityService.js',
     'nodics.wcms/modules/media/src/service/defaultMediaBackofficeCapabilityService.js',
     'nodics.wcms/modules/editorial/src/service/defaultEditorialBackofficeCapabilityService.js',
     'nodics.platform/modules/profile/src/service/defaultProfileBackofficeCapabilityService.js',
@@ -58,7 +59,7 @@ const providerFiles = [
 
 const expected = {
     'system-integrations': ['System Workspace', 'Runtime Operations', 'Modules and Capabilities', 'Configuration and Environments', 'Integrations and Connections', 'APIs, Webhooks, and Events', 'Data Exchange', 'Schema & Data Administration', 'Operational Monitoring and Recovery', 'Platform Policies and Reference Settings'],
-    content: ['Content Workspace', 'Websites and Content Catalogs', 'Page Designer', 'Pages and Routes', 'Components and Content Blocks', 'Templates and Layout', 'Navigation and Menus', 'Visibility and Experience Rules', 'Content Types and Rendering', 'Themes and Branding', 'Content Preview and Readiness', 'Content History and Insights'],
+    content: ['Content Workspace', 'Websites and Content Catalogs', 'Page Designer', 'Pages and Routes', 'Components and Content Blocks', 'Templates and Layout', 'Navigation and Menus', 'Visibility and Experience Rules', 'Content Types and Rendering', 'Themes and Branding', 'Content Preview and Readiness', 'Content History and Insights', 'Experience Studio'],
     'media-management': ['Media Workspace', 'Media Library', 'Folders and Intake Policies', 'Formats and Variants', 'Media Sets and Galleries', 'Usage and References', 'Physical Artifacts', 'Transfer Manifests', 'Publication Receipts', 'Media Placements', 'Replication Queue', 'Cleanup Candidates', 'Cleanup Jobs and Audit', 'Storage and Delivery'],
     organization: ['Customer Workspace', 'Customers and Profiles', 'Segments and Audiences', 'Organisations and Business Accounts', 'Employees and Teams', 'Roles and Access', 'Customer Service and Engagement', 'Reviews and Reputation', 'Testimonials and Advocacy', 'Privacy and Customer Rights', 'Engagement Insights'],
     'products-merchandising': ['Product Workspace', 'Product Information', 'Categories & Classification', 'Catalogs & Assortments', 'Pricing', 'Tax Configuration', 'Product Readiness'],
@@ -69,7 +70,7 @@ const expected = {
     'fulfillment-operations': ['Fulfillment Workspace', 'Fulfillment Orders', 'Fulfillment Planning', 'Picking Operations', 'Packing Operations', 'Dispatch Handover', 'Pickup and Collection', 'Return Receipt and Inspection', 'Fulfillment Exceptions and Recovery', 'Fulfillment History and Insights'],
     'shipping-operations': ['Shipping Workspace', 'Shipments and Consignments', 'Packages', 'Carriers and Services', 'Shipping Rates and Promises', 'Labels and Documents', 'Dispatch and Carrier Handover', 'Tracking and Delivery', 'Delivery Exceptions', 'Return Shipping', 'Shipping Reconciliation and Insights'],
     'payment-operations': ['Payment Workspace', 'Payment Transactions', 'Authorizations', 'Captures', 'Voids and Reversals', 'Refund Execution', 'Payment Methods', 'Payment Providers', 'Reconciliation and Settlement', 'Disputes and Chargebacks', 'Payment Exceptions and Recovery', 'Payment Audit and Insights'],
-    'promotions-discounts': ['Promotion Workspace', 'Promotions', 'Discount Rules', 'Coupons and Promotion Codes', 'Eligibility and Qualification', 'Priority, Combination, and Stacking', 'Schedules and Budgets', 'Promotion Evaluation', 'Promotion Governance', 'Promotion Insights'],
+    'promotions-discounts': ['Coupon Offers', 'Coupon Acquisition', 'Promotion Workspace', 'Promotions', 'Discount Rules', 'Coupons and Promotion Codes', 'Eligibility and Qualification', 'Priority, Combination, and Stacking', 'Schedules and Budgets', 'Promotion Evaluation', 'Promotion Governance', 'Promotion Insights'],
     'editorial-space': ['Editorial Workspace', 'Editorial Content', 'Article Editor', 'Editorial Review and Approval', 'Languages and Localization', 'Authors', 'Taxonomy', 'Series', 'Featured and Special Content', 'Corrections and Governance', 'Content Type Policies', 'Editorial Calendar', 'Editorial Preview and Distribution', 'Editorial History and Insights'],
     'process-and-automations': ['Operations Workspace', 'Workflow Management', 'Pipeline Management', 'Cron jobs', 'Triggers and Relationships', 'Automation Monitoring', 'Advanced Configuration'],
     'sustainability-operations': ['Waste Management', 'Waste Configuration'],
@@ -82,6 +83,10 @@ const childrenByParent = {};
 providerFiles.forEach(file => {
     const capability = require(path.join(root, file)).getCapability();
     (capability.navigation || []).forEach(item => {
+        if (item.group && item.group.label === 'Content and Experience') {
+            assert.strictEqual(item.group.id, 'content', `${file}:${item.id} must share the canonical content group`);
+            assert.strictEqual(item.group.order, 200, `${file}:${item.id} must retain canonical content ordering`);
+        }
         if (item.parentId && item.featureState !== 'HIDDEN') {
             const parentKey = `${item.group && item.group.id || item.moduleName}:${item.parentId}`;
             childrenByParent[parentKey] = childrenByParent[parentKey] || [];

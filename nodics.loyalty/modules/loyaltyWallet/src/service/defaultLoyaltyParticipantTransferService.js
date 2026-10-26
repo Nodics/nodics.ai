@@ -145,15 +145,74 @@ module.exports = {
     return policy;
   },
   /**
-   * Reads the represented owner's selections and framework limits, never another owner's configuration.
+   * Admits an explicit Enterprise policy target through fresh native Profile administrator proof.
+   * @param {Object} request Original authenticated request; target is business data, not signed context.
+   * @param {boolean} updating Whether the exact revision/selection update shape is required.
+   * @returns {Promise<Object>} Exact owner, original actor and revalidation closure; never grants membership or writes policy.
+   * @override Preserve original bearer, nonce binding, same-tenant target resolution and final revalidation.
+   */
+  administrativeSettingsContext: async function (request, updating = false) {
+    const input = request.payload || request.body || {}, auth = structuredClone(request.authData || {});
+    const path = CONFIG.get("loyalty")?.transfers?.platformAdministratorEvidencePath;
+    const pin = { input: structuredClone(input), tenant: request.tenant, authorization: request.authorization };
+    const selectors = () => [request.headers, request.header, request.httpRequest?.headers]
+      .filter(value => value && typeof value === "object")
+      .flatMap(value => Object.entries(value).filter(([key]) => /^(authorization|x-enterprise-code|x-tenant-code)$/i.test(key)));
+    const headerPin = structuredClone(selectors());
+    const bound = () => {
+      if (!isDeepStrictEqual(request.authData, auth) || request.tenant !== pin.tenant || !pin.tenant ||
+        auth.tenant !== pin.tenant || request.authorization !== pin.authorization || !pin.authorization ||
+        auth.principalType !== "human" || auth.tokenType !== "access" || auth.authenticationMethod !== "PASSWORD" ||
+        auth.isSystem || auth.sessionContext !== undefined || auth.runtimeScope !== undefined || auth.externalIdentityLinkCode !== undefined ||
+        !Number.isSafeInteger(auth.authVersion) || auth.authVersion < 1 || !auth.loginId || !auth.entCode ||
+        !isDeepStrictEqual(selectors(), headerPin) ||
+        [request.payload, request.body, request.httpRequest?.body].some(value => value !== undefined && !isDeepStrictEqual(value, pin.input)) ||
+        [request.query, request.httpRequest?.query].some(value => value && Object.keys(value).length) ||
+        [auth.enterpriseCode, request.entCode, request.enterpriseCode].some(value => value !== undefined && value !== auth.entCode) ||
+        [auth.tenantCode, request.tenantCode].some(value => value !== undefined && value !== pin.tenant) ||
+        headerPin.some(([key, value]) => key.toLowerCase() === "x-enterprise-code" && value !== auth.entCode ||
+          key.toLowerCase() === "x-tenant-code" && value !== pin.tenant ||
+          key.toLowerCase() === "authorization" && value !== pin.authorization) ||
+        typeof path !== "string" || !/^\/[A-Za-z0-9/_-]+$/.test(path) ||
+        CONFIG.get("loyalty")?.transfers?.platformAdministratorEvidencePath !== path)
+        this.fail("Administrative policy operation is not authorized");
+    };
+    if (Object.getPrototypeOf(input) !== Object.prototype ||
+      Object.keys(input).sort().join(",") !== (updating
+        ? "enterpriseCode,expectedRevision,programCode,rewardTypeCode,selections"
+        : "enterpriseCode,programCode,rewardTypeCode"))
+      this.fail("Invalid administrative policy selectors");
+    for (const key of ["enterpriseCode", "programCode", "rewardTypeCode"]) this.identifier(input[key]);
+    const owner = { ownerType: "ENTERPRISE", ownerCode: input.enterpriseCode };
+    const revalidate = async () => {
+      bound();
+      const nonce = crypto.randomUUID(), permission = "loyalty.transfers.manage";
+      const participant = SERVICE.DefaultLoyaltyParticipantService;
+      const proof = await participant.profile(request, path, auth.entCode, { nonce, permission });
+      bound();
+      if (proof?.contractVersion !== 1 || proof.nonce !== nonce || proof.permission !== permission ||
+        proof.tenant !== pin.tenant || proof.enterpriseCode !== auth.entCode || proof.actorCode !== auth.loginId ||
+        proof.authVersion !== auth.authVersion || proof.principalType !== "human" || proof.platformAdministrator !== true)
+        this.fail("Administrative policy proof could not be confirmed");
+      const target = await participant.recipient(request, owner);
+      bound();
+      if (target?.ownerType !== owner.ownerType || target.ownerCode !== owner.ownerCode)
+        this.fail("Administrative policy target could not be confirmed");
+    };
+    await revalidate();
+    return { owner, actorCode: auth.loginId, revalidate };
+  },
+  /**
+   * Reads participant policy or an explicit native-administrator target without modifying either context or policy.
    * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
-   * @returns {Promise<*>} Reads the represented owner's selections and framework limits, never another owner's configuration.
+   * @returns {Promise<Object>} Exact admitted owner policy, selections and revision; no writes or inferred limits.
    * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
    * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
    */
   settings: async function (request) {
-    const owner = await SERVICE.DefaultLoyaltyParticipantService.resolve(request, "loyalty.transfers.manage");
     const input = request.payload || request.body || {};
+    const administrative = Object.hasOwn(input, "enterpriseCode") ? await this.administrativeSettingsContext(request) : null;
+    const owner = administrative?.owner || await SERVICE.DefaultLoyaltyParticipantService.resolve(request, "loyalty.transfers.manage");
     const query = { ownerType: owner.ownerType, ownerCode: owner.ownerCode,
       programCode: this.identifier(input.programCode), rewardTypeCode: this.identifier(input.rewardTypeCode) };
     const type = await this.read("DefaultLoyaltyRewardTypeService", request, { code: query.rewardTypeCode });
@@ -161,6 +220,7 @@ module.exports = {
     const scale = SERVICE.DefaultLoyaltyRewardTransferService.scale(type.precision);
     const record = await this.read("DefaultRewardTransferPolicyService", request, query);
     const effective = await this.policy(request, owner, query.programCode, query.rewardTypeCode, scale);
+    if (administrative) await administrative.revalidate();
     return { ...query, revision: record?.revision ?? null, selections: record?.selections || {}, effective };
   },
   /**
@@ -171,8 +231,9 @@ module.exports = {
    * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
    */
   updateSettings: async function (request) {
-    const owner = await SERVICE.DefaultLoyaltyParticipantService.resolve(request, "loyalty.transfers.manage");
     const input = structuredClone(request.payload || request.body || {}), allowed = ["outgoingEnabled", "incomingEnabled", "maximumAmount", "maximumDailyAmount", "maximumDailyCount"];
+    const administrative = Object.hasOwn(input, "enterpriseCode") ? await this.administrativeSettingsContext(request, true) : null;
+    const owner = administrative?.owner || await SERVICE.DefaultLoyaltyParticipantService.resolve(request, "loyalty.transfers.manage");
     if (!input.selections || Object.getPrototypeOf(input.selections) !== Object.prototype ||
       Object.keys(input.selections).some(key => !allowed.includes(key)) ||
       input.expectedRevision !== null && (!Number.isSafeInteger(input.expectedRevision) || input.expectedRevision < 0)) this.fail("Invalid transfer selection");
@@ -180,7 +241,7 @@ module.exports = {
       programCode: this.identifier(input.programCode), rewardTypeCode: this.identifier(input.rewardTypeCode) };
     const type = await this.read("DefaultLoyaltyRewardTypeService", request, { code: query.rewardTypeCode });
     if (!type || type.status !== ENUMS.LoyaltyRewardTypeStatus.ACTIVE.key) this.fail("Reward type is unavailable");
-    const scale = SERVICE.DefaultLoyaltyRewardTransferService.scale(type.precision), defaults = CONFIG.get("loyalty")?.transfers;
+    const scale = SERVICE.DefaultLoyaltyRewardTransferService.scale(type.precision), defaults = structuredClone(CONFIG.get("loyalty")?.transfers);
     const policy = this.validatePolicy({ ...defaults, ...input.selections }, scale);
     // Enterprise selections may narrow an administrator's framework ceiling, not silently lift it.
     for (const key of ["maximumAmount", "maximumDailyAmount", "maximumDailyCount"]) {
@@ -189,11 +250,15 @@ module.exports = {
     }
     const work = { ...request, payload: undefined, body: undefined };
     return SERVICE.DefaultLoyaltyTransactionService.compose(work, async () => {
+      if (administrative) await administrative.revalidate();
+      if (!isDeepStrictEqual(defaults, CONFIG.get("loyalty")?.transfers)) this.fail("Transfer policy configuration changed");
       const previous = await this.read("DefaultRewardTransferPolicyService", work, query);
       if ((previous?.revision ?? null) !== input.expectedRevision) this.fail("Transfer selections changed; reload before saving");
       const row = { ...query, code: this.code("TRANSFER_POLICY", Object.values(query)), selections: input.selections,
-        revision: (previous?.revision ?? -1) + 1, updatedBy: owner.actorCode, updatedAt: new Date() };
+        revision: (previous?.revision ?? -1) + 1, updatedBy: administrative?.actorCode || owner.actorCode, updatedAt: new Date() };
       await this.write("DefaultRewardTransferPolicyService", work, row, previous);
+      if (administrative) await administrative.revalidate();
+      if (!isDeepStrictEqual(defaults, CONFIG.get("loyalty")?.transfers)) this.fail("Transfer policy configuration changed");
       return { ...query, revision: row.revision, selections: row.selections, effective: policy };
     });
   },
@@ -306,7 +371,7 @@ module.exports = {
       const recipientPolicy = await this.policy(work, to, intent.programCode, intent.rewardTypeCode, intent.scale);
       if (!senderPolicy.enabled || !senderPolicy.outgoingEnabled || !recipientPolicy.incomingEnabled) this.fail("Reward transfers are disabled");
       if (senderPolicy.maximumAmount !== null && this.amount().compare(intent.amount, senderPolicy.maximumAmount, intent.scale) > 0)
-        this.fail("Per-transfer limit exceeded");
+        this.operations().fail("ERR_LOYALTY_TRANSFER_AMOUNT_LIMIT", "Per-transfer limit exceeded");
       const period = this.period(now, senderPolicy.timeZone);
       const usageCode = this.code("TRANSFER_USAGE", [owner.ownerType, owner.ownerCode, intent.programCode, intent.rewardTypeCode, period]);
       const old = await this.read("DefaultRewardTransferUsageService", work, { code: usageCode });

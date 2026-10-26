@@ -33,5 +33,11 @@ module.exports = {
     "name": "commerce.digital.own.claim",
     "active": true,
     "ownerModule": "digitalCore"
+  },
+  "record4": {
+    "code": "commerce.digital.notification.read",
+    "name": "commerce.digital.notification.read",
+    "active": true,
+    "ownerModule": "digitalCore"
   }
 };

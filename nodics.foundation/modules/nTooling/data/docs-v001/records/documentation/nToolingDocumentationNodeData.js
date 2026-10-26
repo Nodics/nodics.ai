@@ -74,7 +74,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "nodics-installer-and-workspace-setup",
@@ -153,7 +153,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "fresh-schema",
@@ -230,7 +230,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "local-runtime-troubleshooting",
@@ -307,7 +307,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "operations-monitoring-and-recovery",
@@ -387,7 +387,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "operations-monitoring-and-recovery",
@@ -462,7 +462,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "operations-monitoring-and-recovery",
@@ -537,7 +537,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "operations-monitoring-and-recovery",
@@ -617,7 +617,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "release",
@@ -696,7 +696,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "ai-and-developer-tooling",
@@ -773,7 +773,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "tooling",

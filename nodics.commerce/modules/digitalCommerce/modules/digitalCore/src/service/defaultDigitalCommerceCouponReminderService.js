@@ -65,9 +65,9 @@ module.exports = {
    * @remarks Effects: Checks runtime module, permission and consistent aliases; no data read.
    * Failure behavior: Throws for human/system/foreign context or absent notification-read/workflow
    * authority.
-   * @override Execution context cannot supply runtime grants or select another Enterprise.
+   * @override Execution context supplies no grants; a different business Enterprise requires the exact selected runtime/business binding.
    */
-  authority: function (r) {
+  authority: function (r, businessEnterprise) {
     const a = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(r, "digitalCore");
     const enterpriseCode = a.enterpriseCode || a.entCode;
     if (a.principalType !== "service" || a.isSystem || a.tenant !== r.tenant || !a.modules?.includes("workflow") ||
@@ -75,7 +75,10 @@ module.exports = {
         [r.enterpriseCode, r.entCode, a.enterpriseCode, a.entCode].some(v => v !== undefined && v !== enterpriseCode)) this.fail();
     const source = SERVICE.DefaultDigitalCommerceCouponAcquisitionService;
     source.identifier(r.tenant); source.identifier(enterpriseCode);
-    return { tenant: r.tenant, enterpriseCode, authData: structuredClone(a) };
+    if (businessEnterprise !== undefined && businessEnterprise !== enterpriseCode) {
+      SERVICE.DefaultDigitalCouponReminderProcessService.assertCaller(r, "sweepCallers", businessEnterprise);
+    }
+    return { tenant: r.tenant, enterpriseCode: businessEnterprise || enterpriseCode, authData: structuredClone(a) };
   },
   /**
    * Reads committed fixed-expiry v2 units, checking both canonical lifecycle owners and exact
@@ -196,13 +199,13 @@ module.exports = {
    * through delivery service; installs no job.
    * Failure behavior: Disabled returns without source reads; invalid execution or authority/source/policy
    * drift rejects. Delivery uncertainty remains output.
-   * @override Keep local ACTION provenance and bounds; Process completion is not message delivery or
+   * @override Keep claimed ACTION provenance and bounds; Process completion is not message delivery or
    * deployment activation.
    */
   sweep: async function (request, execution) {
     const p = structuredClone(this.settings());
     if (!p.enabled) return { status: "COMPLETED", output: { sourceStatus: "DISABLED", deliveryAttempted: false, candidates: [] } };
-    const r = this.authority(request), original = structuredClone(execution), context = execution?.context, now = Date.now();
+    const r = this.authority(request, execution?.context?.enterpriseCode), original = structuredClone(execution), context = execution?.context, now = Date.now();
     if (execution?.node?.action?.moduleName !== "digitalCore" || execution.node.action.operation !== "couponExpirySweep" ||
         execution.instance?.tenant !== r.tenant || !same(execution.instance.context, context) ||
         context?.source !== "cronjob" || context.cronJobTenant !== r.tenant ||
@@ -210,14 +213,21 @@ module.exports = {
         now - Date.parse(context.firedAt) > p.maximumTriggerAgeSeconds * 1000 ||
         Object.keys(execution.payload || {}).length) this.fail();
     SERVICE.DefaultDigitalCommerceCouponAcquisitionService.identifier(context.cronJobCode);
-    const first = await this.candidates(r, now, p), second = await this.candidates(r, now, p);
-    if (!same(first, second) || !same(original, execution) || !same(r, this.authority(request))) this.fail();
+    if (context.entitlementCode !== undefined) SERVICE.DefaultDigitalCommerceCouponAcquisitionService.identifier(context.entitlementCode);
+    const first = await this.candidates(r, now, p, context.entitlementCode), second = await this.candidates(r, now, p, context.entitlementCode);
+    if (!same(first, second) || !same(original, execution) || !same(r, this.authority(request, execution?.context?.enterpriseCode))) this.fail();
     const outcomes = [];
     for (const candidate of first) {
-      if (!same(original, execution) || !same(r, this.authority(request)) || !same(p, this.settings())) this.fail();
+      if (!same(original, execution) || !same(r, this.authority(request, execution?.context?.enterpriseCode)) || !same(p, this.settings())) this.fail();
       outcomes.push(await SERVICE.DefaultDigitalCouponReminderDeliveryService.notify(r, candidate));
     }
-    return { status: "COMPLETED", output: { sourceStatus: outcomes.some(o => o.status === "UNCONFIRMED") ? "UNCONFIRMED" : "COMPLETE",
+    const unconfirmed = outcomes.find(o => o.status === "UNCONFIRMED");
+    if (unconfirmed && !["POLICY", "RECIPIENT_PROOF", "SOURCE_BINDING", "RECIPIENT_RECHECK", "SUBMISSION", "RECEIPT"].includes(unconfirmed.failureStage)) this.fail();
+    if (unconfirmed?.failureReason !== undefined && (unconfirmed.failureStage !== "SUBMISSION" ||
+      !["AUTHORIZATION", "CREDENTIAL", "ENDPOINT", "TRANSPORT", "OWNER_RESPONSE"].includes(unconfirmed.failureReason))) this.fail();
+    const diagnosticCode = !first.length ? "REMINDER_NO_CANDIDATES" : unconfirmed
+      ? "REMINDER_UNCONFIRMED_" + unconfirmed.failureStage + (unconfirmed.failureReason ? "_" + unconfirmed.failureReason : "") : "REMINDER_COMPLETE";
+    return { status: "COMPLETED", diagnosticCode, output: { sourceStatus: unconfirmed ? "UNCONFIRMED" : "COMPLETE",
       observedAt: new Date(now).toISOString(), deliveryAttempted: outcomes.some(o => o.deliveryAttempted), candidates: first, outcomes } };
   },
 };

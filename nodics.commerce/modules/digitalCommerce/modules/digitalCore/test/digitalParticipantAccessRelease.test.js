@@ -20,8 +20,8 @@ const { test } = require("node:test");
 
 const dataRoot = path.resolve(__dirname, "../data");
 const manifest = require("../data/manifest.json");
-const permissions = require("../data/init-v002/records/identity/digitalBundleParticipantPermissionData");
-const groups = require("../data/init-v002/records/identity/digitalBundleParticipantUserGroupData");
+const permissions = require("../data/init-v001/records/identity/digitalBundleParticipantPermissionData");
+const groups = require("../data/init-v001/records/identity/digitalBundleParticipantUserGroupData");
 
 test("Digital owns an explicit participant permission and access-group release", () => {
   const permissionRelease = manifest.sections.bundleParticipantPermissions;

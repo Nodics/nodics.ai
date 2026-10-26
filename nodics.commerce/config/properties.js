@@ -25,15 +25,23 @@ module.exports = {
       runtimeRoleProfiles: {
         PLATFORM: {
           contributions: [
-            { moduleName: "product", sections: ["accessGroups"] },
-            { moduleName: "promotion", sections: ["accessGroups"] },
-            { moduleName: "order", sections: ["accessGroups", "specialAccessGroups", "specialAccessRoles"] },
+            { moduleName: "product", sections: ["accessGroups", "enterpriseRoles"] },
+            { moduleName: "promotion", sections: ["accessGroups", "enterpriseRoles", "businessAccessRoles", "permissionCatalogue"] },
+            { moduleName: "order", sections: ["accessGroups", "specialAccessGroups", "specialAccessRoles", "participantReadAccess", "participantTransactionAccess", "permissionCatalogue", "enterpriseRoles"] },
+            { moduleName: "cart", sections: ["participantTransactionAccess", "permissionCatalogue"] },
+            { moduleName: "checkoutCore", sections: ["participantTransactionAccess", "permissionCatalogue"] },
+            { moduleName: "bidding", sections: ["participantTransactionAccess", "permissionCatalogue"] },
             { moduleName: "inventory", sections: ["specialAccessGroups", "specialAccessRoles"] },
             {
               moduleName: "digitalCore",
               sections: [
+                "permissionCatalogue",
                 "bundleParticipantPermissions",
                 "participantAccessGroups",
+                "participantReadAccess",
+                "participantTransactionAccess",
+                "enterpriseParticipationAccess",
+                "enterpriseRoles",
               ],
             },
           ],

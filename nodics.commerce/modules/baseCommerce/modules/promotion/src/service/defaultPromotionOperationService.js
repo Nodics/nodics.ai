@@ -579,7 +579,8 @@ module.exports = {
     if (verifyProtected.length && (typeof secure?.read !== 'function' || typeof secure.privateOperation !== 'function'))
       throw new CLASSES.NodicsError('ERR_PROMOTION_SECURE_ISSUANCE_UNCONFIRMED');
     // Lifecycle CAS changes state only; the secure owner retains issuance bytes in place.
-    const patch = Object.fromEntries(Object.entries(model).filter(([key]) => !protectedFields.includes(key)));
+    // Generated persistence owns updated; operator writes do not alias this readback patch.
+    const patch = Object.fromEntries(Object.entries(model).filter(([key]) => key !== 'updated' && !protectedFields.includes(key)));
     const cleared = Object.keys(patch).filter(key => patch[key] === undefined);
     const mutation = cleared.length ? {
       $set: Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined)),
@@ -682,13 +683,18 @@ module.exports = {
     const owner = SERVICE.DefaultPromotionDistributionAdmissionService;
     if (typeof owner?.trustedCouponPolicy !== "function")
       throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED");
+    const purchaser = Object.hasOwn(request.ownerRef || {}, 'type')
+      ? SERVICE.DefaultCouponOfferAllocationService.owner(request) : undefined;
+    const sellerOwnerRef = purchaser
+      ? { module: 'profile', schema: purchaser.type.toLowerCase(), code: purchaser.code }
+      : request.ownerRef;
     return { activated: true, campaign: await owner.trustedCouponPolicy({
       tenant: request.tenant,
       enterpriseCode: request.authData?.enterpriseCode || request.authData?.entCode,
       storeCode: request.storeCode,
       locale: request.locale,
       ownerId: request.ownerId,
-      ownerRef: structuredClone(request.ownerRef),
+      ownerRef: structuredClone(sellerOwnerRef),
       authData: structuredClone(request.authData || {}),
     }, {
       tenant: request.tenant,
@@ -696,7 +702,7 @@ module.exports = {
       storeCode: request.storeCode,
       locale: request.locale,
       ownerId: request.ownerId,
-      ownerRef: structuredClone(request.ownerRef),
+      ownerRef: structuredClone(sellerOwnerRef),
       productCode: request.payload?.productCode || coupon.productCode,
       authData: this.serviceAuthData(request),
     }, coupon) };
@@ -1089,20 +1095,62 @@ module.exports = {
    * @returns {*} Result defined by the owning module contract.
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
-  transitionPromotion: async function (request) {
-    const payload = request.payload || {};
-    const promotion = await this.loadPromotion(request);
+  assertLifecycleApproval: function (promotion, actionCode, actorId) {
     if (
-      request.actionCode === "APPROVE" &&
+      actionCode === "APPROVE" &&
       promotion.approval &&
       promotion.approval.submittedBy &&
-      promotion.approval.submittedBy === request.actorId
+      promotion.approval.submittedBy === actorId
     ) {
       throw new Error(
         "Maker-checker separation is required for promotion approval",
       );
     }
+  },
+  /** Shared target policy for the existing actions; scheduling uses server time and never repeats approval separation. */
+  lifecycleTargetStatus: function (promotion, actionCode, now = new Date()) {
+    const transitions = {
+      SUBMIT: { from: ['DRAFT'], to: 'SUBMITTED' },
+      APPROVE: { from: ['SUBMITTED'], to: 'APPROVED' },
+      SCHEDULE: { from: ['APPROVED', 'SCHEDULED'], to: 'SCHEDULED' },
+      SUSPEND: { from: ['SCHEDULED', 'ACTIVE'], to: 'SUSPENDED' },
+      ARCHIVE: { from: ['DRAFT', 'SUSPENDED'], to: 'ARCHIVED' },
+    };
+    const transition = transitions[actionCode];
+    if (!transition || !transition.from.includes(promotion.status))
+      throw new CLASSES.NodicsError('ERR_PROMOTION_DRAFT_UNCONFIRMED');
+    if (actionCode !== 'SCHEDULE') return transition.to;
+    const timestamp = new Date(now).getTime(), from = promotion.validFrom ? new Date(promotion.validFrom).getTime() : null;
+    const until = promotion.validTo ? new Date(promotion.validTo).getTime() : null;
+    const expiry = promotion.couponOffer?.expiry;
+    if (!Number.isFinite(timestamp) || from !== null && !Number.isFinite(from) ||
+        until !== null && (!Number.isFinite(until) || until <= timestamp) ||
+        from !== null && until !== null && from >= until ||
+        expiry?.mode === 'FIXED' && (!Number.isFinite(Date.parse(expiry.at)) || Date.parse(expiry.at) <= timestamp))
+      throw new CLASSES.NodicsError('ERR_PROMOTION_DRAFT_UNCONFIRMED');
+    return from !== null && from > timestamp ? 'SCHEDULED' : 'ACTIVE';
+  },
+  /** Routes existing lifecycle actions through qualified Staged append-only authoring or the original operational path. */
+  transitionPromotion: async function (request) {
+    if (this.isStagedPolicyRuntime()) return SERVICE.DefaultPromotionDraftService.transition(request);
+    const payload = request.payload || {};
+    // Snapshot validated overrides before loading; evaluate precisely the window we persist.
+    const dates = {};
+    for (const field of ['validFrom', 'validTo']) {
+      if (!Object.prototype.hasOwnProperty.call(payload, field)) continue;
+      const value = payload[field];
+      if (typeof value !== 'string' || value.length > 40 ||
+          !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/.test(value) ||
+          !Number.isFinite(Date.parse(value)) ||
+          new Date(value.slice(0, 10) + 'T00:00:00.000Z').toISOString().slice(0, 10) !== value.slice(0, 10))
+        throw new CLASSES.NodicsError('ERR_PROMOTION_DRAFT_UNCONFIRMED');
+      dates[field] = new Date(value).toISOString();
+    }
+    const promotion = await this.loadPromotion(request);
+    const effectivePromotion = Object.assign({}, promotion, dates);
+    this.assertLifecycleApproval(promotion, request.actionCode, request.actorId);
     const now = request.now || new Date().toISOString();
+    const targetStatus = this.lifecycleTargetStatus(effectivePromotion, request.actionCode, new Date());
     const approvalPatch = Object.assign({}, promotion.approval, {
       lastAction: request.actionCode,
       lastActionBy: request.actorId,
@@ -1131,9 +1179,10 @@ module.exports = {
     }
     const model = this.withSchemaBase(
       Object.assign({}, promotion, {
-        status: request.targetStatus,
-        validFrom: payload.validFrom || promotion.validFrom,
-        validTo: payload.validTo || promotion.validTo,
+        status: targetStatus,
+        active: targetStatus === 'ACTIVE',
+        validFrom: effectivePromotion.validFrom,
+        validTo: effectivePromotion.validTo,
         approval: approvalPatch,
         revision: Number(promotion.revision || 0) + 1,
       }),
@@ -1584,13 +1633,19 @@ module.exports = {
     this.requireOperationalRuntime();
     if (request.payload?.promotionCode) {
       const sellerReader = this.sellerPolicyReader(request);
+      // Allocation owns the typed reference; seller-policy admission uses Profile references.
+      const purchaser = sellerReader && Object.hasOwn(request.ownerRef || {}, 'type')
+        ? SERVICE.DefaultCouponOfferAllocationService.owner(request) : undefined;
+      const sellerOwnerRef = purchaser
+        ? { module: 'profile', schema: purchaser.type.toLowerCase(), code: purchaser.code }
+        : request.ownerRef;
       const candidates = (sellerReader ? await SERVICE.DefaultPromotionDistributionAdmissionService.trustedPolicies({
         tenant: request.tenant,
         enterpriseCode: request.authData?.enterpriseCode || request.authData?.entCode,
         storeCode: request.storeCode,
         locale: request.locale,
         ownerId: request.ownerId,
-        ownerRef: structuredClone(request.ownerRef),
+        ownerRef: structuredClone(sellerOwnerRef),
         authData: structuredClone(request.authData || {}),
       }, {
         tenant: request.tenant,
@@ -1598,7 +1653,7 @@ module.exports = {
         storeCode: request.storeCode,
         locale: request.locale,
         ownerId: request.ownerId,
-        ownerRef: structuredClone(request.ownerRef),
+        ownerRef: structuredClone(sellerOwnerRef),
         productCodes: [request.payload.productCode],
         authData: this.serviceAuthData(request),
       }) : await this.promotions(request)).filter(policy => policy.code === request.payload.promotionCode &&
@@ -1795,18 +1850,17 @@ module.exports = {
     )
       throw new Error("This outlet is not eligible for the campaign");
   },
-  /** Requires qualified exact item rights before purchase or merchant eligibility. @param {Object} campaign Exact owner campaign or retained purchased campaign. @returns {void} No mutation. @throws {NodicsError} ERR_PROMOTION_BENEFIT_UNCONFIRMED without an owning item integration. @override Preserve independent delivery proof; never infer items from descriptions or monetary flags. */
+  /** Validates immutable item terms for catalogue and purchase, independently of optional fulfillment integration. @param {Object} campaign Exact owner campaign or retained purchased campaign. @returns {void} No mutation. @throws {NodicsError} ERR_PROMOTION_BENEFIT_UNCONFIRMED for absent or malformed item terms. @override Preserve independent delivery proof; never infer items from descriptions or monetary flags. */
   assertSupportedCouponBenefit: function (campaign) {
     const type = campaign.actions?.benefitType;
     if (typeof type === "string" && type.trim().toUpperCase() === "ITEM") {
-      if (typeof SERVICE.DefaultPromotionItemBenefitService?.assertPolicy === "function" &&
-          typeof SERVICE.DefaultPromotionItemBenefitService?.validate === "function") {
-        SERVICE.DefaultPromotionItemBenefitService.assertPolicy(campaign);
+      if (typeof SERVICE.DefaultPromotionItemBenefitService?.assertTerms === "function") {
+        SERVICE.DefaultPromotionItemBenefitService.assertTerms(campaign);
         return;
       }
       throw new CLASSES.NodicsError(
         "ERR_PROMOTION_BENEFIT_UNCONFIRMED",
-        "Item benefits require an owning fulfillment integration",
+        "Item benefits require canonical item terms",
       );
     }
   },
@@ -1872,7 +1926,15 @@ module.exports = {
     const staffItemRecording = campaign.actions?.benefitType === "ITEM" &&
       await SERVICE.DefaultPromotionMerchantScopeService?.staffRecording?.(request, coupon) === true;
     if (staffItemRecording) SERVICE.DefaultPromotionItemBenefitService.assertTerms(campaign);
-    else this.assertSupportedCouponBenefit(campaign);
+    else {
+      this.assertSupportedCouponBenefit(campaign);
+      if (campaign.actions?.benefitType === "ITEM") {
+        const itemOwner = SERVICE.DefaultPromotionItemBenefitService;
+        if (typeof itemOwner?.assertPolicy !== "function" || typeof itemOwner?.validate !== "function")
+          throw new CLASSES.NodicsError("ERR_PROMOTION_BENEFIT_UNCONFIRMED");
+        itemOwner.assertPolicy(campaign);
+      }
+    }
     this.validateMerchantConditions(campaign, coupon, request);
     if (
       CONFIG.get("promotion")?.merchantBenefits?.enabled === true &&

@@ -54,6 +54,12 @@ module.exports = {
     trustedSourceModules: [],
     // Domain modules contribute fixed source-type validators; no delivery is enabled here.
     dispatchEligibilityOwners: {},
+    sourceEligibilityTransport: {
+      timeoutMs: 10000, allowInsecureLoopback: false,
+      maxResponseBytes: 8192,
+      validation: { minimum: 1, maximum: 60000,
+        responseBytes: { minimum: 1, maximum: 1048576 } },
+    },
     templates: {},
     templateResources: {
       enabled: true,

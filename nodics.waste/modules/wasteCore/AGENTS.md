@@ -102,3 +102,23 @@ Effective inspection configuration may narrow the owner resource inventory and
 disclosure only. Preserve the enforced transaction fingerprint ceiling and
 multi-page checksum regression coverage; never turn a transaction into a
 reference response through configuration.
+
+Coupon source-call failures expose fixed stage diagnostics only. Preserve inspect without callback and mandatory source proof before every mutation; never forward dependency messages, payloads or error causes. See the certificate-coupon contract.
+
+Preserve exact Digital coupon source-stage mappings from Waste Core’s static wire
+allowlist. Never prefix-match or forward upstream messages/causes. Keep existing
+diagnostic identities stable and source refusal ahead of every mutation.
+
+Coupon ownership events must author occurredAt as ISO strings before asset intent
+CAS or event insertion. Canonical Waste records JSON-normalize dates; preserve
+strict digitalCreate readback rather than relaxing equality or rewriting retained
+intent. Coupon fixtures must use the real records normalizer, including release
+tombstones and same-operation replay.
+
+The existing Waste Enterprise administrator group composes Carbon holdings and
+material-value self-read permissions from their canonical owner catalogues.
+Its accessGroups release must pin both permissionCatalogue prerequisites. Keep
+customer participant ancestry out of employees and retain current Profile
+Enterprise scope/DENY checks in each read owner. No Carbon mutation or settlement
+grant follows from this composition; installed changes use governed Profile
+catalogue updates and fresh authentication, never Init replay.

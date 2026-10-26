@@ -50,12 +50,21 @@ module.exports = {
         typeof auth.loginId !== "string" || !auth.loginId || !Number.isSafeInteger(auth.authVersion) || auth.authVersion < 1 ||
         !SERVICE.DefaultSecuredRequestPipelineService.hasPlatformFullAccess(request)) this.fail();
     const pin = { auth: structuredClone(auth), input: structuredClone(input), authorization: request.authorization };
-    const headers = [request.headers, request.header, request.httpRequest?.headers, request.httpRequest?.header];
-    const headerPin = structuredClone(headers.map(value => value || {}));
+    // Express header(name) is an accessor method, not a header map. Never invoke or clone it.
+    // Normalize actual maps on every check, including Node's null-prototype incoming headers.
+    const headerMap = (value, accessor = false) => {
+      if (value === undefined || value === null || accessor && typeof value === "function") return {};
+      if (typeof value !== "object" || Array.isArray(value) ||
+          ![Object.prototype, null].includes(Object.getPrototypeOf(value))) this.fail();
+      return Object.fromEntries(Object.entries(value));
+    };
+    const readHeaders = () => [headerMap(request.headers), headerMap(request.header, true), headerMap(request.httpRequest?.headers)];
+    const headers = readHeaders();
+    const headerPin = structuredClone(headers);
     const bound = () => {
       if (request.tenant !== tenant || !isDeepStrictEqual(request.authData, pin.auth) || request.authorization !== pin.authorization ||
           CONFIG.get("defaultTenant") !== tenant || CONFIG.get("defaultEnterprise") !== enterprise || !isDeepStrictEqual(this.policy(), policy) ||
-          !isDeepStrictEqual([request.headers, request.header, request.httpRequest?.headers, request.httpRequest?.header].map(value => value || {}), headerPin) ||
+          !isDeepStrictEqual(readHeaders(), headerPin) ||
           [request.body, request.payload, request.httpRequest?.body].some(value => value !== undefined && !isDeepStrictEqual(value, pin.input)) ||
           [auth.enterpriseCode, request.enterpriseCode, request.entCode].some(value => value !== undefined && value !== enterprise) ||
           [auth.tenantCode, request.tenantCode].some(value => value !== undefined && value !== tenant) ||

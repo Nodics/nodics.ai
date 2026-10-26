@@ -70,7 +70,7 @@ module.exports = {
     "product": "axisDocumentationProduct",
     "accessPolicy": "axisDocsAccessAuthenticated",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -157,7 +157,7 @@ module.exports = {
     "product": "axisDocumentationProduct",
     "accessPolicy": "axisDocsAccessAuthenticated",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -209,7 +209,7 @@ module.exports = {
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "product": "axisDocumentationProduct",
     "accessPolicy": "axisDocsAccessPublic",
     "managedInAxis": true,
@@ -285,7 +285,7 @@ module.exports = {
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "product": "axisDocumentationProduct",
     "accessPolicy": "axisDocsAccessPublic",
     "managedInAxis": true,
@@ -407,7 +407,7 @@ module.exports = {
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "product": "axisDocumentationProduct",
     "accessPolicy": "axisDocsAccessPublic",
     "managedInAxis": true,
@@ -461,7 +461,7 @@ module.exports = {
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "product": "axisDocumentationProduct",
     "accessPolicy": "axisDocsAccessPublic",
     "managedInAxis": true,

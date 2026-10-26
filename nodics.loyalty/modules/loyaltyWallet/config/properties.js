@@ -12,7 +12,16 @@
 /** @module loyaltyWallet/config/properties @description Defines loyaltyWallet schema access policy. @layer config @owner loyaltyWallet */
 module.exports = {
   tooling: {
+    acceptance: {
+      loyaltyPartnerRewardMock: { timeoutMs: 15000, maximumResponseBytes: 262144, maximumSelectionBytes: 16384 },
+    },
     commands: {
+      "acceptance:loyalty-partner-reward-mock": {
+        acceptanceContract: true,
+        projectHome: true,
+        handler: "@nTooling/node-script",
+        script: "src/service/acceptance/defaultLoyaltyPartnerRewardMockAcceptanceService.mjs",
+      },
       "acceptance:loyalty-participant-transfer": {
         acceptanceContract: true,
         projectHome: true,
@@ -22,6 +31,7 @@ module.exports = {
     },
   },
   loyalty: {
+    reservationDecisions: { callers: [], maximumLedgerEntries: 10000 },
     transferNotifications: {
       enabled: false, qualified: false,
       profileConnectionName: "profile", communicationConnectionName: "commsApi",
@@ -46,11 +56,17 @@ module.exports = {
     participantWallet: { maximumBalances: 100, ledgerPageSize: 50 },
     enterpriseTestCredits: {
       enabled: false,
+      provisioningEnabled: false,
       allowedEnvironments: [],
       maximumReasonLength: 500,
       platformAdministratorEvidencePath: "/identity/platform-administrator/evidence",
     },
-    partnerRewardConversion: { enabled: false, providers: {}, selection: { maximumAccounts: 100, maximumRewardsPerIntegration: 100 } },
+    partnerRewardConversion: {
+      enabled: false,
+      providers: { mock: "DefaultLoyaltyMockPartnerRewardProviderService" },
+      mock: { enabled: false, outcome: "CREDITED", targetUnit: "SIMULATED_POINTS", quoteLifetimeMs: 60000 },
+      selection: { maximumAccounts: 100, maximumRewardsPerIntegration: 100 },
+    },
     transfers: {
       enabled: true,
       outgoingEnabled: true,
@@ -61,6 +77,7 @@ module.exports = {
       maximumDailyCount: null,
       timeZone: "UTC",
       identityTimeoutMs: 10000,
+      platformAdministratorEvidencePath: "/identity/platform-administrator/evidence",
       identityTarget: { moduleName: "profile", connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, apiVersion: "v0", maxAttempts: 1 },
       validation: { identityTimeoutMs: { minimum: 1, maximum: 60000 }, identityMaxAttempts: { minimum: 1, maximum: 1 } },
     },

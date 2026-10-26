@@ -66,18 +66,31 @@ module.exports = {
   /** Resolves native/linked Employee identity and accepted target membership read-only; never issues tokens or registers session stamps. */
   membershipGroups: async function (tenant, employee, enterpriseCode) {
     const member = SERVICE.DefaultEnterpriseMembershipService;
-    const anchor = await member.resolve(employee, tenant, "EMPLOYEE");
+    // Native principals use the same canonical/lock proof as ordinary native sessions.
+    // Linked projections still require the independently qualified membership workflow.
+    const anchor = employee.authenticationIdentity
+      ? await member.resolve(employee, tenant, "EMPLOYEE")
+      : await member.anchor(member.locator(tenant, "EMPLOYEE", employee));
+    if (!employee.authenticationIdentity && anchor?.person?.authenticationIdentity) this.fail();
     if (!anchor?.identity || !anchor.person || anchor.person.loginId !== employee.loginId) this.fail();
-    const rows = await member.inventory("DefaultEnterpriseAccessAssignmentService", member.authority(), {
+    const query = {
       enterpriseCode, "membership.identity.recordId": anchor.identity.recordId,
       "membership.identity.tenantCode": anchor.identity.tenantCode, "membership.identity.recordKind": anchor.identity.recordKind,
-    });
+    };
+    // Exact native lookup still rejects ambiguous/failed reads without requiring
+    // the optional cross-enterprise inventory workflow to be enabled.
+    const nativeAssignment = !employee.authenticationIdentity
+      ? await member.read("DefaultEnterpriseAccessAssignmentService", member.authority(), query) : undefined;
+    const rows = employee.authenticationIdentity
+      ? await member.inventory("DefaultEnterpriseAccessAssignmentService", member.authority(), query)
+      : nativeAssignment ? [nativeAssignment] : [];
     if (!Array.isArray(rows)) this.fail();
     if (!rows.length && !employee.authenticationIdentity) {
       if (!Array.isArray(employee.userGroups)) this.fail();
       return employee.userGroups.map(g => typeof g === "string" ? g : g?.code);
     }
     if (rows.length !== 1) this.fail();
+    member.policy();
     const { item } = await member.assignment(rows[0].code);
     if (item.status !== "REGISTERED" || item.active !== true || item.tenantCode !== tenant || item.enterpriseCode !== enterpriseCode ||
         item.membership?.phase !== "COMPLETE" || item.membership.projectionId !== member.recordId(employee._id) ||

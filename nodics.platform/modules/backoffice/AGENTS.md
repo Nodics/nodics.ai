@@ -25,11 +25,35 @@ ordinary unselected initialization must still submit the governed CMS baseline.
 
 ## Capability Boundary
 
-- Remaining bootstrap application-status reads use at most four workers per
-  composition through the existing exact-request reader. Settle every item and
+- A DATA_RELEASE step may declare `batchBoundaryBefore: true` to start a separate
+  sequential nImport batch after earlier preparation groups. Preserve the
+  Framework-owned false default, strict boolean validation and distinct replay
+  keys. Do not encode business module names, fake operator scope or depend on
+  nImport's intra-batch sort to honor cross-release dependencies. Keep the
+  grouping/execution regression in `test/applicationPreparationOrder.test.js`.
+
+- Browser readiness scheduling defaults belong to framework
+  `backofficeApplicationInitialization.browserReadiness`. Project only the
+  validated versioned budget through authenticated bootstrap; Axis must not
+  invent defaults or use scheduling evidence as authority. See the
+  [registry contract](llm/contracts/capability-registry-contract.md#bounded-readiness-composition).
+
+- Shared BEFORE preparation reads use the validated owner setting
+  `backofficeApplicationInitialization.readinessWorkers` (default 4, range 1–16), preserving
+  input order, complete settlement and each observer's fresh plan/authority
+  checks. Never cache proof or parallelize mutations; follow the
+  [governed setup contract](llm/contracts/governed-application-setup.md).
+
+- Aggregate Media unavailability remains a blocker without an invented asset
+  dependency or repair handoff. Preserve exact owner per-asset descriptors and
+  strict client validation; see [Media readiness projection](llm/contracts/backoffice-governance-contracts.md#stored-preparation-and-separate-media-approval).
+
+- Bootstrap application-status reads, including documentation reads, use that
+  budget per composition through the existing exact-request reader. Nested BEFORE
+  reads stay serial, including through owner request clones. Settle every item and
   preserve input-relative success/error order, successful undefined values and
   duplicate outcome positions. Never share readers across actors/compositions or
-  defer readiness/admission. Documentation-phase concurrency is unchanged; this
+  defer readiness/admission. Separate HTTP requests do not share the queue; this
   is not a global limit or latency guarantee. See [bounded readiness composition](llm/contracts/capability-registry-contract.md#bounded-readiness-composition).
 
 - Generic tab workspace `setupContinuation` is an explicit versioned inert
@@ -79,6 +103,13 @@ ordinary unselected initialization must still submit the governed CMS baseline.
   private wrapper flag. Settle every item before refreshing partial persisted
   leases on failure; retain authority checks and independent standalone refresh.
   Follow [bounded batch snapshots](llm/contracts/backoffice-governance-contracts.md#batched-lease-snapshot-work).
+- Expiry publishes remaining leases and prunes ephemeral observers before
+  awaiting catalogue reconciliation. Never let delayed sweep work overwrite a
+  newer registration snapshot or discard its observers; use the same snapshot
+  contract and interleaving regressions.
+- Diagnose registration acknowledgements through the existing secured diagnostics'
+  fixed numeric phase timings. Never retain credentials, request/result payloads
+  or raw errors in timing evidence; elapsed duration alone does not prove CPU cost.
 - Return only client-safe public connection metadata. Never return internal
   tokens, credentials, private keys, secret references, or unapproved internal
   endpoints to the frontend.
@@ -263,3 +294,10 @@ Require explicit execution and publication approval, LOCAL class for bootstrap,
 separate owned-runtime startup and governed reset intent. Optional application
 capabilities are selections, not mandatory framework dependencies. Cleanup may
 stop only child handles created by this invocation, never unrelated port owners.
+
+
+Workspace owner selectors admit `STAGED`, `ONLINE` and `OPERATIONAL` publication
+roles. These are runtime registry coordinates, distinct from business publication
+state. Keep schema and registration validation aligned; preserve exact matching
+and reject unknown roles without aliases or fallbacks. The actual Promotion
+capability registration regression covers the `COMMERCE/OPERATIONAL` report.

@@ -2,6 +2,54 @@
   "contractVersion": 2,
   "module": "pricing",
   "sections": {
+    "administrativePublicationPermission": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Pricing native publication permission",
+      "description": "Explicit native publication permission definition; installed catalogues and grants remain unchanged.",
+      "owningDomain": "pricing",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/pricingAdministrativePublicationPermissionHeader.js": "00635820d682a2a499c8906f2ac62fd4da3a908a0b604b13fc271450b7fc987d",
+        "init-v001/records/identity/pricingAdministrativePublicationPermissionData.js": "11acb3d9bd22c64b20d009c70bc1d66651603c66821877f26bfce58163f71daf"
+      }
+    },
+    "administrativeAuthoringPermission": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Pricing native authoring permission",
+      "description": "Explicit bounded native price row write permission definition; preserves installed catalogues and grants.",
+      "owningDomain": "pricing",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/pricingAdministrativeAuthoringPermissionHeader.js": "730e134e91d1aeceb000f0bcb96c53e826fbbe47415482ef9f75be97caa39bf8",
+        "init-v001/records/identity/pricingAdministrativeAuthoringPermissionData.js": "4ca2288b98651d2992ecc061963304cf9bd9d02fa4b36bb7b6e1334fd7c2f4db"
+      }
+    },
     "merchantEvidencePermission": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
@@ -20,10 +68,10 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "init-v002",
+      "sourceRoot": "init-v001",
       "files": {
-        "init-v002/headers/identity/pricingMerchantEvidencePermissionHeader.js": "b2f5c64e1aff121bde092a76f9630644a89871ee7f7b5edcdbdb539616c09f18",
-        "init-v002/records/identity/pricingMerchantEvidencePermissionData.js": "d6f76195075aae11c5892aa2d4835c69af7685cc9c5d0a96f08cd29bedaed4c0"
+        "init-v001/headers/identity/pricingMerchantEvidencePermissionHeader.js": "b2f5c64e1aff121bde092a76f9630644a89871ee7f7b5edcdbdb539616c09f18",
+        "init-v001/records/identity/pricingMerchantEvidencePermissionData.js": "d6f76195075aae11c5892aa2d4835c69af7685cc9c5d0a96f08cd29bedaed4c0"
       }
     },
     "permissionCatalogue": {

@@ -45,6 +45,11 @@ does not import, publish or validate this module's live data.
 Read the repository contract at `../../../../../AGENTS.md` and global guidance at
 `../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
+Before first release, maintain one consolidated v001 baseline per business lane.
+Corporate repairs and final copy belong in the original corporate records, not
+overlapping update releases or publication aliases. Keep Editorial, Engagement,
+Media and documentation independently classified. Do not ship dated qualification
+markers or successor version IDs as baseline business content. Source consolidation
+never rewrites historical evidence or installed receipts and grants no live replay.
 Derived component-media records exclude retired source components. Keep surviving
-binding codes stable, retain owner validation and advance the development manifest
-version/checksum when correcting a previously attempted release.
+binding codes stable and retain owner validation and exact source checksums.

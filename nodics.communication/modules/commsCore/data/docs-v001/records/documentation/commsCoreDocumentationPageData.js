@@ -9,9 +9,14 @@
 
  */
 
-'use strict';
-
-/** @description Generated Nodics framework documentation pages. */
+/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
+"use strict";
+/**
+ * @module commsCore/data/docs-v001/records/documentation/commsCoreDocumentationPageData
+ * @description Owns canonical commsCoreDocumentationPageData successor records; installation and publication remain governed.
+ * @layer data
+ * @owner commsCore
+ */
 module.exports = {
   "record0": {
     "code": "nodicsDocsPagecommunicationProviderRunbooks",

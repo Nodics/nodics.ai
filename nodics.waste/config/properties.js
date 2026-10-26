@@ -31,7 +31,8 @@ module.exports = {
             {
               "moduleName": "wasteCarbon",
               "sections": [
-                "participantAccessGroups"
+                "participantAccessGroups",
+                "transferFinalizationPermission"
               ]
             },
             {

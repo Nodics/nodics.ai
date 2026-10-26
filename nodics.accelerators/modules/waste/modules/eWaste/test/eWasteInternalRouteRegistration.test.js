@@ -44,16 +44,16 @@ function fixture(t, definitions = routes) {
   // Capture real prepared routes without binding sockets or replacing registry behavior.
   for (const verb of ["get", "post", "put", "delete", "patch", "head", "options"])
     SERVICE.DefaultRouterOperationService[verb] = (_router, definition) => bound.push(definition);
-  for (const group of Object.values(definitions)) for (const [routerName, routerDef] of Object.entries(group))
-    if (routerDef?.method) preparation.prepareRouter({ routerName, routerDef, moduleName: "eWaste", urlPrefix: "eWaste", moduleRouter: {} });
+  for (const [groupName, group] of Object.entries(definitions)) for (const [routerName, routerDef] of Object.entries(group))
+    if (routerDef?.method) preparation.prepareRouter({ groupName, routerName, routerDef, moduleName: "eWaste", urlPrefix: "eWaste", moduleRouter: {} });
   return { registry, bound, calls };
 }
 
 test("all internal owner routes retain unique identities, controllers and authority through real registry refresh", async t => {
   const f = fixture(t), authData = { tenant: "test", tokenType: "service" };
   const scenarios = [
-    ["/internal/digital-sales/:phase", "ewaste_internaldigitalsaleinvoke", "DefaultEWasteDigitalSaleController", "waste.asset.sale.transfer", "evidence", "sale"],
-    ["/internal/digital-listings/:phase", "ewaste_internaldigitallistinginvoke", "DefaultEWasteDigitalListingController", "waste.asset.marketplace.project", "plan", "listing"],
+    ["/internal/digital-sales/:phase", "ewaste_internaldigitalsale_internaldigitalsaleinvoke", "DefaultEWasteDigitalSaleController", "waste.asset.sale.transfer", "evidence", "sale"],
+    ["/internal/digital-listings/:phase", "ewaste_internaldigitallisting_internaldigitallistinginvoke", "DefaultEWasteDigitalListingController", "waste.asset.marketplace.project", "plan", "listing"],
   ];
   for (const [key, identity, controller, permission, phase, owner] of scenarios) {
     const captured = f.bound.find(value => value.key === key);
@@ -80,23 +80,29 @@ test("all internal owner routes retain unique identities, controllers and author
   assert.equal(f.bound.some(value => value.key.startsWith("/internal/order-reversals")), false);
 });
 
-test("reusing invoke across groups reproduces the overwritten sale controller and permission", t => {
+test("reusing invoke across groups preserves isolated controllers and permissions", t => {
   const definitions = structuredClone(routes);
   for (const [group, name] of [["internalDigitalSale", "internalDigitalSaleInvoke"], ["internalDigitalListing", "internalDigitalListingInvoke"]]) {
     definitions[group].invoke = definitions[group][name]; delete definitions[group][name];
   }
   const f = fixture(t, definitions);
   const sale = f.bound.find(value => value.key === "/internal/digital-sales/:phase");
-  assert.equal(sale.routerName, "ewaste_invoke");
+  const listing = f.bound.find(value => value.key === "/internal/digital-listings/:phase");
+  assert.equal(sale.routerName, "ewaste_internaldigitalsale_invoke");
+  assert.equal(listing.routerName, "ewaste_internaldigitallisting_invoke");
+  assert.notEqual(sale.routerName, listing.routerName);
   assert.equal(sale.controller, "DefaultEWasteDigitalSaleController");
-  assert.equal(f.registry.get(sale.routerName).controller, "DefaultEWasteDigitalListingController");
-  assert.equal(f.registry.get(sale.routerName).permission, "waste.asset.marketplace.project");
+  assert.equal(f.registry.get(sale.routerName), sale);
+  assert.equal(f.registry.get(sale.routerName).permission, "waste.asset.sale.transfer");
+  assert.equal(f.registry.get(listing.routerName), listing);
+  assert.equal(listing.controller, "DefaultEWasteDigitalListingController");
+  assert.equal(listing.permission, "waste.asset.marketplace.project");
 });
 
 test("private retention inspection survives real route registration and dispatch with its original signed request", async t => {
   const f = fixture(t);
   const captured = f.bound.find(value => value.key === "/internal/draft-media/retention/inspect");
-  assert.equal(captured.routerName, "ewaste_inspectdraftmediaretention");
+  assert.equal(captured.routerName, "ewaste_draftmediaretention_inspectdraftmediaretention");
   assert.equal(f.registry.get(captured.routerName), captured);
   assert.equal(captured.controller, "DefaultEWasteDraftMediaRetentionController");
   assert.equal(captured.operation, "inspect"); assert.equal(captured.permission, "waste.audit.read");

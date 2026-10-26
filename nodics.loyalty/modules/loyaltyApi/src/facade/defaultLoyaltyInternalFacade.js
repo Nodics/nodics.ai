@@ -13,6 +13,28 @@
 
 /** @module loyaltyApi/src/facade/defaultLoyaltyInternalFacade @description Validates internal Loyalty requests and delegates wallet, reservation and reversal operations to their owning services. @layer facade @owner loyaltyApi @override Later modules may extend validation while preserving owning services and stable movement references. */
 module.exports = {
+    /** Delegates only funding metadata selection to its canonical Wallet owner. */
+    auctionFundingSelection: function (request) {
+        return this.service('DefaultLoyaltyAuctionFundingSelectionService').update(request);
+    },
+    /** Reads only Program-owned partner eligibility under native administrator proof. */
+    programPartnerEligibilityRead: function (request) {
+        return this.service('DefaultLoyaltyProgramEligibilityAdministrationService').read(request);
+    },
+    /** Updates only Program-owned eligibility, revision and audit through the canonical transaction owner. */
+    programPartnerEligibilityUpdate: function (request) {
+        return this.service('DefaultLoyaltyProgramEligibilityAdministrationService').update(request);
+    },
+    /** Delegates read-only qualification; never runs reserve, cancel, repair or credit. */
+    reservationDecisionReadiness: function (request) {
+        return this.service('DefaultLoyaltyReservationDecisionService').readiness(request);
+    },
+    /** Delegates original-key cancellation; does not select a wallet or create a refund. */
+    cancelReservationDecision: function (request) { return this.service('DefaultLoyaltyReservationDecisionService').cancel(request); },
+    /** Delegates exact attempted-authorization reconciliation; never changes accounting. */
+    reconcileReservationDecision: function (request) { return this.service('DefaultLoyaltyReservationDecisionService').reconcile(request); },
+    /** Delegates read-only terminal decision inspection. */
+    inspectReservationDecision: function (request) { return this.service('DefaultLoyaltyReservationDecisionService').inspect(request); },
     /**
      * Proves transfer source from immutable accounting evidence, never caller assertions.
      * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
@@ -85,6 +107,8 @@ module.exports = {
      * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
      */
     enterpriseTestCredit: function (request) { return this.service('DefaultLoyaltyEnterpriseTestCreditService').credit(request); },
+    /** Delegates zero-only provisioning with unchanged original authority; Wallet owns qualification and persistence. */
+    enterpriseTestWallet: function (request) { return this.service('DefaultLoyaltyEnterpriseTestCreditService').provision(request); },
     /**
      * Reads governed transfer settings from Wallet.
      * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.

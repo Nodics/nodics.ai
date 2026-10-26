@@ -1,5 +1,12 @@
 # Workflow Agent Guide
 
+Task queues must page through the generated task service with the original tenant
+and authenticated context. Keep page-size defaults in Workflow properties, stable
+dueAt/code ordering, owner count metadata, and the existing decision projection.
+Never restore page-one-only queues or client status-list merging. See the
+task queue pagination contract in `llm/contracts/README.md` and
+`test/processInspectionPagination.test.js`.
+
 The CMS approval lazy installer selects its exact contribution version from the
 existing nImport catalogue and passes that observed version to execution. Never
 hard-code release pins or bypass drift checks; existing definitions are not
@@ -10,6 +17,11 @@ when the current tenant, enterprise and required permissions allow it. Do not
 restore a same-user exclusion or special-case the login name `admin`. Keep native
 requester provenance, decision actor, immutable workflow identity and audit checks.
 See `llm/contracts/workflow-runtime-governance.md#public-task-decision-projection`.
+
+CMS task review evidence adapts the current approval start contract's siteCode
+through the shared bounded reviewContext validator. Preserve exact published
+pins and the unique CMS applyPublicationDecision action; never rewrite pending
+context, mint decision authority or infer a requester/release from the reader.
 
 Keyed trigger commands reuse `DefaultProcessTriggerCommandReceiptService` and
 the same private Process command journal as tasks. Trigger creation is insert-only;
@@ -117,3 +129,9 @@ Remote actions use the existing allowlist and nService with scoped runtime ident
 Workflow owns process.actionAdapters, process.designer and the PROCESS_DEFINITION
 installer contribution. Child-only compositions inherit them without loading
 group defaults. Action allowlists and approval/activation gates remain explicit.
+
+Action completion audit may retain only an optional static diagnosticCode of
+1..64 characters, leading uppercase ASCII letter then only uppercase letters,
+digits or underscores. Invalid codes are omitted;
+never copy adapter output, messages, IDs or raw errors. Keep this projection
+generic without domain imports and preserve `test/processActionDiagnosticAudit.test.js`.

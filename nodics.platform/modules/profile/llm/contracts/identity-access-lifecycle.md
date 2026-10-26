@@ -1,5 +1,14 @@
 # profile AI Contracts
 
+Principal save/update validation reads every distinct requested active group with
+an explicit page bound derived from the requested union and bypasses item cache.
+The generated default page of ten must not turn existing groups into false
+missing-group errors. This changes no assignment authority: genuinely missing or
+inactive retained groups still refuse, and the original tenant, caller, credentials,
+CAS and security-stamp hooks remain unchanged. The reference Employee regression
+uses more than ten groups, rejects an inactive group beyond that page, and proves
+exact replay without a second write.
+
 ## Business Access Presentation
 
 Ordinary business levels are persisted enterpriseRole definitions, not a new
@@ -493,6 +502,49 @@ complete onboarding journey. Do not infer those guarantees from this helper.
 - Validate changes with
   `node nodics.platform/modules/profile/test/principalAuthorizationScopeContract.test.js`.
 
+### Current human Enterprise display
+
+`GET /identity/scopes/me` keeps its existing human access, route permission and
+uncached self-read boundary. `DefaultPrincipalScopeController.mine` delegates to
+`DefaultPrincipalScopeGovernanceService.getCurrentPrincipalScopes`; internal
+`getEffectiveScopes` consumers retain their scope-only contract. The self-read
+adds only `enterprise: { code, displayName }` for the signed `authData.entCode`.
+Empty plain or null-prototype query/body maps are valid, including Express query
+getters; every nonempty selector map is refused. No query/body selector can select
+another principal, Enterprise or tenant.
+
+Reuse `DefaultEnterpriseMembershipService.verifyAuthenticatedActor` before and
+after owner reads, its existing `enterprise` resolver and the Enterprise/Tenant
+hierarchy owner. Preserve exact signed tenant placement, active records, native
+Employee binding/registration gates and current linked membership context. Native
+sessions work while optional membership features are disabled; this self-read
+never enables those features. Same-tenant placement grants no foreign Enterprise
+selection. Dependency failures and asynchronous context drift refuse with the
+existing authentication error, without private owner details.
+
+Project only canonical Enterprise `name` as `displayName`; missing, blank or
+invalid names stay null. The name bound inherits the existing Profile-owned
+`enterpriseManagement.search.maximumNameLength` default and later-layer override;
+missing/invalid policy refuses rather than substituting a code-local default.
+Never use the code as a business name, humanize a private
+native identifier, expose tenant properties/contacts/credentials, broaden
+`/enterprise/get`, or assign directory access to make a header render. Consumers
+keep the exact code as a reference and use a generic label when the name is null.
+A later Profile service may customize canonical display behind these same
+identity, placement and allowlist invariants. No new configuration/default,
+identity record, role, permission or import is required.
+
+Run `node --test nodics.platform/modules/profile/test/currentPrincipalEnterpriseDisplay.test.js`
+plus scope-lifetime, native registration-session and membership contracts. These
+isolated owner fixtures and real Express parser/header requests prove source
+behavior, not installed/native acceptance. `PROFILE_TEST_EXPRESS_PATH` optionally
+selects an isolated Express 5 package to exercise its real query getter alongside
+the repository's installed Express request/parser.
+After coordinated backend/frontend adoption, main verifies existing Retail login,
+restore and any already-qualified membership switch, matching the name to the
+canonical record and retaining the signed reference; `/enterprise/get` must remain
+forbidden and no identity/grant/data repair is part of this acceptance.
+
 ## Address and contact authority
 
 - Profile `address` is the canonical reusable address schema for customer,
@@ -863,8 +915,42 @@ resumption. No password is retained in the checkpoint.
 Session issuance and refresh must call the registration-readiness gate for
 principals carrying registrationAssignmentCode. It reads the fresh employee,
 security stamp, completed assignment and scope. An active employee flag alone is
-not proof of completed registration. Legacy principals remain on their existing
-session policy. Do not ship the activation path without the session gate.
+not proof of completed registration. Native employees without a registration
+assignment must match their persisted `enterpriseCode` and/or
+`metadata.enterpriseCode`; contradictory or malformed bindings refuse. An
+unbound native employee may authenticate only in the configured default
+Enterprise, never an arbitrary Enterprise sharing the same tenant. The common
+issuer and refresh gate enforces this before credentials are returned. This
+does not synthesize memberships from scopes or enable membership switching;
+qualified linked contexts retain the existing membership owner checks. Keep
+the accepted-context resolver ahead of native fallback admission: an independently
+accepted parent/sibling Enterprise assignment may authorize its exact target
+even when the original native employee is bound elsewhere. Issue and refresh
+must use that assignment's current groups and independent security bindings,
+not union the home Enterprise's roles. Hierarchy or shared tenant alone does not
+constitute an accepted context. Refused restoration must issue no replacement
+credentials; logout remains Origin/CSRF-protected refresh revocation and cookie
+cleanup, independent of admission to the old Enterprise.
+An already-absent browser session is an idempotent logout outcome only after
+the same configured Origin/cookie-policy validation, with neither the refresh
+nor CSRF cookie present and no nonempty CSRF header. Profile returns success
+with no revocation and no Set-Cookie writes, so an old no-cookie request cannot
+erase a concurrently issued session. A remaining cookie (including an empty
+cookie), supplied stale proof or malformed cookie still follows strict CSRF
+validation. Revocation errors are not successful logout.
+
+Employee browser cookies are shared by clients using the same host, name and
+path; ports do not partition them. Axis and Circa Employee mode therefore may
+replace or end the same browser refresh session on localhost. Customer cookies
+remain separately named and scoped. This is not an Enterprise-switch authority
+or a grant: current authentication/restore still enforces the native binding.
+Clients must obtain the normal owner acknowledgement before retiring local
+session state; never clear storage to conceal uncertain logout. The isolated
+`profileBrowserLogoutRecovery.test.js` covers absence, partial proof, origin
+denial, shared-session retry and revocation failure.
+Keep `enterpriseRegistrationSessionGate.test.js` coverage for foreign selection,
+binding drift on refresh, default-Enterprise bootstrap and later-layer admission.
+Do not ship the activation path without the session gate.
 
 After completed registration, Profile may disclose the non-secret sign-in
 enterprise selector to that verified person. Axis uses its existing authentication
@@ -996,3 +1082,75 @@ Malformed intent evidence returns an unconfirmed result, not fabricated success.
 The internal `notify(record, message)` method returns `{intentCode, status}`;
 `requestNotification(record)` retains the safe status contract for its callers.
 Later overlays must adopt that distinction and preserve the exact message snapshot.
+
+## Governed service credential scope updates
+
+`POST /profile/v0/identity/credential/scopes` is the standard scope-only command
+(the deployment supplies its usual `/nodics` prefix). It uses the existing
+`identity.credential.rotate` permission and native Platform administrator access.
+The original human PASSWORD session is revalidated through
+DefaultProfilePlatformAdministratorEvidenceService, including current persisted
+reserved groups, permission vocabulary, tenant/Enterprise, stamp and lockout.
+Neither adminGroup alone nor a service/system/linked identity qualifies.
+The route uses the existing adminGroup admission pattern and the Profile-owned
+serviceScopeManagement.permission path; admission does not replace native proof.
+
+The exact body contains `principalCode`, `loginId`, `expectedAuthVersion`,
+`expectedScopeCodes`, `scopeCodes`, and `confirmed: true`. Both scope arrays are
+complete, ordered, duplicate-free, nonempty sets of registered active permission
+codes; wildcards are prohibited. The expected array must match the retained order
+and expectedAuthVersion must match current owner readback. `scopeCodes` replaces
+the ceiling, so callers retain all permissions they intend to preserve. A stale
+command is not retried automatically. An exact confirmed no-op returns NO_CHANGES.
+Technical bounds and the command permission are defined only in Profile's
+identityGovernance.serviceScopeManagement properties; missing/invalid bounds fail.
+No new role, credential, grant, runtime profile or customer configuration is used.
+
+The owner reads the target freshly by both code and loginId, rejects ambiguity,
+and requires an active native service principal with an active hashed API key and
+the existing service group. It validates both arrays against the persisted
+catalogue. The existing identityMigrationAudit owner records a redacted APPLYING
+intent before mutation. A generated Employee update predicates exact physical
+identity, code/login, current scopes, authVersion, service type, active state,
+key status and groups. Its model contains only apiKeyScopes. Existing pre/post
+security-stamp interceptors reserve and persist the new authVersion and invalidate
+credential stamps; the command does not set or bypass those hooks.
+
+Readback must confirm the requested scopes, advanced authVersion, unchanged key
+hash/prefix/status/expiry, password reference, groups and identity fields before
+the audit becomes APPLIED. Responses include only principalCode, loginId,
+authVersion, scopeCodes, status and (for a mutation) auditCode. Request logging is
+private and responses are no-store. No raw key, hash, password or principal
+snapshot enters the audit or response. Normal runtime authentication renewal uses
+the retained key; no rotation is required. Deployment assignments remain separate
+ceilings and require their own existing governed operation.
+
+After an ambiguous response, inspect the principal's current scope/authVersion and
+the existing audit, without repeating the stale command or assuming no write.
+An APPLYING audit can mean a failed CAS, interrupted update, failed readback or
+unconfirmed audit completion; it is not proof of mutation or permission to replay.
+A new update requires freshly observed expected state and explicit confirmation.
+Manual Init-release scope adoption stays release-only; generic Employee HTTP CRUD
+continues to strip protected credential scope fields. The focused service-scope
+cases in profilePlatformAdministratorEvidence.test.js compose the real proof,
+catalogue, audit and stamp owners over generated storage doubles; they make no
+network, database, credential or deployment changes.
+
+
+Service scope failures after owner entry use registered `ERR_PROFILE_SERVICE_SCOPE_`
+stages: POLICY, INPUT, BINDING, NATIVE_PROOF, TARGET, CURRENT_STATE, VOCABULARY,
+AUDIT_PREPARE, WRITE, READBACK, AUDIT_FINALIZE. These retain HTTP 403 and expose
+only static stages, never upstream messages, identities, tokens, or payloads.
+Router admission failures retain their existing auth codes. A failure at WRITE
+or later is unconfirmed: inspect existing principal/audit evidence before retrying.
+
+Native proof treats Express `header(name)` as an accessor, never a header map or
+an authority source. Actual outer headers/header maps and HTTP headers are
+normalized and pinned on every fresh-proof check, including null-prototype maps.
+Malformed maps, conflicting Enterprise headers and changed maps remain rejected.
+
+The service-scope command derives its native-proof envelope using
+`DefaultLoggerService.inheritRequestPrivacy(proofRequest, request)` from the
+already admitted original request. Object spreading cannot carry the logger's
+private object identity. Keep original command/actor binding checks and never
+replace this derivation with caller flags or relaxed capture qualification.

@@ -20,10 +20,10 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "init-v002",
+      "sourceRoot": "init-v001",
       "files": {
-        "init-v002/headers/identity/wasteCarbonFinalizationPermissionHeader.js": "771ecaac2d2ebe8a8bbd3fd8212b2d74cfc59015ba14f648edd3da5a3195043d",
-        "init-v002/records/identity/wasteCarbonFinalizationPermissionData.js": "e76ec881f259640c1df7bd5ad57d43ae466a5bce70c2b1fb1afbf653f30d5d23"
+        "init-v001/headers/identity/wasteCarbonFinalizationPermissionHeader.js": "771ecaac2d2ebe8a8bbd3fd8212b2d74cfc59015ba14f648edd3da5a3195043d",
+        "init-v001/records/identity/wasteCarbonFinalizationPermissionData.js": "e76ec881f259640c1df7bd5ad57d43ae466a5bce70c2b1fb1afbf653f30d5d23"
       }
     },
     "permissionCatalogue": {
@@ -102,7 +102,7 @@
     "participantAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "sourceRoot": "init-v003",
+      "sourceRoot": "init-v001",
       "version": "0.0.1",
       "displayName": "Waste carbon participant access groups",
       "description": "Customer participation group for owned carbon holdings",
@@ -119,15 +119,15 @@
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
       "files": {
-        "init-v003/headers/identity/wasteCarbonParticipantUserGroupHeader.js": "5456e1fd31e83cb05a15f505e03308f46468fcc440d43f38c7d227ccad7fe6df",
-        "init-v003/records/identity/wasteCarbonParticipantUserGroupData.js": "0940e5337d30b9c11b17aaabadaadfd3a784be918e14ed6a99815202a28f3094"
+        "init-v001/headers/identity/wasteCarbonParticipantUserGroupHeader.js": "5456e1fd31e83cb05a15f505e03308f46468fcc440d43f38c7d227ccad7fe6df",
+        "init-v001/records/identity/wasteCarbonParticipantUserGroupData.js": "0940e5337d30b9c11b17aaabadaadfd3a784be918e14ed6a99815202a28f3094"
       },
       "prerequisites": [
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7",
           "partition": "DEFAULT"
         },
         {

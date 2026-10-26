@@ -59,6 +59,12 @@ module.exports.bidding.bids.decide = {
 
 /** Timed auctions share the same backend participant authority as negotiations. */
 module.exports.bidding.auctions = {
+  reconcileBuyer: {
+    secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup', 'employeeUserGroup'],
+    permission: 'commerce.bid.participate', apiExposure: 'commerceCustomer',
+    cache: { enabled: false }, requestPrivacy: { sensitive: true },
+    key: '/auctions/:code/reconcile', method: 'POST', controller: 'DefaultBiddingController', operation: 'reconcileBuyerAuction',
+  },
   publicPublication: {
     secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'], permission: 'commerce.bid.participate',
     apiExposure: 'commerceCustomer', cache: { enabled: false },

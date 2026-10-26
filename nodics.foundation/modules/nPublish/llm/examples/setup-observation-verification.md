@@ -5,6 +5,30 @@ native Kickoff reviewed source policy is explicitly selected on eight receivers.
 This records the observer work, not every concurrent change in the dirty checkout.
 See [native configuration recipe](setup-observation-native-review.md).
 
+## Baseline Projection Correction, 2026-10-23
+
+Framework-maintainer scope: correct the nPublish BASELINE observer projection so
+CMS pending approval reaches BackOffice with release/workflow identity and bounded
+owner diagnostics. Unknown readiness or unproven READY projects BLOCKED and
+`ready: false`; independent journal, pointer, release and Media proof remains required.
+
+Ownership/placement/scope review: PASS. This correction changes only nPublish's
+observer service, focused observer test, AGENTS, README, existing observation
+contract and this verification record. BackOffice's existing diagnostic consumer
+is exercised from the owner regression test. No runtime defaults, customer
+overrides, Axis code, action authority or persisted data changed. Pre-existing
+eWaste guidance, configuration, contract and test changes remain outside this batch.
+
+Validation: 110 tests passed across `publicationSetupObservation.test.js`,
+BackOffice `applicationContributionReadiness.test.js`, `applicationSetupPlan.test.js`
+and CMS `cmsPublicationBaselineService.test.js`. Documentation and ownership
+governance passed; generated LLM context refreshed. Regressions cover pending and
+terminal states, release identity, scalar workflow/task diagnostics, private-field
+exclusion, diagnostic identity mismatch, later-layer projection override, and
+missing approval journal, target version/pointer, current release, Online state or
+Media qualification. No restart or live UI acceptance was performed in this batch;
+those checks remain with the coordinating task.
+
 ## Owned Files
 
 Paths below are relative to the framework checkout.

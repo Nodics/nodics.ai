@@ -103,6 +103,23 @@ for (const [operation, path] of Object.entries({ targetDeploy: 'deploy', targetS
         apiExposure: operation === 'authorizeTarget' ? 'productPublicationSource' : 'productPublicationTarget',
         key: '/internal/products/publication/' + path, method: 'POST', controller: 'DefaultProductPublicationController', operation };
 }
+
+// Native administrator targets are command fields, never substituted authentication scope.
+for (const [operation, path, permission] of [
+    ['Capabilities', 'capabilities', 'readPermission'], ['Search', 'search', 'readPermission'],
+    ['Read', 'read', 'readPermission'], ['Create', 'create', 'writePermission'],
+    ['Update', 'update', 'writePermission'], ['Archive', 'archive', 'archivePermission'],
+    ['GraphCreate', 'graph-create', 'writePermission'], ['GraphRead', 'graph-read', 'readPermission'],
+    ['GraphContinue', 'graph-continue', 'writePermission'],
+]) {
+    module.exports.product.businessAuthoring['administrative' + operation] = {
+        active: true, secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permissionConfig: 'product.businessAuthoring.' + permission, apiExposure: 'commerceManagement',
+        requestPrivacy: { sensitive: true }, cache: { enabled: false }, method: 'POST',
+        key: '/business/products/administrative/' + path,
+        controller: 'DefaultProductBusinessAuthoringController', operation: 'administrative' + operation,
+    };
+}
 for (const operation of ['prepare', 'publish', 'inspect', 'withdraw']) {
     module.exports.product.operator['bundleListing' + operation] = { active: true, secured: true, authTokenTypes: ['service'],
         accessGroups: ['serviceAccountUserGroup'], permission: 'commerce.product.publish', apiExposure: 'productPublicationSource',

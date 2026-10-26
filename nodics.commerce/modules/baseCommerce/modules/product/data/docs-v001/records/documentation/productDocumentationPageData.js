@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @description Generated Nodics framework documentation pages. */
+/** @description Owner-authored auction documentation CMS Page records; Staged pending review. */
 module.exports = {
   "record0": {
     "code": "nodicsDocsPagecatalogProductDiscoveryManagement",

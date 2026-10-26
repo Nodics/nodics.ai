@@ -1,0 +1,17 @@
+[
+  {
+    "code": "nodicsDocsMetadatacommunicationProviderRunbooks",
+    "documentId": "communication.provider-runbooks",
+    "targetRoute": "nodicsDocsRoutecommunicationProviderRunbooks"
+  },
+  {
+    "code": "nodicsDocsMetadatacommunicationOverview",
+    "documentId": "communication.overview",
+    "targetRoute": "nodicsDocsRoutecommunicationOverview"
+  },
+  {
+    "code": "nodicsDocsMetadatacommunicationEmailSmsTemplates",
+    "documentId": "communication.email-sms-templates",
+    "targetRoute": "nodicsDocsRoutecommunicationEmailSmsTemplates"
+  }
+]

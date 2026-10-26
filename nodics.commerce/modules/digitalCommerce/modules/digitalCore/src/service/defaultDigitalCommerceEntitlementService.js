@@ -239,6 +239,10 @@ module.exports = {
       orderEntryCode: entitlement.orderEntryCode,
       cartCode: entitlement.cartCode,
       productCode: entitlement.productCode,
+      // The purchase promise is immutable; present its retained name without a live catalogue dependency.
+      productName: retained?.version === 2 && typeof retained.name === "string" && retained.name.trim() &&
+        retained.name.length <= SERVICE.DefaultCouponOfferService.settings().maximumTermLength &&
+        !/[\u0000-\u001f\u007f]/.test(retained.name) ? retained.name : undefined,
       sku: entitlement.sku,
       status: entitlement.status,
       digitalDeliveryType: entitlement.digitalDeliveryType,
@@ -482,8 +486,8 @@ module.exports = {
       this.refuseReveal();
     return entries[0];
   },
-  /** Snapshots signed customer scope without trusting payload overrides or manufactured privacy flags. @param {Object} request Exact private entry. @returns {Object} Privately inherited trusted context. */
-  revealContext: function (request, permission = 'commerce.digital.own.reveal', privateRequired = true) {
+  /** Resolves canonical ownership through fresh Profile authority without changing the signed actor or trusting payload/privacy flags. @param {Object} request Exact private entry. @returns {Promise<Object>} Privately inherited canonical owner context. */
+  revealContext: async function (request, permission = 'commerce.digital.own.reveal', privateRequired = true) {
     const auth = request?.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
     const enterpriseCode = auth.enterpriseCode || auth.entCode;
     const ownerId = auth.principalType === 'human' ? enterpriseCode : auth.principalId || auth.code || auth.loginId;
@@ -494,12 +498,25 @@ module.exports = {
         [auth.tenant, enterpriseCode, ownerId].some(value => typeof value !== 'string' || !/^[A-Za-z0-9_.:@-]{1,128}$/.test(value)) ||
         [request.tenant, auth.tenant].some(value => value !== undefined && value !== auth.tenant) ||
         [request.enterpriseCode, request.entCode, auth.enterpriseCode, auth.entCode].some(value => value !== undefined && value !== enterpriseCode) ||
-        (request.ownerId !== undefined && request.ownerId !== ownerId) ||
+        auth.principalType === 'human' && request.ownerId !== undefined && request.ownerId !== enterpriseCode ||
         !security?.isPermissionGranted(permission, security.getGrantedPermissions(request), {}) ||
         privateRequired && SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection(request) !== true) this.refuseReveal();
     const r = { ...request, tenant: auth.tenant, enterpriseCode, ownerId, authData: structuredClone(auth),
       payload: structuredClone(request.payload || {}) };
     if (privateRequired) SERVICE.DefaultLoggerService.inheritRequestPrivacy(r, request);
+    const snapshot = structuredClone({ auth: request.authData, tenant: request.tenant,
+      enterpriseCode: request.enterpriseCode, entCode: request.entCode, ownerId: request.ownerId,
+      authorization: request.authorization || request.httpRequest?.headers?.authorization || request.httpRequest?.headers?.Authorization,
+      payload: request.payload, entitlementCode: request.entitlementCode, couponCode: request.couponCode });
+    const owner = await this.freshCouponOwner(r, undefined, permission);
+    if (!isDeepStrictEqual(snapshot, { auth: request.authData, tenant: request.tenant,
+      enterpriseCode: request.enterpriseCode, entCode: request.entCode, ownerId: request.ownerId,
+      authorization: request.authorization || request.httpRequest?.headers?.authorization || request.httpRequest?.headers?.Authorization,
+      payload: request.payload, entitlementCode: request.entitlementCode, couponCode: request.couponCode }) ||
+        typeof owner.code !== 'string' || !/^[A-Za-z0-9_.:@-]{1,128}$/.test(owner.code) ||
+        request.ownerId !== undefined && request.ownerId !== owner.code) this.refuseReveal();
+    r.ownerId = owner.code;
+    r.ownerRef = owner;
     return r;
   },
   /**
@@ -584,9 +601,7 @@ module.exports = {
    * evidence checks described above.
    */
   listContext: async function (input) {
-    const r = this.revealContext(input, 'commerce.digital.own.read', false);
-    const owner = await this.freshCouponOwner(r, undefined, 'commerce.digital.own.read');
-    return { ...r, ownerId: owner.code, ownerRef: owner };
+    return this.revealContext(input, 'commerce.digital.own.read', false);
   },
   /**
    * Discovers a freshly admitted customer's rights across merchant storage partitions.
@@ -728,11 +743,7 @@ module.exports = {
    * evidence checks described above.
    */
   couponReadContext: async function (input) {
-    let r = this.revealContext(input);
-    const owner = await this.freshCouponOwner(r);
-    const canonical = { ...r, ownerId: owner.code, ownerRef: owner };
-    SERVICE.DefaultLoggerService.inheritRequestPrivacy(canonical, r);
-    r = canonical;
+    const r = await this.revealContext(input);
     const code = r.entitlementCode || r.payload.entitlementCode;
     const rows = r.authData.principalType === 'human'
       ? await this.ownedEnterpriseCoupons(r, code)
@@ -744,7 +755,7 @@ module.exports = {
   },
   /** Reuses committed Checkout/Payment/Order/entitlement/delivery evidence for one current purchased coupon. No notification selection or new authority is introduced. @param {Object} input Private customer context. @param {Object} coupon Current coupon snapshot. @returns {Promise<Object>} Current exact entitlement. */
   authorizeCouponReveal: async function (input, coupon) {
-    const buyer = this.revealContext(input), r = await this.couponReadContext(input), entitlementCode = r.entitlementCode || r.payload.entitlementCode;
+    const buyer = await this.revealContext(input), r = await this.couponReadContext(input), entitlementCode = r.entitlementCode || r.payload.entitlementCode;
     if (buyer.authData.principalType === 'human' || coupon?.purchasePolicy?.version === 2)
       await this.freshCouponOwner(buyer, coupon?.purchasePolicy);
     if (typeof entitlementCode !== 'string' || !/^[A-Za-z0-9_.:@-]{1,192}$/.test(entitlementCode) ||

@@ -43,11 +43,12 @@ function fixedOffer(value, label, options = {}) {
   const keys = options.withdrawal ? ['promotionCode', 'expectedOffer', 'benefitMutation', 'purchasingOwner', 'blockedOwner',
     'redeemerEnterpriseCode'] : ['promotionCode', 'expectedOffer', 'benefitMutation', 'firstOwner', 'secondOwner', 'blockedOwner'];
   requireEvidence(exactKeys(value, keys) && identifier(value.promotionCode) &&
-    exactKeys(value.expectedOffer, ['version', 'supply', 'ownerLimit', 'expiry', 'requirements', 'terms']) &&
+    exactKeys(value.expectedOffer, ['version', 'supply', 'expiry', 'requirements', 'terms',
+      ...(Object.hasOwn(value.expectedOffer || {}, 'ownerLimit') ? ['ownerLimit'] : [])]) &&
     value.expectedOffer.version === 1 && exactKeys(value.expectedOffer.supply, ['mode', 'quantity']) &&
     value.expectedOffer.supply.mode === 'LIMITED' && Number.isSafeInteger(value.expectedOffer.supply.quantity) &&
-    value.expectedOffer.supply.quantity > 0 && Number.isSafeInteger(value.expectedOffer.ownerLimit) &&
-    value.expectedOffer.ownerLimit > 0 && plain(value.expectedOffer.requirements) &&
+    value.expectedOffer.supply.quantity > 0 && (!Object.hasOwn(value.expectedOffer, 'ownerLimit') ||
+      Number.isSafeInteger(value.expectedOffer.ownerLimit) && value.expectedOffer.ownerLimit > 0) && plain(value.expectedOffer.requirements) &&
     ['REWARDS', 'CERTIFICATES', 'BOTH'].includes(value.expectedOffer.requirements.type) &&
     Array.isArray(value.expectedOffer.terms) && value.expectedOffer.terms.length > 0 &&
     value.expectedOffer.terms.every(term => typeof term === 'string' && term.trim()) && plain(value.benefitMutation) &&
@@ -62,10 +63,8 @@ function fixedOffer(value, label, options = {}) {
       value.purchasingOwner.code !== value.blockedOwner.code, 'WITHDRAWAL_REDEEMER_REQUIRED');
   } else {
     owner(value.firstOwner); owner(value.secondOwner);
-    requireEvidence(value.expectedOffer.supply?.mode === 'LIMITED' && value.expectedOffer.supply.quantity === 2 &&
-      value.expectedOffer.ownerLimit === 1 &&
-      new Set([value.firstOwner.code, value.secondOwner.code, value.blockedOwner.code]).size === 3,
-    'LIMITED_TWO_UNIT_OWNER_CAP_REQUIRED');
+    requireEvidence(new Set([value.firstOwner.code, value.secondOwner.code, value.blockedOwner.code]).size === 3,
+    'DISTINCT_LIMITED_OFFER_OWNERS_REQUIRED');
   }
   return value;
 }
@@ -165,29 +164,58 @@ export async function runCouponOfferLifecycleAcceptance(options = {}) {
   requireEvidence(unchanged.revision === before.revision && isDeepStrictEqual(unchanged.actions, before.actions) &&
     isDeepStrictEqual(unchanged.conditions, before.conditions), 'IMMUTABLE_BENEFIT_TERMS_CHANGED');
 
-  const first = completedPurchase(await invoke('purchase', { promotionCode: limited.promotionCode,
-    ownerRef: limited.firstOwner, commandReference: command('limited', 'first') }), limited.promotionCode,
-  limited.firstOwner, limited.expectedOffer);
-  let availability = await invoke('availability', { promotionCode: limited.promotionCode });
-  requireEvidence(exactKeys(availability, ['available', 'remaining', 'reserved', 'completed']) && availability.available === true &&
-    availability.remaining === 1 && availability.reserved === 0 && availability.completed === 1,
-  'SHARED_SUPPLY_FIRST_PURCHASE_UNCONFIRMED');
-  refusedPurchase(await invoke('purchase', { promotionCode: limited.promotionCode, ownerRef: limited.firstOwner,
-    commandReference: command('limited', 'owner-limit') }), 'OWNER_LIMIT_REACHED');
-  const second = completedPurchase(await invoke('purchase', { promotionCode: limited.promotionCode,
-    ownerRef: limited.secondOwner, commandReference: command('limited', 'second') }), limited.promotionCode,
-  limited.secondOwner, limited.expectedOffer);
-  availability = await invoke('availability', { promotionCode: limited.promotionCode });
-  requireEvidence(exactKeys(availability, ['available', 'remaining', 'reserved', 'completed']) && availability.available === false &&
-    availability.remaining === 0 && availability.reserved === 0 && availability.completed === 2,
-  'SHARED_SUPPLY_EXHAUSTION_UNCONFIRMED');
-  refusedPurchase(await invoke('purchase', { promotionCode: limited.promotionCode, ownerRef: limited.blockedOwner,
-    commandReference: command('limited', 'supply') }), 'SUPPLY_EXHAUSTED');
+  const readAvailability = async offer => {
+    const value = await invoke('availability', { promotionCode: offer.promotionCode });
+    requireEvidence(exactKeys(value, ['available', 'remaining', 'reserved', 'completed']) &&
+      ['remaining', 'reserved', 'completed'].every(key => Number.isSafeInteger(value[key]) && value[key] >= 0) &&
+      value.available === (value.remaining > 0) &&
+      value.remaining + value.reserved + value.completed <= offer.expectedOffer.supply.quantity,
+    'CANONICAL_SUPPLY_AVAILABILITY_REQUIRED');
+    return value;
+  };
+  const purchaseOne = async (offer, ownerRef, reference, beforeSupply) => {
+    requireEvidence(beforeSupply.available, 'PURCHASE_SUPPLY_REQUIRED');
+    const purchased = completedPurchase(await invoke('purchase', { promotionCode: offer.promotionCode,
+      ownerRef, commandReference: reference }), offer.promotionCode, ownerRef, offer.expectedOffer);
+    const afterSupply = await readAvailability(offer);
+    requireEvidence(afterSupply.remaining === beforeSupply.remaining - 1 &&
+      afterSupply.completed === beforeSupply.completed + 1 && afterSupply.reserved === beforeSupply.reserved,
+    'SINGLE_PURCHASE_SUPPLY_DELTA_UNCONFIRMED');
+    return { purchased, afterSupply };
+  };
+  const initialAvailability = await readAvailability(limited);
+  requireEvidence(initialAvailability.available, 'LIMITED_INITIAL_SUPPLY_REQUIRED');
+  let availability = initialAvailability;
+  const couponCodes = [];
+  let lifetimeOwnerAllowance = Object.hasOwn(limited.expectedOffer, 'ownerLimit') ? 'NOT_EXERCISED' : 'NOT_APPLICABLE';
+  // At most the two already-reviewed purchasers; never drain stock to manufacture exhaustion.
+  for (const [index, ownerRef] of [limited.firstOwner, limited.secondOwner].entries()) {
+    if (!availability.available) break;
+    const result = await purchaseOne(limited, ownerRef, command('limited', index === 0 ? 'first' : 'second'), availability);
+    availability = result.afterSupply;
+    requireEvidence(!couponCodes.includes(result.purchased.couponCode), 'DISTINCT_PURCHASED_COUPONS_REQUIRED');
+    couponCodes.push(result.purchased.couponCode);
+    if (index === 0 && limited.expectedOffer.ownerLimit === 1 && availability.available) {
+      refusedPurchase(await invoke('purchase', { promotionCode: limited.promotionCode, ownerRef: limited.firstOwner,
+        commandReference: command('limited', 'owner-limit') }), 'OWNER_LIMIT_REACHED');
+      const afterRefusal = await readAvailability(limited);
+      requireEvidence(isDeepStrictEqual(afterRefusal, availability), 'REFUSED_PURCHASE_CHANGED_SUPPLY');
+      lifetimeOwnerAllowance = 'ENFORCED';
+    }
+  }
+  let exhaustion = 'NOT_EXERCISED';
+  if (!availability.available && availability.remaining === 0) {
+    refusedPurchase(await invoke('purchase', { promotionCode: limited.promotionCode, ownerRef: limited.blockedOwner,
+      commandReference: command('limited', 'supply') }), 'SUPPLY_EXHAUSTED');
+    const afterRefusal = await readAvailability(limited);
+    requireEvidence(isDeepStrictEqual(afterRefusal, availability), 'REFUSED_PURCHASE_CHANGED_SUPPLY');
+    exhaustion = 'ENFORCED';
+  }
 
   const withdrawal = s.withdrawalOffer;
-  const purchased = completedPurchase(await invoke('purchase', { promotionCode: withdrawal.promotionCode,
-    ownerRef: withdrawal.purchasingOwner, commandReference: command('withdrawal', 'purchase') }),
-  withdrawal.promotionCode, withdrawal.purchasingOwner, withdrawal.expectedOffer);
+  const withdrawalInitial = await readAvailability(withdrawal);
+  const { purchased } = await purchaseOne(withdrawal, withdrawal.purchasingOwner,
+    command('withdrawal', 'purchase'), withdrawalInitial);
   const decision = await invoke('withdrawParticipation', { promotionCode: withdrawal.promotionCode,
     redeemerEnterpriseCode: withdrawal.redeemerEnterpriseCode, commandReference: command('withdrawal', 'withdraw') });
   requireEvidence(plain(decision) && decision.status === 'WITHDRAWN' && Number.isSafeInteger(decision.revision) && decision.revision > 0,
@@ -201,8 +229,8 @@ export async function runCouponOfferLifecycleAcceptance(options = {}) {
   'PURCHASED_RIGHTS_NOT_RETAINED');
   return { contractVersion: 1, state: 'PASSED', approvalReference: s.approvalReference, runCode: s.runCode,
     evidence: { immutableOffer: { promotionCode: limited.promotionCode, revision: unchanged.revision,
-      expiresAt: limited.expectedOffer.expiry.at }, sharedSupply: { couponCodes: [first.couponCode, second.couponCode],
-      completed: availability.completed, remaining: availability.remaining }, lifetimeOwnerAllowance: 'ENFORCED',
+      expiresAt: limited.expectedOffer.expiry.at }, sharedSupply: { couponCodes, initial: initialAvailability,
+      completed: availability.completed, remaining: availability.remaining, reserved: availability.reserved, exhaustion }, lifetimeOwnerAllowance,
     withdrawal: { promotionCode: withdrawal.promotionCode, status: decision.status,
       retainedCouponCode: retained.couponCode, retainedRights: retained.retainedRights } } };
 }

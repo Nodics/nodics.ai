@@ -21,7 +21,7 @@ The framework layer is intentionally focused:
 
 Platform runtimes that explicitly declare `nodics.loyalty` as a discovery root
 can observe the Loyalty Core Enterprise reference and Loyalty Wallet
-`specialAccessRoles` releases. The owning manifests and prerequisite graph remain
+`specialAccessRoles` and `participantReadAccess` releases. The owning manifests and prerequisite graph remain
 authoritative; discovery does not activate Loyalty, install data or assign roles.
 
 Commerce integrations such as buying a coupon with points are modeled outside

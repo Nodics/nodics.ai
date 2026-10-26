@@ -30,7 +30,12 @@ This module owns generic import mechanics. Functional modules own their data mea
   for other tenants, never cross-partition writes; unqualified groups stay
   tenant-local. See the
   [prerequisite contract](llm/contracts/import-release-contracts.md#exact-release-prerequisites).
-  Existing installations can use the bounded
+  Retained CURRENT receipts with same-version source drift instead return a
+  no-write startup review result; catalogue readiness remains blocked and Profile
+  retained identity validation still runs. Newly added prerequisites are not
+  installed through a drifted graph, and manual checksum refusal is unchanged.
+  No startup-skip configuration is required for this case.
+  Versioned successor migrations can use the bounded
   [maintenance sequence](llm/contracts/import-release-contracts.md#existing-installation-maintenance-sequence):
   suppress `types.init.startupExecution`, keep Init enabled, migrate the default
   partition before tenants through governed operator imports, then restore startup.
@@ -144,6 +149,21 @@ The [manifest](data/manifest.json) selects the current immutable documentation:
   catalogue, not a parallel Markdown authoring tree.
 
 ## Verification
+
+The optional [incremental acceptance contract](llm/contracts/incremental-acceptance.md)
+provides test-owned disabled-record fixtures and explicit owner-client phases
+for predecessor upgrade, edited-record conflict and partial FAILED-release retry.
+CURRENT replay requires the owner's `ERR_IMP_00003` duplicate rejection and
+unchanged source identity, complete fixture records and run history; it does not
+expect a successful install/skip response.
+Payloads live only in `test/fixtures/incrementalAcceptance/data`; the coordinator
+lives in `test/helpers`. They are absent from the shipping release catalogue.
+Tests use disposable module roots and canonical release discovery/validation.
+The explicit isolated harness uses a distinct test module and private providers;
+it never targets a customer database or grants deployment authority. Execution
+requires approval and normal deployment admission. Offline tests start no runtime.
+Execution retains provider state and stops owned children; offline cleanup refuses
+provider directories. See the contract for the command and prerequisites.
 
 `nodics project:run acceptance:staged-sample-data --target-role=<ROLE_STAGED> --release-modules=<module,...>`
 checks the secured sample catalogue and validation APIs using employee authority.

@@ -9,7 +9,7 @@
 
  */
 
-/** @module wasteReward/router @description Service-only mutations and Profile-authorized original-owner allocation reads. @owner wasteReward @layer router */
+/** @module wasteReward/router @description Service-or-native-Platform-Admin mutations and Profile-authorized original-owner allocation reads. @owner wasteReward @layer router */
 module.exports = {
     "wasteReward": {
         "materialValue": {
@@ -26,7 +26,8 @@ module.exports = {
                 "method": "POST",
                 "secured": true,
                 "authTokenTypes": [
-                    "service"
+                    "service",
+                    "access"
                 ],
                 "accessGroups": [
                     "serviceAccountUserGroup"
@@ -44,7 +45,8 @@ module.exports = {
                 "method": "POST",
                 "secured": true,
                 "authTokenTypes": [
-                    "service"
+                    "service",
+                    "access"
                 ],
                 "accessGroups": [
                     "serviceAccountUserGroup"
@@ -62,7 +64,8 @@ module.exports = {
                 "method": "POST",
                 "secured": true,
                 "authTokenTypes": [
-                    "service"
+                    "service",
+                    "access"
                 ],
                 "accessGroups": [
                     "serviceAccountUserGroup"

@@ -29,6 +29,9 @@
 - Maintain framework documentation directly as CMS page/component records under
   `data/docs-v001/records/documentation`. `data/manifest.json` declares the pack;
   do not create a separate `docs/` authoring source or Markdown-to-CMS generator.
+- Ship only files selected by current manifest sections, including within v001.
+  Preserve latest record intent and stable identities; keep superseded source
+  snapshots under test fixtures, never as unselected data or retainedRoots.
 - Store documentation images under `data/docs-v001/assets/documentation` and
   declare Media records in the same release. Image blocks reference `mediaCode`,
   never filesystem paths, provider URLs or embedded base64. Preserve normal

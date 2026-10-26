@@ -177,25 +177,21 @@ test('reverse lifecycle create persists structured item return refund and reconc
     assert(auths.every(authData => authData.userGroups.includes('serviceAccountUserGroup')));
 });
 
-test('reverse lifecycle facade resolves customer ownership from authenticated login id', async () => {
-    let captured;
-    global.SERVICE = {
-        DefaultOrderLifecycleOperationService: {
-            preview: async request => {
-                captured = request;
-                return { ownerId: request.ownerId, actorId: request.actorId, tenant: request.tenant };
-            }
-        }
-    };
-
-    const result = await facade.preview({
-        authData: { tenant: 'default', loginId: 'customer@example.com' },
-        orderCode: 'order-1',
-        payload: { requestType: 'CANCELLATION' }
-    });
-
-    assert.equal(result.ownerId, 'customer@example.com');
-    assert.equal(result.actorId, 'customer@example.com');
+test('reverse lifecycle facade delegates typed owner resolution with the lifecycle permission', async () => {
+    let captured, selectedPermission;
+    global.FACADE = { DefaultCartCustomerFacade: { resolveContext: async (request, permission) => {
+        selectedPermission = permission;
+        return { ...request, tenant: 'default', ownerId: 'canonical-customer',
+            ownerRef: { module: 'profile', schema: 'customer', code: 'canonical-customer' },
+            actorRef: { code: 'customer-login' } };
+    } } };
+    global.SERVICE = { DefaultOrderLifecycleOperationService: { participantLifecycle: async (operation, request) => {
+        assert.equal(operation, 'preview'); captured = request; return request;
+    } } };
+    const result = await facade.preview({ orderCode: 'order-1', payload: { requestType: 'CANCELLATION' } });
+    assert.equal(selectedPermission, 'commerce.lifecycle.own.create');
+    assert.equal(result.ownerId, 'canonical-customer');
+    assert.equal(result.actorId, 'customer-login');
     assert.equal(captured.tenant, 'default');
 });
 

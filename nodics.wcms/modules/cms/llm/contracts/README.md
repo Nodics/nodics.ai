@@ -254,3 +254,26 @@ inactive version evidence and invalidates prior draft readiness. Unknown outcome
 retain the reviewed target; inspection acknowledgement and a fresh review precede
 any separate submission. Do not add generic CRUD fallback, impact claims, lifecycle,
 revision locking or transactions that these existing owner commands do not provide.
+# Retained Approval Recovery
+
+BackOffice may explicitly invoke the service-only CMS baseline
+`POST /publication/baselines/:baselineCode/reconcile-approval`. The existing
+baseline controller verifies the BackOffice runtime principal before applying
+CMS-local authority and requires the delegated human requester. The request
+binds the observed publication code, revision and optional workflow reference
+in `approvalRepairBinding`; changed, absent or non-pending publication evidence
+rejects. Fresh Process diagnostics must report `TASK_REFERENCE_MISSING` or
+`WAITING_REVIEWER`. The latter is a read-only idempotent result.
+
+Recovery delegates the retained pending publication to its existing nPublish
+workflow provider. Process owns deterministic instance start/replay and missing
+human-task repair. CMS never imports baseline data, creates another publication,
+validates/resubmits a release, approves a task or activates Online during this
+operation. A provider outage, non-actionable task or missing assignee requires
+inspection, not automatic replay. Refresh after an uncertain response; only
+fresh `WAITING_REVIEWER` diagnostics establish an actionable review path.
+This is not a cross-owner transaction or an approval grant.
+
+Later-layer baseline/provider customization retains these identity, principal,
+readiness and no-import boundaries. Baseline service/controller, target-route,
+BackOffice initialization and Process publication-approval tests protect them.

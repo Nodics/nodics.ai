@@ -35,7 +35,7 @@ function composed(t) {
         runtimeInstanceId: 'instance', modules: ['promotion', 'digitalCore'], permissions: ['commerce.promotion.analytics'],
         runtimeScope: { projectCode: 'project', environmentCode: 'unit', serverCode: 'cron', instanceCode: 'instance', assignmentCode: 'assignment' } };
     p.refresh.callers = [{ tenant: 't', principalEnterpriseCode: 'runtime', serviceId: 'cron', ...auth.runtimeScope }];
-    const definition = clone(require('../data/init-v002/records/jobs/promotionAcquisitionRefreshJobData').record1);
+    const definition = clone(require('../data/init-v001/records/jobs/promotionAcquisitionRefreshJobData').record1);
     definition.tenant = 't'; definition.jobDetail.channelCode = 'channel';
     const db = { DefaultDigitalEntitlementService: [], DefaultCartService: [], DefaultCheckoutCheckpointService: [], DefaultDigitalDeliveryService: [] };
     for (const code of ['one', 'two']) {
@@ -179,11 +179,11 @@ test('new explicit schedule contribution is hash-checked, inactive and has no se
         configuration: () => require(path.join(importer, 'config/properties')).data.dataReleases };
     const inspected = releases.inspectManifest({ name: 'promotion', path: path.join(__dirname, '..') }, 'init',
         path.join(__dirname, '../data/manifest.json'), section, 'acquisitionRefreshSchedule', true);
-    assert.equal(inspected.sourceRoot, 'init-v002'); assert.equal(inspected.installer, undefined);
+    assert.equal(inspected.sourceRoot, 'init-v001'); assert.equal(inspected.installer, undefined);
     assert.equal(inspected.declaredFiles.length, 2);
     for (const [file, expected] of Object.entries(section.files))
         assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname, '../data', file))).digest('hex'), expected);
-    const job = require('../data/init-v002/records/jobs/promotionAcquisitionRefreshJobData').record1;
+    const job = require('../data/init-v001/records/jobs/promotionAcquisitionRefreshJobData').record1;
     assert.equal(job.active, false); assert.equal(job.runOnInit, false); assert.equal(job.jobDetail.channelCode, null);
     assert.equal(job.jobDetail.startNode, defaults.promotion.acquisitionReporting.refresh.startNode);
 });

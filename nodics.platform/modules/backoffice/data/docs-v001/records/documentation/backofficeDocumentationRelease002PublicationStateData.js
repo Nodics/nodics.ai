@@ -28,7 +28,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "66942ac865f30877e72e63e09a66ec19b921608d7ba65bbffeea3af8e7f6dbde",
+    "checksum": "32d843406c8f592575069f3c84973cedd531911c350ca08928dbc3469b7c40a3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -69,7 +69,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "865e414bafd1145e984849fb1e39ffe9bbbb1d57c356d70654275998b9ec0a32",
+    "checksum": "37c1974529f01c2e1650029af79ef0a00bec47f2627e83bae2d0da5a8c62a989",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -146,7 +146,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "81489ea9317068300cb43ab11545ba39de712a0ef4f09c71ffdb56ddad8275c8",
+    "checksum": "d300ef7b0012d1f0437916d075207083a71dcba7e5383299011df8f6cee71c3a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -331,7 +331,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9e07ba74cca00917e478021bd2dd2fcca3c0846a67be393bd526ac84171e88ea",
+    "checksum": "06dd5a4ea192490a6e832b3f73401c1e7b2b841782eab9fcaceaf8693dec7db2",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -370,7 +370,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "652604bda485049b2b583fbf123e972d49f9ecb430f3520ee885fdd4a82a9172",
+    "checksum": "8df1faec63aca9ec547cbc3ff9eaeacc8d49a5b8ee4014ccf3f705a39de30178",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -443,7 +443,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "4f38456a783bb613abe868a9089098f1b2a8c2bdae3eca316bcef9f635db7a46",
+    "checksum": "856ef966ec5ba27f7bbed150de7b740adb3594173f83be7e31bcceed1325135d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"

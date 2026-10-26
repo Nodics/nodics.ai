@@ -54,7 +54,7 @@
           "moduleName": "axis",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "cms",
@@ -74,7 +74,7 @@
           "moduleName": "profile",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "publish",
@@ -113,7 +113,7 @@
           "moduleName": "axis",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         }
       ]
     },
@@ -284,13 +284,13 @@
           "moduleName": "axis",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "version": "0.0.3",
+          "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
@@ -330,7 +330,7 @@
           "moduleName": "cms",
           "sectionCode": "businessAccessGroups",
           "version": "0.0.3",
-          "checksum": "2bfc1a803738f9e129be1b815e297505b2bf2482008e27c5b6f8f81bf3d219c9"
+          "checksum": "27da70956d363dd1c46bd3c31615f688040847949f1ff381b61631233d6a3ff7"
         }
       ]
     }

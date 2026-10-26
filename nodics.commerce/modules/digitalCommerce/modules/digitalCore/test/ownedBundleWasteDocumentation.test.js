@@ -29,12 +29,14 @@ for (const [owner, directory, id] of owners) test(owner + " direct CMS content, 
   assert.equal(section.sourceAuthority, records);
   assert.equal(section.initialPublicationPolicy, "ADMIN_INITIATED"); assert.equal(section.installationPolicy, "OPTIONAL_AXIS_INITIATED");
   for (const [file, hash] of Object.entries(section.generatedHashes)) assert.equal(contract.sha256(fs.readFileSync(path.join(base, "data", file))), hash, file);
-  const read = family => Object.values(require(path.join(base, records, owner + "Documentation" + family + "Data.js")));
+  const selectedFile = family => Object.keys(section.generatedHashes)
+    .find(file => file.endsWith(family + "Data.js"));
+  const read = family => Object.values(require(path.join(base, "data", selectedFile(family))));
   const component = read("Component").find(c => c.properties.code === id), p = component.properties;
   const meta = read("PageMetadata").find(m => m.documentId === id), body = contract.documentationText(p.blocks);
   const headings = p.blocks.filter(b => b.kind === "heading").map(({ kind, ...value }) => value);
   assert.deepEqual(meta.headings, headings); assert.deepEqual(p.headings, headings);
-  assert.equal(p.source.owner, owner); assert.equal(p.source.path, records + "/" + owner + "DocumentationComponentData.js");
+  assert.equal(p.source.owner, owner); assert.equal(p.source.path, "data/" + selectedFile("Component"));
   assert.equal(meta.sourceChecksum, contract.sha256(body)); assert.equal(p.source.checksum, meta.sourceChecksum);
   assert.equal(meta.sourceWordCount, contract.countWords(body));
   assert.equal(read("SearchMetadata").find(s => s.targetCode === meta.code).searchText, p.searchText);
@@ -44,7 +46,7 @@ for (const [owner, directory, id] of owners) test(owner + " direct CMS content, 
     assert.equal(meta.lifecycleState, "DRAFT"); assert.equal(p.maturityState, "partial");
     assert.equal(read("Route").find(r => r.code === meta.targetRoute).deliveryState, "DRAFT");
     const publication = read("PublicationState").find(s => s.targetCode === meta.code);
-    assert.equal(publication.lifecycleState, "DRAFT");
+    assert.equal(publication.lifecycleState, owner === "digitalCore" ? "STAGED" : "DRAFT");
     for (const field of ["reviewer", "approver", "publisher", "onlineVersion"]) assert.equal(publication[field], undefined);
   }
 });

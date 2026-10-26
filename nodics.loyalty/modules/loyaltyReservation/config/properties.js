@@ -32,6 +32,7 @@ module.exports = {
       loyaltyReservation: {
         serviceNames: {
           DefaultRewardReservationService: true,
+          DefaultRewardReservationDecisionService: true,
         },
       },
     },

@@ -14,9 +14,15 @@ All commands use explicit permissions, sensitive input protection and no-store
 responses. Conversion status is POST because reconciliation may finalize the
 original operation; it cannot submit a new external credit.
 
+Separate native Super Admin PUT `/admin/enterprise-test-wallets` provisions only
+an audited zero-balance test wallet; POST `/admin/enterprise-test-credits` performs
+separately confirmed funding. Both delegate to the Wallet
+[test-credit owner contract](../../../loyaltyWallet/llm/contracts/enterprise-test-credit.md).
+Provisioning cannot call credit, reset balances or relabel existing records.
+
 These routes do not alter the service-only admission of internal ledger APIs.
 Owner code validates original credentials and canonical ownership independently
-of route groups. No route installs permissions, funds a wallet or qualifies an
+of route groups. No route installs permissions or qualifies an
 external provider. Defaults for route exposure belong to LoyaltyAPI; downstream
 configuration contains only intentional overrides.
 

@@ -65,7 +65,7 @@ for (const [index, fixture] of fixtures.entries()) {
     const release = source.section;
     assert.equal(release.kind, "DATA_RELEASE");
     assert.equal(release.dataType, "init");
-    assert.equal(release.version, "0.0.2");
+    assert.equal(release.version, "0.0.4");
     assert.equal(release.sourceRoot, "init-v001");
     assert.equal(release.destinationRole, "PLATFORM");
     assert.equal(release.selectionPolicy, "EXPLICIT");

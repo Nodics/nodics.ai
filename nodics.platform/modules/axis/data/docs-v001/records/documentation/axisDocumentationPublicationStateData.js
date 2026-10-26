@@ -17,11 +17,10 @@ module.exports = {
     "code": "axisDocsPublicationproductaxisdocumentationproduct",
     "targetType": "PRODUCT",
     "targetCode": "axisDocumentationProduct",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -29,7 +28,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b266e31b238c585a1790ad578c8e2d21d6be7efcdd3f1ddd4e19f13e4b8aaafb",
+    "checksum": "a9f01564ed8867ad4ac99609a7bad25ae4dbc5ab5261d2ac9a0790e5f734734f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -46,15 +45,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -63,11 +59,10 @@ module.exports = {
     "code": "axisDocsPublicationnavigationaxisdocumentationnavigationmetadata",
     "targetType": "NAVIGATION",
     "targetCode": "axisDocumentationNavigationMetadata",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -75,7 +70,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "31243e6c6b2e005cb37bc68fffd7d061f540aaaa2460c0fc191a2984981492f9",
+    "checksum": "09ddc575c66af422bb43ccc0527821c5095562b3780543c889bbe2d973ba6f59",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -91,15 +86,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -108,11 +100,10 @@ module.exports = {
     "code": "axisDocsPublicationaccesspolicyaxisdocsaccesspublic",
     "targetType": "ACCESS_POLICY",
     "targetCode": "axisDocsAccessPublic",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -120,7 +111,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "52f82f03a47e24b920d4237f999d5b4f025e3583a111a28d1bd5e42ea4d195a4",
+    "checksum": "161a99ee3f6e0a38c5512ac5614f24911a2a555520518448872c879062765963",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.accessPolicy.update"
@@ -136,15 +127,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -153,11 +141,10 @@ module.exports = {
     "code": "axisDocsPublicationaccesspolicyaxisdocsaccessauthenticated",
     "targetType": "ACCESS_POLICY",
     "targetCode": "axisDocsAccessAuthenticated",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -165,7 +152,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9ed3f6d5cf8736edf9ce3ef59419ce2667bb7e7bad74692dcf0d0211545ff084",
+    "checksum": "1aa58f05b0999a16c038332a467ad21e6f0b91b013370ded2d8329e5b444417e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.accessPolicy.update"
@@ -181,15 +168,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -198,11 +182,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnoderoot",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeRoot",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -210,7 +193,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "fc8716c62ed319f3b23cfd8abd79767e3ff6ed9fcfef642dbd0b9da67a84a2be",
+    "checksum": "b4c92ee7640a1abfea429b1a869bd8e51d46a4533375040104ff320498d69551",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -228,15 +211,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -245,11 +225,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodesecdiscoveraxis",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeSecdiscoverAxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -257,7 +236,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "45e5a9e35de1f99b6068d513933b2f8e6525c336f5ca1458366fec108e2564c4",
+    "checksum": "c85235e5af16009e3f78b0d5d308899e690a0b9686d8dadabcdf6499ff226180",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -275,15 +254,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -292,11 +268,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodesecbuildandoperateaxis",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeSecbuildAndOperateAxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -304,7 +279,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e981c5c19ea6647ab60a70dfd307438809987e224cdd1ec3220fd4089428ee0c",
+    "checksum": "2d0ef6ac920f82ba89957b6cb0048d293b2f18f989007163bf4440c16b110212",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -322,15 +297,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -339,11 +311,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodesecaxiscapabilities",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeSecaxisCapabilities",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -351,7 +322,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "22197103674e3516a3dd2741a072cc3996cf7e1d5e9dc08a8fa5839f6ed2ff6a",
+    "checksum": "a40bf8c7a38e04095a3f2eb88e7d5d049e552293644602f51b97d3e9eb106968",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -369,15 +340,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -386,11 +354,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodeseccontributetoaxis",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeSeccontributeToAxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -398,7 +365,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ceb57904f49e19252dabeb4c7e3358277541e6660a2f6bcf8c9a2dcee8c41eea",
+    "checksum": "85d4cbbcb1396da4a2bf0fe3d617fbb2b0df6cb54e21873b148e56bea552994f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -416,15 +383,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -433,11 +397,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisoverview",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisOverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -445,7 +408,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f39700fc074bdc08d620cb218a4ad39c7d2f4baeffabb3f6442c4704c5272145",
+    "checksum": "8f391792bd009eca16f000427edb31e6b4af02b9b0dc75fa9d6bcfac55b4b05f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -463,15 +426,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -480,11 +440,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisarchitecture",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisArchitecture",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -492,7 +451,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b5e497a6859adf468b9d99abd59e80f89d7e051a9619c010584717bc29fb7515",
+    "checksum": "f3d0b062a06e82ae6b2f0c651ad9958834f575f379ca03ba7b2ed8722046bb50",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -510,15 +469,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -527,11 +483,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxistechnologystack",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisTechnologyStack",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -539,7 +494,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b7dd97df51bed92c82d16149929d8446394ba7468fe0df605874279ea00e2f8a",
+    "checksum": "373cc96865a6a9cf14a102ae911026896419cbf8d963b6236c497c677a652733",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -557,15 +512,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -574,11 +526,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisdesignsystem",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisDesignSystem",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -586,7 +537,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ce169b1f25f2d606df32348e35df790fe9a1b24be290de89a56e2ddab2478aef",
+    "checksum": "7619f906d236a85e751ad20cc540891a8d0e4afcdea0bd15d1043a55beea517a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -604,15 +555,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -621,11 +569,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxiscmsrenderers",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisCmsRenderers",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -633,7 +580,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d9c0ffff567b5965bf573be3026d3cc88db7cc116d05ed94714e4d2f80218ebb",
+    "checksum": "849f8c0e05651933d8f19f248bacfaa48d1610dc09b24d76596eb483ed5aaae3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -651,15 +598,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -668,11 +612,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisdocumentationcontent",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisDocumentationContent",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -680,7 +623,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "450fcf17346ee02945a7e632a502bab3c66195030e465b7b22bebd0713ad2e3c",
+    "checksum": "adc865b2a12e635d7c8714b4942722fe9f021dc13674065e08485311e5273fda",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -698,15 +641,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -715,11 +655,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisemployeeaccess",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisEmployeeAccess",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -727,7 +666,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "424e707bead204ce803ff8c62d62eeeac667cc13bfd0dae50d4395cd2a5ee3b6",
+    "checksum": "3c1ee7e56eae61f332f713e6615d5908bfcbc20ca5ea47b6d5bcdbb05ac0972b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -745,15 +684,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -762,11 +698,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisassistant",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisAssistant",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -774,7 +709,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "408d20591e3866dc05681184dff8c9653949c96d88228d908f9b4558d1a3bc1b",
+    "checksum": "1c8e6f81c4d7733164ce3323bfb7c75671b9d34c20304d467eb02d03cf500664",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -792,15 +727,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -809,11 +741,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisschemaworkbench",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisSchemaWorkbench",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -821,7 +752,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b9704efb37106f6631fbb1b994e557198699ffec058bfd78982482fb62fa8079",
+    "checksum": "d4034022d07878345b122f36cc683194fa132f7f578c33becffcb36bea957a8b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -839,15 +770,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -856,11 +784,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxispagedesigner",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisPageDesigner",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -868,7 +795,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "93131854aa5a2911bc8addb8701595ad6d63eea80c3c7bc677d1ffb160c657f3",
+    "checksum": "1d3126710d8d60d81da3afd878bf1a618147eabf5d04c7a490a0cc0ad42b9f91",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -886,15 +813,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -903,11 +827,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisexperiencestudio",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisExperienceStudio",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -915,7 +838,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "cc1149c2c13d94bb992f2e2b15bad8b663ad79f8533c1c4454c2cbaa3ee6951d",
+    "checksum": "9bd2153b153d5f7b5c137fdf18a6a0a50aa973c40a98aa12ab0c87f72d0a005b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -933,15 +856,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -950,11 +870,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxismodulehealth",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisModuleHealth",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -962,7 +881,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "521e23e40ec32abcfda44b79f0587952381a5985b0981bfdc6b1aefe216b9a8e",
+    "checksum": "d42fb6dc1f6bdab044f1dfba18e17c55b86ea854055954978ca6cd8d201d5fdb",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -980,15 +899,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -997,11 +913,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisimportsexports",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisImportsExports",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1009,7 +924,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b5ef386e14ee0f48c357425e1bae69a254b4c2440b99c45fff77c0aaaf0b60ee",
+    "checksum": "a01f7f2458e1924e469cc48e0bf03e76e89e4cc83b997ec460ee5ec639642441",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1027,15 +942,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1044,11 +956,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxismediamanagement",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisMediaManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1056,7 +967,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "afbb4f14ef4abcdfef7ef98f67ec0092f5587c33f7ed1fc3ee802394bf76af05",
+    "checksum": "264de48cf5bf549b9c9c1d3eb3c3fac3b1835ddca51c9127e338fa04ebe563e4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1074,15 +985,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1091,11 +999,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxiscustomerengagement",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisCustomerEngagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1103,7 +1010,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "56ace911a37de9d0241f037c4d0cc5ac6fc8053aecd02577e1d087a1042f0b93",
+    "checksum": "09eab7ae64468e22a907671d9e82d2d20f30c0158adb8e9f5e7af57a6df1a2ec",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1121,15 +1028,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1138,11 +1042,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisopenapireference",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisOpenapiReference",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1150,7 +1053,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "251230526fd76af7c5b044d4c9ba563643043f54a29311b4c87b4889007bfe31",
+    "checksum": "661115b05efdae82c24e2db0b2dfab15b9cf256cbf6092f4bcc4052adcb19be3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1168,15 +1071,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1185,11 +1085,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisfeaturedelivery",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisFeatureDelivery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1197,7 +1096,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "16ed3aec9e5b01d59fdda4a6899cc78717021bab4b84537ab4f4ba7f36e91238",
+    "checksum": "e9812a6618beecc224c08353b80b0b698eff30484ce1feb5ad6bd2361d1a0823",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1215,15 +1114,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1232,11 +1128,10 @@ module.exports = {
     "code": "axisDocsPublicationnodeaxisdocsnodepageaxisimplementationcontract",
     "targetType": "NODE",
     "targetCode": "axisDocsNodePageaxisImplementationContract",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1244,7 +1139,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "085299ce845e90be05ee0672efe453648cc902bdd440b1a17759817ebdc25183",
+    "checksum": "52de9e659e8c98f31cdf0fe029b08c359e5fbb0731c5066e51b560cd0d68b60f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1262,15 +1157,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1279,11 +1171,10 @@ module.exports = {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardproduct",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardProduct",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1291,7 +1182,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6062b5a7c9aafb930838c293b4bb80ab1f208c0b099012b813f8077eb70f436b",
+    "checksum": "49c33afe75b2e7866a9f92a0029e9bc686bcb64f1a172900ae902d8ff349a7e9",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -1307,15 +1198,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1324,11 +1212,10 @@ module.exports = {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardnavigation",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardNavigation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1336,7 +1223,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d587e15b364f08efed2bb058604c0817575c4a4dfc9f41bb738b12a476c50bb5",
+    "checksum": "ceae2b1ee71a945406be95f92d7005dfd4980868cff977e4759a2128c4000d16",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -1352,15 +1239,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1369,11 +1253,10 @@ module.exports = {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardsecdiscoveraxis",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSecdiscoverAxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1381,7 +1264,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a934742ebef0241400a7ae9cf7044aa8077d942d214373a4f66115a7dbc7d524",
+    "checksum": "7c46ef4ec91300fb0a102097fbf6521ade0a0d462cb06a5e8c4f019bd0b0feec",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -1397,15 +1280,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1414,11 +1294,10 @@ module.exports = {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardsecbuildandoperateaxis",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSecbuildAndOperateAxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1426,7 +1305,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9a26371fb7f6ac786ab57ea9e34269d1974e0fe89e20e84ea04343b983dbbfa2",
+    "checksum": "0110b713f6c77b89b5944a4aa434fb00bc885ed8ebc03427e50ee1eaec65054a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -1442,15 +1321,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1459,11 +1335,10 @@ module.exports = {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardsecaxiscapabilities",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSecaxisCapabilities",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1471,7 +1346,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f92b9b061289f681e85df852f10137d266c26d1ab77e1f07ab30836566e5a95e",
+    "checksum": "40ed579957655c645893155353c98ff3b38aa3b11d8274363647ff84a8b7f3b3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -1487,15 +1362,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1504,11 +1376,10 @@ module.exports = {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardseccontributetoaxis",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSeccontributeToAxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1516,7 +1387,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a3e4d28aa61646c608290b9612bf8eb2f4b0578f2f479be078b8853e7e5a0793",
+    "checksum": "c875b91d698dc080303c18d476b8800d270eeeb5fd81a8ce1bafa2c588305d6b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.dashboard.update"
@@ -1532,15 +1403,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1549,11 +1417,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadataoverview",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataoverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1561,7 +1428,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d2f7fa01de6679a35fd1a19f95474af9c4159eeff57eeb57984e131e13fa5289",
+    "checksum": "0e38b80c5813efc9656a45e8073d01e787e127a42cc92359228231fafa04041f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -1579,15 +1446,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1596,11 +1460,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadataarchitecture",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataarchitecture",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1608,7 +1471,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "01ab6c2f053f5b1ec96c31761c0068830849e12dc9de4328b28b57c31d4d76c8",
+    "checksum": "c7edfae1b3e411a543d76d14023513275e20af5552a9e584771675f3fa33bf67",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -1626,15 +1489,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1643,11 +1503,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadatatechnologystack",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatatechnologystack",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1655,7 +1514,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ba9c7776050e6da0a989e32d2c2cece055de6bf10c6e7c53433ea54e7bcdc622",
+    "checksum": "f413bbfa2725f99da89ba795c27485591dfdd83a14b1484c60ad1c68179e8cae",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -1673,15 +1532,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1690,11 +1546,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadatadesignsystem",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatadesignsystem",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1702,7 +1557,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3ccc63979328216e63f2dd02a8df4655be3712292dcec1d98edad5234cf85a85",
+    "checksum": "7214b4dc56dd828e811d41d3682b4875a1823104979fdecee84b2a9012982f80",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -1720,15 +1575,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1737,11 +1589,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadatacmsrenderers",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatacmsrenderers",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1749,7 +1600,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0d5d8f7bd8c3c0cc25e0d61712523ec22e4711e678c120392d0fd920054413d6",
+    "checksum": "e65958ae13099d9de180d7a0f977cdaf1b43a80a2b358ffa14bd5f3933e2e3b7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -1767,15 +1618,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1784,11 +1632,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadatadocumentationcontent",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatadocumentationcontent",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1796,7 +1643,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0719d5b5adcf64f84fc5ab070d46514315a51459afe0d3324ae795b857049b4c",
+    "checksum": "3bf787c6ef40cfd7b86a5a36fb2dd3ab72c1fbbee232120573c278509af4edc0",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -1814,15 +1661,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1831,11 +1675,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadataemployeeaccess",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataemployeeaccess",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1843,7 +1686,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "4bf7ff832bdce82b2daf7623a5456a3aea1f195911baa025f0ac8727a84afa96",
+    "checksum": "6e92cf223b29e2a840e01b2e358dbd9415935424daf4a4ed85668c4fe198ec16",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -1861,15 +1704,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1878,11 +1718,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadataassistant",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataassistant",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1890,7 +1729,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "110672c835f39725f4f0a260d7b491294e1526d8f23a632dcf9b080cdaa02fd5",
+    "checksum": "77687d5dd2b02892d887aed0f5999074eb5432d22ace326bac261654bcb34f41",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -1908,15 +1747,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1925,11 +1761,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadataschemaworkbench",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataschemaworkbench",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1937,7 +1772,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f2cee5dcc1cb9ea4fa438cd7c7a199fd972752c62d4f1613fed378590719487c",
+    "checksum": "5de98e3b2986b29b1e1fb3a18bffe8b0ec7f70f2465fb01ec417371dd8734298",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -1955,15 +1790,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -1972,11 +1804,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadatapagedesigner",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatapagedesigner",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -1984,7 +1815,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "95685390b7ee015fafe86e47d312f07015d0579df2a92f12c4f03bf458fd4c0e",
+    "checksum": "5cf4bcd1925e33695744a0c7c8e9272dbb929c50d51f724f00077cb4715ac1e7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -2002,15 +1833,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2019,11 +1847,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadataexperiencestudio",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataexperiencestudio",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2031,7 +1858,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0968915337139cf37b3655769cd5f64aca749273f0cbf761fc82a1c2e4eb14cb",
+    "checksum": "dbc061c02eb1068a28c0538c4aaed447d535e1e2f937b32861c3779181c0646c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -2049,15 +1876,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2066,11 +1890,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadatamodulehealth",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatamodulehealth",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2078,7 +1901,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "18b3bd33df4f874ecaf6052b1835a93d9cfeffb5a86a3fd4726677fcf25330b0",
+    "checksum": "f6e6a33ded8311c9facfb4e1c93e2a2da3b032d2b5b202d0657910039fc44533",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -2096,15 +1919,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2113,11 +1933,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadataimportsexports",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataimportsexports",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2125,7 +1944,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "947f72ba517ecbdba80ad9aa7945aa22fec4bceb4fd7c5d69a7e3a0ce18f360f",
+    "checksum": "edbb6f8417a36976e5acd3d606a3ecfe5464e42d62ccd1fba83822bbc622d09e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -2143,15 +1962,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2160,11 +1976,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadatamediamanagement",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatamediamanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2172,7 +1987,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8d1570add71e287e6c24fbe622580d5bb996f183c3008fcf758b355aacd440b8",
+    "checksum": "e18b579d5ecd9916f1b206e119a667beffcae99e89c646bb78464cefa9492142",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -2190,15 +2005,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2207,11 +2019,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadatacustomerengagement",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatacustomerengagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2219,7 +2030,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a712e8887656700cad595bd41dfaff1b4864c1ef9ab8ae7c750423329473bb02",
+    "checksum": "4c45e1a8ec1c7361c8cea8be1ae45132d661603e9c6bdda50ee39bb22ba6394a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -2237,15 +2048,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2254,11 +2062,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadataopenapireference",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataopenapireference",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2266,7 +2073,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "20334e66582c9bb8bc475e973cc771cdc6821dd26ca7d8e15438782a559d538f",
+    "checksum": "615a68f6b52de27ec000162aafcbf683ebaaabbf202a047298d6d146d08e7227",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -2284,15 +2091,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2301,11 +2105,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadatafeaturedelivery",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatafeaturedelivery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2313,7 +2116,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0b097c59918ce271996723a5e9589e1fa02b0330896c37bc7121e030eb98764d",
+    "checksum": "520da9a0a5679c87a91718eb0ad137de2f70a006fa4fb70b15b7d3c8e0fac542",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -2331,15 +2134,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2348,11 +2148,10 @@ module.exports = {
     "code": "axisDocsPublicationpageaxisdocsmetadataimplementationcontract",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataimplementationcontract",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2360,7 +2159,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "dd9a3bf0f72ccb669882b4b99f49ed6ea42fe56f93f58f011b618ef0e1fd655e",
+    "checksum": "89470d98babe1e46a81e2e69befc2704cef98da77ffe01a746f6d5345e2a6086",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -2378,15 +2177,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2395,11 +2191,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchproductaxisdocumentationproduct",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchproductaxisdocumentationproduct",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2407,7 +2202,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "939e27c17e94c22b6c06c7329a99ef31803475dba269411565c8c24baca0b8f5",
+    "checksum": "5cda558d0b9740198ed423fd91cba5d1169a8e3299dc3762452400298444786d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2423,15 +2218,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2440,11 +2232,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnavigationaxisdocumentationnavigationmetadata",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnavigationaxisdocumentationnavigationmetadata",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2452,7 +2243,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "64ab71134be88fbb0dd84871925396de5aac69e6de1dd3b9e703faddafba008a",
+    "checksum": "9a1c732dc5debf6933012e6ca046fc23375548828165d7222c9532ed21b26dc1",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2468,15 +2259,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2485,11 +2273,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnoderoot",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnoderoot",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2497,7 +2284,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "c267472b672145ca443edab8255674a5343437bb433340cbf43bf26465db76b0",
+    "checksum": "c10334b5b43ab51b96b01a4dea44d91811e2b51069d86971b2e8428e56a3ab5c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2513,15 +2300,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2530,11 +2314,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodesecdiscoveraxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodesecdiscoveraxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2542,7 +2325,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "44e8cefc32e8e756a7df2e303a643f96bd4e8cc8439e25273a205f71fac8008e",
+    "checksum": "bbb0f673d965b735ad70cfd2d55929418d1f89d434c105aaa3caaae5034b8917",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2558,15 +2341,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2575,11 +2355,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodesecbuildandoperateaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodesecbuildandoperateaxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2587,7 +2366,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "78e665a6b67174931bb6a3a59371a7ce4a10e6ccaf1da27e5b6f484b079a4efa",
+    "checksum": "6829a145b5c69ffa9f0941411f5c82d8dbba6d53361013a8561b5d6f486e6598",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2603,15 +2382,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2620,11 +2396,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodesecaxiscapabilities",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodesecaxiscapabilities",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2632,7 +2407,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "c8c3e7f44c83cae08a35fba860d70c52469a721891ece757a1c02a7eac10ce4e",
+    "checksum": "30e420bdc83bab179d4746ae7033b5de8dda0f7517f805b27a7b1490c8c7e4ab",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2648,15 +2423,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2665,11 +2437,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodeseccontributetoaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodeseccontributetoaxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2677,7 +2448,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "cc5917220d41df3749686a50c905c5c7804f8b16506914568470ddd5e365817d",
+    "checksum": "5c689a7f86ce1cd6346f5f55f50d18c65bdbe49a571d6f5b7d2a0208297c6926",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2693,15 +2464,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2710,11 +2478,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisoverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2722,7 +2489,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "43e664a93d6166f0e5ecf1dbf5a1aad246ba11b60e5fe36c3fe88155fafc475a",
+    "checksum": "2798534f088e38950e83eb845389a6435a6486cbd4022723ff5141a0512818d3",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2738,15 +2505,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2755,11 +2519,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisarchitecture",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisarchitecture",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2767,7 +2530,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9baf34b4f716d149e2b9cb17c325aef3bd1d79ebe2aba77500e6e26bae4f0b68",
+    "checksum": "5f5b9f25d57ce5dec2146a3598748eb0972b5da64588f57c05015065c144c255",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2783,15 +2546,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2800,11 +2560,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxistechnologystack",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxistechnologystack",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2812,7 +2571,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "003927978a4d04fb807e81cbc3fad5aec5b00fcd3935c75c9666a361b0772790",
+    "checksum": "a006d36b0fc83a2da0a13d1ba36a8a8f198032f54361a2aaa0f311f0ab6330df",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2828,15 +2587,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2845,11 +2601,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisdesignsystem",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisdesignsystem",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2857,7 +2612,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "4584948afde453ae33f41849a62b7e2ab2f31693561e3bd2285a629ab8e784dc",
+    "checksum": "fe431c8ecc30d65f929749492b3be5a60cba54997d2b34e6a8381a75c34a98f0",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2873,15 +2628,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2890,11 +2642,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxiscmsrenderers",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxiscmsrenderers",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2902,7 +2653,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "c9acd1dc3a75551af3091c7d63cfb50f9cf37c47c9cd8eea65d04eb10646883e",
+    "checksum": "3949bdce5c7e4e3be6259dd0f057a1c6036155633b3a72a943ef2b864df89417",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2918,15 +2669,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2935,11 +2683,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisdocumentationcontent",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisdocumentationcontent",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2947,7 +2694,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "4904174953e983efe15cda5a260ee953c9875cad4e359e5ab934dafa34791bc2",
+    "checksum": "989885cdc42f4aafb16b456c30cced146e0e718e365b27d4c811303c0fac2821",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -2963,15 +2710,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -2980,11 +2724,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisemployeeaccess",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisemployeeaccess",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -2992,7 +2735,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "98939508ba875e44b3263ae03d0886226372aafd3906290220d133f4f531370c",
+    "checksum": "2f70975f1753b2a98fea9d237c4a5549f879b4670d2174215cb3ca677e449701",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3008,15 +2751,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3025,11 +2765,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisassistant",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisassistant",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3037,7 +2776,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8ea536dec14a53cdd3d4c256ca93057a5feea84b1e55e07c2877315df9247cf5",
+    "checksum": "46db581c33c567fbbfc92735b66c9854fca10d48f2c1f64c73a5c0eeecfddf57",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3053,15 +2792,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3070,11 +2806,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisschemaworkbench",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisschemaworkbench",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3082,7 +2817,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "21354b741e9ca239a6d18be40a08b9c726a3dfa01a6e811a1f4196cedeec3ed8",
+    "checksum": "ebf73d9ed392328453a4176400225dffabadf68780b891f0d73f770f8066a1c7",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3098,15 +2833,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3115,11 +2847,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxispagedesigner",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxispagedesigner",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3127,7 +2858,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b587f934b26dd001cc568c39f7a2617a67f52762fdc221a7b1503bb7c26624f1",
+    "checksum": "21ae12368d7de4da30e0b3fa8df733391dc0b68f10d56f524bf423b492108924",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3143,15 +2874,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3160,11 +2888,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisexperiencestudio",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisexperiencestudio",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3172,7 +2899,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "470fbb38267e5d1eba8f26bb540417ff7d2f051776200f0c2c9eb303edd4c7de",
+    "checksum": "a0829dcd78edc0c387b41a49c2cc8864dc33778a29ba53c84541d5c063ada877",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3188,15 +2915,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3205,11 +2929,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxismodulehealth",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxismodulehealth",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3217,7 +2940,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d6413102737872d52e773f993450c82dc23edb505f3c9d49ea9a78cc66d886a4",
+    "checksum": "2ee69efbdd1c2ccdca6f2e576a669efcd5fb5ceb93a7b7de01e1a2254b1d57b8",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3233,15 +2956,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3250,11 +2970,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisimportsexports",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisimportsexports",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3262,7 +2981,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "cff64563263a24a5bb05be257e92e850b9492a109b4d1c0b8d348cba0d0666fd",
+    "checksum": "132c26348e554a36d7b964a323deb43c580f4515351958db1673dd1bd779f70a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3278,15 +2997,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3295,11 +3011,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxismediamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxismediamanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3307,7 +3022,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9c937b5f02cb3d2b4cc1552ddc812d3d9052fd4f56d685f91f2670daf6656754",
+    "checksum": "255bc6d4ab46b6fb6f256236171fd65bf2726db9dfe37476f7a2f455265d8234",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3323,15 +3038,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3340,11 +3052,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxiscustomerengagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxiscustomerengagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3352,7 +3063,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f6f88f4ec30a53d335f237b37c41744689a9d7cee3729c3baea2811c3e68971b",
+    "checksum": "bef03436283c1a13b591751e1b5ebde00a1e965a730b95f8a839de0327e3a528",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3368,15 +3079,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3385,11 +3093,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisopenapireference",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisopenapireference",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3397,7 +3104,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "5d2a4b44162f0af2920367311bab8538ed355740b613024a1e69b388cb7d58e8",
+    "checksum": "1425be194559cea7750cd23df4e8eff14a40bf9d6a6b9c7bc8602fb9b2fcc51e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3413,15 +3120,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3430,11 +3134,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisfeaturedelivery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisfeaturedelivery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3442,7 +3145,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "c7f0f669bb1d8f2063d5380e96990d22b4d4b68ba8fc071cd054edf9f36b5c5f",
+    "checksum": "7e30f20daf5e6f1cdcc0c24c8b26c48744a1e45301655f1ded72005c3887c9f2",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3458,15 +3161,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3475,11 +3175,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisimplementationcontract",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisimplementationcontract",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3487,7 +3186,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "409774857253a34bb5b5596208d9c5055286becc5f1b442a852625c1e95b4be0",
+    "checksum": "a19c8e8b89b8046b445b365b183f0f35b0b1c4f777f8b49287c31f9ad103f846",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3503,15 +3202,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3520,11 +3216,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardproduct",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardproduct",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3532,7 +3227,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6f0e8750e576d4777358eb376d2b808c90b7e042dc2fecdd628ee875ae637a8b",
+    "checksum": "93faf6ae2d3cc981462f17e2fdc4b3eb9f62acc3272c4d33015a4ce068091683",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3548,15 +3243,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3565,11 +3257,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardnavigation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardnavigation",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3577,7 +3268,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3256545786238d5b0f1390a0740054e2d3a83ff91fabe8c62a03dbaaa30dbddf",
+    "checksum": "ac52354f178ca470424b42370b32456b967685f5b017cf50c2f9adc546f7e13a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3593,15 +3284,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3610,11 +3298,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardsecdiscoveraxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardsecdiscoveraxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3622,7 +3309,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1b40159a91d62f6ee5c511b11d0425f496a6340127f4c0b4510318f7759170e8",
+    "checksum": "a615a80bc213dbb922079473cb5ac53fcddb99b773c4cbe8b564007d35d8684d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3638,15 +3325,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3655,11 +3339,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardsecbuildandoperateaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardsecbuildandoperateaxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3667,7 +3350,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "648118c898b9ffad4dd6e08f4be3a74a01d2ce8344451b4648c69fc2ca1f3be4",
+    "checksum": "b6b739be9e55cf0bc8c80fe1d62b73d72b329a5ca1b1eea67ff80aa4b78c6531",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3683,15 +3366,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3700,11 +3380,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardsecaxiscapabilities",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardsecaxiscapabilities",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3712,7 +3391,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1ef2a4d2e58714d37c7fee99b2e85da274c1ca7e5ef125f22e7bbc8f6c438efd",
+    "checksum": "cb272c3712abd9ec08ba5eec608fbfa2a3ee0e6b1f9175a7da84d42de5d9a7c9",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3728,15 +3407,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3745,11 +3421,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardseccontributetoaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardseccontributetoaxis",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3757,7 +3432,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "558a30b97ead0764e57c3ab6aa1a3614084c608250758702232424de1c008afc",
+    "checksum": "27996b9cff1fd248d4cf2b469c9086cd34c40143c527ceae076c3b5e71740d5e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3773,15 +3448,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3790,11 +3462,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataoverview",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3802,7 +3473,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "fa752760f0e4352483022a400bcbdb9f14e2b6d469e37abc04573d39d7eeba84",
+    "checksum": "20ae9d07532ceb2eb8e3d68b515073af3ba58a04841333f07025349895b50e0b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3818,15 +3489,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3835,11 +3503,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataarchitecture",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataarchitecture",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3847,7 +3514,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "98c17070806ee1cce7f4f8b5ce9de8661297f62c8dd7dd0493e2b16a79d7329c",
+    "checksum": "bcdd7c0a0d602295e25938e66d319ae5418abefd597bda96bdee5111dee80eda",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3863,15 +3530,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3880,11 +3544,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatatechnologystack",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatatechnologystack",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3892,7 +3555,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "51388d9b220d790a840c09e3c7be06f959ddeb106081a15a2eba92dda038719f",
+    "checksum": "050c5ecbc7ea6cde874928f7e0e5e361f8e86891c2ad439c22084a2407826f13",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3908,15 +3571,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3925,11 +3585,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatadesignsystem",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatadesignsystem",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3937,7 +3596,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "fb791fcf952f27b9ac566b4144be37c5e91a2d90b2fff61c9f47fda86d5ddf57",
+    "checksum": "9fd24b89c6720a84ebc772322e8876a1ee520e7a51c1ba5ca1c2c5e017d84346",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3953,15 +3612,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -3970,11 +3626,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatacmsrenderers",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatacmsrenderers",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -3982,7 +3637,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b0978a01983ed827b808622b4bc57c5d48dd522805521038ba20ad9330c441d2",
+    "checksum": "9ec77f47a5631b0bf69f7426625ae4febfd7a69c91529227b684db7d8583181a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3998,15 +3653,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4015,11 +3667,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatadocumentationcontent",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatadocumentationcontent",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4027,7 +3678,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "7a2b880566db2c2bf8664cc16cc1d6407803a576187d9d2fe8ee33d795a92797",
+    "checksum": "051e1210b5fbcb2c02072a5d415571023c4180a095ea5c9ff208cd5e9de14134",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4043,15 +3694,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4060,11 +3708,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataemployeeaccess",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataemployeeaccess",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4072,7 +3719,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e5c59884e894a8516a97989f66ec0b5116c1565be7416bbb3b2524a75edab966",
+    "checksum": "1c28111f371487cdc0e1b8a4fa378cb684bba44ec707f88e4dc5dedad703696d",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4088,15 +3735,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4105,11 +3749,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataassistant",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataassistant",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4117,7 +3760,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "459f11ddf82c15c572d6e8a3e5b620dadceed179fb2f3866015e3b1d9db795ac",
+    "checksum": "8085d565a893cbdb813a65d541ed1c3ab2d8dd0f3501925605d426f92ae22062",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4133,15 +3776,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4150,11 +3790,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataschemaworkbench",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataschemaworkbench",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4162,7 +3801,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e33e1e2f6f0e1427bf30a8c7c0820f70c277acb092aadb35769cc9b716a9d77a",
+    "checksum": "9f11f567451bf7bb03d2592668ccd8fc99842aca928fb1c1bca4aa9e9dd9cc65",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4178,15 +3817,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4195,11 +3831,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatapagedesigner",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatapagedesigner",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4207,7 +3842,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ce96a209892e71bb4032261e63fc4a4beb46e02628c1b9f42565323af462419c",
+    "checksum": "0480c7e172dbe1edb4265e928d6cded1f7cd35c8a29c3e6166637dc8b908f42a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4223,15 +3858,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4240,11 +3872,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataexperiencestudio",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataexperiencestudio",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4252,7 +3883,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0d2c4d1d67bc4567c37bee48299a30273b2a71f67e4a44483486ec41a498b80c",
+    "checksum": "3f55c04d55744611257578d10271ef5f2b40b1b5519b9ca7f478a883ff740ff4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4268,15 +3899,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4285,11 +3913,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatamodulehealth",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatamodulehealth",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4297,7 +3924,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a52d048c2294c2ec27d73d30d66ff96b4f7dcde7c5f13d40ed322c0b4ab324c0",
+    "checksum": "6a5a0fe15ae1f822672a460dbd6d3b975c396a427b6767a0d8d32d39f803a58f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4313,15 +3940,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4330,11 +3954,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataimportsexports",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataimportsexports",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4342,7 +3965,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "aaaf2adc419f8b9d1b8bea3f8529fffa20cc59ff701d03cbfb3704699a02a4f4",
+    "checksum": "27ba4ffa5b071a45d5b08af7b6763e243b438d312f01b386ad48d290de6b2478",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4358,15 +3981,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4375,11 +3995,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatamediamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatamediamanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4387,7 +4006,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9483350e3399e01f9acfac013ca064da10b52c786ae441f95258b03489edce00",
+    "checksum": "6b598df2c0d10320d56296a726b87bd97ac3ce418e46097c78eb1298c9f31f19",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4403,15 +4022,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4420,11 +4036,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatacustomerengagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatacustomerengagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4432,7 +4047,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "52ddbb0d3111e12569101d3dc8234432550e7cee733edb22309cbd51ed2fff49",
+    "checksum": "4988a3dea1d43f8f9193dd7c94793e836742396923a41939021ffe091557f3de",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4448,15 +4063,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4465,11 +4077,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataopenapireference",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataopenapireference",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4477,7 +4088,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "75ffd9978a86f051cd2faff9204356e137f05a46db9a94071688ad5569ca7fd1",
+    "checksum": "aae252276f889ecbd1fa89741af1bed6fea5a1536f120e8a074a7734be25ba2a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4493,15 +4104,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4510,11 +4118,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatafeaturedelivery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatafeaturedelivery",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4522,7 +4129,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "37e5365a79598cf7939f3451f917afeb44f4f6250282835e8d1483758955883b",
+    "checksum": "03f190c38b12a161183b2b8d4689250746269984a30d8bc4cee4f397b1272028",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4538,15 +4145,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true
@@ -4555,11 +4159,10 @@ module.exports = {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataimplementationcontract",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataimplementationcontract",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
-    "onlineVersion": "0.0.3",
+    "stagedVersion": "0.0.2",
     "previousOnlineVersion": "",
     "validationResult": {
       "generated": true,
@@ -4567,7 +4170,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "af0bdb95346ef86c87ea7507f7f8b9f9103aac90c45f2008fa2fb1b83be46ae7",
+    "checksum": "0d63f1ead0199fbede591054e675ab0a11525bc9a85ba7910d28a30670ee2db4",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -4583,15 +4186,12 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
+    "actor": "axis.source-maintainer",
+    "author": "axis.source-maintainer",
     "submittedBy": "",
     "submittedAt": "",
-    "reviewer": "",
     "reviewedAt": "",
-    "approver": "",
     "approvedAt": "",
-    "publisher": "",
     "publishedAt": "",
     "auditTrail": [],
     "active": true

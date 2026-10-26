@@ -40,6 +40,10 @@ selected for this Store by Pricing's existing delivery policy. Its validity must
 cover the listing window. No book, currency, timing, Store or reward selection is
 invented. A Product already priced in this book conflicts rather than replacing
 its policy. The original pointer version/revision is the CAS precondition.
+An absent listing start means immediate availability and is checked against the
+current time, not negative infinity: an already active book can support it. The
+retained listing start remains absent. Future books still require a compatible
+explicit start; an absent listing end cannot outlive a bounded book.
 Concurrent book changes refuse and remain reconciliation; they never authorize
 unconditional overwrite or rebase of an attempted retained receipt.
 

@@ -1,9 +1,9 @@
 # commsFoundation Agent Contract
 
-Keep canonical notification guidance in the selected v002 CMS source record pack,
-not only README contracts. Preserve sealed v001 files and business-release bytes.
-Successor technical summaries must reference the selected sourcePath, not the
-sealed predecessor; update dependent checksums and test the rendered reference.
+Keep canonical notification guidance in the consolidated docs-v001 CMS source
+record pack and technical summaries aligned with its selected sourcePath.
+Unreleased snapshots are consolidated by record identity; preserve latest intent,
+separate selection sections and refreshed checksums without duplicate imports.
 Transfer, coupon, auction and gift dispatch adapters revalidate exact Profile
 recipients; selected Employees use the existing inbox namespace, never fabricated
 Customer ownership. Source/unit integration is not installed or live acceptance.
@@ -39,3 +39,6 @@ rendering. Use module-owned `src/templates` files, indexed/raw discovery, typed
 escaped parameters and immutable private rendered content. Do not put HTML in
 configuration, activate domain services for files or add a second template/module
 registry. Keep legacy text compatibility and override evidence.
+
+
+Remote dispatch eligibility is an explicitly selected inert domain endpoint, not a fallback from missing local services. Keep frozen metadata, internal authentication, secure defaults, response binding and existing suppression/retry handling; never transmit content or caller credentials.

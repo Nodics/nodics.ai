@@ -21,7 +21,7 @@ const participant = require("../src/service/defaultLoyaltyParticipantService");
 const clone = value => structuredClone(value);
 
 function fixture(t) {
-  const previous = ["SERVICE", "CONFIG", "CLASSES"].map(key => [key, Object.getOwnPropertyDescriptor(global, key)]);
+  const previous = ["SERVICE", "CONFIG", "CLASSES", "UTILS"].map(key => [key, Object.getOwnPropertyDescriptor(global, key)]);
   t.after(() => previous.forEach(([key, descriptor]) => {
     if (descriptor) Object.defineProperty(global, key, descriptor);
     else delete global[key];
@@ -45,7 +45,10 @@ function fixture(t) {
         return { code: "SUC_TEST_READ", result: row ? [clone(row)] : [] };
       },
       save: async request => {
+        await require("../../../../nodics.foundation/modules/nDatabase/database/src/service/interceptors/defaultInterceptorService")
+          .setUpdatedTimestamp(request, {});
         assert.equal(request.options.upsert, false);
+        assert.equal(request.options.insertOnly, request.query ? undefined : true);
         assert.equal(request.authData.principalType, "service");
         const row = clone(request.model), key = request.tenant + ":" + row.code, old = map.get(key);
         if (state.beforeSave) await state.beforeSave(request);
@@ -92,7 +95,7 @@ function fixture(t) {
     capture: async request => {
       assert.equal(owner.ownsSourceRequest(request), true);
       assert.equal(request.authData.principalType, state.actorType || "customer");
-      assert.equal(request.providerReference, "credit-receipt");
+      assert.equal(request.providerReference, state.expectedProviderReference || "credit-receipt");
       if (state.failCapture) { state.failCapture = false; throw Error("capture interrupted"); }
       let result = state.postings.get(request.idempotencyKey);
       if (!result) {
@@ -206,6 +209,156 @@ function fixture(t) {
   const read = (name, code) => state.stores[name].get("tenant-a:" + code);
   return { state, owner, provider, source, config, auth, quoteRequest, command, read, terminal };
 }
+
+/** Composes the real save initializer with an isolated atomic storage adapter.
+ * Generated primary-code lookup is present even on creation; no live I/O occurs.
+ */
+function generatedConversionPersistence(f) {
+  const initializer = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/procs/save/defaultModelSaveInitializerService");
+  global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
+  const rows = f.state.stores.conversions;
+  const calls = { creates: 0, updates: 0, loseCreateAcknowledgement: false, race: undefined };
+  const rawSchema = require("../src/schemas/schemas").loyaltyWallet.loyaltyPartnerRewardConversionRecord;
+  SERVICE.DefaultLoyaltyPartnerRewardConversionRecordService.save = async request => {
+    await require("../../../../nodics.foundation/modules/nDatabase/database/src/service/interceptors/defaultInterceptorService")
+      .setUpdatedTimestamp(request, {});
+    assert.equal(request.options.upsert, false);
+    assert.equal(request.options.recursive, false);
+    assert.equal(request.options.skipItemCache, true);
+    assert.equal(request.authData.principalType, "service");
+    const key = request.tenant + ":" + request.model.code;
+    const schemaModel = {
+      rawSchema,
+      compareAndSetItem: async input => {
+        calls.creates++;
+        assert.equal(input.operation, "create");
+        assert.equal(input.insertOnly, true);
+        if (calls.race) { rows.set(key, calls.race(clone(input.model))); calls.race = undefined; }
+        if (rows.has(key)) throw Object.assign(Error("duplicate"), { code: 11000 });
+        rows.set(key, clone(input.model));
+        if (calls.loseCreateAcknowledgement) {
+          calls.loseCreateAcknowledgement = false;
+          throw Error("acknowledgement lost");
+        }
+        return clone(input.model);
+      },
+      saveItems: async input => {
+        calls.updates++;
+        assert.notEqual(input.options.insertOnly, true);
+        const old = rows.get(key);
+        if (!old || !Object.entries(input.query).every(([field, value]) => old[field] === value)) {
+          throw new CLASSES.NodicsError("ERR_MDL_00005");
+        }
+        rows.set(key, clone(input.model));
+        return clone(input.model);
+      },
+    };
+    const result = await initializer.persistModel.call(initializer, {
+      ...request, query: request.query || { code: request.model.code }, schemaModel,
+    });
+    return { code: "SUC_TEST_SAVE", result };
+  };
+  return calls;
+}
+
+test("generated save initializer inserts first quote and recovers lost acknowledgement without replacement", async t => {
+  const f = fixture(t), calls = generatedConversionPersistence(f);
+  calls.loseCreateAcknowledgement = true;
+  const quote = await f.owner.quote(f.quoteRequest());
+  assert.equal(quote.status, "QUOTED");
+  assert.equal(f.state.stores.conversions.size, 1);
+  assert.deepEqual(await f.owner.quote(f.quoteRequest()), quote);
+  assert.equal(calls.creates, 1);
+  assert.equal(calls.updates, 0);
+  assert.equal(f.state.reserves, 0);
+  assert.equal(f.state.executeCalls, 0);
+});
+
+test("generated insert-only duplicate recovers exact winner and rejects conflicting intent", async t => {
+  const f = fixture(t), calls = generatedConversionPersistence(f);
+  calls.race = row => row;
+  const quote = await f.owner.quote(f.quoteRequest());
+  const retained = clone(f.read("conversions", quote.conversionCode));
+  assert.equal(calls.creates, 1);
+  assert.equal(calls.updates, 0);
+  assert.equal(f.state.stores.conversions.size, 1);
+  await assert.rejects(f.owner.quote(f.quoteRequest({ amount: "11.00" })), { code: "ERR_LOYALTY_CONVERSION_CONFLICT" });
+  assert.deepEqual(f.read("conversions", quote.conversionCode), retained);
+  calls.race = row => ({ ...row, intent: { ...row.intent, amount: "12.00" } });
+  await assert.rejects(f.owner.quote(f.quoteRequest({ idempotencyKey: "racing-conflict" })),
+    { code: "ERR_LOYALTY_CONVERSION_CONFLICT" });
+  assert.equal(calls.creates, 2);
+  assert.equal(calls.updates, 0);
+});
+
+test("generated transition keeps exact revision/status predicates and cannot recreate or overwrite a stale row", async t => {
+  const f = fixture(t), calls = generatedConversionPersistence(f);
+  const quote = await f.owner.quote(f.quoteRequest());
+  const row = f.read("conversions", quote.conversionCode);
+  assert(row);
+  const context = await f.owner.context(f.command(quote.conversionCode), "status");
+  const advanced = { ...row, revision: row.revision + 1, status: "EXPIRED" };
+  await f.owner.persist(context, advanced, row);
+  await assert.rejects(f.owner.persist(context, { ...row, revision: 1, status: "HOLDING" }, row), { code: "ERR_MDL_00005" });
+  assert.deepEqual({ ...f.read("conversions", row.code), updated: advanced.updated }, advanced);
+  await assert.rejects(f.owner.persist(context, { ...advanced, revision: 2, status: "HOLDING" },
+    { ...advanced, status: "QUOTED" }), { code: "ERR_MDL_00005" });
+  assert.deepEqual({ ...f.read("conversions", row.code), updated: advanced.updated }, advanced);
+  f.state.stores.conversions.delete("tenant-a:" + row.code);
+  await assert.rejects(f.owner.persist(context, advanced, row), { code: "ERR_MDL_00005" });
+  assert.equal(f.state.stores.conversions.size, 0);
+  assert.equal(calls.creates, 1);
+  assert.equal(calls.updates, 4);
+});
+
+test("persisted BSON identity never enters transition writes or owner acknowledgement comparisons", async t => {
+  const f = fixture(t);
+  const calls = generatedConversionPersistence(f);
+  const quote = await f.owner.quote(f.quoteRequest());
+  const { ObjectId } = require("mongodb");
+  const mongo = require("../../../../nodics.foundation/modules/nDatabase/mongodb/src/schemas/model").default;
+  const initializer = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/procs/save/defaultModelSaveInitializerService");
+  const retainedId = new ObjectId();
+  const key = "tenant-a:" + quote.conversionCode;
+  f.state.stores.conversions.get(key)._id = retainedId;
+  global.UTILS = { isBlank: value => !value || Object.keys(value).length === 0 };
+  let writes = 0;
+  SERVICE.DefaultLoyaltyPartnerRewardConversionRecordService.save = async request => {
+    await require("../../../../nodics.foundation/modules/nDatabase/database/src/service/interceptors/defaultInterceptorService")
+      .setUpdatedTimestamp(request, {});
+    const schemaModel = {
+      ...mongo,
+      rawSchema: require("../src/schemas/schemas").loyaltyWallet.loyaltyPartnerRewardConversionRecord,
+      dataBase: { getOptions: () => ({ modelSaveOptions: { upsert: true, returnDocument: "after" } }) },
+      transactionOptions: () => ({}),
+      findOneAndUpdate: async (query, update, options) => {
+        assert.equal(options.upsert, false);
+        assert.deepEqual(Object.keys(query).sort(), ["code", "revision", "status"]);
+        // MongoDB refuses changing its immutable identifier, including a cloned BSON object.
+        assert(!Object.hasOwn(update.$set, "_id"), "owner must not $set storage identity");
+        const old = f.state.stores.conversions.get(key);
+        if (!old || !Object.entries(query).every(([field, value]) => old[field] === value)) return { ok: 1, value: null };
+        writes++;
+        const saved = { ...clone(update.$set), _id: retainedId };
+        f.state.stores.conversions.set(key, saved);
+        return { ok: 1, value: saved };
+      },
+    };
+    const result = await initializer.persistModel.call(initializer, { ...request, schemaModel });
+    return { code: "SUC_TEST_SAVE", result };
+  };
+  const result = await f.owner.confirm(f.command(quote.conversionCode));
+  assert.equal(result.status, "COMPLETED");
+  assert(writes > 1);
+  assert.equal(calls.creates, 1);
+  assert.equal(f.state.executeCalls, 1);
+  assert.equal(f.state.captures, 1);
+  assert.equal(f.state.stores.conversions.get(key)._id, retainedId);
+  const before = writes;
+  assert.deepEqual(await f.owner.confirm(f.command(quote.conversionCode)), result);
+  assert.equal(writes, before);
+  assert.equal(f.state.executeCalls, 1);
+});
 
 test("durable quote and confirmation spend once; output never exposes private account/provider bindings", async t => {
   const f = fixture(t), request = f.quoteRequest(), original = clone(request);
@@ -493,4 +646,141 @@ test("transaction composition is mandatory before a quote can be claimed", async
   delete SERVICE.DefaultLoyaltyTransactionService.compose;
   await assert.rejects(f.owner.confirm(f.command(quote.conversionCode)), { code: "ERR_LOYALTY_CONVERSION_UNAVAILABLE" });
   assert.equal(f.read("conversions", quote.conversionCode).status, "QUOTED");
+});
+
+function mockFixture(t, overrides = {}) {
+  const f = fixture(t);
+  const defaults = require("../config/properties").loyalty.partnerRewardConversion;
+  f.config.providers = clone(defaults.providers);
+  f.config.mock = { ...defaults.mock, enabled: true, ...overrides };
+  f.read("integrations", "partner-route").providerKey = "mock";
+  f.read("wallets", "wallet").metadata = { sample: true, testOnly: true };
+  const adapter = { ...require("../src/service/defaultLoyaltyMockPartnerRewardProviderService"), now: () => f.state.clock };
+  SERVICE.DefaultLoyaltyPartnerRewardConversionService = f.owner;
+  SERVICE.DefaultLoyaltyMockPartnerRewardProviderService = adapter;
+  return { ...f, adapter };
+}
+
+test("framework mock defaults are inert and reject malformed overrides and ordinary wallets", async t => {
+  const defaults = require("../config/properties").loyalty.partnerRewardConversion;
+  assert.equal(defaults.enabled, false);
+  assert.equal(defaults.mock.enabled, false);
+  const f = mockFixture(t, { enabled: false });
+  await assert.rejects(f.owner.quote(f.quoteRequest()), /UNAVAILABLE/);
+  f.config.mock.enabled = true;
+  for (const [key, invalid] of [["outcome", "SUCCESS"], ["outcome", "enums"], ["outcome", undefined], ["targetUnit", ""], ["quoteLifetimeMs", 0], ["quoteLifetimeMs", Number.MAX_SAFE_INTEGER]]) {
+    const previous = f.config.mock[key];
+    f.config.mock[key] = invalid;
+    await assert.rejects(f.owner.quote(f.quoteRequest()), /UNAVAILABLE/);
+    f.config.mock[key] = previous;
+  }
+  delete f.read("wallets", "wallet").metadata;
+  await assert.rejects(f.owner.quote(f.quoteRequest()), /INELIGIBLE/);
+  assert.equal(f.state.stores.conversions.size, 0);
+  assert.equal(f.state.reserves, 0);
+});
+
+test("registered mock retains explicit simulation through quote, capture receipt and restart replay", async t => {
+  const f = mockFixture(t, { targetUnit: "SIMULATED_MILES", quoteLifetimeMs: 120000 });
+  const quote = await f.owner.quote(f.quoteRequest());
+  assert.equal(quote.simulated, true);
+  assert.equal(quote.targetUnit, "SIMULATED_MILES");
+  assert.equal(quote.targetAmount, "10.00");
+  assert.equal(new Date(quote.quoteExpiresAt).getTime() - f.state.clock.getTime(), 120000);
+  const row = f.read("conversions", quote.conversionCode);
+  assert.equal(row.simulated, true);
+  assert.match(row.quoteReference, /^simulated:CREDITED:/);
+  f.state.expectedProviderReference = row.quoteReference;
+  f.state.failCapture = true;
+  await assert.rejects(f.owner.confirm(f.command(quote.conversionCode)), /capture interrupted/);
+  assert.equal(f.read("conversions", quote.conversionCode).providerEvidence.simulated, true);
+  // A fresh loader instance and changed defaults cannot rewrite retained outcomes.
+  SERVICE.DefaultLoyaltyMockPartnerRewardProviderService = { ...require("../src/service/defaultLoyaltyMockPartnerRewardProviderService") };
+  f.config.mock.enabled = false;
+  f.config.mock.outcome = "NOT_CREDITED";
+  f.config.enabled = false;
+  const completed = await f.owner.status(f.command(quote.conversionCode));
+  assert.equal(completed.status, "COMPLETED");
+  assert.equal(completed.simulated, true);
+  await f.owner.status(f.command(quote.conversionCode));
+  assert.equal(f.state.captures, 1);
+  assert.equal(f.state.credits, 0);
+  const receipt = [...f.state.postings.values()][0].redemption;
+  assert.match(receipt.providerReference, /^simulated:CREDITED:/);
+  assert.doesNotMatch(JSON.stringify(completed), /private-|credential-binding/);
+});
+
+for (const outcome of ["NOT_CREDITED", "PENDING", "UNKNOWN"]) test(`mock ${outcome} follows the existing protected outcome workflow`, async t => {
+  const f = mockFixture(t, { outcome });
+  const quote = await f.owner.quote(f.quoteRequest());
+  const result = await f.owner.confirm(f.command(quote.conversionCode));
+  assert.equal(result.simulated, true);
+  assert.equal(result.status, outcome === "NOT_CREDITED" ? "REJECTED" : "SUBMITTED");
+  f.config.mock.outcome = "CREDITED";
+  f.config.mock.enabled = false;
+  assert.deepEqual(await f.owner.status(f.command(quote.conversionCode)), result);
+  assert.equal(f.state.captures, 0);
+  assert.equal(f.state.releases, outcome === "NOT_CREDITED" ? 1 : 0);
+  if (outcome === "NOT_CREDITED") assert.equal(f.read("conversions", quote.conversionCode).providerEvidence.cannotCredit, true);
+});
+
+test("mock send-gap recovery is deterministic and rejects cross-tenant or changed quote terms", async t => {
+  const f = mockFixture(t);
+  const quote = await f.owner.quote(f.quoteRequest());
+  const row = f.read("conversions", quote.conversionCode);
+  const request = f.owner.providerRequest({ tenant: "tenant-a" }, row);
+  const expected = await f.adapter.execute(request);
+  f.config.mock.outcome = "NOT_CREDITED";
+  f.config.mock.enabled = false;
+  assert.deepEqual(await f.adapter.reconcile(request), expected);
+  for (const changes of [{ tenant: "tenant-b" }, { targetAmount: "100.00" }, { simulated: false }, { quoteReference: "bad" }]) {
+    await assert.rejects(f.adapter.reconcile({ ...request, ...changes }), /PROVIDER/);
+  }
+  assert.equal(f.state.reserves, 0);
+});
+
+test("mock resumes a submitted send gap with a fresh provider and frozen scenario", async t => {
+  const f = mockFixture(t);
+  const quote = await f.owner.quote(f.quoteRequest());
+  f.state.expectedProviderReference = f.read("conversions", quote.conversionCode).quoteReference;
+  f.adapter.execute = async () => { throw Error("send gap"); };
+  assert.equal((await f.owner.confirm(f.command(quote.conversionCode))).status, "SUBMITTED");
+  SERVICE.DefaultLoyaltyMockPartnerRewardProviderService = { ...require("../src/service/defaultLoyaltyMockPartnerRewardProviderService") };
+  f.config.mock.outcome = "NOT_CREDITED";
+  f.config.mock.enabled = false;
+  const result = await f.owner.status(f.command(quote.conversionCode));
+  assert.equal(result.status, "COMPLETED");
+  assert.equal(result.simulated, true);
+  assert.equal(f.state.captures, 1);
+  assert.equal(f.state.releases, 0);
+});
+
+test("coordinator refuses simulation marker loss and real-provider replacement before spending", async t => {
+  const f = mockFixture(t), originalQuote = f.adapter.quote;
+  f.adapter.quote = async function (request) { return { ...await originalQuote.call(this, request), simulated: false }; };
+  await assert.rejects(f.owner.quote(f.quoteRequest()), /PROVIDER/);
+  f.adapter.quote = originalQuote;
+  const quote = await f.owner.quote(f.quoteRequest());
+  const row = f.read("conversions", quote.conversionCode);
+  const outcome = await f.adapter.execute(f.owner.providerRequest({ tenant: "tenant-a" }, row));
+  assert.throws(() => f.owner.outcome(row, { ...outcome, simulated: false }), /PROVIDER/);
+  f.config.providers.mock = "SyntheticPartnerProvider";
+  await assert.rejects(f.owner.confirm(f.command(quote.conversionCode)), /PROVIDER/);
+  assert.equal(f.state.reserves, 0);
+});
+
+test("mock canonical amount owner can be customized without replacing conversion workflow", async t => {
+  const f = mockFixture(t);
+  let calls = 0;
+  const amount = SERVICE.DefaultLoyaltyAmountService;
+  SERVICE.DefaultLoyaltyAmountService = { ...amount, assertPositive: function (...args) {
+    calls++;
+    return amount.assertPositive.apply(this, args);
+  } };
+  const quote = await f.owner.quote(f.quoteRequest({ amount: "9007199254740993.01" }));
+  assert.equal(quote.targetAmount, "9007199254740993.01");
+  assert.ok(calls >= 3);
+  const schema = require("../src/schemas/schemas").loyaltyWallet.loyaltyPartnerRewardConversionRecord.definition;
+  assert.equal(schema.simulated.type, "bool");
+  assert.equal(schema.simulated.required, true);
 });

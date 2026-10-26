@@ -1,5 +1,14 @@
 # Order
 
+Explicit [Enterprise participant transaction access](llm/contracts/participant-transaction-access.md)
+contributes parent-free owner roles without assigning users or qualifying finance.
+
+The explicit `participantReadAccess` release defines `COMMERCE_OWN_ORDER_READER` with only
+`commerce.order.own.read` and no inherited groups. It installs definitions through
+Profile; assignment requires a separately reviewed Enterprise-scoped operation.
+It grants no mutation, provisioning, funding or reveal authority. See
+[participant reader access](llm/contracts/participant-read-access.md).
+
 Own-order reads resolve the current Profile customer/Enterprise participant and
 check retained typed owner evidence before reading the original Order's entries
 and lifecycle. Merchant storage and signed purchaser context remain distinct;

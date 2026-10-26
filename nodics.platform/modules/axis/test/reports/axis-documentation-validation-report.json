@@ -1,9 +1,10 @@
 {
   "contract": "nodics.documentation.validation/v1",
   "generatedAt": "2026-08-26T00:00:00.000Z",
-  "release": "0.0.3",
+  "release": "0.0.2",
   "source": "nodics.platform/modules/axis/data/manifest.json",
   "owner": "nodics.platform.axis",
+  "validationScope": "AUTHORING",
   "targetAudience": [
     "business-user",
     "administrator",
@@ -263,8 +264,8 @@
         "operator"
       ],
       "passed": true,
-      "target": "public documentation records",
-      "message": "Nexus-visible public documentation records must be Online.",
+      "target": "PRODUCT:axisDocumentationProduct, NAVIGATION:axisDocumentationNavigationMetadata, NODE:axisDocsNodeRoot, NODE:axisDocsNodeSecdiscoverAxis, NODE:axisDocsNodeSecbuildAndOperateAxis, NODE:axisDocsNodeSecaxisCapabilities, NODE:axisDocsNodeSeccontributeToAxis, NODE:axisDocsNodePageaxisOverview, NODE:axisDocsNodePageaxisArchitecture, NODE:axisDocsNodePageaxisTechnologyStack, NODE:axisDocsNodePageaxisDesignSystem, NODE:axisDocsNodePageaxisCmsRenderers, NODE:axisDocsNodePageaxisDocumentationContent, NODE:axisDocsNodePageaxisEmployeeAccess, NODE:axisDocsNodePageaxisAssistant, NODE:axisDocsNodePageaxisSchemaWorkbench, NODE:axisDocsNodePageaxisPageDesigner, NODE:axisDocsNodePageaxisExperienceStudio, NODE:axisDocsNodePageaxisModuleHealth, NODE:axisDocsNodePageaxisImportsExports, NODE:axisDocsNodePageaxisMediaManagement, NODE:axisDocsNodePageaxisCustomerEngagement, NODE:axisDocsNodePageaxisOpenapiReference, NODE:axisDocsNodePageaxisFeatureDelivery, NODE:axisDocsNodePageaxisImplementationContract, DASHBOARD:axisDocsDashboardProduct, DASHBOARD:axisDocsDashboardNavigation, DASHBOARD:axisDocsDashboardSecdiscoverAxis, DASHBOARD:axisDocsDashboardSecbuildAndOperateAxis, DASHBOARD:axisDocsDashboardSecaxisCapabilities, DASHBOARD:axisDocsDashboardSeccontributeToAxis, PAGE:axisDocsMetadataoverview, PAGE:axisDocsMetadataarchitecture, PAGE:axisDocsMetadatatechnologystack, PAGE:axisDocsMetadatadesignsystem, PAGE:axisDocsMetadatacmsrenderers, PAGE:axisDocsMetadatadocumentationcontent, PAGE:axisDocsMetadataemployeeaccess, PAGE:axisDocsMetadataassistant, PAGE:axisDocsMetadataschemaworkbench, PAGE:axisDocsMetadatapagedesigner, PAGE:axisDocsMetadataexperiencestudio, PAGE:axisDocsMetadatamodulehealth, PAGE:axisDocsMetadataimportsexports, PAGE:axisDocsMetadatamediamanagement, PAGE:axisDocsMetadatacustomerengagement, PAGE:axisDocsMetadataopenapireference, PAGE:axisDocsMetadatafeaturedelivery, PAGE:axisDocsMetadataimplementationcontract, SEARCH_METADATA:axisDocsSearchproductaxisdocumentationproduct, SEARCH_METADATA:axisDocsSearchnavigationaxisdocumentationnavigationmetadata, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnoderoot, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodesecdiscoveraxis, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodesecbuildandoperateaxis, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodesecaxiscapabilities, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodeseccontributetoaxis, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisoverview, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisarchitecture, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxistechnologystack, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisdesignsystem, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxiscmsrenderers, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisdocumentationcontent, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisemployeeaccess, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisassistant, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisschemaworkbench, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxispagedesigner, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisexperiencestudio, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxismodulehealth, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisimportsexports, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxismediamanagement, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxiscustomerengagement, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisopenapireference, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisfeaturedelivery, SEARCH_METADATA:axisDocsSearchnodeaxisdocsnodepageaxisimplementationcontract, SEARCH_METADATA:axisDocsSearchdashboardaxisdocsdashboardproduct, SEARCH_METADATA:axisDocsSearchdashboardaxisdocsdashboardnavigation, SEARCH_METADATA:axisDocsSearchdashboardaxisdocsdashboardsecdiscoveraxis, SEARCH_METADATA:axisDocsSearchdashboardaxisdocsdashboardsecbuildandoperateaxis, SEARCH_METADATA:axisDocsSearchdashboardaxisdocsdashboardsecaxiscapabilities, SEARCH_METADATA:axisDocsSearchdashboardaxisdocsdashboardseccontributetoaxis, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadataoverview, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadataarchitecture, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadatatechnologystack, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadatadesignsystem, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadatacmsrenderers, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadatadocumentationcontent, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadataemployeeaccess, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadataassistant, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadataschemaworkbench, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadatapagedesigner, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadataexperiencestudio, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadatamodulehealth, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadataimportsexports, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadatamediamanagement, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadatacustomerengagement, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadataopenapireference, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadatafeaturedelivery, SEARCH_METADATA:axisDocsSearchpageaxisdocsmetadataimplementationcontract",
+      "message": "Authoring records may retain drafts; public delivery still requires Online publication.",
       "remediation": "Keep draft/staged/review records out of public payloads until nPublish activates them Online."
     },
     {
@@ -281,7 +282,7 @@
       "passed": true,
       "target": "cmsDocumentationPublicationState",
       "message": "Publication states must carry lifecycle, checksum, workflow, decision policy, and actor evidence.",
-      "remediation": "Regenerate or repair publication state records with workflow triggers, decisionPolicy, and actor audit fields."
+      "remediation": "Repair workflow triggers, decisionPolicy and lifecycle-appropriate actor evidence; do not fabricate approvals for draft or staged authoring data."
     },
     {
       "id": "publication-state-coverage",
@@ -455,7 +456,7 @@
     "readinessScore": 100
   },
   "integrity": {
-    "checksum": "a5290d94780f994c66f4ba1cd036b2a7826b05aadcbcf38d7f7568be575bab75",
+    "checksum": "242e2d6a6b1d7efb84dddd37efb78c644f20fc81ddce3d3804962f9d35426e95",
     "meaning": "Deterministic digest for validation-report integrity; it is not a production approval signature."
   }
 }

@@ -65,6 +65,14 @@ module.exports = {
     if (!['BUNDLE', 'COUPON'].includes(kind)) throw new Error('Original recovery kind is required');
     const recovery = SERVICE.DefaultCheckoutCompensationRecoveryService;
     const scope = { ...request, commandCode: checkpoint.idempotencyKey };
+    if (checkpoint.results.paymentJournalAttempted) {
+      const ports = SERVICE.DefaultCheckoutPlacementPortsService;
+      const row = await ports.paymentDispatchCheckpoint(request, checkpoint);
+      const evidence = { ...row.evidence, completed: structuredClone(checkpoint.completed), compensation: [],
+        bundleForwardRecovery: { contractVersion: 1, kind, purchaseCodes: units.map(u => u.code), status: 'READY' } };
+      delete evidence.couponAcquisitionRecovery;
+      return ports.persistPlacementCheckpoint(checkpoint, request, { ...row, status: 'COMPENSATION_REQUIRED', evidence });
+    }
     const existing = await recovery.rows(SERVICE.DefaultCheckoutCheckpointService, scope,
       { ownerId: request.ownerId, idempotencyKey: checkpoint.idempotencyKey });
     if (existing.length > 1) throw recovery.failure();

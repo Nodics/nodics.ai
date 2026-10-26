@@ -4,7 +4,7 @@
   "sections": {
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "docs-v002",
+      "contentPath": "docs-v001",
       "pack": "installer",
       "version": "0.0.2",
       "owningDomain": "documentation",
@@ -20,7 +20,7 @@
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "cms-records",
-      "sourceAuthority": "data/docs-v002/records/documentation",
+      "sourceAuthority": "data/docs-v001/records/documentation",
       "sites": [
         "nodicsDocumentationSite"
       ],
@@ -28,16 +28,16 @@
       "pages": 2,
       "components": 2,
       "routes": 2,
-      "releaseChecksum": "7cfd1136dfde08f26533deb4453361126b5ae3218b4e35e2d6aadfb6987abd0a",
+      "releaseChecksum": "bedf51e8b93d8dfd2df10afc540a1eb1680db27996de93a40f0e7ac1b8aa3e60",
       "generatedHashes": {
-        "docs-v002/records/documentation/installerDocumentationNodeData.js": "af72577c90517828b0abfb5115ffeeb5f7677b806e92ddb54d1ca67204852d71",
-        "docs-v002/records/documentation/installerDocumentationPageMetadataData.js": "c9ed8e50f3194523bbbe5c10a50025debe2724b52be6a200f2b7837aef5a2e21",
-        "docs-v002/records/documentation/installerDocumentationPublicationStateData.js": "a2339c75d94afa0a07bc3a8a4a491c6fa090b52c4cc71505de07a59d77bdd5e5",
-        "docs-v002/records/documentation/installerDocumentationSearchMetadataData.js": "6d367cd9d9eab142f67a4a68e4006e999200169c3b519e6e71caaa2aeedf60b9",
-        "docs-v002/records/documentation/installerDocumentationComponentData.js": "1c5550e39c432ff09230d9fbc153c2c4481bf0a19d8b5f1a109ad06bd993c3f4",
-        "docs-v002/records/documentation/installerDocumentationPageData.js": "a110df4b671a0defbd4937fbeb555f70ebd3e7f9e5c8e291f417e8e5ef1544df",
-        "docs-v002/records/documentation/installerDocumentationRouteData.js": "4acc99cfa8e10080d77c8c5fe79db4a41a35108d8cd64513bdd99981f2ad099a",
-        "docs-v002/headers/100_installerDocumentationContentPackHeader.js": "51a79346d2d1059c75f2975d6eb411b2cf888fcf019094b779f0837b36e56099"
+        "docs-v001/records/documentation/installerDocumentationNodeData.js": "af72577c90517828b0abfb5115ffeeb5f7677b806e92ddb54d1ca67204852d71",
+        "docs-v001/records/documentation/installerDocumentationPageMetadataData.js": "6f6748fddf823752653cd7cbdbac34742945b6d188962cbf98c841e64e426284",
+        "docs-v001/records/documentation/installerDocumentationPublicationStateData.js": "f3f5ebc86cf740c204d58fac872f283e233c7e245f5f71d522c70adfa460dc48",
+        "docs-v001/records/documentation/installerDocumentationSearchMetadataData.js": "6d367cd9d9eab142f67a4a68e4006e999200169c3b519e6e71caaa2aeedf60b9",
+        "docs-v001/records/documentation/installerDocumentationComponentData.js": "d4a9b93a58faec1e300d60059bf1c02e7b978e971d76e0c7638ce86e4c81f2ff",
+        "docs-v001/records/documentation/installerDocumentationPageData.js": "a110df4b671a0defbd4937fbeb555f70ebd3e7f9e5c8e291f417e8e5ef1544df",
+        "docs-v001/records/documentation/installerDocumentationRouteData.js": "4acc99cfa8e10080d77c8c5fe79db4a41a35108d8cd64513bdd99981f2ad099a",
+        "docs-v001/headers/100_installerDocumentationContentPackHeader.js": "51a79346d2d1059c75f2975d6eb411b2cf888fcf019094b779f0837b36e56099"
       },
       "includes": [
         {

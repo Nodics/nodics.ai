@@ -59,26 +59,36 @@ test('registers one Digital-owned command and reusable acceptance bound', () => 
   assert.deepEqual(defaults.digitalCore.bundleListings.acceptance, { requestTimeoutMs: 30000 });
 });
 
-test('requires reviewed canonical certificate and realized-carbon selections without rewards', () => {
+test('admits certificate-only, carbon-only and mixed selections without weakening component checks', () => {
   assert.equal(digitalBundlePublicationSelection(options()).selection.manifest.components.length, 2);
   const withoutDescription = selection();
   delete withoutDescription.listing.description;
   assert.equal(digitalBundlePublicationSelection(options({ selection: withoutDescription })).selection.listing.description, undefined);
   for (const components of [
-    [certificate],
+    [],
+    [certificate, certificate],
+    [{ ...certificate, quantity: '2' }],
     [certificate, { ...carbon, kind: 'PROSPECTIVE_CARBON' }],
     [certificate, carbon, { kind: 'REWARD', reference: certificate.reference, quantity: '1', expectedRevision: 1 }],
   ]) assert.throws(() => digitalBundlePublicationSelection(options({ selection: {
     ...selection(), manifest: { ...selection().manifest, components },
-  } })), /COMPONENT|CARBON|PUBLICATION/);
+  } })), /COMPONENT|CARBON|PUBLICATION|QUANTITY/);
+  for (const components of [[certificate], [carbon]]) {
+    assert.deepEqual(digitalBundlePublicationSelection(options({ selection: {
+      ...selection(), manifest: { ...selection().manifest, components },
+    } })).selection.manifest.components, components);
+  }
+  assert.throws(() => digitalBundlePublicationSelection(options({ maximumComponents: 1 })), /MANIFEST/);
   assert.throws(() => digitalBundlePublicationSelection(options({ sessions: {
     ...options().sessions, digitalRuntime: { authorization: 'Bearer digital', enterpriseCode: 'foreign' },
   } })), /SESSION/);
 });
 
-test('creates the exact manifest then proves Digital reservations and Product delegation', async () => {
+for (const selectedComponents of [[certificate], [carbon], [certificate, carbon]]) {
+test('proves exact reservations and Product delegation for ' + selectedComponents.map(value => value.kind).join('+'), async () => {
   const manifestCode = 'bundle:' + hex('a'), operationCode = 'bundle-operation:' + hex('b');
-  const components = [carbon, certificate];
+  const components = [...selectedComponents].sort((left, right) =>
+    JSON.stringify(left.reference).localeCompare(JSON.stringify(right.reference)));
   const product = { confirmed: true, publicationCode: operationCode, productCode: 'product', variantCode: 'variant',
     sku: 'sku', versionId: 0 };
   const terms = { storeCode: 'store', currency: 'POINTS', priceBookCode: 'rewards',
@@ -100,15 +110,17 @@ test('creates the exact manifest then proves Digital reservations and Product de
     calls.push({ url: String(url), init, body: JSON.parse(init.body) });
     return { ok: true, status: 200, json: async () => ({ data: responses.shift() }) };
   };
-  const result = await runDigitalBundlePublicationAcceptance(options({ fetch }));
+  const selected = selection();
+  selected.manifest.components = selectedComponents;
+  const result = await runDigitalBundlePublicationAcceptance(options({ fetch, selection: selected }));
   assert.equal(result.state, 'PASSED');
   assert.equal(result.componentReservationsConfirmed, true);
   assert.equal(result.rewardsIncludedInBundle, false);
   assert.equal(result.productPublicationConfirmed, true);
-  assert.deepEqual(result.componentKinds, ['CERTIFICATE', 'REALIZED_CARBON']);
+  assert.deepEqual(result.componentKinds, [...new Set(selectedComponents.map(value => value.kind))].sort());
   assert.equal(calls.length, 4);
   assert.match(calls[0].url, /\/nodics\/digitalCore\/v0\/bundles$/);
-  assert.deepEqual(calls[0].body.components, [certificate, carbon]);
+  assert.deepEqual(calls[0].body.components, selectedComponents);
   assert.equal(calls[0].body.components.some(component => /REWARD/i.test(component.kind)), false);
   assert.deepEqual(calls[0].body.composition, { mode: 'FIXED', operationKey: 'listing-key',
     terms: { listingContextRef: { code: 'context', revision: 2 }, name: 'Certificate and carbon bundle',
@@ -124,6 +136,7 @@ test('creates the exact manifest then proves Digital reservations and Product de
   assert.equal(calls[3].init.headers.Authorization, 'Bearer product');
   assert.equal(responses.length, 0);
 });
+}
 
 test('returns recovery-required evidence without retrying an uncertain publication', async () => {
   let calls = 0;

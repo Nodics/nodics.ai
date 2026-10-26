@@ -12,9 +12,10 @@ Provider simulators are disabled by default in the framework, and local or
 offline conformance is never a production-provider qualification claim.
 
 For Platform runtimes that explicitly declare `nodics.commerce` as a discovery
-root, Commerce contributes only the Product, Promotion and Order `accessGroups`
-sections and Inventory `specialAccessRoles` section to the Platform data-release
-catalogue. This source visibility does not activate Commerce modules, install the
+root, Commerce contributes its selected owner access definitions to the Platform
+data-release catalogue, including Order and Digital Core `participantReadAccess`
+sections for separately assigned Enterprise readers. This source visibility does
+not activate Commerce modules, install the
 releases, assign roles or grant operational authority.
 
 Read `AGENTS.md`, the contracts and examples, generated context, canonical

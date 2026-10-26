@@ -2,6 +2,32 @@
   "contractVersion": 2,
   "module": "checkoutCore",
   "sections": {
+    "participantTransactionAccess": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "checkoutCore Enterprise participant transactions",
+      "description": "Exact parent-free participant group and Enterprise role; definitions only, no assignment or financial qualification.",
+      "owningDomain": "checkoutCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/010_checkoutCoreParticipantTransactionGroupHeader.js": "9bc23d89614e5d9f81927df752eaf518476f96e8f4efeb8fe2870ce844f6d76c",
+        "init-v001/records/identity/checkoutCoreParticipantTransactionGroupData.js": "efb4051c7dfc9b7c481441e1ada8c46b204e01488b71cae0f6c6842f9abfe65a",
+        "init-v001/headers/identity/020_checkoutCoreParticipantTransactionRoleHeader.js": "d730cbae7743ba61bd7413c1d44a411a2905520b57c03d6c554e2b1be7ea293e",
+        "init-v001/records/identity/checkoutCoreParticipantTransactionRoleData.js": "4a1df061991270b91bda9d1ef1a5e75e6c7377a7fab0d3de43aafb4ad85f4b84"
+      }
+    },
     "enterpriseSpendingAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
@@ -20,24 +46,24 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "init-v002",
+      "sourceRoot": "init-v001",
       "files": {
-        "init-v002/headers/identity/checkoutSpendAccessGroupHeader.js": "65abaa3de0b11c43d5ad77842f14667cb7bb55c8c4ec0025257c4ffcdb398267",
-        "init-v002/records/identity/checkoutSpendAccessGroupData.js": "0702c808f689fc4d94dc8c007d9e60abcb0cdd0d6f83c320ec901e65a196b268"
+        "init-v001/headers/identity/checkoutSpendAccessGroupHeader.js": "65abaa3de0b11c43d5ad77842f14667cb7bb55c8c4ec0025257c4ffcdb398267",
+        "init-v001/records/identity/checkoutSpendAccessGroupData.js": "0702c808f689fc4d94dc8c007d9e60abcb0cdd0d6f83c320ec901e65a196b268"
       },
       "prerequisites": [
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "version": "0.0.3",
+          "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "checkoutCore",
           "sectionCode": "enterpriseSpendingPermission",
           "version": "0.0.2",
-          "checksum": "8bc129fbaff0f7f48b9354e420ab14df5956fc6166622e03788de6475f562b65",
+          "checksum": "72fd14ff78a816913788b75bc0cfa914fe8c87c5f30919fc941bd581f6a97a4c",
           "partition": "DEFAULT"
         }
       ]
@@ -60,17 +86,17 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "init-v002",
+      "sourceRoot": "init-v001",
       "files": {
-        "init-v002/headers/identity/checkoutSpendAccessRoleHeader.js": "efa25138321f0bf6c6c09cf861bef72452213a36419d6fbff68f47f7f04e38bf",
-        "init-v002/records/identity/checkoutSpendAccessRoleData.js": "9edcf08dea426ea6c30e3802a9e845877ef068862b97d7f8c560fa178796e0e2"
+        "init-v001/headers/identity/checkoutSpendAccessRoleHeader.js": "efa25138321f0bf6c6c09cf861bef72452213a36419d6fbff68f47f7f04e38bf",
+        "init-v001/records/identity/checkoutSpendAccessRoleData.js": "9edcf08dea426ea6c30e3802a9e845877ef068862b97d7f8c560fa178796e0e2"
       },
       "prerequisites": [
         {
           "moduleName": "checkoutCore",
           "sectionCode": "enterpriseSpendingAccessGroups",
           "version": "0.0.2",
-          "checksum": "a27052a4e098ee93374c9b37003939804580099b1a44ee7a023bf2357c279608",
+          "checksum": "62e00eef23286153cdaf25a7ed74b9a035c3f4416d14344adc9f8d44c06ed2a9",
           "partition": "DEFAULT"
         }
       ]
@@ -103,6 +129,12 @@
         "catalogCode": "axisContentCatalog",
         "impactMessage": "Presentation only; no access, policy or funds change.",
         "rollbackMessage": "Restore previous governed CMS presentation.",
+        "postPublicationCapabilities": [
+          {
+            "title": "Employee purchase-limit presentation",
+            "description": "Display purchase-limit copy in the existing Enterprise business-access employee panel. Publication does not assign access, select spending policies, change purchase limits or move funds."
+          }
+        ],
         "entities": [
           {
             "type": "cmsComponent",
@@ -142,10 +174,10 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "init-v002",
+      "sourceRoot": "init-v001",
       "files": {
-        "init-v002/headers/identity/checkoutSpendPermissionHeader.js": "0240b8debe3aa84aa17b4f8c1326e9b5156183f2fe2f991a16d305c860d9f94e",
-        "init-v002/records/identity/checkoutSpendPermissionData.js": "811ce8c2093b944093c786a3354970aedb0ad4397b86ba3e2927cb141b21fdd7"
+        "init-v001/headers/identity/checkoutSpendPermissionHeader.js": "0240b8debe3aa84aa17b4f8c1326e9b5156183f2fe2f991a16d305c860d9f94e",
+        "init-v001/records/identity/checkoutSpendPermissionData.js": "811ce8c2093b944093c786a3354970aedb0ad4397b86ba3e2927cb141b21fdd7"
       }
     },
     "permissionCatalogue": {

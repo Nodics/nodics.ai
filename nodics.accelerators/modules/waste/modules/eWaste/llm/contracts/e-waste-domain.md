@@ -546,6 +546,10 @@ not recovery yields, hazard measurements, lifecycle results or carbon credits.
 
 ## Review notification detail links
 
+The eWaste owner defines `outcomeCommunication.detailLinks` as an empty object.
+An unconfigured channel produces no link; configuration must not enable delivery
+or select a deployment destination by default.
+
 `outcomeCommunication.detailLinks` may supply a trusted destination URL and query
 parameter per delivery channel. The immutable submission code is encoded into
 that URL; it selects a record and conveys no authorization. Local Circa uses a
@@ -950,3 +954,14 @@ only: `{type:REWARDS}` or `{type:CERTIFICATES|BOTH,certificates:{quantity,catego
 milestoneCode,brandCodes?,modelCodes?}}`. Unknown/malformed is null and unavailable.
 Copied Product attributes cannot override that result. This is not certificate
 eligibility or a purchase authorization; common Checkout owns final admission.
+
+Coupon list and detail also expose `expiry` exclusively from
+`product.availability.expiry`: FIXED with canonical UTC `at`, explicit NONE,
+or null for unknown/malformed transport. Only FIXED maps to the existing
+`expiresAt` field consumed by ProductContent. Unknown validity is unavailable;
+expired fixed offers are excluded. Product attributes, codes, prose, listing
+windows and runtime time offsets cannot supply or override coupon rights.
+Non-coupon listing expiry keeps its existing Product semantics. The effective
+`couponExpiry` member supports later-layer customization with the same source
+and failure contract. No extra remote read, config property, frontend change,
+immutable-term update or publication replay is required.

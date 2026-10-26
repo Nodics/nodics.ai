@@ -25,6 +25,68 @@ const { isDeepStrictEqual } = require('node:util');
 module.exports = {
     code: 'loyalty-reward-points',
     supportedOperations: ['AUTHORIZE', 'CAPTURE', 'VOID', 'REFUND'],
+    /** Validates exact no-effects evidence from Loyalty; an error or missing record is never a decision. */
+    validateDecision: function (request, response) {
+        let row = response;
+        for (let depth = 0; ; depth++) {
+            if (!row || typeof row !== 'object' || Array.isArray(row) || depth > 5 ||
+                row.error || row.success === false || row.acknowledged === false ||
+                row.errors !== undefined && (!Array.isArray(row.errors) || row.errors.length))
+                this.fail('Original reservation decision is unconfirmed');
+            if (['LOYALTY_RESERVATION_DECISION_V1', 'LOYALTY_RESERVATION_RECONCILIATION_V1'].includes(row.contract)) break;
+            if (row.code !== undefined && !/^SUC_/.test(row.code) ||
+                ['result', 'data', 'decision'].filter(k => Object.hasOwn(row, k)).length !== 1)
+                this.fail('Original reservation decision is unconfirmed');
+            row = row[['result', 'data', 'decision'].find(k => Object.hasOwn(row, k))];
+        }
+        if (!row || row.tenant !== request.tenant ||
+            row.idempotencyKey !== request.idempotencyKey || row.sourceType !== 'PAYMENT' ||
+            row.sourceCode !== request.orderCode || row.targetType !== 'ORDER' || row.targetCode !== request.orderCode ||
+            row.noEffects !== true ||
+            typeof row.code !== 'string' || !row.code) this.fail('Original reservation decision is unconfirmed');
+        if (row.status === 'DENIED' && row.contract === 'LOYALTY_RESERVATION_DECISION_V1') return structuredClone(row);
+        if (row.status !== 'CANCELLED' || row.contract !== 'LOYALTY_RESERVATION_RECONCILIATION_V1')
+            this.fail('Original reservation decision is unconfirmed');
+        if (!request.originalAuthorization || !isDeepStrictEqual(row.intent, request.originalAuthorization))
+            this.fail('Retained original authorization intent is required');
+        const proof = row.proof, intent = row.intent;
+        const amount = value => typeof value === 'string' && /^(0|[1-9]\d*)(\.\d+)?$/.test(value);
+        const stamp = proof?.reconciledAt instanceof Date ? proof.reconciledAt.toISOString() : proof?.reconciledAt;
+        if (!proof || proof.contractVersion !== 1 || proof.method !== 'ATOMIC_LEDGER_RECONCILIATION' ||
+            typeof proof.balanceCode !== 'string' || !proof.balanceCode || !Number.isSafeInteger(proof.balanceRevision) ||
+            proof.balanceRevision < 0 || proof.ledgerCount !== proof.balanceRevision || !/^[a-f0-9]{64}$/.test(proof.ledgerDigest || '') ||
+            typeof stamp !== 'string' || !/^\d{4}-\d{2}-\d{2}T/.test(stamp) || !Number.isFinite(Date.parse(stamp)) ||
+            !['available', 'reserved', 'earned', 'spent', 'expired', 'reversed'].every(k => amount(proof.totals?.[k])) ||
+            !['walletCode', 'programCode', 'rewardTypeCode'].every(k => typeof intent?.[k] === 'string' && intent[k].trim()) ||
+            !amount(intent.amount) || !/[1-9]/.test(intent.amount)) this.fail('Original reconciliation proof is unconfirmed');
+        return { ...structuredClone(row), proof: { ...structuredClone(proof), reconciledAt: new Date(stamp).toISOString() } };
+    },
+    /** Sends original binding to cancel/inspect, or the exact retained authorization tuple to atomic reconciliation. No replacement selection or financial retry. */
+    reservationDecision: async function (request, operation) {
+        if (!['cancel', 'inspect', 'reconcile'].includes(operation)) this.fail('Invalid reservation decision operation');
+        const config = this.providerConfig(), target = config.loyaltyTarget, path = config.reservationDecisionPaths?.[operation];
+        if (typeof path !== 'string' || !path.startsWith('/')) this.fail('Reservation decision route is unavailable');
+        const payload = { idempotencyKey: request.idempotencyKey, sourceType: 'PAYMENT', sourceCode: request.orderCode,
+            targetType: 'ORDER', targetCode: request.orderCode };
+        if (operation === 'reconcile') {
+            const intent = request.originalAuthorization;
+            if (!intent || !['walletCode', 'programCode', 'rewardTypeCode', 'amount'].every(k => typeof intent[k] === 'string' && intent[k].trim()) ||
+                Object.keys(intent).length !== 4 || !/^(0|[1-9]\d*)(\.\d+)?$/.test(intent.amount) || !/[1-9]/.test(intent.amount))
+                this.fail('Retained original authorization intent is required');
+            Object.assign(payload, { reservationDecisionContract: 'LOYALTY_RESERVATION_DECISION_V1' }, structuredClone(intent));
+        }
+        const response = await SERVICE.DefaultModuleService.invokeModule({ local: false, tenant: request.tenant,
+            moduleName: target.moduleName, connectionName: target.connectionName, connectionType: target.connectionType,
+            targetAuthority: target.targetAuthority, apiVersion: target.apiVersion,
+            apiName: path, methodName: 'POST',
+            serviceName: 'DefaultLoyaltyReservationDecisionService', operationName: operation,
+            request: { tenant: request.tenant, payload }, requestBody: payload,
+            idempotencyKey: request.idempotencyKey, timeoutMs: target.timeoutMs, maxAttempts: 1 });
+        const decision = this.validateDecision(request, response);
+        if (operation === 'reconcile' && (decision.contract !== 'LOYALTY_RESERVATION_RECONCILIATION_V1' ||
+            !isDeepStrictEqual(decision.intent, request.originalAuthorization))) this.fail('Original authorization intent changed');
+        return decision;
+    },
     /**
      * Validates the effective enabled provider and transport settings.
      * @returns {Object} The existing configured object, not a clone or synthesized fallback.
@@ -200,6 +262,7 @@ module.exports = {
         let config = this.providerConfig();
         let payload = request.payload || {};
         let model = {
+            ...(operation === 'AUTHORIZE' ? { reservationDecisionContract: 'LOYALTY_RESERVATION_DECISION_V1' } : {}),
             tenant: request.tenant || request.authData && request.authData.tenant,
             walletCode: payload.walletCode || request.walletCode,
             programCode: payload.programCode || request.programCode || config.programCode,
@@ -380,6 +443,12 @@ module.exports = {
         if (request.operation === 'CAPTURE' || request.operation === 'VOID') this.required(payload.reservationCode, 'reservationCode');
         if (request.operation === 'REFUND') this.required(payload.reversalOfEntryCode, 'reversalOfEntryCode');
         let response = await this.invokeLoyalty(request, request.operation, payload);
+        const decision = this.normalizeLoyaltyResponse(response)?.decision;
+        if (request.operation === 'AUTHORIZE' && decision) {
+            const receipt = this.validateDecision(request, response);
+            return Object.freeze({ reference: receipt.code, status: receipt.status === 'DENIED' ? 'DECLINED' : 'CANCELLED',
+                providerCode: this.providerConfig().providerCode, reservationDecision: receipt });
+        }
         this.validateEvidence(request.operation, payload, response);
         this.required(this.referenceFor(request.operation, response), 'Confirmed Loyalty operation reference');
         return Object.freeze({

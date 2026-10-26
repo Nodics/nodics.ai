@@ -24,6 +24,7 @@ const clone = value => structuredClone(value);
 /** Retains real owner services and replaces only generated repositories, Payment dispatch and transport. */
 async function fixture(t, type = 'CERTIFICATES', enterprise = false) {
   const f = setup(t, type, enterprise, enterprise ? 'buyer-enterprise' : 'issuer');
+  f.db.DefaultCartService[0].locale = 'en';
   const prior = CONFIG.get;
   CONFIG.get = name => name === 'checkoutCore' ? require('../config/properties').checkoutCore : prior(name);
   f.r.actorRef = (await FACADE.DefaultCartCustomerFacade.resolveContext({ ...f.r, enterpriseCode: f.r.participantEnterpriseCode }, 'commerce.checkout.place')).actorRef;
@@ -84,6 +85,37 @@ async function fixture(t, type = 'CERTIFICATES', enterprise = false) {
     status: async () => (await controller.commandStatus(request(undefined, { commandCode: 'checkout' }))).data,
     resume: async () => (await controller.resumeBundle(request({ confirmed: true }, { commandCode: 'checkout' }))).data };
 }
+
+test('coupon forward recovery restores the original Cart locale before sale, never a caller default', async t => {
+  const f = await fixture(t, 'BOTH');
+  const digital = SERVICE.DefaultDigitalCommerceCheckoutService, confirm = digital.confirmSale;
+  t.after(() => { digital.confirmSale = confirm; });
+  digital.confirmSale = async function (request, ...args) {
+    assert.equal(request.locale, 'en');
+    return confirm.call(this, request, ...args);
+  };
+  f.state.failConsumeCode = undefined;
+  assert.equal((await f.resume()).status, 'COMPLETED');
+});
+
+for (const locale of [undefined, '', 'en<script>', 'a'.repeat(36)])
+  test(`coupon forward recovery refuses invalid original Cart locale ${String(locale)}`, async t => {
+    const f = await fixture(t, 'BOTH');
+    f.db.DefaultCartService[0].locale = locale;
+    const before = clone(f.db.DefaultCheckoutCheckpointService);
+    await assert.rejects(f.resume());
+    assert.deepEqual(f.db.DefaultCheckoutCheckpointService, before);
+  });
+
+for (const field of ['storeCode', 'ownerRef', 'merchantScope', 'participantEnterpriseCode', 'callerLocale'])
+  test(`coupon recovery refuses original Cart scope conflict ${field} before claiming recovery`, async t => {
+    const f = await fixture(t, 'BOTH');
+    if (field === 'callerLocale') f.r.locale = 'ar';
+    else f.db.DefaultCartService[0][field] = field.endsWith('Ref') || field === 'merchantScope' ? {} : 'foreign';
+    const before = clone(f.db.DefaultCheckoutCheckpointService);
+    await assert.rejects(f.resume());
+    assert.deepEqual(f.db.DefaultCheckoutCheckpointService, before);
+  });
 
 for (const type of ['CERTIFICATES', 'BOTH']) for (const enterprise of [false, true])
   test(`${type} ${enterprise ? 'Enterprise' : 'Customer'}: common confirmed recovery completes partial real certificate consumption once`, async t => {

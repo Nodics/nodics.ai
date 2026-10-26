@@ -88,3 +88,32 @@ test('unknown or malformed owner requirements stay explicit and unavailable desp
     }
   }
 });
+
+test('coupon validity uses only structured owner expiry across detail and list, including layered overrides', async t => {
+  t.mock.method(Date, 'now', () => Date.parse('2026-10-24T00:00:00.000Z'));
+  const service = fixture(selected()), coupon = product();
+  coupon.localizedAttributes = { kind: 'COUPON', expiresAt: '2099-01-01T00:00:00.000Z',
+    terms: ['Valid through 2099'], listingWindow: { endsAt: '2099-01-01T00:00:00.000Z' } };
+  coupon.availability.acquisitionRequirements = { type: 'REWARDS' };
+  let calls = 0;
+  const layered = { ...service, couponExpiry(value) { calls++; return service.couponExpiry.call(this, value); } };
+  for (const expiry of [{ mode: 'FIXED', at: '2026-11-08T19:59:59.999Z' }, { mode: 'NONE' }]) {
+    coupon.availability.expiry = expiry;
+    const before = structuredClone(coupon);
+    for (const dto of [await layered.offer({}, coupon), await layered.marketplaceOffer({}, coupon)]) {
+      assert.equal(dto.expiresAt, expiry.at); assert.deepEqual(dto.expiry, expiry); assert.equal(dto.available, true);
+      assert.notEqual(dto.expiry, expiry);
+    }
+    assert.deepEqual(coupon, before);
+  }
+  assert.equal(calls, 4);
+  for (const expiry of [undefined, null, {}, { mode: 'RELATIVE', days: 30 }, { mode: 'NONE', at: '2099-01-01' },
+    { mode: 'FIXED', at: 'not-a-date' }, { mode: 'FIXED', at: '2026-11-08' }, { mode: 'NONE', private: 'secret' }]) {
+    coupon.availability.expiry = expiry;
+    const dto = await layered.offer({}, coupon);
+    assert.equal(dto.expiry, null); assert.equal(dto.expiresAt, undefined); assert.equal(dto.available, false);
+  }
+  coupon.availability.expiry = { mode: 'FIXED', at: '2026-10-24T00:00:00.000Z' };
+  assert.equal(await layered.offer({}, coupon), null);
+  assert.equal(await layered.marketplaceOffer({}, coupon), null);
+});

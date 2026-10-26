@@ -33,22 +33,6 @@ module.exports = {
             "rootType": "site",
             "rootCode": "nexusCorporateSite",
             "sourceVersion": "0"
-          },
-          "nexusupdate": {
-            "releaseCode": "nexus.web:nexusCorporateSiteUpdate",
-            "releaseVersion": "0.0.1",
-            "dataType": "sample",
-            "rootType": "site",
-            "rootCode": "nexusCorporateSite",
-            "sourceVersion": "0"
-          },
-          "nexusecosystemrepair": {
-            "releaseCode": "nexus.web:nexusCorporateEcosystemComponentRepair",
-            "releaseVersion": "0.0.1",
-            "dataType": "sample",
-            "rootType": "site",
-            "rootCode": "nexusCorporateSite",
-            "sourceVersion": "0"
           }
         } },
         designerAuthoring: {

@@ -9,6 +9,8 @@
 
  */
 
+const administrativeOperations = new WeakMap();
+
 /**
  * @module nPublish/service/DefaultPublicationLifecycleService
  * @description Orchestrates the provider-neutral publication lifecycle with governed transitions, CAS revisions, audit, activation, and rollback.
@@ -17,6 +19,33 @@
  * @override Later modules may replace providers or orchestration while preserving lifecycle, audit, idempotency, tenant, and rollback contracts.
  */
 module.exports = {
+    /** Runs one native domain command through the ordinary lifecycle, with fresh domain proof at each journal write. */
+    executeAdministrativeOperation: async function (publication, request, operation) {
+        if (!['validate', 'requestApproval', 'activate'].includes(operation) || administrativeOperations.has(request))
+            throw new Error('Unsupported native publication operation');
+        const adapter = this.getDomainAdapter(publication.domain);
+        if (!adapter.authorizeAdministrativeOperation) throw new Error('Native publication owner unavailable');
+        const configuration = structuredClone(this.getConfiguration());
+        const contexts = [request];
+        const guard = async (candidate, current = publication) => {
+            if (!require('node:util').isDeepStrictEqual(configuration, this.getConfiguration()) ||
+                this.getDomainAdapter(publication.domain) !== adapter ||
+                !require('node:util').isDeepStrictEqual(candidate.authData, request.authData) ||
+                candidate.tenant !== request.tenant || candidate.enterpriseCode !== request.enterpriseCode ||
+                candidate.publicationCode !== publication.code)
+                throw new Error('Native publication continuation changed');
+            await adapter.authorizeAdministrativeOperation(current, request, operation);
+        };
+        administrativeOperations.set(request, { guard, contexts });
+        try { await guard(request); const result = await this[operation](request); await guard(request); return result; }
+        finally { contexts.forEach(context => administrativeOperations.delete(context)); }
+    },
+    /** Only lifecycle-owned revision copies inherit an in-flight guard; caller spreads never acquire one. */
+    copyRequest: function (request, fields) {
+        const copy = Object.assign({}, request, fields), context = administrativeOperations.get(request);
+        if (context) { administrativeOperations.set(copy, context); context.contexts.push(copy); }
+        return copy;
+    },
     /** Initializes publication lifecycle orchestration. */
     init: function () { return Promise.resolve(true); },
     /** Completes publication lifecycle initialization. */
@@ -103,13 +132,17 @@ module.exports = {
     },
     /** Persists one governed transition and its immutable audit evidence. */
     transition: async function (publication, toState, request, patch, evidence) {
+        const native = administrativeOperations.get(request);
+        if (native) await native.guard(request, publication);
         this.assertTransition(publication.state, toState);
         let expected = this.requireExpectedRevision(request, publication);
         let audit = { publicationCode: publication.code, fromState: publication.state,
             toState: toState, actor: this.getActor(request), reason: request && request.reason,
             details: this.sanitizeEvidence(evidence), correlationId: request && (request.correlationId || request.requestId) };
-        return this.getRepository().transitionWithAudit(publication, expected,
+        const result = await this.getRepository().transitionWithAudit(publication, expected,
             Object.assign({}, patch || {}, { state: toState, updatedBy: this.getActor(request) }), audit, request);
+        if (native) await native.guard(request, result);
+        return result;
     },
     /** Creates an idempotent staged publication request. */
     create: async function (request) {
@@ -145,10 +178,10 @@ module.exports = {
             if (!Array.isArray(dependencies) || dependencies.length > max) throw new CLASSES.NodicsError('ERR_PUB_00006', 'Publication dependency boundary exceeded');
             let validation = adapter.validate ? await adapter.validate(publication, version, request, dependencies) : { valid: true };
             if (!validation || validation.valid !== true) throw new CLASSES.NodicsError('ERR_PUB_00006', 'Publication validation failed');
-            return await this.transition(publication, 'VALIDATED', Object.assign({}, request, { expectedRevision: publication.revision }),
+            return await this.transition(publication, 'VALIDATED', this.copyRequest(request, { expectedRevision: publication.revision }),
                 { dependencies: dependencies, validation: this.sanitizeEvidence(validation) }, validation);
         } catch (error) {
-            await this.transition(publication, 'FAILED', Object.assign({}, request, { expectedRevision: publication.revision }), {},
+            await this.transition(publication, 'FAILED', this.copyRequest(request, { expectedRevision: publication.revision }), {},
                 { failureCode: error.code || error.name || 'VALIDATION_FAILED' }).catch(() => false);
             throw error;
         }
@@ -286,10 +319,10 @@ module.exports = {
                 patch.previousOnlineVersion = previousOnlineVersion || null;
             }
             patch.activationOperation = publication.activationOperation;
-            return await this.transition(publication, 'ONLINE', Object.assign({}, request, { expectedRevision: publication.revision }),
+            return await this.transition(publication, 'ONLINE', this.copyRequest(request, { expectedRevision: publication.revision }),
                 patch, activation);
         } catch (error) {
-            await this.transition(publication, 'FAILED', Object.assign({}, request, { expectedRevision: publication.revision }), {},
+            await this.transition(publication, 'FAILED', this.copyRequest(request, { expectedRevision: publication.revision }), {},
                 { failureCode: error.code || error.name || 'ACTIVATION_FAILED' }).catch(() => false);
             throw error;
         }

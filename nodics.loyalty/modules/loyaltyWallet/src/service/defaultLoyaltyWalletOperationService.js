@@ -18,6 +18,11 @@ module.exports = {
   operations: function () {
     return SERVICE.DefaultLoyaltyRewardOperationService;
   },
+  /** Derives the existing canonical owner-wallet identity without reading or writing storage. */
+  walletCode: function (ownerType, ownerCode) {
+    return "WALLET_" + crypto.createHash("sha256")
+      .update(ownerType + ":" + ownerCode).digest("hex").slice(0, 24).toUpperCase();
+  },
   /** Validates internal callers and bounded owner identifiers. */
   authorize: function (request) {
     if (
@@ -66,14 +71,7 @@ module.exports = {
     });
     if (rows.length) return rows[0];
     const wallet = {
-      code:
-        "WALLET_" +
-        crypto
-          .createHash("sha256")
-          .update(p.ownerType + ":" + p.ownerCode)
-          .digest("hex")
-          .slice(0, 24)
-          .toUpperCase(),
+      code: this.walletCode(p.ownerType, p.ownerCode),
       ownerType: p.ownerType,
       ownerCode: p.ownerCode,
       status: "OPEN",

@@ -38,7 +38,7 @@ test('distribution behavior passes the canonical export audit without exposing a
     assert.deepEqual(failures, []);
     assert.deepEqual(Object.keys(admission).sort(), [
         'fail', 'identifier', 'identityIdentifier', 'participantOwner', 'selected', 'detached', 'assertInstalled', 'resolveReadContext',
-        'referenceReadAdmitted', 'assertReadPurpose', 'assertProductPolicy', 'visibleProduct', 'visibleCommerceProduct',
+        'membershipReferencePhase', 'referenceReadAdmitted', 'assertReadPurpose', 'assertProductPolicy', 'visibleProduct', 'visibleCommerceProduct',
         'dispatchAvailability', 'publicRequest', 'publicAvailabilityBatch', 'publicAvailability', 'trustedAvailability',
         'resolveMembershipRead', 'couponIssuerMemberships', 'trustedPolicies', 'trustedCouponPolicy',
     ].sort());
@@ -102,7 +102,7 @@ function fixture(t) {
             admission.assertProductPolicy(context, { conditions: { sourceProductCode: command.productCode } });
             if (state.duringPool) await state.duringPool(command, context);
             return { available: true, availableQuantity: '4', batchCode: 'private-batch', protectedToken: 'must-not-escape',
-                purchaseRequirements: { type: 'REWARDS', priceRef: 'private-price' } };
+                expiry: { mode: 'NONE' }, purchaseRequirements: { type: 'REWARDS', priceRef: 'private-price' } };
         } },
     };
     return { state, request: { tenant: 'tenant', storeCode: 'store', locale: 'en', productCode: 'product' } };
@@ -113,7 +113,7 @@ test('public availability uses fresh activated/retained Product authority, not s
     Object.assign(f.request, { payload: { batchCode: 'forged' }, batchCode: 'forged', indexConfiguration: { indexName: 'forged' },
         projection: { enterpriseCode: 'forged' } });
     const original = structuredClone(f.request);
-    assert.deepEqual(await admission.publicAvailability(f.request), { available: true, status: 'IN_STOCK', acquisitionRequirements: { type: 'REWARDS' } });
+    assert.deepEqual(await admission.publicAvailability(f.request), { available: true, status: 'IN_STOCK', expiry: { mode: 'NONE' }, acquisitionRequirements: { type: 'REWARDS' } });
     assert.deepEqual(f.request, original);
     assert.equal(f.state.selections, 2, 'A new owner context rechecks the activation after supply work');
     assert.equal(f.state.poolCalls, 1);
@@ -191,7 +191,7 @@ test('fixed batch preparation expires private identities on success, failure and
         };
         if (kind === 'success') {
             const result = await admission.publicAvailabilityBatch(f.request, ['product']);
-            assert.deepEqual(result.get('product'), { available: true, status: 'IN_STOCK', acquisitionRequirements: { type: 'REWARDS' } });
+            assert.deepEqual(result.get('product'), { available: true, status: 'IN_STOCK', expiry: { mode: 'NONE' }, acquisitionRequirements: { type: 'REWARDS' } });
             assert.equal(f.state.poolCalls, 1);
         } else {
             await assert.rejects(admission.publicAvailabilityBatch(f.request, ['product']));
@@ -276,6 +276,8 @@ test('trusted Cart policy quote reads exact Product policy without changing part
     const alternateOwnerRef = { ...ownerRef, code: 'buyer' };
     assert.deepEqual(await admission.trustedPolicies({ ...original, ownerId: 'buyer', ownerRef: alternateOwnerRef },
         { ...downstream, ownerId: 'buyer', ownerRef: alternateOwnerRef }), [campaign]);
+    await assert.rejects(admission.trustedPolicies({ ...original, ownerRef: alternateOwnerRef },
+        { ...downstream, ownerRef: alternateOwnerRef }));
     assert.deepEqual({ original, downstream }, before);
     await assert.rejects(admission.trustedPolicies(original, { ...downstream, enterpriseCode: 'foreign' }));
     await assert.rejects(admission.trustedPolicies(original, { ...downstream, ownerId: 'other' }));
@@ -342,14 +344,17 @@ test('canonical coupon requirements reach public Product cards and marketplace l
     const allocation = require('../src/service/defaultCouponOfferAllocationService');
     const persistence = require('../src/service/defaultCouponAcquisitionPersistenceService');
     const marketplace = require('../../../../../../nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteMarketplaceService');
-    for (const type of ['REWARDS', 'CERTIFICATES', 'BOTH']) await t.test(type, async t => {
+    for (const expiry of [{ mode: 'NONE' }, { mode: 'FIXED', at: '2026-11-08T19:59:59.999Z' }])
+    for (const type of ['REWARDS', 'CERTIFICATES', 'BOTH']) await t.test(type + expiry.mode, async t => {
         const f = fixture(t);
+        t.mock.method(Date, 'now', () => Date.parse('2026-10-24T00:00:00.000Z'));
         const certificates = { quantity: 2, categoryCode: 'electronics', milestoneCode: 'verified', brandCodes: ['brand'], modelCodes: ['model'] };
         const requirements = { type, ...(type !== 'CERTIFICATES' ? { priceRef: 'private-price' } : {}),
             ...(type !== 'REWARDS' ? { certificates } : {}) };
         const safe = { type, ...(type !== 'REWARDS' ? { certificates } : {}) };
         const campaign = { tenant: 'tenant', code: 'private-campaign', status: 'ACTIVE', conditions: { sourceProductCode: 'product' },
-            couponOffer: { version: 1, supply: { mode: 'UNLIMITED' }, expiry: { mode: 'NONE' }, terms: [], requirements } };
+            couponOffer: { version: 1, supply: { mode: 'UNLIMITED' }, expiry, terms: [], requirements } };
+        const originalCampaign = structuredClone(campaign);
         SERVICE.DefaultPromotionOperationService = { ...operation, requireOperationalRuntime() {} };
         SERVICE.DefaultCouponOfferAllocationService = allocation;
         SERVICE.DefaultCouponAcquisitionPersistenceService = persistence;
@@ -367,29 +372,36 @@ test('canonical coupon requirements reach public Product cards and marketplace l
             },
         };
         SERVICE.DefaultDigitalCommerceCheckoutService = { availabilityFromProjection: () => assert.fail('Use admitted public batch') };
-        const expected = { available: true, status: 'IN_STOCK', acquisitionRequirements: safe };
+        const expected = { available: true, status: 'IN_STOCK', expiry, acquisitionRequirements: safe };
         assert.deepEqual(await admission.publicAvailability(f.request), expected);
         const rows = await enrichment.consumerAvailability({ ...f.request, enterpriseCode: 'vendor' }, [f.state.row]);
         assert.deepEqual(rows.product, expected);
         const product = discovery.card({ ...f.state.row, payload: { ...f.state.row.payload, availability: rows.product,
             price: { currency: 'POINTS', unitAmount: type === 'CERTIFICATES' ? '0' : '5' },
-            localizedAttributes: { ...f.state.row.payload.localizedAttributes, kind: 'COUPON', acquisitionRequirements: { type: 'FORGED' } } } });
+            localizedAttributes: { ...f.state.row.payload.localizedAttributes, kind: 'COUPON',
+                expiresAt: '2099-01-01T00:00:00.000Z', expiry: { mode: 'NONE' },
+                acquisitionRequirements: { type: 'FORGED' } } } });
         const settings = { ...require('../../../../../../nodics.accelerators/modules/waste/modules/eWaste/config/properties').eWaste.marketplace,
             storeCode: 'store', currency: 'POINTS', jurisdiction: 'AE', programCode: 'program', rewardTypeCode: 'points' };
         const service = { ...marketplace, experience: () => ({ settings: () => ({ marketplace: settings }) }) };
         assert.equal(product.localizedAttributes.acquisitionRequirements, undefined);
+        assert.equal(product.localizedAttributes.expiresAt, undefined);
+        assert.equal(product.localizedAttributes.expiry, undefined);
         for (const dto of [await service.offer({}, product), await service.marketplaceOffer({}, product)]) {
             assert.deepEqual(dto.acquisitionRequirements, safe); assert.equal(dto.available, true);
+            assert.deepEqual(dto.expiry, expiry);
+            assert.equal(dto.expiresAt, expiry.at);
             assert.equal(dto.rewardPrice, type === 'CERTIFICATES' ? '0' : '5');
             assert.doesNotMatch(JSON.stringify(dto), /private-price|private-campaign|FORGED|supplyMode|availableQuantity/);
         }
         rows.product.acquisitionRequirements.type = 'FORGED';
         assert.deepEqual(product.availability, expected, 'Public card detaches owner data');
+        assert.deepEqual(campaign, originalCampaign, 'Owner terms remain immutable');
     });
 });
 
 test('public requirements reject unsupported policy and preserve explicit unknown without rewards fallback', t => {
-    const f = fixture(t), unavailable = { available: false, status: 'OUT_OF_STOCK', acquisitionRequirements: null };
+    const f = fixture(t), unavailable = { available: false, status: 'OUT_OF_STOCK', expiry: null, acquisitionRequirements: null };
     for (const purchaseRequirements of [undefined, null]) assert.deepEqual(offer.publicSupply({ available: true, purchaseRequirements }), unavailable);
     for (const purchaseRequirements of [{}, { type: 'UNKNOWN' }, { type: 'REWARDS' },
         { type: 'CERTIFICATES', certificates: { quantity: 0, categoryCode: 'x', milestoneCode: 'y' } }])
@@ -400,4 +412,59 @@ test('public requirements reject unsupported policy and preserve explicit unknow
     assert.throws(() => offer.publicSupply({ available: true, purchaseRequirements: requirements }));
     delete f.state.config.promotion.couponOffers;
     assert.throws(() => offer.acquisitionRequirements({ type: 'REWARDS' }));
+});
+
+test('public supply projects detached approved expiry and never infers absent, relative or malformed rights', t => {
+    fixture(t);
+    t.mock.method(Date, 'now', () => Date.parse('2026-10-24T00:00:00.000Z'));
+    const purchaseRequirements = { type: 'REWARDS', priceRef: 'private' };
+    for (const expiry of [{ mode: 'NONE' }, { mode: 'FIXED', at: '2026-11-08T19:59:59.999Z' }]) {
+        const supply = { available: true, purchaseRequirements, expiry }, before = structuredClone(supply);
+        const dto = offer.publicSupply(supply);
+        assert.equal(dto.available, true); assert.deepEqual(dto.expiry, expiry);
+        assert.notEqual(dto.expiry, expiry); assert.deepEqual(supply, before);
+        assert.equal(dto.acquisitionRequirements.priceRef, undefined);
+        assert.equal(offer.publicSupply({ ...supply, available: false }).available, false);
+    }
+    for (const expiry of [undefined, null]) {
+        const dto = offer.publicSupply({ available: true, purchaseRequirements, expiry });
+        assert.equal(dto.expiry, null); assert.equal(dto.available, false);
+    }
+    const expired = { mode: 'FIXED', at: '2026-10-24T00:00:00.000Z' };
+    const dto = offer.publicSupply({ available: true, purchaseRequirements, expiry: expired });
+    assert.equal(dto.available, false); assert.deepEqual(dto.expiry, expired);
+    for (const expiry of [{}, { mode: 'RELATIVE', days: 30 }, { mode: 'NONE', at: '2099-01-01' },
+        { mode: 'FIXED', at: 'bad' }, { mode: 'FIXED', at: '2026-11-08' },
+        Object.defineProperty({}, 'mode', { enumerable: true, get: () => assert.fail('No accessor reads') }),
+        { mode: 'NONE', [Symbol('secret')]: 'private' }])
+        assert.throws(() => offer.publicSupply({ available: true, purchaseRequirements, expiry }));
+    let calls = 0;
+    const layered = { ...offer, expiry(value) { calls++; return offer.expiry.call(this, value); } };
+    assert.equal(layered.publicSupply({ available: true, purchaseRequirements, expiry: { mode: 'NONE' } }).available, true);
+    assert.equal(calls, 1);
+});
+
+test('Search public issuer membership separates browsing Enterprise from activated catalogue ownership', async t => {
+    const f = fixture(t);
+    const original = { ...f.request, enterpriseCode: 'participant', entCode: 'participant',
+        authData: { tenant: 'tenant', enterpriseCode: 'participant', principalType: 'customer', tokenType: 'access' } };
+    const snapshot = structuredClone(original);
+    let captured;
+    SERVICE.DefaultPromotionSellerPolicyService.readProduct = async command => {
+        captured = command;
+        const read = admission.resolveMembershipRead(command);
+        assert.equal(read.projection.enterpriseCode, 'vendor');
+        assert.equal(command.enterpriseCode, 'vendor');
+        assert.deepEqual(command.authData, original.authData);
+        return { campaign: { tenant: 'tenant', status: 'ACTIVE', conditions: { sourceProductCode: 'product' },
+            issuerEnterpriseRef: { code: 'issuer', moduleName: 'profile', schemaName: 'enterprise' } } };
+    };
+    assert.deepEqual(await admission.couponIssuerMemberships(original, ['product']),
+        [{ productCode: 'product', issuerEnterpriseCode: 'issuer' }]);
+    assert.deepEqual(original, snapshot);
+    assert.throws(() => admission.resolveMembershipRead(captured));
+    await assert.rejects(admission.couponIssuerMemberships({ ...original,
+        authData: { ...original.authData, principalType: 'service' } }, ['product']));
+    f.state.row.tenant = 'foreign';
+    await assert.rejects(admission.couponIssuerMemberships(original, ['product']));
 });

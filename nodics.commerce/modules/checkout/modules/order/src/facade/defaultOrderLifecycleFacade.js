@@ -14,20 +14,20 @@
 /** @module order/src/facade/defaultOrderLifecycleFacade @description Enforces tenant and principal context before Order lifecycle services. @layer facade @owner order */
 module.exports = {
     /** Enriches an operation with trusted principal context. @param {string} operation Operation. @param {Object} request Request. @returns {Promise<Object>} Result. */
-    invoke: function (operation, request) {
+    invoke: async function (operation, request) {
         if (['list', 'action'].includes(operation)) {
             const permission = operation === 'list' ? 'commerce.lifecycle.read' : 'commerce.lifecycle.act';
             const scope = SERVICE.DefaultOrderBusinessAccessService.context(request, permission);
             return SERVICE.DefaultOrderLifecycleOperationService[operation]({ ...request,
                 enterpriseCode: scope.enterpriseCode, actorId: scope.actorId });
         }
-        const auth = request.authData || {}; request.tenant = auth.tenant || request.tenant;
-        request.enterpriseCode = request.enterpriseCode || request.entCode || auth.enterpriseCode || auth.entCode;
-        const principalId = auth.principalId || auth.code || auth.loginId;
-        request.actorId = principalId || request.actorId;
-        if (!['list', 'action'].includes(operation)) request.ownerId = principalId || request.ownerId;
-        if (!request.tenant || !request.actorId) return Promise.reject(new Error('Authenticated tenant and principal are required'));
-        return SERVICE.DefaultOrderLifecycleOperationService[operation](request);
+        const permission = operation === 'listOwn' ? 'commerce.order.own.read' : 'commerce.lifecycle.own.create';
+        const resolved = await FACADE.DefaultCartCustomerFacade.resolveContext(request, permission);
+        const participant = SERVICE.DefaultCheckoutAuctionService
+            ? await SERVICE.DefaultCheckoutAuctionService.partition(resolved) : resolved;
+        return SERVICE.DefaultOrderLifecycleOperationService.participantLifecycle(operation, {
+            ...participant, actorId: participant.actorRef.code
+        });
     },
     /** Previews an owned lifecycle request. @param {Object} request Request. @returns {Promise<Object>} Preview. */
     preview: function (request) { return this.invoke('preview', request); },

@@ -82,5 +82,11 @@ module.exports = {
         return Object.freeze({ order, entries: await this.entries(scope, order.code), lifecycle: await this.lifecycle(scope, order.code) });
     },
     /** Lists owner-bounded Order summaries. @param {Object} request Request. @returns {Promise<Array>} Orders. */
-    listOwn: function (request) { return this.orders(request); }
+    listOwn: async function (request) {
+        const rows = await this.orders(request);
+        const result = [];
+        for (const order of rows) result.push({ ...order,
+            reviewEligibility: await SERVICE.DefaultOrderDisputeService.eligibility(request, order) });
+        return result;
+    }
 };

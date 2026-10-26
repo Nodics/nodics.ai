@@ -295,14 +295,17 @@ test('canonical CMS guides do not direct maintainers to retired Markdown authori
 
 test('current baseline instructions reference consolidated releases rather than removed source folders', () => {
     const sources = [
-        ['nodics.platform/modules/axis', 'axisDocumentationComponentData.js', 'axis.overview'],
-        ['nodics.communication/modules/commsCore', 'commsCoreDocumentationComponentData.js', 'communication.email-sms-templates'],
-        ['nodics.accelerators/modules/waste/modules/eWaste', 'eWasteDocumentationComponentData.js', 'accelerators.circa-collection-reference'],
-        ['nodics.accelerators/modules/waste/modules/eWaste', 'eWasteDocumentationComponentData.js', 'accelerators.circa-data-network'],
+        ['nodics.platform/modules/axis', 'axis.overview'],
+        ['nodics.communication/modules/commsCore', 'communication.email-sms-templates'],
+        ['nodics.accelerators/modules/waste/modules/eWaste', 'accelerators.circa-collection-reference'],
+        ['nodics.accelerators/modules/waste/modules/eWaste', 'accelerators.circa-data-network'],
     ];
-    for (const [owner, file, id] of sources) {
-        const records = require(path.join(root, owner, 'data/docs-v001/records/documentation', file));
-        const guide = Object.values(records).find(row => row.properties?.code === id);
+    for (const [owner, id] of sources) {
+        const directory = path.join(root, owner, 'data');
+        const section = require(path.join(directory, 'manifest.json')).sections.documentation;
+        const records = Object.keys(section.generatedHashes).filter(file => file.endsWith('ComponentData.js'))
+            .flatMap(file => Object.values(require(contract.containedPath(directory, file, 'CMS documentation'))));
+        const guide = records.find(row => row.properties?.code === id);
         assert(guide, id + ' must remain canonical');
         const content = JSON.stringify(guide.properties.blocks);
         assert.doesNotMatch(content, /(?:core|sample|init)-v00[2-9]/, id);

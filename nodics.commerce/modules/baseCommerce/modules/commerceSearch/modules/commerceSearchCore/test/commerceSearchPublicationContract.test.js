@@ -87,7 +87,10 @@ test.beforeEach(() => {
         },
         DefaultCommerceSearchRuleProjectionService: {
             save: async request => saved.push(request),
-            doSave: async request => indexed.push(request)
+            doSave: async request => { indexed.push(request); return { result: [{ _id: request.model.code, result: 'created', _shards: { failed: 0 } }] }; },
+            doSearch: async () => ({ result: { hits: { total: { value: 1, relation: 'eq' }, hits: [{
+                _id: indexed.at(-1).model.code, _source: JSON.parse(JSON.stringify(indexed.at(-1).model))
+            }] } } })
         }
     };
     global.FACADE = { DefaultCommerceSearchPublicationFacade: facade };

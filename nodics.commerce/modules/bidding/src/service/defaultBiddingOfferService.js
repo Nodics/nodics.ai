@@ -44,13 +44,21 @@ module.exports = {
       fail = (message) => SERVICE.DefaultBiddingService.fail(message);
     if (!store || store.enterpriseCode !== request.enterpriseCode)
       fail("This store does not accept bids");
-    const result = await SERVICE.DefaultProductDiscoveryService.detail({
-      ...request,
-      productCode,
-      storeCode,
-      locale: store.locale || policy.locale,
-      query: {},
-    });
+    let result;
+    try {
+      result = await SERVICE.DefaultProductDiscoveryService.detail({
+        // Public catalogue selectors only; participant authority stays on the original request.
+        // Product derives merchant scope from its retained publication, never a rewritten actor.
+        tenant: request.tenant,
+        productCode,
+        storeCode,
+        locale: store.locale || policy.locale,
+        query: {},
+      });
+    } catch (_) {
+      // Fixed owner boundary only; never expose downstream provider/query diagnostics.
+      throw new CLASSES.NodicsError('ERR_BIDDING_OFFER_READ_UNAVAILABLE');
+    }
     const product = result.product,
       attributes = product?.localizedAttributes || {},
       terms = attributes.commerceBidding;

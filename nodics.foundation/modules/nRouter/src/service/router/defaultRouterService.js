@@ -170,6 +170,13 @@ module.exports = {
      * @returns {string} API base URL containing context root and module name.
      */
     prepareUrl: function (options) {
+        // Resolve an explicitly declared remote owner's metadata before URL assembly.
+        // Failure must not return a partial endpoint or guess a module-name prefix.
+        let target = NODICS.getRawModule && NODICS.getRawModule(options.moduleName);
+        if (!target && CONFIG.get('runtimeIdentity')?.remoteModules?.includes(options.moduleName)) {
+            target = UTILS.resolveInstalledSourceDescriptor(options.moduleName);
+        }
+        const prefix = target && target.metaData && target.metaData.prefix || options.moduleName;
         let url = '';
         try {
             let connectionName = options.connectionName || options.moduleName;
@@ -184,8 +191,6 @@ module.exports = {
                     this.LOG.error('Invalid node id : ' + options.nodeId + ' while preparing URL for connection : ' + connectionName);
                 }
             }
-            const target = NODICS.getRawModule && NODICS.getRawModule(options.moduleName);
-            const prefix = target && target.metaData && target.metaData.prefix || options.moduleName;
             url += '/' + contextRoot + '/' + prefix;
         } catch (error) {
             this.LOG.error('While Preparing URL for :' + options.moduleName + ' : ', error);

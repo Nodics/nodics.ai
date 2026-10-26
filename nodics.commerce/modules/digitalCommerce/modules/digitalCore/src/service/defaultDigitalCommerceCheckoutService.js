@@ -23,7 +23,7 @@
  * certificate persistence.
  * Failure behavior: Uncertain reservation carries confirmed receipts/key for recovery; coupon release
  * failures remain FAILED, not assumed released.
- * Exported members: uncertainCouponReservationScope, recoverUncertainCouponReservation, availability,
+ * Exported members: uncertainReservationContext, uncertainReservationScope, inspectPrepaymentBundleReconciliation, recoverUncertainReservation, availability,
  * availabilityFromProjection, isCouponCodePoolEntry, couponUnits, maximumCouponUnits, reserveForCheckout,
  * resolveCouponForwardRecovery, couponCompensationDisposition, confirmSale, deliver, releaseReservations.
  * @owner digitalCore
@@ -38,14 +38,14 @@ module.exports = {
      * @param {Object} request Original Checkout participant context with tenant, merchant enterpriseCode,
      * typed owner/actor, bearer and original command key.
      * @param {Object} selector uncertainKey naming the original checkout:digital:<entry>:0 reservation.
-     * @returns {Promise<Object>} Exact cartCode, entryCode, productCode, sku and enterpriseCode.
-     * @remarks Effects: Reads complete single-row Cart/entry evidence only; does not reserve or release.
+     * @returns {Promise<Object>} Canonical Cart/entry request context, retained Product and classified recovery scope.
+     * @remarks Effects: Reads complete Cart/entry and retained Product evidence; does not reserve or release.
      * Failure behavior: Rejects ERR_CHECKOUT_COMPENSATION_UNCONFIRMED for foreign, ambiguous, non-active or
      * non-single-unit scope.
      * @override Preserve exact original key and complete acknowledged reads; absence never permits
      * replacement.
      */
-    uncertainCouponReservationScope: async function (request, selector) {
+    uncertainReservationContext: async function (request, selector) {
         const fail = () => { throw Object.assign(new Error('Coupon compensation is unconfirmed'), { code: 'ERR_CHECKOUT_COMPENSATION_UNCONFIRMED' }); };
         const identifier = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:@|\-]{0,255}$/.test(value);
         const prefix = request.commandCode + ':digital:', key = selector?.uncertainKey;
@@ -73,23 +73,55 @@ module.exports = {
         if (cart.enterpriseCode !== request.enterpriseCode || cart.status !== 'ACTIVE' || !identifier(cart.storeCode)) fail();
         const onlyEntry = await rows(SERVICE.DefaultCartEntryService, { cartCode: cart.code, ownerId: request.ownerId, status: 'ACTIVE' });
         if (onlyEntry.code !== entry.code || !require('node:util').isDeepStrictEqual(onlyEntry, entry)) fail();
-        return { cartCode: cart.code, entryCode: entry.code, productCode: entry.productCode, sku: entry.sku, enterpriseCode: request.enterpriseCode };
+        if (!identifier(cart.locale)) fail();
+        const context = { ...request, storeCode: cart.storeCode, locale: cart.locale,
+            productCode: entry.productCode, sku: entry.sku, quantity: 1 };
+        const product = SERVICE.DefaultProductDiscoveryService;
+        const indexed = await product.searchPinned(context, product.query(context), { pageSize: 2, limit: 2, pageNumber: 1 });
+        const projections = await SERVICE.DefaultProductSearchEnrichmentService.retainedProjections(context, indexed);
+        const projection = projections?.[0], attributes = projection?.payload?.localizedAttributes;
+        if (!Array.isArray(projections) || projections.length !== 1 || !['CURRENT', 'STALE'].includes(projection.status) ||
+            ['tenant', 'enterpriseCode', 'storeCode', 'locale', 'productCode'].some(k => projection[k] !== context[k]) ||
+            !Object.values(projection.payload?.variantSkuMap || {}).includes(entry.sku) || attributes?.productType !== 'DIGITAL') fail();
+        const reservationType = attributes.digitalDeliveryType === 'COUPON_CODE' && attributes.inventoryStrategy === 'COUPON_CODE_POOL'
+            ? 'COUPON' : attributes.digitalDeliveryType === 'DIGITAL_OWNERSHIP' && attributes.inventoryStrategy === 'DIGITAL_COMMERCE' &&
+                attributes.bundleRef?.module === 'digitalCore' && attributes.bundleRef.schema === 'digitalBundleManifest' ? 'BUNDLE' : undefined;
+        if (!reservationType) fail();
+        return { context, entry, projection, scope: { cartCode: cart.code, entryCode: entry.code,
+            productCode: entry.productCode, sku: entry.sku, enterpriseCode: request.enterpriseCode, reservationType } };
+    },
+    /** Reads original Cart and retained Product classification; no absence-based owner inference or effects. */
+    uncertainReservationScope: async function (request, selector) {
+        return (await this.uncertainReservationContext(request, selector)).scope;
+    },
+    /** Reads exact cancelled-purchase/listing pins for same-attempt reconciliation; never mutates owner state. */
+    inspectPrepaymentBundleReconciliation: async function (request, selector) {
+        const { scope, context, entry, projection } = await this.uncertainReservationContext(request, selector);
+        if (scope.reservationType !== 'BUNDLE') throw new Error('Original bundle classification is required');
+        return SERVICE.DefaultDigitalBundleSettlementService.recoverPrepayment(context, entry, projection, 'RECONCILE_PREFLIGHT');
     },
     /**
-     * Revalidates original Cart scope then resolves its reservation only through Promotion's existing owner.
+     * Revalidates original Cart and retained Product type, then dispatches the canonical reservation owner.
      * @param {Object} request Original Checkout participant context with tenant, merchant enterpriseCode,
      * typed owner/actor, bearer and original command key.
-     * @param {Object} selector Original uncertainKey for the one-unit pre-payment Cart.
-     * @returns {Promise<Object>} Completed DIGITAL_COUPON_RELEASE outcome bound to original reservation and
+     * @param {Object} selector Original uncertainKey, pinned reservationType and optional read-only replay selector.
+     * @returns {Promise<Object>} Completed owner-specific release outcome bound to original reservation and
      * Cart.
-     * @remarks Effects: Revalidates Cart then invokes Promotion's existing reservation recovery/release.
-     * Failure behavior: Rejects when original scope or Promotion completion is unconfirmed; retains recovery
+     * @remarks Effects: Revalidates Cart/Product and invokes Promotion or the existing Digital bundle cancellation owner.
+     * Failure behavior: Rejects when original scope or owner completion is unconfirmed; retains recovery
      * state.
      * @override Do not recover by allocating a new coupon or fabricating a release receipt.
      */
-    recoverUncertainCouponReservation: async function (request, selector) {
+    recoverUncertainReservation: async function (request, selector) {
         const fail = () => { throw Object.assign(new Error('Coupon compensation is unconfirmed'), { code: 'ERR_CHECKOUT_COMPENSATION_UNCONFIRMED' }); };
-        const scope = await this.uncertainCouponReservationScope(request, selector), key = selector.uncertainKey;
+        const { scope, context, entry, projection } = await this.uncertainReservationContext(request, selector), key = selector.uncertainKey;
+        if (scope.reservationType !== selector.reservationType) fail();
+        if (scope.reservationType === 'BUNDLE') {
+            await SERVICE.DefaultDigitalBundleSettlementService.recoverPrepayment(context, entry, projection, selector.inspectOnly === true);
+            return { type: 'DIGITAL_OWNERSHIP_RELEASE', status: 'COMPLETED', reservationKey: key,
+                cartCode: scope.cartCode, entryCode: scope.entryCode, enterpriseCode: request.enterpriseCode };
+        }
+        if (selector.inspectOnly === true) fail();
         const promotion = SERVICE.DefaultPromotionOperationService;
         if (typeof promotion?.recoverCouponCodeReservation !== 'function') fail();
         const result = await promotion.recoverCouponCodeReservation({ tenant: request.tenant, enterpriseCode: request.enterpriseCode,
@@ -218,17 +250,17 @@ module.exports = {
                 );
             if (units.length + quantity > maximum)
                 throw new Error('Coupon checkout exceeds its unit bound');
+            const couponBatchCode = entry.availability &&
+                (entry.availability.couponBatchCode || entry.availability.batchCode);
+            const promotionCode = entry.availability && entry.availability.promotionCode;
             for (let index = 0; index < quantity; index += 1) {
                 units.push({
                     entryCode: entry.code,
                     productCode: entry.productCode,
                     sku: entry.sku,
-                    couponBatchCode:
-                        entry.availability &&
-                        (entry.availability.couponBatchCode ||
-                            entry.availability.batchCode),
-                    promotionCode:
-                        entry.availability && entry.availability.promotionCode,
+                    // BSON omits undefined fields; retain the same optional evidence shape on readback.
+                    ...(couponBatchCode === undefined ? {} : { couponBatchCode }),
+                    ...(promotionCode === undefined ? {} : { promotionCode }),
                     governedOffer: entry.availability?.purchaseRequirements !== undefined,
                     unitIndex: index,
                 });
@@ -303,13 +335,14 @@ module.exports = {
                     units, selections: request.payload.couponSelections || {} } });
         }
         const reservations = [];
-        let attemptedKey;
+        let attemptedKey, attemptedCommand;
         try {
             for (const entry of assetEntries) {
                 attemptedKey = request.idempotencyKey + ':digital:' + entry.code + ':0';
                 reservations.push(await ownership.reserve(request, entry));
             }
             for (const unit of units) {
+                attemptedCommand = undefined;
                 attemptedKey = [
                     request.idempotencyKey,
                     'digital',
@@ -345,7 +378,9 @@ module.exports = {
                             promotionCode: unit.promotionCode,
                         },
                     };
+                attemptedCommand = command;
                 const reservation = await promotionService.reserveCouponCodeForCheckout(command);
+                attemptedCommand = undefined;
                 reservations.push(reservation);
                 if (reservation.offerAllocationCode) {
                     if (!acquisition?.reserveInputs) throw new Error('Coupon consideration owner is required');
@@ -356,8 +391,10 @@ module.exports = {
         } catch (error) {
             // Keep confirmed acquisitions available to Checkout compensation; the failing unit may be ambiguous.
             error.digitalReservations = reservations;
-            error.digitalReservationRecoveryRequired = true;
-            error.digitalReservationUncertainKey = attemptedKey;
+            const cleanDenial = attemptedCommand &&
+                SERVICE.DefaultCouponOfferAllocationService?.consumePrewriteDenial?.(error, attemptedCommand) === true;
+            error.digitalReservationRecoveryRequired = !cleanDenial;
+            if (!cleanDenial) error.digitalReservationUncertainKey = attemptedKey;
             throw error;
         }
         return reservations;
@@ -390,6 +427,14 @@ module.exports = {
             !same(order.evidence?.digitalReservationCodes?.slice().sort(), selector.couponCodes.slice().sort()) ||
             order.promotionCode || order.couponCode || order.evidence?.reservationCodes?.length) throw new Error('Original coupon order is not qualified for forward recovery');
         scope.storeCode = acquisition.identifier(order.evidence.storeCode);
+        const cart = await acquisition.one('DefaultCartService', scope, { code: selector.cartCode,
+            enterpriseCode: scope.enterpriseCode, ownerId: scope.ownerId });
+        if (cart.storeCode !== scope.storeCode || !same(cart.ownerRef, scope.ownerRef) ||
+            !same(cart.merchantScope, scope.merchantScope) || cart.participantEnterpriseCode !== scope.participantEnterpriseCode ||
+            typeof cart.locale !== 'string' || !/^[A-Za-z0-9_-]{1,35}$/.test(cart.locale) ||
+            request.locale !== undefined && request.locale !== cart.locale)
+            throw new Error('Original coupon Cart locale or scope is unavailable');
+        scope.locale = cart.locale;
         const units = [];
         for (const code of selector.couponCodes) {
             const coupon = await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon(scope, code);

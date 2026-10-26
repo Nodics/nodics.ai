@@ -47,7 +47,7 @@ owners retain their own inbox; explicitly selected authorized Enterprise Employe
 use `profile-employee:<code>` in the existing inbox, not fake Customer identities.
 Keep actors separate from owners and never retain contacts in Wallet. Exact routes
 and the delivery/recovery matrix are in the owner-maintained
-[v002 CMS article](../../data/docs-v002/records/documentation/communicationDurableOutcomesDocumentationComponentData.js).
+[CMS article](../../data/docs-v001/records/documentation/communicationDurableOutcomesDocumentationComponentData.js).
 Transfer sender/recipient use distinct deterministic keys on the original
 committed transfer, not a second delivery outbox. Source pointer recovery and
 delivery retries remain separate from value movement.
@@ -122,3 +122,21 @@ source tests, not live reconciliation. Provider customizations retain the same
 durable owner protocol; no new configuration or permissions are required.
 
 Validation: `test/communicationRuntime.test.js` exercises replay, conflicting payloads, concurrency, retry timing, suppression, uncertain sends and explicit reconciliation. Actual Telegram client acceptance is a deployment test.
+
+
+## Remote eligibility owners
+
+A domain may contribute an inert `{moduleName, connectionName, runtimeRole,
+apiName}` entry instead of a local service name in `dispatchEligibilityOwners`.
+These are two explicit topology selections, never a catch/fallback chain. Remote
+checks use the existing module transport and internal service authentication,
+exact frozen metadata only, one attempt, no redirects and a bounded reply. The
+shared `communication.sourceEligibilityTransport` owns secure defaults, timeout
+bounds and `maxResponseBytes`. Its `validation.responseBytes` range validates the
+effective byte limit before transport; missing/invalid policy refuses without an
+inline default. Later layers may override owner-defined values while preserving
+internal authentication, single attempt, redirect refusal and exact proof binding. Domain endpoints independently admit the selected caller and reread source
+and recipient proof; an unavailable or foreign reply refuses/suppresses through
+existing intent handling. Templates, contacts, original tokens and rendered content
+never enter the check. Optional owner role contributions may supply this metadata
+without activating that domain's schemas/services on the delivery runtime.

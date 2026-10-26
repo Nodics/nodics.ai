@@ -186,6 +186,7 @@ module.exports = {
           throw error;
         }
         result.options.push({ integrationCode: integration.code, partnerEnterpriseCode: integration.partnerEnterpriseCode,
+          simulated: this.provider(integration).capabilities().simulated === true,
           accountLinkCode: account.code, programCode: pair.programCode, rewardTypeCode: pair.rewardTypeCode,
           sourceScale: eligible.sourceScale, termsReference: integration.termsReference, termsRevision: integration.termsRevision });
       }
@@ -246,23 +247,33 @@ module.exports = {
   },
 
   /**
-   * Saves only through generated persistence; a revision predicate never upserts.
+   * Creates once through generated insert-only persistence; revision predicates never upsert.
    * @param {Object} context Previously admitted owner context with immutable caller and scope.
    * @param {Object} row Persisted owner record with original revision and evidence.
    * @param {Object} previous Prior persisted revision used for conditional writes.
-   * @returns {Promise<*>} Saves only through generated persistence; a revision predicate never upserts.
+   * @returns {Promise<*>} Creates once through generated insert-only persistence; revision predicates never upsert.
    * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
    * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
    */
   persist: async function (context, row, previous) {
-    const response = await this.service("DefaultLoyaltyPartnerRewardConversionRecordService").save(
-      this.storageRequest(context, { model: structuredClone(row),
-        ...(previous ? { query: { code: previous.code, revision: previous.revision, status: previous.status } } : {}) }),
-    );
+    // Storage owns _id. Readback may carry BSON identity that structuredClone
+    // cannot preserve; never send it back in $set or compare it as owner state.
+    const model = structuredClone(row);
+    delete model._id;
+    const request = this.storageRequest(context, { model: structuredClone(model),
+      ...(previous ? { query: { code: previous.code, revision: previous.revision, status: previous.status } } : {}) });
+    // Generated save derives a primary-key query even for new records.
+    // Explicit insertion preserves create-once intent without enabling upsert.
+    if (!previous) request.options.insertOnly = true;
+    const response = await this.service("DefaultLoyaltyPartnerRewardConversionRecordService").save(request);
     const saved = response?.result;
     if (response?.error || response?.success === false || response?.acknowledged === false ||
         !/^SUC_/.test(response?.code || "") || response?.errors && (!Array.isArray(response.errors) || response.errors.length) || !saved || Array.isArray(saved) ||
-        !Object.keys(row).every(key => isDeepStrictEqual(saved[key], row[key]))) this.fail("PERSISTENCE");
+        !(saved.updated instanceof Date) || !Number.isFinite(saved.updated.getTime()) ||
+        // The framework pre-save interceptor owns updated, not the conversion.
+        // Every other supplied field, including created and business dates, stays exact.
+        !Object.keys(model).filter(key => key !== "updated")
+          .every(key => isDeepStrictEqual(saved[key], model[key]))) this.fail("PERSISTENCE");
     return structuredClone(saved);
   },
 
@@ -351,17 +362,20 @@ module.exports = {
         program.endsAt !== undefined && (!date(program.endsAt) || new Date(program.endsAt).getTime() <= now) ||
         type.active !== true || type.status !== ENUMS.LoyaltyRewardTypeStatus.ACTIVE.key || !Number.isInteger(type.precision)) this.fail("INELIGIBLE");
     this.amount().normalize("0", type.precision);
+    if (this.provider(integration).capabilities().simulated === true &&
+        (wallet.metadata?.sample !== true || wallet.metadata?.testOnly !== true)) this.fail("INELIGIBLE");
     return { integration, account, sourceScale: type.precision };
   },
 
   /**
    * Requires a selected qualified adapter, without inventing a production provider.
    * @param {Object} integration Governed partner integration record.
+   * @param {boolean} [simulated] Retained execution mode; replacement adapters must match.
    * @returns {*} Requires a selected qualified adapter, without inventing a production provider.
    * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
    * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
    */
-  provider: function (integration) {
+  provider: function (integration, simulated) {
     const registry = this.policy(true).providers;
     if (!Object.hasOwn(registry, integration.providerKey)) this.fail("UNAVAILABLE");
     const provider = this.service(registry[integration.providerKey]);
@@ -369,6 +383,7 @@ module.exports = {
     if (capabilities?.contractVersion !== 1 || capabilities.idempotentExecution !== true ||
         capabilities.authoritativeOutcomes !== true || capabilities.terminalNoCreditFence !== true ||
         ["quote", "execute", "reconcile"].some(method => typeof provider[method] !== "function")) this.fail("UNAVAILABLE");
+    if (simulated !== undefined && (capabilities.simulated === true) !== simulated) this.fail("PROVIDER");
     return provider;
   },
 
@@ -401,6 +416,7 @@ module.exports = {
    */
   providerRequest: function (context, row) {
     return structuredClone({ tenant: context.tenant, operationReference: row.code,
+      simulated: row.simulated === true,
       integration: row.integration, account: row.account, sourceAmount: row.sourceAmount,
       sourceScale: row.sourceScale, programCode: row.intent.programCode, rewardTypeCode: row.intent.rewardTypeCode,
       targetAmount: row.targetAmount, targetScale: row.targetScale, targetUnit: row.targetUnit,
@@ -432,8 +448,10 @@ module.exports = {
     const row = { code, active: true, revision: 0, status: ENUMS.LoyaltyPartnerConversionStatus.QUOTED.key, intent,
       ownerType: wallet.ownerType, ownerCode: wallet.ownerCode, actorCode: context.actorCode,
       integration, account, sourceAmount: intent.amount, sourceScale, createdAt: this.now() };
-    const quote = await this.provider(integration).quote(this.providerRequest(context, row));
-    if (!quote || !this.identifier(quote.quoteReference) || quote.sourceAmount !== row.sourceAmount ||
+    const provider = this.provider(integration);
+    row.simulated = provider.capabilities().simulated === true;
+    const quote = await provider.quote(this.providerRequest(context, row));
+    if (!quote || (quote.simulated === true) !== row.simulated || !this.identifier(quote.quoteReference) || quote.sourceAmount !== row.sourceAmount ||
         quote.sourceScale !== sourceScale || !Number.isInteger(quote.targetScale) ||
         typeof quote.targetAmount !== "string" || !this.identifier(quote.targetUnit) ||
         quote.termsReference !== integration.termsReference || quote.termsRevision !== integration.termsRevision ||
@@ -470,7 +488,7 @@ module.exports = {
       const current = await this.eligibility(context, row.intent, wallet);
       if (!isDeepStrictEqual(current.integration, row.integration) || !isDeepStrictEqual(current.account, row.account) ||
           current.sourceScale !== row.sourceScale) this.fail("CONFLICT");
-      this.provider(row.integration);
+      this.provider(row.integration, row.simulated === true);
       this.accounting(context);
       const claimed = await this.transition(context, row, { status: ENUMS.LoyaltyPartnerConversionStatus.HOLDING.key, confirmedAt: this.now(), confirmedBy: context.actorCode });
       if (!claimed.won) return this.project(claimed.row);
@@ -602,7 +620,7 @@ module.exports = {
     }
     let method = "reconcile";
     if (row.status === ENUMS.LoyaltyPartnerConversionStatus.HELD.key) {
-      this.provider(row.integration);
+      this.provider(row.integration, row.simulated === true);
       const submitted = await this.transition(context, row, { status: ENUMS.LoyaltyPartnerConversionStatus.SUBMITTED.key });
       if (!submitted.won) return submitted.row;
       row = submitted.row;
@@ -610,7 +628,7 @@ module.exports = {
     }
     if (row.status === ENUMS.LoyaltyPartnerConversionStatus.SUBMITTED.key) {
       let outcome;
-      try { outcome = await this.provider(row.integration)[method](this.providerRequest(context, row)); }
+      try { outcome = await this.provider(row.integration, row.simulated === true)[method](this.providerRequest(context, row)); }
       catch (_) { return row; }
       if (!outcome || [ENUMS.LoyaltyPartnerCreditOutcome.PENDING.key, ENUMS.LoyaltyPartnerCreditOutcome.UNKNOWN.key].includes(outcome.status)) return row;
       const evidence = this.outcome(row, outcome);
@@ -636,12 +654,13 @@ module.exports = {
    * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
    */
   outcome: function (row, value) {
-    if (![ENUMS.LoyaltyPartnerCreditOutcome.CREDITED.key, ENUMS.LoyaltyPartnerCreditOutcome.NOT_CREDITED.key].includes(value.status) || value.operationReference !== row.code ||
+    if ((value.simulated === true) !== (row.simulated === true) ||
+        ![ENUMS.LoyaltyPartnerCreditOutcome.CREDITED.key, ENUMS.LoyaltyPartnerCreditOutcome.NOT_CREDITED.key].includes(value.status) || value.operationReference !== row.code ||
         value.integrationCode !== row.integration.code || value.partnerEnterpriseCode !== row.integration.partnerEnterpriseCode ||
         value.accountReference !== row.account.accountReference || value.targetAmount !== row.targetAmount ||
         value.targetUnit !== row.targetUnit || !this.identifier(value.providerReference) ||
         value.status === ENUMS.LoyaltyPartnerCreditOutcome.NOT_CREDITED.key && value.cannotCredit !== true) this.fail("PROVIDER");
-    return { status: value.status, providerReference: value.providerReference,
+    return { status: value.status, simulated: row.simulated === true, providerReference: value.providerReference,
       operationReference: value.operationReference, integrationCode: value.integrationCode,
       partnerEnterpriseCode: value.partnerEnterpriseCode, accountReference: value.accountReference,
       targetAmount: value.targetAmount, targetUnit: value.targetUnit,
@@ -655,7 +674,8 @@ module.exports = {
    * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
    */
   project: function (row) {
-    return { conversionCode: row.code, status: row.status, partnerEnterpriseCode: row.integration.partnerEnterpriseCode,
+    return { conversionCode: row.code, status: row.status, simulated: row.simulated === true,
+      partnerEnterpriseCode: row.integration.partnerEnterpriseCode,
       integrationCode: row.integration.code, accountLinkCode: row.intent.accountLinkCode,
       owner: { ownerType: row.ownerType, ownerCode: row.ownerCode }, walletCode: row.intent.walletCode, programCode: row.intent.programCode,
       rewardTypeCode: row.intent.rewardTypeCode, sourceAmount: row.sourceAmount, sourceScale: row.sourceScale,

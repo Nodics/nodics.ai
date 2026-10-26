@@ -21,14 +21,15 @@ const inspection = require("../src/service/operation/defaultProcessOperationsIns
 const definitions = require("../src/service/definition/defaultProcessDefinitionLifecycleService");
 
 test("all Process inspection lists and point reads use generated-service page bounds", async (t) => {
-  const previous = { SERVICE: global.SERVICE, CLASSES: global.CLASSES };
+  const previous = { SERVICE: global.SERVICE, CLASSES: global.CLASSES, CONFIG: global.CONFIG };
   t.after(() => Object.assign(global, previous));
   global.CLASSES = { NodicsError: Error };
+  global.CONFIG = { get: () => require('../config/properties').process };
   const calls = [];
   const owner = {
     get: async (request) => {
       calls.push(request);
-      return { result: [{ code: "one" }] };
+      return { code: 'SUC_TEST', count: 1, result: [{ code: "one" }] };
     },
   };
   global.SERVICE = {
@@ -43,7 +44,6 @@ test("all Process inspection lists and point reads use generated-service page bo
   const authData = { loginId: "employee" };
   for (const method of [
     "listInstances",
-    "listTasks",
     "listIncidents",
     "listAuditEvents",
   ]) {
@@ -97,4 +97,61 @@ test("all Process inspection lists and point reads use generated-service page bo
     sort: { version: -1 },
   });
   assert.deepEqual(calls.at(-1).query, { definitionCode: "definition-one" });
+});
+
+test('task pages preserve generated-owner scope, filters and exact count beyond 25 records', async (t) => {
+  const previous = { SERVICE: global.SERVICE, CLASSES: global.CLASSES, CONFIG: global.CONFIG };
+  t.after(() => Object.assign(global, previous));
+  global.CLASSES = { NodicsError: Error };
+  global.CONFIG = { get: () => require('../config/properties').process };
+  const calls = [];
+  const rows = Array.from({ length: 61 }, (_, index) => ({ code: `task-${String(index).padStart(3, '0')}` }));
+  const authData = { loginId: 'reviewer', entCode: 'enterprise-one' };
+  global.SERVICE = {
+    DefaultProcessTaskService: { get: async (request) => {
+      calls.push(request);
+      const { pageNumber, pageSize } = request.searchOptions;
+      return { code: 'SUC_TEST', count: rows.length, result: rows.slice((pageNumber - 1) * pageSize, pageNumber * pageSize) };
+    } },
+    DefaultProcessRuntimeLifecycleService: { projectTaskDecisions: async (request, tasks) => {
+      assert.equal(request.authData, authData);
+      return tasks.map((task) => ({ ...task, reviewerEligibility: { eligible: false } }));
+    } },
+  };
+  const seen = [];
+  for (const page of [1, 2, 3, 4]) {
+    const response = await inspection.listTasks({ tenant: 'tenant-one', authData, query: {
+      page: String(page), queue: 'actionable', status: 'OPEN', assignee: 'reviewer', instanceCode: 'instance-one', unsafe: { $ne: null },
+    } });
+    seen.push(...response.data.map((row) => row.code));
+    assert.deepEqual(response.pagination, { page, pageSize: 25, total: 61, hasNext: page < 3, hasPrevious: page > 1 });
+    assert.ok(response.data.every((row) => row.reviewerEligibility.eligible === false));
+    const call = calls.at(-1);
+    assert.equal(call.tenant, 'tenant-one');
+    assert.equal(call.authData, authData);
+    assert.deepEqual(call.query, { $and: [{ instanceCode: 'instance-one', status: 'OPEN', assignee: 'reviewer' }, { status: { $in: ['OPEN', 'CLAIMED', 'ESCALATED'] } }] });
+    assert.deepEqual(call.searchOptions, { pageSize: 25, pageNumber: page, sort: { dueAt: 1, code: 1 } });
+  }
+  assert.equal(new Set(seen).size, 61);
+  assert.equal(seen.length, 61);
+  for (const query of [{ page: '0' }, { page: '-1' }, { page: '1.5' }, { page: ['2'] }, { page: '1e2' }, { page: '9007199254740991' }, { limit: '101' }, { limit: 'no' }, { queue: 'anything' }]) {
+    await assert.rejects(() => inspection.listTasks({ tenant: 'tenant-one', authData, query }));
+  }
+  assert.equal(calls.length, 4);
+  global.CONFIG = { get: () => ({ taskQueue: { defaultPageSize: 7, maximumPageSize: 20 } }) };
+  const customized = await inspection.listTasks({ tenant: 'tenant-one', authData, query: { page: '2' } });
+  assert.equal(customized.pagination.pageSize, 7);
+  assert.equal(customized.data[0].code, 'task-007');
+  for (const taskQueue of [undefined, { defaultPageSize: 0, maximumPageSize: 100 }, { defaultPageSize: 25, maximumPageSize: 20 }, { defaultPageSize: 25, maximumPageSize: 101 }]) {
+    global.CONFIG = { get: () => ({ taskQueue }) };
+    await assert.rejects(() => inspection.listTasks({ tenant: 'tenant-one', authData, query: {} }));
+  }
+  global.CONFIG = { get: () => require('../config/properties').process };
+  global.SERVICE.DefaultProcessTaskService.get = async () => ({ code: 'SUC_TEST', count: 0, result: [] });
+  assert.deepEqual((await inspection.listTasks({ tenant: 'tenant-one', authData, query: {} })).pagination,
+    { page: 1, pageSize: 25, total: 0, hasNext: false, hasPrevious: false });
+  global.SERVICE.DefaultProcessTaskService.get = async () => ({ code: 'SUC_TEST', result: [] });
+  await assert.rejects(() => inspection.listTasks({ tenant: 'tenant-one', authData, query: {} }));
+  global.SERVICE.DefaultProcessTaskService.get = async () => { throw new Error('Denied'); };
+  await assert.rejects(() => inspection.listTasks({ tenant: 'tenant-one', authData, query: {} }), /Denied/);
 });

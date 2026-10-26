@@ -76,7 +76,7 @@ export function selectDigitalBundlePublicationAcceptance(profiles, name = defaul
 /** Validates one reviewed fixture and original participant/runtime sessions before owner I/O. */
 export function digitalBundlePublicationSelection(options = {}) {
   requireEvidence(options.execute === true, 'EXPLICIT_BUNDLE_PUBLICATION_ACCEPTANCE_EXECUTION_REQUIRED');
-  requireEvidence(Number.isSafeInteger(options.maximumComponents) && options.maximumComponents >= 2,
+  requireEvidence(Number.isSafeInteger(options.maximumComponents) && options.maximumComponents >= 1,
     'BUNDLE_PUBLICATION_COMPONENT_BOUND_REQUIRED');
   const digitalUrl = new URL(options.digitalBaseUrl);
   const productUrl = new URL(options.productBaseUrl);
@@ -92,9 +92,9 @@ export function digitalBundlePublicationSelection(options = {}) {
     'REVIEWED_BUNDLE_PUBLICATION_ACTOR_REQUIRED');
   owner(s.owner.ownerRef);
   requireEvidence(exactKeys(s.manifest, ['idempotencyKey', 'components']) && identifier(s.manifest.idempotencyKey) &&
-    Array.isArray(s.manifest.components) && s.manifest.components.length >= 2 &&
+    Array.isArray(s.manifest.components) && s.manifest.components.length >= 1 &&
     s.manifest.components.length <= options.maximumComponents, 'REVIEWED_BUNDLE_PUBLICATION_MANIFEST_REQUIRED');
-  const seen = new Set(), kinds = new Set();
+  const seen = new Set();
   for (const component of s.manifest.components) {
     const keys = component?.kind === 'REALIZED_CARBON'
       ? ['kind', 'reference', 'quantity', 'expectedRevision', 'unitOfMeasure']
@@ -112,10 +112,8 @@ export function digitalBundlePublicationSelection(options = {}) {
     }
     const key = JSON.stringify(component.reference);
     requireEvidence(!seen.has(key), 'DUPLICATE_BUNDLE_PUBLICATION_COMPONENT');
-    seen.add(key); kinds.add(component.kind);
+    seen.add(key);
   }
-  requireEvidence(kinds.has('CERTIFICATE') && kinds.has('REALIZED_CARBON'),
-    'CERTIFICATE_AND_REALIZED_CARBON_REQUIRED');
   const listingKeys = ['idempotencyKey', 'listingContextRef', 'storeEnterpriseCode', 'name', 'categoryCodes',
     'storeCode', 'saleMode', 'amount', 'currency', 'priceBookCode', 'reward', 'startsAt', 'endsAt'];
   requireEvidence((exactKeys(s.listing, listingKeys) || exactKeys(s.listing, [...listingKeys, 'description'])) &&
@@ -240,7 +238,7 @@ export async function runDigitalBundlePublicationAcceptance(options = {}) {
     return { contractVersion: 1, state: 'PASSED', manifestCode: manifest.code,
       publicationCode: publication.publicationCode, productCode: publication.productCode,
       selectionDigest: createHash('sha256').update(JSON.stringify(s)).digest('hex'),
-      componentKinds: ['CERTIFICATE', 'REALIZED_CARBON'], componentReservationsConfirmed: true,
+      componentKinds: [...new Set(manifest.components.map(component => component.kind))].sort(), componentReservationsConfirmed: true,
       rewardsIncludedInBundle: false, productPublicationConfirmed: true };
   } catch (error) {
     return { contractVersion: 1, state: 'RECOVERY_REQUIRED', stage,
@@ -272,7 +270,7 @@ export async function runConfiguredDigitalBundlePublicationAcceptance(options = 
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  if (process.argv.includes('--help')) console.log('acceptance:digital-bundle-publication --execute [--acceptance=<name>]; requires one reviewed local certificate-and-realized-carbon listing profile plus NODICS_DIGITAL_BUNDLE_PUBLICATION_PARTICIPANT_TOKEN, NODICS_DIGITAL_BUNDLE_PUBLICATION_DIGITAL_RUNTIME_TOKEN and NODICS_DIGITAL_BUNDLE_PUBLICATION_PRODUCT_RUNTIME_TOKEN. It creates no identity, holdings, context or permission.');
+  if (process.argv.includes('--help')) console.log('acceptance:digital-bundle-publication --execute [--acceptance=<name>]; requires one reviewed local certificate-only, realized-carbon-only or mixed listing profile plus NODICS_DIGITAL_BUNDLE_PUBLICATION_PARTICIPANT_TOKEN, NODICS_DIGITAL_BUNDLE_PUBLICATION_DIGITAL_RUNTIME_TOKEN and NODICS_DIGITAL_BUNDLE_PUBLICATION_PRODUCT_RUNTIME_TOKEN. It creates no identity, holdings, context or permission.');
   else runConfiguredDigitalBundlePublicationAcceptance({ execute: process.argv.includes('--execute'),
     acceptanceName: digitalBundlePublicationAcceptanceArgument(process.argv.slice(2)) })
     .then(result => { console.log(JSON.stringify(result, null, 2)); process.exitCode = result.state === 'PASSED' ? 0 : 1; })

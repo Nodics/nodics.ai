@@ -1,5 +1,8 @@
 # Cart
 
+Explicit [Enterprise participant transaction access](llm/contracts/participant-transaction-access.md)
+contributes parent-free owner roles without assigning users or qualifying finance.
+
 Fixed-price creation resolves the merchant through canonical Store placement;
 later commands recover it from the owner-validated Cart without another frontend
 Store selector. Read [merchant scope](llm/contracts/merchant-scope.md) for retained

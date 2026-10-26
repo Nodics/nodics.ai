@@ -11,24 +11,22 @@
 
 'use strict';
 
-/** @description Generated Nodics framework documentation publication state metadata. */
+/** @description Owner-authored auction documentation CMS PublicationState records; Staged pending review. */
 module.exports = {
   "record0": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodepagecatalogproductdiscoverymanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagecatalogProductDiscoveryManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
-      "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d34ff7ea1fb40b6b580e980fa5d0e0ace9c80152e9e7d27f37e68795f3b1e290",
+    "checksum": "8d0f12c5029d052aa149ede4742865e145413877045e697a8c10c9ff35e65b44",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -46,30 +44,24 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
-    "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
+    "author": "nodics.docs.generator",
     "active": true
   },
   "record1": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacatalogProductDiscoveryManagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
-      "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ea3ff92438d6160015a5043df4818545d8cad5b42802225ba34b80b582378a35",
+    "checksum": "5470d3cadd0238d9f98f3984212bca44bbfef61c2f8b366de90cd04f1b101059",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -87,30 +79,24 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
-    "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
+    "author": "nodics.docs.generator",
     "active": true
   },
   "record2": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodepagecatalogproductdiscoverymanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodepagecatalogproductdiscoverymanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
-      "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ab0149c4700b6f1670953cdb9e9ecffadf1a2b35f95d5cd5777248d666800c7e",
+    "checksum": "8568b327c1438081777f1ee10532e041b968ec69e0d012f582467a8e8719de54",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -126,30 +112,24 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
-    "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
+    "author": "nodics.docs.generator",
     "active": true
   },
   "record3": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.16.29",
-    "onlineVersion": "0.16.29",
+    "stagedVersion": "0.0.2",
     "validationResult": {
-      "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "0882ed568f39a09d6bb68d4406c907846ebd4095d79e71e20b6e279f8ac68f14",
+    "checksum": "aabef0310545623e3516723a04e5ea48140d8ad97cd0622223e4c5bd586f1632",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -165,12 +145,8 @@ module.exports = {
       "permissionEnforced": true,
       "adminOverrideAudited": true
     },
-    "actor": "nodics.docs.generator",
-    "author": "nodics.docs.generator",
-    "reviewer": "nodics.docs.generator",
-    "approver": "nodics.docs.generator",
-    "publisher": "nodics.docs.generator",
     "auditTrail": [],
+    "author": "nodics.docs.generator",
     "active": true
   }
 };

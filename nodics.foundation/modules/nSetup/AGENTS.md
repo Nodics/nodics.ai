@@ -33,6 +33,12 @@ project-specific or tool-specific instruction authorities.
 
 ## nSetup Rules
 
+- Enforce the [unreleased owner baseline](llm/contracts/data-manifest-contract.md#unreleased-owner-baseline):
+  shipping data stays in owner-specific v001 without compatibility retained roots
+  or superseded duplicate patches. Preserve semantic versions independently.
+  Generic versioning remains; deliberate versions belong to isolated test fixtures.
+  Source consolidation never authorizes live receipt changes or reset.
+
 - Enforce the [mandatory default ownership gate](llm/contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate).
   Standard property definitions/defaults and provider wiring remain with the
   implementing framework owner. Classify each customer declaration by consumer

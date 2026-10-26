@@ -11,6 +11,7 @@
 
 /** @module loyaltyWallet/src/utils/enums @description Exports Loyalty Wallet-local enum contributions. @layer utility @owner loyaltyWallet */
 module.exports = {
+    LoyaltyReservationDecisionStatus: { definition: ['AUTHORIZED', 'DENIED', 'CANCELLED'] },
     LoyaltyPartnerIntegrationStatus: { definition: ['ACTIVE', 'PAUSED', 'RETIRED'] },
     LoyaltyProtectedHoldPolicy: { definition: ["EXTERNAL_OUTCOME","AUCTION_ROUND"] },
     LoyaltyPartnerAccountStatus: { definition: ["VERIFIED","REVOKED"] },
@@ -18,5 +19,6 @@ module.exports = {
     LoyaltyPartnerCreditOutcome: { definition: ["PENDING","UNKNOWN","CREDITED","NOT_CREDITED"] },
     LoyaltyTransferStatus: { definition: ["COMPLETED","UNCONFIRMED"] },
     LoyaltyTransferNotificationStatus: { definition: ["NOT_REQUESTED","UNCONFIRMED","RECORDED","ACCEPTED","QUEUED","DELIVERING","DELIVERED","RETRY_PENDING","UNCERTAIN","SUPPRESSED","FAILED","CANCELLED","DEAD_LETTER","UNCONFIGURED"] },
-    LoyaltyTestCreditStatus: { definition: ["CURRENT","CREDIT_ONCE","CREDITED"] }
+    LoyaltyTestCreditStatus: { definition: ["CURRENT","CREDIT_ONCE","CREDITED"] },
+    LoyaltyTestWalletProvisionStatus: { definition: ["PROVISIONED", "CURRENT"] }
 };

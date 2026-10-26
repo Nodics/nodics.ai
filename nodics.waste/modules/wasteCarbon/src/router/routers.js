@@ -9,12 +9,12 @@
 
  */
 
-/** @module wasteCarbon/router @description Owner routes with service mutations and self-scoped read admission. @owner wasteCarbon @layer router */
+/** @module wasteCarbon/router @description Owner routes with service-or-native-Platform-Admin mutations and self-scoped read admission. @owner wasteCarbon @layer router */
 module.exports = {
     "wasteCarbon": {
         "internal": {
             "finalize": {
-                "secured": true, "authTokenTypes": ["service"], "accessGroups": ["serviceAccountUserGroup"],
+                "secured": true, "authTokenTypes": ["service", "access"], "accessGroups": ["serviceAccountUserGroup"],
                 "permission": "carbon.holdings.finalize", "apiExposure": "carbonInternal",
                 "key": "/carbon/transfers/finalize", "method": "POST",
                 "controller": "DefaultWasteCarbonController", "operation": "finalize",
@@ -45,7 +45,8 @@ module.exports = {
             "synchronize": {
                 "secured": true,
                 "authTokenTypes": [
-                    "service"
+                    "service",
+                    "access"
                 ],
                 "accessGroups": [
                     "serviceAccountUserGroup"
@@ -63,7 +64,8 @@ module.exports = {
             "reserve": {
                 "secured": true,
                 "authTokenTypes": [
-                    "service"
+                    "service",
+                    "access"
                 ],
                 "accessGroups": [
                     "serviceAccountUserGroup"
@@ -81,7 +83,8 @@ module.exports = {
             "transfer": {
                 "secured": true,
                 "authTokenTypes": [
-                    "service"
+                    "service",
+                    "access"
                 ],
                 "accessGroups": [
                     "serviceAccountUserGroup"
@@ -99,7 +102,8 @@ module.exports = {
             "release": {
                 "secured": true,
                 "authTokenTypes": [
-                    "service"
+                    "service",
+                    "access"
                 ],
                 "accessGroups": [
                     "serviceAccountUserGroup"

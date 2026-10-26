@@ -58,7 +58,7 @@ test('successor Init orders module-owned group datasets after their permission a
     assert.equal(installed.size, require('./helpers/identityCatalogueFixture').records('UserGroup').length);
     assert(installed.get('runtimeConfigAdminUserGroup').permissions.includes('copilot.configuration.admin'));
     assert(!installed.get('employeeUserGroup').permissions.includes('copilot.configuration.admin'));
-    assert.equal(initial.version, '0.0.3');
+    assert.equal(initial.version, '0.0.8');
     assert.equal(initial.sourceRoot, 'init-v001');
     assert(!initial.declaredFiles.some(file => file.includes('/records/groups/')));
 });

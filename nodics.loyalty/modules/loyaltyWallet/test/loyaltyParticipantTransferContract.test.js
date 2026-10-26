@@ -92,7 +92,7 @@ test("failed accounting never dispatches completion notifications", async t => {
 test("owner-wide daily count and amount, per-transfer cap and issuer eligibility", async t => {
   const f = fixture(t); await f.fund();
   f.settings.transfers.maximumAmount = "3";
-  await assert.rejects(service.transfer(f.request), /Per-transfer/);
+  await assert.rejects(service.transfer(f.request), { code: "ERR_LOYALTY_TRANSFER_AMOUNT_LIMIT" });
   f.settings.transfers.maximumAmount = null;
   f.settings.transfers.maximumDailyAmount = "3";
   await assert.rejects(service.transfer(f.request), /Daily/);
@@ -104,6 +104,29 @@ test("owner-wide daily count and amount, per-transfer cap and issuer eligibility
   await assert.rejects(service.transfer({ ...f.request, payload: { ...f.request.payload, idempotencyKey: "third" } }), /Issuer/);
   assert.equal(f.rows.RewardTransferOperation.length, 1);
 });
+test("registered amount-limit code survives the real sensitive router response without private diagnostics", async t => {
+  const f = fixture(t); await f.fund();
+  f.settings.transfers.maximumAmount = "3";
+  let error;
+  try { await service.transfer(f.request); } catch (caught) { error = caught; }
+  assert.equal(error.code, "ERR_LOYALTY_TRANSFER_AMOUNT_LIMIT");
+  const statuses = require("../src/utils/statusDefinitions");
+  const router = require("../../../../nodics.foundation/modules/nRouter/src/service/router/defaultRouterOperationService");
+  SERVICE.DefaultLoggerService = { isSensitiveRequest: () => true };
+  SERVICE.DefaultStatusService = { get: code => statuses[code] };
+  let status, body;
+  const response = { status: value => { status = value; return response; }, json: value => { body = value; } };
+  error.message = "Private dynamic details must not be exposed";
+  assert.equal(router.sendPrivateError({}, response, error), true);
+  assert.equal(status, 409);
+  assert.deepEqual(body, { responseCode: "409", code: "ERR_LOYALTY_TRANSFER_AMOUNT_LIMIT", message: "Per-transfer limit exceeded" });
+  router.sendPrivateError({}, response, { code: "ERR_LOYALTY_TRANSFER", message: "Per-transfer limit exceeded" });
+  assert.equal(body.code, "ERR_LOYALTY_TRANSFER");
+  assert.equal(body.message, "Reward transfer could not be confirmed");
+  assert.equal(f.rows.RewardTransferOperation.length, 0);
+  assert.equal(f.rows.RewardTransferUsage.length, 0);
+});
+
 test("same-owner rejection, incoming selection, malformed policy and canonical precision", async t => {
   const f = fixture(t); await f.fund();
   await assert.rejects(service.transfer({ ...f.request, payload: { ...f.request.payload, recipient: { ownerType: "ENTERPRISE", ownerCode: "source" } } }), /distinct/);
@@ -161,6 +184,174 @@ test("governed owner selections use framework defaults and conditional revisions
   await assert.rejects(service.updateSettings({ ...request, payload: { ...request.payload, expectedRevision: 0 } }), /exceeds framework/);
   await assert.rejects(service.updateSettings({ ...request, payload: { ...request.payload, expectedRevision: 0, selections: { feeAmount: "1" } } }), /Invalid transfer selection/);
 });
+test("participant policy reads do not turn owner aliases into administrative authority", async t => {
+  const f = fixture(t);
+  const request = { ...f.request, payload: { ownerType: "ENTERPRISE",
+    ownerCode: "recipient", programCode: "program", rewardTypeCode: "points" } };
+  let permission;
+  SERVICE.DefaultLoyaltyParticipantService.resolve = async (original, required) => {
+    assert.equal(original, request);
+    permission = required;
+    return { ownerType: "ENTERPRISE", ownerCode: original.authData.entCode, actorCode: original.authData.loginId };
+  };
+  const result = await service.settings(request);
+  assert.equal(permission, "loyalty.transfers.manage");
+  assert.equal(result.ownerCode, "source");
+  assert.notEqual(result.ownerCode, request.payload.ownerCode);
+  SERVICE.DefaultLoyaltyParticipantService.resolve = async () => { throw Error("Current Profile scope refused"); };
+  SERVICE.DefaultLoyaltyRewardTypeService.get = async () => assert.fail("No policy data before admission");
+  await assert.rejects(service.settings(request), /Current Profile scope refused/);
+  assert.equal(f.rows.RewardTransferPolicy.length, 0);
+});
+
+function administratorFixture(t) {
+  const f = fixture(t);
+  f.request.authorization = "Bearer original-admin";
+  Object.assign(f.request.authData, { authenticationMethod: "PASSWORD", authVersion: 7 });
+  f.request.payload = { enterpriseCode: "recipient", programCode: "program", rewardTypeCode: "points" };
+  f.proofs = 0; f.targets = 0;
+  SERVICE.DefaultLoyaltyParticipantService.resolve = async () => assert.fail("Admin read must not require participant scope");
+  SERVICE.DefaultLoyaltyParticipantService.profile = async (request, path, enterprise, input) => {
+    f.proofs++;
+    assert.equal(request, f.request);
+    assert.equal(request.authorization, "Bearer original-admin");
+    assert.equal(path, f.settings.transfers.platformAdministratorEvidencePath);
+    assert.equal(enterprise, "source");
+    assert.equal(input.permission, "loyalty.transfers.manage");
+    return { contractVersion: 1, nonce: input.nonce, permission: input.permission, tenant: "t",
+      enterpriseCode: "source", actorCode: "employee1", authVersion: 7, principalType: "human", platformAdministrator: true };
+  };
+  SERVICE.DefaultLoyaltyParticipantService.recipient = async (request, owner) => {
+    f.targets++;
+    assert.equal(request.authData.entCode, "source");
+    assert.deepEqual(owner, { ownerType: "ENTERPRISE", ownerCode: "recipient" });
+    return { ...owner };
+  };
+  return f;
+}
+
+test("native admin target policy read preserves original context and revalidates without writes", async t => {
+  const f = administratorFixture(t), original = structuredClone(f.request);
+  f.rows.RewardTransferPolicy.push({ code: "target-policy", ownerType: "ENTERPRISE", ownerCode: "recipient",
+    programCode: "program", rewardTypeCode: "points", revision: 4,
+    selections: { maximumAmount: "10", maximumDailyAmount: "25", maximumDailyCount: 4 } });
+  const rows = structuredClone(f.rows);
+  const result = await service.settings(f.request);
+  assert.equal(result.ownerCode, "recipient");
+  assert.equal(result.revision, 4);
+  assert.equal(result.effective.maximumAmount, "10");
+  assert.equal(result.effective.maximumDailyAmount, "25");
+  assert.equal(result.effective.maximumDailyCount, 4);
+  assert.equal(f.proofs, 2); assert.equal(f.targets, 2);
+  assert.deepEqual(f.request, original); assert.deepEqual(f.rows, rows);
+});
+
+test("administrative target reads refuse malformed selectors, native identity and context substitution", async t => {
+  const f = administratorFixture(t), original = structuredClone(f.request);
+  for (const patch of [{ principalType: "customer" }, { isSystem: true }, { authenticationMethod: "LINKED" },
+    { sessionContext: {} }, { tenant: "other" }, { enterpriseCode: "recipient" }, { authVersion: 0 }]) {
+    f.request.authData = { ...original.authData, ...patch };
+    await assert.rejects(service.settings(f.request), /not authorized/);
+  }
+  f.request.authData = original.authData;
+  for (const patch of [{ enterpriseCode: "" }, { tenant: "other" }, { ownerCode: "recipient" }]) {
+    f.request.payload = { ...original.payload, ...patch };
+    await assert.rejects(service.settings(f.request), /Invalid/);
+  }
+  assert.equal(f.proofs, 0); assert.equal(f.targets, 0);
+});
+
+test("administrative target reads reject wrong proof, unavailable target and final revocation", async t => {
+  const f = administratorFixture(t), original = SERVICE.DefaultLoyaltyParticipantService.profile;
+  for (const patch of [{ nonce: "cached" }, { tenant: "foreign" }, { enterpriseCode: "recipient" },
+    { actorCode: "other" }, { authVersion: 8 }, { permission: "loyalty.wallet.testCredit" },
+    { principalType: "service" }, { platformAdministrator: false }]) {
+    SERVICE.DefaultLoyaltyParticipantService.profile = async (...args) => ({ ...await original(...args), ...patch });
+    await assert.rejects(service.settings(f.request), /proof could not/);
+  }
+  SERVICE.DefaultLoyaltyParticipantService.profile = original;
+  SERVICE.DefaultLoyaltyParticipantService.recipient = async () => null;
+  await assert.rejects(service.settings(f.request), /target could not/);
+  SERVICE.DefaultLoyaltyParticipantService.recipient = async () => { throw Error("Inactive or foreign target"); };
+  await assert.rejects(service.settings(f.request), /Inactive or foreign/);
+  SERVICE.DefaultLoyaltyParticipantService.recipient = async (_request, owner) => owner;
+  let calls = 0;
+  SERVICE.DefaultLoyaltyParticipantService.profile = async (...args) => {
+    if (++calls === 2) throw Error("Admin revoked");
+    return original(...args);
+  };
+  await assert.rejects(service.settings(f.request), /Admin revoked/);
+  SERVICE.DefaultLoyaltyParticipantService.profile = async (...args) => {
+    const result = await original(...args); f.request.payload.enterpriseCode = "other"; return result;
+  };
+  await assert.rejects(service.settings(f.request), /not authorized/);
+  assert.equal(f.rows.RewardTransferPolicy.length, 0);
+});
+
+test("native admin target update persists governed selections with original actor and conditional revision", async t => {
+  const f = administratorFixture(t), defaults = structuredClone(f.settings.transfers);
+  Object.assign(f.request.payload, { expectedRevision: null,
+    selections: { maximumAmount: "10.00", maximumDailyAmount: "25.00", maximumDailyCount: 4 } });
+  const request = structuredClone(f.request);
+  const result = await service.updateSettings(f.request);
+  assert.equal(result.ownerCode, "recipient"); assert.equal(result.revision, 0);
+  assert.deepEqual(result.selections, request.payload.selections);
+  assert.equal(f.rows.RewardTransferPolicy.length, 1);
+  assert.equal(f.rows.RewardTransferPolicy[0].updatedBy, "employee1");
+  assert.equal(f.rows.RewardTransferPolicy[0].ownerCode, "recipient");
+  assert.equal(f.proofs, 3); assert.equal(f.targets, 3);
+  assert.deepEqual(f.request, request); assert.deepEqual(f.settings.transfers, defaults);
+  await assert.rejects(service.updateSettings(f.request), /changed; reload/);
+  assert.equal(f.rows.RewardTransferPolicy[0].revision, 0);
+  f.request.payload.expectedRevision = 0;
+  f.request.payload.selections.maximumDailyCount = 3;
+  assert.equal((await service.updateSettings(f.request)).revision, 1);
+  assert.equal(f.rows.RewardTransferPolicy[0].selections.maximumDailyCount, 3);
+  assert.equal(f.rows.RewardLedgerEntry.length, 0);
+});
+
+test("admin policy update rejects absent authority, context substitution and non-governed fields without writes", async t => {
+  const f = administratorFixture(t);
+  Object.assign(f.request.payload, { expectedRevision: null, selections: { maximumAmount: "10" } });
+  const profile = SERVICE.DefaultLoyaltyParticipantService.profile;
+  SERVICE.DefaultLoyaltyParticipantService.profile = async () => { throw Error("Native manage permission denied"); };
+  await assert.rejects(service.updateSettings(f.request), /permission denied/);
+  SERVICE.DefaultLoyaltyParticipantService.profile = profile;
+  f.request.enterpriseCode = "recipient";
+  await assert.rejects(service.updateSettings(f.request), /not authorized/);
+  delete f.request.enterpriseCode;
+  for (const revision of [undefined, -1, "0"]) {
+    f.request.payload.expectedRevision = revision;
+    await assert.rejects(service.updateSettings(f.request), /Invalid transfer selection/);
+  }
+  f.request.payload.expectedRevision = null;
+  f.request.payload.selections = { feeAmount: "0" };
+  await assert.rejects(service.updateSettings(f.request), /Invalid transfer selection/);
+  f.request.payload.selections = { maximumAmount: "10" };
+  f.settings.transfers.maximumAmount = "5";
+  await assert.rejects(service.updateSettings(f.request), /exceeds framework/);
+  assert.equal(f.rows.RewardTransferPolicy.length, 0);
+});
+
+test("admin target update rolls back on late revocation, target loss, request or framework drift", async t => {
+  for (const mode of ["revoked", "target", "request", "defaults"]) await t.test(mode, async t => {
+    const f = administratorFixture(t);
+    Object.assign(f.request.payload, { expectedRevision: null, selections: { maximumAmount: "10" } });
+    const save = SERVICE.DefaultRewardTransferPolicyService.save;
+    SERVICE.DefaultRewardTransferPolicyService.save = async request => {
+      const result = await save(request);
+      if (mode === "revoked") SERVICE.DefaultLoyaltyParticipantService.profile = async () => { throw Error("Revoked"); };
+      if (mode === "target") SERVICE.DefaultLoyaltyParticipantService.recipient = async () => null;
+      if (mode === "request") f.request.payload.selections.maximumAmount = "100";
+      if (mode === "defaults") f.settings.transfers.maximumAmount = "1";
+      return result;
+    };
+    await assert.rejects(service.updateSettings(f.request));
+    assert.equal(f.rows.RewardTransferPolicy.length, 0);
+    assert.equal(f.rows.RewardLedgerEntry.length, 0);
+  });
+});
+
 test("context drift or revocation during settlement rolls back both balances and receipt", async t => {
   const f = fixture(t); await f.fund();
   const original = SERVICE.DefaultRewardTransferOperationService.save;

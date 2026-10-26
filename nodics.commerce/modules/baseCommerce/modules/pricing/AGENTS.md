@@ -1,5 +1,16 @@
 # Pricing Agent Contract
 
+Native publication is a separate per-command admission, not the ordinary signed
+book-owner path. Preserve fresh Profile `commerce.pricing.publish` proof, same-
+tenant target resolution, original actor/header and canonical journal/source pins
+through create, read, validate, requestApproval and approved activation. Product
+grants only the fixed immutable dependency proof. nPublish guards lifecycle-owned
+revision copies; no admission survives a request. Process alone decides approval.
+Keep existing workflow, runtime bindings, CAS and receipts. Preserve installed
+permission sections; the new definition belongs only to explicit
+`administrativePublicationPermission` in `init-v001`. See the native publication
+contract and composed administrative authoring regression.
+
 Read [bundle listing prices](llm/contracts/bundle-listing-prices.md) for the explicit
 automatic held-bundle amendment. Preserve the complete activated book, independent
 Digital source/actor proof, original pointer CAS, retained receipt and private
@@ -96,6 +107,20 @@ root is unavailable. Preserve legacy `rootCodes` when no map is supplied.
 - Follow ancestor contracts and read local guidance.
 
 Preserve Commerce ownership, tenant security, exact evidence, idempotency, audit, and generation discipline. Implementations are active; read the current owning contracts before changes.
+
+- Preserve installed `permissionCatalogue` bytes and receipt identity. The new
+  write definition belongs only to explicit `administrativeAuthoringPermission`
+  within `init-v001`; no catalogue rewrite, forced replay, grant or new version folder.
+
+- Native administrator row creation is a distinct bounded owner command, not
+  generic CRUD admission. Preserve original signed actor/enterprise, fresh Profile
+  native administrator evidence plus same-tenant participant resolution, exact
+  current book version/currency, private retired continuation and managed CURRENT
+  versioned services. No caller versions/audit/publication fields, update/upsert,
+  book mutation or publication delegation. Read reconciles unknown outcomes;
+  never blindly retry a failed write. See the native administrator section in
+  `llm/contracts/pricing-lifecycle-and-publication.md` and the real generated writer
+  coverage in `test/pricingAdministrativeAuthoring.test.js`.
 
 - Use the existing `schemaOperations` router group and shared `schemaApi` policy;
   do not duplicate schema route declarations in this module. Preserve effective

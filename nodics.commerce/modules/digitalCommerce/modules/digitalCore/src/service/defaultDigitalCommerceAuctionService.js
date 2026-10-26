@@ -21,7 +21,7 @@ const { isDeepStrictEqual: same } = require("node:util");
  * Failure behavior: Unconfirmed activation/withdrawal, funds or component state retains original recoverable
  * holds.
  * Exported members: settings, bundles, placement, manifest, read, checkpoint, product, price, binding,
- * publish, terms, published, held, proof, publication, release.
+ * publish, terms, published, held, proofScope, proofOperation, proof, publication, release.
  * @owner digitalCore
  * @layer service
  * @override Override effective members while preserving immutable terms, seller/merchant separation and
@@ -257,10 +257,15 @@ module.exports = {
     if (!row.evidence.listing.bindingCode) row = await this.checkpoint(r, row, { bindingCode: binding.code });
     else if (row.evidence.listing.bindingCode !== binding.code) throw new Error('Original binding changed');
     if (!row.evidence.listing.price) row = await this.checkpoint(r, row, { price: await this.price(r, row, "publish"), phase: "PUBLISHING" });
-    await this.price(r, row, "inspect");
-    const publication = await this.product(r, "publish", row);
+    const price = await this.price(r, row, "inspect");
+    const retainedPublication = row.evidence.listing.phase === "PUBLISHED";
+    const publication = await this.product(r, retainedPublication ? "inspect" : "publish", row);
     this.published(row, publication);
-    row = await this.checkpoint(r, row, { publication, phase: "PUBLISHED" });
+    if (retainedPublication) {
+      // An exact receipt replay is not a business edit: managed revisions must not advance.
+      if (!same(price, row.evidence.listing.price) || !same(publication, row.evidence.listing.publication))
+        throw new Error("Original publication receipt changed");
+    } else row = await this.checkpoint(r, row, { publication, phase: "PUBLISHED" });
     if (terms.saleMode === 'AUCTION' && !row.evidence.listing.auction) {
       const auctions = SERVICE.DefaultBiddingAuctionService;
       if (!auctions?.open) throw new Error('Bidding round owner is unavailable');
@@ -352,29 +357,97 @@ module.exports = {
     return manifest;
   },
   /**
-   * Runtime-only Product proof reads retained terms, never accepts a caller-supplied Product model.
+   * Validates the original runtime and its aliases independently of business placement.
    * @param {Object} r Signed service runtime with commerce.digital.bundle.publish and consistent
    * tenant/Enterprise aliases.
-   * @param {Object} input Exact operationCode and matching storeCode.
-   * @returns {Promise<Object>} Retained owner/terms/manifest/Product/price/release proof in original
-   * namespace.
-   * @remarks Effects: Reads listing and original manifest/holds; does not publish or mutate components.
-   * Failure behavior: Rejects non-runtime authority, conflicting aliases or inconsistent retained Store/hold
-   * evidence.
+   * @returns {Object} Signed tenant and Enterprise scope; no persistence or mutation.
+   * @remarks Failure behavior: Rejects non-runtime authority and conflicting aliases.
    * @override Body selectors cannot grant publication authority; retain independent runtime admission.
    */
-  proof: async function (r, input) {
+  proofScope: function (r) {
     const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(r, "digitalCore");
-    if (r.authData?.tokenType !== "service" || r.authData.tenant !== r.tenant ||
-        !r.authData.permissions?.includes("commerce.digital.bundle.publish") || !auth.entCode ||
-        [auth.enterpriseCode, r.enterpriseCode, r.entCode].some(value => value !== undefined && value !== auth.entCode))
+    const headers = r.httpRequest?.headers || {};
+    if (auth.tokenType !== "service" || auth.principalType !== "service" || auth.isSystem || auth.tenant !== r.tenant ||
+        !auth.permissions?.includes("commerce.digital.bundle.publish") || !auth.entCode ||
+        [r.tenantCode, auth.tenantCode, headers.tenant, headers['x-tenant-code'], headers['X-Tenant-Code']]
+          .some(value => value !== undefined && value !== auth.tenant) ||
+        [auth.enterpriseCode, r.enterpriseCode, r.entCode, headers.entCode, headers['x-enterprise-code'], headers['X-Enterprise-Code']]
+          .some(value => value !== undefined && value !== auth.entCode))
       throw new Error("Bundle publication runtime is required");
-    r = { ...r, enterpriseCode: auth.entCode };
-    const row = await this.read(r, input.operationCode), listing = row.evidence.listing;
-    if (listing.terms.storeCode !== input.storeCode) throw new Error("Listing Store changed");
-    const manifest = await this.manifest(r, row);
+    return { tenant: auth.tenant, enterpriseCode: auth.entCode };
+  },
+  /**
+   * Reads one exact listing in an already qualified Store partition.
+   * @param {Object} r Private owner read context with tenant and proven Store Enterprise.
+   * @param {string} code Exact original operation identity; never a query object.
+   * @returns {Promise<Object>} Detached complete listing row; no writes or discovery.
+   * @throws {Error} Missing, duplicate, truncated, foreign or malformed evidence refuses.
+   * @override Preserve fixed generated owner, exact selectors and duplicate detection.
+   */
+  proofOperation: async function (r, code) {
+    if (typeof code !== 'string' || !/^bundle-operation:[a-f0-9]{64}$/.test(code))
+      throw new Error('Original bundle publication is required');
+    const persistence = SERVICE.DefaultDigitalCommerceEntitlementService;
+    const response = await SERVICE.DefaultDigitalBundleOperationService.get({ tenant: r.tenant,
+      authData: persistence.serviceAuthData(r), query: { ...this.bundles().scope(r), code },
+      options: { recursive: false, skipItemCache: true }, searchOptions: { pageNumber: 1, pageSize: 2 } });
+    persistence.assertPersistence(response);
+    const rows = persistence.unwrap(response);
+    if (response.acknowledged === false || !Array.isArray(rows) || rows.length !== 1 || response.count !== 1 ||
+        [response.total, response.totalCount].some(value => value !== undefined && value !== 1))
+      throw new Error('Exact complete bundle publication evidence is required');
+    const row = rows[0], listing = row?.evidence?.listing;
+    if (!row || row.code !== code || row.tenant !== r.tenant || row.enterpriseCode !== r.enterpriseCode ||
+        row.active !== true || row.purpose !== 'LISTING' || !listing || listing.publicationCode !== code ||
+        this.bundles().digest(listing.terms) !== listing.termsDigest)
+      throw new Error('Retained listing terms are unavailable');
+    return structuredClone(row);
+  },
+  /**
+   * Proves an exact held listing through independently qualified Store placement.
+   * @param {Object} r Original signed runtime request; aliases remain signed scope.
+   * @param {Object} input Only operationCode and storeCode selectors.
+   * @returns {Promise<Object>} Read-only original listing/manifest proof.
+   * @throws {Error} Denied business scope, alias/policy drift or incomplete evidence refuses.
+   * @override Reuse runtime Enterprise qualification; never rewrite auth or infer grants.
+   */
+  proof: async function (r, input) {
+    const scope = this.proofScope(r), selectors = structuredClone(input);
+    if (!input || Object.getPrototypeOf(input) !== Object.prototype ||
+        Object.keys(input).sort().join(',') !== 'operationCode,storeCode' ||
+        typeof input.operationCode !== 'string' || !/^bundle-operation:[a-f0-9]{64}$/.test(input.operationCode) ||
+        typeof input.storeCode !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,191}$/.test(input.storeCode) ||
+        Object.keys(r.query || {}).length || Object.keys(r.httpRequest?.query || {}).length)
+      throw new Error('Exact bundle publication selectors are required');
+    const state = () => structuredClone({ tenant: r.tenant, tenantCode: r.tenantCode, enterpriseCode: r.enterpriseCode,
+      entCode: r.entCode, authData: r.authData, authorization: r.authorization, payload: r.payload,
+      query: r.query, headers: r.httpRequest?.headers, body: r.httpRequest?.body, httpQuery: r.httpRequest?.query });
+    const original = state(), policy = this.settings();
+    const enterprisePolicy = structuredClone(CONFIG.get('publish')?.approvalWorkflow?.runtimeEnterpriseScope);
+    let store;
+    const check = () => {
+      if (!same(scope, this.proofScope(r)) || !same(original, state()) || !same(input, selectors) ||
+          !same(policy, this.settings()) || !same(enterprisePolicy, CONFIG.get('publish')?.approvalWorkflow?.runtimeEnterpriseScope))
+        throw new Error('Bundle publication proof authority changed');
+      if (store && store.enterpriseCode !== scope.enterpriseCode) {
+        const workflow = SERVICE.DefaultPublicationApprovalWorkflowService;
+        if (!workflow?.requireRuntimeEnterprise) throw new Error('Bundle Store Enterprise is not qualified');
+        workflow.requireRuntimeEnterprise(r.authData, store.enterpriseCode);
+      }
+    };
+    store = await this.placement(r, selectors.storeCode); check();
+    // Only the private persistence context uses business placement; the signed request stays intact.
+    const context = { ...r, enterpriseCode: store.enterpriseCode };
+    const row = await this.proofOperation(context, selectors.operationCode); check();
+    const listing = row.evidence.listing;
+    if (listing.terms.storeCode !== selectors.storeCode) throw new Error("Listing Store changed");
+    const manifest = await this.manifest(context, row); check();
     if (manifest.digest !== row.evidence.manifestDigest) throw new Error("Listing manifest changed");
-    if (!listing.release) await this.held(r, row);
+    if (!listing.release) { await this.held(context, row); check(); }
+    if (!same(await this.proofOperation(context, selectors.operationCode), row)) throw new Error('Listing changed during proof');
+    check();
+    if (!same(await this.placement(r, selectors.storeCode), store)) throw new Error('Listing Store placement changed during proof');
+    check();
     return { confirmed: true, tenant: r.tenant, enterpriseCode: row.enterpriseCode, operationCode: row.code,
       ownerRef: row.ownerRef, termsDigest: listing.termsDigest, terms: listing.terms,
       manifest: { code: manifest.code, revision: manifest.revision, digest: manifest.digest },

@@ -52,6 +52,12 @@
         "catalogCode": "axisContentCatalog",
         "impactMessage": "Available authorized agreement workspaces use the published labels; no commercial terms or grants change.",
         "rollbackMessage": "Restore previously published presentation through the existing CMS publication lifecycle.",
+        "postPublicationCapabilities": [
+          {
+            "title": "Read agreement workspace labels",
+            "description": "Display published copy in the existing authorized Axis agreement workspace without changing terms or access grants."
+          }
+        ],
         "entities": [
           {
             "type": "cmsComponent",

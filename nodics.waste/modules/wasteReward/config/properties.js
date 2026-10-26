@@ -11,8 +11,23 @@
 
 /** @module wasteReward/config/properties @description Configurable defaults for Waste reward assessment persistence. @layer config @owner wasteReward */
 module.exports = {
+    tooling: {
+        commands: {
+            'acceptance:waste-material-value': {
+                acceptanceContract: true, projectHome: true, handler: '@nTooling/node-script',
+                script: 'src/service/acceptance/defaultWasteMaterialValueHttpAcceptanceService.mjs'
+            }
+        },
+        acceptance: {
+            wasteMaterialValueHttp: {
+                timeoutMs: 10000, maximumSelectionBytes: 65536, maximumResponseBytes: 262144,
+                authorizationEnvironment: 'NODICS_WASTE_MATERIAL_ACCEPTANCE_AUTHORIZATION'
+            }
+        }
+    },
     apiExposure: { categories: { wasteMaterialValueInternal: { enabled: true }, wasteMaterialValueRead: { enabled: true } } },
     wasteMaterialValue: {
+        mock: { enabled: false },
         profile: { connectionName: 'profile', targetAuthority: { runtimeRole: 'PLATFORM' }, timeoutMs: 10000 },
         evidence: { valuationProviderService: null, paymentProviderService: null, qualificationRef: null, allowSynthetic: false },
         validation: {

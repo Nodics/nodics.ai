@@ -88,3 +88,91 @@ test("unregistered dependency details remain masked with real runtime error hand
     return true;
   });
 });
+
+test("coupon source failures retain fixed registered stages without disclosing remote evidence", async t => {
+  const loaded = fixture(t);
+  const coupon = require(path.join(root, "nodics.waste/modules/wasteCore/src/service/defaultWasteCertificateCouponService"));
+  const properties = require(path.join(root, "nodics.waste/modules/wasteCore/config/properties"));
+  const get = CONFIG.get;
+  CONFIG.get = key => key === "waste" ? properties.waste : get(key);
+  const r = { tenant: "tenant", enterpriseCode: "merchant" };
+  const command = { operationKey: "original" };
+  const owner = { ...coupon, authorize() {} };
+  SERVICE.DefaultEWasteDigitalSaleService = { invoke: () => owner.source(r, command, "reserve") };
+  const sentinel = "private-certificate-token-payload-sentinel";
+  const cases = [
+    [async () => { throw Object.assign(new Error(sentinel), { code: "ERR_DIGITAL_ACQUISITION_UNCONFIRMED", data: sentinel }); }, "043"],
+    [async () => ({ data: { code: "ERR_DIGITAL_ACQUISITION_UNCONFIRMED", message: sentinel } }), "044"],
+    [async () => ({ contractVersion: 1, tenant: r.tenant, enterpriseCode: r.enterpriseCode, phase: "reserve", allowed: false, command }), "045"],
+    [async () => ({ contractVersion: 1, tenant: r.tenant, enterpriseCode: r.enterpriseCode, phase: "reserve", allowed: true, command: { operationKey: sentinel } }), "045"],
+  ];
+  for (const [invokeModule, suffix] of cases) {
+    let calls = 0;
+    SERVICE.DefaultModuleService = { invokeModule: async request => {
+      calls++; assert.equal(request.maxAttempts, 1);
+      assert.equal(request.apiName, "/internal/coupons/acquisition/source");
+      return invokeModule();
+    } };
+    await assert.rejects(loaded.invoke({ httpRequest: { params: { phase: "coupon-reserve" }, body: {} } }), error => {
+      const rendered = response(error);
+      assert.equal(rendered.status, 503);
+      assert.equal(rendered.body.code, "ERR_EWASTE_SALE_DIAGNOSTIC_" + suffix);
+      assert.equal(JSON.stringify(rendered).includes(sentinel), false);
+      assert.equal(error.cause, undefined);
+      return true;
+    });
+    assert.equal(calls, 1);
+  }
+  SERVICE.DefaultModuleService = { invokeModule: async () => ({ contractVersion: 1, tenant: r.tenant,
+    enterpriseCode: r.enterpriseCode, phase: "reserve", allowed: true, command }) };
+  await owner.source(r, command, "reserve");
+});
+
+test('registered Digital source stages survive normalized transport and envelopes through the private serializer', async t => {
+  const loaded = fixture(t);
+  const wasteRoot = path.join(root, 'nodics.waste/modules/wasteCore');
+  const coupon = require(path.join(wasteRoot, 'src/service/defaultWasteCertificateCouponService'));
+  const source = require(path.join(wasteRoot, 'src/utils/couponSourceDiagnostics'));
+  const digitalStatuses = require(path.join(root, 'nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/utils/statusDefinitions'));
+  const properties = require(path.join(wasteRoot, 'config/properties'));
+  const get = CONFIG.get;
+  CONFIG.get = key => key === 'waste' ? properties.waste : get(key);
+  let admissions = 0;
+  const owner = { ...coupon, authorize() { admissions++; } };
+  SERVICE.DefaultEWasteDigitalSaleService = { invoke: () => owner.source({ tenant: 't', enterpriseCode: 'merchant' }, { operationKey: 'original' }, 'release') };
+  const sentinel = 'PRIVATE_REMOTE_TOKEN_PAYLOAD';
+  let calls = 0;
+  const request = { httpRequest: { params: { phase: 'coupon-release' }, body: {} } };
+  for (const [code, message] of Object.entries(source.messages)) {
+    assert.equal(digitalStatuses[code].code, '409');
+    for (const mode of ['normalized', 'direct', 'envelope']) {
+      SERVICE.DefaultModuleService = { invokeModule: async r => {
+        calls++; assert.equal(r.maxAttempts, 1);
+        assert.equal(r.apiName, '/internal/coupons/acquisition/source');
+        const foreign = { message: sentinel, data: sentinel, causes: [{ token: sentinel }] };
+        if (mode === 'envelope') return { data: { result: { code, ...foreign } } };
+        throw Object.assign(Error(sentinel), foreign, mode === 'normalized'
+          ? { code: 'ERR_SYS_00000', metadata: { remoteHttpFailure: { code, httpStatus: 409 }, private: sentinel } }
+          : { code });
+      } };
+      const error = await new Promise(resolve => loaded.invoke(request, failure => resolve(failure)));
+      assert.deepEqual(response(error), { status: 503, body: { responseCode: '503', code: diagnostics.codes[message], message } });
+      assert.equal(JSON.stringify(response(error)).includes(sentinel), false);
+      assert.equal(error.causes.length, 0);
+    }
+  }
+  assert.equal(calls, 33); assert.equal(admissions, 33);
+  for (const failure of [
+    { code: 'ERR_DIGITAL_COUPON_SOURCE_UNKNOWN' },
+    { code: 'ERR_DIGITAL_COUPON_SOURCE_AUTH_suffix' },
+    { message: source.messages.ERR_DIGITAL_COUPON_SOURCE_AUTH },
+    { code: 'ERR_DIGITAL_COUPON_SOURCE_AUTH', metadata: { remoteHttpFailure: { code: 'ERR_OTHER', httpStatus: 409 } } },
+    { code: 'ERR_DIGITAL_COUPON_SOURCE_AUTH', metadata: { remoteHttpFailure: { code: 'ERR_DIGITAL_COUPON_SOURCE_AUTH', httpStatus: 500 } } },
+    { causes: [{ code: 'ERR_DIGITAL_COUPON_SOURCE_AUTH' }] },
+  ]) {
+    SERVICE.DefaultModuleService = { invokeModule: async () => { throw failure; } };
+    await assert.rejects(loaded.invoke(request), error => {
+      assert.equal(response(error).body.code, 'ERR_EWASTE_SALE_DIAGNOSTIC_043'); return true;
+    });
+  }
+});

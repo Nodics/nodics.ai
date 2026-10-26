@@ -11,7 +11,7 @@
 
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 "use strict";
-/** @module profile/test/notificationDocumentationSuccessor @description Verifies canonical notification CMS source, frozen predecessor bytes, stable identities, derived checksums and unapproved successor publication without import. @layer test @owner profile */
+/** @module profile/test/notificationDocumentationSuccessor @description Verifies consolidated notification CMS source, stable identities, derived checksums and unapproved publication without import. @layer test @owner profile */
 const test = require("node:test"), assert = require("node:assert/strict"), fs = require("node:fs"), path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const contract = require("../../../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService");
@@ -19,13 +19,14 @@ const manifest = require("../data/manifest.json").sections.documentation;
 const predecessor = require("./fixtures/notificationDocumentationPredecessor.json");
 const local = suffix => Object.keys(manifest.generatedHashes).filter(file => file.endsWith(suffix + "Data.js"))
   .flatMap(file => Object.values(require(path.join(root, "data", file))));
-test("notification documentation has a legitimate immutable forward release and preserves every predecessor byte", () => {
-  assert.equal(manifest.contentPath, "docs-v002"); assert.equal(manifest.version, "0.0.2");
+test("notification documentation has one consolidated source with verified hashes", () => {
+  assert.equal(manifest.contentPath, "docs-v001"); assert.equal(manifest.version, "0.0.2");
   assert.equal(predecessor.contentPath, "docs-v001");
-  for (const [file, hash] of Object.entries(predecessor.generatedHashes))
+  for (const [file, hash] of Object.entries(manifest.generatedHashes))
     assert.equal(contract.sha256(fs.readFileSync(path.join(root, "data", file))), hash, file);
-  contract.validateGeneration(predecessor, manifest);
-  assert.equal(manifest.sourceAuthority, "data/docs-v002/records/documentation");
+  assert.equal(fs.existsSync(path.join(root, "data", "docs-v002")), false);
+  assert.equal(manifest.releaseChecksum, contract.releaseChecksum(manifest.generatedHashes));
+  assert.equal(manifest.sourceAuthority, "data/docs-v001/records/documentation");
   assert.equal(manifest.installationPolicy, "OPTIONAL_AXIS_INITIATED");
 });
 test("canonical CMS guide describes all actual wrappers and does not confuse source checks with activation", () => {
@@ -37,12 +38,9 @@ test("canonical CMS guide describes all actual wrappers and does not confuse sou
     "profile-employee:", "permission", "scope", "consent", "Staged", "Common mistakes", "Verification"])
     assert.ok(article.body.includes(phrase), phrase);
   assert.equal(article.source.owner, "profile"); assert.equal(article.lifecycleState, "STAGED");
-  for (const file of Object.keys(predecessor.generatedHashes).filter(file => file.endsWith("PageMetadataData.js"))) {
-    const oldRows = Object.values(require(path.join(root, "data", file)));
-    for (const row of oldRows) {
+  for (const row of require("./fixtures/documentationIdentityBaseline.json")) {
       const next = local("PageMetadata").find(v => v.code === row.code);
       assert.equal(next.documentId, row.documentId); assert.equal(next.targetRoute, row.targetRoute);
-    }
   }
 });
 test("successor headers, source/search metadata and publication checksums match with no invented approvals", () => {

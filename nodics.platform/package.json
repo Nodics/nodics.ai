@@ -43,6 +43,6 @@
     "test:installer": "npm --prefix modules/installer test",
     "test:documentation": "node modules/backoffice/test/backofficeDocumentationNavigationContract.test.js && node modules/backoffice/test/backofficeLocalResetCoordinatorContract.test.js",
     "test:functional-catalogue": "node modules/backoffice/test/functionalModuleCatalogueService.test.js",
-    "test": "npm run check:syntax && npm run test:axis && npm run test:installer && npm run test:documentation && npm run test:functional-catalogue"
+    "test": "npm run check:syntax && npm run test:axis && npm run test:installer && npm run test:documentation && npm run test:functional-catalogue && node test/unreleasedDataConsolidation.test.js"
   }
 }

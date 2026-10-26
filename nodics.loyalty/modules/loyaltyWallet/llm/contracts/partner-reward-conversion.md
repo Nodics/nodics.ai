@@ -34,7 +34,7 @@ canonical customer's code, not login ID. Enterprise wallets bind to the acting
 employee's selected Enterprise and explicit permission. Service
 identities cannot impersonate these humans. Status retains current authority.
 
-Public output: `conversionCode`, `status`, `owner` (typed canonical owner), `partnerEnterpriseCode`,
+Public output: `conversionCode`, `status`, `simulated`, `owner` (typed canonical owner), `partnerEnterpriseCode`,
 `integrationCode`, `accountLinkCode` (opaque internal link identity), `walletCode`, `programCode`, `rewardTypeCode`, `sourceAmount`,
 `sourceScale`, `targetAmount`, `targetScale`, `targetUnit`, `termsReference`,
 `termsRevision`, `quoteExpiresAt`, `confirmedAt`, `completedAt`. No external
@@ -74,7 +74,8 @@ belong in `loyaltyWallet/config/properties.js`:
 loyalty: {
   partnerRewardConversion: {
     enabled: false,
-    providers: {},
+    providers: { mock: "DefaultLoyaltyMockPartnerRewardProviderService" },
+    mock: { enabled: false, outcome: "CREDITED", targetUnit: "SIMULATED_POINTS", quoteLifetimeMs: 60000 },
     selection: { maximumAccounts: 100, maximumRewardsPerIntegration: 100 }
   }
 }
@@ -86,7 +87,8 @@ selection keys are retained in governed integration records. Enabling this
 capability does not qualify a provider. Customer/runtime files may override only
 these framework definitions. No rate, fee, timeout or partner policy default is
 invented in the coordinator. Adapter-specific defaults and settings belong to
-the eventual implementing framework provider's properties, after protocol review.
+the implementing framework provider's properties, after protocol review. The
+registered mock is simulation-only and disabled for new quotes by default.
 
 Add the following schemas inside `loyaltyWallet/src/schemas/schemas.js`. Every
 schema uses `super: 'base', model: true, service: {enabled: true},
@@ -173,6 +175,60 @@ ownerCode: partnerEnterpriseCode})`. This invokes Profile `/participants/resolve
 with the original token and requires an exact same-tenant active existing
 Enterprise. It does not depend on local Profile models or an administrative search
 endpoint. Unit evidence does not qualify remote runtime topology.
+
+## Generated Quote Persistence
+
+First quote creation uses the existing generated save with `options.insertOnly:
+true`, retaining `recursive: false`, `skipItemCache: true` and `upsert: false`.
+The generated pipeline derives an inherited primary-code query even when the
+owner omits `query`; missing query never establishes insertion intent. Keep the
+normal access/default/validation pipeline and its atomic create primitive, with
+qualified unique identity indexes. Do not enable global or per-command upsert.
+
+Storage-owned `_id` is excluded from every owner write model and acknowledgement
+comparison. Generated reads may return BSON ObjectId values; structured cloning
+cannot preserve their driver identity, and replaying them in MongoDB `$set` can
+violate the immutable identifier. Keep all other expected owner fields checked,
+including revision/status and immutable quote evidence. Do not weaken the generic
+adapter or replace the canonical code selector with a cloned storage identifier.
+
+The framework pre-save interceptor owns `updated`: require a finite Date in the
+saved acknowledgement, but do not compare it to the old timestamp. Keep the
+original `created`, business `createdAt`/confirmation/completion dates, all supplied
+business fields, revision and status exact. Never compare against the mutable
+request object after interceptors; it is not an independent intent snapshot.
+
+Managed-field source audit: conversion inherits base defaults (`active`,
+`accessGroups`, `created`, `updated`), which fill absent values only. The standard
+pre-save interceptor refreshes only `updated`. This operational schema does not
+select ownership attribution, versioned persistence or managed concurrency;
+`ownerType`/`ownerCode` remain business ownership and revision stays owner-managed.
+Do not broadly exempt `createdBy`, `updatedBy`, owner fields or `versionId` if a
+later layer introduces them: reconcile its explicit policy while retaining exact
+business intent. `_id` remains storage-owned and excluded from writes.
+
+The accounting regression composes the actual timestamp interceptor, generic save
+initializer, Mongo save adapter, participant/reward owners and transaction
+compose/join with isolated driver I/O. It covers complete conversion/replay,
+unchanged creation evidence, malformed timestamp and business-field response
+refusal, rollback and original-key recovery. It is not live MongoDB qualification.
+
+Existing transitions remain update-only with exact code, previous revision and
+previous status. They never select insert-only or recreate a missing record.
+Duplicate creation or lost acknowledgement triggers the existing exact-key
+readback: recover only matching original intent and owner, reject conflicting
+intent, and preserve the winning record. No quote retry authorizes source holds
+or provider execution. See the framework
+[insert-only contract](../../../../../nodics.foundation/modules/nDatabase/database/llm/examples/insert-only-save.md).
+
+`loyaltyPartnerRewardConversion.test.js` composes the actual generic save
+initializer with isolated storage adapters, including generated primary lookup,
+insert-only dispatch, duplicate/lost-acknowledgement recovery, conflicting intent,
+stale revision/status and absent-row update refusal. A BSON-identity regression
+also composes the generic initializer and actual Mongo save adapter with isolated
+driver I/O, exercising confirmation through completion and replay while retaining
+the original database identity. This is source regression
+evidence, not installed database or HTTP acceptance.
 
 ## Source Accounting Dependency
 
@@ -280,8 +336,83 @@ with original signed credentials, private generated-storage admission, opaque
 token retention through normalization, guarded release, no-expiry protected holds,
 canonical capture/redemption and rollback/recovery after a redemption write fails.
 They do not prove real database behavior, generated schema adoption, external
-provider acceptance, API deployment or live conversion. There is deliberately no
-production synthetic adapter. A real provider remains gated until its protocol,
+provider acceptance, API deployment or live conversion. The permanent mock below
+supplies simulation evidence only. A real provider remains gated until its protocol,
 credentials, account verification, concrete framework path and qualification are
 reviewed. Parent-owned schema/config/API/hold integration must remain consistent
 with these contracts; its presence does not constitute live provider qualification.
+
+## Permanent Simulated Adapter
+
+The opt-in [installed Local HTTP acceptance](installed-partner-reward-mock-acceptance.md)
+uses existing signed human sessions and exact reviewed selections. It provisions
+nothing and distinguishes fresh source accounting from retained-key recovery.
+
+`src/service/defaultLoyaltyMockPartnerRewardProviderService.js` implements the
+same `capabilities/quote/execute/reconcile` interface and is registered by Wallet
+properties under `providers.mock`. There is no additional workflow, registry,
+transport, external account store or simulated balance authority. Both conversion
+and mock new-quote activation default to false. No customer identifiers, endpoints
+or credentials are supplied by this adapter.
+
+Administrators may explicitly override `loyalty.partnerRewardConversion.enabled`
+and `.mock.enabled` to true, then select `providerKey: "mock"` in an existing
+governed integration. Existing partner Enterprise resolution, issuer eligibility,
+verified account-link ownership, participant permissions and transaction
+qualification still apply. Mock eligibility additionally requires the persisted
+wallet's `metadata.sample === true` and `metadata.testOnly === true`, checked
+at quote and confirmation. Callers cannot provide these markers in commands.
+This adapter does not provision or relabel any wallet/account. Source reservation,
+capture and release remain actual local accounting on those test wallets.
+
+Framework defaults and validation live in Wallet. Later configuration layers
+provide only actual overrides:
+
+| Setting under `.mock` | Default | Contract |
+| --- | --- | --- |
+| `enabled` | `false` | Explicit true permits new mock quotes; recovery uses retained terms. |
+| `outcome` | `CREDITED` | Existing outcomes `CREDITED`, `NOT_CREDITED`, `PENDING`, `UNKNOWN` only. |
+| `targetUnit` | `SIMULATED_POINTS` | Bounded owner identifier; never removes simulation labeling. |
+| `quoteLifetimeMs` | `60000` | Positive safe integer producing a valid expiry date. |
+
+The mock quotes one target unit per source unit at the canonical source scale,
+using the loaded amount owner and exact decimal strings. No real exchange rate
+or partner policy is implied. Outcome and target terms are frozen in the retained
+quote. A `simulated:<outcome>:<digest>` reference binds tenant, operation, immutable
+integration/account snapshots and amounts. Execute and reconcile derive the same
+outcome without process-local maps, network requests or partner writes, including
+after a send gap or restart. Configuration changes affect new quotes only.
+PENDING/UNKNOWN scenarios intentionally remain unresolved and retain their holds;
+changing defaults cannot turn them into terminal outcomes or authorize release.
+
+Provider capabilities, quotes and outcomes mark `simulated: true`. Conversion
+records require a `simulated:bool` field; choice projections and all public
+conversion responses expose it. Terminal private evidence retains it, and the
+Redemption provider receipt retains the `simulated:` prefix. COMPLETED means the
+simulated credit scenario and local source capture finished; it never proves
+external partner credit. Business users and downstream consumers must visibly
+label every simulated option, quote and result. Target-unit wording alone is
+insufficient. Runtime/schema adoption must include the new field before use;
+existing historical records are not rewritten by this source change.
+
+The coordinator rejects quote/outcome marker disagreement and refuses rebinding
+a retained operation between simulated and real adapters. Missing/replaced
+providers leave uncertain holds unresolved. A mocked CREDITED scenario can
+recover a failed local capture from persisted evidence; NOT_CREDITED is a terminal
+simulation fence and releases once. Neither asserts real external success.
+
+Partner developers add later adapters through the existing loader service name
+mapping and a distinct governed integration binding, keeping the same public
+quote/confirm/status commands. Preserve contract-v1 idempotency, original frozen
+terms, authoritative credit and terminal no-credit fences. Never remap the mock
+key to a real provider for retained operations. Framework defaults belong to the
+implementing owner; project layers select bindings or override defined values.
+Exported mock methods and the amount owner remain customizable, but simulation
+labeling and evidence binding are mandatory invariants.
+
+Before real use, operators still need a qualified real adapter and protocol,
+approved partner/account evidence, credential bindings in their existing owner,
+deployed schema/services/API permissions and qualified atomic database behavior.
+No real partner is qualified by mock tests. Focused conversion, accounting and
+selection tests cover default refusal, configured outcomes, exact large amounts,
+customization, replay, capture recovery, privacy and simulated/real separation.

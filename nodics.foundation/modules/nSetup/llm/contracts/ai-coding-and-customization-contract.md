@@ -537,6 +537,12 @@ do not turn every helper or route into another approval request. Pause only for
 an unresolved material decision or action whose authorization is actually absent.
 
 
+For unreleased framework changes, keep authored shipping data in each owner's
+v001 baseline as specified by
+[unreleased owner data](data-manifest-contract.md#unreleased-owner-baseline).
+Preserve section semantic versions independently; remove superseded retained roots
+and duplicate forward patches, not generic multi-version runtime capability.
+Deliberate versioning fixtures remain isolated under test ownership.
 For unreleased framework changes, migrate current in-repository consumers and
 remove superseded routes/adapters in the same batch. Do not create compatibility
 aliases based on assumed external users. A real released contract or an explicit

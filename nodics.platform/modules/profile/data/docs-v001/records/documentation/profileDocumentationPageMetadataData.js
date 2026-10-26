@@ -9,9 +9,14 @@
 
  */
 
-'use strict';
-
-/** @description Module-owned documentation page metadata. */
+/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
+"use strict";
+/**
+ * @module profile/data/docs-v001/records/documentation/profileDocumentationPageMetadataData
+ * @description Owns canonical profileDocumentationPageMetadataData successor records; installation and publication remain governed.
+ * @layer data
+ * @owner profile
+ */
 module.exports = {
   "record0": {
     "code": "nodicsDocsMetadataplatformOverview",
@@ -148,7 +153,7 @@ module.exports = {
     ],
     "accessPolicy": "nodicsDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 1163,
@@ -488,7 +493,7 @@ module.exports = {
     ],
     "accessPolicy": "nodicsDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 9077,

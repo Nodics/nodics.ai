@@ -17,6 +17,75 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+  ERR_PROFILE_COUPON_RECIPIENT_POLICY: {
+    code: "403",
+    message: "Coupon recipient resolution unconfirmed at POLICY.",
+  },
+  ERR_PROFILE_COUPON_RECIPIENT_INPUT: {
+    code: "403",
+    message: "Coupon recipient resolution unconfirmed at INPUT.",
+  },
+  ERR_PROFILE_COUPON_RECIPIENT_SOURCE_RPC: {
+    code: "403",
+    message: "Coupon recipient resolution unconfirmed at SOURCE_RPC.",
+  },
+  ERR_PROFILE_COUPON_RECIPIENT_SOURCE_PROOF: {
+    code: "403",
+    message: "Coupon recipient resolution unconfirmed at SOURCE_PROOF.",
+  },
+  ERR_PROFILE_COUPON_RECIPIENT_SELECTION: {
+    code: "403",
+    message: "Coupon recipient resolution unconfirmed at SELECTION.",
+  },
+  ERR_PROFILE_COUPON_RECIPIENT_BOUND: {
+    code: "403",
+    message: "Coupon recipient resolution unconfirmed at BOUND.",
+  },
+
+  ERR_PROFILE_SERVICE_SCOPE_POLICY: {
+    code: "403",
+    message: "Service scope update unconfirmed at POLICY.",
+  },
+  ERR_PROFILE_SERVICE_SCOPE_INPUT: {
+    code: "403",
+    message: "Service scope update unconfirmed at INPUT.",
+  },
+  ERR_PROFILE_SERVICE_SCOPE_BINDING: {
+    code: "403",
+    message: "Service scope update unconfirmed at BINDING.",
+  },
+  ERR_PROFILE_SERVICE_SCOPE_NATIVE_PROOF: {
+    code: "403",
+    message: "Service scope update unconfirmed at NATIVE_PROOF.",
+  },
+  ERR_PROFILE_SERVICE_SCOPE_TARGET: {
+    code: "403",
+    message: "Service scope update unconfirmed at TARGET.",
+  },
+  ERR_PROFILE_SERVICE_SCOPE_CURRENT_STATE: {
+    code: "403",
+    message: "Service scope update unconfirmed at CURRENT_STATE.",
+  },
+  ERR_PROFILE_SERVICE_SCOPE_VOCABULARY: {
+    code: "403",
+    message: "Service scope update unconfirmed at VOCABULARY.",
+  },
+  ERR_PROFILE_SERVICE_SCOPE_AUDIT_PREPARE: {
+    code: "403",
+    message: "Service scope update unconfirmed at AUDIT_PREPARE.",
+  },
+  ERR_PROFILE_SERVICE_SCOPE_WRITE: {
+    code: "403",
+    message: "Service scope update unconfirmed at WRITE.",
+  },
+  ERR_PROFILE_SERVICE_SCOPE_READBACK: {
+    code: "403",
+    message: "Service scope update unconfirmed at READBACK.",
+  },
+  ERR_PROFILE_SERVICE_SCOPE_AUDIT_FINALIZE: {
+    code: "403",
+    message: "Service scope update unconfirmed at AUDIT_FINALIZE.",
+  },
   ERR_PROFILE_RECOVERY_UNAVAILABLE: {
     code: "503",
     message: "Account recovery is unavailable under the current configuration.",

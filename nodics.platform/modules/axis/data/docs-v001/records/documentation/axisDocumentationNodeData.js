@@ -83,7 +83,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis",
@@ -171,7 +171,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "discover-axis",
@@ -282,7 +282,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "build-and-operate-axis",
@@ -445,7 +445,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-capabilities",
@@ -532,7 +532,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "contribute-to-axis",
@@ -597,7 +597,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "discover-axis",
@@ -670,7 +670,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "discover-axis",
@@ -743,7 +743,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "build-and-operate-axis",
@@ -816,7 +816,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "build-and-operate-axis",
@@ -888,7 +888,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "build-and-operate-axis",
@@ -961,7 +961,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "build-and-operate-axis",
@@ -1034,7 +1034,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-capabilities",
@@ -1107,7 +1107,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-capabilities",
@@ -1180,7 +1180,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-capabilities",
@@ -1253,7 +1253,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-capabilities",
@@ -1328,7 +1328,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-capabilities",
@@ -1407,7 +1407,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-capabilities",
@@ -1480,7 +1480,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-capabilities",
@@ -1553,7 +1553,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-capabilities",
@@ -1626,7 +1626,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-capabilities",
@@ -1701,7 +1701,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "axis-capabilities",
@@ -1774,7 +1774,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "contribute-to-axis",
@@ -1846,7 +1846,7 @@ module.exports = {
       "DASHBOARD_CHANGE",
       "ACCESS_POLICY_CHANGE"
     ],
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "contribute-to-axis",

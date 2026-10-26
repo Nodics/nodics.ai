@@ -151,7 +151,7 @@ function phasedFixture(t) {
     httpRequest: { headers: { authorization: "Bearer original-partner-human" } } };
   const installed = new Set([before.code]);
   const authority = { readiness: "READY", releaseStatus: "CURRENT", releaseCode: "partner.storefront:site",
-    publication: { code: "partnerPublication", state: "ONLINE", version: 1 },
+    publication: { code: "partnerPublication", state: "ONLINE", revision: 1 },
     mediaDependencies: { contractVersion: 1, owner: "media", qualified: true, dependencies: [] } };
   const state = { ownerReady: true, afterStatus: undefined, postInstallStatus: undefined,
     postInstallMedia: undefined, afterBaseline: undefined };
@@ -306,6 +306,108 @@ test("reviewed service proof admits shared BEFORE and aggregate foreign stages w
   await assert.rejects(f.initiate(), { code: "ERR_BOF_00082" }); assert.deepEqual(f.calls, []);
 });
 
+test("proven foreign NOT_CURRENT stays authority pending and cannot select or execute owner commands", async t => {
+  const f = observationFixture(t), invoke = global.SERVICE.DefaultModuleService.invokeModule;
+  global.SERVICE.DefaultModuleService.invokeModule = async input => {
+    const response = await invoke(input);
+    if (input.apiName === "/publications/setup/observe" &&
+        [f.foreign.code, f.foreignRelease.code].includes(input.requestBody.stageCode)) {
+      response.data.ready = false;
+      if (input.requestBody.mode === "SOURCE")
+        response.data.items = response.data.items.map(item => ({ code: item.code, status: "NOT_CURRENT" }));
+      else response.data.status = "NOT_CURRENT";
+    }
+    return response;
+  };
+  const result = await f.status();
+  assert.equal(result.readiness, "BLOCKED");
+  for (const step of [f.foreign, f.foreignRelease]) {
+    const projected = result.preparation.steps.find(item => item.code === step.code);
+    assert.equal(projected.status, "AUTHORITY_PENDING");
+    assert.equal(projected.publicationPlan, undefined);
+    assert(!result.preparation.selectableStepCodes.includes(step.code));
+    const blocker = result.capability.blockers.find(item => item.owner === step.code);
+    assert.equal(blocker.code, "AUTHORITY_PENDING");
+    assert.equal(blocker.severity, "BLOCKED");
+    assert.equal(blocker.source, "APPLICATION_PREPARATION");
+    assert.match(blocker.disabledReason, /authorized human operator for ISSUER_B/);
+    assert.equal(blocker.repair.available, false);
+    assert.equal(blocker.repair.action, "REVIEW_SETUP_AUTHORITY");
+    assert.equal(blocker.repair.operation, undefined);
+    f.select(step.code); f.calls.length = 0;
+    await assert.rejects(f.initiate(), { code: "ERR_BOF_00082" });
+    assert.deepEqual(f.calls, []);
+  }
+  assert.equal(result.capability.nextAction, "Continue setup as the authorized enterprise operator");
+  assert(!result.capability.blockers.some(item => item.code === "READINESS_UNKNOWN"));
+});
+
+test("foreign installation distinguishes proven absence from refused, missing and contradictory status", async t => {
+  const f = observationFixture(t);
+  for (const [evidence, expected] of [
+    [{ ready: false, status: "NOT_CURRENT" }, "AUTHORITY_PENDING"],
+    [{ ready: true, status: "CURRENT" }, "CURRENT"],
+    [{ ready: false, status: "VALIDATION_BLOCKED" }, "VALIDATION_BLOCKED"],
+    [{ ready: false }, "VALIDATION_BLOCKED"],
+    [{ ready: true, status: "NOT_CURRENT" }, "VALIDATION_BLOCKED"],
+    [{ ready: "true", status: "CURRENT" }, "VALIDATION_BLOCKED"],
+  ]) {
+    f.service.setupObservation = async () => evidence;
+    const result = await f.service.observeForeignPreparation(f.application, f.request, f.foreignRelease);
+    assert.equal(result.status, expected);
+  }
+  assert.deepEqual(f.calls, []);
+});
+
+test("foreign publication absence requires exact members and typed NOT_CURRENT, never a generic refusal", async t => {
+  const f = observationFixture(t), intended = f.foreign.publicationPlan.items;
+  const missing = intended.map(item => ({ code: item.code, status: "NOT_CURRENT" }));
+  for (const [evidence, expected] of [
+    [{ ready: false, items: missing }, "AUTHORITY_PENDING"],
+    [{ ready: false, items: missing.map((item, index) => ({ ...item,
+      status: index === 0 ? "NOT_CURRENT" : "CURRENT" })) }, "AUTHORITY_PENDING"],
+    [{ ready: false, items: missing.map(item => ({ ...item, status: "REVIEW_REQUIRED" })) }, "VALIDATION_BLOCKED"],
+    [{ ready: false, items: [] }, "VALIDATION_BLOCKED"],
+    [{ ready: false, items: [null] }, "VALIDATION_BLOCKED"],
+    [{ ready: false, items: missing.map(item => ({ ...item, code: "unknown" })) }, "VALIDATION_BLOCKED"],
+    [{ ready: false, items: missing.concat(missing) }, "VALIDATION_BLOCKED"],
+    [{ ready: false, items: missing.map(item => ({ ...item, status: "CURRENT" })) }, "VALIDATION_BLOCKED"],
+    [{ ready: "false", items: missing }, "VALIDATION_BLOCKED"],
+  ]) {
+    const modes = [];
+    f.service.setupObservation = async (_profile, _request, _step, mode) => { modes.push(mode); return evidence; };
+    const result = await f.service.observeForeignPreparation(f.application, f.request, f.foreign);
+    assert.equal(result.status, expected);
+    assert.equal(result.publicationPlan, undefined);
+    assert.deepEqual(modes, ["SOURCE"]);
+  }
+});
+
+test("foreign target NOT_CURRENT retains source recheck and refuses drift before pending projection", async t => {
+  const f = observationFixture(t), read = f.service.setupObservation.bind(f.service);
+  let drift = false, reads = 0, targetStatus = "NOT_CURRENT";
+  f.service.setupObservation = async (...args) => {
+    const evidence = await read(...args);
+    if (args[3] === "TARGET") {
+      evidence.ready = false;
+      evidence.items = evidence.items.map(item => ({ ...item, status: targetStatus }));
+    }
+    if (args[3] === "SOURCE" && ++reads === 2 && drift) evidence.items[0].revision += 1;
+    return evidence;
+  };
+  let result = await f.service.observeForeignPreparation(f.application, f.request, f.foreign);
+  assert.equal(result.status, "AUTHORITY_PENDING");
+  assert.equal(result.reasonCode, undefined);
+  assert.deepEqual(f.calls.map(call => call.operation), ["SOURCE", "TARGET", "SOURCE"]);
+  drift = true; reads = 0; f.calls.length = 0;
+  result = await f.service.observeForeignPreparation(f.application, f.request, f.foreign);
+  assert.equal(result.status, "AUTHORITY_PENDING");
+  assert.equal(result.reasonCode, "ERR_BOF_00081");
+  drift = false; reads = 0; targetStatus = "REVIEW_REQUIRED";
+  result = await f.service.observeForeignPreparation(f.application, f.request, f.foreign);
+  assert.equal(result.status, "VALIDATION_BLOCKED");
+});
+
 test("ordinary scoped initiation submits the CMS baseline when no AFTER stage is selected", async t => {
   const f = observationFixture(t);
   Object.assign(f.authority, {
@@ -360,7 +462,7 @@ test("actual installation observer envelope preserves plan hash through foreign 
   global.SERVICE.DefaultIdentityGovernanceService = Object.assign(Object.create(
     require("../../../../nodics.foundation/modules/nAuth/src/service/identity/defaultIdentityGovernanceService")), {
     getConfiguration: () => require("../../../../nodics.foundation/modules/nAuth/config/properties").identityGovernance });
-  global.SERVICE.DefaultDataReleaseService = { discoverReleases: () => [release], validateDestination: () => {},
+  global.SERVICE.DefaultDataReleaseService = { discoverManifestRelease: () => release, validateDestination: () => {},
     installationCode: () => "exact-installation" };
   global.SERVICE.DefaultDataInstallationService = { get: async request => {
     assert.equal(request.authData.isSystem, true); assert.equal(request.options.skipItemCache, true);

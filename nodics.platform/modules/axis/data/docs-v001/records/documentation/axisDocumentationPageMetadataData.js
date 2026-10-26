@@ -158,13 +158,13 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 2870,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
       "README.md"
     ]
   },
@@ -297,14 +297,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 2209,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/architecture-and-ownership.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   },
   "record2": {
@@ -406,14 +406,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 1301,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/frontend-technology-stack.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   },
   "record3": {
@@ -514,14 +514,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 2061,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/design-system-and-shell.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   },
   "record4": {
@@ -613,14 +613,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 1241,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/cms-delivery-and-renderers.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   },
   "record5": {
@@ -717,14 +717,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 2287,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/documentation-content.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   },
   "record6": {
@@ -831,14 +831,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 1942,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/employee-login.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   },
   "record7": {
@@ -970,14 +970,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 2083,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/assistant-frontend.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   },
   "record8": {
@@ -1105,6 +1105,16 @@ module.exports = {
         "text": "Common mistakes",
         "anchor": "schema-workbench-22-common-mistakes",
         "level": 2
+      },
+      {
+        "text": "Commercial agreement and Loyalty owner controls",
+        "anchor": "schema-workbench-commercial-owner-controls",
+        "level": 2
+      },
+      {
+        "text": "Coupon workspace registry and recovery",
+        "anchor": "schema-workbench-coupon-native-registry",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -1139,8 +1149,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-    "sourceChecksum": "ccc91c8c300fd5ceac93a772bca74386f203b1f248344fc24881a008fa45887c",
-    "sourceWordCount": 5142,
+    "sourceChecksum": "0dd14c38b8cc404cec25fa74a59e7d302eafff9759f59ecaaed300280b9b5464",
+    "sourceWordCount": 5903,
     "audience": [
       "business-user",
       "administrator",
@@ -1159,14 +1169,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 5142,
+    "wordCount": 5903,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/schema-workbench.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   },
   "record9": {
@@ -1281,14 +1291,13 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 1443,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js"
     ]
   },
   "record10": {
@@ -1470,13 +1479,13 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 2301,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js"
     ]
   },
   "record11": {
@@ -1615,14 +1624,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 1863,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/module-health.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   },
   "record12": {
@@ -1728,14 +1737,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 2582,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/imports-and-exports.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   },
   "record13": {
@@ -1841,14 +1850,13 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 4451,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js"
     ]
   },
   "record14": {
@@ -1974,14 +1982,13 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 1350,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js"
     ]
   },
   "record15": {
@@ -2072,14 +2079,13 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 924,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js"
     ]
   },
   "record16": {
@@ -2190,14 +2196,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 1176,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/feature-delivery-checklist.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   },
   "record17": {
@@ -2348,14 +2354,14 @@ module.exports = {
     ],
     "accessPolicy": "axisDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 1946,
     "sourceEvidence": [
       "data/manifest.json",
-      "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
-      "docs/implementation-and-documentation-contract.md"
+      "data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+      "test/evidence/documentation-migration-register.json"
     ]
   }
 };

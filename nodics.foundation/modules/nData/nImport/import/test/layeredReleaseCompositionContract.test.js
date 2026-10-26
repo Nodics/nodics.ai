@@ -173,12 +173,18 @@ test('project release inherits matching current source fields without replaying 
 });
 
 
-test('startup evaluates init deltas on every run and refuses running or edited applied releases', async () => {
+test('startup evaluates init deltas on every run and refuses running or edited applied releases', async t => {
+    const saved = { NODICS: global.NODICS, CONFIG: global.CONFIG };
+    t.after(() => { for (const [key, value] of Object.entries(saved)) { if (value === undefined) delete global[key]; else global[key] = value; } });
+    global.NODICS = { getSelectedEnvironmentName: () => 'testEnvironment' };
+    global.CONFIG = { get: key => key === 'runtimeRole' ? { code: 'PLATFORM' } : undefined };
     const release = { releaseCode: 'owner:init-v001', moduleName: 'owner', dataType: 'init', version: '0.0.0', checksum: 'initial' };
     let state = 'NOT_INSTALLED', checksum = undefined, executions = 0;
     const service = Object.assign({}, releases, {
         configuration: () => ({ types: { init: { enabled: true, operatorExecution: false } } }),
         discoverReleases: () => [release], isDestinationCompatible: () => true,
+        // Durable source-review admission is covered by dataReleasePrerequisites; this fixture isolates execution states.
+        startupSourceReview: async () => undefined,
         preparePlan: async request => { assert.equal(request.releaseRequest.dataType, 'init'); return { releases: [release] }; },
         operationReleases: async () => [{ ...release, status: state, installedVersion: checksum ? release.version : undefined, installedChecksum: checksum }],
         executePreparedPlan: async () => { if (state === 'RUNNING') throw new Error('still running'); executions++; state = 'CURRENT'; checksum = release.checksum; return { installed: true }; }

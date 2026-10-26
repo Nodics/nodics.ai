@@ -355,3 +355,123 @@ owner identity and never create another Cart or reserved-balance requirement.
 Governed Cron/template selection, runtime composition/permissions, installed
 provider concurrency, live acceptance and E2E remain qualification work performed
 last. Missing source integrations are not substituted with successful stubs.
+
+## Safe read-boundary diagnostics
+
+Product discovery exceptions during offer resolution return registered
+ERR_BIDDING_OFFER_READ_UNAVAILABLE (503). Generated round lookup exceptions return
+ERR_BIDDING_ROUND_READ_UNAVAILABLE (503). Neither response includes private search,
+query, credential or database diagnostics. Business eligibility and Store checks
+remain unchanged; there is no fallback to source Product, altered actor or new
+round. These codes distinguish owner boundaries, not the underlying provider cause.
+
+Round get supplies an exact merchant predicate and bounded pagination. The real
+generated initializer supplies limit/skip and Mongo accepts omitted sort/filter
+fields. `test/biddingAuctionReadBoundary.test.js` composes that initializer/adapter
+with isolated driver reads; no fabricated required sort or search fields belong
+in Bidding. Published Digital/Product/Pricing checkpoints may precede round opening:
+retain their original identities and holds. Recovery requires fresh unchanged
+owner evidence and the original command, never replacement publication or bids.
+
+### Public catalogue context at the Bidding boundary
+
+Offer resolution uses the existing public Product discovery service with an
+allowlist of `tenant`, `productCode`, `storeCode`, configured `locale`, and empty
+`query`. The tenant comes from the resolved Bidding participant context. Store
+admission still requires the configured merchant partition before discovery.
+Signed participant credentials, headers, payload, publication pins and index
+configuration do not belong to this public catalogue request. Product determines
+its merchant scope from retained activated publication evidence; Bidding does
+not rewrite signed enterprise claims or weaken Product guards.
+
+The original participant request remains unchanged for seller/buyer authorization,
+round persistence and subsequent owner operations. Seller references, auction
+floor, listing start/end and grace semantics remain governed by existing checks.
+`biddingAuctionReadBoundary.test.js` composes actual Product detail, activated
+search and retained enrichment: mixed signed scope still rejects, the public
+read succeeds, caller pins cannot escape, and foreign store/tenant evidence fails.
+This is source regression evidence, not installed-runtime publication proof.
+
+### Generated round storage contract
+
+Round persistence declares framework-managed `revision` on the owner schema.
+Creation uses generated managed save (initial persisted revision 1), never a
+blanket upsert or insertOnly override. Optional listing dates and pending/selection
+explicitly allow null through schema type unions. Non-null listing dates are
+written as BSON Dates and normalized to ISO at the owner read boundary, retaining
+existing publication equality and API semantics. Installed validators must adopt
+the schema before retrying the original publication. Unique code/listingKey
+indexes and stale-revision rejection remain mandatory.
+
+The focused read-boundary suite composes actual save/update initializers, managed
+concurrency, timestamp interceptor and Mongo adapter over isolated BSON storage.
+It verifies nullable fields, date readback, replay, lost insert acknowledgement,
+duplicate recovery and stale updates without live mutations.
+
+## Original participant cancellation reconciliation
+
+`POST /nodics/bidding/v0/auctions/:code/reconcile` accepts exactly
+`{"storeCode":"circaMainStore","confirmed":true}` with an access bearer and
+existing `commerce.bid.participate`. Fresh Profile admission binds the governed
+Store merchant, original buyer AND actor, or the original typed seller. A seller
+may enter only after FAILED with complete retained FAILED_RECONCILED proof matching
+the selected bid: confirmed funds, no pending purchase, available holdings and
+nonempty original receipt. Seller scope still requires the existing seller permission.
+Service tokens, foreign participants and caller proof are refused.
+
+Buyer financial reconciliation and scheduler reconciliation share the guarded
+Checkout proof/CAS flow. Checkout proves original VOIDED Payment, original
+owner/hold/key/order/cart/amount, no acquisition and original listing holdings.
+Fresh buyer authority is checked again before managed CAS. FAILED retains the
+original selection and cleanup key, with no reaward or financial redispatch.
+A buyer without seller authority never invokes listing cleanup: the result includes
+`cleanupComplete:false, cleanupRequiredBy:"SELLER"`. Repeating that read is stable.
+
+The original seller uses the same exact-round action to resume pending cleanup.
+Digital independently re-admits that seller, reads the persisted terminal fence,
+refuses pending purchase/loser funds, and releases only the original listing.
+Product withdrawal uses the existing Commerce runtime credential and exact
+operation/Store selectors; Product checks retained Digital proof, governed Store
+merchant and runtime Enterprise authorization. No caller identity is substituted.
+Uncertain cleanup retains FAILED and its original pending intent. Completed replay
+returns `cleanupComplete:true` without further effects. No scheduler activation,
+new permission, Cart repair or replacement command is implied.
+
+Focused cases in checkoutCore/test/checkoutAuctionContract.test.js compose actual
+Checkout proof, managed Bidding persistence, Digital release admission and Product
+transport, with isolated remote/driver I/O. They cover buyer cleanup separation,
+revoked/foreign seller, incomplete proof, late listing claim, uncertain cleanup,
+CAS conflict and replay. Installed acceptance remains a separate parent operation.
+
+## Selected Checkout hold inspection
+
+AUTHORIZE inspects the existing selected hold; it never reserves again. In SELECTED,
+only the original selected buyer and actor with exact selected order/bid/hold command
+may obtain funds-evidence checkoutRequired:true for inspect. Existing pending
+SELECT/CLOSE OPEN-bid inspection remains unchanged. Loyalty must then call Checkout
+for a read-only original authorization-journal proof; Bidding evidence alone is
+insufficient. Seller identity or arbitrary order/key does not authorize inspection.
+
+
+## Completed original purchase reconciliation
+
+The same exact-round participant reconcile route accepts the original selected buyer
+and actor under fresh existing participant permission. Checkout returns the distinct
+`PURCHASE_COMPLETED` proof only from its original CAPTURE_DECIDED commitment,
+completed immutable journal/digest, exact completed checkpoint and closed Cart proof,
+fresh original Order and captured Payment in the original participant partition.
+Retained Digital units must match SOLD and DELIVERED results and checkpoint codes.
+Pending phases, changed identities/keys/amounts/receipts and incomplete delivery fail closed.
+Bidding re-admits the participant then performs one managed CAS to `COMPLETED`,
+retaining selection and the exact completion receipt. It performs no financial,
+transfer, seller earning, listing release or reaward operation. The projection shows
+COMPLETED, CAPTURED funds and the receipt; it no longer offers purchase. Exact replay
+re-admits the original buyer and returns the retained receipt without another write.
+Original completed Checkout placement replay remains valid after round finalization.
+Cancellation and original seller FAILED cleanup remain separate. No new grant,
+scheduler, profile, configuration or historical repair is introduced.
+
+Regression: checkoutCore/test/checkoutAuctionContract.test.js, `completed purchase
+reconciliation` cases compose actual Checkout/Payment phases and generated Bidding
+managed update/Mongo/BSON persistence, including replay, revoked/foreign admission,
+changed proof, incomplete delivery and CAS conflict.

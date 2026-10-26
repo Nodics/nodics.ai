@@ -2,6 +2,32 @@
   "contractVersion": 2,
   "module": "digitalCore",
   "sections": {
+    "participantTransactionAccess": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "digitalCore Enterprise participant transactions",
+      "description": "Exact parent-free participant group and Enterprise role; definitions only, no assignment or financial qualification.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/010_digitalCoreParticipantTransactionGroupHeader.js": "1012ac434a09311135b08504a364e9f6c5827a9c957a1f93a817260137473359",
+        "init-v001/records/identity/digitalCoreParticipantTransactionGroupData.js": "ef170bb89ea4e8b0acd1e94302e9e8dc8a0f29d4fb390e2afb9f0c3e1a69b208",
+        "init-v001/headers/identity/020_digitalCoreParticipantTransactionRoleHeader.js": "da8187d1c9eae3d06c3c93d121c8662b7353281d2421f8d5796341e7aa9d1c7d",
+        "init-v001/records/identity/digitalCoreParticipantTransactionRoleData.js": "35ebe48b03a89bcd0f54542d6cfb4201c1fc9b06d48eaad07868deed17434e7f"
+      }
+    },
     "giftExpirySchedule": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
@@ -45,10 +71,10 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "init-v002",
+      "sourceRoot": "init-v001",
       "files": {
-        "init-v002/headers/identity/digitalBundleParticipantPermissionHeader.js": "ef1432d6765dcc76679299a91f417442b889a34af2190e6130a2fd6c0ca80b97",
-        "init-v002/records/identity/digitalBundleParticipantPermissionData.js": "022b3b84383c0b9330586b63611893baa4ae8fd9d7fc558687ffe2089fcdb545"
+        "init-v001/headers/identity/digitalBundleParticipantPermissionHeader.js": "ef1432d6765dcc76679299a91f417442b889a34af2190e6130a2fd6c0ca80b97",
+        "init-v001/records/identity/digitalBundleParticipantPermissionData.js": "022b3b84383c0b9330586b63611893baa4ae8fd9d7fc558687ffe2089fcdb545"
       }
     },
     "bundleRuntimePermissions": {
@@ -69,10 +95,10 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "init-v003",
+      "sourceRoot": "init-v001",
       "files": {
-        "init-v003/headers/identity/digitalBundleRuntimePermissionHeader.js": "f1f1d4375b6c18c0fb073644dbd03f76062dfd86408d7a93a28cba4637ea5726",
-        "init-v003/records/identity/digitalBundleRuntimePermissionData.js": "dd614102da54124c3743f6819190e373ed2eb071262c6c827efe5171d9e7ef4d"
+        "init-v001/headers/identity/digitalBundleRuntimePermissionHeader.js": "f1f1d4375b6c18c0fb073644dbd03f76062dfd86408d7a93a28cba4637ea5726",
+        "init-v001/records/identity/digitalBundleRuntimePermissionData.js": "dd614102da54124c3743f6819190e373ed2eb071262c6c827efe5171d9e7ef4d"
       }
     },
     "participantAccessGroups": {
@@ -93,24 +119,24 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "init-v002",
+      "sourceRoot": "init-v001",
       "files": {
-        "init-v002/headers/identity/digitalBundleParticipantUserGroupHeader.js": "86f1b05cc40f404b2044508891283a8c348a9295396625554a5c04658a17a888",
-        "init-v002/records/identity/digitalBundleParticipantUserGroupData.js": "0e197b9bb89bf78d2ed5a6d958dc463c20ba523a684618135ff21e5858f37759"
+        "init-v001/headers/identity/digitalBundleParticipantUserGroupHeader.js": "86f1b05cc40f404b2044508891283a8c348a9295396625554a5c04658a17a888",
+        "init-v001/records/identity/digitalBundleParticipantUserGroupData.js": "0e197b9bb89bf78d2ed5a6d958dc463c20ba523a684618135ff21e5858f37759"
       },
       "prerequisites": [
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "digitalCore",
           "sectionCode": "bundleParticipantPermissions",
           "version": "0.0.1",
-          "checksum": "df311ce222f297af63a848a13fb52c21e7b89592002ad442362cf5b775074c0a",
+          "checksum": "cefeccf352ca72d3fd91b90497869e0dc76fadcb52b516dfb4e8272d22d6cea9",
           "partition": "DEFAULT"
         }
       ]
@@ -118,7 +144,7 @@
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "digitalCore permissionCatalogue",
       "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "digitalCore",
@@ -136,7 +162,7 @@
       "sourceRoot": "init-v001",
       "files": {
         "init-v001/headers/identity/digitalCorePermissionHeader.js": "0651a0f19a442c4052e40d13358e51b6123a6d5bb33ade62ea874e8df5b49852",
-        "init-v001/records/identity/digitalCorePermissionData.js": "705e848b0a1eef2103b4627b0e82dd144e17b75c6e70aacbbc12fd60293dfe5e"
+        "init-v001/records/identity/digitalCorePermissionData.js": "eb3276b54ea3cec613bec4088be28b5aaba056904c338b930ab357b7feb9490e"
       }
     },
     "accessGroups": {
@@ -167,20 +193,20 @@
           "moduleName": "axis",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
-          "checksum": "ab53220ee38bb003b43e3f1ed0723afe8499523a31429abd96ddcc3c328b152a",
+          "version": "0.0.2",
+          "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "version": "0.0.3",
+          "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
@@ -220,13 +246,13 @@
           "moduleName": "digitalCore",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "78b57ae4a3fccd2cb2e0cbe6579afa3821b839d63acf2ea2ee7c7c8e74b18ddf"
+          "checksum": "3f83909885dfa658d2f50405849a24b87ef3e4f1ee7ddef9d6269c831357050c"
         }
       ]
     },
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "docs-v002",
+      "contentPath": "docs-v001",
       "pack": "digitalCore",
       "version": "0.0.3",
       "owningDomain": "documentation",
@@ -242,7 +268,7 @@
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "cms-records",
-      "sourceAuthority": "data/docs-v002/records/documentation",
+      "sourceAuthority": "data/docs-v001/records/documentation",
       "sites": [
         "nodicsDocumentationSite"
       ],
@@ -250,16 +276,16 @@
       "pages": 2,
       "components": 2,
       "routes": 2,
-      "releaseChecksum": "4a38621da07c0e7af00baa79d81775c09888eea8c53e57697b213885f992c63d",
+      "releaseChecksum": "95ec558d567645fa17adfbe6b35e0233b02fc8de74bccfc416833937019ef280",
       "generatedHashes": {
-        "docs-v002/records/documentation/digitalCoreDocumentationRelease003NodeData.js": "bee395fa1f3b7d21460220136c6c431b75b5aa5e44c00d8bfb48921d52236864",
-        "docs-v002/records/documentation/digitalCoreDocumentationRelease003PageMetadataData.js": "de7044875a7f5d4e9124c31ef275b2292a4d5448eaeea8ca0ffcc2ce992250d7",
-        "docs-v002/records/documentation/digitalCoreDocumentationRelease003SearchMetadataData.js": "bf457042cd67520c3cd3cb41ec0c2dca7ebc6b1fa090fece294a88dd58fc4fc0",
-        "docs-v002/records/documentation/digitalCoreDocumentationRelease003ComponentData.js": "12e80c2b16fcda8002482a5987a98aeb1821a65c070ae18d5b49decfa52e5eaa",
-        "docs-v002/records/documentation/digitalCoreDocumentationRelease003PageData.js": "9f2485cdb58717e2dca9f43db0be0f1f789a4a0a074391e9efeabc26b3585b0e",
-        "docs-v002/records/documentation/digitalCoreDocumentationRelease003RouteData.js": "35a9c5f624afad6ba75341cc6348f1736109ca2a792714cb7095313136a134a4",
-        "docs-v002/records/documentation/digitalCoreDocumentationRelease003PublicationStateData.js": "38ebb4660ad2dbd941db662d34aa048470cb1683067fa260bf66f66a6c73b4b7",
-        "docs-v002/headers/100_digitalCoreDocumentationRelease003ContentPackHeader.js": "eefe405174cdf5d1de99e5e7946702da132bb08447a07e7df1f43608076280b3"
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003NodeData.js": "bee395fa1f3b7d21460220136c6c431b75b5aa5e44c00d8bfb48921d52236864",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003PageMetadataData.js": "4010b2539fb43a8a45d708042e02ea2c6f31a6233f845c2cd5ee35e85a7ee97f",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003SearchMetadataData.js": "bf457042cd67520c3cd3cb41ec0c2dca7ebc6b1fa090fece294a88dd58fc4fc0",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003ComponentData.js": "aeded643ef92c5293f7cce21ee10912d8a9d51313fda71a9f86368c7ffd42f19",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003PageData.js": "9f2485cdb58717e2dca9f43db0be0f1f789a4a0a074391e9efeabc26b3585b0e",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003RouteData.js": "35a9c5f624afad6ba75341cc6348f1736109ca2a792714cb7095313136a134a4",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003PublicationStateData.js": "fd95030d564caf5268934efab3ef23b4926b5c11d82f73318f2e0f3a12c7ca41",
+        "docs-v001/headers/100_digitalCoreDocumentationRelease003ContentPackHeader.js": "eefe405174cdf5d1de99e5e7946702da132bb08447a07e7df1f43608076280b3"
       },
       "includes": [
         {
@@ -310,6 +336,117 @@
           }
         }
       ]
+    },
+    "participantReadAccess": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "digitalCore Enterprise participant read access",
+      "description": "One parent-free read group and delegable Enterprise role. Definitions only; no employee assignment, mutation, funding or provisioning.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/010_digitalCoreParticipantReadGroupHeader.js": "7900fa21fb732c4fcddcda9fe5f624b44a763eee0d146b917f3dd8b3ea95ddc2",
+        "init-v001/headers/identity/020_digitalCoreParticipantReadRoleHeader.js": "666451893766d2e982ff51d22b09d0b2ae58214f7ca0f97ccf2857c6428b66d4",
+        "init-v001/records/identity/digitalCoreParticipantReadGroupData.js": "fe5a0385f4c55ec6b2588b21a5acd9b1c082fb6b0e247130837b4b3ca11f987b",
+        "init-v001/records/identity/digitalCoreParticipantReadRoleData.js": "629d923d614b44f43c3bc4444783319d6c279b456a40de9c870184fa1a6badf6"
+      }
+    },
+    "enterpriseParticipationAccess": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "digitalCore internal enterprise capabilities",
+      "description": "Parent-free internal capability groups; no new profile, employee assignment or financial records.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/020_digitalEnterpriseParticipationGroupHeader.js": "4f90549ffd482c03a4ff53e1a8588a352a74276620872162392e3de50701839a",
+        "init-v001/records/identity/digitalEnterpriseParticipationGroupData.js": "4e4875fae07c527de26b6a529af8532c8b03459f525b833af1f729394734b8d5"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "participantReadAccess",
+          "version": "0.0.1",
+          "checksum": "6f00e9e812fb6f2b7d8b86c14f1fa2c34907af36aa1a4d0cd76f207ded1322a8",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "participantTransactionAccess",
+          "version": "0.0.1",
+          "checksum": "f890a4d787906ab195a5cc888db7935729d78c5b4a8af50e44fd37e825890713",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "bundleParticipantPermissions",
+          "version": "0.0.1",
+          "checksum": "cefeccf352ca72d3fd91b90497869e0dc76fadcb52b516dfb4e8272d22d6cea9",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "enterpriseParticipationPermissions",
+          "version": "0.0.1",
+          "checksum": "3704d2d74cb501f847cc8eb5ed757ea235892dcc719727f238f93d8b561408f1",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "enterpriseParticipationPermissions": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "Digital enterprise settings permission vocabulary",
+      "description": "Persisted settings permission vocabulary before dependent groups.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/010_digitalEnterpriseParticipationPermissionHeader.js": "ec618e55fb3680c14f9b3608f8c9c33f16d372e8e143694537ebb4c7754e09e2",
+        "init-v001/records/identity/digitalEnterpriseParticipationPermissionData.js": "278a8a35c622f54d700784c7d65f09c882025926e6a271fbc99b263b2cb54ed8"
+      }
     }
   }
 }

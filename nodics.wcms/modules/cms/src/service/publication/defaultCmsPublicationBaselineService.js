@@ -410,6 +410,35 @@ module.exports = {
         return Promise.resolve({ contractVersion: 1, owner: 'media', status: retained ? 'UNAVAILABLE' : 'NOT_REQUIRED',
             qualified: !retained, dependencies: [] });
     },
+    /** Repairs only the retained pending approval through its existing workflow owner; never installs source data. */
+    reconcileApproval: async function (code, request) {
+        this.assertStaged();
+        const descriptor = this.descriptor(code);
+        const actorRequest = this.actorRequest(request, 'Reconcile retained CMS publication approval');
+        const publication = await this.publication(descriptor, actorRequest);
+        const binding = (request.baseline || {}).approvalRepairBinding;
+        if (!publication || publication.state !== 'PENDING_APPROVAL' || !binding ||
+            binding.source !== 'PUBLICATION_APPROVAL' ||
+            binding.publicationCode !== publication.code || binding.publicationRevision !== publication.revision ||
+            (binding.workflowRef && binding.workflowRef !== (publication.workflowRef ||
+                SERVICE.DefaultCmsPublicationWorkflowService.reference(publication)))) {
+            throw new CLASSES.NodicsError('CMS_BASELINE_INVALID', 'Retained pending publication identity changed; refresh approval evidence');
+        }
+        const diagnostic = await this.approvalDiagnostic(publication, actorRequest);
+        if (!diagnostic || !['TASK_REFERENCE_MISSING', 'WAITING_REVIEWER'].includes(diagnostic.status)) {
+            throw new CLASSES.NodicsError('CMS_BASELINE_INVALID', 'Publication approval is not eligible for missing-task recovery');
+        }
+        if (diagnostic.status === 'TASK_REFERENCE_MISSING') {
+            const current = await this.publication(descriptor, actorRequest);
+            if (!current || current.state !== 'PENDING_APPROVAL' || current.code !== publication.code ||
+                current.revision !== binding.publicationRevision || current.workflowRef !== publication.workflowRef) {
+                throw new CLASSES.NodicsError('CMS_BASELINE_INVALID', 'Retained pending publication identity changed; refresh approval evidence');
+            }
+            await SERVICE.DefaultPublicationLifecycleService.requestApproval(Object.assign({}, actorRequest,
+                { publicationCode: publication.code, expectedRevision: publication.revision }));
+        }
+        return this.status(code, request);
+    },
     /** Installs and submits one baseline without approving or deploying it. */
     initiate: async function (code, request) {
         this.assertStaged();

@@ -332,6 +332,8 @@ describe("Bounded setup status fanout", function () {
       lastRead.resolve();
     }
     const result = await pending;
+    assert.deepEqual(result.data.applicationReadinessScheduling,
+      { contractVersion: 1, concurrency: 1, priorityBurst: 1 });
     assert.equal(result.data.axisInitializationAdmission, "READY");
     assert.deepEqual(
       calls.map((call) => call.code),

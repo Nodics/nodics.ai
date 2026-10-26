@@ -104,6 +104,82 @@ test("real Media contribution published through the definition owner projects ex
   );
 });
 
+test("fixed CMS approval projects recorded site/source/requester without changing pinned decisions", async () => {
+  const f = fixture();
+  f.instance.definitionCode = f.version.definitionCode =
+    "cmsPublicationApproval";
+  f.task.nodeCode = f.version.graph.nodes[0].code = "publicationReview";
+  delete f.version.policy.actorPolicy;
+  f.version.graph.nodes.push({
+    type: "ACTION",
+    action: { moduleName: "cms", operation: "applyPublicationDecision" },
+  });
+  f.instance.context = {
+    publicationCode: "cmsBaseline_circa_0_0_2",
+    siteCode: "circa",
+    sourceVersion: "0",
+    requestedBy: "maker@example.test",
+    password: "private",
+    releaseVersion: "invented",
+  };
+  const [result] = await f.owner.projectTaskDecisions(f.request, [f.task]);
+  assert.deepEqual(result.reviewContext, {
+    contractVersion: 1,
+    owner: "cms",
+    publicationCode: "cmsBaseline_circa_0_0_2",
+    rootType: "site",
+    rootCode: "circa",
+    sourceVersion: "0",
+    requestedBy: "maker@example.test",
+  });
+  assert.equal(result.decisionContract, undefined);
+  assert.equal(result.reviewerEligibility, undefined);
+  assert.equal(f.instance.context.password, "private");
+  for (const patch of [
+    { version: 99 },
+    { status: "DRAFT" },
+    { definitionCode: "other" },
+  ]) {
+    const original = { ...f.version };
+    Object.assign(f.version, patch);
+    await assert.rejects(f.owner.projectTaskDecisions(f.request, [f.task]), {
+      code: "ERR_PROCESS_00028",
+    });
+    Object.assign(f.version, original);
+  }
+  const originalSite = f.instance.context.siteCode;
+  f.instance.context.siteCode = "x".repeat(129);
+  assert.equal(
+    (await f.owner.projectTaskDecisions(f.request, [f.task]))[0].reviewContext,
+    undefined,
+  );
+  f.instance.context.siteCode = originalSite;
+  for (const requester of [
+    undefined,
+    "",
+    "x".repeat(129),
+    "maker\nprivate",
+    { loginId: "maker" },
+    " maker ",
+  ]) {
+    f.instance.context.requestedBy = requester;
+    const [read] = await f.owner.projectTaskDecisions(f.request, [f.task]);
+    assert.equal(read.reviewContext.requestedBy, undefined);
+    assert.equal(read.reviewContext.rootCode, "circa");
+  }
+  f.version.graph.nodes.push({ ...f.version.graph.nodes[1] });
+  assert.equal(
+    (await f.owner.projectTaskDecisions(f.request, [f.task]))[0].reviewContext,
+    undefined,
+  );
+  f.version.graph.nodes.pop();
+  f.version.graph.nodes[1].action.moduleName = "other";
+  assert.equal(
+    (await f.owner.projectTaskDecisions(f.request, [f.task]))[0].reviewContext,
+    undefined,
+  );
+});
+
 test("requester eligibility follows the same permissions as completion without a distinct reviewer requirement", async () => {
   const f = fixture();
   f.instance.context = {
@@ -126,18 +202,21 @@ test("requester eligibility follows the same permissions as completion without a
   f.task.reviewerEligibility = { eligible: true };
   let [result] = await f.owner.projectTaskDecisions(f.request, [f.task]);
   assert.equal(result.reviewerEligibility.eligible, true);
-  assert.equal(
-    result.reviewerEligibility.reasonCode,
-    "ELIGIBLE",
-  );
-  assert.doesNotThrow(
-    () => f.owner.assertTaskActor(f.request, f.instance, f.version.policy),
+  assert.equal(result.reviewerEligibility.reasonCode, "ELIGIBLE");
+  assert.doesNotThrow(() =>
+    f.owner.assertTaskActor(f.request, f.instance, f.version.policy),
   );
   granted = false;
   [result] = await f.owner.projectTaskDecisions(f.request, [f.task]);
   assert.equal(result.reviewerEligibility.eligible, false);
-  assert.equal(result.reviewerEligibility.reasonCode, "REVIEWER_NOT_AUTHORISED");
-  assert.throws(() => f.owner.assertTaskActor(f.request, f.instance, f.version.policy), { code: "ERR_PROCESS_00029" });
+  assert.equal(
+    result.reviewerEligibility.reasonCode,
+    "REVIEWER_NOT_AUTHORISED",
+  );
+  assert.throws(
+    () => f.owner.assertTaskActor(f.request, f.instance, f.version.policy),
+    { code: "ERR_PROCESS_00029" },
+  );
   granted = true;
   f.request.authData.loginId = "checker@example.test";
   [result] = await f.owner.projectTaskDecisions(f.request, [f.task]);
@@ -516,9 +595,11 @@ test("wrong version identity, unpublished version and missing or ambiguous task 
 
 test("list projection reuses owner reads only within the same bounded request", async () => {
   const f = fixture();
+  global.CONFIG = { get: () => require('../config/properties').process };
   f.inspector.taskService = () => ({
     get: async () => ({
       code: "SUC_DBS_00000",
+      count: 2,
       result: [f.task, { ...f.task, code: "second" }],
     }),
   });

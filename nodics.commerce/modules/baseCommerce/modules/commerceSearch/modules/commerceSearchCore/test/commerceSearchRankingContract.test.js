@@ -132,3 +132,60 @@ test('Commerce Search publishes Axis BackOffice capability metadata from concret
         assert.equal(capability.navigation[0].permission, 'commerce.search.read');
     });
 });
+
+
+test('indexed ranking composes locale scope through the real Elastic adapter', async () => {
+    const elastic = require('../../../../../../../../nodics.foundation/modules/nSearch/elastic/src/schemas/elasticSearchModel').default;
+    const queries = [];
+    const base = { ...rules[0], scopeType: 'GLOBAL' };
+    const indexed = [
+        { ...base, code: 'exact' },
+        { ...base, code: 'missing', locale: undefined },
+        { ...base, code: 'null', locale: null },
+        { ...base, code: 'foreignLocale', locale: 'fr' },
+        { ...base, code: 'foreignTenant', tenant: 'other' },
+        { ...base, code: 'foreignStore', storeCode: 'other' },
+        { ...base, code: 'retired', status: 'RETIRED' }
+    ];
+    // Transport seam only: execute the supported DSL against index documents.
+    const matches = (row, query) => {
+        if (query.term) return Object.entries(query.term).every(([key, value]) => row[key] === value);
+        if (query.exists) return row[query.exists.field] !== undefined && row[query.exists.field] !== null;
+        assert.ok(query.bool, 'unsupported provider query');
+        const bool = query.bool;
+        return (bool.filter || []).every(part => matches(row, part)) &&
+            (bool.must_not || []).every(part => !matches(row, part)) &&
+            (!bool.should || bool.should.filter(part => matches(row, part)).length >= bool.minimum_should_match);
+    };
+    const model = {
+        indexDef: { indexName: 'commerceSearchRuleProjection' },
+        LOG: { debug() {} },
+        searchEngine: {
+            getOptions: () => ({}),
+            getConnection: () => ({ search: async parameters => {
+                queries.push(parameters.body.query);
+                assert.equal(JSON.stringify(parameters.body.query).includes('$'), false);
+                return { hits: { hits: indexed.filter(row => matches(row, parameters.body.query)).map(row => ({ _source: row })) } };
+            } })
+        }
+    };
+    elastic.defineDefaultDoSearch(model);
+    SERVICE.DefaultCommerceSearchRuleProjectionService = { doSearch: request => model.doSearch(request) };
+    const request = { tenant: 'default', storeCode: 'agoraMainStore', locale: 'en', query: {} };
+    assert.deepEqual((await ranking.loadRules(request)).map(row => row.code), ['exact', 'missing', 'null']);
+    assert.deepEqual(queries[0], { bool: { filter: [
+        { term: { tenant: 'default' } }, { term: { storeCode: 'agoraMainStore' } },
+        { term: { status: 'CURRENT' } }, { bool: { should: [
+            { term: { locale: 'en' } }, { bool: { must_not: [{ exists: { field: 'locale' } }] } }
+        ], minimum_should_match: 1 } }
+    ] } });
+    const ranked = await ranking.rank(request, products);
+    assert.equal(ranked[0].productCode, 'agoraLinenWrapDress');
+    assert.deepEqual(await ranking.rank({ ...request, query: { sort: 'name-asc' } }, products), products);
+    assert.equal(queries.length, 2);
+});
+
+test('generated model lookup retains model locale operators', async () => {
+    await ranking.loadRules({ tenant: 'default', storeCode: 'agoraMainStore', locale: 'en', query: {} });
+    assert.deepEqual(ruleRequests[0].query.$or, [{ locale: 'en' }, { locale: { $exists: false } }, { locale: null }]);
+});

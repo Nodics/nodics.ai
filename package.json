@@ -464,7 +464,7 @@
     "mongodb": "^4.17.2",
     "mongodb-connection-string-url": "2.6.0",
     "node-fetch": "^2.7.0",
-    "nodemailer": "10.0.12",
+    "nodemailer": "10.1.4",
     "object-sizeof": "^1.6.3",
     "require-from-string": "^2.0.2",
     "stream-json": "^3.6.0",

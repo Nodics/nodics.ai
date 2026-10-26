@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "loyaltyProgram",
   "sections": {
+    "partnerEligibilityAdministrationPermission": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "Program partner eligibility administration permission",
+      "description": "Program-owned permission vocabulary only; no assignments, program selections or financial records.",
+      "owningDomain": "loyaltyProgram",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "DEFAULT",
+      "files": {
+        "init-v001/headers/identity/loyaltyProgramAdministrationPermissionHeader.js": "f494a63a0668cdf8e20a831a3d63c1a28b47ccac8a696530053ccc6530eb8e05",
+        "init-v001/records/identity/loyaltyProgramAdministrationPermissionData.js": "937d96e3f23694aba8373b6d4f99b294ae577629e6c94eab06272ded2c5a0a5a"
+      }
+    },
     "core-reference": {
       "kind": "DATA_RELEASE",
       "dataType": "core",

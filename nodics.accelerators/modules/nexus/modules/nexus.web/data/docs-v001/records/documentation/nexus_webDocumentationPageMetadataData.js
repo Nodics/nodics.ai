@@ -104,8 +104,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/nexus_webDocumentationComponentData.js",
-    "sourceChecksum": "4df0a6eb0002f39a4c3977d21bd9b48a013a5bd60be5cb15556f4cdf360645e4",
-    "sourceWordCount": 1033,
+    "sourceChecksum": "ae5f8224e40d56466449cac38d9f7c690bf2144968a81c5d64d379f4a95a6878",
+    "sourceWordCount": 1020,
     "audience": [
       "business",
       "architect",
@@ -130,7 +130,7 @@ module.exports = {
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 1033,
+    "wordCount": 1020,
     "sourceEvidence": [
       "../../../../../nodics.docs/data/manifest.json",
       "../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",

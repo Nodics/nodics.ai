@@ -98,3 +98,63 @@ refunds, history deletion or cleanup mutations. Operators inspect correlated
 owner records and follow normal recovery. Re-running spends again with a new
 journey; explicit execution is required every time. Tests use injected fetch,
 isolated fixtures and inert help/import, never live mutation.
+
+## Attempted Payment bundle reconciliation
+
+The existing compensation/recover command also admits exactly one original
+DIGITAL_OWNERSHIP reservation. Digital verifies the canonical PURCHASE digest,
+original key, buyer/actor, Cart entry, merchant, listing and matching purchase claim,
+then durably fences the original purchase through its existing compensation owner.
+It never releases seller listing content holds. Changed claims, captured/transferred
+purchases, existing Orders and mixed reservation sets refuse.
+
+Checkout durably inserts and reads back `evidence.originalAuthorization` from the
+exact prepared original Payment request before dispatch: walletCode, programCode,
+rewardTypeCode and amount. The existing original-key checkpoint also retains its
+claim UUID, typed identities, original phases and reservation references. Only the
+successful insertion claimant dispatches; failed/uncertain acknowledgements or
+readback never grant dispatch authority. Success/compensation CAS the same row,
+retaining this evidence without credentials. Recovery never prepares a new
+payment method or reads current Cart totals to reconstruct it. Existing checkpoints
+without that tuple cannot reconcile a historical CANCELLED/noEffects:false decision;
+do not backfill them with caller selections, current balances or a new calculation.
+
+Payment sends the retained tuple and exact original PAYMENT/ORDER key binding to
+`/reward-reservation-decisions/reconcile` through its existing runtime transport,
+with reservationDecisionContract LOYALTY_RESERVATION_DECISION_V1 and one attempt.
+The result must be the distinct LOYALTY_RESERVATION_RECONCILIATION_V1,
+CANCELLED/noEffects:true with identical intent and valid atomic accounting proof.
+Never relabel it DENIED. The existing `paymentDenialDecision` evidence field retains
+the actual typed receipt unchanged apart from canonical ISO proof time formatting.
+Original atomic DENIED receipts remain supported through their existing path.
+
+Fresh reconciliation of the same retained tuple rechecks proof before release,
+after release and on replay. Ordinary cancel/inspect cannot confirm a reconciled
+cancellation; they deliberately return conservative legacy receipts. Digital also
+requires the retained proof independently, including when release is called directly.
+Checkpoint CAS preserves original evidence, advances monotonically, and leaves
+unknown outcomes fenced. No authorization retry, Payment denial fabrication,
+refund, wallet funding, owner replacement or checkpoint reset occurs.
+
+Focused source tests use isolated owner fixtures and synthetic canonical Loyalty
+receipts. They do not establish live adoption, historical authorization retention,
+or native Loyalty transaction qualification.
+
+## Canonical auction capture evidence
+
+Loyalty capture returns `redemptionCode`, `captureLedgerEntryCode` and
+`captureEvidence` with contractVersion 1, both codes, roundCode, bidCode,
+reservationCode, idempotencyKey, sourceType/sourceCode and targetType/targetCode.
+The transaction rereads the redemption and capture ledger and verifies their
+original hold, wallet, program/type, amount, key and provenance before retaining
+the command receipt. Replay returns that same receipt without another debit.
+Provenance remains BIDDING/original bid -> AUCTION_ROUND/original round.
+
+The Payment auction adapter uses captureLedgerEntryCode as its capture reference,
+keeps redemptionCode distinct, validates the exact receipt, then adds the
+Checkout-verified commitmentCode as `auctionCapture`. Payment stores this under
+`evidence.auctionCapture`; `evidence.providerReference` is the ledger code.
+No client evidence is promoted to authority. Redemption-only legacy receipts
+fail closed; they cannot be silently treated as ledger proof. Inspect/release
+retain their original hold references. No generic capture/refund fallback or
+ledger provenance rewriting is permitted.

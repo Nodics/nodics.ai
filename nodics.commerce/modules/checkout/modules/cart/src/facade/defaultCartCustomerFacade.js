@@ -105,7 +105,7 @@ module.exports = {
             ownerRef = { module: 'profile', schema: 'enterprise', code: enterpriseCode };
         }
         return { ...input, tenant, enterpriseCode, participantEnterpriseCode: enterpriseCode, authorization,
-            ownerId: ownerRef.schema === 'enterprise' ? ownerRef.code : principalId, ownerRef,
+            ownerId: ownerRef.code, ownerRef,
             actorRef: { principalType: auth.principalType, code: principalId, loginId: auth.loginId, enterpriseCode },
             correlationId: input.correlationId || input.requestId };
     },

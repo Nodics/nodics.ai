@@ -127,6 +127,12 @@ module.exports = {
   },
 
   promotion: {
+    administrativeReview: {
+      evidencePath: "/identity/platform-administrator/evidence",
+      recipientPath: "/participants/resolve",
+      identityTarget: { moduleName: "profile", connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, apiVersion: "v0" },
+      timeoutMs: 10000,
+    },
     enabled: true,
     acceptance: {
       couponOfferLifecycle: {
@@ -146,6 +152,7 @@ module.exports = {
       maximumReservationSeconds: 3600,
     },
     acquisitionReporting: {
+      channelOptions: [],
       pageSize: 200,
       maximumPages: 100,
       minimumDistinctOwners: 5,

@@ -44,15 +44,28 @@ module.exports = {
   remote: async function (r, path, body) {
     const p = CONFIG.get("digitalCore")?.bundles?.carbon;
     if (p?.qualified !== true || !p.connectionName || !p.targetAuthority || !Number.isSafeInteger(p.timeoutMilliseconds) || p.timeoutMilliseconds <= 0 ||
-        !Number.isSafeInteger(p.maximumHoldingPages) || p.maximumHoldingPages < 1) throw new Error("Carbon component transport is not qualified");
-    let result = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: "wasteCarbon",
-      connectionName: p.connectionName, targetAuthority: p.targetAuthority, apiName: path, methodName: "POST",
-      tenant: r.tenant, request: { tenant: r.tenant }, requestBody: body,
-      header: { "Idempotency-Key": body.operationKey, "X-Correlation-Id": r.correlationId || body.operationKey },
-      timeoutMs: p.timeoutMilliseconds, maxAttempts: 1 });
+        !Number.isSafeInteger(p.maximumHoldingPages) || p.maximumHoldingPages < 1) throw new CLASSES.NodicsError("ERR_DIGITAL_BUNDLE_OWNER_UNAVAILABLE");
+    let result;
+    try {
+      result = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: "wasteCarbon",
+        connectionName: p.connectionName, targetAuthority: p.targetAuthority, apiName: path, methodName: "POST",
+        tenant: r.tenant, request: { tenant: r.tenant }, requestBody: body,
+        header: { "Idempotency-Key": body.operationKey, "X-Correlation-Id": r.correlationId || body.operationKey },
+        timeoutMs: p.timeoutMilliseconds, maxAttempts: 1 });
+    } catch (error) {
+      const diagnostic = error?.metadata?.runtimeInvocationDiagnostic;
+      const httpStatus = error?.metadata?.remoteHttpFailure?.httpStatus ?? error?.status;
+      const stage = diagnostic?.failureCode === "INTERNAL_TOKEN_UNAVAILABLE" ? "CREDENTIAL"
+        : diagnostic?.failureCode === "REMOTE_ENDPOINT_UNAVAILABLE" ? "TARGET"
+        : [401, 403].includes(httpStatus) ? "AUTHORIZATION"
+        : httpStatus === 404 ? "TARGET"
+        : "TRANSPORT";
+      // Forward only fixed adapter stages, never remote errors, tokens or diagnostic metadata.
+      throw new CLASSES.NodicsError("ERR_DIGITAL_CARBON_" + stage);
+    }
     for (let n = 0; n < 8 && result; n++) {
       if (result.error || result.success === false || result.acknowledged === false || /^ERR_/.test(result.code || "") ||
-          result.errors && (!Array.isArray(result.errors) || result.errors.length)) throw new Error("Carbon owner evidence failed");
+          result.errors && (!Array.isArray(result.errors) || result.errors.length)) throw new CLASSES.NodicsError("ERR_DIGITAL_CARBON_EVIDENCE");
       if (result.data !== undefined) result = result.data;
       else if (result.result !== undefined) result = result.result;
       else break;
@@ -82,19 +95,19 @@ module.exports = {
     let total, found, count = 0;
     const seen = new Set();
     for (let page = 1; ; page++) {
-      if (page > CONFIG.get("digitalCore").bundles.carbon.maximumHoldingPages) throw new Error("Carbon holdings exceed the bounded read");
+      if (page > CONFIG.get("digitalCore").bundles.carbon.maximumHoldingPages) throw new CLASSES.NodicsError("ERR_DIGITAL_CARBON_HOLDINGS");
       const result = await this.remote(r, "/carbon/holdings", { ownerRef: input.ownerRef, page });
       if (!Array.isArray(result?.items) || !Number.isSafeInteger(result.total) || result.total < 0 || result.page !== page ||
           !Number.isSafeInteger(result.limit) || result.limit < 1 || result.items.length > result.limit ||
-          total !== undefined && total !== result.total) throw new Error("Carbon holdings are incomplete or changed");
+          total !== undefined && total !== result.total) throw new CLASSES.NodicsError("ERR_DIGITAL_CARBON_HOLDINGS");
       total = result.total;
       for (const item of result.items) {
-        if (seen.has(item.lotCode)) throw new Error("Duplicate carbon lot");
+        if (seen.has(item.lotCode)) throw new CLASSES.NodicsError("ERR_DIGITAL_CARBON_HOLDINGS");
         seen.add(item.lotCode);
         if (item.lotCode === c.reference.code) found = item;
       }
       count += result.items.length;
-      if (count > total || count < total && result.items.length < result.limit) throw new Error("Carbon holding totals changed");
+      if (count > total || count < total && result.items.length < result.limit) throw new CLASSES.NodicsError("ERR_DIGITAL_CARBON_HOLDINGS");
       if (count === total) break;
     }
     return { available: !!found && found.state === "REALIZED" && found.unitOfMeasure === c.unitOfMeasure &&

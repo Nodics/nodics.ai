@@ -40,6 +40,14 @@ module.exports = {
     },
   },
   communication: {
+    runtimeRoleProfiles: {
+      ENGAGEMENT: {
+        dispatchEligibilityOwners: {
+          digitalCore: { DIGITAL_COUPON_EXPIRING: { moduleName: "digitalCore", connectionName: "commerce",
+            runtimeRole: "COMMERCE", apiName: "/internal/coupons/reminder-dispatch-eligibility" } },
+        },
+      },
+    },
     dispatchEligibilityOwners: {
       digitalCore: { DIGITAL_COUPON_EXPIRING: "DefaultDigitalCouponReminderDeliveryService",
         DIGITAL_BUNDLE_GIFT_PENDING: "DefaultDigitalBundleGiftNotificationService",
@@ -55,8 +63,8 @@ module.exports = {
         "digitalCore.couponExpirySweep": {
           moduleName: "digitalCore",
           operation: "couponExpirySweep",
-          service: "DefaultDigitalCommerceCouponReminderService",
-          method: "sweep",
+          remote: { target: "digitalCore", moduleName: "digitalCore", runtimeRole: "COMMERCE",
+            apiName: "/workflow/actions/couponExpirySweep" },
         },
       },
     },
@@ -99,11 +107,15 @@ module.exports = {
       validation: {
         leadTimeSeconds: { minimum: 1, maximum: 31536000 }, maximumCandidates: { minimum: 1, maximum: 1000 },
         maximumTriggerAgeSeconds: { minimum: 1, maximum: 3600 },
+        claimResponseBytes: { minimum: 1, maximum: 1048576 },
       },
       leadTimeSeconds: 86400,
       maximumCandidates: 200,
       maximumTriggerAgeSeconds: 300,
       sourceCallers: [],
+      sweepCallers: [],
+      dispatchCallers: [],
+      actionAuthority: { connectionName: "workflow", runtimeRole: "PROCESS", timeoutMs: 10000, maxResponseBytes: 32768 },
       delivery: {
         validation: { timeoutMs: { minimum: 1, maximum: 60000 }, maximumRecipients: { minimum: 1, maximum: 100 } },
         profileConnectionName: "profile", communicationConnectionName: "communication",
@@ -248,6 +260,10 @@ module.exports = {
       presentation: {
         storeLabel: "Fulfillment outlet",
         pricedSourceLabel: "Native basket reference",
+        itemSourceLabel: "Item fulfillment reference",
+        simulatedItemSourceLabel: "ITEM simulation reference",
+        mixedItemSourceLabel: "Basket or item fulfillment reference",
+        mixedSimulatedItemSourceLabel: "Basket or simulated fulfillment reference",
       },
     },
   },

@@ -142,13 +142,13 @@
           "moduleName": "profile",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
+          "version": "0.0.3",
+          "checksum": "402b7ebffc05ac529f465c228700437b830cfb0f873a15ac92d5b7b5b9a3a9c8",
           "partition": "DEFAULT"
         },
         {

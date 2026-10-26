@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @description Module-owned documentation page metadata. */
+/** @description Owner-authored auction documentation CMS PageMetadata records; Staged pending review. */
 module.exports = {
   "record0": {
     "code": "nodicsDocsMetadatacatalogProductDiscoveryManagement",
@@ -20,7 +20,7 @@ module.exports = {
     "title": "Product Catalog and Discovery Management",
     "summary": "Products, categories, variants, localized attributes, catalog publication, discovery projections, and project customization.",
     "businessSummary": "Product Catalog and Discovery Management explains the business purpose, supported decisions, operational impact, and controls for the Catalog Model and Publication journey.",
-    "technicalSummary": "Product Catalog and Discovery Management has canonical documentation records in product at data/docs-v001/records/documentation/productDocumentationComponentData.js, with functional visibility under nodics.commerce. Referenced capability modules retain their own implementation and validation authority.",
+    "technicalSummary": "Canonical owner CMS records describe source behavior and isolated unit evidence; deployment and live qualification remain separate.",
     "ownerFunctionalModule": "nodics.commerce",
     "technicalModule": "product",
     "targetPage": "nodicsDocsPagecatalogProductDiscoveryManagement",
@@ -73,6 +73,21 @@ module.exports = {
         "text": "Source authoring APIs",
         "anchor": "catalogProductDiscoveryManagement-9-source-authoring-apis",
         "level": 2
+      },
+      {
+        "text": "Automatic held-bundle publication",
+        "anchor": "automatic-held-bundle-publication",
+        "level": 2
+      },
+      {
+        "text": "Auction projection and consumer boundaries",
+        "anchor": "auction-projection-and-consumer-boundaries",
+        "level": 2
+      },
+      {
+        "text": "Public coupon acquisition requirements",
+        "anchor": "public-coupon-acquisition-requirements",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -107,6 +122,10 @@ module.exports = {
       {
         "kind": "table",
         "title": "Entity or service area, Business purpose, Developer extension point"
+      },
+      {
+        "kind": "table",
+        "title": "Boundary, Authoritative evidence, Failure behavior"
       }
     ],
     "visualRequirements": [
@@ -122,8 +141,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/productDocumentationComponentData.js",
-    "sourceChecksum": "58753c6854fc36a128c505f5658e92dd1ad50384eeaa81b8ac90ed5ef4795cea",
-    "sourceWordCount": 1473,
+    "sourceChecksum": "0bfa82421fc3c808421fe3fbb51f510ee82bbf293746d4271421efeb2d6b6366",
+    "sourceWordCount": 2193,
     "audience": [
       "business",
       "architect",
@@ -145,16 +164,21 @@ module.exports = {
     ],
     "accessPolicy": "nodicsDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 1473,
+    "wordCount": 2193,
     "sourceEvidence": [
       "../../../../../nodics.docs/data/manifest.json",
       "../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
       "package.json",
       "src/schemas",
-      "src/service"
+      "src/service",
+      "llm/contracts/automatic-bundle-publication.md",
+      "src/service/defaultProductBundlePublicationService.js",
+      "llm/contracts/README.md#public-coupon-browsing",
+      "../promotion/llm/contracts/coupon-offers-and-acquisition.md",
+      "test/productDigitalAvailabilityContract.test.js"
     ]
   }
 };

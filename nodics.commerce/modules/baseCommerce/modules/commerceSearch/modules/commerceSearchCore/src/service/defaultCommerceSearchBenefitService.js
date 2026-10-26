@@ -121,17 +121,27 @@ module.exports = {
      * evidence checks described above.
      */
     expand: async function (request, products, rules) {
-        const memberships = await this.memberships(request, products), result = [], used = new Set();
+        const result = [], used = new Set(), resolved = [], selectedCodes = new Set();
+        let allCoupons = false;
         const ordered = [...rules].sort((a, b) =>
             SERVICE.DefaultCommerceSearchPolicyService.priority(b) - SERVICE.DefaultCommerceSearchPolicyService.priority(a) ||
             String(a.code).localeCompare(String(b.code)));
         for (const rule of ordered) {
-            if (!rule.benefitRef) { result.push(rule); continue; }
+            if (!rule.benefitRef) { resolved.push({ rule }); continue; }
             const benefit = await this.benefit(request, rule.benefitRef);
             if (!benefit || benefit.storeCode !== request.storeCode) continue;
             const key = JSON.stringify([request.tenant, benefit.agreementCode, benefit.benefitCode]);
             if (used.has(key)) continue;
             used.add(key);
+            resolved.push({ rule, benefit });
+            if (benefit.targetType === 'ALL_ENTERPRISE_COUPONS') allCoupons = true;
+            else for (const code of benefit.productCodes) selectedCodes.add(code);
+        }
+        // Only current coverage determines which eligible coupons require private issuer proof.
+        const memberships = await this.memberships(request,
+            allCoupons ? products : products.filter(product => selectedCodes.has(product.productCode)));
+        for (const { rule, benefit } of resolved) {
+            if (!benefit) { result.push(rule); continue; }
             const selected = new Set(benefit.productCodes);
             const actions = products.filter(product => memberships.get(product.productCode) === benefit.enterpriseCode &&
                 (benefit.targetType === 'ALL_ENTERPRISE_COUPONS' || selected.has(product.productCode)))

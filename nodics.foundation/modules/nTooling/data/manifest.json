@@ -4,7 +4,7 @@
   "sections": {
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "docs-v002",
+      "contentPath": "docs-v001",
       "pack": "nTooling",
       "version": "0.0.2",
       "owningDomain": "documentation",
@@ -20,7 +20,7 @@
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "cms-records",
-      "sourceAuthority": "data/docs-v002/records/documentation",
+      "sourceAuthority": "data/docs-v001/records/documentation",
       "sites": [
         "nodicsDocumentationSite"
       ],
@@ -28,16 +28,16 @@
       "pages": 10,
       "components": 10,
       "routes": 10,
-      "releaseChecksum": "ae39359fb8e8dba282ae8fb3e2a3375b81fe2df43caf1f769beebf78ee99a614",
+      "releaseChecksum": "c07bd647e2f7fc1ef3f0b3fb3f95892f333acfa37e958782fb471c56527f50d8",
       "generatedHashes": {
-        "docs-v002/records/documentation/nToolingDocumentationNodeData.js": "07649055faa0ff3889746ece6d02d08f2e2b799e1e8164fd3737a7d4efdc616d",
-        "docs-v002/records/documentation/nToolingDocumentationPageMetadataData.js": "930e948e4703e5158820f8872545827df3b1901dfc595a4fde9479bb7b31af57",
-        "docs-v002/records/documentation/nToolingDocumentationPublicationStateData.js": "e67ebfd09c3d770cb01606340daea1dffd957ca7af904509bb035c843751f93a",
-        "docs-v002/records/documentation/nToolingDocumentationSearchMetadataData.js": "0b4b3884396b8fd0ae640a001d55434675287e709ee79d54b35745d7ed1daa50",
-        "docs-v002/records/documentation/nToolingDocumentationComponentData.js": "5fd7f1bdc7271505b79368d1848cef520a131c79578166949561508f5dc49f3c",
-        "docs-v002/records/documentation/nToolingDocumentationPageData.js": "7081a23e8cf0d2f8f2f7dd98b77f5d5cc8928ebda030cf7798d0c1d3700c8a56",
-        "docs-v002/records/documentation/nToolingDocumentationRouteData.js": "e626cac39e797a0e7f9ddfe908eca59deb752565596e8ae0b756ffe39650ef6e",
-        "docs-v002/headers/100_nToolingDocumentationContentPackHeader.js": "13efda5c2a7ba01a47b1c042046d15ad6d174bef26c2c09c9b5e5b3ee55da391"
+        "docs-v001/records/documentation/nToolingDocumentationNodeData.js": "07649055faa0ff3889746ece6d02d08f2e2b799e1e8164fd3737a7d4efdc616d",
+        "docs-v001/records/documentation/nToolingDocumentationPageMetadataData.js": "5bd85ef8d848e9419f2b2c6cf08c047bae203f5b3fa9b9740af3e3ae835c7d46",
+        "docs-v001/records/documentation/nToolingDocumentationPublicationStateData.js": "a36e7f3db18cdf76d18a289fae5a9eb99f21fa4e6f953c92c1c9d096219fadd2",
+        "docs-v001/records/documentation/nToolingDocumentationSearchMetadataData.js": "0b4b3884396b8fd0ae640a001d55434675287e709ee79d54b35745d7ed1daa50",
+        "docs-v001/records/documentation/nToolingDocumentationComponentData.js": "0bbb73ee40135c4f193952b03c064766af9ae5bf3909c14543215f7047ead005",
+        "docs-v001/records/documentation/nToolingDocumentationPageData.js": "7081a23e8cf0d2f8f2f7dd98b77f5d5cc8928ebda030cf7798d0c1d3700c8a56",
+        "docs-v001/records/documentation/nToolingDocumentationRouteData.js": "e626cac39e797a0e7f9ddfe908eca59deb752565596e8ae0b756ffe39650ef6e",
+        "docs-v001/headers/100_nToolingDocumentationContentPackHeader.js": "13efda5c2a7ba01a47b1c042046d15ad6d174bef26c2c09c9b5e5b3ee55da391"
       },
       "includes": [
         {

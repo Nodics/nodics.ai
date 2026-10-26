@@ -54,7 +54,7 @@ module.exports = {
   checkoutCore: { enabled: true,
     couponAcceptance: { requestTimeoutMs: 30000, maximumCases: 12,
       checkpointDirectory: '.nodics/acceptance/checkout-coupon' },
-    auction: { purchaseValiditySeconds: 86400,
+    auction: { purchaseValiditySeconds: 86400, cartContexts: {},
     validation: { purchaseValiditySeconds: { minimum: 1, maximum: 31536000 } } },
     bundleRecovery: { leaseMs: 60000 },
     participantSpend: { perPurchaseLimit: null,

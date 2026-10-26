@@ -1,5 +1,10 @@
 # Loyalty Reward Provider Agent Contract
 
+Decision cancel/inspect transport uses original keys, the configured owner paths,
+runtime credentials and one attempt. Never forward participant credentials as a
+service principal or retry spending to discover denial. Validate exact receipt
+binding and noEffects:true; historical cancellation fences remain unconfirmed.
+
 Enterprise wallet admission must apply wildcard capability scopes equally to
 allow and deny, preserve tenant/Enterprise qualifiers and let denial win.
 Use effective service members for scope matching and original-context checks;
@@ -38,3 +43,17 @@ and redemption evidence, Payment's exact journey transaction evidence and Digita
 current-owner delivery evidence. Keep persisted-row context exclusion in the owning
 native persistence suite; do not infer it from API projections.
 Keep injected success, denial, correlation, amount and customer-adoption tests.
+
+Attempted-Payment bundle cleanup requires the exact canonical purchase fence and
+fresh terminal owner proof. Typed CANCELLED/noEffects:true is accepted only from
+LOYALTY_RESERVATION_RECONCILIATION_V1 with matching retained original authorization
+intent and atomic accounting proof. Reconcile through the Payment runtime using
+that original tuple; cancel/inspect remain conservative. Missing retained intent
+blocks historical cancellation cleanup. Never reconstruct it from current Cart,
+caller fields or balances; never relabel cancellation as DENIED or release seller
+listing content holds. Preserve original checkpoint/claim and monotonic CAS.
+
+Auction capture must prove the retained redemption-to-capture-ledger link and
+original BIDDING/AUCTION_ROUND provenance before returning canonical ledger
+evidence. Payment reference is the ledger code, not redemptionCode; retain exact
+auctionCapture binding separately. Preserve rollback and unchanged replay tests.

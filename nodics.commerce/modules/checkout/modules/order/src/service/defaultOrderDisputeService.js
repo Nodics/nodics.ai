@@ -16,6 +16,34 @@ module.exports = {
   policy: function () {
     return (CONFIG.get("order") || {}).disputes || {};
   },
+  /** Projects review intent from retained Store admission and current Digital owner policy; never grants reversal authority. */
+  eligibility: async function (request, order) {
+    const unavailable = { eligible: false, resolutions: [], reasonCode: "ORDER_REVIEW_UNAVAILABLE" };
+    try {
+      if (request.authData?.principalType !== "customer") return unavailable;
+      const scope = { ...request, enterpriseCode: order.enterpriseCode };
+      const digital = SERVICE.DefaultDigitalCommerceEntitlementService;
+      if (!digital?.listEntitlements || !digital.revocationPolicy) return unavailable;
+      const items = await digital.listEntitlements(scope, { ownerId: order.ownerId, orderCode: order.code });
+      if (!Array.isArray(items) || items.some(item => !item ||
+          item.tenant !== request.tenant || item.enterpriseCode !== order.enterpriseCode ||
+          item.ownerId !== order.ownerId || item.orderCode !== order.code)) return unavailable;
+      const decisions = items.map(item => digital.revocationPolicy(item, "REFUND"));
+      if (decisions.some(decision => typeof decision?.refundable !== "boolean" ||
+          !["BLOCKED", "MANUAL_REVIEW", "REVOKE_AND_REFUND"].includes(decision.policyDecision))) return unavailable;
+      if (decisions.some(decision => decision?.reasonCode === "DIGITAL_COUPON_PURCHASE_FINAL"))
+        return { eligible: false, resolutions: [], reasonCode: "DIGITAL_COUPON_PURCHASE_FINAL" };
+      // Finality describes the owned purchase even when manual review is not admitted.
+      await this.policyAdmission(scope, order, this.policy());
+      // Ownership delivery has a separate domain reversal contract, not coupon review authority.
+      if (items.some(item => item.digitalDeliveryType !== "COUPON_CODE")) return unavailable;
+      const resolutions = ["DISPUTE", "CANCELLATION", "RETURN", "REFUND"].filter(type =>
+        type === "DISPUTE" || items.every(item => digital.revocationPolicy(item, type)?.refundable === true));
+      return { eligible: true, resolutions, reasonCode: "MANUAL_REVIEW" };
+    } catch {
+      return unavailable;
+    }
+  },
   /** Rejects invalid or inaccessible requests without exposing other orders. */
   fail: function (message) {
     throw new CLASSES.NodicsError("ERR_ORDER_DISPUTE_INVALID", message);
@@ -118,8 +146,9 @@ module.exports = {
   /** Lists the customer's case history after rechecking order ownership. */
   listOwn: async function (input) {
     const request = this.context(input);
-    await this.order(request);
+    const order = await this.order(request);
     return {
+      reviewEligibility: await this.eligibility(request, order),
       cases: (
         await this.records(request, {
           orderCode: request.code,
@@ -133,7 +162,7 @@ module.exports = {
     const request = this.context(input),
       p = request.payload || {},
       key = request.idempotencyKey;
-    await this.order(request);
+    const order = await this.order(request);
     if (
       p.confirmed !== true ||
       typeof key !== "string" ||
@@ -170,6 +199,9 @@ module.exports = {
         this.fail("This request reference belongs to different details");
       return this.project(row);
     }
+    const eligibility = await this.eligibility(request, order);
+    if (!eligibility.eligible || !eligibility.resolutions.includes(p.requestedResolution))
+      this.fail("This order is not eligible for the requested review");
     const model = {
       tenant: request.tenant,
       created: new Date(),

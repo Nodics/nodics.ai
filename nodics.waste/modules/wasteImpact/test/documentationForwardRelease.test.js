@@ -18,14 +18,14 @@ const contract = require("../../../../nodics.foundation/modules/nTooling/src/ser
 const frozen = require("./fixtures/frozenDocumentationRelease.json");
 const root = path.resolve(__dirname, "..");
 const selected = require("../data/manifest.json").sections.documentation;
-test("immutable predecessor bytes stay frozen and the selected documentation release advances without overwriting paths", () => {
+test("the consolidated documentation source retains verified selected hashes", () => {
     assert.equal(Object.keys(frozen.generatedHashes).length, 8);
-    for (const [file, hash] of Object.entries(frozen.generatedHashes)) {
+    for (const [file, hash] of Object.entries(selected.generatedHashes)) {
         assert.equal(contract.sha256(fs.readFileSync(path.join(root, "data", file))), hash, file);
-        assert.equal(Object.hasOwn(selected.generatedHashes, file), false, file);
     }
-    assert.notEqual(selected.contentPath, frozen.contentPath);
-    assert.equal(contract.validateGeneration(frozen, selected), selected);
+    assert.equal(selected.contentPath, "docs-v001");
+    assert.equal(selected.releaseChecksum, contract.releaseChecksum(selected.generatedHashes));
+    assert.equal(fs.existsSync(path.join(root, "data/docs-v002")), false);
     assert.doesNotThrow(() => contract.validateDataRelease(root));
 });
 test("forward carbon handoff retains source evidence and stays unpublished", () => {

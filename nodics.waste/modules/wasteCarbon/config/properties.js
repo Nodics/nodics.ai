@@ -11,7 +11,22 @@
 
 /** @module wasteCarbon/config/properties @description Complete reusable defaults and validation bounds. Evidence selection remains governed data; no provider is qualified by default. @owner wasteCarbon @layer config @override Later layers supply intentional value overrides only. */
 module.exports = {
+    tooling: {
+        commands: {
+            'acceptance:waste-carbon': {
+                acceptanceContract: true, projectHome: true, handler: '@nTooling/node-script',
+                script: 'src/service/acceptance/defaultWasteCarbonHttpAcceptanceService.mjs'
+            }
+        },
+        acceptance: {
+            wasteCarbonHttp: {
+                timeoutMs: 10000, maximumSelectionBytes: 65536, maximumResponseBytes: 262144,
+                authorizationEnvironment: 'NODICS_WASTE_CARBON_ACCEPTANCE_AUTHORIZATION'
+            }
+        }
+    },
     wasteCarbon: {
+        mock: { enabled: false },
         profile: { connectionName: 'profile', targetAuthority: { runtimeRole: 'PLATFORM' }, timeoutMs: 10000 },
         evidence: { providerService: null, qualificationRef: null, allowSynthetic: false },
         validation: {

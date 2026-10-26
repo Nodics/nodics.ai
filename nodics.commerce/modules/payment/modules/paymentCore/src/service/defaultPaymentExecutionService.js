@@ -22,7 +22,7 @@
  * Inputs and outputs are specified on each exported member below.
  * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
  * Exported members: isSupportedOperation, inFlightKey, operationEnterprise, participantIdentity,
- * auctionIdentity, normalizeOutcome, transactionModel, execute.
+ * auctionIdentity, normalizeOutcome, transactionModel, authorizationDecision, execute.
  * @override Customize through the existing loader-visible module members, preserving private
  * authority.
  */
@@ -32,6 +32,20 @@ const captureIntents = new Map();
 const participantIntents = new Map();
 const { isDeepStrictEqual } = require('node:util');
 module.exports = {
+    /**
+     * Reconciles one original Loyalty authorization key through its canonical owner. Internal callers
+     * must derive Order/key from a freshly authorized retained checkpoint, never HTTP financial fields.
+     * Cancellation creates only an immutable no-debit fence; inspection has no domain effects.
+     */
+    authorizationDecision: async function (request, operation) {
+        const id = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:@|\-]{0,511}$/.test(value);
+        if (!request || ![request.tenant, request.orderCode, request.commandCode].every(id) ||
+            !['cancel', 'inspect', 'reconcile'].includes(operation)) throw new Error('Original authorization identity is required');
+        return SERVICE.DefaultLoyaltyRewardPaymentProviderService.reservationDecision({
+            tenant: request.tenant, orderCode: request.orderCode, idempotencyKey: request.commandCode + ':payment',
+            ...(operation === 'reconcile' ? { originalAuthorization: request.originalAuthorization } : {})
+        }, operation);
+    },
     /** Returns true when a payment operation is supported by the provider-neutral execution contract. @param {string} operation Operation code. @returns {boolean} Supported flag. */
     isSupportedOperation: function (operation) { return ALLOWED.has(operation); },
     /** Returns a tenant/idempotency in-flight key. @param {Object} request Payment request. @returns {string} Key. */
@@ -127,6 +141,8 @@ module.exports = {
                 providerReference: response && response.reference,
                 providerStatus: response && response.status,
                 sandbox: response && response.sandbox === true,
+                ...(response?.auctionCapture ? { auctionCapture: structuredClone(response.auctionCapture) } : {}),
+                ...(response?.reservationDecision ? { reservationDecision: structuredClone(response.reservationDecision) } : {}),
                 ...(response && response.originalCaptureReceipt ? { originalCaptureReceipt: structuredClone(response.originalCaptureReceipt), maturity: response.maturity, sandboxMode: response.sandboxMode } : {}),
                 ...(response && response.originalRefundReceipt ? { originalRefundReceipt: structuredClone(response.originalRefundReceipt), maturity: response.maturity, sandboxMode: response.sandboxMode } : {}),
                 ...(response && response.originalRefundUnconfirmed === true ? { originalRefundUnconfirmed: true, maturity: response.maturity, sandboxMode: response.sandboxMode } : {}),

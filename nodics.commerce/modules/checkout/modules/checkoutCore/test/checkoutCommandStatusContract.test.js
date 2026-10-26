@@ -35,7 +35,7 @@ function fixture() {
       errorCode: "PRIVATE_DEPENDENCY_TEXT", providerReference: "PRIVATE_RECEIPT", compensation: [
         { type: "PAYMENT_REFUND", status: "COMPLETED", providerReference: "PRIVATE_RECEIPT" },
         { type: "DIGITAL_OWNERSHIP_RELEASE", status: "FAILED", errorCode: "PRIVATE_DEPENDENCY_TEXT", code: "PRIVATE_UNIT" } ] } };
-  const state = { rows: [row], reads: [], payments: [], paymentReads: [], effects: 0, privacyChecks: 0 };
+  const state = { rows: [row], reads: [], payments: [], paymentReads: [], effects: 0, privacyChecks: 0, profileCustomerCode: 'buyer' };
   const deny = async () => { state.effects++; throw new Error("Forbidden effect"); };
   global.SERVICE = {
     // DTO/privacy tests isolate partition recovery, exercised with real facades in merchantScopeContract.
@@ -63,12 +63,41 @@ function fixture() {
   };
   global.CONFIG = { get: key => key === 'cart' ? require('../../cart/config/properties').cart : undefined };
   SERVICE.DefaultSecuredRequestPipelineService = { getGrantedPermissions: () => ['commerce.checkout.place'], isPermissionGranted: () => true };
-  SERVICE.DefaultModuleService = { invokeModule: async () => ({ contractVersion: 1, tenant: 't', enterpriseCode: 'e', customer: { code: 'customer', loginId: 'buyer' } }) };
+  SERVICE.DefaultModuleService = { invokeModule: async () => ({ contractVersion: 1, tenant: 't', enterpriseCode: 'e', customer: { code: state.profileCustomerCode, loginId: 'buyer' } }) };
   global.FACADE = { DefaultCheckoutCustomerFacade: facade, DefaultCartCustomerFacade: require('../../cart/src/facade/defaultCartCustomerFacade') };
   global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
   return { request, row, state };
 }
 test.afterEach(() => { delete global.SERVICE; delete global.FACADE; delete global.CLASSES; });
+
+test('retained coupon diagnostic is read-only, bounded and never projects owner payloads', async () => {
+  const { request, row, state } = fixture();
+  row.cartCode = 'cart'; row.evidence.orderCode = 'order';
+  row.evidence.couponAcquisitionRecovery = { orderCode: 'order', cartCode: 'cart',
+    reservations: [{ code: 'private-coupon', offerAllocationCode: 'private-allocation', idempotencyKey: request.commandCode + ':digital:entry:0' }] };
+  SERVICE.DefaultDigitalCommerceCheckoutService = { maximumCouponUnits: () => 10 };
+  SERVICE.DefaultDigitalCommerceCouponAcquisitionService = { inspectRecovery: async (scope, unit) => {
+    assert.deepEqual(scope.payload, { cartCode: 'cart', orderCode: 'order' });
+    assert.equal(unit.offerAllocationCode, 'private-allocation');
+    return { allocationStatus: 'RESERVED', inputDisposition: 'RELEASE', couponStatus: 'RESERVED', stage: 'FAILURE_PROOF', condition: 'PAYMENT_PENDING',
+      failureCode: 'ERR_DIGITAL_COUPON_RECOVERY_INSPECTION', privatePayload: 'SECRET', retryAllowed: true };
+  } };
+  const result = await recovery.commandStatus(request);
+  assert.deepEqual(result.couponRecoveryDiagnostics, { contract: 'COUPON_RECOVERY_INSPECTION_V1', readOnly: true,
+    units: [{ unitIndex: 0, allocationStatus: 'RESERVED', inputDisposition: 'RELEASE', couponStatus: 'RESERVED',
+      stage: 'FAILURE_PROOF', condition: 'PAYMENT_PENDING', failureCode: 'ERR_DIGITAL_COUPON_RECOVERY_INSPECTION' }] });
+  assert.equal(JSON.stringify(result).includes('SECRET'), false);
+  assert.equal(JSON.stringify(result).includes('retryAllowed'), false);
+  assert.equal(state.effects, 0);
+  SERVICE.DefaultDigitalCommerceCouponAcquisitionService.inspectRecovery = async () => ({ allocationStatus: 'PRIVATE' });
+  await assert.rejects(recovery.commandStatus(request), failure);
+  SERVICE.DefaultDigitalCommerceCouponAcquisitionService.inspectRecovery = async () => {
+    row.revision++;
+    return { allocationStatus: 'RESERVED', inputDisposition: 'UNSET', couponStatus: 'RESERVED', stage: 'EVIDENCE_CONFIRMED', condition: 'NONE' };
+  };
+  await assert.rejects(recovery.commandStatus(request), failure);
+  assert.equal(state.effects, 0);
+});
 
 test("private route has independent customer permission/exposure and disabled capture/cache", () => {
   assert.deepEqual(routers.checkoutCore.customer.commandStatus, {
@@ -125,7 +154,7 @@ test("actual completed checkpoint writer uses Order code, not placement key", as
     state.rows = [copy(r.model)]; return { code: "SUC_SAVE_00000", result: r.model };
   };
   const writer = { ...ports, closeCart: async () => ({ status: "PLACED" }) };
-  await writer.create().complete({ ...request, idempotencyKey: request.commandCode,
+  await writer.create().complete({ ...request, idempotencyKey: request.commandCode, results: {},
     completed: ["VALIDATED", "CALCULATED", "RESERVED", "DIGITAL_RESERVED", "AUTHORIZED", "ORDERED", "DIGITAL_SOLD", "RELEASED", "DIGITAL_DELIVERED"] },
   { order: { code: "original-order", cartCode: "original-cart" } });
   assert.equal(state.rows[0].code, "original-order");
@@ -163,7 +192,7 @@ test("exact acknowledged absence is UNCONFIRMED, not permission to repeat or rec
 });
 
 test("foreign customer query cannot disclose another owner's record", async () => {
-  const { request, state } = fixture(); request.authData.principalId = "other";
+  const { request, state } = fixture(); request.authData.principalId = "other"; state.profileCustomerCode = 'other';
   assert.equal((await facade.commandStatus(request)).scopeQualified, false);
   assert.equal(state.reads[0].query.ownerId, "other"); assert.equal(state.effects, 0);
 });
@@ -343,5 +372,36 @@ test("unacknowledged Payment absence and Payment read exception cannot become a 
   await assert.rejects(controller.commandStatus(request), failure);
   state.paymentError = new Error("PRIVATE_PAYMENT_EXCEPTION");
   await assert.rejects(controller.commandStatus(request), error => error.code === failure.code && error.message === failure.code);
+  assert.equal(state.effects, 0);
+});
+
+test('qualified command status exposes only exact failed coupon source codes without effects', async () => {
+  const { request, row, state } = fixture();
+  const codes = Array.from({ length: 16 }, (_, index) => 'ERR_EWASTE_SALE_DIAGNOSTIC_' + String(index + 41).padStart(3, '0'));
+  for (const errorCode of codes) {
+    row.evidence.compensation = [{ type: 'DIGITAL_COUPON_RELEASE', status: 'FAILED', errorCode,
+      message: 'PRIVATE_PAYLOAD', code: 'PRIVATE_UNIT', cause: { message: 'PRIVATE_CAUSE' } }];
+    const value = await recovery.commandStatus(request);
+    assert.deepEqual(value.compensationOutcomes, [{ type: 'DIGITAL_COUPON_RELEASE', status: 'FAILED', errorCode }]);
+    assert.equal(JSON.stringify(value).includes('PRIVATE'), false);
+  }
+  for (const errorCode of ['ERR_EWASTE_SALE_DIAGNOSTIC_040', 'ERR_EWASTE_SALE_DIAGNOSTIC_057',
+    'ERR_DIGITAL_COUPON_SOURCE_GRANT',
+    'ERR_DIGITAL_COUPON_SOURCE_UNKNOWN', 'ERR_DIGITAL_COUPON_SOURCE_GRANT:PRIVATE', 'PRIVATE_PAYLOAD']) {
+    row.evidence.compensation = [{ type: 'DIGITAL_COUPON_RELEASE', status: 'FAILED', errorCode }];
+    assert.deepEqual((await recovery.commandStatus(request)).compensationOutcomes,
+      [{ type: 'DIGITAL_COUPON_RELEASE', status: 'FAILED' }]);
+  }
+  row.evidence.compensation = [
+    { type: 'DIGITAL_COUPON_RELEASE', status: 'COMPLETED', errorCode: codes[0] },
+    { type: 'PAYMENT_REFUND', status: 'FAILED', errorCode: codes[0] },
+    { type: 'DIGITAL_OWNERSHIP_RELEASE', status: 'FAILED', errorCode: codes[0] }];
+  assert.deepEqual((await recovery.commandStatus(request)).compensationOutcomes,
+    row.evidence.compensation.map(({ type, status }) => ({ type, status })));
+  row.evidence.compensation = [{ type: 'DIGITAL_COUPON_RELEASE', status: 'FAILED', errorCode: codes[0] }];
+  delete row.enterpriseCode;
+  assert.equal((await recovery.commandStatus(request)).compensationOutcomes[0].errorCode, undefined);
+  row.enterpriseCode = 'foreign';
+  await assert.rejects(recovery.commandStatus(request), failure);
   assert.equal(state.effects, 0);
 });

@@ -535,7 +535,13 @@ module.exports = {
         result.reviewerEligibility = eligibility;
       }
       const reviewContext = this.taskReviewContext(instance, version);
-      if (contract && reviewContext) result.reviewContext = reviewContext;
+      if (
+        reviewContext &&
+        (contract ||
+          (instance.definitionCode === "cmsPublicationApproval" &&
+            task.nodeCode === "publicationReview"))
+      )
+        result.reviewContext = reviewContext;
       projected.push(result);
     }
     return projected;
@@ -548,12 +554,30 @@ module.exports = {
    * @returns {Object|undefined} Bounded review identity when its owner action matches.
    */
   taskReviewContext: function (instance, version) {
-    const context = instance.context || {};
+    const stored = instance.context || {};
     const text = (value) =>
       typeof value === "string" &&
       /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value);
     const nodes = version.graph && version.graph.nodes;
+    const cms = instance.definitionCode === "cmsPublicationApproval";
+    // Adapt the current CMS start contract's siteCode into the shared public
+    // envelope. Its published context allowlist and stored decisions stay intact.
+    const context = cms
+      ? {
+          ownerModule: "cms",
+          definitionCode: instance.definitionCode,
+          workflowRef: instance.code,
+          actionKey: "cms.applyPublicationDecision",
+          publicationCode: stored.publicationCode,
+          rootType: "site",
+          rootCode: stored.siteCode,
+          sourceVersion: stored.sourceVersion,
+        }
+      : stored;
     if (
+      version.definitionCode !== instance.definitionCode ||
+      version.version !== instance.version ||
+      version.status !== "PUBLISHED" ||
       !text(context.ownerModule) ||
       context.definitionCode !== instance.definitionCode ||
       context.workflowRef !== instance.code ||
@@ -563,6 +587,7 @@ module.exports = {
       !Array.isArray(nodes) ||
       nodes.filter(
         (node) =>
+          node &&
           node.type === "ACTION" &&
           node.action &&
           node.action.moduleName === context.ownerModule &&
@@ -572,7 +597,7 @@ module.exports = {
       ).length !== 1
     )
       return undefined;
-    return {
+    const result = {
       contractVersion: 1,
       owner: context.ownerModule,
       publicationCode: context.publicationCode,
@@ -580,6 +605,16 @@ module.exports = {
       rootCode: context.rootCode,
       sourceVersion: context.sourceVersion,
     };
+    if (
+      cms &&
+      typeof stored.requestedBy === "string" &&
+      stored.requestedBy.trim() === stored.requestedBy &&
+      stored.requestedBy.length > 0 &&
+      stored.requestedBy.length <= 128 &&
+      !/[\x00-\x1f\x7f]/.test(stored.requestedBy)
+    )
+      result.requestedBy = stored.requestedBy;
+    return result;
   },
 
   /**
@@ -1173,7 +1208,8 @@ module.exports = {
 
   /**
    * Executes an ACTION node through the configured declarative adapter
-   * registry and records the outcome.
+   * registry and records the outcome. Only an optional bounded static diagnosticCode
+   * joins the existing audit metadata; adapter output and errors are never copied.
    *
    * @param {Object} request Nodics request context.
    * @param {Object} instance Process instance.
@@ -1208,6 +1244,9 @@ module.exports = {
           adapter:
             node.action && node.action.moduleName + "." + node.action.operation,
           status: result && result.status,
+          ...(typeof result?.diagnosticCode === "string" && /^[A-Z]/.test(result.diagnosticCode) &&
+            result.diagnosticCode.length <= 64 && !/[^A-Z0-9_]/.test(result.diagnosticCode)
+            ? { diagnosticCode: result.diagnosticCode } : {}),
         },
       });
       return result;

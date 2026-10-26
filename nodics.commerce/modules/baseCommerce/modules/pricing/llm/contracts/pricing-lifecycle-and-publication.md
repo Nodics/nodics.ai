@@ -612,3 +612,145 @@ calculation contract and cartActivatedPolicyPorts.test.js. Generate source-deriv
 artifacts only after all owners are stable. Runtime registration, installed
 migration, real database CAS and authenticated Process acceptance remain
 unqualified by unit tests.
+
+## Native administrator price row authoring
+
+Pricing owns two bounded business commands under `/nodics/pricing/v0`:
+
+- `POST /business/price-rows/administrative/create`
+- `POST /business/price-rows/administrative/read`
+
+Both retain the original native human access bearer and signed Platform enterprise.
+The create body is exactly:
+
+```json
+{
+  "targetEnterpriseCode": "seller-enterprise",
+  "command": {
+    "code": "new-coupon-price",
+    "priceBookCode": "existing-points-book",
+    "bookVersionId": 0,
+    "productCode": "new-coupon-product",
+    "unitAmount": "80",
+    "currency": "POINTS",
+    "minQuantity": "1"
+  }
+}
+```
+
+Read uses the same outer envelope with `command: {"code":"new-coupon-price"}`.
+HTTP success returns `data: {targetEnterpriseCode, result, audit}`; read returns
+`result: null` only after a confirmed empty exact-code owner read. Audit contains
+tenant, actorCode, actorEnterpriseCode, targetEnterpriseCode, permission and
+authVersion. No bearer, internal proof or persistence metadata is returned.
+
+Create requires fresh Profile native-administrator evidence for
+`commerce.pricing.write`; read requires `commerce.pricing.read`. Profile's
+`profilePlatformAdministratorEvidence.allowedPermissions` must independently allow
+these permissions. Pricing contributes the definition of write in the separate
+explicit `administrativeAuthoringPermission` section within `init-v001`, not any
+user/group grant. Preserve installed `permissionCatalogue` source bytes, hashes,
+selection and receipts. Select the new section through canonical release tooling;
+never reseal an installed catalogue to force replay or create a replacement receipt.
+An unavailable,
+revoked, stale or mismatched proof denies. Participant resolution must prove the
+exact target enterprise exists in the same signed tenant. Original auth/header
+aliases remain unchanged across Profile calls and local authoring.
+
+The price book must be current, match `bookVersionId`, currency and selected
+enterprise, and be DRAFT or ACTIVE. Row identity must be absent. Amount is an exact
+nonnegative decimal string; minimum quantity is positive. This minimal command
+does not accept validity windows, bulk input, query selectors, scope fields,
+revision, versionId, actor fields or publication references. Pricing supplies
+initial revision/versionId zero and the original native actor. Book references
+are checked again before persistence. Concurrent book changes do not grant
+publication: publication separately captures and checks its exact book/Product
+pins. Product existence/approval is independently enforced at publication; this
+command neither authors nor certifies Product.
+
+Only qualified Staged CURRENT versioned book/row storage is accepted. The existing
+generated `DefaultPriceRowService.save` must select `saveVersionedItems`; no raw
+database, mutable writer, generic CRUD fallback, upsert or update is available.
+Canonical local persistence is restricted to a private request continuation,
+checked after awaits and retired in `finally`. Fresh Profile proof is repeated
+before save and before returning success. Acknowledged fields and current readback
+must agree, including original actor and initial versions.
+Keep the authored expected-field snapshot separate from the model passed to the
+managed writer. MongoDB insert preparation mutates that model by adding `_id`;
+BSON readback creates another ObjectId instance. Driver metadata must neither
+enter authored-field equality checks nor weaken comparison of actual price fields.
+
+A failed or lost response can follow a successful insert. Operators must use the
+exact read command and compare all requested fields before any retry. Existing
+rows are never changed by create. Mismatch or inconclusive read is an investigation
+case, not permission to choose another code or publish. The immutable writer and
+unique identity remain responsible for concurrent insertion safety.
+
+For administrators/partners, reusable defaults and overrides live in
+`pricing.administrativeAuthoring` (Profile connection/paths, timeout, decimal bound
+and permission names) and the `pricingAdministrativeAuthoring` exposure category.
+Changing a permission requires matching Profile policy and explicit governed
+authorization; category activation alone grants nothing. Invalid configuration
+fails closed. Later layers may override documented service members while retaining
+the same authority, input, managed-write and recovery invariants. A smaller
+decimal limit and alternate Profile connection are covered by the regression.
+
+Price row authoring alone confers no publication authority. Business users use
+the independently authorized enterprise publisher or the separate native
+publication contract below. No grant, funding or approval completion is conferred
+by authoring. `test/pricingAdministrativeAuthoring.test.js` exercises
+the real generated services, base/versioned initializers and immutable provider
+with isolated driver I/O. It proves local behavior only, not installed Profile
+policy, HTTP exposure, live database/index qualification or business acceptance.
+
+## Native administrator publication
+
+`POST /nodics/pricing/v0/publication/policy/administrative` accepts only
+`{ targetEnterpriseCode, command }`. Preserve the signed native human actor,
+tenant, enterprise and bearer. The same-tenant target is a business selector,
+never an authentication alias. Pricing owns the `commerce.pricing.publish`
+default; Profile must independently allow and freshly prove it. The separate
+explicit `administrativePublicationPermission` v0.0.1 release defines it without
+changing installed read/write sections, receipts or employee assignments.
+
+- Create command: `operation: "create"`, `publicationCode`, `rootType`, `rootCode`,
+  `references`, and row-only `productReference`. Exact capture creates STAGED
+  intent, not approval. An identical identity reuses its existing publication.
+- Continuation command: `operation: "read" | "validate" | "requestApproval" |
+  "activate"`, `publicationCode`, `sourceVersion`, `expectedRevision`. The source
+  is the retained SHA-256 identity; revision is a nonnegative safe integer. Domain,
+  tenant, target, original requester, root and source must match canonical storage.
+
+Each request re-admits through Profile and resolves the same-tenant Enterprise.
+Validation rereads exact Product approval, sealed immutable graph and Online
+receipt. Product's private read-only proof admits only the checked dependency,
+retires at return and cannot seal or author a graph. nPublish retains ordinary
+state transitions, revision CAS and audit, with fresh proof before/after native
+journal writes. Only lifecycle-owned revision copies inherit its in-flight guard.
+
+RequestApproval uses the existing Process definition, original bearer and signed
+enterprise header; the business target remains in workflow context. Selected
+native requester-binding and Process task policies remain unchanged. There is no
+native approve/reject operation. Activation requires an already-approved cycle;
+normal Process callback activation is primary. Native activate can continue an
+approved interrupted operation without replacing its operation key, predecessor,
+target authorization, CAS or receipt.
+
+Refuse stale revisions, foreign targets, changed actor/source, revoked proof,
+Product drift and copied/retired contexts. Lost response or postwrite revocation
+is not rollback evidence: read the existing journal with its observed revision
+and source before continuing. Never create a replacement publication or blindly
+complete a task. Publication contains no credit, funding or ledger operation.
+
+Source edits do not install definitions, select releases, configure Profile,
+qualify storage, enable exposure or change callback deployment scope. Use existing
+explicit Commerce capability composition and canonical installation; customers
+contain only actual overrides. Never replay installed definitions or migrate
+waiting tasks implicitly. Boundaries and defaults remain owner-controlled.
+
+`test/pricingAdministrativeAuthoring.test.js` composes real Pricing, Product graph,
+nPublish lifecycle/repository/callback and target CAS/receipt owners. Storage,
+transport and Process execution claims are isolated; Process-owned tests prove
+start/task/action behavior separately. Cover separate requests, approved native
+continuation, callback replay, scope/permission/source drift, preapproval activation
+denial and postwrite read reconciliation. This is not live E2E acceptance.

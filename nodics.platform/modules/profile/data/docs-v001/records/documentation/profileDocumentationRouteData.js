@@ -9,9 +9,14 @@
 
  */
 
-'use strict';
-
-/** @description Generated Nodics framework documentation routes. */
+/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
+"use strict";
+/**
+ * @module profile/data/docs-v001/records/documentation/profileDocumentationRouteData
+ * @description Owns canonical profileDocumentationRouteData successor records; installation and publication remain governed.
+ * @layer data
+ * @owner profile
+ */
 module.exports = {
   "record0": {
     "code": "nodicsDocsRouteplatformOverview",
@@ -21,7 +26,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageplatformOverview",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -33,7 +38,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagesecurityIdentityAccessGovernance",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   }

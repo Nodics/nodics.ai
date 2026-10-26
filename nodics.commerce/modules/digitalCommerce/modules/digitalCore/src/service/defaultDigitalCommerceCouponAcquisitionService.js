@@ -11,6 +11,7 @@
 "use strict";
 const crypto = require("node:crypto");
 const { isDeepStrictEqual: same } = require("node:util");
+const recoveryConditions = new WeakMap();
 /**
  * @module digitalCore/service/defaultDigitalCommerceCouponAcquisitionService
  * @description Coordinates coupon consideration and reads canonical acquisition history across original
@@ -22,10 +23,10 @@ const { isDeepStrictEqual: same } = require("node:util");
  * never duplicate their storage.
  * Failure behavior: Uncertain payment, input or history evidence rejects without releasing holds or
  * inventing a usable coupon.
- * Exported members: fail, sourceProof, settings, typedOwner, identifier, rows, one, authorize,
- * authorizeContinuation, allocation, commandForCoupon, certificates, prepare, reserveInputs,
+ * Exported members: fail, recoveryFailure, sourceProof, settings, typedOwner, identifier, rows, one, authorize,
+ * authorizeContinuation, allocation, allocationNamespace, commandForCoupon, certificates, prepare, reserveInputs,
  * certificatePhase, readCertificateEligibility, paymentEnterprise, consideration, completeInputs,
- * completion, purchasedCompletion, failureCheckpoint, released, releaseInputs, failed, reportContext, all,
+ * completion, purchasedCompletion, failureCheckpoint, inspectRecovery, released, releaseInputs, failed, reportContext, all,
  * reportSource, reportingEvents.
  * @owner digitalCore
  * @layer service
@@ -42,6 +43,16 @@ module.exports = {
    * @override Do not replace uncertain evidence with permissive defaults.
    */
   fail: function () { throw new Error("Coupon acquisition evidence is unconfirmed"); },
+  /** Tags only owner-defined proof failures; effective overrides retain private diagnostic provenance.
+   * @param {string} condition Static owner-selected recovery condition.
+   * @returns {never} Throws the bounded evidence error without dependency details or I/O.
+   * @override Preserve rejection and private error tagging; callers resolve this effective member.
+   */
+  recoveryFailure: function (condition) {
+    const error = new Error('Coupon acquisition evidence is unconfirmed');
+    recoveryConditions.set(error, condition);
+    throw error;
+  },
   /**
    * Reads private persisted phase authority for approved domain callbacks; submitted command fields are
    * comparisons, never authority.
@@ -58,62 +69,85 @@ module.exports = {
    * evidence, not callback fields.
    */
   sourceProof: async function (request, input) {
-    const policy = structuredClone(CONFIG.get("digitalCore")?.couponAcquisition?.sourceProof);
-    const role = CONFIG.get("runtimeRole"), logger = SERVICE.DefaultLoggerService;
-    if (policy?.enabled !== true || (role?.code || role) !== policy.runtimeRole ||
-        logger?.hasPrivateCaptureProtection?.(request) !== true ||
-        !input || Object.keys(input).sort().join(",") !== "certificateCodes,contractVersion,enterpriseCode,entryCode,idempotencyKey,operationKey,orderCode,ownerId,ownerRef,phase,productCode,promotionCode,requirements" ||
-        input.contractVersion !== 1 || input.idempotencyKey !== input.operationKey ||
-        !["reserve", "consume", "release"].includes(input.phase)) this.fail();
-    const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "digitalCore");
-    const principalEnterprise = auth.entCode || auth.enterpriseCode;
-    if (auth !== request.authData || auth.principalType !== "service" || auth.isSystem || auth.tenant !== request.tenant ||
-        !auth.permissions?.includes("commerce.digital.own.read") ||
-        [request.enterpriseCode, request.entCode, auth.entCode, auth.enterpriseCode, request.httpRequest?.headers?.["x-enterprise-code"]]
-          .some(v => v !== undefined && v !== principalEnterprise) ||
-        [request.tenantCode, auth.tenantCode, request.httpRequest?.headers?.["x-tenant-code"]].some(v => v !== undefined && v !== auth.tenant)) this.fail();
-    this.identifier(principalEnterprise); this.identifier(input.operationKey); this.identifier(input.orderCode);
-    const before = structuredClone({ auth, input, tenant: request.tenant, enterpriseCode: request.enterpriseCode, entCode: request.entCode,
-      headers: request.httpRequest?.headers, tenantCode: request.tenantCode });
-    const persistence = SERVICE.DefaultCouponAcquisitionPersistenceService;
-    const row = await persistence.acquisitionByCommand(request, input.operationKey, input.orderCode);
-    const identity = row.evidence?.identity;
-    const grants = (Array.isArray(policy.callers) ? policy.callers : []).filter(g =>
-      g.tenant === auth.tenant && g.principalEnterpriseCode === principalEnterprise && g.enterpriseCode === row.enterpriseCode &&
-      g.serviceId === auth.serviceId && Array.isArray(g.phases) && g.phases.includes(input.phase) &&
-      ["projectCode", "environmentCode", "serverCode", "instanceCode", "assignmentCode"].every(k =>
-        typeof g[k] === "string" && g[k] && g[k] === auth.runtimeScope?.[k]) &&
-      g.instanceCode === auth.runtimeInstanceId && g.environmentCode === NODICS.getSelectedEnvironmentName());
-    if (grants.length !== 1 || !identity || input.enterpriseCode !== row.enterpriseCode) this.fail();
-    const coupon = await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon({ tenant: request.tenant, enterpriseCode: row.enterpriseCode }, row.evidence.couponCode);
-    const r = { tenant: request.tenant, enterpriseCode: row.enterpriseCode, ownerId: identity.ownerId, ownerRef: this.typedOwner(identity.ownerRef),
-      idempotencyKey: input.operationKey, couponCode: coupon.code,
-      payload: { orderCode: input.orderCode, cartCode: coupon.cartCode, entryCode: identity.entryCode,
-        productCode: identity.productCode, sku: coupon.sku, certificateCodes: identity.certificateCodes } };
-    const a = await this.allocation(r);
-    if (!same(a.row, row) || coupon.offerAllocationCode !== row.code || !coupon.protectedToken || !coupon.secureIssuanceCode) this.fail();
-    const command = { contractVersion: 1, ownerRef: r.ownerRef, ownerId: identity.ownerId, orderCode: input.orderCode,
-      entryCode: identity.entryCode, productCode: identity.productCode, promotionCode: identity.promotionCode,
-      operationKey: input.operationKey, certificateCodes: this.certificates(identity.certificateCodes),
-      requirements: structuredClone(a.offer.requirements), idempotencyKey: input.operationKey };
-    const { enterpriseCode: business, phase, ...submitted } = input;
-    if (business !== r.enterpriseCode || !same(command, submitted)) this.fail();
-    if (input.phase === "reserve") {
-      if (row.evidence.status !== "RESERVED" || row.evidence.inputDisposition === "RELEASE" || coupon.status !== "RESERVED" || coupon.reservedFor !== identity.ownerId ||
-          !Number.isFinite(Date.parse(coupon.reservedUntil)) || Date.parse(coupon.reservedUntil) <= Date.now()) this.fail();
-    } else if (input.phase === "consume") {
-      if (!["RESERVED", "COMPLETED"].includes(row.evidence.status) || row.evidence.inputDisposition !== "COMMIT") this.fail();
-      await this.consideration(r, a);
-    } else await this.failureCheckpoint(r, a);
-    const current = await persistence.read("couponAcquisitionReservation", r, row.code);
-    const currentCoupon = await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon(r, coupon.code);
-    if (!same(current, row) || !same(before, { auth: request.authData, input, tenant: request.tenant,
-        enterpriseCode: request.enterpriseCode, entCode: request.entCode, headers: request.httpRequest?.headers, tenantCode: request.tenantCode }) ||
-        !same(currentCoupon, coupon) || !same(role, CONFIG.get("runtimeRole")) ||
-        !same(policy, CONFIG.get("digitalCore")?.couponAcquisition?.sourceProof) ||
-        logger.hasPrivateCaptureProtection(request) !== true || SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "digitalCore") !== request.authData ||
-        NODICS.getSelectedEnvironmentName() !== auth.runtimeScope.environmentCode) this.fail();
-    return { contractVersion: 1, tenant: r.tenant, enterpriseCode: r.enterpriseCode, phase, command, allowed: true };
+    let stage = "GATES";
+    try {
+      const policy = structuredClone(CONFIG.get("digitalCore")?.couponAcquisition?.sourceProof);
+      const role = CONFIG.get("runtimeRole"), logger = SERVICE.DefaultLoggerService;
+      if (policy?.enabled !== true || (role?.code || role) !== policy.runtimeRole ||
+          logger?.hasPrivateCaptureProtection?.(request) !== true ||
+          !input || Object.keys(input).sort().join(",") !== "certificateCodes,contractVersion,enterpriseCode,entryCode,idempotencyKey,operationKey,orderCode,ownerId,ownerRef,phase,productCode,promotionCode,requirements" ||
+          input.contractVersion !== 1 || input.idempotencyKey !== input.operationKey ||
+          !["reserve", "consume", "release"].includes(input.phase)) this.fail();
+      stage = "AUTH";
+      const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "digitalCore");
+      const principalEnterprise = auth.entCode || auth.enterpriseCode;
+      if (auth !== request.authData || auth.principalType !== "service" || auth.isSystem || auth.tenant !== request.tenant ||
+          !auth.permissions?.includes("commerce.digital.own.read") ||
+          [request.enterpriseCode, request.entCode, auth.entCode, auth.enterpriseCode, request.httpRequest?.headers?.["x-enterprise-code"]]
+            .some(v => v !== undefined && v !== principalEnterprise) ||
+          [request.tenantCode, auth.tenantCode, request.httpRequest?.headers?.["x-tenant-code"]].some(v => v !== undefined && v !== auth.tenant)) this.fail();
+      this.identifier(principalEnterprise); this.identifier(input.operationKey); this.identifier(input.orderCode);
+      const before = structuredClone({ auth, input, tenant: request.tenant, enterpriseCode: request.enterpriseCode, entCode: request.entCode,
+        headers: request.httpRequest?.headers, tenantCode: request.tenantCode });
+      const persistence = SERVICE.DefaultCouponAcquisitionPersistenceService;
+      stage = "ALLOCATION";
+      const row = await persistence.acquisitionByCommand(request, input.operationKey, input.orderCode);
+      const identity = row.evidence?.identity;
+      const merchant = row.evidence?.campaign?.vendorEnterpriseRef?.code;
+      if (row.enterpriseCode !== row.evidence?.campaign?.issuerEnterpriseRef?.code) this.fail();
+      this.identifier(merchant);
+      stage = "GRANT";
+      const grants = (Array.isArray(policy.callers) ? policy.callers : []).filter(g =>
+        g.tenant === auth.tenant && g.principalEnterpriseCode === principalEnterprise && g.enterpriseCode === merchant &&
+        g.serviceId === auth.serviceId && Array.isArray(g.phases) && g.phases.includes(input.phase) &&
+        ["projectCode", "environmentCode", "serverCode", "instanceCode", "assignmentCode"].every(k =>
+          typeof g[k] === "string" && g[k] && g[k] === auth.runtimeScope?.[k]) &&
+        g.instanceCode === auth.runtimeInstanceId && g.environmentCode === NODICS.getSelectedEnvironmentName());
+      if (grants.length !== 1 || !identity || input.enterpriseCode !== merchant) this.fail();
+      stage = "COUPON";
+      const coupon = await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon({ tenant: request.tenant, enterpriseCode: merchant }, row.evidence.couponCode);
+      const r = { tenant: request.tenant, enterpriseCode: merchant, ownerId: identity.ownerId, ownerRef: this.typedOwner(identity.ownerRef),
+        idempotencyKey: input.operationKey, couponCode: coupon.code,
+        payload: { orderCode: input.orderCode, cartCode: coupon.cartCode, entryCode: identity.entryCode,
+          productCode: identity.productCode, sku: coupon.sku, certificateCodes: identity.certificateCodes } };
+      stage = "ALLOCATION_BINDING";
+      const a = await this.allocation(r);
+      if (!same(a.row, row) || coupon.offerAllocationCode !== row.code ||
+          await SERVICE.DefaultCouponSecureIssuanceService.assertAcquisitionIssuance(request, r, coupon, row.evidence.campaign) !== true) this.fail();
+      stage = "COMMAND";
+      const command = { contractVersion: 1, ownerRef: r.ownerRef, ownerId: identity.ownerId, orderCode: input.orderCode,
+        entryCode: identity.entryCode, productCode: identity.productCode, promotionCode: identity.promotionCode,
+        operationKey: input.operationKey, certificateCodes: this.certificates(identity.certificateCodes),
+        requirements: structuredClone(a.offer.requirements), idempotencyKey: input.operationKey };
+      const { enterpriseCode: business, phase, ...submitted } = input;
+      if (business !== r.enterpriseCode || !same(command, submitted)) this.fail();
+      stage = "PHASE";
+      if (input.phase === "reserve") {
+        if (row.evidence.status !== "RESERVED" || row.evidence.inputDisposition === "RELEASE" || coupon.status !== "RESERVED" || coupon.reservedFor !== identity.ownerId ||
+            !Number.isFinite(Date.parse(coupon.reservedUntil)) || Date.parse(coupon.reservedUntil) <= Date.now()) this.fail();
+      } else if (input.phase === "consume") {
+        if (!["RESERVED", "COMPLETED"].includes(row.evidence.status) || row.evidence.inputDisposition !== "COMMIT") this.fail();
+        stage = "CONSIDERATION";
+        await this.consideration(r, a);
+      } else {
+        stage = "FAILURE_PROOF";
+        await this.failureCheckpoint(r, a);
+      }
+      stage = "READBACK";
+      const current = await persistence.read("couponAcquisitionReservation", r, row.code);
+      const currentCoupon = await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon(r, coupon.code);
+      if (await SERVICE.DefaultCouponSecureIssuanceService.assertAcquisitionIssuance(request, r, currentCoupon, row.evidence.campaign) !== true) this.fail();
+      if (!same(current, row) || !same(before, { auth: request.authData, input, tenant: request.tenant,
+          enterpriseCode: request.enterpriseCode, entCode: request.entCode, headers: request.httpRequest?.headers, tenantCode: request.tenantCode }) ||
+          !same(currentCoupon, coupon) || !same(role, CONFIG.get("runtimeRole")) ||
+          !same(policy, CONFIG.get("digitalCore")?.couponAcquisition?.sourceProof) ||
+          logger.hasPrivateCaptureProtection(request) !== true || SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "digitalCore") !== request.authData ||
+          NODICS.getSelectedEnvironmentName() !== auth.runtimeScope.environmentCode) this.fail();
+      return { contractVersion: 1, tenant: r.tenant, enterpriseCode: r.enterpriseCode, phase, command, allowed: true };
+    } catch (_) {
+      // Only owner-selected static stages cross this private boundary. Never attach the cause.
+      throw new CLASSES.NodicsError("ERR_DIGITAL_COUPON_SOURCE_" + stage);
+    }
   },
   /**
    * Requires complete framework-defined limits; caller values cannot select transports.
@@ -295,12 +329,21 @@ module.exports = {
     if (!coupon?.offerAllocationCode || coupon.tenant !== r.tenant || coupon.enterpriseCode !== r.enterpriseCode) this.fail();
     const row = await SERVICE.DefaultCouponAcquisitionPersistenceService.read("couponAcquisitionReservation", r, coupon.offerAllocationCode);
     const e = row?.evidence, i = e?.identity;
+    this.allocationNamespace(r, row);
     if (!i || e.couponCode !== coupon.code || i.tenant !== r.tenant || i.ownerId !== r.ownerId ||
       i.orderCode !== r.payload?.orderCode || i.idempotencyKey !== r.idempotencyKey || !same(i.ownerRef, this.typedOwner(r.ownerRef)) ||
       coupon.orderCode !== i.orderCode || coupon.idempotencyKey !== i.idempotencyKey ||
       !["RESERVED", "COMPLETED"].includes(e.status)) this.fail();
     const offer = SERVICE.DefaultCouponOfferService.validate(e.campaign?.couponOffer);
     return { coupon, row, identity: i, offer };
+  },
+  /** Checks frozen issuer storage and vendor placement independently; neither namespace grants buyer authority. */
+  allocationNamespace: function (r, row) {
+    const campaign = row?.evidence?.campaign, issuer = campaign?.issuerEnterpriseRef, vendor = campaign?.vendorEnterpriseRef;
+    if (!row || row.tenant !== r.tenant || [issuer, vendor].some(ref => ref?.moduleName !== 'profile' ||
+        ref.schemaName !== 'enterprise' || typeof ref.code !== 'string' || !ref.code)) this.fail();
+    if (row.enterpriseCode !== issuer.code || vendor.code !== r.enterpriseCode ||
+        row.evidence.identity?.promotionCode !== campaign.code) this.fail();
   },
   /**
    * Reconstructs only the original persisted unit payload for sale, delivery and compensation.
@@ -318,6 +361,7 @@ module.exports = {
     const coupon = await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon(r, this.identifier(unit.code));
     if (!coupon.offerAllocationCode) return undefined;
     const row = await SERVICE.DefaultCouponAcquisitionPersistenceService.read("couponAcquisitionReservation", r, coupon.offerAllocationCode);
+    this.allocationNamespace(r, row);
     const i = row?.evidence?.identity;
     if (!i || i.tenant !== r.tenant || i.ownerId !== r.ownerId || coupon.enterpriseCode !== r.enterpriseCode ||
       row.evidence.couponCode !== coupon.code || !same(i.ownerRef, this.typedOwner(r.ownerRef)) ||
@@ -596,13 +640,16 @@ module.exports = {
    */
   failureCheckpoint: async function (r, a) {
     const suffix = ":digital:" + a.identity.entryCode + ":", at = r.idempotencyKey.lastIndexOf(suffix);
-    if (at < 1 || !/^\d+$/.test(r.idempotencyKey.slice(at + suffix.length))) this.fail();
+    if (at < 1 || !/^\d+$/.test(r.idempotencyKey.slice(at + suffix.length))) this.recoveryFailure('ALLOCATION_COMMAND');
     const key = r.idempotencyKey.slice(0, at);
-    const checkpoint = await this.one("DefaultCheckoutCheckpointService", r, {
-      code: key, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId, idempotencyKey: key });
+    let checkpoint;
+    try { checkpoint = await this.one("DefaultCheckoutCheckpointService", r, {
+      code: key, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId, idempotencyKey: key }); }
+    catch (_) { this.recoveryFailure('CHECKPOINT_READ'); }
     const e = checkpoint.evidence, intent = e?.paymentCompensationIntent;
-    if (!["COMPENSATED", "COMPENSATION_REQUIRED"].includes(checkpoint.status) || !Array.isArray(e?.compensation) ||
-      a.row.evidence.status !== "RESERVED" || a.row.evidence.inputDisposition === "COMMIT" || a.coupon.status !== "RESERVED") this.fail();
+    if (!["COMPENSATED", "COMPENSATION_REQUIRED"].includes(checkpoint.status) || !Array.isArray(e?.compensation)) this.recoveryFailure('CHECKPOINT_STATE');
+    if (e.couponAcquisitionRecovery && e.couponAcquisitionRecovery.paymentAttemptUnconfirmed !== false) this.recoveryFailure('PAYMENT_PENDING');
+    if (a.row.evidence.status !== "RESERVED" || a.row.evidence.inputDisposition === "COMMIT" || a.coupon.status !== "RESERVED") this.recoveryFailure('INPUT_STATE');
     const ownerRef = this.typedOwner(r.ownerRef);
     const paymentEnterprise = this.identifier(ownerRef.type === "ENTERPRISE" ? ownerRef.code :
       e.participantEnterpriseCode || r.participantEnterpriseCode || r.enterpriseCode);
@@ -610,23 +657,47 @@ module.exports = {
     if (crossMerchant && (e.participantEnterpriseCode !== paymentEnterprise ||
       r.participantEnterpriseCode !== undefined && r.participantEnterpriseCode !== paymentEnterprise ||
       !same(this.typedOwner(e.ownerRef), ownerRef) || typeof e.actorRef?.loginId !== "string" || !e.actorRef.loginId ||
-      r.actorRef !== undefined && !same(e.actorRef, r.actorRef))) this.fail();
-    const payments = await this.rows("DefaultPaymentTransactionEntryService", r, { orderCode: r.payload.orderCode,
-      enterpriseCode: paymentEnterprise, ownerId: r.ownerId }, 100);
-    if (payments.count !== payments.result.length) this.fail();
+      r.actorRef !== undefined && !same(e.actorRef, r.actorRef))) this.recoveryFailure('PARTICIPANT_BINDING');
+    let payments;
+    try { payments = await this.rows("DefaultPaymentTransactionEntryService", r, { orderCode: r.payload.orderCode,
+      enterpriseCode: paymentEnterprise, ownerId: r.ownerId }, 100); }
+    catch (_) { this.recoveryFailure('PAYMENT_READ'); }
+    if (payments.count !== payments.result.length) this.recoveryFailure('PAYMENT_COUNT');
+    if (e.paymentDenialDecision) {
+      if (ownerRef.type !== 'ENTERPRISE' || intent || e.couponAcquisitionRecovery?.paymentAttemptUnconfirmed !== false ||
+          !same(e.completed, ['VALIDATED', 'CALCULATED', 'SPENDING_ADMITTED', 'RESERVED', 'DIGITAL_RESERVED'])) this.recoveryFailure('DENIAL_PHASES');
+      if (e.couponAcquisitionRecovery.orderCode !== r.payload.orderCode || e.couponAcquisitionRecovery.cartCode !== r.payload.cartCode)
+        this.recoveryFailure('DENIAL_COMMAND');
+      let decision;
+      try { decision = await SERVICE.DefaultPaymentExecutionService.authorizationDecision({ tenant: r.tenant,
+        commandCode: key, orderCode: r.payload.orderCode }, 'inspect'); }
+      catch (_) { this.recoveryFailure('DECISION_READ'); }
+      if (!same(decision, e.paymentDenialDecision)) this.recoveryFailure('DECISION_MISMATCH');
+      if (payments.result.length > 1 || payments.result.some(p =>
+          p.idempotencyKey !== key + ':payment' || p.cartCode !== r.payload.cartCode ||
+          !['DECLINED', 'CANCELLED'].includes(p.status) || p.evidence?.operation !== 'AUTHORIZE' ||
+          (p.methodCode || p.evidence?.methodCode) !== 'LOYALTY_REWARD' ||
+          !same(p.evidence?.reservationDecision, decision) || !same(p.evidence?.participant?.ownerRef, e.ownerRef) ||
+          !same(p.evidence?.participant?.actorRef, e.actorRef))) this.recoveryFailure('PAYMENT_RECEIPT');
+      let orders;
+      try { orders = await this.rows('DefaultCommerceOrderService', r, { code: r.payload.orderCode }, 2); }
+      catch (_) { this.recoveryFailure('ORDER_READ'); }
+      if (orders.count !== 0 || orders.result.length) this.recoveryFailure('ORDER_PRESENT');
+      return checkpoint;
+    }
     if (payments.result.length) {
       if (!intent || intent.orderCode !== r.payload.orderCode || intent.cartCode !== r.payload.cartCode || intent.ownerId !== r.ownerId ||
         intent.enterpriseCode !== r.enterpriseCode || intent.tenant !== r.tenant ||
         crossMerchant && (intent.participantEnterpriseCode !== paymentEnterprise ||
-          !same(this.typedOwner(intent.ownerRef), ownerRef) || !same(intent.actorRef, e.actorRef))) this.fail();
+          !same(this.typedOwner(intent.ownerRef), ownerRef) || !same(intent.actorRef, e.actorRef))) this.recoveryFailure('REVERSAL_INTENT');
       const receipts = e.compensation.filter(c => c.type === "PAYMENT_" + intent.operation);
       const receipt = receipts[0], payment = payments.result.find(p => p.code === receipt?.paymentTransactionCode);
       if (receipts.length !== 1 || receipt.status !== "COMPLETED" || !payment ||
         payment.idempotencyKey !== intent.idempotencyKey || !["VOIDED", "REFUNDED", "REFUND_SUCCEEDED"].includes(payment.status) ||
         payment.evidence?.operation !== intent.operation || receipt.idempotencyKey !== intent.idempotencyKey ||
         crossMerchant && (!same(this.typedOwner(payment.evidence?.participant?.ownerRef), ownerRef) ||
-          payment.evidence?.participant?.participantEnterpriseCode !== paymentEnterprise)) this.fail();
-    } else if (intent || !Array.isArray(e.completed) || e.completed.includes("AUTHORIZED") || e.completed.includes("PAYMENT_CAPTURED")) this.fail();
+          payment.evidence?.participant?.participantEnterpriseCode !== paymentEnterprise)) this.recoveryFailure('REVERSAL_RECEIPT');
+    } else if (intent || !Array.isArray(e.completed) || e.completed.includes("AUTHORIZED") || e.completed.includes("PAYMENT_CAPTURED")) this.recoveryFailure('UNPROVEN_PAYMENT');
     return checkpoint;
   },
   /**
@@ -647,15 +718,97 @@ module.exports = {
     const row = await SERVICE.DefaultCouponAcquisitionPersistenceService.read("couponAcquisitionReservation", r, unit.offerAllocationCode);
     const e = row?.evidence, i = e?.identity;
     if (e?.status !== "RELEASED") return false;
+    this.allocationNamespace(r, row);
     if (row.code !== unit.offerAllocationCode || row.tenant !== r.tenant || e.couponCode !== unit.code ||
         i?.ownerId !== r.ownerId || !same(i.ownerRef, this.typedOwner(r.ownerRef)) || i.idempotencyKey !== unit.idempotencyKey ||
         i.orderCode !== (unit.orderCode || r.payload?.orderCode) || e.failure?.status !== "FAILED" ||
         e.failure.orderCode !== i.orderCode || e.failure.couponUsable !== false || e.failure.inputsReconciled !== true) this.fail();
+    // Checkout retains a minimal unit descriptor; the original Cart entry owns its SKU.
+    const cartCode = this.identifier(r.payload?.cartCode);
+    const entry = await this.one("DefaultCartEntryService", r, { code: this.identifier(i.entryCode),
+      cartCode, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId });
+    if (entry.productCode !== i.productCode || unit.cartCode !== undefined && unit.cartCode !== cartCode ||
+        unit.sku !== undefined && unit.sku !== entry.sku) this.fail();
     const command = { ...r, idempotencyKey: i.idempotencyKey, payload: { ...r.payload, orderCode: i.orderCode,
-      cartCode: unit.cartCode, entryCode: i.entryCode, productCode: i.productCode, sku: unit.sku } };
+      cartCode, entryCode: i.entryCode, productCode: i.productCode, sku: this.identifier(entry.sku) } };
     await this.authorize(command);
     // A later purchase may reuse a released finite unit; the original release receipt, not today's unit state, proves this command completed.
     return true;
+  },
+  /**
+   * Inspects only the retained original recovery unit after fresh Cart/participant admission.
+   * @param {Object} r Authenticated original Checkout scope with retained order/Cart payload.
+   * @param {Object} unit Retained coupon code, allocation code and original unit key.
+   * @returns {Promise<Object>} Closed state vocabulary and inspection stage; no records or retry grant.
+   * @remarks Read-only: no fence, release, reserve or Payment execution. Canonical Loyalty inspection
+   * may use its read-only transaction authority; no diagnostic grants mutation authority.
+   * Failure behavior: Admission failures reject; evidence failures return one registered code, never
+   * dependency text. Missing or concurrently changed evidence is UNKNOWN, not proof of no effects.
+   * @override Preserve original identity checks and bounded projection; never accept browser evidence.
+   */
+  inspectRecovery: async function (r, unit) {
+    await this.authorize(r);
+    const unknown = (stage, condition = 'READBACK') => ({ allocationStatus: 'UNKNOWN', inputDisposition: 'UNKNOWN', couponStatus: 'UNKNOWN',
+      stage, condition, failureCode: 'ERR_DIGITAL_COUPON_RECOVERY_INSPECTION' });
+    let stage = 'ALLOCATION', condition = 'ALLOCATION_READ', result, row, coupon;
+    try {
+      const persistence = SERVICE.DefaultCouponAcquisitionPersistenceService;
+      row = await persistence.read('couponAcquisitionReservation', r, this.identifier(unit.offerAllocationCode));
+      const e = row?.evidence, i = e?.identity;
+      const prefix = r.idempotencyKey + ':digital:' + i?.entryCode + ':';
+      condition = 'ALLOCATION_IDENTITY';
+      if (!i || row.tenant !== r.tenant || i.tenant !== r.tenant || e.couponCode !== unit.code) this.fail();
+      condition = 'ALLOCATION_ISSUER';
+      if (row.enterpriseCode !== e.campaign?.issuerEnterpriseRef?.code) this.fail();
+      condition = 'ALLOCATION_MERCHANT';
+      this.allocationNamespace(r, row);
+      condition = 'ALLOCATION_OWNER';
+      if (i.ownerId !== r.ownerId || !same(i.ownerRef, this.typedOwner(r.ownerRef))) this.fail();
+      condition = 'ALLOCATION_COMMAND';
+      if (i.orderCode !== r.payload.orderCode || i.idempotencyKey !== unit.idempotencyKey ||
+          !i.idempotencyKey.startsWith(prefix) || !/^\d+$/.test(i.idempotencyKey.slice(prefix.length))) this.fail();
+      condition = 'ALLOCATION_STATE';
+      if (!['RESERVED', 'RELEASED', 'COMPLETED'].includes(e.status) ||
+          e.inputDisposition !== undefined && !['RELEASE', 'COMMIT'].includes(e.inputDisposition)) this.fail();
+      result = { allocationStatus: e.status, inputDisposition: e.inputDisposition || 'UNSET', couponStatus: 'UNKNOWN' };
+      stage = 'COUPON';
+      condition = 'COUPON_READ';
+      coupon = await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon(r, this.identifier(unit.code));
+      condition = 'COUPON_BINDING';
+      if (!coupon || coupon.tenant !== r.tenant || coupon.enterpriseCode !== r.enterpriseCode) this.fail();
+      if (e.status !== 'RELEASED' && (!same(coupon.issuerEnterpriseRef, e.campaign.issuerEnterpriseRef) ||
+          !same(coupon.vendorEnterpriseRef, e.campaign.vendorEnterpriseRef))) this.fail();
+      const bound = coupon.offerAllocationCode === row.code && coupon.idempotencyKey === i.idempotencyKey && coupon.orderCode === i.orderCode;
+      if (bound && ['RESERVED', 'SOLD', 'DELIVERED'].includes(coupon.status)) result.couponStatus = coupon.status;
+      else if (e.status === 'RELEASED') result.couponStatus = !coupon.offerAllocationCode &&
+        ['ACTIVE', 'AVAILABLE'].includes(coupon.status) && !coupon.reservedFor && !coupon.soldTo ? 'AVAILABLE' : 'REASSIGNED';
+      else this.fail();
+      stage = 'ORIGINAL_AUTHORIZATION';
+      condition = 'ORIGINAL_AUTHORIZATION';
+      if (e.status === 'RELEASED') {
+        if (!await this.released(r, unit)) this.fail();
+      } else {
+        const command = await this.commandForCoupon(r, unit);
+        if (!command) this.fail();
+        stage = 'FAILURE_PROOF';
+        condition = 'UNCLASSIFIED';
+        await this.failureCheckpoint(command, { coupon, row, identity: i });
+      }
+      stage = 'READBACK';
+      if (!same(row, await persistence.read('couponAcquisitionReservation', r, row.code)) ||
+          !same(coupon, await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon(r, unit.code))) return unknown(stage);
+      return { ...result, stage: 'EVIDENCE_CONFIRMED', condition: 'NONE' };
+    } catch (error) {
+      condition = recoveryConditions.get(error) || condition;
+      if (stage === 'READBACK') return unknown(stage);
+      if (result) {
+        try {
+          if (!same(row, await SERVICE.DefaultCouponAcquisitionPersistenceService.read('couponAcquisitionReservation', r, row.code)) ||
+              coupon && !same(coupon, await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon(r, unit.code))) return unknown('READBACK');
+        } catch (_) { return unknown('READBACK'); }
+      }
+      return { ...(result || unknown(stage, condition)), stage, condition, failureCode: 'ERR_DIGITAL_COUPON_RECOVERY_INSPECTION' };
+    }
   },
   /**
    * Releases unconsumed domain holds only after common failed-command evidence, never on a timeout alone.
@@ -760,11 +913,19 @@ module.exports = {
    * @override Unknown historical owners disable new-customer claims; no current actor substitution.
    */
   reportSource: async function (r, coverageThrough) {
+    // Generated date fields may be Date objects. Date.parse(Date) truncates milliseconds.
+    const instant = value => {
+      if (!(value instanceof Date) && typeof value !== "string") this.fail();
+      const epoch = new Date(value).getTime();
+      if (!Number.isFinite(epoch)) this.fail();
+      return epoch;
+    };
+    const cutoff = instant(coverageThrough);
     const items = await this.all("DefaultDigitalEntitlementService", r, { digitalDeliveryType: "COUPON_CODE", providerOwner: "promotion" });
     const events = [];
     for (const item of items) {
-      if (!Number.isFinite(Date.parse(item.purchasedAt))) this.fail();
-      if (Date.parse(item.purchasedAt) > Date.parse(coverageThrough)) continue;
+      const purchasedAt = instant(item.purchasedAt);
+      if (purchasedAt > cutoff) continue;
       const scope = { ...r, enterpriseCode: item.enterpriseCode, ownerId: item.ownerId, orderCode: item.orderCode };
       const cart = await this.one("DefaultCartService", scope, { code: item.cartCode, enterpriseCode: item.enterpriseCode, ownerId: item.ownerId });
       if (cart.status !== "PLACED" || cart.active !== false) this.fail();
@@ -781,17 +942,18 @@ module.exports = {
       const promotionCode = policy?.promotionCode || item.evidence?.promotionCode, issuerEnterpriseCode = policy?.issuerEnterpriseRef?.code;
       this.identifier(promotionCode); this.identifier(issuerEnterpriseCode);
       const base = { promotionCode, issuerEnterpriseCode, channel: cart.channelCode, confirmed: true, historyKnown: false, ownerRef };
-      events.push({ ...base, sourceId: "purchase:" + item.code, kind: "PURCHASE", confirmedAt: new Date(item.purchasedAt).toISOString() });
+      events.push({ ...base, sourceId: "purchase:" + item.code, kind: "PURCHASE", confirmedAt: new Date(purchasedAt).toISOString() });
       const marker = item.evidence?.merchantRedemption;
       for (const receipt of deliveries.filter(d => d.deliveryType === "MERCHANT_RECEIPT")) {
+        const deliveredAt = instant(receipt.deliveredAt);
         if (item.claimStatus !== "REDEEMED" || receipt.code !== marker?.receiptCode || receipt.evidence?.redemptionCode !== marker.code ||
           receipt.evidence?.fulfillmentStatus !== "COMPLETED" || !same(receipt.evidence.enterpriseRef, marker.enterpriseRef) ||
-          !same(receipt.evidence.storeRef, marker.storeRef) || Date.parse(receipt.deliveredAt) !== Date.parse(marker.confirmedAt)) this.fail();
-        if (Date.parse(receipt.deliveredAt) > Date.parse(coverageThrough)) continue;
+          !same(receipt.evidence.storeRef, marker.storeRef) || deliveredAt !== instant(marker.confirmedAt)) this.fail();
+        if (deliveredAt > cutoff) continue;
         const redeemerEnterpriseCode = receipt.evidence.enterpriseRef?.code, storeCode = receipt.evidence.storeRef?.code;
         this.identifier(redeemerEnterpriseCode); this.identifier(storeCode);
         events.push({ ...base, sourceId: "redemption:" + receipt.code, kind: "REDEMPTION",
-          confirmedAt: new Date(receipt.deliveredAt).toISOString(), redeemerEnterpriseCode, storeCode });
+          confirmedAt: new Date(deliveredAt).toISOString(), redeemerEnterpriseCode, storeCode });
       }
     }
     // Any unidentified historical owner prevents a new-customer claim for this channel.

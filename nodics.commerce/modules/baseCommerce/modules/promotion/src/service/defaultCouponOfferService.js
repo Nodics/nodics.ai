@@ -44,6 +44,8 @@ module.exports = {
     /** Checks explicit fixed/no-expiry terms; absence is never inferred as no expiry. */
     expiry: function (value) {
         this.object(value, ['mode', 'at']);
+        if (Reflect.ownKeys(value).some(key => !['mode', 'at'].includes(key) ||
+            !Object.hasOwn(Object.getOwnPropertyDescriptor(value, key), 'value'))) this.fail();
         if (value.mode === 'NONE' && Object.keys(value).length === 1) return { mode: 'NONE' };
         if (value.mode !== 'FIXED' || typeof value.at !== 'string' || !Number.isFinite(Date.parse(value.at)) ||
             new Date(value.at).toISOString() !== value.at) this.fail();
@@ -78,7 +80,7 @@ module.exports = {
         } else if (value.certificates !== undefined) this.fail();
         return result;
     },
-    /** Projects canonical supply into public purchase requirements; a legacy or missing policy remains explicitly unknown and unavailable. */
+    /** Projects canonical supply into public requirements and fixed/NONE expiry; missing rights remain unknown and unavailable. */
     publicSupply: function (supply) {
         if (!supply || typeof supply.available !== 'boolean') this.fail();
         let acquisitionRequirements = null;
@@ -86,8 +88,10 @@ module.exports = {
             const { priceRef, ...safe } = this.requirements(supply.purchaseRequirements);
             acquisitionRequirements = safe;
         }
-        const available = supply.available && acquisitionRequirements !== null;
-        return { available, status: available ? 'IN_STOCK' : 'OUT_OF_STOCK', acquisitionRequirements };
+        const expiry = supply.expiry == null ? null : this.expiry(supply.expiry);
+        const available = supply.available && acquisitionRequirements !== null && expiry !== null &&
+            (expiry.mode === 'NONE' || Date.parse(expiry.at) > Date.now());
+        return { available, status: available ? 'IN_STOCK' : 'OUT_OF_STOCK', acquisitionRequirements, expiry };
     },
     /** Validates a complete governed offer and preserves optional lifetime caps as explicit records. */
     validate: function (value) {
@@ -176,8 +180,14 @@ module.exports = {
         if (presentation?.contractVersion !== 1 || !presentation.labels ||
             Object.values(presentation.labels).some(value => typeof value !== 'string' || !value || value.length > 512) ||
             !Array.isArray(presentation.benefitOptions) || !Array.isArray(presentation.requirementOptions)) this.fail();
+        const channels = CONFIG.get('promotion')?.acquisitionReporting?.channelOptions;
+        if (!Array.isArray(channels) || channels.length > this.settings().maximumStores ||
+            channels.some(option => !option || Object.keys(option).sort().join(',') !== 'code,name' ||
+                typeof option.code !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,127}$/.test(option.code) ||
+                typeof option.name !== 'string' || !option.name.trim() || option.name.length > this.settings().maximumTermLength ||
+                /[\u0000-\u001f\u007f]/.test(option.name)) || new Set(channels.map(option => option.code)).size !== channels.length) this.fail();
         const security = SERVICE.DefaultSecuredRequestPipelineService;
-        return { ...structuredClone(presentation), limits: structuredClone(this.settings()),
+        return { ...structuredClone(presentation), limits: structuredClone(this.settings()), reportChannels: structuredClone(channels),
             canCreate: SERVICE.DefaultPromotionDraftService.available(request) === true &&
                 security.isPermissionGranted('commerce.promotion.manage', security.getGrantedPermissions(request), {}) === true };
     },
@@ -209,6 +219,9 @@ module.exports = {
         const campaign = await this.authoringOffer(request);
         return { code: campaign.code, name: campaign.name, status: campaign.status, revision: campaign.revision,
             versionId: campaign.versionId, actions: structuredClone(campaign.actions), conditions: structuredClone(campaign.conditions),
+            ...(campaign.budget ? { budget: { limit: campaign.budget.limit } } : {}),
+            ...(campaign.vendorEnterpriseRef ? { vendorEnterpriseRef: structuredClone(campaign.vendorEnterpriseRef) } : {}),
+            lifecycleActions: SERVICE.DefaultPromotionDraftService?.describeLifecycle?.(request, campaign) || [],
             couponOffer: this.validate(campaign.couponOffer) };
     },
     /** Returns only reusable unsaved content; creation must still pass normal owner authoring. */
@@ -217,6 +230,8 @@ module.exports = {
         const campaign = await this.authoringOffer(request);
         if (!isDeepStrictEqual(SERVICE.DefaultPromotionDraftService.scope(request), scope)) this.fail();
         return { name: campaign.name, actions: structuredClone(campaign.actions), conditions: structuredClone(campaign.conditions),
+            ...(campaign.budget ? { budget: { limit: campaign.budget.limit } } : {}),
+            ...(campaign.vendorEnterpriseRef ? { vendorEnterpriseRef: structuredClone(campaign.vendorEnterpriseRef) } : {}),
             couponOffer: this.validate(campaign.couponOffer) };
     },
     /** Enforces immutable benefits/terms from initial creation across generic/import/versioned writes. */

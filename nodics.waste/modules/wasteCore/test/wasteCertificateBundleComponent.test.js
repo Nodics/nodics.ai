@@ -37,7 +37,8 @@ function fixture(t) {
     },
   }]));
   global.SERVICE = { DefaultWasteAssetTransferOperationService: operations,
-    DefaultWastePersistenceService: { repository: schema => repositories[schema], context: r => ({ tenant: r.tenant }), records: r => r.result },
+    DefaultWastePersistenceService: { repository: schema => repositories[schema], context: r => ({ tenant: r.tenant }),
+      records: require('../src/service/defaultWastePersistenceService').records },
     DefaultDatabaseModelHandlerService: { inspectIndexes: async () => ({ versioned: false, indexes: [{ unique: true, key: { code: 1 } }] }) },
     DefaultModelConcurrencyService: { getField: () => "revision" },
   };

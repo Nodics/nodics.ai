@@ -50,6 +50,16 @@ module.exports = {
           SERVICE.DefaultExactAmountService.compare(result.amount, command.amount) !== 0) ||
         operation === "capture" && (typeof result.redemptionCode !== "string" || !result.redemptionCode))
       throw new Error("Original auction funds outcome is unconfirmed");
+    if (operation === "capture") {
+      const evidence = result.captureEvidence;
+      const expected = { contractVersion: 1, redemptionCode: result.redemptionCode,
+        captureLedgerEntryCode: result.captureLedgerEntryCode, roundCode: command.roundCode,
+        bidCode: command.sourceCode, reservationCode: command.reservationCode, idempotencyKey: command.idempotencyKey,
+        sourceType: "BIDDING", sourceCode: command.sourceCode, targetType: "AUCTION_ROUND", targetCode: command.roundCode };
+      if (typeof result.captureLedgerEntryCode !== "string" || !result.captureLedgerEntryCode ||
+          result.captureLedgerEntryCode === result.redemptionCode || !same(evidence, expected))
+        throw new Error("Original auction capture ledger evidence is unconfirmed");
+    }
     return result;
   },
   /**
@@ -85,8 +95,9 @@ module.exports = {
       header: { Authorization: request.authorization, "X-Enterprise-Code": request.participantEnterpriseCode },
       request: { tenant: request.tenant, authData: request.authData, payload: command }, requestBody: command });
     const result = this.receipt(response, command, operation);
-    return { reference: operation === "capture" ? result.redemptionCode : result.reservation.code,
+    return { reference: operation === "capture" ? result.captureLedgerEntryCode : result.reservation.code,
       status: { inspect: "AUTHORIZED", capture: "CAPTURED", release: "VOIDED" }[operation],
+      ...(operation === "capture" ? { auctionCapture: { ...result.captureEvidence, commitmentCode: row.code } } : {}),
       providerCode: config.providerCode, loyalty: result };
   }
 };

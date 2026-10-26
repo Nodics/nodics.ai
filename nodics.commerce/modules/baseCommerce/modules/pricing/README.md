@@ -1,5 +1,18 @@
 # Pricing
 
+Native Platform administrators may create one same-tenant enterprise price row
+through the [bounded native authoring contract](llm/contracts/pricing-lifecycle-and-publication.md#native-administrator-price-row-authoring).
+Fresh Profile evidence precedes managed Staged versioned persistence; exact-code
+read reconciles uncertain outcomes. This does not grant generic CRUD, book writes,
+Product authority, approval or publication. Defaults belong to Pricing and Profile
+retains its independently governed permission evidence allowlist.
+
+Native administrators may separately continue same-tenant Pricing publications
+through `POST /publication/policy/administrative`, with fresh
+`commerce.pricing.publish` proof for every command. Process still owns decisions;
+the original actor and signed enterprise never become the business target.
+See [native publication](llm/contracts/pricing-lifecycle-and-publication.md#native-administrator-publication).
+
 Digital bundle listings use the persisted
 [`DefaultPricingBundleListingService` port](llm/contracts/bundle-listing-prices.md).
 Its default-disabled automatic policy appends the exact source-proven row to the

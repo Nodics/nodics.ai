@@ -113,9 +113,17 @@ module.exports = {
         authorization: request.authorization }) || receipt?.confirmed !== true || receipt.tenant !== request.tenant || receipt.operation !== operation ||
           receipt.orderCode !== p.orderCode || receipt.roundCode !== p.roundCode || receipt.bidCode !== p.sourceCode ||
           receipt.reservationCode !== p.reservationCode || receipt.idempotencyKey !== p.idempotencyKey ||
-          receipt.amount !== p.amount || !receipt.receiptCode || receipt.terminalFence !== true ||
-          receipt.decision !== (operation === "capture" ? ENUMS.LoyaltyLedgerEntryType.CAPTURE.key : ENUMS.LoyaltyLedgerEntryType.RELEASE.key)) this.fail("FORBIDDEN");
-      request.purchaseReceipt = receipt.receiptCode;
+          receipt.amount !== p.amount || typeof receipt.receiptCode !== "string" || !receipt.receiptCode) this.fail("FORBIDDEN");
+      if (operation === "inspect") {
+        // Read-only authorization of the selected hold is never a terminal funds decision.
+        if (receipt.decision !== "INSPECT" || receipt.terminalFence !== false || receipt.authorizationFence !== true)
+          this.fail("FORBIDDEN");
+      } else {
+        if (!["capture", "release"].includes(operation) || receipt.terminalFence !== true || receipt.authorizationFence === true ||
+            receipt.decision !== (operation === "capture" ? ENUMS.LoyaltyLedgerEntryType.CAPTURE.key : ENUMS.LoyaltyLedgerEntryType.RELEASE.key))
+          this.fail("FORBIDDEN");
+        request.purchaseReceipt = receipt.receiptCode;
+      }
     }
   },
   /**
@@ -322,13 +330,26 @@ module.exports = {
       const balance = await this.read(request, "LoyaltyWalletRewardBalance", { code: f.balance.code });
       if (result.balance && (!balance || ["available", "reserved", "spent", "revision"].some(field =>
         balance[field] !== result.balance[field]))) this.fail("PERSISTENCE");
+      let captureEvidence;
       if (operation === "capture") {
         const redemption = await this.read(request, "RewardRedemption", { code: result.redemption?.code });
         if (!redemption || redemption.reservationCode !== reservationCode || redemption.amount !== f.amount ||
             redemption.status !== ENUMS.LoyaltyRedemptionStatus.CAPTURED.key || redemption.providerReference !== request.purchaseReceipt) this.fail("PERSISTENCE");
+        const ledger = await this.read(request, "RewardLedgerEntry", { code: redemption.captureLedgerEntryCode });
+        if (!ledger || ledger.code !== result.ledgerEntry?.code || ledger.entryType !== "CAPTURE" ||
+            ledger.reservationCode !== reservationCode || ledger.redemptionCode !== redemption.code ||
+            ledger.walletCode !== f.wallet.code || ledger.programCode !== f.program.code || ledger.rewardTypeCode !== f.type.code ||
+            ledger.amount !== f.amount || ledger.idempotencyKey !== p.idempotencyKey || ledger.sourceType !== "BIDDING" ||
+            ledger.sourceCode !== p.sourceCode || ledger.targetType !== "AUCTION_ROUND" || ledger.targetCode !== p.roundCode ||
+            ledger.active === false) this.fail("PERSISTENCE");
+        captureEvidence = { contractVersion: 1, redemptionCode: redemption.code, captureLedgerEntryCode: ledger.code,
+          roundCode: p.roundCode, bidCode: p.sourceCode, reservationCode, idempotencyKey: p.idempotencyKey,
+          sourceType: ledger.sourceType, sourceCode: ledger.sourceCode, targetType: ledger.targetType, targetCode: ledger.targetCode };
+
       }
       const response = { confirmed: true, reservation: this.project(saved),
-        ...(result.redemption ? { redemptionCode: result.redemption.code } : {}) };
+        ...(result.redemption ? { redemptionCode: result.redemption.code } : {}),
+        ...(captureEvidence ? { captureLedgerEntryCode: captureEvidence.captureLedgerEntryCode, captureEvidence } : {}) };
       const model = { ...saved, revision: saved.revision + 1, metadata: { ...saved.metadata, auction: {
         ...saved.metadata?.auction, ownerRef: p.ownerRef, publicationCode: p.publicationCode,
         commands: { ...saved.metadata?.auction?.commands, [key]: { fingerprint, result: response } },

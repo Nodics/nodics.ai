@@ -53,7 +53,7 @@ test('native Carbon: allocations, holdings and one-winner transfer survive unkno
         qualificationRef: ref('native-test-qualification'), allowSynthetic: true } } };
     const f = await fixture.create(t, { schemas: descriptors(), settings, enums: enums() });
     const request = payload => ({ tenant: f.tenant, authData: { tenant: f.tenant, principalType: 'service',
-        loginId: 'native-carbon-owner', permissions }, payload });
+        serviceId: 'native-carbon-owner', tokenType: 'service', permissions }, payload });
     const evidence = { evidenceRef: ref('synthetic-carbon-evidence'), issuanceRef: ref('synthetic-registry-lot'),
         providerRef: ref('synthetic-provider'), programRef: ref('synthetic-program'), unitOfMeasure: 'tCO2e',
         scale: 3, issuedQuantity: '10.000', state: 'REALIZED', synthetic: true,
@@ -141,7 +141,7 @@ test('native Carbon: unqualified external evidence cannot create a lot or holdin
         },
     });
     const request = { tenant: f.tenant, authData: { tenant: f.tenant, principalType: 'service',
-        loginId: 'native-carbon-owner', permissions }, payload: { evidenceRef: ref('unqualified') } };
+        serviceId: 'native-carbon-owner', tokenType: 'service', permissions }, payload: { evidenceRef: ref('unqualified') } };
     await assert.rejects(carbon.synchronize(request), { code: 'ERR_CARBON_UNAVAILABLE' });
     assert.equal((await SERVICE.DefaultWasteCarbonLotService.get({ tenant: f.tenant, query: {} })).result.length, 0);
     assert.equal((await SERVICE.DefaultWasteCarbonAllocationClaimService.get({ tenant: f.tenant, query: {} })).result.length, 0);

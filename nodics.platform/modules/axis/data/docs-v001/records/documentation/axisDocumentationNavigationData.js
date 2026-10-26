@@ -23,7 +23,7 @@ module.exports = {
     "emptyMessage": "No Nodics Axis documentation matches your search.",
     "expandable": true,
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"

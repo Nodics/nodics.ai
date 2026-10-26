@@ -11,6 +11,7 @@
 
 'use strict';
 const historyWrites = new WeakSet();
+const { isDeepStrictEqual } = require('node:util');
 
 /**
  * @module commerceSearchCore/service/defaultCommerceSearchPublicationService
@@ -165,6 +166,71 @@ module.exports = {
     },
 
     /**
+     * Rejects unconfirmed index evidence with a registered static publisher diagnostic.
+     * @param {string} stage Owner-selected stage, never provider text.
+     * @returns {never} Throws without retaining provider payloads or causes.
+     */
+    indexFailure: function (stage) {
+        throw new CLASSES.NodicsError('ERR_COMMERCE_SEARCH_' + stage);
+    },
+
+    /**
+     * Unwraps known nSearch/provider envelopes while refusing negative evidence.
+     * @param {*} value Index response.
+     * @param {string} stage Owner-selected diagnostic stage.
+     * @returns {*} Provider result after bounded envelope traversal.
+     */
+    indexResult: function (value, stage) {
+        for (let depth = 0; depth < 6; depth++) {
+            if (!value || typeof value !== 'object' || value.error || value.success === false ||
+                value.acknowledged === false || value.errors !== undefined &&
+                (!Array.isArray(value.errors) || value.errors.length) ||
+                value.code !== undefined && !String(value.code).startsWith('SUC_')) this.indexFailure(stage);
+            if (Array.isArray(value) || value._id || value.hits) return value;
+            const key = ['result', 'body', 'data'].find(key => Object.hasOwn(value, key));
+            if (!key) this.indexFailure(stage);
+            value = value[key];
+        }
+        this.indexFailure(stage);
+    },
+
+    /**
+     * Requires exact write acknowledgement and an independently read indexed projection.
+     * @param {Object} request Original authorized publication request.
+     * @param {Object} model Expected immutable projection content.
+     * @returns {Promise<void>} Resolves only after the index confirms exact current content.
+     * @remarks Uses existing nSearch owner methods; refresh wait_for makes the subsequent search
+     * observe this write. Retained snapshots support ordinary retry after uncertain outcomes.
+     */
+    indexProjection: async function (request, model) {
+        const owner = SERVICE.DefaultCommerceSearchRuleProjectionService;
+        const input = { tenant: request.tenant, authData: request.authData,
+            moduleName: 'commerceSearchCore', indexName: this.policy().searchIndexName };
+        let response;
+        try { response = await owner.doSave({ ...input, model: structuredClone(model), options: { refresh: 'wait_for' }, searchOptions: {} }); }
+        catch (_) { this.indexFailure('INDEX_WRITE'); }
+        const acknowledged = this.indexResult(response, 'INDEX_ACK');
+        if (!Array.isArray(acknowledged) || acknowledged.length !== 1) this.indexFailure('INDEX_ACK');
+        const ack = this.indexResult(acknowledged[0], 'INDEX_ACK');
+        if (ack._id !== model.code || !['created', 'updated'].includes(ack.result) ||
+            ack._shards?.failed !== 0) this.indexFailure('INDEX_ACK');
+        try { response = await owner.doSearch({ ...input, query: { ids: { values: [model.code] } },
+            searchOptions: { pageSize: 2, limit: 2, pageNumber: 1 } }); }
+        catch (_) { this.indexFailure('INDEX_READ'); }
+        const read = this.indexResult(response, 'INDEX_READ');
+        const hits = read.hits?.hits, total = typeof read.hits?.total === 'number' ? read.hits.total : read.hits?.total?.value;
+        if (read.timed_out === true || read._shards?.failed > 0 || !Array.isArray(hits) ||
+            !Number.isSafeInteger(total) || read.hits.total?.relation && read.hits.total.relation !== 'eq') this.indexFailure('INDEX_READ');
+        if (total === 0 && hits.length === 0) this.indexFailure('INDEX_MISSING');
+        if (total !== 1 || hits.length !== 1 || hits[0]._id !== model.code) this.indexFailure('INDEX_BINDING');
+        const actual = hits[0]._source, expected = JSON.parse(JSON.stringify(model));
+        const fields = ['code', 'tenant', 'storeCode', 'locale', 'status', 'sourceHash', 'scopeType',
+            'categoryCode', 'searchTerm', 'benefitRef', 'actions', 'priority', 'validFrom', 'validTo'];
+        if (!actual || fields.some(key => !isDeepStrictEqual(actual[key],
+            expected[key]))) this.indexFailure('INDEX_BINDING');
+    },
+
+    /**
      * Publishes approved rules into online projections and the search index.
      *
      * @param {Object} request Publication request.
@@ -183,13 +249,7 @@ module.exports = {
             let model = SERVICE.DefaultCommerceSearchProjectionBuilderService.build(request, rule);
             await this.snapshot(request, rule, model);
             await SERVICE.DefaultCommerceSearchRuleProjectionService.save({ tenant: request.tenant, authData: request.authData, model: model });
-            await SERVICE.DefaultCommerceSearchRuleProjectionService.doSave({
-                tenant: request.tenant,
-                moduleName: 'commerceSearchCore',
-                indexName: this.policy().searchIndexName,
-                model: model,
-                searchOptions: {}
-            });
+            await this.indexProjection(request, model);
             projections.push(model);
         }
         return {

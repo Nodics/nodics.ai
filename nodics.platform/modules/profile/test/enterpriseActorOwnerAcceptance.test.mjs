@@ -181,6 +181,34 @@ test("mutation and two distinct runtime-only sessions are mandatory", async () =
   assert.equal(f.calls.length, 0);
 });
 
+test("selection rejects owner DTO identifier violations before any request", async () => {
+  const variants = [
+    value => { value.revocation.operationId = "too-short"; },
+    value => { value.revocation.operationId = "x".repeat(129); },
+    value => { value.revocation.operationId = "operation.with.dots"; },
+    value => { value.revocation.assignmentCode = "x".repeat(129); },
+    value => { value.owner.membershipAssignmentCode = "x".repeat(129); },
+  ];
+  for (const mutate of variants) {
+    const f = fixture();
+    mutate(f.selected);
+    await assert.rejects(runEnterpriseActorOwnerAcceptance({
+      execute: true, selection: f.selected, actors: f.tokens, context: f.context,
+    }), /invalid/);
+    assert.equal(f.calls.length, 0);
+  }
+});
+
+test("selection admits the owner DTO identifier boundaries", () => {
+  for (const length of [16, 128]) {
+    const value = selection();
+    value.revocation.operationId = "x".repeat(length);
+    value.revocation.assignmentCode = "r".repeat(128);
+    value.owner.membershipAssignmentCode = "a".repeat(128);
+    assert.doesNotThrow(() => validateEnterpriseActorOwnerAcceptanceSelection(value));
+  }
+});
+
 test("a successful unrelated or foreign-tenant probe fails the suite before mutation", async () => {
   const f = fixture();
   f.context.raw = async () => Response.json({ code: "SUC_PRFL_00000" });

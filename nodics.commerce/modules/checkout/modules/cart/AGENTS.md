@@ -10,6 +10,10 @@ priceRowCode. Schema projection must not discard this purchased-consideration
 evidence; Digital validates it before governed coupon inputs become consumed.
 
 Resolve customer/Enterprise purchasers with original Profile access authority.
+Use the freshly resolved Profile ownerRef.code as ownerId for both owner kinds.
+The signed principal remains actorRef.code, never a customer storage alias. Keep
+Cart, calculation, Checkout, Order, Payment and Digital ownership consistent;
+exercise customer codes distinct from signed principal IDs in actual-owner tests.
 Never change signed employee claims to a customer or accept a body owner tuple.
 Private generated storage follows typed owner admission. Fixed-price scope comes
 from canonical Store placement and then retained Cart evidence, never the signed

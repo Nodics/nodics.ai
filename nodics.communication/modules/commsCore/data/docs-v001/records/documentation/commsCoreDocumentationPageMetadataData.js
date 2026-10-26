@@ -9,9 +9,14 @@
 
  */
 
-'use strict';
-
-/** @description Module-owned documentation page metadata. */
+/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
+"use strict";
+/**
+ * @module commsCore/data/docs-v001/records/documentation/commsCoreDocumentationPageMetadataData
+ * @description Owns canonical commsCoreDocumentationPageMetadataData successor records; installation and publication remain governed.
+ * @layer data
+ * @owner commsCore
+ */
 module.exports = {
   "record0": {
     "code": "nodicsDocsMetadatacommunicationProviderRunbooks",
@@ -179,7 +184,7 @@ module.exports = {
     ],
     "accessPolicy": "nodicsDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 2412,
@@ -317,7 +322,7 @@ module.exports = {
     ],
     "accessPolicy": "nodicsDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 1246,
@@ -565,7 +570,7 @@ module.exports = {
     ],
     "accessPolicy": "nodicsDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
     "wordCount": 4928,

@@ -11,6 +11,14 @@
 
 /** @module bidding/src/utils/statusDefinitions.js @description Defines stable bidding errors. @layer config @owner bidding */
 module.exports = {
+  ERR_BIDDING_OFFER_READ_UNAVAILABLE: {
+    code: "503",
+    message: "The published auction offer could not be read",
+  },
+  ERR_BIDDING_ROUND_READ_UNAVAILABLE: {
+    code: "503",
+    message: "The original auction round could not be read",
+  },
   ERR_BIDDING_RUNTIME_FORBIDDEN: {
     code: "403",
     message: "Bidding is unavailable on this runtime",

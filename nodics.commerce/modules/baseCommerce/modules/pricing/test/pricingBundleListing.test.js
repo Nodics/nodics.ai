@@ -20,7 +20,7 @@ const selection = require("../src/service/defaultPriceSelectionService");
 const clone = structuredClone;
 
 /** Uses real Pricing target operations for initial book activation and every subsequent listing write. */
-async function setup(t) {
+async function setup(t, bookTerms = {}) {
   const f = fixture(t), pricing = clone(require("../config/properties").pricing), oldGet = CONFIG.get;
   Object.assign(pricing.bundleListings, { enabled: true, qualified: true });
   Object.assign(pricing.publication, { runtimeRole: "ONLINE", delivery: { enabled: true, rootCodes: ["rewards"] } });
@@ -59,7 +59,7 @@ async function setup(t) {
   }
   const scope = { tenant: "tenant", enterpriseCode: "market", authData: { isSystem: true } };
   const records = [{ schema: "priceBook", policy: { code: "rewards", tenant: "tenant", enterpriseCode: "market",
-    versionId: 3, currency: "POINTS", active: true, status: "ACTIVE" } },
+    versionId: 3, currency: "POINTS", active: true, status: "ACTIVE", ...bookTerms } },
   { schema: "priceRow", policy: { code: "unrelated-row", tenant: "tenant", enterpriseCode: "market", versionId: 4,
     priceBookCode: "rewards", productCode: "unrelated", currency: "POINTS", unitAmount: "7", minQuantity: "1", active: true } }];
   const payload = { tenant: "tenant", enterpriseCode: "market", rootType: "priceBook", rootCode: "rewards", records };
@@ -283,6 +283,32 @@ test("future start and elapsed intake do not erase original receipt needed for a
   assert.equal(row.validFrom, f.command.startsAt); assert.equal(row.validTo, f.command.endsAt);
   assert.equal(proof.amount, "10");
   assert.equal(selection.effective(row, new Date("2999-02-02T00:00:00.000Z")), false);
+});
+
+test('blank listing start admits an already active book without changing retained listing dates', async t => {
+  const f = await setup(t, { validFrom: '2000-01-01T00:00:00.000Z' });
+  const result = await f.publish();
+  assert.equal(result.status, 'PUBLISHED');
+  assert.equal(f.row().evidence.listing.terms.startsAt, null);
+  assert.equal((await prices.inspect(f.request(), f.input())).confirmed, true);
+});
+
+test('blank start cannot precede a future book and blank end cannot exceed a bounded book', async t => {
+  for (const terms of [{ validFrom: '2999-01-01T00:00:00.000Z' }, { validTo: '2999-01-01T00:00:00.000Z' }]) {
+    await t.test(JSON.stringify(terms), async child => {
+      const f = await setup(child, terms), writes = f.state.writes;
+      f.command.endsAt = null;
+      await assert.rejects(f.publish(), /Listing window exceeds selected book/);
+      assert.equal(f.state.writes, writes);
+      assert.equal(f.row().status, 'HELD');
+    });
+  }
+});
+
+test('an explicit listing start before the book remains refused', async t => {
+  const f = await setup(t, { validFrom: '2000-01-01T00:00:00.000Z' });
+  f.command.startsAt = '1999-01-01T00:00:00.000Z';
+  await assert.rejects(f.publish(), /Listing window exceeds selected book/);
 });
 
 test("a competing managed pointer revision never gets overwritten or acknowledged as this listing", async t => {

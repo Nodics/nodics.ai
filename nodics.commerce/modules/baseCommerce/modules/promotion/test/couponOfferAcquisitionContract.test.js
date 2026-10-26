@@ -42,7 +42,15 @@ test('workspace preserves its DTO through owner data contribution and effective 
     };
     const result = offer.workspace(f.request());
     assert.equal(checked, 1);
-    assert.deepEqual(result, { ...structuredClone(presentation), limits: structuredClone(f.settings.couponOffers), canCreate: true });
+    assert.deepEqual(result, { ...structuredClone(presentation), limits: structuredClone(f.settings.couponOffers), reportChannels: [], canCreate: true });
+    f.settings.acquisitionReporting.channelOptions = [{ code: 'partner-site', name: 'Partner website' }];
+    const selected = offer.workspace(f.request());
+    assert.deepEqual(selected.reportChannels, [{ code: 'partner-site', name: 'Partner website' }]);
+    selected.reportChannels[0].name = 'MUTATED';
+    assert.equal(offer.workspace(f.request()).reportChannels[0].name, 'Partner website');
+    f.settings.acquisitionReporting.channelOptions.push({ code: 'partner-site', name: 'Duplicate' });
+    assert.throws(() => offer.workspace(f.request()), { code: 'ERR_PROMOTION_COUPON_OFFER_INVALID' });
+    f.settings.acquisitionReporting.channelOptions = [];
     assert.equal(defaults.promotion.couponOfferPresentation, undefined);
     result.labels.title = 'MUTATED';
     assert.equal(offer.workspace(f.request()).labels.title, presentation.labels.title);
@@ -235,7 +243,8 @@ test('benefit/supply edits and imported replacements cannot change existing offe
     SERVICE.DefaultPromotionBusinessWorkbenchService = { context: () => ({ tenant: 't', enterpriseCode: 'issuer' }),
         persistenceAuth: () => r.authData };
     const prefill = await offer.prefill({ ...r, promotionCode: 'offer' });
-    assert.deepEqual(Object.keys(prefill).sort(), ['actions', 'conditions', 'couponOffer', 'name']);
+    assert.deepEqual(Object.keys(prefill).sort(), ['actions', 'conditions', 'couponOffer', 'name', 'vendorEnterpriseRef']);
+    assert.deepEqual(prefill.vendorEnterpriseRef, f.campaign.vendorEnterpriseRef);
 });
 
 test('offer inspection and prefill read scoped inactive drafts without borrowing active sales admission', async t => {

@@ -1,5 +1,10 @@
 # nTooling Agent Contract
 
+Unreleased shipping data uses owner-specific v001 with no retained-root snapshots.
+`DefaultProjectDataManifestService.validateUnreleasedBaseline` owns reusable
+read-only checks for framework and customer roots. Preserve semantic versions,
+canonical checksum/prerequisite validation and isolated versioning fixtures.
+
 Reference packs explicitly marked `nodics.referenceDemo: true` are demo-only.
 Keep their static ownership check in the existing design-principle audit and
 project validation, with negative fixtures in `test/referenceDemoOwnership.test.js`.
@@ -58,8 +63,9 @@ and nImport's retained-root validator. Preserve immutable historical trees and
 section identities; never recreate retained roots as conventional releases. See
 `llm/contracts/README.md#forward-data-releases` before integrating any generator.
 
-Copyright governance preserves the exact checksum-frozen Profile init-v007 service
-employee payload and ten core-v001 Commerce role payloads through content-digest compatibility entries. Their existing root
+Copyright governance preserves the exact checksum-frozen Profile service employee
+payload at `nodics.platform/modules/profile/data/init-v001/records/identityBootstrap/preservedServiceEmployeeData.js`
+and ten core-v001 Commerce role payloads through content-digest compatibility entries. Their existing root
 license attribution stays intact; changed bytes or new short-header source do not
 inherit that compatibility. New source uses the standard Nodics header.
 
@@ -222,6 +228,12 @@ for launch; cleanup may signal only caller-owned children. Media helpers call
 the owning API, never persistence. Test failure/cleanup and caller-equivalence
 when consolidating scripts; do not promote a sample journey into a framework
 default merely because its HTTP mechanics are shared.
+
+Write-recovery coordination must attempt operation-key-bound cleanup once after
+every fault-arm attempt, even when arming throws or returns invalid evidence.
+Adapters must tolerate an unarmed fault. Never proceed to an owner write after
+unconfirmed arming or retry an uncertain write. Preserve isolated regression
+coverage in `writeRecoveryResilienceAcceptance.test.mjs`.
 
 Customer property-placement checks belong to the existing framework design
 principle audit, not a project-specific validator. Parse authored configuration

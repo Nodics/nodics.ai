@@ -43,6 +43,7 @@ for (const [moduleName, relativeRoot] of Object.entries(owners)) {
 
 for (const item of navigation) {
     if (item.backendWorkspace) {
+        assert.equal(item.group.id, 'promotions-discounts');
         assert.equal(item.backendWorkspace.renderer, 'axis.workspace.native');
         assert(['promotion.couponOffers', 'promotion.couponAcquisition'].includes(item.backendWorkspace.workspaceCode));
         assert.equal(require('../../nodics.platform/modules/backoffice/src/service/contract/defaultBackofficeContractService')

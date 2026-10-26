@@ -18,8 +18,21 @@ framework `profileNotificationRecipients.maximumGroups` bound. No inline default
 or former scope-only selection path remains. Digital's source callback enforces exact
 deployment/business grants. Failed envelopes or request/policy/source drift refuse.
 Malformed occurrence identifiers and incomplete shared-selection policy refuse
-before source transport. Unexpected storage/transport diagnostics are redacted
-to `ERR_AUTH_00003`; private errors never become a successful empty recipient list.
+before source transport. Private capture and exact runtime-principal validation run before policy reads.
+Missing/invalid private entry, runtime identity, module scope or permission remains
+`ERR_AUTH_00003`. After private runtime/module admission, POLICY identifies invalid
+or disabled effective policy; after permission validation, INPUT identifies malformed
+selectors. These use fixed `ERR_PROFILE_COUPON_RECIPIENT_POLICY` and `_INPUT`
+HTTP 403 definitions. Existing post-input failures expose only registered
+HTTP 403 `ERR_PROFILE_COUPON_RECIPIENT_SOURCE_RPC`, `_SOURCE_PROOF`, `_SELECTION`
+or `_BOUND` codes. These represent the locally executing boundary, not a claimed
+remote root cause. RPC covers automatic internal-authentication and transport;
+proof covers envelope/coordinate validation and proof drift; selection covers
+current persisted recipients and selection drift; binding covers original
+request/policy rechecks. Dependency codes, messages, contacts, credentials, raw
+causes and metadata are discarded, never logged or copied into diagnostics.
+These fixed stages grant no authority and never turn errors into an empty list.
+The self-inbox command retains its generic AccessDenied contract.
 
 ## Governed Records
 
@@ -76,3 +89,17 @@ the original-bearer Employee self-identity path. Defaults stay off; isolated opt
 fixtures do not qualify an installed runtime. IN_APP is implemented. Other channels
 require independently verified purpose-bound destinations and explicit consent;
 email and phone fields are never implicit fallbacks.
+
+The focused controller regression uses the real runtime-principal guard and
+registered NodicsError, proving HTTP 403 and no private cause propagation. The
+composed Enterprise regression uses actual Profile source validation, generated
+record reads, membership, permission ancestry and effective scope selection; only
+external RPC and stored fixture records are substituted. These are source tests,
+not proof of a live callback identity or delivered reminder.
+
+`profileCouponRecipientHttpAdmission.test.js` composes real early privacy binding,
+route privacy middleware, HTTP request-envelope construction, secured permission
+checks, controller dispatch and private error serialization. Token verification
+and persistence are isolated; invalid runtime identity or detached private entry
+never expose a diagnostic stage. Only this focused regression needs running for
+the admission-stage change; it does not qualify a live deployment.

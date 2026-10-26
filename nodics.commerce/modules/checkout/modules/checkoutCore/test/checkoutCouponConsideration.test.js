@@ -191,6 +191,29 @@ test('unknown authorization retains coupon and certificate holds without claimin
   await assert.rejects(recovery.recover({ ...f.request, commandCode: 'checkout', payload: {} }), /UNCONFIRMED/);
 });
 
+test('a remote balance-negative error and absent Payment rows cannot prove terminal original authorization denial', async t => {
+  const f = fixture(t, 'BOTH');
+  await acquisition.reserveInputs(await acquisition.commandForCoupon(f.request, f.coupon));
+  const error = Object.assign(Error('available balance cannot be negative'), {
+    code: 'ERR_LOYALTY_BALANCE_NEGATIVE', responseCode: 500, noEffects: true,
+  });
+  const result = await f.ports.compensate({ ...f.request,
+    completed: ['VALIDATED', 'CALCULATED', 'RESERVED', 'DIGITAL_RESERVED'],
+    results: { paymentAttempted: true, digitalReservation: [f.coupon] } }, error, f.request);
+  assert.equal(result.status, 'COMPENSATION_REQUIRED');
+  assert.equal(result.evidence.couponAcquisitionRecovery.paymentAttemptUnconfirmed, true);
+  assert.equal((f.db.PaymentTransactionEntry || []).length, 0);
+  assert.equal(f.events.includes('coupon-release'), false);
+  assert.equal(f.state.held, true);
+  const retained = clone(f.db.CheckoutCheckpoint);
+  await assert.rejects(recovery.recover({ ...f.request, commandCode: 'checkout', payload: {} }), /UNCONFIRMED/);
+  assert.deepEqual(f.db.CheckoutCheckpoint, retained);
+  assert.equal(f.events.includes('coupon-release'), false);
+  assert.equal(f.state.paymentCalls, 0);
+  await assert.rejects(acquisition.releaseInputs(await acquisition.commandForCoupon(f.request, f.coupon)), /unconfirmed/);
+  assert.equal(f.state.held, true);
+});
+
 test('a lost certificate reserve acknowledgement is resolved only through the retained original unit release', async t => {
   const f = fixture(t); f.state.lostReserve = true;
   await assert.rejects(placement.place(f.request, f.ports), /reserve acknowledgement lost/);

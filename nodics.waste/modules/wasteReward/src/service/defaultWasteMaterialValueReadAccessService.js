@@ -29,7 +29,7 @@ module.exports = {
      */
     resolve: async function (request) {
         const domain = SERVICE.DefaultWasteMaterialValueAssessmentService, permission = 'waste.materialValue.read';
-        if (request.authData?.principalType === 'service') {
+        if (request.authData?.principalType === 'service' || SERVICE.DefaultSecuredRequestPipelineService.hasPlatformFullAccess?.(request) === true) {
             domain.authorize(request, permission);
             return domain.owner(request.payload?.ownerRef);
         }

@@ -15,6 +15,11 @@ The seller manifest partition is retained separately from the Store partition.
 A listing CAS claim precedes PURCHASE insertion, retaining original Checkout key,
 owner/actor, Order, Cart, entry and immutable terms. It never replaces content holds.
 
+Read-only catalogue availability may omit the variant/SKU selection. Resolve it
+only from the single retained published variant and the exact listing binding;
+reject ambiguous projections or any supplied conflicting selector. Never mutate
+the caller request or relax Cart/Checkout's explicit entry identity requirements.
+
 Confirmation reads complete Order/entry/Payment records and actual Loyalty CAPTURE
 evidence. Missing, partial, duplicated, foreign and contradictory rows are refused.
 Provider identity is checked against effective `loyaltyRewardPayment.providerCode`
@@ -105,3 +110,46 @@ installed indices/grants, registry issuance, live payment or deployed recovery.
 Operators must separately verify Checkout's compensation/forward-recovery
 integration before marketplace activation. UI renders pending versus available;
 it must never offer a second purchase to resolve an uncertain original one.
+
+## Selected auction reservation
+
+For AUCTION, reserve obtains CHECKOUT_AUCTION_REWARD_V1 directly from Checkout's
+rewardPaymentTerms, using fresh canonical commitment, selected quote and original
+non-expiring hold. Caller funding is forbidden. Match publication, Product/variant,
+entry quote, Store, buyer/actor, Cart/Order/original key, reward program/type/scale
+and currency. Selected amount must meet the listing floor; purchase gross/net use
+that selected amount, including above-floor bids, never the floor itself.
+The PURCHASE command retains commitment/round/quote/reservation binding.
+
+A valid selected handoff may reserve after intake closes, but still requires the
+original HELD publication, exact Product/SKU, no listing release, original content
+holds, fresh Product/Pricing inspection and exclusive claim CAS. Replay preserves
+its original purchase identity/digest. Fixed-price reward checks are unchanged and
+reject auction bindings. The Checkout regression composes the actual Checkout
+proof and Digital reserve with isolated publication/storage boundaries; capture,
+transfer and seller proceeds remain independent owner proof and live acceptance.
+
+Calculated quote evidence is nested under priceDecision. Checkout validates it
+against the independently read Cart entry and original Order before projecting
+priceQuoteCode into the Digital entry. Digital retains its exact entry/proof check
+and also verifies persisted Cart variant/quote. Missing/foreign quote evidence is
+not permission to select the current listing price or remove the quote guard.
+
+## Auction capture provenance
+
+Selected PURCHASE retains canonical commitment/round/bid/quote/reservation binding.
+Payment CAPTURE evidence.providerReference must be the actual capture ledger entry
+code, not the redemption code. Require evidence.auctionCapture exactly:
+contractVersion 1, commitmentCode, redemptionCode, captureLedgerEntryCode, roundCode,
+bidCode, reservationCode, idempotencyKey, sourceType BIDDING, sourceCode bidCode,
+targetType AUCTION_ROUND and targetCode roundCode. Match both Payment records'
+auctionFunds commitment and original authorization hold. Keep redemptionCode as a
+separate reference in settlement evidence, never pass it as the ledger selector.
+
+Digital queries canonical exact Loyalty evidence with original BIDDING/bid source,
+then verifies AUCTION_ROUND/round target, wallet, original hold, capture key and
+selected amount. It never relabels auction accounting as PAYMENT/ORDER. Missing or
+contradictory producer proof, foreign ledger or wrong amount blocks transfer and
+seller credit. Ordinary fixed-price PAYMENT/ORDER validation remains unchanged and
+refuses unexpected auction proof. Producer validation remains Payment/Loyalty-owned;
+Digital verifies the persisted producer contract and fresh exact ledger independently.

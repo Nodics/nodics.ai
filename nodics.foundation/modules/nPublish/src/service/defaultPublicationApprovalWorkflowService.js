@@ -13,6 +13,15 @@
 
 /** @module nPublish/service/DefaultPublicationApprovalWorkflowService @description Binds a publication approval to a configured Process definition using existing module transport. @layer service @owner nPublish @override Select domain policy and Process connection; preserve immutable scope, deterministic identity and fail-closed authority. */
 module.exports = {
+    /** A domain may attest a private fresh native admission; payload flags never authorize business scope. */
+    administrativeScope: function (publication, request) {
+        if (!publication.enterpriseCode || publication.enterpriseCode === (request.authData?.entCode || request.authData?.enterpriseCode)) return undefined;
+        const adapter = typeof SERVICE !== 'undefined' && SERVICE.DefaultPublicationLifecycleService?.getDomainAdapter?.(publication.domain);
+        const scope = adapter?.administrativeApprovalScope?.(publication, request);
+        if (scope && (scope.tenant !== request.tenant || scope.enterpriseCode !== publication.enterpriseCode))
+            throw new Error('Native publication approval scope changed');
+        return scope;
+    },
     /** Resolves the explicit domain policy without falling back to another approval owner. */
     policy: function (domain) {
         const settings = (CONFIG.get('publish') || {}).approvalWorkflow || {};
@@ -62,12 +71,13 @@ module.exports = {
         const auth = request.authData || {};
         const requester = this.requireText(auth.loginId, 'requester');
         const actor = this.requireText(SERVICE.DefaultPublicationLifecycleService.getActor(request), 'actor');
+        const native = this.administrativeScope(publication, request);
         if (auth.tokenType !== 'access' || auth.principalType !== 'human' || auth.isSystem ||
             auth.tenant !== request.tenant || publication.requestedBy !== actor ||
             typeof auth.entCode !== 'string' || !auth.entCode ||
             (publication.tenantCode && publication.tenantCode !== request.tenant) ||
-            (publication.enterpriseCode && publication.enterpriseCode !== auth.entCode) ||
-            (publication.entCode && publication.entCode !== auth.entCode)) {
+            (publication.enterpriseCode && publication.enterpriseCode !== (native?.enterpriseCode || auth.entCode)) ||
+            (publication.entCode && publication.entCode !== (native?.enterpriseCode || auth.entCode))) {
             throw new CLASSES.NodicsError('ERR_PUB_00002', 'Publication requires its authenticated native requester');
         }
         const policy = this.policy(publication.domain);
@@ -179,8 +189,9 @@ module.exports = {
         if (claimedEnterprise !== undefined && auth.isSystem !== true) {
             throw new CLASSES.NodicsError('ERR_PUB_00004', 'Claimed enterprise requires private owner persistence');
         }
+        const native = claimedEnterprise === undefined ? this.administrativeScope(publication, request) : undefined;
         const enterprise = claimedEnterprise === undefined
-            ? this.requireText(auth.entCode || auth.enterpriseCode, 'enterprise')
+            ? this.requireText(native?.enterpriseCode || auth.entCode || auth.enterpriseCode, 'enterprise')
             : this.requireRuntimeEnterprise(auth, claimedEnterprise);
         if ((auth.tenant && auth.tenant !== tenant) ||
             (auth.entCode && auth.enterpriseCode && auth.entCode !== auth.enterpriseCode) ||
@@ -233,7 +244,7 @@ module.exports = {
             moduleName: 'workflow', connectionName: target.connectionName,
             connectionType: target.connectionType, targetAuthority: { runtimeRole: target.runtimeRole },
             local: false, tenant: request.tenant,
-            header: { Authorization: authorization, tenant: request.tenant, 'x-enterprise-code': context.enterpriseCode },
+            header: { Authorization: authorization, tenant: request.tenant, 'x-enterprise-code': request.authData.entCode || request.authData.enterpriseCode },
             methodName: 'POST', apiName: '/instances', timeoutMs: target.timeoutMs,
             // Process owns replay through the exact instance identity and start fingerprint.
             // A transport key would opt into its separate, deployment-gated command receipts.

@@ -153,6 +153,41 @@ test('uncertain writes are never retried and invalid reconciliation stops later 
   assert(!phases.some(phase => phase.startsWith('bundle-settlement:')));
 });
 
+for (const failure of ['lost-arm-ack', 'invalid-arm-ack', 'prepare', 'cleanup']) {
+  test(`fault cleanup remains bounded after ${failure}`, async t => {
+    const f = fixture(t);
+    const phases = [], keys = [];
+    let faultArmed = false, writes = 0, restarts = 0;
+    await assert.rejects(runWriteRecoveryResilienceAcceptance({ ...f, runId: 'run-cleanup', limits, execute: true,
+      approveFaultInjection: true, approveRestarts: true, approvedOperations: ['wallet-transfer', 'bundle-settlement'],
+      assertReady: async () => undefined,
+      restartTopology: async () => { restarts++; },
+      runOwnerCommand: async () => { writes++; },
+      runAdapter: async (operation, phase) => {
+        phases.push(`${operation.code}:${phase}`);
+        keys.push(operation.operationKey);
+        if (phase === 'PREPARE' && failure === 'prepare') throw new Error('Preparation unavailable');
+        if (phase === 'ARM_FAULT') {
+          faultArmed = true;
+          if (failure === 'lost-arm-ack') throw new Error('Arm acknowledgement lost');
+          if (failure === 'invalid-arm-ack') return adapterEvidence(operation, phase, { operationKey: 'wrong-key' });
+        }
+        if (phase === 'CLEANUP') {
+          if (failure === 'cleanup') throw new Error('Cleanup unavailable');
+          faultArmed = false;
+        }
+        return adapterEvidence(operation, phase);
+      },
+    }), /Preparation unavailable|Arm acknowledgement lost|invalid ARM_FAULT|Cleanup unavailable/);
+    assert.equal(phases.filter(phase => phase.endsWith(':CLEANUP')).length, failure === 'prepare' ? 0 : 1);
+    assert.equal(faultArmed, failure === 'cleanup');
+    assert.equal(writes, failure === 'cleanup' ? 1 : 0);
+    assert.equal(restarts, failure === 'cleanup' ? 1 : 0);
+    assert(keys.every(key => key === 'run-cleanup:wallet-transfer'));
+    assert(!phases.some(phase => phase.startsWith('bundle-settlement:')));
+  });
+}
+
 test('redaction removes credential-shaped keys, bearer values and query secrets', () => {
   assert.deepEqual(redactWriteRecoveryEvidence({ password: 'x', nested: { text: 'Bearer abc', url: 'https://x.invalid?a=1&token=abc' } }),
     { password: '[REDACTED]', nested: { text: 'Bearer [REDACTED]', url: 'https://x.invalid?a=1&token=[REDACTED]' } });

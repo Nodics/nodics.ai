@@ -37,6 +37,10 @@ module.exports = {
   },
 
   process: {
+    taskQueue: {
+      defaultPageSize: 25,
+      maximumPageSize: 100,
+    },
     runtime: {
       deadLetterRequeue: {
         enabled: false,

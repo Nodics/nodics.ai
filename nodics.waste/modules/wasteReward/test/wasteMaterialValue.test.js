@@ -129,7 +129,7 @@ const cover = (batch, indices = [0], amount) => {
         coverage: indices.map(i => ({ allocationCode: batch.allocations[i].code, amount: batch.allocations[i].attributedValue })) };
 };
 beforeEach(() => {
-    f = fixture.create(['wasteMaterialValueBatch', 'wasteMaterialValuePolicy', 'wasteMaterialValueContributionClaim', 'wasteMaterialValuePaymentClaim', 'wasteSubmission', 'wasteReceipt', 'wasteAsset']);
+    f = fixture.create(['wasteMaterialValueMockEvidence', 'wasteMaterialValueBatch', 'wasteMaterialValuePolicy', 'wasteMaterialValueContributionClaim', 'wasteMaterialValuePaymentClaim', 'wasteSubmission', 'wasteReceipt', 'wasteAsset']);
     for (let n = 1; n <= 3; n++) {
         f.put('wasteSubmission', { code: 'S' + n, submitterRef: owner('O' + n, n === 2 ? 'enterprise' : 'customer') });
         f.put('wasteReceipt', { code: 'R' + n, submissionCode: 'S' + n, receiptStatus: 'RECEIVED',
@@ -377,4 +377,115 @@ test('permission definitions are explicitly selected and manifest checksums matc
     assert.equal(section.selectionPolicy, 'EXPLICIT');
     for (const [file, expected] of Object.entries(section.files))
         assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.resolve(__dirname, '../data', file))).digest('hex'), expected);
+});
+
+function installMock() {
+    const mock = require('../src/service/defaultWasteMaterialValueMockProviderService');
+    SERVICE.DefaultWasteMaterialValueMockProviderService = mock;
+    settings.mock = { enabled: true };
+    settings.evidence.valuationProviderService = settings.evidence.paymentProviderService = 'DefaultWasteMaterialValueMockProviderService';
+    const put = (code, evidence) => f.put('wasteMaterialValueMockEvidence', { code, synthetic: true,
+        qualificationRef: settings.evidence.qualificationRef, evidence });
+    put('valuation', { ...valuation, kind: 'valuation' });
+    return { mock, put, assess: () => assessment.assess(request({ evidenceRef: mock.reference('valuation') })),
+        command: batch => request({ batchCode: batch.code, allocationCode: batch.allocations[0].code,
+            paymentEvidenceRef: mock.reference('payment') }) };
+}
+test('permanent mock uses canonical Loyalty atomicity, provenance and original-key recovery', async () => {
+    const mock = installMock(), batch = await mock.assess();
+    cover(batch); mock.put('payment', { ...payment, kind: 'payment' });
+    const loyalty = realLoyalty.install();
+    loyalty.state.failLedger = true;
+    await assert.rejects(settlement.release(mock.command(batch)), /injected ledger failure/);
+    assert.equal(loyalty.rows.RewardLedgerEntry.length, 0);
+    settings.evidence.allowSynthetic = false;
+    await assert.rejects(settlement.release(mock.command(batch)), { code: 'ERR_MATERIAL_VALUE_EVIDENCE' });
+    settings.evidence.allowSynthetic = true;
+    loyalty.state.loseResponse = true;
+    await assert.rejects(settlement.release(mock.command(batch)), /lost Loyalty response/);
+    const done = await settlement.release(mock.command(batch));
+    assert.equal(done.synthetic, true);
+    assert.equal(done.payment.paymentRef.schema, 'wasteMaterialValueMockEvidence');
+    assert.equal(loyalty.rows.RewardLedgerEntry.length, 1);
+    assert.equal(loyalty.rows.RewardLedgerEntry[0].metadata.synthetic, true);
+    assert.equal(loyalty.rows.LoyaltyWallet[0].ownerCode, 'O1');
+    assert.deepEqual((await settlement.release(mock.command(batch))).ledgerRef, done.ledgerRef);
+});
+test('mock payment cannot infer paid coverage or accept a caller paid flag', async () => {
+    const mock = installMock(), batch = await mock.assess(), command = mock.command(batch);
+    command.payload.paid = true;
+    await assert.rejects(settlement.release(command), { code: 'ERR_MATERIAL_VALUE_EVIDENCE' });
+    cover(batch); mock.put('payment', { ...payment, kind: 'payment', amount: '0.01' });
+    await assert.rejects(settlement.release(command), { code: 'ERR_MATERIAL_VALUE_PAYMENT' });
+    mock.put('payment', { ...payment, kind: 'payment', payerRef: ref('foreign') });
+    await assert.rejects(settlement.release(command), { code: 'ERR_MATERIAL_VALUE_PAYMENT' });
+    mock.put('payment', { ...payment, kind: 'payment', synthetic: false });
+    await assert.rejects(settlement.release(command), { code: 'ERR_MATERIAL_VALUE_EVIDENCE' });
+    assert.equal(creditCalls.length, 0);
+});
+test('mock material activation, tenant, qualification and record kind gates fail closed', async () => {
+    const mock = installMock();
+    delete settings.mock;
+    await assert.rejects(mock.assess(), { code: 'ERR_MATERIAL_VALUE_UNAVAILABLE' });
+    settings.mock = { enabled: 'true' };
+    await assert.rejects(mock.assess(), { code: 'ERR_MATERIAL_VALUE_UNAVAILABLE' });
+    settings.mock = { enabled: true }; settings.evidence.allowSynthetic = false;
+    await assert.rejects(mock.assess(), { code: 'ERR_MATERIAL_VALUE_UNAVAILABLE' });
+    settings.evidence.allowSynthetic = true;
+    await assert.rejects(mock.mock.readValuation({ evidenceRef: mock.mock.reference('valuation') },
+        { tenant: 'other', qualificationRef: settings.evidence.qualificationRef }), { code: 'ERR_MATERIAL_VALUE_EVIDENCE' });
+    mock.put('valuation', { ...valuation, kind: 'payment' });
+    await assert.rejects(mock.assess(), { code: 'ERR_MATERIAL_VALUE_EVIDENCE' });
+    mock.put('valuation', { ...valuation, kind: 'valuation' });
+    settings.evidence.qualificationRef = ref('other');
+    await assert.rejects(mock.assess(), { code: 'ERR_MATERIAL_VALUE_EVIDENCE' });
+    assert.equal(f.calls.length, 0);
+});
+test('canonical earning must retain synthetic provenance before completion', async () => {
+    const mock = installMock(), batch = await mock.assess();
+    cover(batch); mock.put('payment', { ...payment, kind: 'payment' });
+    const invoke = SERVICE.DefaultModuleService.invokeModule;
+    SERVICE.DefaultModuleService.invokeModule = async input => {
+        const response = await invoke(input);
+        if (input.apiName === '/reward-earnings') delete response.data.ledgerEntry.metadata.synthetic;
+        return response;
+    };
+    await assert.rejects(settlement.release(mock.command(batch)), { code: 'ERR_MATERIAL_VALUE_LOYALTY' });
+    assert.equal(f.get('wasteMaterialValueBatch', batch.code).releases[0].status, 'CREDIT_PENDING');
+});
+
+test('native Admin uses real route gates and owner admission without replacing identity', async () => {
+    const router = require('../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService');
+    const previous = CONFIG.get;
+    CONFIG.get = key => ({ defaultTenant: 'T', defaultEnterprise: 'platform',
+        identityGovernance: { principalPolicy: { serviceGroup: 'serviceAccountUserGroup' } } }[key] ?? previous(key));
+    SERVICE.DefaultSecuredRequestPipelineService = router;
+    const authData = { tenant: 'T', entCode: 'platform', principalType: 'human', tokenType: 'access',
+        authenticationMethod: 'PASSWORD', loginId: 'existing-admin', authVersion: 1,
+        userGroups: ['platformAdministratorUserGroup'], permissions: ['*'] };
+    const admin = payload => ({ tenant: 'T', authData: structuredClone(authData), authorization: 'Bearer existing-admin', payload });
+    const routes = require('../src/router/routers').wasteReward.materialValue;
+    for (const route of Object.values(routes)) {
+        const req = { ...admin({}), router: route };
+        assert.equal(router.hasAcceptedTokenType(req), true);
+        assert.equal(router.hasAccessGroup(req), true);
+        assessment.authorize(req, route.permission);
+        for (const patch of [{ principalType: 'customer' }, { userGroups: ['employeeUserGroup'] },
+            { permissions: [] }, { tenant: 'foreign' }, { entCode: 'foreign' },
+            { tokenType: 'service' }, { authenticationMethod: 'EXTERNAL' }, { sessionContext: {} },
+            { runtimeScope: {} }, { isSystem: true }, { externalIdentityLinkCode: 'linked' }]) {
+            const denied = { ...req, authData: { ...authData, ...patch } };
+            assert.equal(router.hasPlatformFullAccess(denied), false);
+            assert.throws(() => assessment.authorize(denied, route.permission));
+        }
+        assert.equal(router.hasAcceptedTokenType({ ...req, authData: { ...authData, tokenType: 'refresh' } }), false);
+    }
+    const batch = await assessment.assess(admin({ evidenceRef: ref('valuation-source') }));
+    assert.deepEqual(batch.assessedBy, { principalType: 'human', principalCode: 'existing-admin' });
+    cover(batch);
+    const command = admin(releaseRequest(batch).payload), original = structuredClone(command);
+    const done = await settlement.release(command);
+    assert.deepEqual(done.sourceActor, batch.assessedBy);
+    assert.deepEqual(command, original);
+    assert.equal((await assessment.read(admin({ batchCode: batch.code }))).code, batch.code);
 });

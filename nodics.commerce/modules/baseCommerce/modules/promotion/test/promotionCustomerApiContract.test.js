@@ -607,7 +607,7 @@ test('Promotion BackOffice capability exposes builder lifecycle coupon budget an
     assert.deepEqual(authoring.requiredPermissions, ['commerce.promotion.read']);
     const reporting = capability.navigation.find(item => item.id === 'coupon-acquisition-reporting');
     assert.equal(reporting.backendWorkspace.workspaceCode, 'promotion.couponAcquisition');
-    assert.equal(reporting.backendWorkspace.ownerSelector.publicationRole, 'ONLINE');
+    assert.deepEqual(reporting.backendWorkspace.ownerSelector, { runtimeRoleCode: 'COMMERCE', publicationRole: 'OPERATIONAL' });
     const builder = capability.navigation.find(
         (item) => item.id === 'promotions-builder',
     );
@@ -1279,6 +1279,25 @@ test('Promotion coupon pool reservation is scoped by enterpriseCode inside a sha
     );
 });
 
+test('operational scheduling rejects invalid requested windows without changing approved policy', async () => {
+    SERVICE.DefaultSecuredRequestPipelineService = require('../../../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService');
+    for (const body of [
+        { validFrom: '' }, { validFrom: null }, { validFrom: 0 }, { validFrom: {} },
+        { validFrom: 'not-a-date' }, { validFrom: '2099-02-30T00:00:00.000Z' },
+        { validTo: 'invalid' }, { validTo: '2000-01-01T00:00:00.000Z' },
+        { validFrom: '2099-03-01T00:00:00.000Z', validTo: '2099-02-01T00:00:00.000Z' },
+    ]) {
+        promotions = [{ code: 'schedule-window', tenant: 'default', enterpriseCode: 'issuer',
+            status: 'APPROVED', active: false, revision: 2 }];
+        const before = structuredClone(promotions);
+        await assert.rejects(() => controller.schedulePromotion({
+            authData: { tenant: 'default', entCode: 'issuer', principalId: 'checker', principalType: 'human', tokenType: 'access' },
+            httpRequest: { params: { promotionCode: 'schedule-window' }, body },
+        }));
+        assert.deepEqual(promotions, before);
+    }
+});
+
 test('Advanced Promotion Builder workflow approves schedules coupons and analytics independently of ordinary drafts', async () => {
     // Advanced policy is a fixture, not authority granted by the ordinary metadata draft command.
     promotions = [{ code: 'builder10', tenant: 'default', enterpriseCode: 'issuer', name: 'Builder 10', status: 'DRAFT',
@@ -1316,8 +1335,8 @@ test('Advanced Promotion Builder workflow approves schedules coupons and analyti
         httpRequest: {
             params: { promotionCode: 'builder10' },
             body: {
-                validFrom: '2026-08-16T00:00:00.000Z',
-                validTo: '2026-09-01T00:00:00.000Z',
+                validFrom: '2099-01-01T00:00:00.000Z',
+                validTo: '2099-02-01T00:00:00.000Z',
             },
         },
     });
@@ -1376,9 +1395,10 @@ test('Advanced Promotion Builder workflow approves schedules coupons and analyti
     assert.equal(approved.data.promotion.status, 'APPROVED');
     assert.equal(approved.data.promotion.approval.approvedBy, 'checker-1');
     assert.equal(scheduled.data.promotion.status, 'SCHEDULED');
+    assert.equal(scheduled.data.promotion.active, false);
     assert.equal(
         scheduled.data.promotion.validFrom,
-        '2026-08-16T00:00:00.000Z',
+        '2099-01-01T00:00:00.000Z',
     );
     assert.equal(batch.data.batch.promotionCode, 'builder10');
     assert.equal(batch.data.coupons.length, 2);

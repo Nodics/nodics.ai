@@ -53,7 +53,7 @@ module.exports = {
       title: "Microservices architecture",
       heading: "Enterprise capabilities that evolve independently.",
       subheading:
-        "Compose focused services through governed APIs, explicit ownership and observable runtime contracts.",
+        "Compose focused services through governed APIs, explicit ownership, observable runtime contracts, and public experiences that evolve safely.",
       referenceImageCode: "nodicsMicroservicesHero",
       imageAlt:
         "Connected services representing the Nodics microservices architecture",

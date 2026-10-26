@@ -78,6 +78,11 @@ module.exports = {
         "text": "Sourced energy and prospective input metrics",
         "anchor": "wasteImpactProviders-10-sourced-energy-and-prospective-input-metrics",
         "level": 2
+      },
+      {
+        "text": "Persisted carbon evidence handoff",
+        "anchor": "waste-impact-carbon-evidence",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -102,8 +107,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/wasteImpactDocumentationComponentData.js",
-    "sourceChecksum": "532e829a7982434683fc04f5f427701656b2c97b05a2c6bdc40f0844b3926c0d",
-    "sourceWordCount": 2202,
+    "sourceChecksum": "338f4b796d0b5159caae8901712a6687becf1c3a0321094e83b18836810b7b03",
+    "sourceWordCount": 2352,
     "audience": [
       "business",
       "architect",
@@ -125,10 +130,10 @@ module.exports = {
     ],
     "accessPolicy": "nodicsDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 2202,
+    "wordCount": 2352,
     "sourceEvidence": [
       "../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
       "config/properties.js",
@@ -137,7 +142,8 @@ module.exports = {
       "test/wasteImpactProviderContract.test.js",
       "package.json",
       "src/schemas",
-      "src/service"
+      "src/service",
+      "src/service/defaultWasteImpactAssessmentService.js"
     ]
   }
 };

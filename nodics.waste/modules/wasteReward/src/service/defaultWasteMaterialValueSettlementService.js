@@ -122,6 +122,8 @@ module.exports = {
     finish: async function (request, batch, release) {
         const owner = this.assessment(), store = owner.store();
         if (release.status === ENUMS.WasteMaterialReleaseStatus.COMPLETED.key) return release;
+        if (batch.synthetic && !owner.settings(request).evidence.allowSynthetic)
+            owner.fail('EVIDENCE', 'Synthetic settlement is not enabled');
         const allocation = batch.allocations.find(item => item.code === release.allocationCode), policy = batch.policy;
         if (!release.walletCode) {
             const wallet = await this.loyalty(request, '/wallets', {
@@ -160,6 +162,7 @@ module.exports = {
             entry.targetType !== 'WASTE_CONTRIBUTION' || entry.targetCode !== allocation.contributionRef.code ||
             entry.reasonCode !== 'RECYCLER_PAID_MATERIAL_VALUE' ||
             entry.metadata?.sourceLabel !== 'Material value' || entry.metadata?.evidenceHash !== batch.evidenceHash ||
+            entry.metadata?.synthetic !== batch.synthetic ||
             !owner.same(entry.metadata?.paymentRef, release.payment.paymentRef) ||
             !owner.same(entry.metadata?.originalOwnerRef, allocation.ownerRef) ||
             owner.minor(String(entry.amount), policy.rewardScale, owner.settings(request)) !==
@@ -209,6 +212,7 @@ module.exports = {
         if (!priorClaim) await store.create('wasteMaterialValuePaymentClaim', request,
             { code: paymentClaimCode, batchCode: batch.code, paymentRef, revision: 0 });
         const release = { allocationCode: allocation.code, operationKey: allocation.code + ':material-value',
+            synthetic: batch.synthetic,
             status: ENUMS.WasteMaterialReleaseStatus.CREDIT_PENDING.key, requestedPaymentRef: owner.reference(body.paymentEvidenceRef), payment,
             originalOwnerRef: allocation.ownerRef, actorRef: request.actorRef || null,
             sourceActor: { principalType: request.authData.principalType, principalCode: request.authData.loginId },

@@ -1,8 +1,55 @@
 # profile Agent Contract
 
-Successor documentation technical summaries must reference their selected
-sourcePath, not the sealed predecessor. Keep dependent publication/manifest
-checksums and owner-local successor tests aligned without rewriting history.
+Promotion administrative authoring also consumes native evidence for
+`commerce.promotion.read`, `commerce.promotion.draft.write` and
+`commerce.promotion.manage`. These allowlist entries grant no access: fresh
+persisted permission vocabulary, native reserved identity and security stamp
+remain mandatory. Promotion owns exact issuer selection and lifecycle gates.
+
+Program partner eligibility administration consumes the existing native proof via
+`loyalty.program.partnerEligibility.manage`. Its allowlist entry grants no access;
+Program owns permission vocabulary and business updates. Preserve persisted native
+identity, current security stamp and reserved-group checks; the cross-owner test
+in `profilePlatformAdministratorEvidence.test.js` uses the actual proof service.
+
+Native Product and Pricing administrative commands consume the existing fresh
+Platform-administrator evidence permission allowlist. Product read/write/archive
+and Pricing read/write/publish entries permit proof requests only; they create no grants.
+Preserve reserved native identity, Platform-owner placement, active permission
+vocabulary, current authVersion and original human actor. Explicit business targets
+are separately resolved inside the same tenant, never substituted into signed
+context. Run `test/profilePlatformAdministratorEvidence.test.js` when changing
+these consumers; its Product composition uses the actual proof and directory.
+
+Promotion administrative offer review consumes the same native administrator proof
+for `commerce.promotion.approve`. This allowlist entry is not an employee grant.
+Preserve default Platform context, persisted native identity and same-tenant target
+directory checks; adminGroup alone remains insufficient. Promotion owns lifecycle
+approval and original-actor audit, not Profile and not a customer role fixture.
+
+Native administrator proof admits Loyalty transfer-policy inspection through the
+existing `loyalty.transfers.manage` vocabulary as well as test credit. Keep the
+fresh reserved-group proof in the original default context; target Enterprise
+resolution is a separate same-tenant directory read, not optional membership or
+employee grants. See platform-administrator-evidence and its cross-owner tests.
+
+Principal group validation must read the complete requested union with an explicit
+bounded page size and fresh storage. The generated default page cannot establish
+missing/inactive membership. Preserve rejection for genuinely missing or inactive
+groups, original credentials and normal stamp hooks; cover unions above ten groups
+in employeeReferenceGroupImport tests.
+
+Native Employee session issuance and refresh must enforce persisted Enterprise
+bindings before returning credentials. Conflicting bindings refuse; unbound
+native principals are limited to the configured default Enterprise. Shared tenant
+placement is not cross-Enterprise authority. Keep registered and linked contexts
+with their existing registration/membership gates; never infer membership from
+scope or enable qualification flags to repair a login. See identity-access-lifecycle
+and enterpriseRegistrationSessionGate tests.
+
+Documentation technical summaries must reference their selected sourcePath.
+Keep unreleased records consolidated in docs-v001/init-v001 with separate
+selection sections, unique record imports and current publication/manifest hashes.
 
 Participant discovery must retain every original body/transport alias through
 the controller, pin selectors and policy across reads, and redact dependency
@@ -20,8 +67,8 @@ Whole-gift recipients use the exact Digital event/side callback, independent gif
 notification consent and current bundle permission/scope. Reuse the shared
 selector; never convert an Employee to a Customer or couple messages to gift
 decisions. Read `llm/contracts/gift-notification-recipients.md`. Canonical public
-guidance is selected through the v002 CMS documentation successor; preserve
-sealed v001 bytes, stable identities and unapproved Staged publication state.
+guidance is selected through docs-v001; preserve stable identities, latest
+content and unapproved Staged publication state.
 
 Coupon expiry recipients follow [their source-bound contract](llm/contracts/coupon-notification-recipients.md).
 Recheck Digital source, explicit Enterprise Employee roster, persisted Digital
@@ -54,6 +101,9 @@ checks. Never substitute broad administrator helpers, scopes or service credenti
 Preserve read-only nonce projection, bounded ancestry, tenant isolation and final
 actor revalidation. See `llm/contracts/platform-administrator-evidence.md` and run
 `test/profilePlatformAdministratorEvidence.test.js` with participant-directory tests.
+Snapshot actual header maps, never Express's callable `httpRequest.header`.
+Cover the installed Express request prototype and preserve rejection of conflicting,
+mutated or replaced header maps without changing native proof requirements.
 
 Existing-participant lookup is owned by `DefaultProfileParticipantDirectoryService`.
 Search and exact resolution retain fresh original Customer/Employee authority,
@@ -448,6 +498,12 @@ Browser sessions resolve credentialed origins through nRouter's existing
 share one policy; explicit denials and endpoint disables take precedence.
 Profile continues to enforce cookie security, CSRF and refresh rotation.
 
+An already-absent browser logout may acknowledge only after origin/policy
+validation when both cookie names are absent and no nonempty CSRF header exists.
+Return no cookie writes in this branch; do not erase a concurrent new session.
+Partial/malformed cookies, stale proof and revocation errors stay fail-closed.
+See `profileBrowserLogoutRecovery.test.js` and identity-access-lifecycle.
+
 During a governed Local reset, the provider's private authority may reach scope
 cleanup after Employee deletion. Profile must prove principal absence through an
 authoritative read and await nAuth shared-stamp revocation. It must reject failed
@@ -485,3 +541,33 @@ request evidence separately from the decision, freeze non-secret message inputs
 and delegate delivery/reconciliation to Communication. Reuse the existing private
 application record, not another queue or approval store. Read the application
 review-recovery section in `llm/contracts/README.md` before modifying these paths.
+
+Wallet auction funding selection consumes native proof for the existing
+system.schema.manage vocabulary. The proof allowlist change grants no authority;
+persisted native identity, active vocabulary, current stamp and reserved grants
+remain mandatory. Wallet owns the exact target, CAS and selection mutation.
+
+Service API-key scope maintenance uses the named credential/scopes command in
+DefaultIdentityGovernanceMigrationService and the existing native administrator
+proof and identity.credential.rotate permission. Preserve exact expected scope
+and authVersion predicates, bounded registered vocabulary, private audit, generated
+stamp hooks and unchanged key/password/groups. Never expose protected generic
+Employee writes or repurpose release-only adoption. Bounds/defaults remain in
+Profile config; see the governed service credential scope section of
+llm/contracts/identity-access-lifecycle.md and its native-proof composition tests.
+
+
+Coupon recipient resolution permission belongs in the existing Profile permission catalogue. Selections/preferences remain governed existing identity records; default recipient delivery stays disabled and no role or group gains the service permission implicitly.
+
+Coupon recipient diagnostics are private fixed HTTP 403 stages. Check exact private
+entry and runtime/module identity before POLICY; check permission before INPUT.
+Invalid identity, private entry or permission remains generic. Keep SOURCE_RPC, SOURCE_PROOF,
+SELECTION and BOUND local to the executing owner; never forward dependency error
+codes, messages, metadata or causes. Pre-admission and self-inbox refusals remain
+generic. See `llm/contracts/coupon-notification-recipients.md`.
+
+Native Employee recipient selection uses the existing canonical anchor/lock proof
+and exact bounded assignment lookup without enabling optional cross-enterprise
+membership. Linked projections and existing assignments retain their qualification
+and acceptance checks. Never interpret failed/ambiguous lookup as no assignment,
+or substitute scopes for persisted permission grants.

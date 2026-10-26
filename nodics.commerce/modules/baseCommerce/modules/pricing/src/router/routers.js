@@ -13,6 +13,29 @@
 /** @module pricing/src/router/routers @description Declares internal Pricing publication ingestion APIs. @layer router @owner pricing */
 module.exports = {
   pricing: {
+    administrativeAuthoring: {
+      publication: {
+        active: true, secured: true, authTokenTypes: ["access"], accessGroups: ["userGroup"],
+        permissionConfig: "pricing.administrativeAuthoring.publishPermission", apiExposure: "pricingPublicationAuthoring",
+        key: "/publication/policy/administrative", method: "POST",
+        controller: "DefaultPricingAdministrativeAuthoringController", operation: "publication",
+        cache: { enabled: false }, requestPrivacy: { sensitive: true },
+      },
+      create: {
+        active: true, secured: true, authTokenTypes: ["access"], accessGroups: ["userGroup"],
+        permissionConfig: "pricing.administrativeAuthoring.writePermission", apiExposure: "pricingAdministrativeAuthoring",
+        key: "/business/price-rows/administrative/create", method: "POST",
+        controller: "DefaultPricingAdministrativeAuthoringController", operation: "create",
+        cache: { enabled: false }, requestPrivacy: { sensitive: true },
+      },
+      read: {
+        active: true, secured: true, authTokenTypes: ["access"], accessGroups: ["userGroup"],
+        permissionConfig: "pricing.administrativeAuthoring.readPermission", apiExposure: "pricingAdministrativeAuthoring",
+        key: "/business/price-rows/administrative/read", method: "POST",
+        controller: "DefaultPricingAdministrativeAuthoringController", operation: "read",
+        cache: { enabled: false }, requestPrivacy: { sensitive: true },
+      },
+    },
     merchantEvidence: {
       evaluate: {
         secured: true,

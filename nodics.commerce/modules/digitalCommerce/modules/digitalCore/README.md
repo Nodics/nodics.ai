@@ -1,5 +1,27 @@
 # Digital Core
 
+Explicit [Enterprise participant transaction access](llm/contracts/participant-transaction-access.md)
+contributes parent-free owner roles without assigning users or qualifying finance.
+
+The explicit `participantReadAccess` release defines `COMMERCE_OWN_ENTITLEMENT_READER` with only
+`commerce.digital.own.read` and no inherited groups. It installs definitions through
+Profile; assignment requires a separately reviewed Enterprise-scoped operation.
+It grants no mutation, provisioning, funding or reveal authority. See
+[participant reader access](llm/contracts/participant-read-access.md).
+
+Exact `/gifts/inspect` uses that same Digital read permission with fresh Profile
+admission and retained sender/recipient checks. It can inspect an incoming gift
+from another Enterprise namespace without granting gift-decision authority.
+Unauthorized or nonparticipant inspection returns the standard HTTP403 Access
+denied response without exposing whether the gift exists. Infrastructure failures
+are not converted into authorization denials.
+See [bundle holdings and gifts](llm/contracts/bundle-holdings-and-gifts.md).
+
+Invalid component collections return `ERR_DIGITAL_BUNDLE_INPUT` (400).
+Confirmed unavailable or changed holdings return `ERR_DIGITAL_BUNDLE_UNAVAILABLE`
+(409), so consumers can refresh holdings. Provider outages and malformed inspection
+evidence remain errors; neither refusal creates a manifest or releases existing holds.
+
 `POST /entitlements/delivery-evidence` reads one exact generated delivery for a
 currently admitted Customer or represented Enterprise entitlement. It rechecks
 Profile ownership before and after the read, keeps merchant Enterprise placement
@@ -153,3 +175,8 @@ A selected digital-ownership provider may expose a published listing before its
 genuine owner binding exists. Zero retained bindings return explicit unavailable
 supply and never call the remote owner. Duplicate, malformed, stale or remote-owner
 evidence still fails closed, and checkout cannot reserve an unbound listing.
+
+The explicit [Enterprise capability definitions](llm/contracts/enterprise-participation-role.md)
+retain internal settings groups without adding a selectable profile. Permission
+vocabulary is a pinned Init prerequisite, not dependent on record filename order.
+Installing its definitions assigns nobody and does not enable business policies.

@@ -13,13 +13,29 @@ Read [owner guidance](AGENTS.md) before changing behavior. Customize through the
 
 ## Responsibilities
 
+Preparation steps can select `batchBoundaryBefore: true` when an import depends
+on earlier imports on the same runtime. The Framework default is false; execution
+retains original authority and separate replay keys. See [batch boundaries](llm/contracts/governed-application-setup.md#preparation-import-batch-boundaries)
+for selection, validation and failure behavior.
+
+Shared BEFORE preparation observes independent owner stages using validated
+`backofficeApplicationInitialization.readinessWorkers` (owner default 4, range
+1–16), retaining ordered findings and fresh authority checks. See
+[governed setup](llm/contracts/governed-application-setup.md) for the boundary
+between read concurrency and separately admitted setup writes.
+
+Aggregate Media readiness failures remain visible without fabricated asset
+dependencies or repair actions. Exact asset evidence retains owner handoffs;
+see [Media readiness projection](llm/contracts/backoffice-governance-contracts.md#stored-preparation-and-separate-media-approval).
+
 Routine bootstrap readiness reuses profile results only within its authenticated
 request and reads bounded Media-owned CURRENT metadata rather than inspecting
 every asset over HTTP. See [bounded readiness composition](llm/contracts/capability-registry-contract.md#bounded-readiness-composition)
 for evidence limits, customization and focused regression tests.
-Remaining profile reads settle through four workers per composition with ordered
-results and unchanged readiness/admission gates. This bounds that phase's logical
-reads, not nested owner work or total concurrent requests, and promises no latency.
+Profile reads, including documentation reads, share that budget per composition.
+Nested BEFORE observations remain serial under composition; direct profile reads
+use the configured stage budget. Results stay ordered and admission unchanged.
+Separate HTTP requests do not share this queue; it promises no live latency.
 
 See [Responsibilities](backoffice-operations-guide.md#responsibilities).
 

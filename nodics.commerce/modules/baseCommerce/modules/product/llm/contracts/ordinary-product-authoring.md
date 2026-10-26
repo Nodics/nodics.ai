@@ -54,6 +54,23 @@ schema policy. Create/update are absent for View and outside Staged. Delete,
 delete-impact and bulk routes are explicitly inactive. There are no child
 relationships or aggregate-save promises in this descriptor.
 
+Reviewed root fields retain effective `backoffice.fields` labels, enum options
+and read-only restrictions through the standard schema utility and Axis renderer.
+Managed/non-writable fields cannot be unlocked by presentation overrides. The
+writer enforces effective schema enums and read-only restrictions as well.
+Ordinary status choices intersect the effective schema enum with the existing
+`DRAFT`/`ACTIVE` command boundary. Owner captions cannot reintroduce excluded
+choices. The descriptor supplies the existing `DRAFT` default only when allowed;
+when the effective schema excludes it, create requires an explicit allowed
+status and rejects an omitted status before persistence. This applies equally
+to native targeted roots. Archive remains a separate lifecycle command.
+Current base Product definitions do not declare enums for `productType`,
+`fulfillmentStrategy` or `digitalDeliveryType`; specific coupon/listing constants
+are not a complete classification registry. `catalogVersion` is a required string,
+not a declared schema relation. Product publication identities and nCatalog's
+catalogue tree do not supply a business catalogue-version lookup contract.
+No enum catalogue or lookup authority is invented by this descriptor.
+
 The archive lifecycle action is independently permission-gated. A caller's row
 echo is checked against the current safe projection and never used as the write
 model. `idempotencyKey` is accepted for the existing action transport but does
@@ -142,3 +159,121 @@ Custom commands must preserve scope, Staged qualification, version checks,
 separate publication authority and generated persistence. Extending child CRUD
 requires a separately designed child-owner contract; adding a navigation link
 or numeric ACL is not such a contract.
+
+## Native Administrator Targeted Authoring
+
+Product exposes fixed **POST** commands under `/business/products/administrative/`
+(the Product `v0` prefix is unchanged). Keep the original native human bearer and
+Platform Enterprise headers unchanged. `targetEnterpriseCode` is a separate body
+selector resolved by Profile's same-tenant participant directory. Neither
+`adminGroup`, enterprise administration nor a service principal is native proof.
+Profile checks its existing Platform-owner placement, current native identity,
+fresh nonce, actor, tenant, authVersion and exact permission. Allowlisting a
+proof permission does not create any persisted grant.
+
+| Suffix | Exact body | Result |
+| --- | --- | --- |
+| `capabilities` | `{targetEnterpriseCode}` | `{crossEnterpriseManagement,descriptor,labels,graphOperations}` |
+| `search`, `read`, `create`, `update`, `archive` | `{targetEnterpriseCode,command}` | Existing ordinary result; command is the corresponding ordinary request above (`read` uses `{code}`) |
+| `graph-create` | `{targetEnterpriseCode,command:{product,variants,localizations,variantLocalizations}}` | `{productCode,records:[{schemaName,code,versionId,revision}],publicationRequired:true}` |
+| `graph-read` | `{targetEnterpriseCode,command:{productCode}}` | `{product,variants,localizations,variantLocalizations}` |
+| `graph-continue` | `{targetEnterpriseCode,command:{graph,confirmedRecords,reason}}` | Explicitly reviewed continuation, creating only missing children |
+
+Success is `{data:{targetEnterpriseCode,result,audit}}`. Audit contains `tenant`,
+`actorCode`, `actorEnterpriseCode`, `targetEnterpriseCode`, `permission` and
+`authVersion`, never bearer or nonce. Labels are `title`, `targetEnterpriseCode`,
+`createGraph`. Graph operations expose `method`, `path`, `apiVersion` and Boolean
+`active`; Axis requires explicit `active:true`, not merely a route. Creation
+discovery requires fresh `commerce.product.write` proof plus Staged, authorable
+schemas and qualified CURRENT storage. Reads use `commerce.product.read`;
+archive uses `commerce.product.archive`. Every mutation independently requalifies.
+
+Ordinary commands remain root-only with existing marketplace guards. Graph-create
+is explicitly a new DIGITAL / DIGITAL_COMMERCE / COUPON_CODE catalogue: one root,
+variants/SKUs, localized Products and localized variants with exact parent and
+variant-locale bindings. Root/variant ACTIVE and localization READY are source
+states, not Online publication. Variant attributes explicitly declare COUPON,
+COUPON_CODE_POOL, matching digital classification, `promotionCode` and
+`couponBatchCode`. These references do not certify approval or issuance. Media
+references use localization `media`; categories use localization
+`classificationValues.categoryCodes`. No Pricing, Media asset or Promotion
+records are authored here.
+
+`product.administrativeAuthoring` owns transport, labels, allowlists and bounds:
+100 total records, 262144 bytes and depth 12 by default. Later layers may narrow
+these values. Fields must exist in the effective schemas. Input is bounded before
+cloning and persistence. Scope, managed versions, actor audit, publication/listing
+proofs and digital bindings cannot be supplied. Nested metadata cannot carry
+these proofs or legacy relative `validityDays`. Duplicate codes, SKUs, locales,
+foreign parents and pre-existing identity/semantic collisions reject before the
+first save, without adopting existing records. Generated first-version saves
+assign signed tenant, selected Enterprise, actual actor, version/revision zero.
+Acknowledgment and independent current readback must match. Fresh authority,
+configuration, schema and persistence-port checks surround awaits and writes.
+
+### Partial Outcomes And Inspection
+
+The graph is not an atomic transaction. After a save attempt, failure returns
+HTTP 409 with `code: ERR_PRODUCT_AUTHORING_PARTIAL` and sanitized `data.result`
+(not generic error metadata): `outcome: PARTIAL`, `productCode`,
+`targetEnterpriseCode`, `confirmedRecords`, `uncertainAttempt` (identity or null),
+`unattemptedRecords`, `automaticRetryAllowed:false`, and the exact `readback`
+request. Confirmed records passed acknowledgment and exact readback. An uncertain
+save may have committed; unattempted records were not dispatched by this command.
+Raw diagnostics, credentials and models are omitted. This is response evidence,
+not a durable journal; a disconnected client must inspect the original identity.
+
+Graph-read allows incomplete coupon graphs, including root-only partial saves.
+It independently verifies returned root/child selectors, tenant/Enterprise,
+duplicate counts, total bounds and variant references. Asset/listing-bound,
+malformed coupon or nested proof-bearing records reject rather than being
+projected as coupons. Database IDs, scope fields and publication proofs are never
+returned. Missing roots use the owner MISSING error. Readback and repeated create
+never finish, delete, replace or adopt a partial graph. Operators reconcile the
+exact identities before any further owner action; no blind retry is supported.
+
+### Dependencies And Qualification
+
+`graph-continue` is a separate explicit reviewed command, not a retry flag on
+create. Supply the complete original graph, a nonempty reason (at most 500
+characters), and the complete observed `confirmedRecords` array of
+`{schemaName,code,versionId,revision}`. The root must exist and be pinned. Only
+version/revision zero is supported; all retained fields must equal the reviewed
+graph and retain the current native actor as creator/updater. Foreign, published,
+listing-bound, altered, unexpected, duplicate or unpinned records reject. No
+existing record is updated or deleted. A complete graph rejects continuation as
+unnecessary. Missing records still use generated immutable first-save, never upsert.
+
+Continuation rechecks all identities, semantic collisions, root/child membership
+and exact retained fields before dispatches, with fresh native proof. Retained
+records and newly confirmed records appear separately on success, with the review
+reason and actual actor. Success explicitly returns `outcome: COMPLETE`; HTTP 200
+alone is not an outcome check. On another failure, PARTIAL includes the retained
+and newly confirmed pins, the uncertain dispatched identity and unattempted ones.
+Read again and submit another deliberately reviewed continuation; do not rerun
+the prior command. Inspections are fresh observations, not a distributed graph
+lock; immutable identity conflicts and final readback remain mandatory. Concurrent
+graph edits require reconciliation, not automatic adoption.
+
+Expected business snapshots are detached from provider write models. MongoDB's
+`insertOne` may mutate its model with BSON `_id` and defaults; these are not new
+business expectations. Regression uses the real versioned writer with an actual
+ObjectId mutation. The actual nRouter JSON success serializer is tested with the
+explicit HTTP409 partial DTO; generic private error metadata remains hidden.
+
+Pricing separately owns POST `/business/price-rows/administrative/create` and
+`/read` under its prefix. Its current book version, currency, target, decimal
+validation and CURRENT Staged gates are independent. Profile's
+`commerce.pricing.read` / `commerce.pricing.write` allowlist additions enable
+proof consumption, not grants. Product publication, Process review, consent,
+budget, issuance and checkout remain separately authorized normal workflows.
+This command cannot write publication evidence or substitute an approval.
+
+`test/productAdministrativeAuthoring.test.js` exercises real generated saves,
+base/vService initializers and vMongodb with isolated driver I/O: valid coupon
+payloads, proof drift, graph binding/bounds/collisions, qualification, partial
+errors and readback. Ordinary authoring tests cover native targeted roots through
+their real versioned writer. Profile's native-evidence suite composes Product
+with the actual proof and directory, rejecting adminGroup-only and inactive
+permission authority. Tests are source/local evidence, not installed HTTP,
+catalogue publication or checkout acceptance.

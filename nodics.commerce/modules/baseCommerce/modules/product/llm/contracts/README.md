@@ -26,9 +26,15 @@ internal `publicAvailabilityBatch`, preserving original authentication rather
 than synthetic Product service auth. Pass selectors only, never indexed/retained
 rows as admission. Require a complete Map with every selected value containing
 exactly own data fields `available` (Boolean), its matching `IN_STOCK` or
-`OUT_OF_STOCK` status, and Promotion-validated `acquisitionRequirements` (safe
-typed DTO or explicit null). Null means unavailable, never REWARDS. Product
-cards and detail preserve this field inside availability, not localized attributes.
+`OUT_OF_STOCK` status, Promotion-validated `acquisitionRequirements` (safe
+typed DTO or explicit null), and `expiry` (FIXED canonical UTC `at`, explicit
+NONE, or null). Null requirements or expiry means unavailable. Product cards
+and detail preserve these fields inside availability, not localized attributes.
+Coupon localized `expiresAt` and `expiry` are removed from customer cards;
+they are never authoritative. Coupon validThrough and expiry sorting consume
+only the owner DTO: NONE passes a validity date filter, unknown does not,
+and both sort after fixed dates. Listing windows retain their separate meaning.
+No prose, Product code, current time offset or sale window supplies missing rights.
 Detach those safe fields before further awaits. Undefined,
 inert, malformed, accessor or extra-field values reject before any Digital call;
 an initially selected Product never falls back when selection changes during

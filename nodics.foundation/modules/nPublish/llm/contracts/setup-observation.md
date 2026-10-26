@@ -175,12 +175,50 @@ identity manifest and may require explicit reviewed narrowing or increase.
 
 BASELINE reuses canonical CMS status, checks its exact generated publication and
 approved journal, current Online CMS pointer and owner Media dependency proof.
+Its authority projection preserves CMS non-ready states: NOT_IMPORTED, IMPORTING,
+IMPORTED, PUBLICATION_PENDING, RETIRED, ROLLED_BACK, REJECTED, FAILED and
+MEDIA_DEPENDENCIES_PENDING. In particular PENDING_APPROVAL remains
+PUBLICATION_PENDING; it must not become UNAVAILABLE or imply NOT_STARTED.
+Unknown readiness and an unproven owner READY claim become BLOCKED, with
+`ready: false`. READY additionally requires a nonempty target version and matching
+ONLINE state in both the canonical row and owner projection. Pending states do
+not require an Online pointer read; target evidence is required to qualify READY.
+
+The publication projection binds code, revision, state, source and target versions
+to the scoped generated row. Preserve owner `releaseCode`, `releaseVersion`,
+`releaseStatus`, publication `workflowRef` and `correlationId`. Allowlist approval
+diagnostic source, owner, status, publication identity/state/revision, workflow
+reference, task code/status, assignee, queue and operator message/action/reason.
+Any supplied diagnostic publication or workflow identity must match the observed
+publication. Approval-task projection contains only code, status, assignee, queue
+and requiresAssignee. Publication diagnostics expose only source, owner, status,
+severity, publication code/state, workflow reference, approval status and operator
+message/action/reason. Added fields accept bounded strings (2048 characters),
+nonnegative safe integer revisions and boolean flags; nested values are omitted.
+Never spread owner objects: raw journals, lineage, review payloads, workflow
+context, error details, stacks, credentials and persistence authority stay private.
+These fields describe owner evidence and grant no review, approval or activation
+permission. BackOffice consumes this projection unchanged; Axis must not relax its
+readiness contract to compensate for observer data loss.
+Assignee and queue are approved diagnostic disclosures within this exact reviewed
+tenant/enterprise publication scope, not access grants or a workflow-user directory.
+
+Later-loaded service members may override `baselineFields` through the existing
+Nodics service merge, retaining bounded scalar projection and exact identity checks.
+Focused observer tests exercise this override and BackOffice's diagnostic consumer,
+pending/terminal states, private-field exclusion and each independent READY proof.
 Shared BEFORE readiness uses INSTALLATION/MEDIA without borrowing a human's
 global import/core/CMS/upload permissions. Missing, denied, changed or ambiguous
 evidence is never READY. All observations are repeated and policy/plan bytes
 are rechecked before return; Platform separately rechecks its effective profile.
 There is no cross-request evidence cache or store;
 sequential observations do not provide a distributed transaction.
+
+INSTALLATION resolves its exact reviewed module/section through nImport's
+`discoverManifestRelease`, retaining active/explicit-contribution admission and
+the normal fresh manifest/source inspector. Do not discover and hash unrelated
+owners for each individual stage. Both observations still inspect fresh source
+bytes and receipts; narrowing discovery is not an authority cache or checksum bypass.
 
 BackOffice `AUTHORITY_PENDING` observation failures include only an allowlisted
 `reasonCode` from local binding, observation, authentication, router or tenant

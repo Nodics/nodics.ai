@@ -58,6 +58,18 @@ backoffice.init().then(() => {
     assert.deepEqual(capability.requiredPermissions, ['WCMS_EXPERIENCE_VIEW']);
     assert.equal(capability.navigation[0].route, '/content/experience-studio');
     assert.equal(capability.navigation[0].group.label, 'Content and Experience');
+    assert.equal(capability.navigation.length, 4);
+    for (const entry of capability.navigation) {
+        assert.deepEqual(entry.group, { id: 'content', label: 'Content and Experience', order: 200 });
+        assert.equal(entry.featureState, 'PREVIEW');
+        assert.equal(entry.parentId, entry.id === 'wcms-experience-studio' ? undefined : 'wcms-experience-studio');
+    }
+    assert.deepEqual(capability.navigation.map(entry => [entry.route, entry.requiredPermissions]), [
+        ['/content/experience-studio', ['WCMS_EXPERIENCE_VIEW']],
+        ['/content/experience-studio/placements', ['WCMS_EXPERIENCE_VIEW', 'WCMS_EXPERIENCE_EDIT']],
+        ['/content/experience-studio/preview', ['WCMS_EXPERIENCE_PREVIEW']],
+        ['/content/experience-studio/index-status', ['WCMS_EXPERIENCE_PUBLISH_STATUS']]
+    ]);
     assert.equal(capability.navigation[0].help.documentationRoute, '/docs/capabilities/content-publishing/experience-targeting');
     assert(capability.navigation.some(item => item.route === '/content/experience-studio/preview' &&
         item.requiredPermissions.includes('WCMS_EXPERIENCE_PREVIEW')));

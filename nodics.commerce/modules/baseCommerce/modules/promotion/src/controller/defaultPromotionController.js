@@ -13,6 +13,12 @@
 
 /** @module promotion/src/controller/defaultPromotionController @description HTTP adapter for customer promotion eligibility APIs. @layer controller @owner promotion */
 module.exports = {
+  /** Discovers native administrator review without granting issuer membership. */
+  administrativeReviewCapabilities: function (request, callback) { return this.invoke(request, 'administrativeReviewCapabilities', callback); },
+  /** Reviews one explicit same-tenant issuer root using original native administrator authority. */
+  administrativeReview: function (request, callback) { return this.invoke(request, 'administrativeReview', callback); },
+  /** Approves one reviewed current version; does not activate or publish it. */
+  administrativeApprove: function (request, callback) { return this.invoke(request, 'administrativeApprove', callback); },
   /** Reads owner form copy and current authoring admission. */
   couponWorkspace: function (request, callback) { return this.invoke(request, 'couponWorkspace', callback); },
   /** Inspects one scoped immutable offer. */

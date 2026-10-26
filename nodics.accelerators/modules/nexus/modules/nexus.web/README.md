@@ -46,9 +46,9 @@ The isolated `test/nexusReleaseClassification.test.mjs` also guards immutable
 manifest version, lifecycle and destination classification without a customer
 checkout. Customer tests own the release pins selected for their deployment.
 
-The manifest exposes three destination-qualified releases:
+The manifest exposes four destination-qualified business releases:
 `nexusCorporateSite`, `nexusEditorialSource`, and
-`nexusEngagementOperational`. It includes accelerator-owned reference CMS
+`nexusEngagementOperational`, plus `nexusCorporateMediaReferences`. It includes accelerator-owned reference CMS
 contracts for Editorial listing/detail pages and all nine standard Nexus
 Editorial renderer mappings. It excludes Online projection fixtures, Wiki
 documentation, customer submissions, and commerce-demo data.
@@ -78,6 +78,9 @@ customer project declares frontend, domain and preset choices. Preserve the
 module's existing import-manifest and content ownership rules; Builder metadata
 does not import, publish or validate this module's live data.
 
-Derived component-media records exclude retired source components. Keep surviving
-binding codes stable, retain owner validation and advance the development manifest
-version/checksum when correcting a previously attempted release.
+The unreleased v001 baseline consolidates corporate repairs and final copy into
+the original records. Separate update/proof releases are not shipped. Editorial,
+Engagement, Media and optional documentation retain their own lifecycle lanes.
+Source consolidation does not rewrite installed receipts or authorize live replay.
+Derived component-media records exclude retired source components; surviving
+binding codes and exact source checksum validation remain stable.

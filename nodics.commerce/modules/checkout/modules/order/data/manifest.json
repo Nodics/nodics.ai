@@ -2,6 +2,32 @@
   "contractVersion": 2,
   "module": "order",
   "sections": {
+    "participantTransactionAccess": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "order Enterprise participant transactions",
+      "description": "Exact parent-free participant group and Enterprise role; definitions only, no assignment or financial qualification.",
+      "owningDomain": "order",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/010_orderParticipantTransactionGroupHeader.js": "edbc51596041db40fa460cc36cf6bde70a9aa0201f83f7db523b8c208da64739",
+        "init-v001/records/identity/orderParticipantTransactionGroupData.js": "63700ed857fa2f8f240b4d5c1cf2ec7f5a75662bc4b7f0ed4ceb331fcb47aebd",
+        "init-v001/headers/identity/020_orderParticipantTransactionRoleHeader.js": "ac8dfa7181e1771c75c2f87006bbc81de1e2855a34a97af7c87970bf84c5b084",
+        "init-v001/records/identity/orderParticipantTransactionRoleData.js": "f009006ba7c023f749e1d8579727c711043436aa1a4f83f47076e666f6e42d09"
+      }
+    },
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
@@ -54,7 +80,7 @@
           "moduleName": "order",
           "sectionCode": "accessGroups",
           "version": "0.0.4",
-          "checksum": "a09781ed3826c4a4809b4313986c90f6e1988e0f074bc154fb48c386aa4a0cf6"
+          "checksum": "214c4a0b8ed588a745a3a5046d79ac826e711cde0d2e788339ad6c331f071048"
         }
       ]
     },
@@ -163,13 +189,13 @@
           "moduleName": "profile",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "version": "0.0.3",
+          "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         }
       ]
@@ -202,7 +228,7 @@
           "moduleName": "profile",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "order",
@@ -241,7 +267,7 @@
           "moduleName": "order",
           "sectionCode": "specialAccessGroups",
           "version": "0.0.2",
-          "checksum": "9513073632ea87b6ce5895878caa14103c24c2e88b7725db9a98165e0fe01747"
+          "checksum": "d40a1fd3d663a7bff2a9ffba949311c70efaccc6050b84cb291abe859d8248a5"
         }
       ]
     },
@@ -273,13 +299,13 @@
           "moduleName": "axis",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "version": "0.0.3",
+          "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
@@ -319,9 +345,35 @@
           "moduleName": "order",
           "sectionCode": "businessAccessGroups",
           "version": "0.0.2",
-          "checksum": "f46d06113643a2b5c6f5f3a9e19951617549b2cfc00b51514fcde1175d7bf1a2"
+          "checksum": "60c7982b011f94fdc8fb08891822c39fe644d0d1912b5da9bd52ea7f52c1943b"
         }
       ]
+    },
+    "participantReadAccess": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "order Enterprise participant read access",
+      "description": "One parent-free read group and delegable Enterprise role. Definitions only; no employee assignment, mutation, funding or provisioning.",
+      "owningDomain": "order",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/010_orderParticipantReadGroupHeader.js": "4f4cd0d4e3ed86f5529de26a9fa7c7e03d2899f0d82205652bfeb2eb968a4aa9",
+        "init-v001/headers/identity/020_orderParticipantReadRoleHeader.js": "b3defdd7f0077f699b2930ded7b0c6dbbc5c960d3b6971bd224f594827804073",
+        "init-v001/records/identity/orderParticipantReadGroupData.js": "0ba8cecd09a64100c852c1e00eb10cad4cb5868ad9200ee13cd224c103118afb",
+        "init-v001/records/identity/orderParticipantReadRoleData.js": "aca28ef0eba1c1bc27c23203ad1479340beb79b6590eb15068b1f7cc9afd48dc"
+      }
     }
   }
 }

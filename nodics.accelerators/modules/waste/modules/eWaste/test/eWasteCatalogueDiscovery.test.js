@@ -30,7 +30,8 @@ const product = (code, kind = "COUPON", amount = 10) => ({
   name: code,
   categoryCodes: ['LAPTOP'],
   categories: [{ code: 'LAPTOP', name: 'Laptops' }],
-  availability: { available: true, ...(kind === 'COUPON' ? { acquisitionRequirements: { type: 'REWARDS' } } : {}) },
+  availability: { available: true, ...(kind === 'COUPON' ? { acquisitionRequirements: { type: 'REWARDS' },
+    expiry: { mode: 'FIXED', at: '2099-12-31T23:59:59.000Z' } } : {}) },
   localizedAttributes: {
     kind,
     issuer: "Partner",
@@ -46,6 +47,7 @@ function setup(products = [], assets = {}) {
   const calls = [];
   global.CONFIG = { get: (key) => config[key] };
   global.SERVICE = {
+    DefaultCouponOfferService: require('../../../../../../nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultCouponOfferService'),
     DefaultProductDiscoveryService: {
       policy: () => config.product.discovery,
       query: () => ({}), card: row => row, rank: async (_, rows) => rows,
@@ -174,7 +176,8 @@ test("unlisted, inactive, mismatched assets and expired or invalid-price coupons
     { ...product("CPN_1"), price: { currency: "POINTS", unitAmount: "NaN" } },
     {
       ...product("CPN_1"),
-      localizedAttributes: { kind: "COUPON", expiresAt: "2020-01-01" },
+      availability: { available: false, acquisitionRequirements: { type: 'REWARDS' },
+        expiry: { mode: 'FIXED', at: '2020-01-01T00:00:00.000Z' } },
     },
   ]) {
     setup([source]);

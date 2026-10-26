@@ -16,8 +16,72 @@
  * @owner profile
  * @override Project modules may extend scope types, effects, and resolver behavior through configuration and later-layer services.
  */
+const { isDeepStrictEqual } = require("node:util");
 const scopeMutationTargets = new WeakMap();
 module.exports = {
+  /**
+   * Projects scopes and only the signed human's current Enterprise display.
+   * @param {Object} request Original authenticated self-read; selectors are refused.
+   * @returns {Promise<Object>} Effective scopes plus enterprise {code, displayName}; missing names stay null.
+   * @override Later Profile layers may customize display, preserving fresh actor/binding checks,
+   * exact tenant/Enterprise selection and the private-field allowlist. Performs no writes.
+   */
+  getCurrentPrincipalScopes: async function (request) {
+    const auth = structuredClone(request.authData || {}), tenant = request.tenant;
+    const fail = () => { throw new CLASSES.NodicsError("ERR_AUTH_00003"); };
+    const maximumNameLength = CONFIG.get("enterpriseManagement")?.search?.maximumNameLength;
+    const headers = () => [request.headers, request.header, request.httpRequest?.headers, request.httpRequest?.header]
+      .map(value => value && typeof value === "object" && !Array.isArray(value)
+        ? Object.fromEntries(Object.entries(value).filter(([key]) =>
+          ["x-tenant-code", "x-enterprise-code"].includes(key.toLowerCase()))) : null);
+    const pin = { headers: structuredClone(headers()), authorization: request.authorization };
+    const bound = () => {
+      if (!isDeepStrictEqual(request.authData, auth) || request.tenant !== tenant ||
+        request.authorization !== pin.authorization || !isDeepStrictEqual(headers(), pin.headers) ||
+        !Number.isSafeInteger(maximumNameLength) || maximumNameLength < 1 ||
+        CONFIG.get("enterpriseManagement")?.search?.maximumNameLength !== maximumNameLength ||
+        !tenant || auth.tenant !== tenant || auth.tokenType !== "access" || auth.principalType !== "human" ||
+        auth.isSystem || typeof auth.loginId !== "string" || !auth.loginId.trim() ||
+        typeof auth.entCode !== "string" || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(auth.entCode) ||
+        [request.query, request.body, request.payload, request.httpRequest?.query, request.httpRequest?.body]
+          .some(value => value !== undefined && (!value ||
+            ![Object.prototype, null].includes(Object.getPrototypeOf(value)) || Reflect.ownKeys(value).length)) ||
+        [auth.tenantCode, request.tenantCode].some(value => value !== undefined && value !== tenant) ||
+        [auth.enterpriseCode, request.enterpriseCode, request.entCode].some(value => value !== undefined && value !== auth.entCode) ||
+        pin.headers.some(value => Object.entries(value || {}).some(([key, code]) =>
+          key.toLowerCase() === "x-tenant-code" ? code !== tenant : code !== auth.entCode))) fail();
+    };
+    try {
+      bound();
+      const membership = SERVICE.DefaultEnterpriseMembershipService;
+      const actor = await membership.verifyAuthenticatedActor(request);
+      bound();
+      const target = await membership.enterprise(auth.entCode);
+      bound();
+      const enterprise = target.enterprise;
+      if (target.tenantCode !== tenant || enterprise?.tenant?.code !== tenant ||
+        enterprise?.code !== auth.entCode || enterprise.active !== true ||
+        enterprise.disabled === true || enterprise.registrationSuspended === true ||
+        enterprise.tenant.active !== true) fail();
+      if (!auth.sessionContext)
+        await SERVICE.DefaultAuthenticationProviderService.assertEmployeeRegistrationSession(actor.person, enterprise);
+      bound();
+      const scopes = await this.getEffectiveScopes({ tenant, authData: auth });
+      bound();
+      const currentActor = await membership.verifyAuthenticatedActor(request);
+      bound();
+      if (!auth.sessionContext)
+        await SERVICE.DefaultAuthenticationProviderService.assertEmployeeRegistrationSession(currentActor.person, enterprise);
+      bound();
+      const name = enterprise.name;
+      const displayName = typeof name === "string" && name.trim() && name.length <= maximumNameLength &&
+        !/[\u0000-\u001f\u007f]/.test(name) ? name.trim() : null;
+      return { ...scopes, enterprise: { code: auth.entCode, displayName } };
+    } catch (_) {
+      // Dependency and identity failures must not disclose private owner records.
+      fail();
+    }
+  },
   /** Captures private old/new non-runtime scope targets and awaits pre-write invalidation. */
   prepareScopeInvalidation: async function (request, assignments) {
     const targets = assignments

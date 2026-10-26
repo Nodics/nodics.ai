@@ -13,6 +13,7 @@ module.exports = {
     /** Dispatches only declared commands and retains the original authenticated context. */
     dispatch: function (request, operation, callback) {
         const input = { tenant: request.tenant || request.authData?.tenant, authData: request.authData,
+            authorization: request.httpRequest?.headers?.authorization,
             payload: request.httpRequest?.body || request.payload };
         const result = FACADE.DefaultCommercialAgreementFacade[operation](input).then(data => ({ data }));
         if (!callback) return result;

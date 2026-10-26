@@ -8,6 +8,14 @@ ledger or notification outbox. Source ports alone are not a completed journey.
 
 ## Authority And Consideration
 
+New Checkout commands carry Profile's canonical customer/Enterprise code as
+ownerId throughout Cart, Order, Payment and Digital. The original signed principal
+is retained separately as actorRef.code. Neither loginId nor principalId is a
+fallback customer owner. Actual-owner composition tests must distinguish these
+identities through consideration, sale and delivery. Original failed commands
+retain their stored identifiers and require exact checkpoint-bound recovery;
+fresh admission never rewrites or aliases historical records.
+
 Owned coupon reads and secure reveal independently reauthorize the original
 Profile owner. The effective `matchesCouponScope` member matches wildcard
 capabilities and tenant/Enterprise qualifiers on both allow and deny; any matching
@@ -192,10 +200,80 @@ real service orchestration with isolated generated persistence/domain responses;
 native database, installed providers, runtime placement and browser acceptance
 remain separate verification gates.
 
+## Released Allocation Reconciliation
+
+Checkout's retained coupon recovery unit contains only `code`, `offerAllocationCode`
+and `idempotencyKey`. Digital must not require an unretained Cart/SKU snapshot to
+recognize an already durable `RELEASED` allocation. Resolve its original entry
+using the retained allocation entry/product identity and authenticated recovery
+Cart, merchant and owner scope; read the SKU from that exact entry and freshly
+authorize the original participant. Conflicting supplied Cart/SKU values reject.
+Do not consult a reusable coupon's new purchase identity or repeat release writes.
+The allocation's exact original key, order, owner and successful failure receipt
+remain mandatory. This read-only recognition does not authorize a RESERVED hold,
+historical missing decision, COMMIT or completed purchase reversal.
+
+Regression: `test/digitalCouponDenialRelease.test.js` composes actual Digital and
+Promotion release owners over isolated persistence, including minimal descriptors,
+lost release acknowledgement and current-admission/identity failures. Native
+transaction behavior and an installed command's recovery remain separate evidence.
+
+## Read-Only Recovery Inspection
+
+`inspectRecovery` is an internal Digital read used by the existing authenticated
+Checkout command-status route, not a new generic read API. Promotion's private
+allocation provider forbids generic Workbench/service-account reads. Preserve
+that boundary. Checkout supplies only its retained unit and admitted original
+Cart/Order/tenant/merchant/owner/actor scope; Digital freshly authorizes the Cart
+before private lookup and validates the allocation's original command/unit binding.
+
+Return only allocationStatus (`UNKNOWN`, `RESERVED`, `RELEASED`, `COMPLETED`),
+inputDisposition (`UNKNOWN`, `UNSET`, `RELEASE`, `COMMIT`), couponStatus (`UNKNOWN`,
+`RESERVED`, `SOLD`, `DELIVERED`, `AVAILABLE`, `REASSIGNED`), and stage (`ALLOCATION`,
+`COUPON`, `ORIGINAL_AUTHORIZATION`, `FAILURE_PROOF`, `READBACK`, `EVIDENCE_CONFIRMED`).
+Also return `condition` from the owner-registered `CouponRecoveryInspectionCondition`
+enum; stages are registered as `CouponRecoveryInspectionStage`. Conditions distinguish
+allocation read/identity/issuer/merchant/owner/command/state, coupon read/binding,
+original authorization, checkpoint read/state, pending Payment, input state,
+participant binding, Payment read/count/receipt, denial phases/command, canonical
+decision read/mismatch, Order read/presence, reversal intent/receipt, unproven Payment,
+readback and unclassified failure. `NONE` occurs only with EVIDENCE_CONFIRMED.
+The existing failureCheckpoint predicates tag their own failures privately;
+diagnostics cannot accept tags or error text from remote dependencies.
+Unconfirmed observations include registered `ERR_DIGITAL_COUPON_RECOVERY_INSPECTION`;
+never expose dependency messages, records, coupon secrets, identities or payloads.
+REASSIGNED describes only that the reusable coupon no longer represents the
+released original; it discloses no later buyer or purchase state.
+
+For RESERVED, inspection reads the existing failureCheckpoint proof without
+fencing/releasing inputs. For RELEASED, it verifies the exact durable failure
+receipt and current original Cart admission. EVIDENCE_CONFIRMED does not test a
+future mutation or assert cleanup is complete. Canonical Payment decision inspect
+may use Loyalty's read-only transaction authority; no reserve/cancel/credit,
+transactional writes, domain release or financial execution is dispatched.
+Read back allocation/coupon evidence on both successful and failed proof paths;
+changed or failed readback yields UNKNOWN. These non-atomic observations never
+replace the recovery operation's fresh proofs. Never inspect a missing record
+as absence of historical effects.
+
+Allocation `enterpriseCode` is its frozen campaign issuer, not the Checkout merchant.
+The frozen vendor is the merchant for the original coupon, Cart and Checkout.
+Digital independently checks both namespaces, tenant, frozen promotion identity,
+typed buyer and original command in acquisition, command reconstruction, released
+receipt reconciliation and diagnostics. Source callbacks select the existing
+exact merchant grant from the frozen vendor; the issuer cannot substitute for
+that grant. No new caller grants or fallback namespaces are introduced.
+Delegated finite-offer tests use the real allocation writer with distinct issuer
+and merchant, including BOTH source callbacks and issuer-only grant refusal.
+
+Inspection cannot reconstruct a discarded historical write error. If all current
+read checks pass but release remains unconfirmed, it does not prove the earlier
+write succeeded or predict mutation success; retain the hold pending owner review.
+
 ## Inert Expiry Sweep
 
 Exact callable: `DefaultDigitalCommerceCouponReminderService.sweep(request, execution)`.
-The owner contributes `process.actionAdapters.definitions["digitalCore.couponExpirySweep"]`;
+The owner contributes the remote `process.actionAdapters.definitions["digitalCore.couponExpirySweep"]`;
 it does not add an allowed action, Process definition, Cron record or active schedule.
 The existing Cronjob `jobDetail.processTrigger` contract starts a governed Process
 whose ACTION is `{moduleName:"digitalCore", operation:"couponExpirySweep"}`.
@@ -229,3 +307,75 @@ action execution does not claim every message was delivered. Disabled execution
 reads nothing. See [actual expiry delivery](coupon-expiry-reminders.md) for source
 grants, recipient records, inbox routing, frozen retries and composed real-owner
 unit evidence. No second outbox or active schedule is introduced.
+
+## Private Source Proof Failure Stages
+
+The existing source callback rejects with registered `ERR_DIGITAL_COUPON_SOURCE_`
+status codes suffixed by `GATES`, `AUTH`, `ALLOCATION`, `GRANT`, `COUPON`,
+`ALLOCATION_BINDING`, `COMMAND`, `PHASE`, `CONSIDERATION`, `FAILURE_PROOF`, or
+`READBACK`. The stage is selected locally before its boundary executes; it is
+never taken from a dependency error, submitted payload or persisted diagnostic.
+These codes describe where proof could not be confirmed, not a verified root
+cause. All existing authority, finality and repeated-read checks remain required.
+The boundary returns only the registered static message/code and no original
+cause, error metadata, record, identity, token or request snapshot.
+
+No extra log sink or privacy exemption is introduced. Request privacy remains
+in force. A downstream owner that swallows an error will still hide these codes;
+this change does not extend Checkout status or grant access to private callback
+evidence. Route exposure failures happen before this service and cannot acquire
+a source stage. Runtime adoption and any downstream diagnostic projection require
+separate owner work.
+
+`test/digitalCouponSourceDiagnostics.test.js` checks each failure boundary with
+actual Digital/Promotion orchestration and the real NodicsError/status definitions,
+including dependency-error spoofing and no writes. It also confirms private
+certificate-only reserve and RELEASE proof for a distinct purchaser Enterprise.
+Persistence and transport are isolated; this is not installed runtime acceptance.
+
+## Secure Issuance Proof Behind Generic Projection
+
+Generic Promotion lifecycle reads intentionally remove protectedToken and
+secureIssuanceCode. Source proof must never require those fields on that public
+projection or turn off the projection. For every reserve/consume/release phase,
+Digital asks `DefaultCouponSecureIssuanceService.assertAcquisitionIssuance` to
+verify the exact observed coupon against the frozen allocation campaign. The
+same check runs again at final readback. Promotion retains private read identity,
+checks the complete public coupon snapshot, encrypted material presence, original
+batch/command/unit membership, token hash, ciphertext fingerprint and exact
+issuer/vendor/delegated associations, then rereads coupon and batch. It returns
+only true; no ciphertext, receipt or token is passed to Digital or its callback.
+No decryption, generic read grant, missing-secret fallback or financial action
+is introduced. Original allocation and public coupon equality checks remain.
+
+`digitalCouponSourceIssuanceProjection.test.js` uses real providerResult projection
+and the installed BSON codec over isolated generated storage for all three phases,
+own-issuer/delegated bindings, corruption, private provenance and readback drift.
+This corrects the ALLOCATION_BINDING projection mismatch; installed recovery still
+requires separately qualified runtime adoption.
+
+### Pre-write owner-limit refusal
+
+Digital's reservation catch consumes only Promotion's private original-unit
+pre-write denial. It retains confirmed earlier reservations, but does not mark
+that denied unit uncertain. Unknown failures, changed/copied authority and any
+prior write-phase attempt retain existing recovery. A registered 409 error alone
+is never proof; no Payment, source or database contract is bypassed.
+
+### Persisted reporting timestamps
+
+The report source accepts generated Date fields and retained timestamp strings,
+normalizing both to finite epoch milliseconds before purchase cutoff, receipt
+cutoff and receipt/confirmation equality checks. Never use Date.parse on a Date
+object: its string conversion drops milliseconds and rejects a valid merchant
+receipt or moves an event across the coverage boundary. Output remains canonical
+UTC ISO timestamps. Invalid dates and genuinely different instants still refuse;
+no source rows are repaired or silently skipped. The regression composes the
+actual merchantReceiptModel with nonzero milliseconds and generated Date values.
+
+
+Purchased entitlement presentation projects `productName` only from the retained
+version-2 purchase promise's name. Promotion's existing maximum term length bounds
+the label; invalid or absent labels remain absent without changing coupon rights.
+No current Product/offer lookup or receipt rewrite is performed. The owner reference
+and original terms remain visible independently of display names.

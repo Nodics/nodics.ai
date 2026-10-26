@@ -122,7 +122,8 @@ module.exports = {
             relationships: [], aggregateOperations: [], form: undefined,
             bulkCapabilities: { operations: [], maximumItems: 100, idempotencyRequired: true, outcomeMode: "AUTHORITATIVE_RESULT" },
             apiOperations: { capabilities, search }, ...editing,
-            queryCapabilities: { ...query, searchableFields: query.searchableFields.filter(name => visible.has(name)),
+            queryCapabilities: { ...query, searchableFields: [...new Set([
+                ...query.searchableFields.filter(name => visible.has(name)), ...(visible.has('name') ? ['name'] : [])])],
                 filterFields: query.filterFields.filter(field => visible.has(field.field)), sortableFields, defaultSort,
                 maximumPageSize, allowedPageSizes,
                 defaultPageSize: allowedPageSizes.includes(query.defaultPageSize) ? query.defaultPageSize : allowedPageSizes[0] } };

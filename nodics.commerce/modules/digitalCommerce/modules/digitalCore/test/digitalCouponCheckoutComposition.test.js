@@ -18,6 +18,25 @@ const notifications = require("../src/service/defaultDigitalCommerceNotification
 /** @module digitalCore/test/digitalCouponCheckoutComposition @description Composes actual Digital checkout/acquisition/entitlement and Promotion allocation/private persistence with isolated generated records and domain transport. No installed provider or database is exercised. @owner digitalCore @layer test */
 const { setup, realWaste } = require("./helpers/couponCheckoutFixture");
 
+for (const requirements of ["REWARDS", "CERTIFICATES", "BOTH"]) {
+  test(`${requirements}: canonical customer ownership survives a distinct signed actor through sale and delivery`, async t => {
+    const f = setup(t, requirements);
+    f.r.authData.principalId = "signed-customer-subject";
+    const originalAuth = structuredClone(f.r.authData);
+    const context = await FACADE.DefaultCartCustomerFacade.resolveContext(f.r, "commerce.checkout.place");
+    assert.equal(context.ownerId, "buyer");
+    assert.equal(context.actorRef.code, "signed-customer-subject");
+    f.r.actorRef = context.actorRef;
+    const result = await f.finish();
+    assert.equal(result.entitlement.ownerId, "buyer");
+    assert.equal(result.deliveries[0].status, "DELIVERED");
+    assert.equal(f.db.DefaultCommerceOrderService[0].ownerId, "buyer");
+    assert.ok(f.db.DefaultPaymentTransactionEntryService.every(row => row.ownerId === "buyer"));
+    assert.deepEqual(f.r.authData, originalAuth);
+    assert.equal((await notifications.evidence({ ...f.r, orderCode: "order" }, "PURCHASED")).items.length, 1);
+  });
+}
+
 test("certificate-only unlimited coupon completes real reservation, source callback, consumption, sale, entitlement and delivery without Payment", async t => {
   const f = setup(t), result = await f.finish();
   assert.equal(result.deliveries[0].status, "DELIVERED"); assert.equal(f.db.DefaultPaymentTransactionEntryService.length, 0);
@@ -141,6 +160,8 @@ test("real Digital -> Waste coupon mutation -> Digital source callback composes 
 });
 test("partial real Waste consumption durably fences reversal and retains the original coupon for forward completion", async t => {
   const f = setup(t, "BOTH"), waste = realWaste(f);
+  f.db.DefaultCartService[0].locale = "en";
+  f.r.merchantScope = structuredClone(f.db.DefaultCartService[0].merchantScope);
   f.campaign.couponOffer.requirements.certificates.quantity = 2;
   f.entry.availability.purchaseRequirements = structuredClone(f.campaign.couponOffer.requirements);
   f.r.payload.couponSelections.entry[0] = ["certificate", "certificate2"];

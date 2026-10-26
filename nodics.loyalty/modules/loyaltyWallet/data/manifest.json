@@ -2,6 +2,32 @@
   "contractVersion": 2,
   "module": "loyaltyWallet",
   "sections": {
+    "participantTransactionAccess": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "loyaltyWallet Enterprise participant transactions",
+      "description": "Exact parent-free participant group and Enterprise role; definitions only, no assignment or financial qualification.",
+      "owningDomain": "loyaltyWallet",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/010_loyaltyWalletParticipantTransactionGroupHeader.js": "d0df9c80250bd5cb03c1c23e400760d48a61d49f048222ed9ee90c35a72364a6",
+        "init-v001/records/identity/loyaltyWalletParticipantTransactionGroupData.js": "dab70881afa9070c2f0eee980c7a7a766c2690fb7be93b7613bec563dda3e418",
+        "init-v001/headers/identity/020_loyaltyWalletParticipantTransactionRoleHeader.js": "b5dc74cec53187ceefbff390d908fbfe0e3fe065b2bc8f6435760f65202c8dd1",
+        "init-v001/records/identity/loyaltyWalletParticipantTransactionRoleData.js": "5e03d116fdb0442af88312f62e4213b5ba7f758df3d1ef2681494dacb250f504"
+      }
+    },
     "transferNotificationPermission": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
@@ -20,10 +46,10 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "init-v003",
+      "sourceRoot": "init-v001",
       "files": {
-        "init-v003/headers/identity/loyaltyTransferNotificationPermissionHeader.js": "75b2b32a70697db0a8dfffef3f4ba6ed3862ea8f785425300b921bdd3c6e1116",
-        "init-v003/records/identity/loyaltyTransferNotificationPermissionData.js": "b0000fb420a6cfade95f374d54917f3264ebff3182251f9592531a0d0bdc50df"
+        "init-v001/headers/identity/loyaltyTransferNotificationPermissionHeader.js": "75b2b32a70697db0a8dfffef3f4ba6ed3862ea8f785425300b921bdd3c6e1116",
+        "init-v001/records/identity/loyaltyTransferNotificationPermissionData.js": "b0000fb420a6cfade95f374d54917f3264ebff3182251f9592531a0d0bdc50df"
       }
     },
     "participationWorkspace": {
@@ -54,6 +80,12 @@
         "catalogCode": "axisContentCatalog",
         "impactMessage": "Changes presentation only; no wallet provisioning, transfer enablement, access or credits.",
         "rollbackMessage": "Restore prior CMS presentation through the governed publication lifecycle.",
+        "postPublicationCapabilities": [
+          {
+            "title": "Loyalty participation presentation",
+            "description": "Display localized copy for the existing wallet, transfer-settings and Enterprise test-credit views. Publication does not provision wallets, grant access, enable transfers or test credit, change policy selections or move rewards."
+          }
+        ],
         "entities": [
           {
             "type": "cmsComponent",
@@ -93,10 +125,10 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "init-v002",
+      "sourceRoot": "init-v001",
       "files": {
-        "init-v002/headers/identity/loyaltyTransferPermissionHeader.js": "c62b525a80f43fe3790532bbf5d61796ed8b89f2f47009e90f1a5eaaea3ab4ed",
-        "init-v002/records/identity/loyaltyTransferPermissionData.js": "2492a7c750823f4c8503972da46127a567f94e7f92c9145a245d01f427ac3976"
+        "init-v001/headers/identity/loyaltyTransferPermissionHeader.js": "c62b525a80f43fe3790532bbf5d61796ed8b89f2f47009e90f1a5eaaea3ab4ed",
+        "init-v001/records/identity/loyaltyTransferPermissionData.js": "2492a7c750823f4c8503972da46127a567f94e7f92c9145a245d01f427ac3976"
       }
     },
     "permissionCatalogue": {
@@ -149,7 +181,7 @@
     },
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "docs-v002",
+      "contentPath": "docs-v001",
       "pack": "loyaltyWallet",
       "version": "0.0.2",
       "owningDomain": "documentation",
@@ -165,7 +197,7 @@
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "cms-records",
-      "sourceAuthority": "data/docs-v002/records/documentation",
+      "sourceAuthority": "data/docs-v001/records/documentation",
       "sites": [
         "nodicsDocumentationSite"
       ],
@@ -173,16 +205,16 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "451191205f7d50375d721e1ef79c08235a12b151d64a0239bed7abb730a83050",
+      "releaseChecksum": "208f7d7cc08cb6d031f5bdb86715012c1c3996056e72e8972a5619b9fe265022",
       "generatedHashes": {
-        "docs-v002/records/documentation/loyaltyWalletDocumentationComponentData.js": "7e9c6cb30b51d39334aa07e5526b9ea5190c401797f913e090e46dcdd3e118cc",
-        "docs-v002/records/documentation/loyaltyWalletDocumentationPageMetadataData.js": "177bd9eb4c7d65ade105c5b96b4da1b306a891b4b798368b05fe219cfabc5b2c",
-        "docs-v002/records/documentation/loyaltyWalletDocumentationNodeData.js": "f868470e0f191ed2adee07fbad622b2b1c469579847db64abc2860501901948a",
-        "docs-v002/records/documentation/loyaltyWalletDocumentationSearchMetadataData.js": "257e5b1b4158831db93da3ff2d0f740cf14e8d7d922950dd3f9edb05a04ca585",
-        "docs-v002/records/documentation/loyaltyWalletDocumentationPageData.js": "ab89161e83f468b6008444101c3f830ef12d613edf014bc8753abbc1d3110a4e",
-        "docs-v002/records/documentation/loyaltyWalletDocumentationRouteData.js": "0b867e4977a190b31d62da76d77308846e19523d2f5d134a429e5aee38404cd5",
-        "docs-v002/records/documentation/loyaltyWalletDocumentationPublicationStateData.js": "0192f1bf4905437aec76e11eeb2d2498de9bd5c8538ff167d1fafb85818d049d",
-        "docs-v002/headers/100_loyaltyWalletDocumentationContentPackHeader.js": "6b15d6f4cb436506992b04a49ed540a59c999346e1a65033fe8c2db888fdf451"
+        "docs-v001/records/documentation/loyaltyWalletDocumentationComponentData.js": "50c1d3615abb080b35cfa779fa43eb0f65974f39279e0ffc55de849011adc474",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationPageMetadataData.js": "30bbd041e26bf5a83672d03c7dd1650f8f72d76d3192e20471e7680518f2a997",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationNodeData.js": "f868470e0f191ed2adee07fbad622b2b1c469579847db64abc2860501901948a",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationSearchMetadataData.js": "257e5b1b4158831db93da3ff2d0f740cf14e8d7d922950dd3f9edb05a04ca585",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationPageData.js": "ab89161e83f468b6008444101c3f830ef12d613edf014bc8753abbc1d3110a4e",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationRouteData.js": "0b867e4977a190b31d62da76d77308846e19523d2f5d134a429e5aee38404cd5",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationPublicationStateData.js": "395b26e6bcf23d470823be2b404cbbd84dc0830820be47866836752d1ffaf8ac",
+        "docs-v001/headers/100_loyaltyWalletDocumentationContentPackHeader.js": "6b15d6f4cb436506992b04a49ed540a59c999346e1a65033fe8c2db888fdf451"
       },
       "includes": [
         {
@@ -224,7 +256,7 @@
           "moduleName": "profile",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "loyaltyWallet",
@@ -263,14 +295,14 @@
           "moduleName": "loyaltyWallet",
           "sectionCode": "specialAccessGroups",
           "version": "0.0.2",
-          "checksum": "755fa6fa3381cb1e86f430b767c746f17aebb6b7942444d377a2a7c8ccfc9ddd"
+          "checksum": "32a475b64e4fdfb37f6f979d2d9cad78b759be705cfeaaf080695bb158dc5fc5"
         }
       ]
     },
     "participantAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "sourceRoot": "init-v004",
+      "sourceRoot": "init-v001",
       "version": "0.0.1",
       "displayName": "Loyalty participant access groups",
       "description": "Customer participation groups for transfer and partner-conversion capabilities",
@@ -287,22 +319,102 @@
       "removalPolicy": "RETAIN",
       "selectionPolicy": "EXPLICIT",
       "files": {
-        "init-v004/headers/identity/loyaltyParticipantUserGroupHeader.js": "8940ba91d5d83b0a64e7d3cce8eead22a0676870d0846e3f455ed98435c8a6de",
-        "init-v004/records/identity/loyaltyParticipantUserGroupData.js": "7b4e2de7a239828e384b48c6e66278f08552abb268f5c8388ef6d4443f65a5bb"
+        "init-v001/headers/identity/loyaltyParticipantUserGroupHeader.js": "8940ba91d5d83b0a64e7d3cce8eead22a0676870d0846e3f455ed98435c8a6de",
+        "init-v001/records/identity/loyaltyParticipantUserGroupData.js": "7b4e2de7a239828e384b48c6e66278f08552abb268f5c8388ef6d4443f65a5bb"
       },
       "prerequisites": [
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "loyaltyWallet",
           "sectionCode": "transferPermissions",
           "version": "0.0.1",
-          "checksum": "345060888d02ab4f321b92a0367826e487666f37469acf21c1a0e3f3e6ca4ded",
+          "checksum": "df049e825596d034535eba67b80fa9c8b3ebafc71250696a7a85e385b5ba5770",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "participantReadAccess": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "loyaltyWallet Enterprise participant read access",
+      "description": "One parent-free read group and delegable Enterprise role. Definitions only; no employee assignment, mutation, funding or provisioning.",
+      "owningDomain": "loyaltyWallet",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/010_loyaltyWalletParticipantReadGroupHeader.js": "9202ef122e6679a1bac79eb0dcb4f6abecbb097454ece771ca9b536ac8acd3d2",
+        "init-v001/headers/identity/020_loyaltyWalletParticipantReadRoleHeader.js": "44282db99634b0eaadd41abb1c53b1a96cc1a5ada0b68003665597f45e1a83f7",
+        "init-v001/records/identity/loyaltyWalletParticipantReadGroupData.js": "35028a3c0caec125100cee388a96c48eb4ffc36d27722f38ae308251e8a9b103",
+        "init-v001/records/identity/loyaltyWalletParticipantReadRoleData.js": "525d2e7c4ba2e3f5df1ebdf551534aa0933b7b1e642e9552315707cafe08c064"
+      }
+    },
+    "enterpriseParticipationAccess": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "loyaltyWallet internal enterprise capabilities",
+      "description": "Parent-free internal capability groups; no new profile, employee assignment or financial records.",
+      "owningDomain": "loyaltyWallet",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/010_loyaltyEnterpriseParticipationGroupHeader.js": "a5958ce3aaaab0a4c1e4fde4327b5181bbdb68fee1deab6390927c9f8de17e9e",
+        "init-v001/records/identity/loyaltyEnterpriseParticipationGroupData.js": "5074e52c95bbcded212992e653f205efdb374ee458b41f4c9156d339653ce76a"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "loyaltyWallet",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "838336cb02e48538bb992bd7d2140b0b784b8ffa582451a18bef88399ed1499f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "loyaltyWallet",
+          "sectionCode": "participantReadAccess",
+          "version": "0.0.1",
+          "checksum": "0fbe30554e6ca16f4958fc6419157d6e42a22a5c3d99130d413d73e62b531fe2",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "loyaltyWallet",
+          "sectionCode": "participantTransactionAccess",
+          "version": "0.0.1",
+          "checksum": "8ecbb7f80bd3f25cbac9d0370176f5bb8fad44dbe27d233fdba8e6ec77145973",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "loyaltyWallet",
+          "sectionCode": "transferPermissions",
+          "version": "0.0.1",
+          "checksum": "df049e825596d034535eba67b80fa9c8b3ebafc71250696a7a85e385b5ba5770",
           "partition": "DEFAULT"
         }
       ]

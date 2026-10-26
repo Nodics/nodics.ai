@@ -1,5 +1,8 @@
 # loyaltyWallet Contracts
 
+Payment reservation authority follows [durable decisions](reservation-decisions.md).
+Historical absence may permit a no-debit fence, never a no-effects claim.
+
 Read-evidence customization dispatches through effective exported helpers.
 Private invocation lifetime and exact admitted context remain nonserializable
 authority: helper exposure is not an arbitrary generated-service/query API.

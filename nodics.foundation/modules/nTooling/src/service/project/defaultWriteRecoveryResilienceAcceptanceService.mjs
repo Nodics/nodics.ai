@@ -268,13 +268,14 @@ export async function runWriteRecoveryResilienceAcceptance({
   const evidence = [];
   for (const operation of plan) {
     const checkpoints = [];
-    let armed = false;
+    let armAttempted = false;
     let completed;
     try {
       await assertReady(operation.runtimeCodes, context);
       checkpoints.push(assertAdapterEvidence(await runAdapter(operation, 'PREPARE', context), checkpointExpectations.PREPARE, operation, limits));
+      // Arming may take effect even when its acknowledgement is lost or invalid.
+      armAttempted = true;
       checkpoints.push(assertAdapterEvidence(await runAdapter(operation, 'ARM_FAULT', context), checkpointExpectations.ARM_FAULT, operation, limits));
-      armed = true;
       await runOwnerCommand(operation, context);
       checkpoints.push(assertAdapterEvidence(await runAdapter(operation, 'OBSERVE', context), checkpointExpectations.OBSERVE, operation, limits));
       await restartTopology(operation.runtimeCodes, context);
@@ -283,7 +284,7 @@ export async function runWriteRecoveryResilienceAcceptance({
       completed = { code: operation.code, ownerCommand: operation.ownerCommand, ownerModule: operation.ownerModule,
         faultPhase: operation.faultPhase, operationKey: operation.operationKey, checkpoints };
     } finally {
-      if (armed) checkpoints.push(assertAdapterEvidence(await runAdapter(operation, 'CLEANUP', context), checkpointExpectations.CLEANUP, operation, limits));
+      if (armAttempted) checkpoints.push(assertAdapterEvidence(await runAdapter(operation, 'CLEANUP', context), checkpointExpectations.CLEANUP, operation, limits));
     }
     evidence.push(completed);
   }

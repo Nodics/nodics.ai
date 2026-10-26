@@ -89,7 +89,8 @@ function fixture(t, kind = 'human') {
     };
     for (const name of ['Cart', 'CartEntry', 'CartCalculation', 'CheckoutCheckpoint', 'CommerceOrder', 'CommerceOrderEntry', 'PaymentTransactionEntry', 'Consignment']) {
         db[name] = [];
-        const match = (row, query) => Object.entries(query || {}).every(([key, value]) => same(row[key], value));
+        const match = (row, query) => Object.entries(query || {}).every(([key, value]) =>
+            same(key.split('.').reduce((record, part) => record?.[part], row), value));
         SERVICE['Default' + name + 'Service'] = {
             get: async r => {
                 reads.push({ name, request: clone(r) });
@@ -140,7 +141,13 @@ for (const kind of ['customer', 'human']) test(`${kind} fixed-price create/add/p
     assert.deepEqual((await f.place()).data, result); assert.equal(f.payments.length, 2);
     assert.equal(f.calls.filter(r => r.moduleName === 'store').length, 1); assert.deepEqual(f.auth, before);
     for (const read of f.reads.filter(read => read.request.authData.isSystem)) {
-        assert.equal(read.request.query.tenant, 't'); assert.ok(read.request.query.ownerId);
+        assert.equal(read.request.query.tenant, 't');
+        if (read.name === 'CheckoutCheckpoint' && read.request.query['evidence.ownerRef.code'] !== undefined) {
+            assert.equal(read.request.query['evidence.ownerRef.module'], 'profile');
+            assert.equal(read.request.query['evidence.ownerRef.schema'], f.ownerRef.schema);
+            assert.equal(read.request.query['evidence.ownerRef.code'], f.ownerRef.code);
+            assert.ok(read.request.query.idempotencyKey || read.request.query.orderCode);
+        } else assert.ok(read.request.query.ownerId);
         assert.equal(read.request.searchOptions.limit, 2); assert.equal(read.request.options.skipItemCache, true);
     }
 });
@@ -197,6 +204,17 @@ for (const [name, mutate] of Object.entries({
     'missing binding': row => { delete row.evidence.merchantScope; },
 })) test(`Checkout reads reject ${name}`, async t => {
     const f = fixture(t); await f.create(); await f.add(); await f.place(); mutate(f.db.CheckoutCheckpoint[0]);
+    if (name === 'typed owner mismatch') {
+        const result = (await f.command()).data;
+        assert.equal(result.status, 'UNCONFIRMED'); assert.equal(result.scopeQualified, false);
+        assert.equal(result.orderCode, undefined); assert.equal(result.cartCode, undefined);
+        // A provider ignoring the owner-bound query must still fail the independent readback check.
+        f.state.readChange = (owner, response) => {
+            if (owner === 'CheckoutCheckpoint') {
+                response.result = clone(f.db.CheckoutCheckpoint); response.count = 1;
+            }
+        };
+    }
     await assert.rejects(f.command()); await assert.rejects(checkoutController.status(f.request(undefined, { orderCode: 'order' })));
 });
 

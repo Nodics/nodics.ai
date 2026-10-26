@@ -1,5 +1,9 @@
 # Workflow
 
+Human task lists support owner pagination and an actionable queue through the
+existing secured task API. See [task queue pagination](llm/contracts/README.md#task-queue-pagination)
+for filters, configuration, concurrency limits and operator recovery.
+
 Missing CMS approval definitions install through the governed nImport catalogue
 and executor using the observed contribution version. Existing definitions remain
 untouched, and release drift fails closed rather than forcing a replay.

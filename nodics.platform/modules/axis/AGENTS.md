@@ -35,10 +35,10 @@
   `sections.documentation.sourceAuthority` in `data/manifest.json`, under that
   section's selected `data/<contentPath>/records/documentation` directory.
   Source readers and validators must follow the manifest, not a fixed release
-  directory. Preserve frozen predecessor bytes; advance through unused successor
-  paths and versions with nTooling's canonical `validateGeneration` contract.
-  Keep `test/documentationForwardPackaging.test.js` and its frozen evidence
-  intact. Selecting source documentation does not install or publish it.
+  directory. Consolidate unreleased snapshots into docs-v001, preserving latest
+  content and stable identities with current hashes and no duplicate imports.
+  Keep `test/documentationForwardPackaging.test.js` aligned with that baseline.
+  Selecting source documentation does not install or publish it.
 - Image blocks reference Media identities in the same governed release. Do not
   create a parallel `docs/` source or Markdown-to-CMS generator.
 - CMS data may target WCMS schemas, but WCMS remains the CMS schema,

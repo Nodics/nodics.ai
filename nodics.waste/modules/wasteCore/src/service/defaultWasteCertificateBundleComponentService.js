@@ -135,7 +135,7 @@ module.exports = {
     event = { code: selected.code, assetCode: asset.code, fromOwnerRef: selected.command.ownerRef,
       toOwnerRef: selected.command.recipientRef || selected.command.ownerRef,
       transferType: input.purpose === "GIFT" ? "GIFT" : "SELL", transferStatus: ENUMS.WasteCertificateOperationStatus.RESERVED.key, revision: 0,
-      occurredAt: new Date(), idempotencyKey: input.operationKey, metadata: { bundleComponent: {
+      occurredAt: new Date().toISOString(), idempotencyKey: input.operationKey, metadata: { bundleComponent: {
         command: selected.command, fingerprint: selected.fingerprint, phase: ENUMS.WasteCertificateOperationStatus.RESERVED.key, previousStatus: asset.assetStatus } } };
     this.authorize(r);
     await op.digitalUpdate(r, "wasteAsset", asset, { assetStatus: ENUMS.WasteAssetStatus.LOCKED.key,

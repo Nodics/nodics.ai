@@ -150,7 +150,7 @@ test("ordinary workbenches and coupon native workspaces retain exact owner disco
     assert.deepEqual(native.map(item => [item.backendWorkspace.workspaceCode, item.backendWorkspace.viewCode,
         item.backendWorkspace.ownerSelector]), [
         ['promotion.couponOffers', 'authoring', { runtimeRoleCode: 'COMMERCE_STAGED', publicationRole: 'STAGED' }],
-        ['promotion.couponAcquisition', 'reporting', { runtimeRoleCode: 'COMMERCE', publicationRole: 'ONLINE' }],
+        ['promotion.couponAcquisition', 'reporting', { runtimeRoleCode: 'COMMERCE', publicationRole: 'OPERATIONAL' }],
     ]);
     for (const item of native) {
         assert.equal(contract.validateNavigationHelp(item.help), true);
@@ -202,6 +202,20 @@ test("same-campaign scope is not widened by nested disjunction, text or paginati
     assert.equal(page.records.length, 0);
     assert.equal(page.totalCount, 1);
     assert.equal(page.pageNumber, 2);
+});
+
+test('business name lookup preserves the signed tenant and Enterprise without exposing policy', async t => {
+    const f = fixture(t);
+    for (const row of f.rows) row.name = 'Friendly coffee benefit';
+    f.request.httpRequest.body = { search: 'Friendly coffee', pageSize: '10', pageNumber: '1' };
+    const descriptor = (await controller.schemas(f.request)).data.schemas[0];
+    assert(descriptor.queryCapabilities.searchableFields.includes('name'));
+    const result = (await controller.search(f.request)).data;
+    assert.equal(result.records.length, 1);
+    assert.equal(result.records[0].name, 'Friendly coffee benefit');
+    assert.equal(result.records[0].code, 'campaign');
+    assert.equal(result.records[0].actions, undefined);
+    assert.equal(result.records[0].budget, undefined);
 });
 
 test("exact empty evidence and maximum bounded pages work with independent signed aliases", async t => {

@@ -11,6 +11,13 @@
 
 /** @module loyaltyProgram/config/properties @description Defines loyaltyProgram schema access policy. @layer config @owner loyaltyProgram */
 module.exports = {
+  loyalty: {
+    programEligibilityAdministration: {
+      maximumRewardTypes: 100,
+      maximumReasonLength: 500,
+      platformAdministratorEvidencePath: "/identity/platform-administrator/evidence",
+    },
+  },
   schemaPolicies: {
     loyaltyProgram: {
       operational: {

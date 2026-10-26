@@ -10,6 +10,7 @@
  */
 "use strict";
 const { isDeepStrictEqual } = require('node:util');
+const reconciliations = new WeakMap();
 
 /**
  * @module bidding/service/defaultBiddingCloseService
@@ -81,19 +82,74 @@ module.exports = {
    */
   reconcile: async function (input) {
     const auctions = SERVICE.DefaultBiddingAuctionService, request = auctions.scheduler(input);
+    reconciliations.set(request, async () => auctions.scheduler(input));
+    try { return await this.reconcileAdmitted(request); }
+    finally { reconciliations.delete(request); }
+  },
+  /** Re-admits the original buyer for financial reconciliation or original seller for retained FAILED cleanup. */
+  reconcileBuyer: async function (input) {
+    const auctions = SERVICE.DefaultBiddingAuctionService, body = input.payload;
+    if (input.authData?.tokenType !== "access" || !["human", "customer"].includes(input.authData?.principalType) ||
+        !body || Object.keys(body).sort().join(",") !== "confirmed,storeCode" || body.confirmed !== true ||
+        typeof input.code !== "string" || !/^AUCTION_[a-f0-9]{64}$/.test(input.code)) auctions.fail("Exact original participant reconciliation is required");
+    const request = await auctions.participant({ ...input, storeCode: body.storeCode });
+    const revalidate = async () => {
+      const fresh = await auctions.participant({ ...input, storeCode: body.storeCode });
+      if (!isDeepStrictEqual(fresh.authData, request.authData) || fresh.enterpriseCode !== request.enterpriseCode ||
+          !isDeepStrictEqual(fresh.buyerRef, request.buyerRef) || !isDeepStrictEqual(fresh.actorRef, request.actorRef)) auctions.fail("Original participant authority changed");
+      const round = await auctions.load(fresh, input.code), bid = round.bids?.[round.selection?.bidCode];
+      const buyer = isDeepStrictEqual(bid?.buyerRef, fresh.buyerRef) &&
+        isDeepStrictEqual(bid?.actorRef, fresh.actorRef) && isDeepStrictEqual(round.selection?.buyerRef, fresh.buyerRef);
+      const seller = round.status === "FAILED" && auctions.isSeller(fresh, round);
+      const proof = round.selection?.reconciliation;
+      if (!["SELECTED", "FAILED", "COMPLETED"].includes(round.status) || !bid || !round.selection?.checkout ||
+          (!buyer && !seller) ||
+          round.status === "FAILED" && (proof?.confirmed !== true || proof.outcome !== "FAILED_RECONCILED" ||
+            proof.bidCode !== bid.code || proof.fundsReconciled !== true || proof.holdingsAvailable !== true ||
+            proof.noPendingPurchase !== true || typeof proof.receiptCode !== "string" || !proof.receiptCode))
+        auctions.fail("Original selected buyer or reconciled listing seller is required");
+      if (round.status === "COMPLETED" && (proof?.confirmed !== true || proof.outcome !== "PURCHASE_COMPLETED" ||
+          proof.bidCode !== bid.code || proof.orderCode !== round.selection.checkout.orderCode ||
+          proof.cartCode !== round.selection.checkout.cartCode || !proof.receiptCode))
+        auctions.fail("Original completed purchase receipt is required");
+      if (!isDeepStrictEqual(fresh.sellerRefs, request.sellerRefs)) auctions.fail("Original seller authority changed");
+    };
+    await revalidate();
+    reconciliations.set(request, revalidate);
+    try { return await this.reconcileAdmitted(request); }
+    finally { reconciliations.delete(request); }
+  },
+  /** Shares original terminal proof, managed CAS and recoverable cleanup between admitted entry points. */
+  reconcileAdmitted: async function (request) {
+    const auctions = SERVICE.DefaultBiddingAuctionService, revalidate = reconciliations.get(request);
+    if (!revalidate) auctions.fail("Reconciliation admission is required");
+    await revalidate();
     let round = await auctions.load(request, request.code);
+    if (round.status === "COMPLETED") return this.reconciliationResult(request, round);
     if (round.status === "FAILED") {
-      if (round.pending) round = await auctions.resume(request, round);
-      return { code: round.code, status: round.status, revision: round.revision };
+      if (round.pending && (request.authData?.principalType === "service" || auctions.isSeller(request, round)))
+        round = await auctions.resume(request, round);
+      return this.reconciliationResult(request, round);
     }
     const bidCode = round.selection?.bidCode || round.pending?.chosenBidCode;
     if (!bidCode) auctions.fail("There is no selected attempt to reconcile");
     const bid = round.bids[bidCode], key = auctions.hash([round.code, bidCode, "FAILED_RECONCILED"]);
     const proof = await auctions.ports().reconcileCheckout(request, { round, bid, idempotencyKey: key });
+    if (proof?.confirmed === true && proof.outcome === "PURCHASE_COMPLETED") {
+      if (proof.bidCode !== bidCode || proof.orderCode !== round.selection.checkout?.orderCode ||
+          proof.cartCode !== round.selection.checkout?.cartCode || !proof.commandKey || !proof.checkpointCode ||
+          !proof.paymentCode || !proof.receiptCode || round.pending || !round.cleanupComplete)
+        auctions.fail("Original completed purchase proof is unavailable");
+      await revalidate();
+      round = await auctions.save(request, round, { status: "COMPLETED",
+        selection: { ...round.selection, reconciliation: proof } });
+      return this.reconciliationResult(request, round);
+    }
     if (proof?.confirmed !== true || proof.outcome !== "FAILED_RECONCILED" || proof.bidCode !== bidCode ||
         proof.fundsReconciled !== true || proof.holdingsAvailable !== true || proof.noPendingPurchase !== true ||
         typeof proof.receiptCode !== "string" || !proof.receiptCode)
       auctions.fail("Selected purchase is not fully reconciled");
+    await revalidate();
     const selection = { ...round.selection, bidCode, bidRevision: bid.revision, amount: bid.amount,
       buyerRef: bid.buyerRef, buyerId: bid.buyerId, sellerRef: round.sellerRef,
       reconciliation: proof };
@@ -102,8 +158,16 @@ module.exports = {
     // Preserve the original pending fingerprint so retrying the failed command cannot restart funding.
     round = await auctions.save(request, round, { status: "FAILED", selection, bids, cleanupComplete: false,
       pending: round.pending || { action: "RECONCILE", key, hash: key } });
-    round = await auctions.resume(request, round);
-    return { code: round.code, status: round.status, revision: round.revision };
+    if (request.authData?.principalType === "service" || auctions.isSeller(request, round))
+      round = await auctions.resume(request, round);
+    return this.reconciliationResult(request, round);
+  },
+  /** Projects retained cleanup responsibility without granting listing-release authority. */
+  reconciliationResult: function (request, round) {
+    return { code: round.code, status: round.status, revision: round.revision,
+      ...(round.status === "COMPLETED" ? { receiptCode: round.selection.reconciliation.receiptCode } : {}),
+      ...(request.authData?.principalType !== "service" ? { cleanupComplete: round.cleanupComplete === true,
+        ...(!round.cleanupComplete ? { cleanupRequiredBy: "SELLER" } : {}) } : {}) };
   },
   /**
    * Reconciles any retained command before applying the original immutable end/grace deadline.

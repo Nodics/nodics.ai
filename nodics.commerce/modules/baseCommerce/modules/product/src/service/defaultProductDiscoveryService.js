@@ -730,6 +730,8 @@ module.exports = {
     return {
       available: availability.available === true,
       status: availability.status,
+      ...(Object.hasOwn(availability, 'expiry') ? { expiry: availability.expiry === null ? null :
+        SERVICE.DefaultCouponOfferService.expiry(availability.expiry) } : {}),
       ...(Object.hasOwn(availability, 'acquisitionRequirements') ? { acquisitionRequirements:
         availability.acquisitionRequirements === null ? null :
           SERVICE.DefaultCouponOfferService.acquisitionRequirements(availability.acquisitionRequirements) } : {}),
@@ -863,6 +865,10 @@ module.exports = {
   card: function (projection) {
     let payload = projection.payload || {};
     const { acquisitionRequirements: ignoredRequirements, ...localizedAttributes } = payload.localizedAttributes || {};
+    if (localizedAttributes.kind === 'COUPON' || localizedAttributes.digitalDeliveryType === 'COUPON_CODE') {
+      delete localizedAttributes.expiresAt;
+      delete localizedAttributes.expiry;
+    }
     const window = payload.localizedAttributes?.listingWindow;
     if (window && (!Object.hasOwn(window, 'startsAt') || !Object.hasOwn(window, 'endsAt') ||
         [window.startsAt, window.endsAt].some(value => value !== null &&
@@ -930,6 +936,12 @@ module.exports = {
     try {
       return await service.rank(request, products);
     } catch (error) {
+      // Optional ranking must remain observable without logging request data,
+      // provider messages, commercial terms or customer identities.
+      const reason = typeof error?.code === "string" && /^ERR_[A-Z0-9_]+$/.test(error.code)
+        ? error.code : "UNCLASSIFIED";
+      if (this.LOG && typeof this.LOG.warn === "function")
+        this.LOG.warn("Optional Product discovery ranking failed: " + reason);
       if (
         ((CONFIG.get("product") || {}).discovery || {})
           .rankingFailureBehavior === "error"

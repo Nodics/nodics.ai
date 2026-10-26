@@ -38,4 +38,21 @@ module.exports = {
     create: function (request, callback) { return this.draft(request, callback, "create"); },
     /** Appends a version-qualified draft metadata change. */
     update: function (request, callback) { return this.draft(request, callback, "update"); },
+    /** Retains the original HTTP envelope and bearer for fresh native administrative proof. */
+    administrative: function (request, callback, operation) {
+        const promise = Promise.resolve().then(() => SERVICE.DefaultPromotionDraftService.administrativeAuthoring(request, operation))
+            .then(data => ({ data }));
+        if (!callback) return promise;
+        promise.then(value => callback(null, value)).catch(callback);
+    },
+    /** Reads one explicitly selected issuer's campaign without operational secrets. */
+    administrativeRead: function (request, callback) { return this.administrative(request, callback, 'read'); },
+    /** Creates only an inert issuer-owned draft. */
+    administrativeCreate: function (request, callback) { return this.administrative(request, callback, 'create'); },
+    /** Appends only permitted DRAFT metadata. */
+    administrativeUpdate: function (request, callback) { return this.administrative(request, callback, 'update'); },
+    /** Submits as the original administrator, preserving checker separation. */
+    administrativeSubmit: function (request, callback) { return this.administrative(request, callback, 'submit'); },
+    /** Schedules only independently approved current policy. */
+    administrativeSchedule: function (request, callback) { return this.administrative(request, callback, 'schedule'); },
 };

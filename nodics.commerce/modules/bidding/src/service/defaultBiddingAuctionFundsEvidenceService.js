@@ -107,6 +107,12 @@ module.exports = {
     else if (operation === "release" && pending && bid && bid.code !== round.selection?.bidCode &&
         ["WITHDRAWN", "UNSUCCESSFUL", "CANCELLED", "EXPIRED"].includes(bid.status))
       key = pending.key + ":release:" + bid.code;
+    else if (operation === "inspect" && round.status === "SELECTED" && bid?.status === "SELECTED" &&
+        bid.code === round.selection?.bidCode && supplied.orderCode === round.selection.checkout?.orderCode &&
+        same(request.buyerRef, bid.buyerRef) && same(request.actorRef, bid.actorRef)) {
+      key = supplied.idempotencyKey;
+      checkoutRequired = true;
+    }
     else if (["capture", "release"].includes(operation) && round.status === "SELECTED" &&
         bid?.code === round.selection?.bidCode && supplied.orderCode === round.selection.checkout?.orderCode) {
       key = supplied.idempotencyKey;

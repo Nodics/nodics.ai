@@ -437,6 +437,11 @@ module.exports.loyaltyWallet.loyaltyPartnerRewardAccount = {
 module.exports.loyaltyWallet.loyaltyPartnerRewardConversionRecord = {
   ...conversionRecordDefaults,
   definition: {
+    simulated: {
+      type: "bool",
+      required: true,
+      description: "True identifies simulated partner outcomes, never external credit.",
+    },
     revision: {
       type: "int",
       required: true,

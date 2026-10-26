@@ -30,7 +30,9 @@ function fixture() {
   const config = structuredClone(properties), now = Date.now(), expiresAt = new Date(now + 3600000).toISOString();
   config.digitalCore.couponReminders.enabled = true;
   config.digitalCore.couponAcquisition.sourcePageSize = 1;
-  config.process.actionAdapters.allowedActions = ["digitalCore.couponExpirySweep"];
+  // Isolate the source/delivery functions here; remote Process claim is covered in digitalCouponReminderRemoteAction.
+  config.process.actionAdapters.allowedActions = [{ moduleName: "digitalCore", operation: "couponExpirySweep",
+    service: "DefaultDigitalCommerceCouponReminderService", method: "sweep" }];
   const policy = { version: 2, purchasedAt: new Date(now - 7200000).toISOString(),
     originalOwnerRef: { type: "CUSTOMER", code: "buyer" }, couponOffer: { expiry: { mode: "FIXED", at: expiresAt } },
     finality: { refundable: false, transferable: false, singleUse: true } };

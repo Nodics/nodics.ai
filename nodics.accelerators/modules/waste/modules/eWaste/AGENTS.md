@@ -1,5 +1,16 @@
 # eWaste agent contract
 
+Catalogue refusals use registered owner error codes so nRouter preserves safe
+400/404/409/503 responses. Missing published pricing is an explicit 503 dependency
+blocker, never silent filtering or a generic 500. Preserve Product totals and
+availability authority; deployment row delivery belongs to Pricing configuration.
+
+Outcome notification link configuration is defined here with an empty
+`outcomeCommunication.detailLinks` default. Deployments select channel URLs and
+query parameters; neither the default nor a link grants access or enables delivery.
+Keep default omission and later-layer link validation covered by
+`eWasteApplicationConfigurationOwnership.test.js` and `eWasteOutcomeLinkContract.test.js`.
+
 Journey defaults, including unassigned review (`reviewAssignment: null`) and
 neutral deposit guidance, belong in this module's properties. Confirmation
 consumes the effective instruction and rejects missing/invalid text before
@@ -41,17 +52,18 @@ snapshots. Documentation is optional and confers no Store or seller authority.
 Maintain canonical CMS blocks directly and refresh derived metadata/checksums;
 do not restore prose authoring or imply a source pass installed or published data.
 
-Forward documentation releases keep their existing pack/section identities and
-may advance semantic version inside docs-v001. Never edit a stable predecessor's
-payload or assets. Select unused successor filenames through the existing
-manifest/header, excluding predecessor counterparts from that active selection.
+The authorized unreleased documentation consolidation retains existing pack/section
+identities and semantic versions inside docs-v001. Ship only the selected current
+record families, headers and shared assets; remove superseded unselected sources
+from data while preserving historical evidence under test/fixtures. Future frozen
+releases require successor filenames and normal immutable release governance.
 Reuse nTooling's documentation text, word-count, digest, release-checksum and
-validateGeneration contracts; do not hand-maintain derived hash maps or create
+validation contracts; do not hand-maintain derived hash maps or create
 a parallel generator/importer. Preserve header dispatch order, stable CMS codes
 and owner-qualified references. Corrected content and its derived publication
 metadata remain STAGED without invented approval/Online actors. Main deployment
 owners advance exact publication descriptors separately. The frozen-source and
-forward content gates live in test/eWasteDocumentationForwardRelease.test.js.
+current content gates live in test/eWasteDocumentationForwardRelease.test.js.
 Current source selectors are documentation 0.0.8 and referenceDocumentation
 0.0.4. Their immediate predecessors remain frozen in
 test/fixtures/documentationFrozen006.json. Current guides describe final-sale
@@ -122,7 +134,12 @@ Use CONFIG.eWaste for reusable defaults and configurable service/policy seams;
 never reference a customer-named service directly from reusable source.
 
 Reusable fresh-arrival orchestration, safe marketplace offer projection,
-guidance persistence and evidence-based weight valuation live here. Customer
+including coupon validity from Product availability.expiry only, belong here.
+Map FIXED.at to expiresAt in both list and detail; preserve explicit NONE and
+unknown null. Missing/malformed validity is unavailable. Never use copied
+attributes, prose, codes, listing windows or purchase-relative invented dates.
+See the coupon projection section of the domain contract.
+Guidance persistence and evidence-based weight valuation live here. Customer
 adapters supply policy, display copy and compatibility error mappings; they must
 not copy these algorithms. A valuation provider never chooses a customer's rates
 or programme. Preserve unknown-impact semantics and original approval evidence.
@@ -294,3 +311,9 @@ names, enablement, qualification and exact caller identities deployment-owned.
 Review-outcome presentation belongs in src/templates/telegram and src/templates/in_app.
 Communication resolves selected resources from this discovered owner without
 activating its services. Preserve frozen intent retries and recipient admission.
+
+Coupon source-proof diagnostics use the append-only digitalSaleDiagnostics registry. Preserve fixed target, request, error-envelope and proof-mismatch distinctions; never serialize remote errors or infer that a failed callback proves missing controller operations.
+
+Preserve exact Digital coupon source-stage mappings from Waste Core’s static wire
+allowlist. Never prefix-match or forward upstream messages/causes. Keep existing
+diagnostic identities stable and source refusal ahead of every mutation.

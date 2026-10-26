@@ -2,6 +2,66 @@
 
 ## Outcome And Authority
 
+Seller-policy admission uses canonical Profile references and requires ownerId to
+equal the purchasing owner's code, not the signed actor's ID. Digital coupon
+acquisition uses the allocation owner's typed {type,code} contract. The Promotion
+reservation and retained purchase-rights entries validate that typed reference
+with the existing allocation owner and project it to Profile {module,schema,code}
+only for trustedPolicies and trustedCouponPolicy respectively.
+Both source and downstream policy contexts receive that same projection; the
+original allocation command and authentication are unchanged. Malformed, mixed
+or extra-field references reject. This conversion supplies no permission, consent,
+publication or eligibility proof and admits no alternative owner IDs.
+The existing non-governed batch reservation supplies a canonical Profile
+reference directly and retains that contract. Only an explicitly typed acquisition
+reference is projected. Do not infer CouponOffer applicability from selected seller
+delivery or turn either path into a fallback for malformed references.
+Sale confirmation still rechecks live seller consent before and after retained
+policy admission. A paid confirmation failure retains the original command for
+qualified forward recovery; reference conversion never authorizes another charge.
+
+## Product Root Ownership
+
+Store root selection is not enterprise ownership. `readOwnProduct` first checks
+the exact tenant/Product-enterprise pointer for every configured root. A present
+pointer always uses the strict applied activation reader, including corruption
+and missing-version failures. When absent, SellerPolicy's `productRootOwnership`
+accepts only the exact live membership command and discovers bounded original
+delegated issuance receipts through the same private owner used by `readRoot`.
+Every binding passes `readBound`: original receipt readbacks, current consent,
+active enterprises, retained issuer activation/fingerprint and budget provenance.
+Only an opaque fingerprint of verified bindings and retained policies leaves
+that operation; unrelated policies never become Product policy candidates.
+Ordinary `readRoot` still refuses Product-purpose admission.
+
+An unproven root still invokes the strict own reader and fails if absent. There
+is no missing-policy catch, mutable-policy fallback, foreign-pointer enumeration,
+new owner map or configuration-root removal. Own pointers take precedence even
+when a delegated binding exists. Before returning, all delegated proofs and the
+absence of corresponding own pointers are reread; own records, Product visibility,
+configured roots and private admission remain checked. These observations are
+not a distributed lock. Existing dependency/binding limits refuse excess evidence,
+never truncate. Later layers may narrow the ownership method; refusal propagates.
+
+For buyers, an ordinary Product with only valid delegated roots returns no
+applicable discount, while delegated coupons and mixed-root own discounts keep
+their existing paths. Operators must repair genuinely missing activation,
+corrupt receipt or revoked consent through their existing owners. A foreign root
+code or pointer alone is insufficient: the original seller receipt must exist.
+Adoption is a framework code deployment/reload of both services, with no new
+defaults, flags, permissions, imports, fixture changes or publication. Source
+tests do not certify installed evidence; recalculate the retained Cart only after
+the effective runtime has loaded the correction. No purchase/payment is required
+to validate this quote boundary.
+
+Ownership/placement/scope review: PASS for the two Promotion service changes,
+owner guidance and the added seller-policy bridge regressions. Tests use real
+Distribution, Product, SellerPolicy, Publication, consent and issuance owners
+with isolated generated persistence/Profile ports. They cover delegated-only and
+mixed roots, missing own/issuer activation, corruption, revocation, drift, copied
+or expired commands, effective narrowing and unchanged business records. No live
+Cart, grants, stock, budgets, runtime configuration or customer source is changed.
+
 ## Public Coupon Issuer Membership
 
 Search's stable owner port is
@@ -299,3 +359,42 @@ regression invokes nTooling's canonical export-style audit and checks the unchan
 export surface, fixed batch cleanup on success/failure/scope drift, copy refusal
 and expired-dispatch rejection. Run it with
 `test/promotionSellerPolicyBridgeContract.test.js` for real owner integration.
+
+
+## Bounded Product membership observations
+
+An ordinary Product with no matching coupon policy still qualifies selected
+issuer roots through `readOwnProduct`. Each root used to rediscover all generated
+batches and check the same Profile issuer/seller references twice per policy read,
+then repeat that work for the final snapshot comparison. The request count grew
+with selected roots even when no promotion applied.
+
+`DefaultPromotionSellerPolicyService.productRootPhase` now confines canonical
+receipt discovery to an exact live membership command. It reads bounded generated
+batches before and after each observation phase, validates existing receipt
+bindings and indexes only the selected Store roots. The final observation creates
+an independent phase and fresh discovery; it never reuses the first phase's map.
+`DefaultPromotionDistributionAdmissionService.membershipReferencePhase` reuses the
+private batch/reference admission mechanism. It calls Profile's existing bounded
+`activeEnterprises` API before and after each phase, with owner-derived issuer and
+seller identities. Only exact registered contexts during READ may share that
+reference evidence. Copies, caller flags, changed tenant/Store/actor and nested
+phases cannot open or extend it. Both owners close phase state in `finally`.
+
+Consent and grant revision checks, exact batch readback, retained policy,
+activation pointers/receipts and live consumption remain fresh canonical reads.
+Final publication snapshot comparison, Product visibility, original actor/scope
+and installed-readiness checks remain in place. These observations are not an
+atomic cross-owner authorization snapshot and grant no later mutation authority.
+No result, failure or reference evidence is shared across requests. No timeout,
+rate limit, framework default, Local override or persistence cache is changed.
+
+The 73-root real-owner regression expects four Profile requests (one bounded
+chunk at each boundary of two phases), rather than per-root reference traffic.
+Receipt discovery is five bounded collection reads including initial Product
+candidate selection; per-binding exact receipt/consent checks are intentionally
+retained. Concurrent requests each incur their own four Profile requests.
+Regression coverage also includes mid-read revocation/inactivity, Profile failure,
+new or changed bindings, pointer/root drift, live copied identities, changed scope
+and cleanup on success/failure. This is source/local qualification, not native
+Cart performance or live acceptance evidence.

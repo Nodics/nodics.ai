@@ -14,6 +14,16 @@ const assert = require('assert');
 const routes = require('../src/router/routers').loyaltyApi.internal;
 const controller = require('../src/controller/defaultLoyaltyInternalController');
 const facade = require('../src/facade/defaultLoyaltyInternalFacade');
+const readiness = require('../src/router/routers').loyaltyApi.participation.reservationDecisionReadiness;
+assert.strictEqual(readiness.key, '/admin/reservation-decisions/readiness');
+assert.strictEqual(readiness.method, 'GET');
+assert.deepStrictEqual(readiness.authTokenTypes, ['access']);
+assert.deepStrictEqual(readiness.accessGroups, ['platformAdministratorUserGroup']);
+assert.strictEqual(readiness.permission, 'loyalty.wallet.testCredit');
+assert.strictEqual(readiness.cache.enabled, false);
+assert.strictEqual(readiness.requestPrivacy.sensitive, true);
+assert.strictEqual(typeof controller.reservationDecisionReadiness, 'function');
+assert.strictEqual(typeof facade.reservationDecisionReadiness, 'function');
 
 const routeValues = Object.values(routes);
 assert(routeValues.length > 0, 'Loyalty API must declare explicit integration routes');
@@ -32,6 +42,14 @@ assert.deepStrictEqual(routes.wallet.authTokenTypes, ['access', 'service']);
 assert.strictEqual(routes.captureReservation.key, '/reward-reservations/:reservationCode/capture');
 assert.strictEqual(routes.releaseReservation.key, '/reward-reservations/:reservationCode/release');
 assert.strictEqual(routes.reverseLedgerEntry.key, '/reward-ledger-entries/:entryCode/reverse');
+for (const [operation, permission] of [['cancelReservationDecision', 'loyalty.rewards.release'], ['inspectReservationDecision', 'loyalty.wallet.read']]) {
+    assert.deepStrictEqual(routes[operation].authTokenTypes, ['service']);
+    assert.strictEqual(routes[operation].permission, permission);
+    assert.strictEqual(routes[operation].cache.enabled, false);
+    assert.strictEqual(routes[operation].requestPrivacy.sensitive, true);
+    assert.strictEqual(typeof controller[operation], 'function');
+    assert.strictEqual(typeof facade[operation], 'function');
+}
 assert.strictEqual(routes.reservationEvidence.key, '/reward-reservation-evidence');
 assert.strictEqual(routes.redemptionEvidence.key, '/reward-redemption-evidence');
 for (const operation of ['reservationEvidence', 'redemptionEvidence']) {

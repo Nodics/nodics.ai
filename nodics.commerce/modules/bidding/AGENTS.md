@@ -85,3 +85,52 @@ consent. Public storefront projection contains publication/round coordinates onl
 Only the selected buyer receives the immutable common-purchase DTO; sellers must
 never receive a buyer checkout action. Circa closes its superseded negotiation UI
 without removing the generic Bidding negotiation capability.
+
+Auction read failures use bounded registered diagnostics: Product discovery failure
+is ERR_BIDDING_OFFER_READ_UNAVAILABLE; generated round lookup failure is
+ERR_BIDDING_ROUND_READ_UNAVAILABLE (503). Never expose provider exceptions or
+alter signed actor/merchant scope to diagnose. Omitted sort/filter fields are valid
+in generated get; preserve the actual initializer/Mongo read regression in
+`test/biddingAuctionReadBoundary.test.js`. A diagnostic code is not recovery or
+proof that a publication failed; reconcile retained owner checkpoints first.
+
+Bidding offer discovery is a public catalogue read: pass only trusted tenant,
+exact product/store, configured locale and an empty query to Product discovery.
+Never spread the participant request, signed auth, headers, private payload or
+caller publication/index pins into that read. Keep participant authorization and
+merchant store admission on the original request; never rewrite its enterprise.
+Product retains its activation, retained-projection and enterprise guards.
+Preserve the real Product discovery/enrichment regression in the read-boundary test.
+
+Round persistence declares framework-managed `revision` on the owner schema.
+Creation uses generated managed save (initial persisted revision 1), never a
+blanket upsert or insertOnly override. Optional listing dates and pending/selection
+explicitly allow null through schema type unions. Non-null listing dates are
+written as BSON Dates and normalized to ISO at the owner read boundary, retaining
+existing publication equality and API semantics. Installed validators must adopt
+the schema before retrying the original publication. Unique code/listingKey
+indexes and stale-revision rejection remain mandatory.
+
+Exact-round participant reconciliation uses existing commerce.bid.participate and
+fresh original buyer AND actor admission for financial status. Only the original
+typed seller with fresh seller authority may resume FAILED listing cleanup after
+complete retained canonical reconciliation proof. Buyers see seller cleanup pending;
+never weaken Digital seller admission or substitute identity for Product withdrawal.
+Share reconcileAdmitted and generated CAS with the scheduler through private request
+admission. Preserve original selection/cleanup key, no reaward and uncertain replay.
+Tests compose Checkout, managed Bidding persistence and actual Digital release guard
+in checkoutCore/test/checkoutAuctionContract.test.js (buyer reconciliation cases).
+
+Selected Checkout AUTHORIZE inspection uses the original selected buyer AND actor,
+exact selected bid/order/hold command and checkoutRequired:true. Pending SELECT/CLOSE
+OPEN-bid inspection stays separate. Never grant selected inspect from seller scope
+alone; Checkout must prove its original pending authorization journal independently.
+
+Completed original auction purchases reconcile with distinct PURCHASE_COMPLETED
+proof from original journal/checkpoint and fresh Order/captured Payment, including
+exact Digital SOLD/DELIVERED receipt bindings. Fresh original buyer/actor admission
+and managed round CAS remain required. Retain original selection and completion
+receipt in COMPLETED; replay is read-only, no financial/transfer/cleanup/reaward
+effects. Project CAPTURED and remove the purchase action. Preserve original completed
+Checkout replay after terminal round projection. Keep focused completed purchase
+reconciliation tests through real managed update/Mongo/BSON persistence.

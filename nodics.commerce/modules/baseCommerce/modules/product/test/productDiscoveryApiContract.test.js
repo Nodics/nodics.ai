@@ -548,3 +548,22 @@ test('operator restoration ingests evidenced projections through Product search 
     assert(indexedProjections.every(item => item.indexName === 'productLocalized'));
     assert(indexedProjections.every(item => item.model.status === 'CURRENT'));
 });
+
+test('optional ranking records only a safe failure code while preserving configured behavior', async () => {
+    const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE };
+    try {
+        const warnings = [], products = [{ productCode: 'p' }];
+        const owner = Object.assign(Object.create(discovery), { LOG: { warn: value => warnings.push(value) } });
+        let failure = Object.assign(new Error('private provider detail'), { code: 'ERR_SRCH_00003' });
+        let behavior = 'omit';
+        global.SERVICE = { DefaultCommerceSearchRankingService: { rank: async () => { throw failure; } } };
+        global.CONFIG = { get: () => ({ discovery: { rankingFailureBehavior: behavior } }) };
+        assert.equal(await owner.rank({ authData: { loginId: 'private' } }, products), products);
+        assert.deepEqual(warnings, ['Optional Product discovery ranking failed: ERR_SRCH_00003']);
+        failure = new Error('private provider detail');
+        behavior = 'error';
+        await assert.rejects(owner.rank({}, products), error => error === failure);
+        assert.equal(warnings[1], 'Optional Product discovery ranking failed: UNCLASSIFIED');
+        assert.equal(JSON.stringify(warnings).includes('private'), false);
+    } finally { global.CONFIG = previous.CONFIG; global.SERVICE = previous.SERVICE; }
+});

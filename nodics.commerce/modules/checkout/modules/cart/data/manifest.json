@@ -2,6 +2,32 @@
   "contractVersion": 2,
   "module": "cart",
   "sections": {
+    "participantTransactionAccess": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "cart Enterprise participant transactions",
+      "description": "Exact parent-free participant group and Enterprise role; definitions only, no assignment or financial qualification.",
+      "owningDomain": "cart",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/010_cartParticipantTransactionGroupHeader.js": "461f681b554f6e1beeba4140ef75da2a9a8573df1dccbfe25735bdf58b4ababc",
+        "init-v001/records/identity/cartParticipantTransactionGroupData.js": "e7774efdd0b24fd31aeeac180a21037765afa22c5f52c6d1533db12b975c7897",
+        "init-v001/headers/identity/020_cartParticipantTransactionRoleHeader.js": "6c2aa79ae9dc79085b71e0e8f13935eca107e24e138c1394a701b6bcbfb908a5",
+        "init-v001/records/identity/cartParticipantTransactionRoleData.js": "08a08dfc7a6a8af775f26fd5096f21771079db3948904db209c4bf9e44a14a08"
+      }
+    },
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",

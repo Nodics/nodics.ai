@@ -119,6 +119,7 @@ for (const ownerSelector of [
   { publicationRole: "STAGED" },
   { runtimeRoleCode: "WCMS_STAGED", publicationRole: "STAGED" },
   { runtimeRoleCode: "WCMS_ONLINE", publicationRole: "ONLINE" },
+  { runtimeRoleCode: "COMMERCE", publicationRole: "OPERATIONAL" },
 ])
   assert(
     service.validateBackendWorkspace({ ...nativeWorkspace, ownerSelector }),
@@ -159,6 +160,7 @@ assert.deepEqual(Object.keys(selectorSchema.properties).sort(), [
 assert.deepEqual(selectorSchema.properties.publicationRole.enum, [
   "STAGED",
   "ONLINE",
+  "OPERATIONAL",
 ]);
 assert.equal(selectorSchema.properties.runtimeRoleCode.maxLength, 64);
 assert.strictEqual(

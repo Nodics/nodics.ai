@@ -136,6 +136,10 @@ function fixture(guarded = true) {
     get: (key) =>
       key === "defaultErrorCodes"
         ? { DataImportError: "ERR_IMP_00000" }
+        : key === "runtimeRole"
+          ? "PLATFORM"
+          : key === "environment"
+            ? { class: "LOCAL" }
         : undefined,
   };
   CLASSES.DataImportError = require(
@@ -388,12 +392,19 @@ async function importStartupGuest(f, execute, tenant = "default") {
   const releases = {
     ...releaseOwner,
     configuration: () => ({
-      types: { init: { enabled: true, startupExecution: true } },
+      ...structuredClone(
+        require(foundation + "nData/nImport/import/config/properties").data.dataReleases,
+      ),
     }),
     discoverReleases: () => [
-      { moduleName: "profile", releaseCode: "profile:init-v001" },
+      {
+        moduleName: "profile", releaseCode: "profile:init-v001",
+        dataType: "init", version: "0.0.1", checksum: "a".repeat(64),
+        destinationRole: "PLATFORM", environmentScope: ["LOCAL"],
+        prerequisites: [],
+      },
     ],
-    isDestinationCompatible: () => true,
+    getInstallations: async () => [],
     preparePlan: async () => ({ tenant }),
     operationReleases: async () => [{ status: "AVAILABLE" }],
     executePreparedPlan: execute,
@@ -404,7 +415,7 @@ async function importStartupGuest(f, execute, tenant = "default") {
 
 /** Exercises the retained historical saveAll Customer header; successor ensureBootstrapAll coverage is separate below. */
 function guestImport(f, record) {
-  const header = require("../data/init-v001/headers/user/defaultUsersHeader")
+  const header = require("./fixtures/unreleasedPredecessor/init-v001/headers/user/defaultUsersHeader")
     .profile.defaultCustomer;
   return importWriter.insertLocalSchemaModel(
     {
@@ -483,7 +494,7 @@ function useGuestMongoAdapter(
 /** Sends an Employee record through the retained historical saveAll header and generated import pipeline. */
 function employeeImport(f, record, tenant = "default") {
   const headers =
-    require("../data/init-v001/headers/user/defaultUsersHeader").profile;
+    require("./fixtures/unreleasedPredecessor/init-v001/headers/user/defaultUsersHeader").profile;
   const header =
     record.principalType === "service"
       ? headers.defaultServiceEmployee
@@ -1624,7 +1635,7 @@ test("fresh framework Init Employee and Customer records save distinct credentia
   delete require.cache[sourceEmployees];
   const employees = lodash.cloneDeep(Object.values(require(sourceEmployees)));
   delete require.cache[sourceEmployees];
-  const sourceServices = require.resolve("../data/init-v001/records/user/defaultServiceEmployeeData");
+  const sourceServices = require.resolve("./fixtures/unreleasedPredecessor/init-v001/records/user/defaultServiceEmployeeData");
   delete require.cache[sourceServices];
   employees.push(...lodash.cloneDeep(Object.values(require(sourceServices))));
   delete require.cache[sourceServices];

@@ -14,6 +14,56 @@
 const { isDeepStrictEqual } = require("node:util");
 /** @module order/src/service/defaultOrderLifecycleOperationService @description Persists immutable lifecycle intent and maker-checker decisions through generated repositories. @layer service @owner order */
 module.exports = {
+  /** Admits a Profile-resolved typed purchaser, reads the owned Order and uses Digital's retained ownership policy before reverse intent. No financial effects. */
+  participantLifecycle: async function (operation, participant) {
+    const owner = SERVICE.DefaultOrderOperationService;
+    const orders = await owner.orders(participant), order = orders[0];
+    if (orders.length !== 1 || !order || order.code !== participant.orderCode) throw owner.accessDeniedError();
+    const request = { ...participant, enterpriseCode: order.enterpriseCode };
+    if (operation === "listOwn") return owner.lifecycle(request, order.code);
+    if (!["preview", "create"].includes(operation)) throw new Error("Unsupported participant lifecycle operation");
+    // An appeal is review intent, not financial reversal authority.
+    if (request.payload?.requestType === "APPEAL") return this[operation](request);
+    const entries = await owner.entries(request, order.code);
+    const expectsDigital = entries.some(entry => entry.evidence?.digitalReservationCodes?.length > 0);
+    const digital = SERVICE.DefaultDigitalCommerceEntitlementService;
+    if (!digital?.listEntitlements) {
+      if (expectsDigital) throw new Error("Digital lifecycle evidence is unavailable");
+      return this[operation](request);
+    }
+    const items = await digital.listEntitlements(request, { ownerId: request.ownerId, orderCode: order.code });
+    if (!Array.isArray(items) || items.some(item => !item || item.tenant !== request.tenant ||
+        item.enterpriseCode !== order.enterpriseCode || item.ownerId !== request.ownerId || item.orderCode !== order.code))
+      throw new Error("Digital lifecycle evidence is outside the owned Order");
+    if (expectsDigital && !items.length) throw new Error("Digital lifecycle evidence is unavailable");
+    if (items.some(item => item.digitalDeliveryType === "DIGITAL_OWNERSHIP")) {
+      const decision = await SERVICE.DefaultDigitalCommerceOwnershipService.refund({ ...request, entries }, items, "preview");
+      if (typeof decision?.eligible !== "boolean") throw new Error("Digital lifecycle policy is unavailable");
+      if (!decision.eligible) {
+        if (operation === "create") throw new CLASSES.NodicsError("ERR_ORDER_LIFECYCLE_INELIGIBLE", "Lifecycle request is ineligible: " + decision.reason);
+        const preview = await this.preview(request);
+        return Object.freeze({ ...preview, eligible: false, reason: decision.reason,
+          reasonCode: decision.reason, requiresApproval: false, automationPlan: [], refundPreview: null });
+      }
+    }
+    // Coupon finality belongs to Digital's retained purchase policy, not generic lifecycle defaults.
+    const coupons = items.filter(item => item.digitalDeliveryType === "COUPON_CODE");
+    if (coupons.length) {
+      if (typeof digital.revocationPolicy !== "function") throw new Error("Digital lifecycle policy is unavailable");
+      const decisions = coupons.map(item => digital.revocationPolicy(item, request.payload?.requestType));
+      if (decisions.some(decision => typeof decision?.refundable !== "boolean" ||
+          !["BLOCKED", "MANUAL_REVIEW", "REVOKE_AND_REFUND"].includes(decision.policyDecision)))
+        throw new Error("Digital lifecycle policy is unavailable");
+      if (decisions.some(decision => decision.reasonCode === "DIGITAL_COUPON_PURCHASE_FINAL")) {
+        const reason = "DIGITAL_COUPON_PURCHASE_FINAL";
+        if (operation === "create") throw new CLASSES.NodicsError("ERR_ORDER_LIFECYCLE_INELIGIBLE", "Lifecycle request is ineligible: " + reason);
+        const preview = await this.preview(request);
+        return Object.freeze({ ...preview, eligible: false, reason, reasonCode: reason,
+          requiresApproval: false, automationPlan: [], refundPreview: null, refundMethods: [], returnMethods: [] });
+      }
+    }
+    return this[operation](request);
+  },
   /** Resolves the lifecycle repository adapter. @returns {Object} Repository service. */
   repository: function () {
     return SERVICE.DefaultOrderLifecycleRepositoryService;

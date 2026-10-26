@@ -80,6 +80,12 @@ module.exports = {
         request.httpResponse?.setHeader?.("Cache-Control", "no-store");
         return this.invoke("inspectReviewedMigration", request, callback);
     },
+    /** Updates only reviewed service scopes, with private request logging and no credential rotation. */
+    updateServiceScopes: function (request, callback) {
+        SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
+        request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+        return this.invoke("updateServiceScopes", request, callback);
+    },
     /** Replaces a service credential with a client-generated secret. */
     rotateServiceKey: function (request, callback) {
         return this.invoke("rotateServiceKey", request, callback);

@@ -118,7 +118,7 @@ function loadProfileBootstrapEmployees(activeConfig) {
     delete require.cache[profileEmployeeDataPath];
     global.CONFIG = activeConfig;
     try {
-        const services = path.join(path.dirname(profileEmployeeDataPath), 'defaultServiceEmployeeData.js');
+        const services = path.join(path.dirname(profileEmployeeDataPath), '../identityBootstrap/preservedServiceEmployeeData.js');
         delete require.cache[require.resolve(services)];
         return { ...require(profileEmployeeDataPath), ...require(services) };
     } finally {

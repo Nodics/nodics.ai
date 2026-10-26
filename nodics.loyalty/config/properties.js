@@ -17,12 +17,16 @@ module.exports = {
         PLATFORM: {
           contributions: [
             {
+              moduleName: "loyaltyProgram",
+              sections: ["partnerEligibilityAdministrationPermission"],
+            },
+            {
               moduleName: "loyaltyCore",
               sections: ["core-enterprise-reference"],
             },
             {
               moduleName: "loyaltyWallet",
-              sections: ["specialAccessGroups", "specialAccessRoles", "participantAccessGroups"],
+              sections: ["specialAccessGroups", "specialAccessRoles", "participantAccessGroups", "participantReadAccess", "participantTransactionAccess", "enterpriseParticipationAccess"],
             },
           ],
         },

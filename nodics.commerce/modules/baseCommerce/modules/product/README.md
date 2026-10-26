@@ -1,5 +1,12 @@
 # Product
 
+Native Super Admin can manage an explicit same-tenant Enterprise's ordinary
+Product roots and create bounded new coupon catalogue graphs through Product's
+administrative commands. Original identity is preserved; CURRENT Staged storage,
+fresh Profile proof and separate publication gates remain mandatory. Partial
+graphs require explicit readback, never automatic retry. See the
+[administrative API and recovery contract](llm/contracts/ordinary-product-authoring.md#native-administrator-targeted-authoring).
+
 Held Digital bundles have a separate default-disabled automatic publication
 policy with actual nPublish audit and exact Online receipt checks. Human approval
 remains unchanged. See [automatic bundle publication](llm/contracts/automatic-bundle-publication.md)
@@ -40,6 +47,10 @@ remote reads use this runtime's own credential, not the human bearer or enterpri
 headers; existing owner deployment/permission admission remains mandatory.
 
 ## Governed Catalogue Publication
+
+Product workflow release 0.0.2 explicitly declares typed approval decisions for
+Process and Axis. Existing instances retain their pinned policy; source adoption
+does not upgrade waiting tasks. See [human publication decisions](llm/contracts/product-lifecycle-and-publication.md#human-publication-decisions).
 
 Customer delivery can be rolled out to exact tenant/store pairs with
 `product.discovery.activationScopes` alongside the existing `activationService`.
@@ -157,8 +168,8 @@ checkout still resolves price, tax, stock and payment through their owners.
 
 ## Selective source authoring APIs
 
-The owner CMS guide in `data/docs-v002` extends the unchanged `docs-v001` release
-with automatic held-bundle publication, dates, auction projection and recovery.
+The consolidated owner CMS guide in `data/docs-v001` includes automatic
+held-bundle publication, dates, auction projection and recovery.
 It is Staged content, not an installed or approved publication. See
 [automatic bundle publication](llm/contracts/automatic-bundle-publication.md)
 and `test/productBundleDocumentation.test.js` for source and checksum evidence.

@@ -24,7 +24,7 @@
  * Inputs and outputs are specified on each exported member below.
  * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
  * Exported members: init, postInit, policy, invalid, values, decimal, compareDecimal, filters,
- * candidates, available, list.
+ * candidates, available, expiry, list.
  * @override Customize through the existing loader-visible module members, preserving private
  * authority.
  */
@@ -245,6 +245,20 @@ module.exports = {
     return product.availability?.available === true;
   },
 
+  /** Reads coupon validity exclusively from Promotion's safe summary; other listing semantics stay Product-owned.
+   * @param {Object} product Published customer card. @returns {string|null|undefined} Fixed date, explicit NONE, or unknown.
+   * @override Preserve the distinction between unknown and NONE; no persistence or inferred dates.
+   */
+  expiry: function (product) {
+    const attrs = product.localizedAttributes || {};
+    if (attrs.kind === 'COUPON' || attrs.digitalDeliveryType === 'COUPON_CODE') {
+      if (product.availability?.expiry == null) return undefined;
+      const expiry = SERVICE.DefaultCouponOfferService.expiry(product.availability.expiry);
+      return expiry.mode === 'FIXED' ? expiry.at : null;
+    }
+    return attrs.expiresAt || attrs.listingWindow?.endsAt;
+  },
+
   /**
    * Lists complete filtered results with stable pagination and whole-query facet counts.
    * @param {Object} request Original owner request with tenant, authData and operation selectors;
@@ -372,7 +386,9 @@ module.exports = {
         return false;
       if (filters.priceMax && this.compareDecimal(price, filters.priceMax) > 0)
         return false;
-      const expiresAt = product.localizedAttributes?.expiresAt || product.localizedAttributes?.listingWindow?.endsAt;
+      const expiresAt = this.expiry(product);
+      if (filters.validThrough && expiresAt === undefined &&
+          (product.localizedAttributes?.kind === 'COUPON' || product.localizedAttributes?.digitalDeliveryType === 'COUPON_CODE')) return false;
       if (filters.validThrough && expiresAt && (!Number.isFinite(Date.parse(expiresAt)) || Date.parse(expiresAt) < filters.validThrough)) return false;
       if (
         filters.saleOnly &&
@@ -392,7 +408,7 @@ module.exports = {
         let order = 0;
         if (sort === "expiry-asc") {
           const expiry = value => {
-            const date = value.localizedAttributes?.expiresAt || value.localizedAttributes?.listingWindow?.endsAt;
+            const date = this.expiry(value);
             if (!date) return Infinity;
             const timestamp = Date.parse(date);
             if (!Number.isFinite(timestamp)) throw new Error("Invalid retained Product expiry");

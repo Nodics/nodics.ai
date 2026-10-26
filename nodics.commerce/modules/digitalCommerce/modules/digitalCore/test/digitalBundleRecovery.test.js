@@ -121,6 +121,7 @@ test('manifest, gift and listing intake honor the same effective command-key bou
 });
 test('exact gift inspection and original decision continuation survive list pagination without recreating a gift', async t => {
   const f = fixture(t), recipientRef = { module: 'profile', schema: 'customer', code: 'recipient' };
+  require('./helpers/authorizationErrorFixture')(t);
   SERVICE.Authority.resolveRecipient = async (_, input) => ({ active: true, ownerRef: input.ownerRef });
   require('./helpers/participationFixture')();
   const manifest = await f.create({ mode: 'GIFT', operationKey: 'gift', recipientRef });
@@ -139,7 +140,7 @@ test('exact gift inspection and original decision continuation survive list pagi
   assert.equal((await recovery.inspectGift(f.request, reference)).status, 'RELEASED');
   assert.equal((await recovery.query(f.request, ref)).status, 'RELEASED');
   assert.equal(f.rows.DefaultDigitalBundleOperationService.length, 1);
-  await assert.rejects(recovery.inspectGift(f.request, { operationCode: row.code, ownerRef: { ...ownerRef, code: 'foreign' } }), /unavailable/);
+  await assert.rejects(recovery.inspectGift(f.request, { operationCode: row.code, ownerRef: { ...ownerRef, code: 'foreign' } }), { code: 'ERR_AUTH_00003', responseCode: '403', message: 'Access denied' });
   assert.equal(manifest.composition.recipientRef.code, 'recipient');
 });
 test('public recovery routes use actual controller dispatch, no-store and original access authority', async t => {
@@ -148,9 +149,67 @@ test('public recovery routes use actual controller dispatch, no-store and origin
   for (const [name, operation] of [['bundleCommandStatus','commandStatus'], ['bundleCommandResume','commandResume'], ['giftStatus','giftStatus']]) {
     assert.equal(routes[name].secured, true); assert.deepEqual(routes[name].authTokenTypes, ['access']);
     assert.equal(routes[name].operation, operation); assert.equal(routes[name].cache.enabled, false);
+    assert.equal(routes[name].permission, name === 'giftStatus' ? 'commerce.digital.own.read' : 'commerce.digital.bundle.manage');
   }
   const r = { ...f.request, httpRequest: { body: ref }, httpResponse: { setHeader: (...args) => headers.push(args) } };
   const result = await controller.commandStatus(r);
   assert.equal(result.data.status, 'UNCONFIRMED');
   assert.deepEqual(headers, [['Cache-Control','no-store']]);
+});
+
+test('Enterprise gift inspection uses read authority across sender namespaces without granting decisions', async t => {
+  const f = fixture(t);
+  require('./helpers/authorizationErrorFixture')(t);
+  const authority = require('../src/service/defaultDigitalBundleAuthorityService');
+  const recipient = { module: 'profile', schema: 'enterprise', code: 'recipient-enterprise' };
+  const request = { tenant: 'tenant', enterpriseCode: recipient.code, authorization: 'Bearer reader',
+    authData: { tenant: 'tenant', enterpriseCode: recipient.code, principalType: 'human',
+      tokenType: 'access', loginId: 'reader', permissions: ['commerce.digital.own.read'] } };
+  const row = { code: 'bundle-operation:' + 'a'.repeat(64), tenant: 'tenant', enterpriseCode: 'sender-namespace',
+    active: true, purpose: 'GIFT', ownerRef, recipientRef: recipient, status: 'RELEASED', revision: 8,
+    evidence: { decision: 'CANCEL', privateReceipt: 'must-not-leak' } };
+  f.rows.DefaultDigitalBundleOperationService.push(row);
+  f.policy.bundles.ownerAuthorityService = 'DefaultDigitalBundleAuthorityService';
+  SERVICE.DefaultSecuredRequestPipelineService = require('../../../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService');
+  const evidence = { principalCode: 'reader', scopes: [{ scopeType: 'ENTERPRISE', scopeCode: recipient.code,
+    capabilityCode: 'digitalCore', permissionCode: 'commerce.digital.own.read' }], deniedScopes: [] };
+  let admissions = 0;
+  SERVICE.DefaultModuleService.invokeModule = async call => {
+    assert.equal(call.apiName, '/identity/scopes/me');
+    assert.equal(call.header.Authorization, request.authorization);
+    assert.equal(call.header['X-Enterprise-Code'], recipient.code);
+    admissions++;
+    return { data: structuredClone(evidence) };
+  };
+  const input = { ownerRef: recipient, operationCode: row.code }, before = structuredClone(f.rows);
+  assert.deepEqual(await recovery.inspectGift(request, input), { contractVersion: 1, ownerRef: recipient,
+    operationCode: row.code, status: 'RELEASED', revision: 8, decision: 'CANCEL', canResume: false });
+  assert.equal(admissions, 2);
+  assert.deepEqual(f.rows, before);
+  assert.deepEqual(f.effects, []);
+  await assert.rejects(authority.authorize(request, { ownerRef: recipient, action: 'GIFT_RECEIVE' }), { code: 'ERR_AUTH_00003', responseCode: '403' });
+  await assert.rejects(authority.authorize(request, { ownerRef: recipient, action: 'GIFT_CANCEL' }), { code: 'ERR_AUTH_00003', responseCode: '403' });
+  row.recipientRef = { ...recipient, code: 'other-enterprise' };
+  await assert.rejects(recovery.inspectGift(request, input), { code: 'ERR_AUTH_00003', responseCode: '403', message: 'Access denied' });
+  row.recipientRef = recipient;
+  row.tenant = 'foreign';
+  await assert.rejects(recovery.inspectGift(request, input), { code: 'ERR_AUTH_00003', responseCode: '403', message: 'Access denied' });
+  row.tenant = 'tenant';
+  const originalGet = SERVICE.DefaultDigitalBundleOperationService.get;
+  SERVICE.DefaultDigitalBundleOperationService.get = async () => { throw new Error('Persistence unavailable'); };
+  await assert.rejects(recovery.inspectGift(request, input), error => error.message === 'Persistence unavailable' && !error.code);
+  SERVICE.DefaultDigitalBundleOperationService.get = originalGet;
+  evidence.deniedScopes = [{ scopeType: 'ENTERPRISE', scopeCode: recipient.code, capabilityCode: '*', permissionCode: 'commerce.*' }];
+  await assert.rejects(recovery.inspectGift(request, input), { code: 'ERR_AUTH_00003', responseCode: '403' });
+  evidence.deniedScopes = [];
+  request.authData.permissions = [];
+  await assert.rejects(recovery.inspectGift(request, input), { code: 'ERR_AUTH_00003', responseCode: '403' });
+  request.authData.permissions = ['commerce.digital.own.read'];
+  const get = SERVICE.DefaultDigitalBundleOperationService.get;
+  SERVICE.DefaultDigitalBundleOperationService.get = async r => {
+    const result = await get(r);
+    evidence.scopes = [];
+    return result;
+  };
+  await assert.rejects(recovery.inspectGift(request, input), { code: 'ERR_AUTH_00003', responseCode: '403' });
 });

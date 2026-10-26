@@ -423,6 +423,7 @@ module.exports = {
                 { node: 'nodics.waste/modules/wasteCore/test/wasteDataContributionPolicyContract.test.js' },
                 { node: 'nodics.location/modules/locationCore/test/locationDistanceService.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/dataReleaseService.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/exactManifestDiscovery.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/dataReleasePrerequisites.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/identityAuthorityReleaseExecution.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/installedMigrationJournalContract.test.js' },

@@ -1355,3 +1355,29 @@ Authored fixtures: `test/enterpriseMembershipContract.test.js` and nAuth's
 live qualification. Behavioral and visual execution is intentionally deferred to
 the jointly agreed test session. Delivery tracking belongs in the existing action
 documents, not in this standing framework contract.
+# Public Membership Availability
+
+Profile's existing BackOffice capability provider publishes
+`publicFeatureAvailability` version 1. Its Boolean `features` fields are
+`enterpriseMembershipDiscovery` and `enterpriseMembershipSwitch`. Discovery
+requires the existing membership enablement, inventory/session/claim-index
+qualifications, valid inventory bounds and `profileMembership` API exposure.
+Switching additionally requires `browserContextSwitchQualified`. Defaults remain
+disabled in Profile; a project supplies only intentional qualified overrides.
+This projection grants no membership, role, scope or API access.
+
+The existing public bootstrap exposes the selected Profile lease observation at
+`featureAvailability.profile`. It does not use permission-filtered Axis menus.
+Missing, stale, unobserved or conflicting lease evidence is unknown, not false.
+Clients must validate the version and Booleans, retain the signed-in identity,
+and omit optional switch controls and membership reads when explicitly disabled.
+Bootstrap failures and subsequent membership 403s remain errors with retry;
+they must not become empty memberships. Every switch still re-reads exact
+assignment revision and uses Profile's independent browser/session admission.
+
+Operators must refresh registered runtime metadata through the normal deployment
+lifecycle after a source upgrade. Old leases without this projection cannot
+establish availability. No API should be enabled merely to repair presentation.
+Tests cover defaults, later-layer qualified opt-in, independent switch policy,
+conflicting evidence, malformed contracts, denied reads and empty successful
+workspaces. Source checks are not installed or live acceptance.

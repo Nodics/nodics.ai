@@ -10,6 +10,12 @@
  */
 /** @module promotion/data/permissionCatalogue @description Owns permission seed records administered through Profile and Axis. @layer data @owner promotion @override Import explicitly; preserve existing governed records on replay. */
 module.exports = {
+  "record6": {
+    "code": "commerce.promotion.analytics",
+    "name": "Refresh coupon acquisition reporting projections",
+    "active": true,
+    "ownerModule": "promotion"
+  },
   "record0": {
     "code": "commerce.promotion.read",
     "name": "commerce.promotion.read",

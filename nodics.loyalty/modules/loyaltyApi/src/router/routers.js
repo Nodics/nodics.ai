@@ -14,6 +14,31 @@
 /** @module loyaltyApi/src/router/routers @description Declares internal Loyalty resource APIs for remote module integrations. @layer router @owner loyaltyApi @override Later modules may add routes while preserving resource-oriented route keys. */
 module.exports = {
     loyaltyApi: {
+        walletAdministration: {
+            auctionFundingSelection: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['platformAdministratorUserGroup'],
+                permission: 'system.schema.manage', apiExposure: 'loyaltyAdministration',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/admin/wallets/auction-funding', method: 'PUT',
+                controller: 'DefaultLoyaltyInternalController', operation: 'auctionFundingSelection'
+            }
+        },
+        programAdministration: {
+            programPartnerEligibilityRead: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['platformAdministratorUserGroup'],
+                permission: 'loyalty.program.partnerEligibility.manage', apiExposure: 'loyaltyAdministration',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/admin/programs/partner-conversion-eligibility/read', method: 'POST',
+                controller: 'DefaultLoyaltyInternalController', operation: 'programPartnerEligibilityRead'
+            },
+            programPartnerEligibilityUpdate: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['platformAdministratorUserGroup'],
+                permission: 'loyalty.program.partnerEligibility.manage', apiExposure: 'loyaltyAdministration',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/admin/programs/partner-conversion-eligibility', method: 'PUT',
+                controller: 'DefaultLoyaltyInternalController', operation: 'programPartnerEligibilityUpdate'
+            }
+        },
         transferNotifications: {
             source: { secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
                 permission: 'loyalty.transfer.notification.source', apiExposure: 'loyaltyInternal',
@@ -30,6 +55,19 @@ module.exports = {
             operation: 'auction' + operation[0].toUpperCase() + operation.slice(1),
         }])),
         participation: {
+            reservationDecisionReadiness: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['platformAdministratorUserGroup'],
+                permission: 'loyalty.wallet.testCredit', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/admin/reservation-decisions/readiness', method: 'GET',
+                controller: 'DefaultLoyaltyInternalController', operation: 'reservationDecisionReadiness'
+            },
+            enterpriseTestWallet: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['platformAdministratorUserGroup'],
+                permission: 'loyalty.wallet.testCredit', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/admin/enterprise-test-wallets', method: 'PUT', controller: 'DefaultLoyaltyInternalController', operation: 'enterpriseTestWallet'
+            },
             wallet: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup', 'employeeUserGroup'],
                 permission: 'loyalty.wallet.read', apiExposure: 'loyaltyParticipation',
@@ -152,6 +190,27 @@ module.exports = {
                 key: '/reward-reservations', method: 'POST',
                 controller: 'DefaultLoyaltyInternalController', operation: 'reserveRewards',
                 help: { requestType: 'secured', message: 'Creates a reward reservation for a wallet and reward type.' }
+            },
+            cancelReservationDecision: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.rewards.release', apiExposure: 'loyaltyInternal',
+                requestPrivacy: { sensitive: true }, cache: { enabled: false },
+                key: '/reward-reservation-decisions/cancel', method: 'POST',
+                controller: 'DefaultLoyaltyInternalController', operation: 'cancelReservationDecision'
+            },
+            reconcileReservationDecision: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.rewards.release', apiExposure: 'loyaltyInternal',
+                requestPrivacy: { sensitive: true }, cache: { enabled: false },
+                key: '/reward-reservation-decisions/reconcile', method: 'POST',
+                controller: 'DefaultLoyaltyInternalController', operation: 'reconcileReservationDecision'
+            },
+            inspectReservationDecision: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.wallet.read', apiExposure: 'loyaltyInternal',
+                requestPrivacy: { sensitive: true }, cache: { enabled: false },
+                key: '/reward-reservation-decisions/inspect', method: 'POST',
+                controller: 'DefaultLoyaltyInternalController', operation: 'inspectReservationDecision'
             },
             captureReservation: {
                 secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],

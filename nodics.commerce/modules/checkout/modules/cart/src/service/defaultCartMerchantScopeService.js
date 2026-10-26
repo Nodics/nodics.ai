@@ -73,7 +73,7 @@ module.exports = {
             r.ownerRef?.module !== 'profile' || !this.identifier(r.ownerRef.code) ||
             r.ownerRef.schema !== (a.principalType === 'human' ? 'enterprise' : 'customer') ||
             a.principalType === 'human' && (r.ownerId !== enterprise || r.ownerRef.code !== enterprise) ||
-            a.principalType === 'customer' && r.ownerId !== (a.principalId || a.code || a.loginId) ||
+            a.principalType === 'customer' && r.ownerId !== r.ownerRef.code ||
             r.actorRef?.enterpriseCode !== enterprise || r.actorRef?.loginId !== a.loginId ||
             r.actorRef?.principalType !== a.principalType ||
             r.actorRef?.code !== (a.principalId || a.code || a.loginId)) throw new Error('Original purchase participant is required');

@@ -1714,6 +1714,18 @@ module.exports = {
           },
         },
       },
+      updateServiceScopes: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["adminGroup"],
+        permissionConfig: "identityGovernance.serviceScopeManagement.permission",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        key: "/identity/credential/scopes",
+        method: "POST",
+        controller: "DefaultIdentityGovernanceController",
+        operation: "updateServiceScopes",
+      },
       rotateServiceKey: {
         secured: true,
         accessGroups: ["runtimeConfigAdminUserGroup"],

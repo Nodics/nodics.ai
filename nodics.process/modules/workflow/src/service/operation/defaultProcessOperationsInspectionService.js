@@ -158,20 +158,65 @@ module.exports = {
     },
 
     /**
-     * Lists human tasks using safe filters.
+     * Resolves task pagination from Workflow-owned defaults and strict request bounds.
      *
      * @param {Object} request Nodics request context.
-     * @returns {Promise<Object>} Human task list.
+     * @returns {Object} Validated page and page size.
      */
+    taskPagination: function (request) {
+        const policy = CONFIG.get('process')?.taskQueue;
+        if (!policy || !Number.isSafeInteger(policy.defaultPageSize) ||
+            !Number.isSafeInteger(policy.maximumPageSize) || policy.defaultPageSize < 1 ||
+            policy.defaultPageSize > policy.maximumPageSize || policy.maximumPageSize > 100) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00006', 'Process task pagination configuration is invalid');
+        }
+        const source = request.query || {};
+        const integer = (value) => typeof value === 'number' ||
+            (typeof value === 'string' && /^[1-9][0-9]*$/.test(value)) ? Number(value) : NaN;
+        const page = source.page === undefined ? 1 : integer(source.page);
+        const pageSize = source.limit === undefined ? policy.defaultPageSize : integer(source.limit);
+        if (!Number.isSafeInteger(page) || page < 1 || !Number.isSafeInteger(pageSize) ||
+            pageSize < 1 || pageSize > policy.maximumPageSize || !Number.isSafeInteger(page * pageSize)) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00006', 'Process task pagination is invalid');
+        }
+        return { page, pageSize };
+    },
+
+    /** Builds the owner task queue filter without accepting database operators or caller policy. */
+    taskQuery: function (request) {
+        const query = this.safeQuery(request, ['instanceCode', 'status', 'assignee']);
+        const queue = request.query && request.query.queue;
+        if (queue !== undefined && queue !== 'actionable') {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00006', 'Process task queue is invalid');
+        }
+        if (queue === 'actionable') {
+            const actionable = { status: { $in: ['OPEN', 'CLAIMED', 'ESCALATED'] } };
+            return { $and: [query, actionable] };
+        }
+        return query;
+    },
+
+    /** Lists one stable owner page; count and rows share the generated service authorization and filters. */
     listTasks: async function (request) {
+        const { page, pageSize } = this.taskPagination(request);
         let response = await this.taskService().get(this.serviceRequest(request, {
-            query: this.safeQuery(request, ['instanceCode', 'status', 'assignee']),
-            searchOptions: { pageSize: this.listLimit(request), pageNumber: 1, sort: { dueAt: 1 } }
+            query: this.taskQuery(request),
+            searchOptions: { pageSize, pageNumber: page, sort: { dueAt: 1, code: 1 } }
         }));
+        if (!/^SUC_/.test(response?.code || '') || response.error || response.success === false ||
+            (response.errors !== undefined && (!Array.isArray(response.errors) || response.errors.length)) ||
+            !Array.isArray(response.result) || response.result.length > pageSize ||
+            !Number.isSafeInteger(response.count) || response.count < response.result.length) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00006', 'Process task page is unavailable');
+        }
         const tasks = await SERVICE.DefaultProcessRuntimeLifecycleService.projectTaskDecisions(
-            request, response.result || []
+            request, response.result
         );
-        return { code: 'SUC_PROCESS_00000', data: tasks };
+        return { code: 'SUC_PROCESS_00000', data: tasks, pagination: {
+            page, pageSize, total: response.count,
+            hasNext: response.count > page * pageSize,
+            hasPrevious: page > 1,
+        } };
     },
 
     /**

@@ -79,6 +79,37 @@ test("test-credit command is platform-admin-only and defaults do not activate fu
   assert.equal(schemas.rewardTestCreditOperation.backoffice.enabled, false);
   assert.equal(schemas.rewardTestCreditOperation.transaction.enabled, true);
 });
+test("zero-only PUT preserves authority, delegates provisioning alone and propagates refusal", async t => {
+  const previous = ["SERVICE", "FACADE"].map(key => [key, global[key]]);
+  t.after(() => previous.forEach(([key, value]) => value === undefined ? delete global[key] : global[key] = value));
+  const route = routes.participation.enterpriseTestWallet;
+  assert.equal(route.method, "PUT"); assert.equal(route.key, "/admin/enterprise-test-wallets");
+  assert.deepEqual(route.accessGroups, ["platformAdministratorUserGroup"]);
+  assert.equal(route.permission, "loyalty.wallet.testCredit");
+  assert.equal(require("../../loyaltyWallet/config/properties").loyalty.enterpriseTestCredits.provisioningEnabled, false);
+  const auth = { principalType: "human", tokenType: "access", tenant: "tenant", entCode: "default", loginId: "admin" };
+  const payload = { enterpriseCode: "TARGET", programCode: "program", rewardTypeCode: "points", reason: "Reviewed test setup", confirmed: true };
+  let calls = 0, cache, refuse = false;
+  const failure = Object.assign(new Error("Owner qualification failed"), { code: "ERR_LOYALTY_TEST_CREDIT_INELIGIBLE" });
+  global.FACADE = { DefaultLoyaltyInternalFacade: require("../src/facade/defaultLoyaltyInternalFacade") };
+  global.SERVICE = { DefaultLoyaltyEnterpriseTestCreditService: {
+    provision: async request => {
+      calls++; assert.equal(request.authData, auth); assert.equal(request.authorization, "Bearer original");
+      assert.deepEqual(request.payload, payload); assert.equal(request.tenant, "tenant");
+      if (refuse) throw failure;
+      return { status: "PROVISIONED", walletCode: "wallet", balanceCode: "balance", testOnly: true };
+    }, credit: () => assert.fail("Provisioning must never dispatch credit"),
+  } };
+  const request = () => ({ tenant: "tenant", authData: auth,
+    httpRequest: { headers: { authorization: "Bearer original" }, body: payload },
+    httpResponse: { setHeader: (key, value) => { if (key === "Cache-Control") cache = value; } } });
+  const result = await controller.enterpriseTestWallet(request());
+  assert.equal(result.data.status, "PROVISIONED"); assert.equal(calls, 1); assert.equal(cache, "no-store");
+  assert.equal(JSON.stringify(result).includes("Bearer"), false);
+  refuse = true;
+  await assert.rejects(controller.enterpriseTestWallet(request()), error => error === failure);
+  assert.equal(calls, 2);
+});
 test("partner choices retain the original participant and delegate an empty read selector", async t => {
   const previous = ["SERVICE", "FACADE"].map(key => [key, global[key]]);
   t.after(() => previous.forEach(([key, value]) => value === undefined ? delete global[key] : global[key] = value));

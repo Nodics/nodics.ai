@@ -14,6 +14,18 @@
 /** @module wasteReward/src/schemas/schemas @description Defines immutable Waste reward-assessment evidence. @layer schema @owner wasteReward */
 module.exports = {
     wasteReward: {
+        wasteMaterialValueMockEvidence: {
+            super: 'base', model: true,
+            backoffice: { mutationMode: 'READ_ONLY', operations: ['search', 'read'], concurrency: { managed: true, field: 'revision' } },
+            schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false },
+            cache: { enabled: false }, event: { enabled: false }, search: { enabled: true, idPropertyName: 'code' },
+            definition: {
+                synthetic: { type: 'boolean', required: true, description: 'Must be true; this record never proves external issuance or payment.' },
+                qualificationRef: { type: 'object', required: true, description: 'Explicit simulation qualification scope.' },
+                evidence: { type: 'object', required: true, description: 'Governed mock provider evidence; no customer values in configuration.' },
+                revision: { type: 'int', required: true, default: 0, description: 'Managed evidence revision.' }
+            }
+        },
         wasteMaterialValuePolicy: {
             super: 'base', model: true,
             backoffice: { mutationMode: 'READ_ONLY', operations: ['search', 'read'], concurrency: { managed: true, field: 'revision' } },

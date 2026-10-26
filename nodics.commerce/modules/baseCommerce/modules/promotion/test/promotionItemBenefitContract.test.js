@@ -140,3 +140,22 @@ test("mixed item and native pricing selections allow item handles without weaken
   f.policy.itemEvidenceService = null;
   await assert.rejects(effective.validate(r), { code: "ERR_DIGITAL_MERCHANT_INVALID" });
 });
+
+test("ordinary ITEM catalogue and purchase terms do not select fulfillment, while integrated evidence stays gated", async t => {
+  const f = fixture(t);
+  Object.assign(f.policy, { enabled: false, qualified: false, itemEvidenceMode: 'VERIFIED', itemEvidenceService: null });
+  assert.doesNotThrow(() => operation.assertSupportedCouponBenefit(f.campaign));
+  const campaign = { ...f.campaign, code: 'item-offer', status: 'ACTIVE',
+    conditions: { ...f.campaign.conditions, sourceProductCode: 'product' }, couponOffer: { version: 1 } };
+  let availabilityReads = 0;
+  SERVICE.DefaultCouponOfferAllocationService = { availability: async (_r, actual) => {
+    assert.equal(actual, campaign); availabilityReads++; return { available: true, remaining: 99 };
+  } };
+  const effective = { ...operation, couponPoolAdmission: () => {}, sellerPolicyReader: () => false,
+    promotions: async () => [campaign] };
+  assert.deepEqual(await effective.couponPoolAvailability({ tenant: 't', enterpriseCode: 'issuer', storeCode: 'outlet', productCode: 'product' }), { available: true, remaining: 99 });
+  assert.equal(availabilityReads, 1); assert.equal(f.state.calls, 0);
+  await assert.rejects(owner.validate(f.request, f.campaign, f.coupon), { code: 'ERR_PROMOTION_BENEFIT_UNCONFIRMED' });
+  f.campaign.actions.items[0].quantity = 0;
+  assert.throws(() => operation.assertSupportedCouponBenefit(f.campaign), { code: 'ERR_PROMOTION_BENEFIT_UNCONFIRMED' });
+});

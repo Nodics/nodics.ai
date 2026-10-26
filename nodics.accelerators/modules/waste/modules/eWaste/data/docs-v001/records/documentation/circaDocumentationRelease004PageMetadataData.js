@@ -517,7 +517,7 @@ module.exports = {
       "data/core-v001/records/waste/eWasteEvidencePolicyData.js",
       "data/core-v001/records/waste/eWasteVerificationPolicyData.js",
       "data/core-v001/records/waste/eWasteImpactProfileData.js",
-      "data/docs-v001/headers/circaDocumentationContentPackHeader.js",
+      "data/docs-v001/headers/circaDocumentationRelease004ContentPackHeader.js",
       "test/eWasteReferenceCompatibility.test.js",
       "test/eWasteReferenceRelease.test.js",
       "test/eWastePresetDataContract.test.js",

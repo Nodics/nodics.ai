@@ -21,7 +21,7 @@ const crypto = require("node:crypto"), { isDeepStrictEqual: same } = require("no
  * Commerce mutation.
  * Failure behavior: Malformed/private owner evidence rejects; notify contains failures as UNCONFIRMED rather
  * than false delivery.
- * Exported members: fail, settings, digest, rpc, recipients, sourceCode, key, notify, isDispatchEligible.
+ * Exported members: fail, settings, digest, rpcFailureReason, rpcFailure, rpc, recipients, sourceCode, key, notify, isDispatchEligible.
  * @owner digitalCore
  * @layer service
  * @override Override effective delivery members while preserving stable keys, frozen addressing and current
@@ -65,6 +65,26 @@ module.exports = {
    * @override Preserve tuple ordering and exact serialization for retry identity.
    */
   digest: function (value) { return crypto.createHash("sha256").update(JSON.stringify(value)).digest("hex"); },
+  /** Classifies only bounded nService HTTP/runtime/transport evidence; normalized responseCode and error text are not remote HTTP evidence. @param {Object} error Original nService failure. @returns {string} Fixed submission reason. @override Preserve the fixed vocabulary and never inspect messages or copy remote metadata. */
+  rpcFailureReason: function (error) {
+    const failure = error?.metadata?.runtimeInvocationDiagnostic?.failureCode;
+    const status = error?.metadata?.remoteHttpFailure?.httpStatus ?? error?.metadata?.transportFailure?.httpStatus ?? error?.status;
+    if (failure === "INTERNAL_TOKEN_UNAVAILABLE") return "CREDENTIAL";
+    if (failure === "REMOTE_ENDPOINT_UNAVAILABLE") return "ENDPOINT";
+    if (status === 401 || status === 403) return "AUTHORIZATION";
+    if (status === 404) return "ENDPOINT";
+    if (Number.isInteger(status) && status >= 500 && status <= 599) return "OWNER_RESPONSE";
+    // Network codes (including runtimeInvocationDiagnostic.failureCode) and unknown
+    // transport failures share one bounded class; no arbitrary code is echoed.
+    return "TRANSPORT";
+  },
+  /** Creates detached source-owned error metadata, never carrying the original exception or response. @param {string} reason Fixed reason. @returns {Error} Safe delivery error. @override Keep metadata limited to the static classification. */
+  rpcFailure: function (reason) {
+    const error = new Error("Coupon reminder delivery is unconfirmed");
+    error.metadata = { digitalReminderDelivery: { failureReason:
+      ["AUTHORIZATION", "CREDENTIAL", "ENDPOINT", "TRANSPORT", "OWNER_RESPONSE"].includes(reason) ? reason : "TRANSPORT" } };
+    return error;
+  },
   /**
    * Uses existing runtime credential transport; no original actor token or business enterprise header.
    * @param {Object} r Tenant-only source context; no caller credential is forwarded.
@@ -75,8 +95,8 @@ module.exports = {
    * @returns {Promise<Object>} Unwrapped successful private owner response.
    * @remarks Effects: Performs one sensitive internal-auth RPC with response bound, no redirects and no
    * retries.
-   * Failure behavior: Rejects absent/malformed/failed envelope or excessive nesting; transport failures
-   * propagate.
+   * Failure behavior: Rejects with a detached fixed reason for original transport evidence or an
+   * absent/malformed/failed owner envelope. Raw transport failures never propagate.
    * @override Do not add business Enterprise headers, actor tokens or a second delivery outbox.
    */
   rpc: async function (r, moduleName, apiName, requestBody, p) {
@@ -84,15 +104,18 @@ module.exports = {
       targetAuthority: { runtimeRole: moduleName === "profile" ? "PLATFORM" : "ENGAGEMENT" }, tenant: r.tenant, request: { tenant: r.tenant },
       apiName, methodName: "POST", requestBody, requireInternalAuth: true, timeoutMs: p.timeoutMs, maxAttempts: 1,
       maxResponseBytes: 32768, followRedirects: false, secureTransport: { required: true, allowInsecureLoopback: p.allowInsecureLoopback } };
-    let response = await SERVICE.DefaultLoggerService.runSensitiveOperation(call, () => SERVICE.DefaultModuleService.invokeModule(call));
+    let response;
+    try {
+      response = await SERVICE.DefaultLoggerService.runSensitiveOperation(call, () => SERVICE.DefaultModuleService.invokeModule(call));
+    } catch (error) { throw this.rpcFailure(this.rpcFailureReason(error)); }
     for (let depth = 0; depth < 6; depth++) {
       if (!response || typeof response !== "object" || Array.isArray(response) || response.error || response.success === false ||
-          /^ERR_/.test(response.code || "") || response.errors && (!Array.isArray(response.errors) || response.errors.length)) this.fail();
+          /^ERR_/.test(response.code || "") || response.errors && (!Array.isArray(response.errors) || response.errors.length)) throw this.rpcFailure("OWNER_RESPONSE");
       if (response.data !== undefined) response = response.data;
       else if (response.result !== undefined) response = response.result;
       else return response;
     }
-    this.fail();
+    throw this.rpcFailure("OWNER_RESPONSE");
   },
   /**
    * Requests only the persisted source coordinates; Profile must independently callback to Digital before
@@ -151,36 +174,49 @@ module.exports = {
    * @remarks Effects: Rechecks current Profile source/roster before each original Communication intent
    * submission; Communication owns durable retries.
    * Failure behavior: Source ineligibility/empty roster returns SKIPPED; transport/proof/config errors
-   * return UNCONFIRMED, retaining attempted flag.
+   * return UNCONFIRMED, retaining attempted flag and a fixed owner-selected failureStage. SUBMISSION
+   * may include a fixed source-owned failureReason; never errors or remote metadata.
    * @override Never infer delivery from submission, resend with a new key or substitute current actor
    * contacts.
    */
   notify: async function (r, candidate) {
-    let attempted = false;
+    let attempted = false, stage = "POLICY";
     try {
       const p = this.settings(), source = { enterpriseCode: candidate.enterpriseCode, entitlementCode: candidate.sourceCode,
-        occurrenceKey: candidate.occurrenceKey }, proof = await this.recipients(r, source, p);
+        occurrenceKey: candidate.occurrenceKey };
+      stage = "RECIPIENT_PROOF";
+      const proof = await this.recipients(r, source, p);
       if (!proof.eligible) return { occurrenceKey: source.occurrenceKey, status: "SKIPPED", reason: "SOURCE_INELIGIBLE", deliveryAttempted: false };
+      stage = "SOURCE_BINDING";
       if (!same(proof.ownerRef, candidate.ownerRef) || proof.expiresAt !== candidate.expiresAt || !same(p, this.settings())) this.fail();
       if (!proof.recipients.length) return { occurrenceKey: source.occurrenceKey, status: "SKIPPED", reason: "NO_ELIGIBLE_RECIPIENT", deliveryAttempted: false };
       const outcomes = [];
       for (const recipient of proof.recipients) {
+        stage = "POLICY";
         if (!same(p, this.settings())) this.fail();
+        stage = "RECIPIENT_RECHECK";
         const current = await this.recipients(r, source, p);
         if (!current.eligible || !same(current.ownerRef, proof.ownerRef) || current.expiresAt !== proof.expiresAt ||
             !current.recipients.some(v => same(v, recipient))) { outcomes.push({ status: "SKIPPED", reason: "RECIPIENT_OR_SOURCE_CHANGED" }); continue; }
+        stage = "SUBMISSION";
         attempted = true;
         const result = await this.rpc(r, "commsApi", "/internal/communications", { sourceModule: "digitalCore",
           sourceType: "DIGITAL_COUPON_EXPIRING", sourceCode: this.sourceCode(source), templateCode: p.templateCode,
           ...recipient, purpose: "DIGITAL_COUPON_EXPIRING", channel: "IN_APP", locale: p.locale,
           idempotencyKey: this.key(source, recipient.recipientId), expiresAt: proof.expiresAt, requiresSourceEligibility: true,
           variables: { entitlementReference: source.entitlementCode, expiresAt: proof.expiresAt } }, p);
+        stage = "RECEIPT";
         if (!/^COMM_[a-f0-9]{64}$/.test(result?.intentCode || "") || !["ACCEPTED", "QUEUED", "DELIVERING", "DELIVERED", "RETRY_PENDING",
           "UNCERTAIN", "SUPPRESSED", "FAILED", "CANCELLED", "DEAD_LETTER", "UNCONFIGURED"].includes(result.status)) this.fail();
         outcomes.push({ intentCode: result.intentCode, status: result.status });
       }
       return { occurrenceKey: source.occurrenceKey, status: "RECORDED", deliveryAttempted: attempted, outcomes };
-    } catch (_) { return { occurrenceKey: candidate.occurrenceKey, status: "UNCONFIRMED", deliveryAttempted: attempted }; }
+    } catch (error) {
+      const reason = error?.metadata?.digitalReminderDelivery?.failureReason;
+      return { occurrenceKey: candidate.occurrenceKey, status: "UNCONFIRMED", deliveryAttempted: attempted, failureStage: stage,
+        ...(stage === "SUBMISSION" && ["AUTHORIZATION", "CREDENTIAL", "ENDPOINT", "TRANSPORT", "OWNER_RESPONSE"].includes(reason)
+          ? { failureReason: reason } : {}) };
+    }
   },
   /**
    * Communication's pre-send/retry hook rechecks source state and Profile preferences without readdressing

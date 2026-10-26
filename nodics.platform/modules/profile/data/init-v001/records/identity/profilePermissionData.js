@@ -111,5 +111,11 @@ module.exports = {
     "name": "profile.scope.read",
     "active": true,
     "ownerModule": "profile"
+  },
+  "record17": {
+    "code": "profile.commerce.notification.recipient.resolve",
+    "name": "profile.commerce.notification.recipient.resolve",
+    "active": true,
+    "ownerModule": "profile"
   }
 };

@@ -26,7 +26,7 @@ templates. Missing ownership never means any source. `commsTemplateVersion.resou
 selects a module resource instead of inline subject/body; runtime validates the
 exclusive representation and matching code, version, purpose and source before
 creating an intent. Legacy text remains readable through the shared renderer.
-Regenerate and install schemas before adopting core-v002/sample-v002 data releases.
+Regenerate and install schemas before adopting core-v001/sample-v001 data releases.
 No schema installation, import or queued-message rewrite is implicit in source changes.
 
 Status: active Phase 1C. Communication schema contracts. Later-loaded projects may override implementation while retaining Communication ownership, security, audit, retry, and recovery invariants.

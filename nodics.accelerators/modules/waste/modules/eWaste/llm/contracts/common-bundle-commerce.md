@@ -79,3 +79,25 @@ Bridge/publication tests retain transport-scope, authority, diagnostics, complet
 capture/ledger, custody, beneficiary, partial-lock, lost-response and cancellation
 coverage using current Digital/Waste/Loyalty owners. Product/Pricing transport and
 repositories are isolated doubles, not live qualification or runtime acceptance.
+
+### Coupon source-proof diagnostics
+
+The private bridge registers Waste coupon source failures as append-only diagnostics 042–045: unavailable target, failed source request, returned error evidence, and unconfirmed original proof. They distinguish the callback boundary from generic controller diagnostic 041 without exposing remote text or payloads. A failed source request does not identify which remote admission condition failed. Inspect skips that callback; mutation still requires exact Digital proof and original recovery authority.
+
+The bridge additionally appends diagnostics 046–056, in order: GATES, AUTH,
+ALLOCATION, GRANT, COUPON, ALLOCATION_BINDING, COMMAND, PHASE, CONSIDERATION,
+FAILURE_PROOF and READBACK. They map Digital's exact registered source codes via
+Waste Core's static wire allowlist; existing 001–045 identities are unchanged.
+eWaste loads those static messages into its existing status registry and the
+private router serializes only its registered code/message. No raw upstream
+message, cause, payload or identity is forwarded. The HTTP status remains 503 at
+this bridge. The stage identifies a failed proof boundary, not a verified root
+cause or recovery permission. Checkout may still discard it until its owning
+recovery projection explicitly accepts these diagnostics.
+
+The focused registered-Digital-stage regression in `eWasteDigitalSaleDiagnostics.test.js`
+composes Waste's source catch with eWaste's controller, actual status registration,
+NodicsError and private router serialization. It covers normalized nService
+HTTP-failure metadata, direct exceptions and nested failed envelopes, rejecting
+unknown codes, message-only claims, conflicting status markers and nested causes.
+Transport is isolated; installed network behavior remains separately qualified.

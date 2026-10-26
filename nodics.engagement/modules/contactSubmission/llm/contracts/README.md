@@ -4,8 +4,10 @@
 
 This module owns `src/templates/email/contact-acknowledgement`: a parameterized
 HTML/text/subject resource, not delivery logic or configuration content. It requires
-explicit selection or optional sample-v002 adoption; file discovery alone never
-enables sending. Later customer modules and runtime scopes may override individual
+explicit trusted deployment selection through `communication.templateResources.selections`
+or optional adoption of `commsCore:sample-templates` from its `data/sample-v001`.
+This module's `init-v001` permission catalogue does not select templates, and file
+discovery alone never enables sending. Later customer modules and runtime scopes may override individual
 files using the [Communication resource contract](../../../../../nodics.communication/modules/commsCore/llm/contracts/template-resources.md).
 Keep source ownership, required parameters and optional activation invariant.
 Communication renders and transports; this domain retains business decisions.

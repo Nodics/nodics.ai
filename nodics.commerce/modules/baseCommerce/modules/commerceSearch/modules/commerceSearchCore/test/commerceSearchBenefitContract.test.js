@@ -62,9 +62,15 @@ test('published windows survive hashing, snapshot persistence and repeatable fai
     SERVICE.DefaultCommerceSearchRuleService = { get: async () => ({ result: [source] }) };
     SERVICE.DefaultCommerceSearchRuleProjectionService.save = async () => {};
     SERVICE.DefaultCommerceSearchRuleProjectionService.doSave = async () => { throw new Error('synthetic index failure'); };
-    await assert.rejects(publication.publish(request, {}), /index failure/);
+    global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
+    await assert.rejects(publication.publish(request, {}), /INDEX_WRITE/);
     assert.equal(snapshots.size, 1);
-    SERVICE.DefaultCommerceSearchRuleProjectionService.doSave = async () => {};
+    let indexed;
+    SERVICE.DefaultCommerceSearchRuleProjectionService.doSave = async r => { indexed = JSON.parse(JSON.stringify(r.model));
+        return { result: [{ _id: indexed.code, result: 'created', _shards: { failed: 0 } }] }; };
+    SERVICE.DefaultCommerceSearchRuleProjectionService.doSearch = async () => ({ result: { hits: {
+        total: { value: 1, relation: 'eq' }, hits: [{ _id: indexed.code, _source: indexed }]
+    } } });
     await publication.publish(request, {});
     assert.equal(snapshots.size, 1);
     assert.equal([...snapshots.values()][0].snapshot.validTo, projected.validTo);
@@ -222,4 +228,75 @@ test('canonical membership is mandatory even when legacy published-policy reads 
     const get = CONFIG.get;
     CONFIG.get = key => key === 'promotion' ? { publication: { delivery: { enabled: true } } } : get(key);
     await assert.rejects(benefitService.memberships(request, [product('own-one')]), /complete coupon membership owner/);
+});
+
+test('selected coverage resolves real Agreement history before requesting only the eligible membership union', async () => {
+    const agreement = require('../../../../commercialAgreement/src/service/defaultCommercialAgreementOperationService');
+    const agreementProperties = require('../../../../commercialAgreement/config/properties').commercialAgreement;
+    const schema = require('../../../../commercialAgreement/src/schemas/schemas').commercialAgreement.commercialAgreement;
+    const concurrency = require('../../../../../../../../nodics.foundation/modules/nDatabase/database/src/service/schema/defaultModelConcurrencyService');
+    const get = CONFIG.get;
+    CONFIG.get = key => key === 'commercialAgreement' ? agreementProperties : get(key);
+    global.NODICS = { getModels: () => ({ CommercialAgreementModel: {
+        primaryKey: 'code', rawSchema: schema, compareAndSetItem() { assert.fail('Read only'); }
+    } }) };
+    SERVICE.DefaultCommercialAgreementOperationService = agreement;
+    SERVICE.DefaultModelConcurrencyService = concurrency;
+    SERVICE.DefaultIdentityGovernanceService = { getSystemAuthData: () => ({ isSystem: true }) };
+    SERVICE.DefaultDatabaseConfigurationService = { getSchemaInterceptors: () => Object.fromEntries(
+        [['preSave', 'protect'], ['preUpdate', 'protect'], ['preRemove', 'protectRemove']]
+            .map(([trigger, member]) => [trigger, [{ active: true, handler: 'DefaultCommercialAgreementOperationService.' + member }]])) };
+    const events = [];
+    const benefits = [
+        { ...benefit, code: 'included', targetType: 'SELECTED_COUPONS', productCodes: ['own-a', 'absent'] },
+        { ...benefit, code: 'addon', targetType: 'SELECTED_COUPONS', productCodes: ['own-a', 'own-b', 'foreign'] }
+    ];
+    SERVICE.DefaultCommercialAgreementService = {
+        get: async r => {
+            assert.equal(r.authData.isSystem, true);
+            assert.deepEqual(r.query, { code: 'agreement', 'enterpriseRef.code': 'issuer' });
+            events.push('agreement');
+            return { result: [{ code: 'agreement', enterpriseRef: { code: 'issuer' }, revision: 1,
+                versions: [{ version: 1, terms: { effectiveFrom: benefit.validFrom, effectiveTo: benefit.validTo, benefits } }] }] };
+        },
+        save() { assert.fail('Read only'); }, update() { assert.fail('Read only'); }
+    };
+    const customer = { ...request, authData: { tenant: 't', principalType: 'customer', tokenType: 'access', permissions: [] } };
+    const ref = benefitCode => ({ agreementCode: 'agreement', enterpriseCode: 'issuer', benefitCode });
+    rules = [rule({ code: 'included', benefitRef: ref('included') }), rule({ code: 'addon', benefitRef: ref('addon') })];
+    const products = ['unrelated-legacy', 'foreign', 'own-a', 'own-b'].map(product);
+    const membershipReads = [];
+    SERVICE.DefaultPromotionOperationService.couponIssuerMemberships = async (r, codes) => {
+        assert.equal(r.authData, customer.authData);
+        assert.equal(events.filter(value => value === 'agreement').length, 2);
+        events.push('membership'); membershipReads.push(codes);
+        assert.ok(!codes.includes('unrelated-legacy'));
+        return codes.map(productCode => ({ productCode, issuerEnterpriseCode: productCode === 'foreign' ? 'other' : 'issuer' }));
+    };
+    const ranked = await ranking.rank(customer, products);
+    assert.deepEqual(membershipReads.flat(), ['foreign', 'own-a', 'own-b']);
+    assert.deepEqual(ranked.map(p => p.productCode), ['own-a', 'own-b', 'unrelated-legacy', 'foreign']);
+    SERVICE.DefaultPromotionOperationService.couponIssuerMemberships = async () => { throw new Error('selected owner refused'); };
+    await assert.rejects(ranking.rank(customer, products), /selected owner refused/);
+});
+
+test('absent and foreign-Store benefits require no membership while mixed all coverage remains complete', async () => {
+    const ref = { agreementCode: 'agreement', enterpriseCode: 'issuer', benefitCode: 'visibility' };
+    rules = [rule({ benefitRef: ref })];
+    const products = ['unrelated', 'own-one'].map(product);
+    SERVICE.DefaultPromotionOperationService.couponIssuerMemberships = async () => assert.fail('No matching coverage');
+    benefit.storeCode = 'other';
+    assert.deepEqual(await ranking.rank(request, products), products);
+    benefit = undefined;
+    assert.deepEqual(await ranking.rank(request, products), products);
+    SERVICE.DefaultCommercialAgreementOperationService.resolveBenefit = async (_request, reference) => ({
+        ...reference, storeCode: 'shop', targetType: reference.benefitCode === 'all' ? 'ALL_ENTERPRISE_COUPONS' : 'SELECTED_COUPONS',
+        productCodes: ['own-one']
+    });
+    rules.push(rule({ code: 'all', benefitRef: { ...ref, benefitCode: 'all' } }));
+    SERVICE.DefaultPromotionOperationService.couponIssuerMemberships = async (_request, codes) => {
+        assert.deepEqual(codes, ['unrelated', 'own-one']);
+        throw new Error('all coverage owner refused');
+    };
+    await assert.rejects(ranking.rank(request, products), /all coverage owner refused/);
 });

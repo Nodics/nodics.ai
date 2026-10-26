@@ -99,34 +99,12 @@ module.exports = {
           ],
         },
       },
-      nexusupdate: {
-        code: "nexusupdate",
-        type: "WEBSITE_BUNDLE_UPDATE",
-        owner: "nexus.web",
-        applicationCode: "nexus",
-        siteCode: "nexusCorporateSite",
-        baselineCode: "nexusupdate",
-        presentation: {
-          visible: false,
-        },
-      },
-      nexusecosystemrepair: {
-        code: "nexusecosystemrepair",
-        type: "WEBSITE_BUNDLE_UPDATE",
-        owner: "nexus.web",
-        applicationCode: "nexus",
-        siteCode: "nexusCorporateSite",
-        baselineCode: "nexusecosystemrepair",
-        presentation: {
-          visible: false,
-        },
-      },
     },
   },
   tooling: {
     acceptance: {
       guidedInitialization: {
-        publicationProfiles: ["nexus", "nexusupdate", "nexusecosystemrepair"],
+        publicationProfiles: ["nexus"],
         deliveryProbe: {
           site: "nexusCorporateSite",
           path: "/",

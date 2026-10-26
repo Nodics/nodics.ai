@@ -35,7 +35,7 @@ module.exports = {
       "ai-tool"
     ],
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true
   }

@@ -83,6 +83,16 @@ module.exports = {
 
   pricing: {
     enabled: true,
+    administrativeAuthoring: {
+      readPermission: "commerce.pricing.read",
+      writePermission: "commerce.pricing.write",
+      publishPermission: "commerce.pricing.publish",
+      evidencePath: "/identity/platform-administrator/evidence",
+      recipientPath: "/participants/resolve",
+      identityTarget: { moduleName: "profile", connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, apiVersion: "v0" },
+      timeoutMs: 10000,
+      maximumDecimalLength: 64,
+    },
     bundleListings: { enabled: false, qualified: false, maximumRecords: 1000, maximumConfiguredBound: 10000 },
     merchantEvidence: {
       qualified: false,
@@ -187,6 +197,7 @@ module.exports = {
   },
   apiExposure: {
     categories: {
+      pricingAdministrativeAuthoring: { enabled: true },
       commerceMerchantPricing: { enabled: false },
       pricingPublicationAuthoring: { enabled: false },
       commercePublicationIngestion: {

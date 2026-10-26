@@ -108,6 +108,7 @@ function fixture(t) {
     DefaultDatabaseConfigurationService: { toObjectId: (_model, id) => id },
     DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
     DefaultUserStateService: { findUserState: async () => ({ locked: state.locked }) },
+    DefaultEnterpriseAccessAssignmentService: { get: async () => ({ code: "SUC_READ", result: clone(state.assignments), count: state.assignments.length }) },
     DefaultLoggerService: { assertSensitiveRequest: r => assert.ok(privateRequests.has(r)),
       runSensitiveOperation: async (r, work) => { privateRequests.add(r); return work(); } },
   };
@@ -642,4 +643,82 @@ test("gift actual dispatch hook suppresses frozen recipients after permission re
   f.db.UserGroup[1].permissions = ["commerce.digital.bundle.manage"];
   f.row.evidence.decision = "ACCEPT"; assert.equal((await f.digital.isDispatchEligible(input)).eligible, false);
   f.state.storageError = true; await assert.rejects(f.digital.isDispatchEligible(input));
+});
+
+
+test("coupon controller composes source proof with real Enterprise membership, groups and scope selection", async t => {
+  const f = fixture(t);
+  const coupon = require("../src/service/identity/defaultProfileCouponNotificationRecipientService");
+  const controller = require("../src/controller/identity/defaultProfileCouponNotificationRecipientController");
+  const policy = f.config.profileCouponNotifications;
+  policy.enabled = true;
+  f.request.authData.modules.push("digitalCore");
+  f.request.authData.permissions.push(policy.permission);
+  f.request.body = { channel: "IN_APP", source: { enterpriseCode: "shop", entitlementCode: "coupon", occurrenceKey: "COUPON_EXPIRY_" + "b".repeat(64) } };
+  f.db.Enterprise[0].couponReminderPreferences = { IN_APP: true };
+  f.db.Enterprise[0].couponReminderRecipients = [{ employeeCode: "U1" }];
+  f.db.Employee[0].couponReminderPreferences = { IN_APP: true };
+  f.db.UserGroup[1].permissions = [policy.recipientSelection.recipientPermission];
+  f.db.Permission[0].code = policy.recipientSelection.recipientPermission;
+  SERVICE.DefaultProfileCouponNotificationRecipientService = coupon;
+  SERVICE.DefaultProfileCommerceNotificationRecipientService = require("../src/service/customer/defaultProfileCommerceNotificationRecipientService");
+  global.FACADE = { DefaultProfileCouponNotificationRecipientFacade: require("../src/facade/identity/defaultProfileCouponNotificationRecipientFacade") };
+  const expiresAt = new Date(Date.now() + 60000).toISOString();
+  let callbacks = 0;
+  SERVICE.DefaultModuleService = { invokeModule: async call => {
+    callbacks++;
+    assert.equal(call.requireInternalAuth, true);
+    assert.equal(call.header, undefined);
+    assert.equal(call.targetAuthority.runtimeRole, "COMMERCE");
+    return { code: "SUC_READ", data: { contractVersion: 1, tenant: "tenant", sourceModule: "digitalCore",
+      sourceType: "DIGITAL_COUPON_EXPIRING", source: structuredClone(call.requestBody), eligible: true,
+      ownerRef: { type: "ENTERPRISE", code: "E1" }, expiresAt } };
+  } };
+  const result = await controller.resolve(f.request);
+  assert.deepEqual(result.data.recipients.map(item => item.recipientId), ["profile-employee:U1"]);
+  assert.equal(callbacks, 2);
+  assert.ok(f.state.reads.includes("PrincipalScopeAssignment"));
+  f.state.onRead = (name) => { if (name === "Employee") throw new Error("private storage failure"); };
+  await assert.rejects(controller.resolve(f.request), { code: "ERR_PROFILE_COUPON_RECIPIENT_SELECTION" });
+});
+
+test("native coupon recipient retains identity and grant checks with optional membership policy disabled", async t => {
+  const f = fixture(t);
+  Object.assign(f.config.enterpriseManagement.memberships, { enabled: false, inventoryQualified: false,
+    sessionBindingQualified: false, assignmentClaimIndexQualified: false });
+  const policy = { ...f.config.profileCouponNotifications.recipientSelection, maximumRecipients: 20 };
+  f.db.Enterprise[0].couponReminderPreferences = { IN_APP: true };
+  f.db.Enterprise[0].couponReminderRecipients = [{ employeeCode: "U1" }];
+  f.db.Employee[0].couponReminderPreferences = { IN_APP: true };
+  f.db.UserGroup[1].permissions = [policy.recipientPermission];
+  f.db.Permission[0].code = policy.recipientPermission;
+  SERVICE.DefaultEnterpriseMembershipService.inventory = membership.inventory;
+  let assignmentReads = 0;
+  SERVICE.DefaultEnterpriseAccessAssignmentService = { get: async request => {
+    assignmentReads++;
+    assert.equal(request.tenant, "authority");
+    assert.equal(request.query.enterpriseCode, "E1");
+    assert.equal(request.query["membership.identity.recordId"], "U1-id");
+    return { code: "SUC_READ", result: [], count: 0 };
+  } };
+  assert.throws(() => SERVICE.DefaultEnterpriseMembershipService.resolve(f.db.Employee[0], "tenant", "EMPLOYEE"), { code: "ERR_PROFILE_MEMBERSHIP_UNAVAILABLE" });
+  const run = () => recipient.select(f.request, { type: "ENTERPRISE", code: "E1" }, policy);
+  assert.deepEqual(await run(), ["profile-employee:U1"]);
+  assert.ok(assignmentReads >= 2);
+  f.state.locked = true;
+  await assert.rejects(run(), { code: "ERR_AUTH_00003" });
+  f.state.locked = false;
+  f.db.Employee[0].authenticationIdentity = { tenantCode: "tenant", recordKind: "EMPLOYEE", recordId: "U1-id" };
+  await assert.rejects(run(), { code: "ERR_AUTH_00003" }, "linked identity retains qualified membership resolver");
+  delete f.db.Employee[0].authenticationIdentity;
+  f.db.UserGroup[1].permissions = [];
+  assert.deepEqual(await run(), []);
+  f.db.UserGroup[1].permissions = [policy.recipientPermission];
+  f.db.PrincipalScopeAssignment[0].effect = "DENY";
+  assert.deepEqual(await run(), []);
+  f.db.PrincipalScopeAssignment[0].effect = "ALLOW";
+  SERVICE.DefaultEnterpriseAccessAssignmentService.get = async () => ({ code: "SUC_READ", result: [{ code: "a" }, { code: "b" }], count: 2 });
+  await assert.rejects(run(), { code: "ERR_AUTH_00003" }, "ambiguous assignment lookup remains refused");
+  SERVICE.DefaultEnterpriseAccessAssignmentService.get = async () => ({ code: "ERR_READ", result: [] });
+  await assert.rejects(run(), { code: "ERR_AUTH_00003" }, "failed lookup cannot imply native assignment absence");
 });

@@ -194,9 +194,35 @@ module.exports = {
       throw error;
     }
   },
-  /** Revalidates initial registration readiness without creating another session or identity authority. */
+  /**
+   * Rejects foreign or contradictory native Employee Enterprise bindings.
+   * @param {Object} person Fresh canonical native principal.
+   * @param {Object} enterprise Selected existing Enterprise.
+   * @returns {void} Throws the existing authentication refusal on mismatch.
+   * @override Preserve persisted binding and configured default-Enterprise boundaries.
+   */
+  assertNativeEmployeeEnterprise: function (person, enterprise) {
+    const bindings = [person?.enterpriseCode, person?.metadata?.enterpriseCode]
+      .filter((value) => value !== undefined);
+    if (
+      !person ||
+      !enterprise ||
+      typeof enterprise.code !== "string" ||
+      bindings.some((value) =>
+        typeof value !== "string" || !value.trim() || value !== enterprise.code,
+      ) ||
+      (!bindings.length && enterprise.code !== CONFIG.get("defaultEnterprise"))
+    ) {
+      throw new CLASSES.NodicsError("ERR_AUTH_00001");
+    }
+  },
+  /** Revalidates native Enterprise binding or registration readiness without creating another session or identity authority. */
   assertEmployeeRegistrationSession: async function (person, enterprise) {
-    if (!person || !person.registrationAssignmentCode) return;
+    if (!person?.registrationAssignmentCode) {
+      if (person?.principalType !== "customer")
+        this.assertNativeEmployeeEnterprise(person, enterprise);
+      return;
+    }
     const registration = SERVICE.DefaultEnterpriseRegistrationService;
     if (
       !registration ||

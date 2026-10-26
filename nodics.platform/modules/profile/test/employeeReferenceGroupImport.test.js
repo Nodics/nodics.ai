@@ -52,7 +52,8 @@ function fixture(t) {
   const envelope = result => ({ code: "SUC_OWNER_READ", count: result.length, result: structuredClone(result) });
   const port = rows => ({ get: async request => {
     reads.push(request);
-    return envelope(rows.filter(row => matches(row, request.query)));
+    const selected = rows.filter(row => matches(row, request.query));
+    return envelope(selected.slice(0, request.searchOptions?.pageSize ?? 10));
   } });
   const owner = { ...employee, ...port(records), update: async request => {
     writes.push(structuredClone(request));
@@ -102,6 +103,32 @@ test("additive adoption preserves password and extra groups, retains import auth
   await f.owner.addReferenceGroupsAll(f.request);
   assert.equal(f.writes.length, 1);
   assert.equal(f.registered.length, 2);
+});
+
+test("complete retained group union exceeds default page without false missing-group refusal", async t => {
+  const f = fixture(t);
+  const retained = Array.from({ length: 12 }, (_, index) => "retainedGroup" + index);
+  f.records[0].userGroups.push(...retained);
+  f.groups.push(...retained.map(code => ({ code, active: true })));
+  const before = structuredClone(f.records[0]);
+  await f.owner.addReferenceGroupsAll(f.request);
+  assert.deepEqual(f.records[0].userGroups, [...before.userGroups, ...f.instruction.groupCodes]);
+  assert.equal(f.records[0].authVersion, 8);
+  assert.equal(f.records[0].password, before.password);
+  await f.owner.addReferenceGroupsAll(f.request);
+  assert.equal(f.writes.length, 1);
+});
+
+test("inactive retained group beyond the default page still refuses without persistence", async t => {
+  const f = fixture(t);
+  const retained = Array.from({ length: 12 }, (_, index) => "retainedGroup" + index);
+  f.records[0].userGroups.push(...retained);
+  f.groups.push(...retained.map(code => ({ code, active: true })));
+  f.groups.at(-1).active = false;
+  const before = structuredClone(f.records[0]);
+  await assert.rejects(f.owner.addReferenceGroupsAll(f.request));
+  assert.deepEqual(f.records[0], before);
+  assert.equal(f.registered.length, 0);
 });
 
 test("legacy absent stamp uses explicit CAS absence and normal stamp allocation", async t => {

@@ -91,7 +91,8 @@ module.exports = {
         if ((request.auctionFunds || request.merchantScope) && request.ownerRef?.schema === 'customer') {
             const auth = request.authData || {};
             if (auth.principalType !== 'customer' || auth.tokenType !== 'access' || auth.tenant !== request.tenant ||
-                request.ownerRef.module !== 'profile' || request.actorRef?.code !== request.ownerId ||
+                request.ownerRef.module !== 'profile' || request.ownerRef.code !== request.ownerId ||
+                request.actorRef?.code !== (auth.principalId || auth.code || auth.loginId) ||
                 request.actorRef?.loginId !== auth.loginId) throw this.accessDeniedError();
             return this.serviceAuthData(request);
         }

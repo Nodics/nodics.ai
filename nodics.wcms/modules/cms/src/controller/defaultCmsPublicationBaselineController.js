@@ -44,6 +44,8 @@ module.exports = {
     status: function (request, callback) { return this.invoke('status', request, callback); },
     /** Executes the documented bounded module operation. */
     initiate: function (request, callback) { return this.invoke('initiate', request, callback); },
+    /** Reconciles approval for an existing publication without baseline installation. */
+    reconcileApproval: function (request, callback) { return this.invoke('reconcileApproval', request, callback); },
     /** Executes the documented bounded module operation. */
     rollback: function (request, callback) { return this.invoke('rollback', request, callback); },
     /** Executes the documented bounded module operation. */

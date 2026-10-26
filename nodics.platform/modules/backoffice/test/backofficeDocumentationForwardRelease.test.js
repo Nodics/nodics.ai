@@ -23,10 +23,14 @@ const previous = require('./fixtures/documentationFrozen001.json').sections.docu
 const next = require('../data/manifest.json').sections.documentation;
 const selected = contract.readDocumentationRelease(root, 'documentation');
 const local = { ...selected, children: [] };
+const historicalFile = file => {
+    const fixture = path.join(root, 'test/fixtures/unreleasedPredecessor', file);
+    return fs.existsSync(fixture) ? fixture : path.join(root, 'data', file);
+};
 const family = (release, suffix) => contract.readReleaseRecords(release, suffix).records;
 const components = family(local, 'Component');
 const original = suffix => Object.keys(previous.generatedHashes).filter(file => file.endsWith(suffix + 'Data.js'))
-    .flatMap(file => Object.values(require(path.join(root, 'data', file))));
+    .flatMap(file => Object.values(require(historicalFile(file))));
 const axis = components.find(record => record.properties.code === 'applications.axis-setup-error-contracts').properties;
 
 test('all eight released 0.0.1 payloads retain their exact bytes', () => {
@@ -34,7 +38,7 @@ test('all eight released 0.0.1 payloads retain their exact bytes', () => {
     assert.equal(contract.releaseChecksum(previous.generatedHashes), 'fca75462cfb14798e573c502a9f8646bbf8f6c35aa86fa7cc5735f3a868c666b');
     assert.equal(Object.keys(previous.generatedHashes).length, 8);
     for (const [file, hash] of Object.entries(previous.generatedHashes)) {
-        assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
+        assert.equal(contract.sha256(fs.readFileSync(historicalFile(file))), hash, file);
     }
 });
 
@@ -65,7 +69,7 @@ test('one successor header preserves dispatch, query, ordering and all canonical
     const headers = files.filter(file => file.includes('/headers/'));
     assert.equal(headers.length, 1);
     assert.ok(headers[0].includes('Release002'));
-    const before = require(path.join(root, 'data', Object.keys(previous.generatedHashes).find(file => file.includes('/headers/'))));
+    const before = require(historicalFile(Object.keys(previous.generatedHashes).find(file => file.includes('/headers/'))));
     const after = require(path.join(root, 'data', headers[0]));
     const dispatch = header => Object.entries(header).flatMap(([module, entries]) => Object.values(entries).map(entry => ({
         module, schemaName: entry.options.schemaName, operation: entry.options.operation,

@@ -88,6 +88,16 @@ module.exports = {
         "text": "Verification and adoption",
         "anchor": "commerce-search-guide-source-depth-4",
         "level": 2
+      },
+      {
+        "text": "Complete eligible sets and independent timing",
+        "anchor": "commerce-search-guide-complete-set-timing",
+        "level": 2
+      },
+      {
+        "text": "Enterprise agreement benefit targeting",
+        "anchor": "commerce-search-guide-agreement-benefits",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -114,8 +124,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/commerceSearchCoreDocumentationComponentData.js",
-    "sourceChecksum": "f4bacee607b4206ed11059a280a4ab8745d1a3fa222281222bcee29271f3d587",
-    "sourceWordCount": 1603,
+    "sourceChecksum": "2404a330934bb5fe023549c53eaa1c384e01cfa7e05bca3288122b355681ff69",
+    "sourceWordCount": 2306,
     "audience": [
       "business",
       "architect",
@@ -137,10 +147,10 @@ module.exports = {
     ],
     "accessPolicy": "nodicsDocsAccessPublic",
     "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
+    "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 1603,
+    "wordCount": 2306,
     "sourceEvidence": [
       "../../../../../../../nodics.docs/data/manifest.json",
       "../../../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",

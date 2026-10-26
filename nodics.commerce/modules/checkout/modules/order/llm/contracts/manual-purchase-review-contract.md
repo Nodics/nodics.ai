@@ -12,6 +12,25 @@ a bounded reason and stable idempotency. Manual resolution remains available and
 does not execute financial changes. Operators require `commerce.dispute.review`
 and current Profile scope; generic lifecycle actions cannot bypass these checks.
 
+Order history summaries and the own-disputes read project `reviewEligibility`
+(`eligible`, `resolutions`, `reasonCode`). This is review intent only, never
+financial authority. Store admission and bounded owner-scoped Digital reads run
+server-side. Owner-bound Digital finality is projected before manual-review Store
+admission, so an unadmitted `purchase-` identity still reports its final-sale
+reason. Admission remains mandatory before granting any review intent and on
+the existing customer case operations; finality never enables a Store or prefix.
+Digital's retained v2 `DIGITAL_COUPON_PURCHASE_FINAL` decision exposes
+no customer review action, regardless of browser status strings. Other coupon
+financial review types require the current Digital revocation decision to be
+refundable; redeemed legacy coupons retain dispute-only review. Ownership
+deliveries require their separate domain contract and are not granted coupon
+review authority. Missing/failed owner evidence disables review, not history.
+New cases recheck eligibility; immutable original-command replay and existing
+case reads remain available without changing history or executing any reversal.
+Clients require affirmative eligibility for entry and fresh case-read eligibility
+for each offered resolution. They must not infer permission from REDEEMED,
+COMPLETED, purchase terms or a generic lifecycle preview.
+
 When a deployment explicitly enables `order.refunds`, a moderator can preview a
 full refund for a configured exact retained Store or legacy order prefix. Store
 admission loads the original owner-bound Cart and rejects absent, conflicting or
@@ -244,3 +263,50 @@ Focused isolated coverage: `test/orderReverseSafetyContract.test.js`,
 `test/orderRefundRecoveryContract.test.js`,
 `test/orderLifecycleOperationalReadinessContract.test.js` and PaymentCore's
 `test/paymentRefundSafetyContract.test.js`. These are not live acceptance.
+
+
+## Typed participant lifecycle preview and bundle finality
+
+`POST /orders/:orderCode/lifecycle/preview` and `POST /orders/:orderCode/lifecycle`
+admit existing Customer and Enterprise employee access groups with
+`commerce.lifecycle.own.create`. Own lifecycle GET retains its existing route access and `commerce.order.own.read`.
+The Cart participant resolver verifies current Profile identity/scope without
+rewriting the signed actor; Order verifies typed owner continuity and selects the
+retained merchant partition. Same-text Customer and Enterprise identities are not
+interchangeable. No new group, role or deployment default is required.
+
+For retained DIGITAL_OWNERSHIP entitlements, Order invokes
+`DefaultDigitalCommerceOwnershipService.refund(request, items, "preview")`.
+For financial reverse intents (not APPEAL review), completed bundle policy returns `eligible:false`,
+`reasonCode:COMPLETED_BUNDLE_FINAL_SALE`; no executable automation or refund preview
+is returned. Create rechecks the same canonical policy and refuses with
+`ERR_ORDER_LIFECYCLE_INELIGIBLE` (409) before any lifecycle save or financial effect.
+Missing expected Digital evidence is an evidence failure, not proof of finality.
+Body-carried finality/owner values and a route authorization 403 are not final-sale
+proof. Existing manual-dispute and operator execution gates remain independent.
+
+Safe live validation after coordinated adoption is the owned preview POST with
+`{"requestType":"REFUND"}` or `{"requestType":"RETURN"}` under the original buyer.
+This source change performs no live preview/create/refund. Focused regression
+`test/orderParticipantFinalSale.test.js` exercises actual route security,
+controller/facade, participant resolver, Order readers and Digital policy against
+read-only Profile/generated-persistence fixtures, including wrong owner/scope and
+no-write creation refusal. It does not establish live acceptance.
+
+### Coupon finality in participant lifecycle
+
+The same qualified Order preview/create path evaluates retained COUPON_CODE
+entitlements with DefaultDigitalCommerceEntitlementService.revocationPolicy.
+DIGITAL_COUPON_PURCHASE_FINAL produces eligible:false and the same fixed reason
+for cancellation, return, refund, exchange and replacement. The preview has empty
+refundMethods/returnMethods/automationPlan and null refundPreview; it cannot
+advertise generic USD refund amounts for a final coupon. Create rejects with
+ERR_ORDER_LIFECYCLE_INELIGIBLE before lifecycle persistence or financial effects.
+Unused, redeemed and expired states do not weaken original version-2 finality.
+Missing or malformed canonical policy fails closed. Bundle checks still run first;
+APPEAL remains review intent. Existing typed Customer/Enterprise authority and
+merchant scope are unchanged. No new configuration, Profile rule or runtime action.
+
+orderParticipantFinalSale regressions use the actual HTTP controller/facade,
+Profile participant resolver and Digital revocationPolicy for CERTIFICATES/BOTH,
+preview/create, unchanged bundle refusals and no-write enforcement.

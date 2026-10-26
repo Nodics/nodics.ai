@@ -16,6 +16,9 @@
  * @owner backoffice
  * @override Later modules may replace storage or reconciliation while preserving lease, security, and client-safe projection contracts.
  */
+const readinessWork = require("../../utils/applicationReadinessWork");
+const { performance } = require("node:perf_hooks");
+
 module.exports = {
   _sweepTimer: null,
   _metrics: {
@@ -311,6 +314,28 @@ module.exports = {
     return ttl;
   },
 
+  /** Measures fixed owner phases without retaining requests, identities, results or errors. */
+  measureRegistrationPhase: function (phase, operation) {
+    const phases = this._metrics.registrationTiming ||= {};
+    const metric = phases[phase] ||= { active: 0, completed: 0, rejected: 0,
+      lastDurationMs: 0, maxDurationMs: 0, totalDurationMs: 0 };
+    const started = performance.now();
+    metric.active++;
+    const finish = (rejected) => {
+      const elapsed = Math.max(0, Math.round(performance.now() - started));
+      metric.active--;
+      metric.completed++;
+      if (rejected) metric.rejected++;
+      metric.lastDurationMs = elapsed;
+      metric.maxDurationMs = Math.max(metric.maxDurationMs, elapsed);
+      metric.totalDurationMs += elapsed;
+    };
+    let result;
+    try { result = operation(); } catch (error) { finish(true); throw error; }
+    return Promise.resolve(result).then(value => { finish(false); return value; },
+      error => { finish(true); throw error; });
+  },
+
   /** Registers one bounded runtime-instance batch while preserving per-module leases. */
   registerBatch: function (batch, authData) {
     if (!this.validateServiceIdentity({ authData }, batch)) {
@@ -356,7 +381,7 @@ module.exports = {
     let functionalModuleIndex = SERVICE.DefaultFunctionalModuleCatalogueService
       .buildLeaseFunctionalModuleIndex(batch);
     let snapshotRefreshed = false;
-    return Promise.allSettled(
+    return this.measureRegistrationPhase("batch", () => this.measureRegistrationPhase("leases", () => Promise.allSettled(
       registrations.map((item) =>
         this.register({
           body: item,
@@ -379,19 +404,24 @@ module.exports = {
           },
         }),
       ),
-    ).then(async (settled) => {
+    )).then(async (settled) => {
       // Wait for late sibling writes before publishing even a partial batch.
       let failure = settled.find(result => result.status === "rejected");
       if (failure) throw failure.reason;
       let results = settled.map(result => result.value);
-      let functionalModules = await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileRuntimeBatch(batch, authData);
-      let activeEntries = await this.getStore().values();
-      // Publish the captured leases before asynchronous reconciliation can interleave.
-      await this.refreshRuntimeRegistrySnapshot(activeEntries.map(entry => entry.value));
+      let functionalModules = await this.measureRegistrationPhase("catalogue", () =>
+        SERVICE.DefaultFunctionalModuleCatalogueService.reconcileRuntimeBatch(batch, authData));
+      let activeEntries = await this.measureRegistrationPhase("snapshot", async () => {
+        const entries = await this.getStore().values();
+        // Publish before yielding to timing or catalogue continuations.
+        await this.refreshRuntimeRegistrySnapshot(entries.map(entry => entry.value));
+        return entries;
+      });
       snapshotRefreshed = true;
-      await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
-        activeEntries.map(entry => entry.value), [batch.project], { authData: authData });
-      return this.audit({
+      await this.measureRegistrationPhase("activeCatalogue", () =>
+        SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
+          activeEntries.map(entry => entry.value), [batch.project], { authData: authData }));
+      return this.measureRegistrationPhase("audit", () => this.audit({
         eventType: "backoffice.registry.registration",
         outcome: outcomes.every((outcome) => outcome === "renewed")
           ? "renewed"
@@ -400,7 +430,7 @@ module.exports = {
             : "reconciled",
         instanceId: batch.instanceId,
         moduleCount: results.length,
-      }).then(() => ({
+      })).then(() => ({
         code: "SUC_BOF_00000",
         data: {
           instanceId: batch.instanceId,
@@ -427,7 +457,7 @@ module.exports = {
         }
       }
       throw error;
-    });
+    }));
   },
 
   /** Normalizes one schema/service authority claim and derives its stable authority key. */
@@ -1215,21 +1245,24 @@ module.exports = {
   /** Coalesces reads only inside one authenticated composition; no cross-request authority or freshness cache. */
   applicationStatusReader: function (request) {
     const results = new Map();
+    const schedule = readinessWork.queue();
+    readinessWork.composition(request);
     return (profileCode) => {
       if (!results.has(profileCode)) {
-        results.set(profileCode, Promise.resolve().then(() =>
+        results.set(profileCode, schedule(() =>
           SERVICE.DefaultBackofficeApplicationInitializationService.status(profileCode, request)));
       }
       return results.get(profileCode);
     };
   },
 
-  /** Settles profile reads with at most four workers per composition, preserving input-relative result/error order and request-local reuse. */
+  /** Settles profile reads under owner worker policy, preserving input-relative result/error order and request-local reuse. */
   applicationStatusReport: async function (profiles, readStatus) {
     const pending = (profiles || []).filter(profile => profile && profile.code);
     const outcomes = new Array(pending.length);
     let cursor = 0;
-    await Promise.all(Array.from({ length: Math.min(4, pending.length) }, async () => {
+    const workers = readinessWork.workers();
+    await Promise.all(Array.from({ length: Math.min(workers, pending.length) }, async () => {
       while (cursor < pending.length) {
         const index = cursor++;
         const profile = pending[index];
@@ -1646,6 +1679,7 @@ module.exports = {
         effectiveNavigationComposition: effectiveNavigationComposition,
         uiComposition: this.selectUiComposition(catalogue, availability),
         applicationInitializationProfiles: applicationInitializationProfiles,
+        applicationReadinessScheduling: readinessWork.browserPolicy(),
         documentationSources: documentationSources,
         axisPolicy: axisPolicy,
         startupValidation: startupValidation,
@@ -1957,10 +1991,18 @@ module.exports = {
     };
   },
 
-  /**
-   * Returns only the public module endpoints and UI composition required before employee authentication.
-   * The observed registry remains endpoint authority; no module inventory, lease, health, or permission data is disclosed.
-   */
+  /** Projects only explicitly public owner observations from agreeing, current selected leases. */
+  publicFeatureAvailability: function (candidates) {
+    const values = candidates.map(item => item.backoffice?.publicFeatureAvailability);
+    const validator = SERVICE.DefaultBackofficeContractService;
+    if (!values.length || values.some(value =>
+      !validator?.validatePublicFeatureAvailability(value))) return undefined;
+    const first = values[0];
+    if (values.some(value => Object.keys(value.features).length !== Object.keys(first.features).length ||
+      Object.entries(first.features).some(([key, enabled]) => value.features[key] !== enabled))) return undefined;
+    return structuredClone(first);
+  },
+  /** Returns public endpoints, composition and opted-in owner feature observations, never permissions or private lease data. */
   publicBootstrap: async function (request) {
     let policy = this.getConfiguration().publicBootstrap || {};
     if (policy.enabled !== true)
@@ -1989,6 +2031,7 @@ module.exports = {
     let endpointRoles = {};
     let moduleStates = {};
     let missingRequiredModules = [];
+    let featureAvailability = {};
     Object.entries(policy.requiredModules || {}).forEach((entry) => {
       let selection = typeof entry[1] === "string"
         ? { moduleName: entry[1] }
@@ -2017,6 +2060,8 @@ module.exports = {
         return;
       }
       endpoints[entry[0]] = this.clientEndpoint(candidates[0]);
+      const features = this.publicFeatureAvailability(candidates);
+      if (features) featureAvailability[entry[0]] = features;
       moduleStates[entry[0]] = "UP";
       if (selection.runtimeRole) endpointRoles[entry[0]] = selection.runtimeRole;
     });
@@ -2042,6 +2087,7 @@ module.exports = {
         clientContractVersion: clientContractVersion,
         endpoints: endpoints,
         endpointRoles: endpointRoles,
+        featureAvailability: featureAvailability,
         bootstrapState: {
           state: missingRequiredModules.length ? "SETUP_REQUIRED" : "READY",
           moduleStates: moduleStates,
@@ -2181,11 +2227,7 @@ module.exports = {
         moduleCount: expired,
       });
     let remaining = await this.getStore().values();
-    if (expired > 0 && SERVICE.DefaultFunctionalModuleCatalogueService &&
-      SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases) {
-      await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
-        remaining.map(entry => entry.value), Array.from(affectedProjects), {});
-    }
+    // Publish and prune before catalogue I/O can interleave a newer registration.
     if (expired > 0) await this.refreshRuntimeRegistrySnapshot(remaining.map(entry => entry.value));
     let availabilityRemoved = 0;
     let discoveryRemoved = 0;
@@ -2206,6 +2248,11 @@ module.exports = {
         SERVICE.DefaultBackofficeDiscoveryService.reconcileActiveModules(
           remaining.map((entry) => entry.value.moduleName),
         );
+    }
+    if (expired > 0 && SERVICE.DefaultFunctionalModuleCatalogueService &&
+      SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases) {
+      await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
+        remaining.map(entry => entry.value), Array.from(affectedProjects), {});
     }
     if (availabilityRemoved + discoveryRemoved > 0)
       await this.audit({

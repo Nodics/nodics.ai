@@ -159,6 +159,42 @@ const create = { code: 'root-a', name: 'Product A', catalogVersion: 'catalog-a' 
 const update = { query: { code: 'root-a', versionId: 0 }, model: { name: 'Revised' }, options: { recursive: false, returnModified: true } };
 const archive = { actionId: 'archiveProduct', identity: { code: 'root-a', versionId: 0 }, idempotencyKey: 'explicit-action-a' };
 
+function nativeFixture(f) {
+    SERVICE.DefaultProductAdministrativeAuthoringService = require('../src/service/defaultProductAdministrativeAuthoringService');
+    SERVICE.DefaultProductAdministrativeCatalogueService = require('../src/service/defaultProductAdministrativeCatalogueService');
+    Object.assign(f.request.authData, { loginId: 'employee-a', authenticationMethod: 'PASSWORD', authVersion: 1, entCode: 'PLATFORM' });
+    f.request.entCode = 'PLATFORM'; f.request.httpRequest.headers = { authorization: 'Bearer original' };
+    SERVICE.DefaultModuleService = { invokeModule: async call => {
+        assert.equal(call.header['X-Enterprise-Code'], 'PLATFORM');
+        assert.equal(call.header.Authorization, 'Bearer original');
+        return { data: call.apiName.endsWith('/evidence') ? {
+            contractVersion: 1, ...call.requestBody, tenant: 'tenant-a', enterpriseCode: 'PLATFORM', actorCode: 'employee-a',
+            authVersion: 1, principalType: 'human', platformAdministrator: true,
+        } : { contractVersion: 1, tenant: 'tenant-a', recipient: { ownerType: 'ENTERPRISE', ownerCode: 'enterprise-a' } } };
+    } };
+    return async (operation, command) => {
+        f.request.httpRequest.body = { targetEnterpriseCode: 'enterprise-a', command };
+        return (await controller['administrative' + operation](f.request)).data;
+    };
+}
+
+test('native targeted ordinary create/read/update/archive reuse actual versioned writer without signed scope substitution', async t => {
+    const f = fixture(t, 'fullControl'), run = nativeFixture(f), original = structuredClone(f.request.authData);
+    assert.equal((await run('Create', create)).result.code, 'root-a');
+    assert.equal((await run('Read', { code: 'root-a' })).result.versionId, 0);
+    assert.equal((await run('Update', update)).result.versionId, 1);
+    const archived = await run('Archive', { ...archive, identity: { code: 'root-a', versionId: 1 } });
+    assert.equal(archived.result.status, 'ARCHIVED'); assert.equal(archived.result.versionId, 2);
+    assert.deepEqual(f.request.authData, original); assert.equal(f.history.length, 3);
+    assert(f.history.every(row => row.enterpriseCode === 'enterprise-a' && row.createdBy === 'employee-a'));
+});
+
+test('native ordinary updates retain marketplace-bound root refusal', async t => {
+    const f = fixture(t, 'fullControl'), run = nativeFixture(f);
+    f.seed({ listingAuthoring: { proof: 'owned-elsewhere' } });
+    await assert.rejects(run('Update', update), /CONFLICT/); assert.equal(f.inserted.length, 0);
+});
+
 for (const level of ['view', 'edit', 'fullControl']) test('actual ' + level + ' role exposes scoped descriptor/reads with schema ACL zero', async t => {
     const f = fixture(t, level), original = structuredClone(f.request), descriptor = (await controller.schemas(f.request)).data.schemas[0];
     assert.equal(access.getAccessPoint(f.request.authData, f.raw.accessGroups, f.request), 0);
@@ -185,6 +221,73 @@ for (const level of ['view', 'edit', 'fullControl']) test('actual ' + level + ' 
     assert(f.calls.every(call => call.authData.isSystem === true));
     assert(!JSON.stringify(page).includes('enterprise-a')); assert(!JSON.stringify(page).includes('tenant-a'));
     assert(!f.actualGroup.permissions.includes('commerce.product.publish'));
+});
+
+test('descriptor retains effective owner enum metadata and never widens managed fields', async t => {
+    const f = fixture(t);
+    f.raw.definition.productType.enum = ['FIXTURE_PHYSICAL', 'FIXTURE_DIGITAL'];
+    f.raw.backoffice.fields = { ...f.raw.backoffice.fields,
+        productType: { label: 'Owner product type', enumOptions: [
+            { value: 'FIXTURE_PHYSICAL', label: 'Owner physical' }, { value: 'FIXTURE_DIGITAL', label: 'Owner digital' }] },
+        fulfillmentStrategy: { readOnly: true }, versionId: { readOnly: false } };
+    const descriptor = owner.descriptor(f.request);
+    const field = name => descriptor.fields.find(item => item.name === name);
+    assert.equal(field('productType').label, 'Owner product type');
+    assert.deepEqual(field('productType').enum, f.raw.definition.productType.enum);
+    assert.deepEqual(field('productType').enumOptions.map(({ value, label }) => ({ value, label })), f.raw.backoffice.fields.productType.enumOptions);
+    assert.equal(field('fulfillmentStrategy').readOnly, true);
+    assert.equal(field('versionId').readOnly, true);
+    assert.equal(owner.writableModel({ productType: 'FIXTURE_DIGITAL' }, false).productType, 'FIXTURE_DIGITAL');
+    assert.throws(() => owner.writableModel({ productType: 'UNDECLARED' }, false), /INPUT/);
+    assert.throws(() => owner.writableModel({ fulfillmentStrategy: 'ANY' }, false), /INPUT/);
+    if (process.env.AXIS_WORKBENCH_CONTRACTS) {
+        const source = fs.readFileSync(process.env.AXIS_WORKBENCH_CONTRACTS, 'utf8');
+        const parser = await import('data:text/javascript;base64,' + Buffer.from(Module.stripTypeScriptTypes(source)).toString('base64'));
+        assert.equal(parser.parseWorkbenchSchema(JSON.parse(JSON.stringify(descriptor))).fields.find(item => item.name === 'productType').label, 'Owner product type');
+    }
+});
+
+test('ordinary status choices intersect the effective enum and preserve owner captions', async t => {
+    const f = fixture(t);
+    f.raw.definition.status.enum = ['ACTIVE', 'ARCHIVED'];
+    f.raw.backoffice.fields = { ...f.raw.backoffice.fields, status: { enumOptions: [
+        { value: 'DRAFT', label: 'Draft caption' }, { value: 'ACTIVE', label: 'Owner active caption' },
+        { value: 'ARCHIVED', label: 'Archived caption' }] } };
+    const descriptor = owner.descriptor(f.request);
+    const status = descriptor.fields.find(field => field.name === 'status');
+    assert.deepEqual(status.enum, ['ACTIVE']);
+    assert.deepEqual(status.enumOptions.map(({ value, label }) => ({ value, label })),
+        [{ value: 'ACTIVE', label: 'Owner active caption' }]);
+    assert.equal(status.default, undefined);
+    if (process.env.AXIS_WORKBENCH_CONTRACTS) {
+        const source = fs.readFileSync(process.env.AXIS_WORKBENCH_CONTRACTS, 'utf8');
+        const parser = await import('data:text/javascript;base64,' + Buffer.from(Module.stripTypeScriptTypes(source)).toString('base64'));
+        const parsed = parser.parseWorkbenchSchema(JSON.parse(JSON.stringify(descriptor)));
+        assert.deepEqual(parsed.fields.find(field => field.name === 'status').enum, ['ACTIVE']);
+    }
+});
+
+for (const native of [false, true]) test('narrowed status rejects implicit draft before persistence: ' + (native ? 'native' : 'ordinary'), async t => {
+    const f = fixture(t), run = native ? nativeFixture(f) : null;
+    f.raw.definition.status.enum = ['ACTIVE', 'ARCHIVED'];
+    const { status, ...withoutStatus } = create;
+    const submit = model => native ? run('Create', model) : owner.execute(f.request, 'create', model);
+    await assert.rejects(submit(withoutStatus), /INPUT/);
+    await assert.rejects(submit({ ...withoutStatus, status: 'DRAFT' }), /INPUT/);
+    assert.equal(f.inserted.length, 0);
+    const result = await submit({ ...withoutStatus, status: 'ACTIVE' });
+    assert.equal((native ? result.result : result).status, 'ACTIVE');
+    assert.equal(f.inserted.length, 1);
+});
+
+test('base ordinary status retains draft default and excludes archive from editing', async t => {
+    const f = fixture(t), descriptor = owner.descriptor(f.request);
+    const status = descriptor.fields.find(field => field.name === 'status');
+    assert.deepEqual(status.enum, ['DRAFT', 'ACTIVE']);
+    assert.equal(status.default, 'DRAFT');
+    const { status: omitted, ...withoutStatus } = create;
+    assert.equal((await owner.execute(f.request, 'create', withoutStatus)).status, 'DRAFT');
+    assert.throws(() => owner.writableModel({ status: 'ARCHIVED' }, false), /INPUT/);
 });
 
 test('actual Axis parser accepts Product owner discovery, capabilities and search envelopes',

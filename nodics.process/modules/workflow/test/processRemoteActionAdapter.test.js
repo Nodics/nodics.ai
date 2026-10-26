@@ -551,6 +551,40 @@ test("pending Editorial decisions finish against their immutable version after c
   }
 });
 
+test("native human decision keeps separate seller context and original actor through authoritative remote claim", async () => {
+  const f = fixture();
+  f.request.authData = { ...f.request.authData, tokenType: "access", principalType: "human" };
+  f.request.httpRequest = { headers: { enterprise: "enterpriseA" } };
+  f.instance.context.enterpriseCode = "seller-a";
+  f.instance.context.requestedBy = "reviewer";
+  const original = structuredClone(f.request);
+  let claim;
+  const nativeClaim = transport.claim;
+  SERVICE.DefaultModuleService.invokeModule = ((invoke) => async options => {
+    if (options.moduleName !== "workflow") return invoke(options);
+    const result = await nativeClaim.call(transport, {
+      tenant: options.tenant, authData: f.editorialAuth,
+      instanceCode: decodeURIComponent(options.apiName.split("/")[2]), runtimeOperation: options.requestBody,
+    });
+    claim = result;
+    return options.responseSelector(result);
+  })(SERVICE.DefaultModuleService.invokeModule);
+  await assert.rejects(lifecycle.completeTask({ ...f.request,
+    runtimeOperation: { decision: { approved: true } } }), /multiple approvals/);
+  assert.equal(f.callbacks.length, 0, "separate business context cannot relax task decision policy");
+  await lifecycle.completeTask(f.request);
+  assert.equal(f.instance.status, "COMPLETED");
+  assert.equal(f.instance.activeRemoteAction.context.enterpriseCode, "seller-a");
+  assert.equal(f.instance.activeRemoteAction.actor, "reviewer");
+  assert.equal(f.instance.activeRemoteAction.enterpriseCode, f.processAuth.entCode);
+  assert.ok(claim, "target must claim authoritative Process context");
+  assert.equal(claim.data.instance.context.enterpriseCode, "seller-a");
+  assert.equal(claim.data.actor, "reviewer");
+  assert.deepEqual(claim.data.body.decision, original.runtimeOperation.decision);
+  assert.equal(f.article.decisionEvidence.actor, "reviewer");
+  assert.deepEqual(f.request, original);
+});
+
 test("actual task policy governs the remote callback and stored decision wins over caller input", async () => {
   const f = fixture();
   await assert.rejects(

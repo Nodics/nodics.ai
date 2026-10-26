@@ -102,7 +102,13 @@ function fixture(t) {
             isSetupReceiptCommitted: (p, r, receipt) => receipt?.committed === true,
             observeSetupTarget: async (p, r) => { assert.notEqual(r.authData, authData); assert.equal(r.authData.isSystem, true); reads.push(['target']);
                 return { version: state.target, revision: 1, receipt }; }, prepareSetup: forbidden, activate: forbidden },
-        DefaultDataReleaseService: { discoverReleases: () => [release], validateDestination: () => {},
+        DefaultDataReleaseService: { discoverReleases: () => [release],
+            discoverManifestRelease: (pin, type) => {
+                assert.equal(pin.moduleName, release.moduleName);
+                assert.equal(pin.sectionCode, release.sectionCode);
+                assert.equal(type, release.dataType);
+                return release;
+            }, validateDestination: () => {},
             installationCode: () => installation.code,
             contributionSourceSnapshot: () => ({ files: new Map([['core-v001/reference.json', fileBytes]]) }),
             preparePlan: forbidden, preflight: forbidden, execute: forbidden },
@@ -110,6 +116,17 @@ function fixture(t) {
     };
     return { service, request, authData, policy, plan, profile, release, installation, row, receipt, state, reads, input, root, writePlan, catalog };
 }
+
+test('installation observes the exact release twice without full catalogue discovery', async t => {
+    const f = fixture(t);
+    const owner = global.SERVICE.DefaultDataReleaseService;
+    const discover = owner.discoverManifestRelease;
+    let inspections = 0;
+    owner.discoverManifestRelease = (...args) => { inspections++; return discover(...args); };
+    global.SERVICE.DefaultDataReleaseService.discoverReleases = () => assert.fail('full catalogue discovery');
+    assert.equal((await f.service.observe(f.request, f.input('INSTALLATION'))).ready, true);
+    assert.equal(inspections, 2);
+});
 
 test('disabled policy and missing explicit permission refuse before owner reads', async t => {
     const f = fixture(t); f.policy.enabled = false;
@@ -369,6 +386,91 @@ test('CMS baseline reuses exact owner status, current target pointer and Media q
     assert.equal(pending.authority.readiness, 'MEDIA_DEPENDENCIES_PENDING');
     assert.deepEqual(pending.authority.mediaDependencies.dependencies, [mediaDependency]);
     descriptor.sourceVersion = 'changed'; await assert.rejects(f.service.observe(f.request, input));
+});
+
+test('CMS pending approval preserves safe owner workflow, diagnostic and release metadata', async t => {
+    const f = fixture(t), descriptor = { code: 'partner', rootType: 'site', rootCode: 'partnerSite', sourceVersion: 'source-v1' };
+    f.plan.baseline = { server: 'staged', runtimeRole: 'COMMERCE_STAGED', enterpriseCode: 'partnerEnterprise',
+        descriptorDigest: f.service.digest(descriptor) }; f.writePlan();
+    Object.assign(f.row, { domain: 'cms', rootType: 'site', rootCode: 'partnerSite', state: 'PENDING_APPROVAL' });
+    const diagnostic = { source: 'PUBLICATION_APPROVAL', owner: 'PROCESS', status: 'WAITING_REVIEWER',
+        publicationCode: f.row.code, publicationRevision: f.row.revision, publicationState: f.row.state,
+        workflowRef: 'approval-workflow', taskCode: 'approval-task', taskStatus: 'OPEN', queue: 'reviewers',
+        message: 'Waiting for review.', suggestedAction: 'Review approval queue', disabledReason: 'Approval is pending.' };
+    const task = { code: 'approval-task', status: 'OPEN', queue: 'reviewers', requiresAssignee: false };
+    const evidence = { baselineCode: 'partner', readiness: 'PUBLICATION_PENDING', releaseCode: 'partner:content',
+        releaseVersion: '1.0.0', releaseStatus: 'CURRENT', publication: { ...f.row, workflowRef: 'approval-workflow',
+            correlationId: 'correlation', approvalDiagnostic: { ...diagnostic, errorCode: 'private failure',
+                authData: { token: 'secret' }, stack: 'private stack', workflow: { private: true } },
+            approvalTask: { ...task, payload: { private: true } } },
+        publicationDiagnostic: { status: 'PUBLICATION_APPROVAL_PENDING', owner: 'cms', raw: { private: true } },
+        review: { private: true }, lineage: { private: true } };
+    global.SERVICE.DefaultCmsPublicationBaselineService = { descriptor: () => descriptor, publicationCode: () => f.row.code,
+        status: async () => structuredClone(evidence) };
+    global.SERVICE.DefaultCmsPublicationVersionProviderService = { transport: () => assert.fail('pending approval needs no Online pointer') };
+    const input = { ...f.input(), mode: 'BASELINE', stageCode: 'partner' };
+    const result = await f.service.observe(f.request, input), authority = result.authority;
+    assert.equal(result.ready, false);
+    assert.equal(authority.readiness, 'PUBLICATION_PENDING');
+    assert.equal(authority.publication.state, 'PENDING_APPROVAL');
+    assert.equal(authority.publication.workflowRef, 'approval-workflow');
+    assert.equal(authority.publication.correlationId, 'correlation');
+    assert.deepEqual(authority.publication.approvalDiagnostic, diagnostic);
+    const backoffice = require('../../../../nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService');
+    assert.equal(backoffice.approvalWorkflowDiagnostic(authority).status, 'WAITING_REVIEWER');
+    assert.equal(backoffice.approvalWorkflowDiagnostic(authority).workflowRef, 'approval-workflow');
+    assert.deepEqual(authority.publication.approvalTask, task);
+    assert.equal(authority.releaseCode, evidence.releaseCode);
+    assert.equal(authority.releaseVersion, evidence.releaseVersion);
+    assert.equal(authority.releaseStatus, 'CURRENT');
+    assert.deepEqual(authority.publicationDiagnostic, { owner: 'cms', status: 'PUBLICATION_APPROVAL_PENDING' });
+    assert(!JSON.stringify(authority).includes('private'));
+    assert.equal(authority.publication.auditTrail, undefined);
+    for (const readiness of ['NOT_IMPORTED', 'IMPORTING', 'IMPORTED', 'RETIRED', 'ROLLED_BACK', 'REJECTED', 'FAILED', 'MEDIA_DEPENDENCIES_PENDING']) {
+        evidence.readiness = readiness;
+        assert.equal((await f.service.observe(f.request, input)).authority.readiness, readiness);
+    }
+    evidence.readiness = 'UNKNOWN_OWNER_STATE';
+    assert.equal((await f.service.observe(f.request, input)).authority.readiness, 'BLOCKED');
+    for (const [key, value] of Object.entries({ publicationCode: 'foreign', publicationRevision: 99,
+        publicationState: 'ONLINE', workflowRef: 'foreign' })) {
+        evidence.publication.approvalDiagnostic[key] = value;
+        await assert.rejects(f.service.observe(f.request, input));
+        evidence.publication.approvalDiagnostic[key] = diagnostic[key];
+    }
+    f.row.workflowRef = 'different-stored-workflow';
+    await assert.rejects(f.service.observe(f.request, input));
+    assert.deepEqual(f.service.baselineFields({ status: { token: 'secret' }, message: 'x'.repeat(2049),
+        publicationRevision: -1, requiresAssignee: 'yes' }, ['status', 'message'], ['publicationRevision'], ['requiresAssignee']), {});
+});
+
+test('CMS owner READY remains BLOCKED without every independent readiness proof', async t => {
+    const f = fixture(t), descriptor = { code: 'partner', rootType: 'site', rootCode: 'partnerSite', sourceVersion: 'source-v1' };
+    f.plan.baseline = { server: 'staged', runtimeRole: 'COMMERCE_STAGED', enterpriseCode: 'partnerEnterprise',
+        descriptorDigest: f.service.digest(descriptor) }; f.writePlan();
+    Object.assign(f.row, { domain: 'cms', rootType: 'site', rootCode: 'partnerSite' });
+    let pointer = 'digest', qualified = true, releaseStatus = 'CURRENT';
+    global.SERVICE.DefaultCmsPublicationBaselineService = { descriptor: () => descriptor, publicationCode: () => f.row.code,
+        status: async () => ({ baselineCode: 'partner', readiness: 'READY', releaseStatus, publication: { ...f.row },
+            mediaDependencies: { qualified } }) };
+    global.SERVICE.DefaultCmsPublicationVersionProviderService = { transport: () => ({ getStatus: async () => ({ version: pointer }) }) };
+    const input = { ...f.input(), mode: 'BASELINE', stageCode: 'partner' };
+    assert.equal((await f.service.observe(f.request, input)).ready, true);
+    const journal = f.row.auditTrail;
+    for (const mutate of [() => { f.row.auditTrail = []; }, () => { pointer = 'stale'; },
+        () => { qualified = false; }, () => { releaseStatus = 'NOT_CURRENT'; },
+        () => { f.row.state = 'PENDING_APPROVAL'; }, () => { pointer = undefined; delete f.row.targetVersion; }]) {
+        mutate();
+        const result = await f.service.observe(f.request, input);
+        assert.equal(result.ready, false); assert.equal(result.authority.readiness, 'BLOCKED');
+        f.row.auditTrail = journal; pointer = 'digest'; qualified = true; releaseStatus = 'CURRENT';
+        f.row.state = 'ONLINE'; f.row.targetVersion = 'digest';
+    }
+    const original = f.service.baselineFields;
+    let calls = 0;
+    f.service.baselineFields = function (...args) { calls++; return original.apply(this, args); };
+    assert.equal((await f.service.observe(f.request, input)).ready, true);
+    assert(calls > 0, 'projection honors later-layer method overrides');
 });
 
 function generatedGate(t, f) {

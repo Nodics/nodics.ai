@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @description Generated Nodics framework documentation routes. */
+/** @description Owner-authored auction documentation CMS Route records; Staged pending review. */
 module.exports = {
   "record0": {
     "code": "nodicsDocsRoutecatalogProductDiscoveryManagement",
@@ -21,7 +21,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecatalogProductDiscoveryManagement",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   }

@@ -1,0 +1,19 @@
+{
+  "scope": "Offline source validation only; no runtime effects",
+  "ownerApi": "DefaultDataReleaseService.inspectSourceManifest",
+  "baselineApi": "DefaultProjectDataManifestService.validateUnreleasedBaseline",
+  "changes": [
+    "Source-only exact declared-byte inspection reuses canonical metadata and prerequisite validation without evaluating bootstrap records",
+    "Regression proves runtime discovery still evaluates records and is not replaced",
+    "Six isolated incremental fixtures now have module documentation; current and retained test manifest hashes regenerated"
+  ],
+  "validation": {
+    "kickoffAgoraContract": { "passed": 15, "failed": 0 },
+    "focusedBaselineAndIncrementalFixtures": { "passed": 16, "failed": 0 },
+    "wholeFrameworkBaseline": "BLOCKED: loyaltyWallet:participationWorkspace publicationReview lacks nonempty postPublicationCapabilities",
+    "documentationGovernance": "PASS",
+    "documentationLog": "/tmp/v001-framework-docs-quality-owner-final.log"
+  },
+  "remainingOwnerAction": "Loyalty owner must author accurate publication capability review metadata; validator must not fabricate it or waive validation.",
+  "liveChanges": false
+}

@@ -34,7 +34,7 @@ function serviceSeed(relative) {
 }
 
 test("forward service source restores exactly five fresh-install scopes without changing historical bytes or credential bindings", () => {
-  const historicalPath = "../data/init-v001/records/user/defaultServiceEmployeeData";
+  const historicalPath = "./fixtures/unreleasedPredecessor/init-v001/records/user/defaultServiceEmployeeData";
   const original = serviceSeed(historicalPath);
   const forward = serviceSeed("../data/init-v001/records/identityBootstrap/preservedServiceEmployeeData");
   assert.deepEqual(original.apiKeyScopes, serviceBaselineScopes.slice(0, 2));

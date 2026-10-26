@@ -40,6 +40,11 @@ const controller = require('../src/controller/defaultCmsPublicationBaselineContr
     assert.strictEqual(source.baselineCode, undefined);
     assert.throws(() => controller.status({ authData: { tokenType: 'service', principalId: 'foreign' } }),
         /BackOffice runtime principal required/);
-    assert.strictEqual(principalChecks, 2);
+    SERVICE.DefaultCmsPublicationBaselineService.reconcileApproval = SERVICE.DefaultCmsPublicationBaselineService.status;
+    await controller.reconcileApproval(source);
+    assert.strictEqual(received.request.authData.isSystem, true);
+    assert.throws(() => controller.reconcileApproval({ authData: { tokenType: 'service', principalId: 'foreign' } }),
+        /BackOffice runtime principal required/);
+    assert.strictEqual(principalChecks, 4);
     console.log('CMS publication baseline controller authority validated');
 })().catch(error => { console.error(error); process.exit(1); });

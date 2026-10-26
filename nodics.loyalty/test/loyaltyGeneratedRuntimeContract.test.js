@@ -17,11 +17,11 @@ test('Loyalty schemas materialize governed generated get/save services independe
         schemas: {
             loyaltyCore: { loyaltyOperationPolicy: true }, loyaltyProgram: { loyaltyProgram: true },
             loyaltyRewardType: { loyaltyRewardType: true }, loyaltyWallet: { loyaltyWallet: true, loyaltyWalletRewardBalance: true },
-            loyaltyLedger: { rewardLedgerEntry: true }, loyaltyReservation: { rewardReservation: true },
+            loyaltyLedger: { rewardLedgerEntry: true }, loyaltyReservation: { rewardReservation: true, rewardReservationDecision: false },
             loyaltyRedemption: { rewardRedemption: true },
         },
         entities: { SERVICE: ['DefaultLoyaltyAmountService', 'DefaultLoyaltyWalletOwnerService',
-            'DefaultLoyaltyLedgerPostingService', 'DefaultLoyaltyRewardOperationService'],
+            'DefaultLoyaltyLedgerPostingService', 'DefaultLoyaltyRewardOperationService', 'DefaultLoyaltyReservationDecisionService'],
         FACADE: ['DefaultLoyaltyInternalFacade'], CONTROLLER: ['DefaultLoyaltyInternalController'] },
     });
 });

@@ -11,6 +11,7 @@
 
 "use strict";
 const { isDeepStrictEqual } = require("node:util");
+const couponInspectionEnums = require('../../../../../digitalCommerce/modules/digitalCore/src/utils/enums');
 /**
  * @module checkoutCore/service/defaultCheckoutCompensationRecoveryService
  * @description Recovers bounded retained digital compensation without replaying placement or financial
@@ -22,15 +23,45 @@ const { isDeepStrictEqual } = require("node:util");
  * namespace are mandatory; missing evidence never authorizes cleanup or financial replay.
  * Inputs and outputs are specified on each exported member below.
  * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
- * Exported members: assertOwner, prepaymentPhases, failure, unwrap, rows, one,
+ * Exported members: couponReleaseFailureCode, assertOwner, prepaymentPhases, failure, unwrap, rows, one,
  * originalPaymentRecordCount, commandStatus, assertPlacementAllowed, checkpoint, qualify, evidence,
  * resolveCleanup, transition, result, qualifyPrepaymentCoupon, prepaymentCouponReceipt,
- * prepaymentCouponResult, recoverAcquisitions, prepaymentCartEvidence, recoverPrepaymentCoupon,
+ * prepaymentCouponResult, recoverAcquisitions, prepaymentCartEvidence, prepaymentDiagnostic, failedPrepaymentBundle,
+ * prepaymentReconciliationProof, reconcilePrepaymentBundle, recoverPrepaymentCoupon,
  * recover.
  * @override Customize through the existing loader-visible module members, preserving private
  * authority.
  */
 module.exports = {
+  /**
+   * Projects only fixed registered coupon-source failure codes from qualified owner outcomes.
+   * @param {Object} outcome Retained or validated Digital release outcome; never raw dependency text.
+   * @returns {string|undefined} Allowlisted static code for a failed coupon release only.
+   * @remarks No reads, writes, message projection or retry authority. Unknown codes remain private.
+   * @override Preserve exact membership and failed coupon-release restrictions.
+   */
+  couponReleaseFailureCode: function (outcome) {
+    const codes = [
+      'ERR_EWASTE_SALE_DIAGNOSTIC_041',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_042',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_043',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_044',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_045',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_046',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_047',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_048',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_049',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_050',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_051',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_052',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_053',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_054',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_055',
+      'ERR_EWASTE_SALE_DIAGNOSTIC_056',
+    ];
+    return outcome?.type === 'DIGITAL_COUPON_RELEASE' && outcome.status === 'FAILED' &&
+      codes.includes(outcome.errorCode) ? outcome.errorCode : undefined;
+  },
   /**
    * Requires typed owner continuity for Enterprise and all newly retained participant evidence.
    * @param {Object} request Original owner request with tenant, authData and operation selectors;
@@ -180,7 +211,8 @@ module.exports = {
     if (!["COMPLETED", "COMPENSATED", "COMPENSATION_REQUIRED"].includes(row.status) ||
         !Number.isSafeInteger(row.revision) || row.revision < 0 || !identifier(row.code) ||
         (row.status === "COMPLETED" ? row.code !== row.evidence?.orderCode &&
-          !SERVICE.DefaultCheckoutBundleRecoveryService?.completed(row) : row.code !== scope.commandCode) ||
+          !SERVICE.DefaultCheckoutBundleRecoveryService?.completed(row) &&
+          !(row.code === scope.commandCode && SERVICE.DefaultCheckoutPlacementPortsService.completedPaymentJournal(row)) : row.code !== scope.commandCode) ||
         (row.enterpriseCode !== undefined && row.enterpriseCode !== scope.enterpriseCode) ||
         !Array.isArray(completed) || completed.length > phases.length ||
         completed.some((phase, index) => !phases.includes(phase) || index > 0 && phases.indexOf(phase) <= phases.indexOf(completed[index - 1])) ||
@@ -195,10 +227,46 @@ module.exports = {
           row.evidence.paymentCompensationIntent.orderCode !== row.evidence.orderCode))) throw this.failure();
     const recoveryAction = row.evidence?.bundleForwardRecovery
       ? await SERVICE.DefaultCheckoutBundleRecoveryService.action(scope, row) : undefined;
+    const plan = row.evidence?.couponAcquisitionRecovery;
+    let couponRecoveryDiagnostics;
+    if (row.status === 'COMPENSATION_REQUIRED' && Array.isArray(plan?.reservations) &&
+        plan.reservations.some(unit => unit.offerAllocationCode)) {
+      const digital = SERVICE.DefaultDigitalCommerceCouponAcquisitionService;
+      const maximum = SERVICE.DefaultDigitalCommerceCheckoutService?.maximumCouponUnits?.();
+      if (!digital?.inspectRecovery || !Number.isSafeInteger(maximum) || plan.reservations.length > maximum ||
+          row.enterpriseCode !== scope.enterpriseCode || !isDeepStrictEqual(row.evidence.actorRef, scope.actorRef) ||
+          !bound || plan.reservations.some(unit => !identifier(unit.code) || !identifier(unit.idempotencyKey))) throw this.failure();
+      const units = [];
+      for (const [unitIndex, unit] of plan.reservations.entries()) if (unit.offerAllocationCode) {
+        const inspection = await digital.inspectRecovery({ ...scope, idempotencyKey: scope.commandCode,
+          payload: { cartCode: plan.cartCode, orderCode: plan.orderCode } }, unit);
+        if (!inspection || !['UNKNOWN', 'RESERVED', 'RELEASED', 'COMPLETED'].includes(inspection.allocationStatus) ||
+            !['UNKNOWN', 'UNSET', 'RELEASE', 'COMMIT'].includes(inspection.inputDisposition) ||
+            !['UNKNOWN', 'RESERVED', 'SOLD', 'DELIVERED', 'AVAILABLE', 'REASSIGNED'].includes(inspection.couponStatus) ||
+            !couponInspectionEnums.CouponRecoveryInspectionStage.definition.includes(inspection.stage) ||
+            !couponInspectionEnums.CouponRecoveryInspectionCondition.definition.includes(inspection.condition) ||
+            (inspection.stage === 'EVIDENCE_CONFIRMED') !== (inspection.condition === 'NONE') ||
+            (inspection.stage === 'EVIDENCE_CONFIRMED' ? inspection.failureCode !== undefined :
+              inspection.failureCode !== 'ERR_DIGITAL_COUPON_RECOVERY_INSPECTION')) throw this.failure();
+        units.push({ unitIndex, allocationStatus: inspection.allocationStatus, inputDisposition: inspection.inputDisposition,
+          couponStatus: inspection.couponStatus, stage: inspection.stage, condition: inspection.condition,
+          ...(inspection.failureCode ? { failureCode: inspection.failureCode } : {}) });
+      }
+      const current = await this.rows(SERVICE.DefaultCheckoutCheckpointService, scope,
+        { ownerId: scope.ownerId, idempotencyKey: scope.commandCode });
+      if (current.length !== 1 || !isDeepStrictEqual(current[0], row)) throw this.failure();
+      couponRecoveryDiagnostics = { contract: 'COUPON_RECOVERY_INSPECTION_V1', readOnly: true, units };
+    }
     return { status: row.status, revision: row.revision, ...(bound ? { cartCode: row.cartCode, orderCode: row.evidence.orderCode } : {}),
       ...(recoveryAction ? { recoveryAction } : {}),
+      ...(couponRecoveryDiagnostics ? { couponRecoveryDiagnostics } : {}),
+      ...(row.evidence?.compensationRecovery?.failure && isDeepStrictEqual(row.evidence.compensationRecovery.failure,
+        this.prepaymentDiagnostic({ recoveryStage: row.evidence.compensationRecovery.failure.stage }))
+        ? { compensationRecoveryDiagnostic: row.evidence.compensationRecovery.failure } : {}),
       completedPhases: completed.map(phase => phases[phases.indexOf(phase)]),
-      compensationOutcomes: (outcomes || []).map(value => ({ type: value.type, status: value.status })),
+      compensationOutcomes: (outcomes || []).map(value => ({ type: value.type, status: value.status,
+        ...(row.enterpriseCode === scope.enterpriseCode && this.couponReleaseFailureCode(value)
+          ? { errorCode: this.couponReleaseFailureCode(value) } : {}) })),
       scopeQualified: row.enterpriseCode === scope.enterpriseCode,
       originalPaymentRecordCount: await this.originalPaymentRecordCount(scope) };
   },
@@ -386,11 +454,11 @@ module.exports = {
     const fields = ["type", "status", "reservationKey", "cartCode", "entryCode", "enterpriseCode"];
     if (!outcome || typeof outcome !== "object" || Array.isArray(outcome) ||
         Object.keys(outcome).length !== fields.length || fields.some(key => !Object.hasOwn(outcome, key)) ||
-        outcome.type !== "DIGITAL_COUPON_RELEASE" || outcome.status !== "COMPLETED" ||
+        outcome.type !== (plan.reservationType === "BUNDLE" ? "DIGITAL_OWNERSHIP_RELEASE" : "DIGITAL_COUPON_RELEASE") || outcome.status !== "COMPLETED" ||
         outcome.reservationKey !== plan.uncertainKey || outcome.entryCode !== plan.entryCode ||
         outcome.enterpriseCode !== request.enterpriseCode || typeof outcome.cartCode !== "string" ||
         !/^[A-Za-z0-9][A-Za-z0-9_.:@|\-]{0,255}$/.test(outcome.cartCode)) throw this.failure();
-    return { type: "DIGITAL_COUPON_RELEASE", status: "COMPLETED", reservationKey: plan.uncertainKey,
+    return { type: outcome.type, status: "COMPLETED", reservationKey: plan.uncertainKey,
       cartCode: outcome.cartCode, entryCode: plan.entryCode, enterpriseCode: request.enterpriseCode };
   },
   /** Exposes only retained original Cart/entry recovery identity after fresh zero Payment evidence, without retry permission. */
@@ -417,6 +485,8 @@ module.exports = {
    */
   recoverAcquisitions: async function (request, original) {
     this.assertOwner(request, original);
+    if (original.evidence?.couponAcquisitionRecovery?.paymentAttemptUnconfirmed === true)
+      original = await this.reconcileAuthorizationDenial(request, original);
     const plan = original.evidence?.couponAcquisitionRecovery, intent = original.evidence?.paymentCompensationIntent;
     const digital = SERVICE.DefaultDigitalCommerceCheckoutService;
     if (!digital?.maximumCouponUnits || !digital.releaseReservations) throw this.failure();
@@ -426,8 +496,12 @@ module.exports = {
         new Set(plan.reservations.map(unit => unit.code)).size !== plan.reservations.length ||
         plan.reservations.some(unit => !identifier(unit.code)) || original.enterpriseCode !== request.enterpriseCode ||
         !['COMPENSATION_REQUIRED', 'COMPENSATED'].includes(original.status) || !Array.isArray(original.evidence.compensation)) throw this.failure();
-    if (plan.status === 'COMPLETED' && original.status === 'COMPENSATED') return { commandCode: original.code,
-      status: original.status, revision: original.revision, recoveryStatus: 'COMPLETED' };
+    if (plan.status === 'COMPLETED' && original.status === 'COMPENSATED') {
+      if (plan.reservations.some(unit => unit.digitalDeliveryType === 'DIGITAL_OWNERSHIP') && original.evidence.paymentDenialDecision)
+        await SERVICE.DefaultDigitalBundleSettlementService.inspectAuthorizationRelease({ ...request, idempotencyKey: request.commandCode,
+          payload: { orderCode: plan.orderCode, cartCode: plan.cartCode } }, plan.reservations);
+      return { commandCode: original.code, status: original.status, revision: original.revision, recoveryStatus: 'COMPLETED' };
+    }
     if (!['READY', 'UNCONFIRMED'].includes(plan.status) || original.status !== 'COMPENSATION_REQUIRED') throw this.failure();
     const payments = [];
     for (const suffix of [':payment', ':payment:capture', ':payment:void', ':payment:refund']) {
@@ -454,6 +528,8 @@ module.exports = {
       outcomes.push({ type: 'PAYMENT_' + intent.operation, status: 'COMPLETED', paymentStatus: row.status,
         idempotencyKey: intent.idempotencyKey, paymentTransactionCode: row.code,
         providerReference: row.providerReference || row.evidence.providerReference });
+    } else if (original.evidence.paymentDenialDecision) {
+      await this.verifyAuthorizationDenial(request, original);
     } else if (payments.length || original.evidence.completed?.includes('AUTHORIZED') ||
         original.evidence.completed?.includes('PAYMENT_CAPTURED')) throw this.failure();
     const claimed = await this.transition(request, original, 'COMPENSATION_REQUIRED', { ...original.evidence,
@@ -476,19 +552,91 @@ module.exports = {
     if (valid) outcomes = outcomes.filter(value => !plan.reservations.some(unit => value.code === unit.code &&
       ['DIGITAL_COUPON_RELEASE', 'DIGITAL_OWNERSHIP_RELEASE'].includes(value.type))).concat(releases.map(value => ({
         type: value.type, code: value.code, status: value.status,
-        ...(value.status === 'FAILED' ? { errorCode: 'DIGITAL_RELEASE_UNCONFIRMED' } : {}) })));
+        ...(value.status === 'FAILED' ? { errorCode: this.couponReleaseFailureCode(value) || 'DIGITAL_RELEASE_UNCONFIRMED' } : {}) })));
     const resolvedUncertain = valid && typeof original.evidence.digitalReservationUncertainKey === 'string' &&
       plan.reservations.some(unit => unit.idempotencyKey === original.evidence.digitalReservationUncertainKey &&
       releases.some(value => value.code === unit.code && value.status === 'COMPLETED'));
     if (resolvedUncertain) outcomes = outcomes.filter(value => !(value.type === 'DIGITAL_COUPON_RELEASE' &&
       value.code === undefined && value.errorCode === 'DIGITAL_RESERVATION_UNCERTAIN'));
-    const complete = valid && outcomes.every(value => value.status === 'COMPLETED');
+    let terminalProof = true;
+    if (original.evidence.paymentDenialDecision && plan.reservations.some(unit => unit.digitalDeliveryType === 'DIGITAL_OWNERSHIP')) {
+      try { await this.verifyAuthorizationDenial(request, claimed); } catch (_) { terminalProof = false; }
+    }
+    const complete = valid && terminalProof && outcomes.every(value => value.status === 'COMPLETED');
     const saved = await this.transition(request, claimed, complete ? 'COMPENSATED' : 'COMPENSATION_REQUIRED', {
       ...claimed.evidence, compensation: outcomes,
       ...(resolvedUncertain ? { digitalReservationRecoveryRequired: false } : {}),
       couponAcquisitionRecovery: { ...plan, status: complete ? 'COMPLETED' : 'UNCONFIRMED' } });
     return { commandCode: saved.code, status: saved.status, revision: saved.revision,
       recoveryStatus: saved.evidence.couponAcquisitionRecovery.status };
+  },
+  /**
+   * Requires original preauthorization phases and exact Enterprise/actor scope. A retained Loyalty
+   * error selects its owner only; the subsequent atomic fence, never that error, proves no effects.
+   */
+  denialScope: function (request, row) {
+    this.assertOwner(request, row);
+    const e = row.evidence, plan = e?.couponAcquisitionRecovery;
+    if (request.ownerRef?.schema !== 'enterprise' || request.ownerRef.code !== request.ownerId ||
+        request.participantEnterpriseCode !== request.ownerId || !sameActor(request.actorRef, e?.actorRef) ||
+        row.code !== request.commandCode || row.idempotencyKey !== request.commandCode || row.ownerId !== request.ownerId ||
+        row.tenant !== request.tenant || row.enterpriseCode !== request.enterpriseCode ||
+        !['COMPENSATION_REQUIRED', 'COMPENSATED'].includes(row.status) ||
+        !isDeepStrictEqual(e.completed, [...this.prepaymentPhases(request), 'DIGITAL_RESERVED']) ||
+        e.paymentCompensationIntent || e.bundleForwardRecovery || e.inventoryReservationRecoveryRequired !== false ||
+        e.digitalReservationRecoveryRequired !== false || !plan || plan.orderCode !== e.orderCode || plan.cartCode !== row.cartCode ||
+        (plan.paymentMethod !== 'LOYALTY_REWARD' && !(plan.paymentMethod === undefined && e.errorCode === 'ERR_LOYALTY_BALANCE_NEGATIVE')))
+      throw this.failure();
+    return { ...request, orderCode: plan.orderCode, originalAuthorization: e.originalAuthorization };
+    function sameActor(left, right) { return left?.principalType === 'human' && isDeepStrictEqual(left, right); }
+  },
+  /** Rejects every original Payment effect except a positively bound durable denial; checks all Order rows. */
+  denialPayments: async function (request, row, decision) {
+    const scope = this.denialScope(request, row), plan = row.evidence.couponAcquisitionRecovery;
+    if ((await this.rows(SERVICE.DefaultCommerceOrderService, request, { code: plan.orderCode })).length) throw this.failure();
+    const payments = await this.rows(SERVICE.DefaultPaymentTransactionEntryService, request, { orderCode: plan.orderCode });
+    if (payments.length > 1 || payments.some(p => p.ownerId !== request.ownerId || p.cartCode !== plan.cartCode ||
+        p.enterpriseCode !== request.participantEnterpriseCode || p.idempotencyKey !== request.commandCode + ':payment' ||
+        !['DECLINED', 'CANCELLED'].includes(p.status) || p.evidence?.operation !== 'AUTHORIZE' ||
+        (p.methodCode || p.evidence?.methodCode) !== 'LOYALTY_REWARD' ||
+        !isDeepStrictEqual(p.evidence?.participant?.ownerRef, request.ownerRef) ||
+        !isDeepStrictEqual(p.evidence?.participant?.actorRef, request.actorRef) ||
+        !p.evidence?.reservationDecision || decision && !isDeepStrictEqual(p.evidence.reservationDecision, decision))) throw this.failure();
+    return scope;
+  },
+  /** Rechecks the durable Loyalty decision independently before every original input release. */
+  verifyAuthorizationDenial: async function (request, row) {
+    const scope = await this.denialPayments(request, row, row.evidence.paymentDenialDecision);
+    const decision = await SERVICE.DefaultPaymentExecutionService.authorizationDecision(scope, row.evidence.paymentDenialDecision?.contract === 'LOYALTY_RESERVATION_RECONCILIATION_V1' ? 'reconcile' : 'inspect');
+    if (!isDeepStrictEqual(decision, row.evidence.paymentDenialDecision)) throw this.failure();
+    return decision;
+  },
+  /**
+   * Fences an uncertain original authorization, persists proof by checkpoint CAS, then allows the
+   * existing guarded cleanup. Lost acknowledgements remain uncertain and recover only the same key.
+   */
+  reconcileAuthorizationDenial: async function (request, row) {
+    const scope = await this.denialPayments(request, row);
+    if (row.status !== 'COMPENSATION_REQUIRED') throw this.failure();
+    const plan = row.evidence.couponAcquisitionRecovery;
+    if (!Array.isArray(plan.reservations) || !plan.reservations.length) throw this.failure();
+    const bundle = plan.reservations.length === 1 && plan.reservations[0].digitalDeliveryType === 'DIGITAL_OWNERSHIP' &&
+      /^bundle-operation:[a-f0-9]{64}$/.test(plan.reservations[0].code || '') && !plan.reservations[0].offerAllocationCode;
+    if (!bundle && plan.reservations.some(unit => !unit.offerAllocationCode || unit.digitalDeliveryType === 'DIGITAL_OWNERSHIP'))
+      throw this.failure();
+    const ownerScope = { ...request, idempotencyKey: request.commandCode, payload: { orderCode: plan.orderCode, cartCode: plan.cartCode } };
+    const disposition = bundle
+      ? await SERVICE.DefaultDigitalBundleSettlementService.authorizationCompensationDisposition(ownerScope, plan.reservations)
+      : await SERVICE.DefaultDigitalCommerceCheckoutService.couponCompensationDisposition(ownerScope, plan.reservations);
+    if (disposition?.disposition !== 'RELEASE_ALLOWED' || disposition.outcomes?.length !== plan.reservations.length ||
+        new Set(disposition.outcomes.map(unit => unit.code)).size !== plan.reservations.length ||
+        disposition.outcomes.some(unit => unit.disposition !== 'RELEASE_ALLOWED' || !plan.reservations.some(r => r.code === unit.code))) throw this.failure();
+    const decision = await SERVICE.DefaultPaymentExecutionService.authorizationDecision(scope, scope.originalAuthorization ? 'reconcile' : 'cancel');
+    await this.denialPayments(request, row, decision);
+    const current = await this.checkpoint(request);
+    if (!isDeepStrictEqual(current, row)) throw this.failure();
+    return this.transition(request, row, 'COMPENSATION_REQUIRED', { ...row.evidence,
+      paymentDenialDecision: decision, couponAcquisitionRecovery: { ...plan, paymentAttemptUnconfirmed: false } });
   },
   /** Rejects any existing Order or entitlement for the verified original Cart; access denial never proves absence. */
   prepaymentCartEvidence: async function (request, cartCode) {
@@ -498,56 +646,154 @@ module.exports = {
       }
     } catch (_) { throw this.failure(); }
   },
+  /** Returns only a bounded server-selected failure stage/code; dependency messages and payloads are never retained. */
+  prepaymentDiagnostic: function (error, fallback) {
+    const stages = ["PAYMENT_BEFORE_OWNER", "CART_BEFORE_OWNER", "DIGITAL_OWNER", "OWNER_ADMISSION", "CHECKPOINT_PROOF",
+      "LISTING_PROOF", "PURCHASE_PROOF", "PURCHASE_FENCE", "LISTING_FENCE", "OWNER_RELEASE", "OWNER_READBACK",
+      "PAYMENT_AFTER_OWNER", "CART_AFTER_OWNER", "RECEIPT_PROOF"];
+    return { stage: stages.includes(error?.recoveryStage) ? error.recoveryStage : stages.includes(fallback) ? fallback : "DIGITAL_OWNER",
+      code: "ERR_CHECKOUT_COMPENSATION_UNCONFIRMED" };
+  },
+  /** Validates the immutable revision-two failed bundle attempt; no RUNNING claim, receipt or unbounded history is accepted. */
+  failedPrepaymentBundle: function (request, plan, prior) {
+    const expected = { contractVersion: 1, kind: "PREPAYMENT_UNCERTAIN_BUNDLE", reservationType: "BUNDLE", status: "UNCONFIRMED",
+      attemptId: prior?.attemptId, tenant: request.tenant, enterpriseCode: request.enterpriseCode, ownerId: request.ownerId,
+      commandCode: request.commandCode, uncertainKey: plan.uncertainKey, entryCode: plan.entryCode, cartCode: prior?.cartCode,
+      ...(prior?.failure ? { failure: this.prepaymentDiagnostic({ recoveryStage: prior.failure.stage }) } : {}) };
+    if (!/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(prior?.attemptId || "") ||
+        typeof prior?.cartCode !== "string" || !prior.cartCode.trim() || !isDeepStrictEqual(prior, expected)) throw this.failure();
+    return expected;
+  },
+  /** Validates exact finite owner pins from a read-only cancellation preflight; selectors never authorize effects. */
+  prepaymentReconciliationProof: function (proof) {
+    const fields = ["purchaseCode", "purchaseRevision", "commandDigest", "listingCode", "listingRevision", "listingEvidenceDigest"];
+    if (!proof || Object.keys(proof).length !== fields.length || fields.some(k => !Object.hasOwn(proof, k)) ||
+        ![proof.purchaseCode, proof.listingCode].every(v => /^bundle-operation:[a-f0-9]{64}$/.test(v)) ||
+        ![proof.commandDigest, proof.listingEvidenceDigest].every(v => /^[a-f0-9]{64}$/.test(v)) ||
+        ![proof.purchaseRevision, proof.listingRevision].every(v => Number.isSafeInteger(v) && v >= 0)) throw this.failure();
+    return structuredClone(proof);
+  },
+  /**
+   * Reconciles once under the same attempt UUID after exact cancelled-purchase proof; never resets or steals a claim.
+   * @param {Object} request Fresh original owner/actor/merchant context and empty public payload.
+   * @param {Object} original Revision-two UNCONFIRMED checkpoint.
+   * @returns {Promise<Object>} Revision-four completion, or retained UNCONFIRMED failure.
+   * @remarks Existing checkpoint CAS stores the complete prior attempt and fixed owner pins before effects.
+   * Failure behavior: Changed owner/Cart/Payment/pins, competing CAS or unknown effects remain fenced.
+   */
+  reconcilePrepaymentBundle: async function (request, original) {
+    const plan = this.qualifyPrepaymentCoupon(request, original);
+    const prior = this.failedPrepaymentBundle(request, plan, original.evidence.compensationRecovery);
+    plan.reservationType = "BUNDLE";
+    if (original.status !== "COMPENSATION_REQUIRED" || original.revision !== 2 || original.cartCode !== prior.cartCode ||
+        typeof original.orderCode !== "string" || !original.orderCode.trim() || await this.originalPaymentRecordCount(request) !== 0) throw this.failure();
+    await this.prepaymentCartEvidence(request, prior.cartCode);
+    const digital = SERVICE.DefaultDigitalCommerceCheckoutService;
+    const ownerRequest = { ...request, idempotencyKey: request.commandCode, payload: { cartCode: prior.cartCode, orderCode: original.orderCode } };
+    const proof = this.prepaymentReconciliationProof(await digital.inspectPrepaymentBundleReconciliation(ownerRequest, { uncertainKey: plan.uncertainKey }));
+    if (await this.originalPaymentRecordCount(request) !== 0) throw this.failure();
+    await this.prepaymentCartEvidence(request, prior.cartCode);
+    const { failure: previousFailure, ...identity } = prior;
+    const claim = { ...identity, status: "RUNNING", reconciliation: { fromRevision: 2, previous: structuredClone(prior), proof } };
+    const claimed = await this.transition(request, original, "COMPENSATION_REQUIRED", { ...original.evidence, compensationRecovery: claim });
+    let receipt, failure, stage = "PAYMENT_BEFORE_OWNER";
+    try {
+      if (await this.originalPaymentRecordCount(request) !== 0) throw this.failure();
+      stage = "CART_BEFORE_OWNER"; await this.prepaymentCartEvidence(request, prior.cartCode);
+      stage = "DIGITAL_OWNER";
+      const outcome = await digital.recoverUncertainReservation(ownerRequest, { uncertainKey: plan.uncertainKey, reservationType: "BUNDLE" });
+      stage = "PAYMENT_AFTER_OWNER"; if (await this.originalPaymentRecordCount(request) !== 0) throw this.failure();
+      stage = "CART_AFTER_OWNER"; await this.prepaymentCartEvidence(request, prior.cartCode);
+      stage = "RECEIPT_PROOF"; receipt = this.prepaymentCouponReceipt(request, plan, outcome);
+      if (receipt.cartCode !== prior.cartCode) { receipt = undefined; throw this.failure(); }
+    } catch (error) { failure = this.prepaymentDiagnostic(error, stage); receipt = undefined; }
+    const saved = await this.transition(request, claimed, receipt ? "COMPENSATED" : "COMPENSATION_REQUIRED", {
+      ...claimed.evidence, compensationRecovery: { ...claim, status: receipt ? "COMPLETED" : "UNCONFIRMED",
+        ...(receipt ? { outcome: receipt } : { failure }) } });
+    if (!receipt) throw this.failure();
+    return this.prepaymentCouponResult(saved);
+  },
   /** Fences one original prepayment coupon cleanup; Payment observations are not a distributed no-effects claim. */
   recoverPrepaymentCoupon: async function (request, original) {
     const plan = this.qualifyPrepaymentCoupon(request, original), prior = original.evidence.compensationRecovery;
+    if (prior?.status === "UNCONFIRMED" && prior.kind === "PREPAYMENT_UNCERTAIN_BUNDLE" && prior.reconciliation === undefined)
+      return this.reconcilePrepaymentBundle(request, original);
     if (prior !== undefined) {
-      const expected = { contractVersion: 1, kind: "PREPAYMENT_UNCERTAIN_COUPON", status: "COMPLETED",
+      plan.reservationType = prior?.reservationType;
+      if (!["COUPON", "BUNDLE"].includes(plan.reservationType)) throw this.failure();
+      let reconciliation;
+      if (prior.reconciliation !== undefined) {
+        const previous = this.failedPrepaymentBundle(request, plan, prior.reconciliation.previous);
+        reconciliation = { fromRevision: 2, previous, proof: this.prepaymentReconciliationProof(prior.reconciliation.proof) };
+        if (!isDeepStrictEqual(prior.reconciliation, reconciliation) || previous.attemptId !== prior.attemptId ||
+            previous.cartCode !== prior.cartCode) throw this.failure();
+      }
+      const expected = { contractVersion: 1, kind: plan.reservationType === "BUNDLE" ? "PREPAYMENT_UNCERTAIN_BUNDLE" : "PREPAYMENT_UNCERTAIN_COUPON", reservationType: plan.reservationType, status: "COMPLETED",
         attemptId: prior?.attemptId, tenant: request.tenant, enterpriseCode: request.enterpriseCode, ownerId: request.ownerId,
         commandCode: request.commandCode, uncertainKey: plan.uncertainKey, entryCode: plan.entryCode,
         cartCode: prior?.outcome?.cartCode,
-        outcome: this.prepaymentCouponReceipt(request, plan, prior?.outcome) };
-      if (original.status !== "COMPENSATED" || original.revision !== 2 ||
+        outcome: this.prepaymentCouponReceipt(request, plan, prior?.outcome), ...(reconciliation ? { reconciliation } : {}) };
+      if (original.status !== "COMPENSATED" || original.revision !== (reconciliation ? 4 : 2) ||
           !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(prior?.attemptId || "") ||
           !isDeepStrictEqual(prior, expected) || await this.originalPaymentRecordCount(request) !== 0) throw this.failure();
       await this.prepaymentCartEvidence(request, prior.cartCode);
+      const replayScope = await SERVICE.DefaultDigitalCommerceCheckoutService.uncertainReservationScope(
+        { ...request, idempotencyKey: request.commandCode }, { uncertainKey: plan.uncertainKey });
+      if (replayScope.reservationType !== plan.reservationType || replayScope.cartCode !== prior.cartCode ||
+          replayScope.entryCode !== plan.entryCode || replayScope.enterpriseCode !== request.enterpriseCode) throw this.failure();
+      if (plan.reservationType === "BUNDLE") {
+        const receipt = await SERVICE.DefaultDigitalCommerceCheckoutService.recoverUncertainReservation(
+          { ...request, idempotencyKey: request.commandCode, payload: { cartCode: prior.cartCode, orderCode: original.orderCode } },
+          { uncertainKey: plan.uncertainKey, reservationType: plan.reservationType, inspectOnly: true });
+        if (!isDeepStrictEqual(receipt, prior.outcome) || await this.originalPaymentRecordCount(request) !== 0) throw this.failure();
+      }
       return this.prepaymentCouponResult(original);
     }
     const digital = SERVICE.DefaultDigitalCommerceCheckoutService;
     if (original.status !== "COMPENSATION_REQUIRED" || original.revision !== 0 ||
-        typeof digital?.uncertainCouponReservationScope !== "function" ||
-        typeof digital.recoverUncertainCouponReservation !== "function" || await this.originalPaymentRecordCount(request) !== 0) throw this.failure();
+        typeof digital?.uncertainReservationScope !== "function" ||
+        typeof digital.recoverUncertainReservation !== "function" || await this.originalPaymentRecordCount(request) !== 0) throw this.failure();
     let scope;
     try {
-      scope = await digital.uncertainCouponReservationScope({ ...request, idempotencyKey: request.commandCode }, { uncertainKey: plan.uncertainKey });
+      scope = await digital.uncertainReservationScope({ ...request, idempotencyKey: request.commandCode }, { uncertainKey: plan.uncertainKey });
     } catch (_) { throw this.failure(); }
-    const scopeFields = ["cartCode", "entryCode", "productCode", "sku", "enterpriseCode"];
+    const scopeFields = ["cartCode", "entryCode", "productCode", "sku", "enterpriseCode", "reservationType"];
     if (!scope || typeof scope !== "object" || Array.isArray(scope) || Object.keys(scope).length !== scopeFields.length ||
         scopeFields.some(key => !Object.hasOwn(scope, key) || typeof scope[key] !== "string" ||
           !/^[A-Za-z0-9][A-Za-z0-9_.:@|\-]{0,255}$/.test(scope[key])) ||
         scope.entryCode !== plan.entryCode || scope.enterpriseCode !== request.enterpriseCode ||
         (original.cartCode !== undefined && original.cartCode !== scope.cartCode)) throw this.failure();
+    if (!["COUPON", "BUNDLE"].includes(scope.reservationType) || scope.reservationType === "BUNDLE" &&
+        (typeof original.orderCode !== "string" || !original.orderCode.trim())) throw this.failure();
+    plan.reservationType = scope.reservationType;
     await this.prepaymentCartEvidence(request, scope.cartCode);
-    const claim = { contractVersion: 1, kind: "PREPAYMENT_UNCERTAIN_COUPON", status: "RUNNING",
+    const claim = { contractVersion: 1, kind: plan.reservationType === "BUNDLE" ? "PREPAYMENT_UNCERTAIN_BUNDLE" : "PREPAYMENT_UNCERTAIN_COUPON", reservationType: plan.reservationType, status: "RUNNING",
       attemptId: require("node:crypto").randomUUID(), tenant: request.tenant, enterpriseCode: request.enterpriseCode,
       ownerId: request.ownerId, commandCode: request.commandCode, uncertainKey: plan.uncertainKey, entryCode: plan.entryCode, cartCode: scope.cartCode };
     const claimed = await this.transition(request, original, "COMPENSATION_REQUIRED", { ...original.evidence, compensationRecovery: claim });
-    let outcome, receipt;
+    let outcome, receipt, failure, stage = "PAYMENT_BEFORE_OWNER";
     try {
       if (await this.originalPaymentRecordCount(request) !== 0) throw this.failure();
+      stage = "CART_BEFORE_OWNER";
       await this.prepaymentCartEvidence(request, claim.cartCode);
-      outcome = await digital.recoverUncertainCouponReservation({ ...request, idempotencyKey: request.commandCode },
-        { uncertainKey: plan.uncertainKey });
-    } catch (_) { /* Failed or unknown owner effects stay fenced; never persist arbitrary dependency errors. */ }
+      stage = "DIGITAL_OWNER";
+      outcome = await digital.recoverUncertainReservation({ ...request, idempotencyKey: request.commandCode,
+        payload: { cartCode: claim.cartCode, orderCode: original.orderCode } },
+        { uncertainKey: plan.uncertainKey, reservationType: plan.reservationType });
+    } catch (error) { failure = this.prepaymentDiagnostic(error, stage); }
     try {
+      stage = "PAYMENT_AFTER_OWNER";
       if (await this.originalPaymentRecordCount(request) !== 0) throw this.failure();
+      stage = "CART_AFTER_OWNER";
       await this.prepaymentCartEvidence(request, claim.cartCode);
+      stage = "RECEIPT_PROOF";
       receipt = this.prepaymentCouponReceipt(request, plan, outcome);
       if (receipt.cartCode !== claim.cartCode) receipt = undefined;
-    } catch (_) { /* No terminal success without both the original owner receipt and fresh zero Payment evidence. */ }
+    } catch (error) { failure ||= this.prepaymentDiagnostic(error, stage); }
+    if (!receipt) failure ||= this.prepaymentDiagnostic(undefined, "RECEIPT_PROOF");
     const saved = await this.transition(request, claimed, receipt ? "COMPENSATED" : "COMPENSATION_REQUIRED",
       { ...claimed.evidence, compensationRecovery: { ...claim, status: receipt ? "COMPLETED" : "UNCONFIRMED",
-        ...(receipt ? { outcome: receipt } : {}) } });
+        ...(receipt ? { outcome: receipt } : { failure }) } });
     if (!receipt) throw this.failure();
     return this.prepaymentCouponResult(saved);
   },

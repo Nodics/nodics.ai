@@ -21,7 +21,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkLocalQuickStart",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -33,7 +33,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkFreshSchemaSetupJourney",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -45,7 +45,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkLocalRuntimeTroubleshooting",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -57,7 +57,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkDevopsRuntime",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -69,7 +69,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkRuntimeReleaseRollback",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -81,7 +81,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkLocalBrowserAcceptanceJourney",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -93,7 +93,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkLocalVerificationChecklist",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -105,7 +105,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkReleaseUpgradeCompatibility",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -117,7 +117,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagetoolingAiDeveloperEnablement",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -129,7 +129,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagefoundationToolingRuntimeContracts",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   }

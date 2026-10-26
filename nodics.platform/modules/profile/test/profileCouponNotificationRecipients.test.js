@@ -103,11 +103,11 @@ test("coupon malformed occurrence or incomplete selector policy refuses before t
     if (kind === "OCCURRENCE") f.request.body.source.occurrenceKey += "\n";
     if (kind === "POLICY") delete f.policy.recipientSelection;
     if (kind === "MODULES") f.request.authData.modules = "profile,digitalCore";
-    await assert.rejects(service.resolve(f.request), { message: "ERR_AUTH_00003" }); assert.equal(f.calls, 0);
+    await assert.rejects(service.resolve(f.request), { message: kind === "MODULES" ? "ERR_AUTH_00003" : "ERR_PROFILE_COUPON_RECIPIENT_" + (kind === "OCCURRENCE" ? "INPUT" : "POLICY") }); assert.equal(f.calls, 0);
   }
   const f = fixture(t);
   SERVICE.DefaultModuleService.invokeModule = async () => { throw new Error("private destination and credential diagnostics"); };
-  await assert.rejects(service.resolve(f.request), { message: "ERR_AUTH_00003" });
+  await assert.rejects(service.resolve(f.request), { message: "ERR_PROFILE_COUPON_RECIPIENT_SOURCE_RPC" });
 });
 
 test("Employee self inbox rejects body selectors, inactive principals, namespace collision and signed alias drift", async t => {
@@ -145,5 +145,55 @@ test("Employee self inbox revalidates actor after private reads and redacts depe
       assert.equal((await service.inboxIdentity(request)).recipientId, "profile-employee:staff");
       assert.equal(checks, 2);
     } else await assert.rejects(service.inboxIdentity(request), { message: "ERR_AUTH_00003" });
+  }
+});
+
+
+test("real controller/facade, runtime admission and error registry expose only fixed private stages", async t => {
+  for (const mode of ["SUCCESS", "SOURCE_RPC", "SOURCE_PROOF", "SELECTION", "BOUND", "UNADMITTED"]) {
+    const f = fixture(t);
+    const oldFacade = global.FACADE, oldUtils = global.UTILS;
+    t.after(() => { global.FACADE = oldFacade; global.UTILS = oldUtils; });
+    const definitions = { ...require("../src/utils/statusDefinitions"),
+      ERR_AUTH_00003: { code: "403", message: "Access Denied" },
+      ERR_SYS_00000: { code: "500", message: "Unknown error" } };
+    const get = CONFIG.get;
+    CONFIG.get = key => key === "defaultErrorCodes" ? { NodicsError: "ERR_SYS_00000" } : get(key);
+    SERVICE.DefaultStatusService = { get: code => definitions[code] };
+    global.UTILS = { isObject: value => value !== null && typeof value === "object" };
+    CLASSES.NodicsError = require("../../../../nodics.foundation/modules/nCommon/src/lib/nodicsError");
+    SERVICE.DefaultServiceTokenService = require("../../../../nodics.foundation/modules/nAuth/src/service/identity/defaultServiceTokenService");
+    SERVICE.DefaultProfileCouponNotificationRecipientService = service;
+    global.FACADE = { DefaultProfileCouponNotificationRecipientFacade: require("../src/facade/identity/defaultProfileCouponNotificationRecipientFacade") };
+    Object.assign(f.request.authData, { tokenType: "service", serviceId: "service", runtimeInstanceId: "instance",
+      runtimeScope: { instanceCode: "instance", projectCode: "project", environmentCode: "unit", serverCode: "server", assignmentCode: "grant" } });
+    const privateRequests = new WeakSet([f.request]);
+    SERVICE.DefaultLoggerService = {
+      assertSensitiveRequest: request => assert.ok(privateRequests.has(request)),
+      runSensitiveOperation: async (request, work) => { privateRequests.add(request); return work(); },
+    };
+    let cacheControl;
+    f.request.httpResponse = { setHeader: (name, value) => { assert.equal(name, "Cache-Control"); cacheControl = value; } };
+    const secret = "private-contact-token-remote-cause";
+    if (mode === "SOURCE_RPC") SERVICE.DefaultModuleService.invokeModule = async () => { throw Object.assign(new Error(secret), { code: "ERR_PROFILE_COUPON_RECIPIENT_SELECTION" }); };
+    if (mode === "SOURCE_PROOF") f.proof.source.entitlementCode = secret;
+    if (mode === "SELECTION") SERVICE.DefaultCustomerService.get = async () => { throw new Error(secret); };
+    if (mode === "BOUND") f.onSource = () => { f.request.authData.entCode = secret; };
+    if (mode === "UNADMITTED") delete f.request.authData.runtimeScope;
+    const controller = require("../src/controller/identity/defaultProfileCouponNotificationRecipientController");
+    if (mode === "SUCCESS") {
+      const result = await controller.resolve(f.request);
+      assert.equal(result.data.recipients[0].recipientId, "customer");
+      assert.equal(f.calls, 2); assert.equal(f.reads, 4);
+    } else {
+      const error = await new Promise(resolve => controller.resolve(f.request, resolve));
+      assert.equal(error.code, mode === "UNADMITTED" ? "ERR_AUTH_00003" : "ERR_PROFILE_COUPON_RECIPIENT_" + mode);
+      assert.equal(error.responseCode, "403");
+      assert.equal(error.metadata, undefined); assert.deepEqual(error.causes, []);
+      assert.equal(JSON.stringify(error).includes(secret), false);
+      assert.equal(error.message.includes(secret), false);
+      if (mode === "UNADMITTED") assert.equal(f.calls, 0);
+    }
+    assert.equal(cacheControl, "no-store");
   }
 });

@@ -208,15 +208,18 @@ module.exports = {
                 const summary = batch.get(code);
                 if (!summary || typeof summary !== 'object' || Array.isArray(summary) ||
                     ![Object.prototype, null].includes(Object.getPrototypeOf(summary)) ||
-                    Reflect.ownKeys(summary).length !== 3 ||
+                    Reflect.ownKeys(summary).length !== 4 ||
+                    !Object.hasOwn(Object.getOwnPropertyDescriptor(summary, 'expiry') || {}, 'value') ||
                     !Object.hasOwn(Object.getOwnPropertyDescriptor(summary, 'acquisitionRequirements') || {}, 'value') ||
                     typeof Object.getOwnPropertyDescriptor(summary, 'available')?.value !== 'boolean' ||
                     Object.getOwnPropertyDescriptor(summary, 'status')?.value !== (summary.available ? 'IN_STOCK' : 'OUT_OF_STOCK'))
                     throw new Error('Promotion browsing batch summary is invalid');
                 const acquisitionRequirements = summary.acquisitionRequirements === null ? null :
                     SERVICE.DefaultCouponOfferService.acquisitionRequirements(summary.acquisitionRequirements);
-                if (acquisitionRequirements === null && summary.available) throw new Error('Promotion browsing batch summary is invalid');
-                publicSummaries.set(code, { available: summary.available, status: summary.status, acquisitionRequirements });
+                const expiry = summary.expiry === null ? null : SERVICE.DefaultCouponOfferService.expiry(summary.expiry);
+                if ((acquisitionRequirements === null || expiry === null) && summary.available)
+                    throw new Error('Promotion browsing batch summary is invalid');
+                publicSummaries.set(code, { available: summary.available, status: summary.status, acquisitionRequirements, expiry });
             }
         }
         for (const [productCode, row] of digital) {

@@ -531,9 +531,21 @@ module.exports = {
       configuration.memberships.inventoryQualified === true &&
       configuration.memberships.sessionBindingQualified === true &&
       configuration.memberships.assignmentClaimIndexQualified === true &&
+      Number.isSafeInteger(configuration.memberships.pageSize) &&
+      configuration.memberships.pageSize >= 1 && configuration.memberships.pageSize <= 100 &&
+      Number.isSafeInteger(configuration.memberships.maximumInventoryPages) &&
+      configuration.memberships.maximumInventoryPages >= 1 &&
       typeof CONFIG !== "undefined" &&
       CONFIG.get("apiExposure")?.categories?.profileMembership?.enabled ===
         true;
+    effective.publicFeatureAvailability = {
+      contractVersion: 1,
+      features: {
+        enterpriseMembershipDiscovery: membershipsQualified,
+        enterpriseMembershipSwitch:
+          membershipsQualified && configuration.memberships.browserContextSwitchQualified === true,
+      },
+    };
     if (membershipsQualified) {
       effective.navigation.push({
         id: "my-enterprise-memberships",

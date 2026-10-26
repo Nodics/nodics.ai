@@ -117,8 +117,11 @@ module.exports = {
    * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
    * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
    */
-  context: function (request) {
-    const selected = this.policy(), intent = this.command(request, selected.policy);
+  context: function (request, provisioning = false) {
+    const selected = this.policy();
+    if (provisioning && selected.policy.provisioningEnabled !== true) this.fail();
+    const parse = () => provisioning ? this.provisionCommand(request, selected.policy) : this.command(request, selected.policy);
+    const intent = parse();
     const auth = request.authData || {}, enterpriseCode = auth.entCode;
     const router = this.service("DefaultSecuredRequestPipelineService");
     if (!this.identifier(request.tenant) || auth.tenant !== request.tenant || !this.identifier(enterpriseCode) ||
@@ -141,7 +144,7 @@ module.exports = {
           !isDeepStrictEqual(context.authData, pin.authData) || context.tenant !== pin.tenant ||
           context.authorization !== pin.authorization || context.enterpriseCode !== enterpriseCode ||
           context.environmentCode !== selected.environmentCode || !isDeepStrictEqual(context.policy, selected.policy) ||
-          !isDeepStrictEqual(context.intent, this.command(request, selected.policy)) ||
+          !isDeepStrictEqual(context.intent, parse()) ||
           !isDeepStrictEqual(this.policy(), selected) ||
           [request.entCode, request.enterpriseCode, request.httpRequest?.headers?.["x-enterprise-code"]]
             .some(value => value !== undefined && value !== enterpriseCode) ||
@@ -353,6 +356,92 @@ module.exports = {
       await this.platformAdministrator(context);
       context.assertBound();
       return this.project(retained, ENUMS.LoyaltyTestCreditStatus.CREDITED.key);
+    });
+  },
+  /**
+   * Validates confirmed zero-balance provisioning; the target tuple is its replay identity.
+   * @param {Object} request Original signed request; no caller markers, balances or wallet codes.
+   * @param {Object} policy Selected test-credit owner policy.
+   * @returns {Object} Immutable reviewed intent; no effects. Invalid fields refuse.
+   */
+  provisionCommand: function (request, policy) {
+    const input = request.payload;
+    const fields = ["enterpriseCode", "programCode", "rewardTypeCode", "reason", "confirmed"];
+    if (!input || Object.getPrototypeOf(input) !== Object.prototype ||
+        Object.keys(input).length !== fields.length || Object.keys(input).some(key => !fields.includes(key)) ||
+        ["enterpriseCode", "programCode", "rewardTypeCode"].some(key => !this.identifier(input[key])) ||
+        typeof input.reason !== "string" || !input.reason.trim() || input.reason !== input.reason.trim() ||
+        input.reason.length > policy.maximumReasonLength || /[\u0000-\u001f\u007f]/.test(input.reason) ||
+        input.confirmed !== true || Object.keys(request.query || {}).length || request.transactionContext !== undefined)
+      this.fail("INVALID");
+    const { confirmed, ...intent } = input;
+    return structuredClone(intent);
+  },
+  /**
+   * Creates one qualified test wallet and zero balance atomically, or returns exact original evidence.
+   * @param {Object} request Original native Super Admin request with confirmed target and reason.
+   * @returns {Promise<Object>} PROVISIONED/CURRENT evidence; never earns, resets or reclassifies records.
+   * @throws {Error} Missing qualification, conflicting intent, incomplete records or uncertain writes refuse.
+   * @override Preserve fresh Profile proof, original credentials, complete readback and atomic zero-only creation.
+   */
+  provision: async function (request) {
+    const context = this.context(request, true);
+    await this.platformAdministrator(context);
+    await this.persistence(context);
+    return this.service("DefaultLoyaltyTransactionService").compose(context, async () => {
+      const actor = await this.platformAdministrator(context), intent = context.intent;
+      const participant = await this.service("DefaultLoyaltyParticipantService").recipient(context,
+        { ownerType: "ENTERPRISE", ownerCode: intent.enterpriseCode });
+      if (participant?.ownerType !== "ENTERPRISE" || participant.ownerCode !== intent.enterpriseCode) this.fail("INELIGIBLE");
+      const scale = await this.scale(context, intent);
+      const operations = this.service("DefaultLoyaltyRewardOperationService");
+      const walletCode = this.service("DefaultLoyaltyWalletOperationService").walletCode("ENTERPRISE", intent.enterpriseCode);
+      const balanceRequest = { walletCode, programCode: intent.programCode, rewardTypeCode: intent.rewardTypeCode };
+      const wallet = await this.read(context, "DefaultLoyaltyWalletService", { ownerType: "ENTERPRISE", ownerCode: intent.enterpriseCode });
+      const existingCode = await this.read(context, "DefaultLoyaltyWalletService", { code: walletCode });
+      const balance = await this.read(context, "DefaultLoyaltyWalletRewardBalanceService", balanceRequest);
+      let retainedWallet, retainedBalance, status;
+      if (wallet || existingCode || balance) {
+        if (!wallet || wallet.code !== walletCode || !existingCode || !balance) this.fail("CONFLICT");
+        const audit = wallet.metadata?.testProvision;
+        if (audit?.contractVersion !== 1 || !isDeepStrictEqual(audit.intent, intent) || audit.scale !== scale ||
+            !this.identifier(audit.actor?.actorCode) || !Number.isSafeInteger(audit.actor?.authVersion) ||
+            audit.actor.authVersion < 1 || audit.actor.authorityTenant !== context.tenant ||
+            !this.identifier(audit.actor.authorityEnterpriseCode) || typeof audit.provisionedAt !== "string" ||
+            !Number.isFinite(Date.parse(audit.provisionedAt)) || !isDeepStrictEqual(balance.metadata?.testProvision, audit)) this.fail("CONFLICT");
+        const target = await this.target(context, { ...intent, walletCode });
+        if (target.balance.code !== operations.balanceCode(balanceRequest) || counters.some(key =>
+          typeof target.balance[key] !== "string" || this.amount().compare(target.balance[key], "0", scale) < 0)) this.fail("CONFLICT");
+        retainedWallet = target.wallet; retainedBalance = target.balance; status = ENUMS.LoyaltyTestWalletProvisionStatus.CURRENT.key;
+      } else {
+        if (await this.read(context, "DefaultRewardLedgerEntryService", { walletCode })) this.fail("CONFLICT");
+        const provisionedAt = new Date().toISOString();
+        const metadata = { sample: true, testOnly: true, testEnvironment: context.environmentCode,
+          testProvision: { contractVersion: 1, intent: structuredClone(intent), scale, actor, provisionedAt } };
+        const newWallet = { code: walletCode, ownerType: "ENTERPRISE", ownerCode: intent.enterpriseCode,
+          status: ENUMS.LoyaltyWalletStatus.OPEN.key, active: true, revision: 0, openedAt: provisionedAt,
+          created: provisionedAt, updated: provisionedAt, metadata };
+        const newBalance = { ...operations.initialBalance(balanceRequest), metadata: structuredClone(metadata) };
+        for (const key of counters) newBalance[key] = this.amount().normalize("0", scale);
+        for (const [name, model] of [["DefaultLoyaltyWalletService", newWallet], ["DefaultLoyaltyWalletRewardBalanceService", newBalance]]) {
+          context.assertBound();
+          const response = await this.service(name).save({ ...operations.serviceRequest(context, { model }), options: { insertOnly: true } });
+          if (!/^SUC_/.test(response?.code || "") || response.error || response.success === false ||
+              response.acknowledged === false || response.result?.acknowledged === false || response.errors?.length) this.fail("CONFLICT");
+        }
+        const target = await this.target(context, { ...intent, walletCode });
+        retainedWallet = target.wallet; retainedBalance = target.balance;
+        if (retainedWallet.code !== walletCode || retainedBalance.code !== newBalance.code || retainedBalance.revision !== 0 ||
+            !isDeepStrictEqual(retainedWallet.metadata, metadata) || !isDeepStrictEqual(retainedBalance.metadata, metadata) ||
+            counters.some(key => typeof retainedBalance[key] !== "string" || this.amount().compare(retainedBalance[key], "0", scale) !== 0)) this.fail("CONFLICT");
+        status = ENUMS.LoyaltyTestWalletProvisionStatus.PROVISIONED.key;
+      }
+      await this.platformAdministrator(context);
+      context.assertBound();
+      return { status, testOnly: true, walletCode, balanceCode: retainedBalance.code,
+        ownerType: "ENTERPRISE", ownerCode: intent.enterpriseCode, programCode: intent.programCode,
+        rewardTypeCode: intent.rewardTypeCode, actorCode: retainedWallet.metadata.testProvision.actor.actorCode,
+        provisionedAt: retainedWallet.metadata.testProvision.provisionedAt };
     });
   },
 };

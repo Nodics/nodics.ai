@@ -160,7 +160,7 @@ module.exports = {
    */
   components: function (values) {
     if (!Array.isArray(values) || !values.length || values.length > this.settings().maximumComponents)
-      throw new Error("A nonempty bounded bundle is required");
+      throw new CLASSES.NodicsError("ERR_DIGITAL_BUNDLE_INPUT");
     const seen = new Set();
     return values.map(value => {
       if (!value || !["CERTIFICATE", "REALIZED_CARBON"].includes(value.kind) ||
@@ -168,13 +168,13 @@ module.exports = {
           !Number.isSafeInteger(value.expectedRevision) || value.expectedRevision < 0 ||
           typeof value.quantity !== "string" || !/^(0|[1-9]\d*)(\.\d+)?$/.test(value.quantity) ||
           value.quantity.length > 128 || !/[1-9]/.test(value.quantity) ||
-          value.kind === "CERTIFICATE" && value.quantity !== "1") throw new Error("Invalid bundle component");
+          value.kind === "CERTIFICATE" && value.quantity !== "1") throw new CLASSES.NodicsError("ERR_DIGITAL_BUNDLE_INPUT");
       const reference = { module: value.reference.module, schema: value.reference.schema, code: value.reference.code };
       const key = JSON.stringify(reference);
-      if (seen.has(key)) throw new Error("Duplicate bundle component");
+      if (seen.has(key)) throw new CLASSES.NodicsError("ERR_DIGITAL_BUNDLE_INPUT");
       seen.add(key);
       if (value.kind === "REALIZED_CARBON" && (typeof value.unitOfMeasure !== "string" || !value.unitOfMeasure.trim() || value.unitOfMeasure.length > 100))
-        throw new Error("Carbon component unit is required");
+        throw new CLASSES.NodicsError("ERR_DIGITAL_BUNDLE_INPUT");
       return { kind: value.kind, reference, quantity: value.quantity, expectedRevision: value.expectedRevision,
         ...(value.kind === "REALIZED_CARBON" ? { unitOfMeasure: value.unitOfMeasure } : {}) };
     }).sort((a, b) => JSON.stringify(a.reference).localeCompare(JSON.stringify(b.reference)));
@@ -370,8 +370,9 @@ module.exports = {
       if (components.length > 1 && this.provider(component).retainsTransferLock === false)
         throw new Error("Component owner cannot yet retain a whole-bundle transfer lock");
       const result = await this.provider(component).inspect(r, { component, ownerRef });
+      if (typeof result?.available !== 'boolean') throw new Error('Bundle component inspection is unconfirmed');
       if (result?.available !== true || !isDeepStrictEqual(result.ownerRef, ownerRef) || result.revision !== component.expectedRevision)
-        throw new Error("Bundle component is not available to this owner");
+        throw new CLASSES.NodicsError("ERR_DIGITAL_BUNDLE_UNAVAILABLE");
     }
     return this.insert(r, "DefaultDigitalBundleManifestService", { ...this.scope(r), code, revision: 0, status: "ACTIVE",
       ownerRef, components, digest, ...(composition ? { composition, compositionDigest: this.digest(composition) } : {}),

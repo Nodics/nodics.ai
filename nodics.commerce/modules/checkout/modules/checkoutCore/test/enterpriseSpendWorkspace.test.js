@@ -36,8 +36,8 @@ test('purchase-limit copy and unassigned access definitions have exact governed 
     assert.equal(component.activationMode, undefined);
 });
 test('existing Profile business-area projection exposes only explicit purchase-limit Full control, with no employee assignments', () => {
-    const role = require('../data/init-v002/records/identity/checkoutSpendAccessRoleData').record0;
-    const group = require('../data/init-v002/records/identity/checkoutSpendAccessGroupData').record0;
+    const role = require('../data/init-v001/records/identity/checkoutSpendAccessRoleData').record0;
+    const group = require('../data/init-v001/records/identity/checkoutSpendAccessGroupData').record0;
     const catalogue = require('../../../../../../nodics.platform/modules/profile/src/service/identity/defaultIdentityCatalogueService');
     assert.deepEqual(catalogue.businessAreas({ [role.code]: role }), [{
         code: 'purchaseLimits', label: 'Purchase limits', ownerModule: 'checkoutCore', scopeType: 'ENTERPRISE',

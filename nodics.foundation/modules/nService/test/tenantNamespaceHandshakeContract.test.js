@@ -75,6 +75,8 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
   const releases = require("../../nData/nImport/import/src/service/release/defaultDataReleaseService");
   const authProperties = require("../../nAuth/config/properties");
   const importProperties = require("../../nData/nImport/import/config/properties");
+  global.UTILS = { ...global.UTILS,
+    resolveInstalledSourceDescriptor: require("../../nConfig/src/utils/utils").resolveInstalledSourceDescriptor.bind(require("../../nConfig/src/utils/utils")) };
   const provisioningPolicy = require("../../../../nodics.platform/modules/profile/config/properties").profileTenantProvisioning;
   // Installed governed assignments, not configuration, approve tenant binding.
   const migration = { ...authProperties.identityGovernance.migration,
@@ -100,13 +102,17 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
   CONFIG.get = (name, tenant) => name === "defaultAuthDetail" ? { entCode: tenantProperties[tenant]?.defaultAuthDetail?.entCode || "platform", apiKey: key }
     : name === "profileTenantProvisioning" ? { ...provisioningPolicy, enabled: true }
     : name === "runtimeIdentity" ? { instanceCode: scope.instanceCode }
-    : name === "authSecurity" ? { internalToken: { maximumLifetimeSeconds: 300 },
-      apiKey: { pepper: "fictional-test-pepper-not-for-deployment-only", requireScopes: true } }
+    : name === "authSecurity" ? { ...structuredClone(authProperties.authSecurity),
+      internalToken: { ...authProperties.authSecurity.internalToken, maximumLifetimeSeconds: 300 },
+      apiKey: { ...authProperties.authSecurity.apiKey, pepper: "fictional-test-pepper-not-for-deployment-only", requireScopes: true } }
     : name === "identityGovernance" ? { migration }
+    : name === "bootstrapIdentity" ? { source: "environment", adminPassword: "offline-admin-password-long-unique", servicePassword: "offline-service-password-long-unique", serviceApiKey: "offline-service-api-key-long-unique-2026" }
     : name === "data" ? importProperties.data
     : name === "runtimeRole" ? { code: "PLATFORM" }
     : name === "environment" ? { class: "LOCAL" } : original(name, tenant);
   Object.assign(NODICS, { isModuleActive: () => true, getActiveModules: () => scope.modules,
+    getNodicsHome: () => require("node:path").resolve(__dirname, "../../.."),
+    getCustomHome: () => require("node:path").resolve(__dirname, "../../../.."),
     getInternalAuthToken: tenant => f.state.tokens[tenant],
     getEnvironmentName: () => scope.projectCode, getSelectedEnvironmentName: () => scope.environmentCode,
     getServerName: () => scope.serverCode,
@@ -114,6 +120,7 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
   let grantActive = true;
   const proofReads = [], issuedTenants = [];
   const native = { code: "apiAdmin", loginId: "apiAdmin", active: true, principalType: "service",
+    enterpriseCode: "enterprise-a",
     userGroups: [], apiKeyScopes: scope.permissions, apiKeyHash: apiKeys.digest(key), apiKeyStatus: "active",
     identityMigrationVersion: migration.version || 1, password: "retained-target-reference" };
   const originalNative = structuredClone(native);
@@ -137,7 +144,7 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
           assert.equal(request.query.apiKeyHash === apiKeys.digest(key), true);
           proofReads.push(request.tenant);
           return { code: "SUC_FIND_00000", result: request.tenant === "default"
-            ? [{ loginId: "apiAdmin", principalType: "service", active: true, authVersion: 2, apiKeyStatus: "active", apiKeyScopes: scope.permissions }]
+            ? [{ loginId: "apiAdmin", enterpriseCode: "platform", principalType: "service", active: true, authVersion: 2, apiKeyStatus: "active", apiKeyScopes: scope.permissions }]
             : [structuredClone(native)] };
         }
         throw new Error("Startup must not repair service principals or administrators");
@@ -182,6 +189,7 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
     }),
     DefaultMandatoryIdentityBootstrapService: bootstrap,
     DefaultDataReleaseService: Object.assign(Object.create(releases), {
+      getInstallations: async () => [],
       preparePlan: async request => {
         assert.equal(request.tenant, "tenant-a"); assert.equal(request.releaseRequest.dataType, "init");
         assert(request.releaseRequest.releaseCodes.length > 0);
@@ -200,6 +208,8 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
     return provisioning.runtimeBootstrapView(f.record);
   };
   SERVICE.DefaultInternalAuthenticationProviderService = Object.assign(Object.create(provider), { getInternalAuthToken: issuer.getInternalAuthToken });
+  for (const release of SERVICE.DefaultDataReleaseService.discoverReleases("init"))
+    assert.equal(release.invalidManifest, undefined, release.invalidReason);
   const enterprise = { code: "enterprise-a", active: true, tenant: { code: "tenant-a", active: true } };
   await f.owner.buildEnterprise([enterprise]);
   assert.deepEqual(proofReads, ["default", "tenant-a"]);

@@ -160,7 +160,43 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     assert.strictEqual(invalidRelease.releaseStatus, 'INVALID_RELEASE');
     assert.strictEqual(invalidRelease.publicationDiagnostic.status, 'STAGED_SOURCE_INVALID_RELEASE');
     releaseVersion = '0.0.0';
+    lifecycle = { code: 'cmsBaseline_axis_0_0_0', state: 'PENDING_APPROVAL', revision: 2,
+        workflowRef: 'workflow-cmsBaseline_axis_0_0_0-2', sourceVersion: '0' };
+    const retained = JSON.stringify(lifecycle);
+    const repairRequest = { ...request, baseline: { requestedBy: 'admin', approvalRepairBinding: {
+        source: 'PUBLICATION_APPROVAL', publicationCode: lifecycle.code, publicationRevision: 2,
+        workflowRef: lifecycle.workflowRef } } };
+    let diagnosticStatus = 'TASK_REFERENCE_MISSING';
+    SERVICE.DefaultCmsPublicationWorkflowService.diagnoseApproval = async () => ({ data: { status: diagnosticStatus } });
+    SERVICE.DefaultPublicationLifecycleService.requestApproval = async input => {
+        operations.push(['recoverApproval', input.publicationCode, input.expectedRevision]);
+        diagnosticStatus = 'WAITING_REVIEWER';
+        return lifecycle;
+    };
+    operations = [];
+    await service.reconcileApproval('axis', repairRequest);
+    assert.deepStrictEqual(operations, [['recoverApproval', lifecycle.code, 2]]);
+    assert.strictEqual(JSON.stringify(lifecycle), retained, 'Recovery preserves the retained publication');
+    await service.reconcileApproval('axis', repairRequest);
+    assert.strictEqual(operations.length, 1, 'An already actionable task is read-only');
+    for (const status of ['PROVIDER_UNAVAILABLE', 'TASK_NOT_ACTIONABLE', 'TASK_ASSIGNEE_MISSING']) {
+        diagnosticStatus = status;
+        await assert.rejects(service.reconcileApproval('axis', repairRequest), /not eligible/);
+    }
+    diagnosticStatus = 'TASK_REFERENCE_MISSING';
+    for (const binding of [undefined, { ...repairRequest.baseline.approvalRepairBinding, publicationRevision: 1 },
+        { ...repairRequest.baseline.approvalRepairBinding, publicationCode: 'foreign' },
+        { ...repairRequest.baseline.approvalRepairBinding, workflowRef: 'foreign' }]) {
+        await assert.rejects(service.reconcileApproval('axis', { ...repairRequest,
+            baseline: { ...repairRequest.baseline, approvalRepairBinding: binding } }), /identity changed/);
+    }
+    lifecycle.state = 'ONLINE';
+    await assert.rejects(service.reconcileApproval('axis', repairRequest), /identity changed/);
+    lifecycle = undefined;
+    await assert.rejects(service.reconcileApproval('axis', repairRequest), /identity changed/);
+    assert.strictEqual(operations.length, 1, 'Rejected recovery never imports or mutates publication');
     publication.runtimeRole = 'ONLINE';
+    await assert.rejects(service.reconcileApproval('axis', repairRequest), error => error.code === 'CMS_BASELINE_SOURCE_ROLE_INVALID');
     await assert.rejects(service.status('axis', request), error => error.code === 'CMS_BASELINE_SOURCE_ROLE_INVALID');
     console.log('CMS publication baseline service validated');
 })().catch(error => { console.error(error); process.exit(1); });

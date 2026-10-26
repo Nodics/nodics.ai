@@ -1,5 +1,8 @@
 # Checkout Core Contracts
 
+[Durable payment denial cleanup](payment-denial-cleanup.md) owns original Enterprise
+reconciliation. A historical cancellation fence does not establish no effects.
+
 Fixed-price commands follow [merchant and participant scope](../../../cart/llm/contracts/merchant-scope.md).
 Only Cart creation requires explicit Store selection. Owner-validated retained
 Cart/checkpoint evidence resolves merchant scope thereafter; command status returns
@@ -240,14 +243,15 @@ unchanged even when checkpoint status is UNCONFIRMED.
 
 The existing original-command compensation recovery operation also admits one
 narrow prepayment failure. Its retained checkpoint must have revision zero,
-COMPENSATION_REQUIRED status, exactly VALIDATED/CALCULATED/RESERVED phases,
+COMPENSATION_REQUIRED status, exactly VALIDATED/CALCULATED/RESERVED phases (Enterprise additionally requires
+SPENDING_ADMITTED before RESERVED),
 explicit false Inventory uncertainty, explicit true Digital uncertainty and
 exactly one FAILED DIGITAL_COUPON_RELEASE/DIGITAL_RESERVATION_UNCERTAIN outcome.
 No Payment compensation intent or additional obligation is admitted. The one
 uncertain key must derive from the original command, `:digital:`, a bounded entry
 identity and index `:0`. No caller replacement selector or scope flag is accepted.
 
-Before any claim, Digital's read-only `uncertainCouponReservationScope` resolves
+Before any claim, Digital's read-only `uncertainReservationScope` resolves
 the persisted signed Cart/entry, one ACTIVE quantity-one entry and matching
 enterprise. Its bounded Cart/entry/Product/SKU projection must match the retained
 uncertain identity. Failed or malformed generated Cart reads therefore cannot
@@ -256,12 +260,15 @@ acknowledged zero rows. Foreign/missing enterprise, ambiguous/truncated or faile
 reads never establish absence.
 
 Checkout then reuses its exact revision/status/evidence-preimage CAS transition
-and protected readback to fence a PREPAYMENT_UNCERTAIN_COUPON recovery claim.
+and protected readback to fence a PREPAYMENT_UNCERTAIN_COUPON or
+PREPAYMENT_UNCERTAIN_BUNDLE recovery claim, selected by retained Product classification.
 The claim pins original tenant, signed enterprise/owner, command, uncertain key,
 entry and resolved Cart; Product/SKU are not persisted. Payment-zero evidence is
 refreshed after claiming and before the Digital owner call. Digital resolves Cart
-scope afresh and delegates only original reservation release or verified exact
-absence to Promotion. Checkout neither executes Payment nor creates an Order,
+scope and retained Product classification afresh. Only COUPON_CODE/COUPON_CODE_POOL
+can delegate original reservation release or verified exact absence to Promotion.
+DIGITAL_OWNERSHIP/DIGITAL_COMMERCE with a canonical bundle reference delegates to
+Digital Bundle Settlement; an absent Coupon is never bundle cleanup evidence. Checkout neither executes Payment nor creates an Order,
 entitlement, new reservation or alternate command.
 
 After the owner attempt, all four Payment-zero reads are refreshed again. Only
@@ -270,15 +277,18 @@ Cart, entry and enterprise) matching the claim permits COMPENSATED revision two
 with a COMPLETED recovery receipt. Failed reads, changed scope, uncertain owner
 effects or malformed receipts retain COMPENSATION_REQUIRED with UNCONFIRMED
 recovery when that terminal CAS can be confirmed. Unconfirmed claims/terminal
-writes fail closed; RUNNING or UNCONFIRMED attempts are never automatically
-stolen or retried. A later protected read may confirm an already durable exact
+writes fail closed; RUNNING attempts are never stolen. UNCONFIRMED attempts
+remain fenced except for the single proof-qualified bundle reconciliation below. A later protected read may confirm an already durable exact
 COMPLETED receipt after lost acknowledgement, without repeating cleanup.
 
 All original failure evidence, flags, compensation outcomes and audit fields
 remain unchanged. Missing legacy enterprise/Cart/Order fields stay missing; the
-new receipt does not backfill or qualify the legacy checkpoint. Completed replay
-requires its exact retained scope/receipt and fresh Payment-zero evidence. Its
-bounded response adds recoveryType PREPAYMENT_UNCERTAIN_COUPON, retained cartCode
+new receipt does not backfill or qualify the legacy checkpoint. Bundle recovery
+requires the original retained Cart and Order identities. Completed replay
+requires its exact retained scope/receipt, fresh classification and Payment-zero evidence.
+Bundle replay additionally verifies the original cancelled purchase and absence of
+its original listing claim without repeating writes. Its
+bounded response adds the selected recoveryType, retained cartCode
 and entryCode, and originalPaymentRecordCount zero to the existing recovery
 status/revision result. The captured/refunded asset recovery result is unchanged.
 Sequential Payment observations are not an atomic wallet or general no-effects
@@ -349,3 +359,84 @@ generated storage, Promotion and certificate transport doubles. It covers a
 complete certificate-only placement, rejected partial/nonzero consideration,
 failure-before-Order release, BOTH reversal-before-release and unknown Payment
 retention. This is unit/source evidence, not deployed end-to-end qualification.
+
+### Original bundle prepayment cancellation
+
+Digital uses the existing deterministic PURCHASE operation identity derived from
+tenant, merchant Enterprise, original owner, Checkout key and entry. With no
+original claim, insert-only canonical persistence records CANCELLED, never a
+synthetic Payment denial or new reservation. A claim-only interrupted reserve is
+reconciled into that same PURCHASE operation; existing reservations use the
+existing cancellation fence and release operations. Complete original terms,
+owner, actor, Cart/Order, Product/SKU and command digest must match.
+
+A listing CAS invalidates reserve snapshots taken before cancellation insertion.
+Reserve refuses CANCELLED/CANCELLING operations, including insert readback after
+a race. The owner verifies zero original Payment records on entry and exit in
+addition to Checkout's before-claim, before-cleanup and after-cleanup checks.
+Late claims, paid evidence, foreign/type drift and lost CAS remain unconfirmed.
+Only the purchase claim is released; seller listing component holds remain.
+No originalPayment denial is required for this strictly prepayment branch. An
+attempted-but-unconfirmed Payment still requires the separate durable-denial
+contract; zero records never waive that requirement.
+
+### Same-attempt cancelled-bundle reconciliation
+
+The existing compensation/recover POST with empty body may reconcile exactly one
+revision-two UNCONFIRMED PREPAYMENT_UNCERTAIN_BUNDLE attempt. This is not a new
+placement, reset or unrestricted retry. Require the original strict prepayment
+flags/phases, original owner/actor/merchant, Cart/Order and fresh zero original
+Payment evidence. Digital must independently prove the exact canonical PURCHASE
+is CANCELLED, its complete command/digest/owner/manifest matches, the original
+listing is HELD and no purchase claim exists. No absent Coupon inference is used.
+
+Read-only preflight returns six fixed pins: purchaseCode, purchaseRevision,
+commandDigest, listingCode, listingRevision and listingEvidenceDigest. Checkout
+CAS advances revision 2 to 3 while retaining the original attemptId and storing
+`reconciliation: {fromRevision: 2, previous: <exact original recovery>, proof}`.
+Digital rechecks all pins after this claim before effects. The owner writes a
+bounded purchaseCancellation marker through existing listing CAS, preserving
+seller component holds, and verifies the original cancelled purchase/no claim.
+The marker carries contractVersion, purchaseCode, commandDigest and attemptId.
+An identical evidence write is not a fence: managed concurrency intentionally
+suppresses business no-ops, including timestamp-only changes.
+
+Fresh Payment/Cart checks bracket owner work. Exact completion advances to
+COMPENSATED revision 4; uncertainty advances to COMPENSATION_REQUIRED revision 4
+and remains fenced. No second reconciliation or RUNNING takeover is admitted.
+Completed revision-four replay checks immutable history and current owner evidence
+without writes. Changes, foreign owners, late claims, funded Payment, failed reads
+or competing CAS never fabricate success.
+
+New failed attempts retain only `failure: {stage, code}`. Stage is selected from a
+fixed owner/checkpoint/Cart/Payment/receipt vocabulary; code is always
+ERR_CHECKOUT_COMPENSATION_UNCONFIRMED. Command status exposes this as
+compensationRecoveryDiagnostic. Dependency messages, payloads and credentials are
+never copied. Historical failures without diagnostics remain unchanged in
+reconciliation.previous; missing historical diagnostics are not manufactured.
+
+## Coupon release failure diagnostics
+
+Original acquisition recovery preserves only fixed registered errorCode values on
+validated FAILED DIGITAL_COUPON_RELEASE outcomes: eWaste sale diagnostics 041–056. Code 041 is the registered generic private
+controller diagnostic: it identifies an unclassified owner failure, not a missing
+method or proof that no effects occurred. Codes 046–056 map respectively to Digital source
+stages GATES, AUTH, ALLOCATION, GRANT, COUPON, ALLOCATION_BINDING, COMMAND, PHASE,
+CONSIDERATION, FAILURE_PROOF and READBACK. Direct ERR_DIGITAL_COUPON_SOURCE codes
+are not projected by Checkout.
+Membership is exact, never a prefix match or caller-selected registry. Unknown
+owner codes persist as DIGITAL_RELEASE_UNCONFIRMED and are omitted from public
+status. Successful and other compensation types do not expose these codes.
+
+The existing original-owner commandStatus read exposes the same allowlisted code
+in compensationOutcomes only when the retained enterprise is scope-qualified,
+after existing tenant, typed owner, actor, merchant and checkpoint validation.
+It returns no remote message, cause, payload or unit identifier. This is retained
+failure evidence, not a new live diagnosis: an old record without the code stays
+unknown, and status reads do not retry release, alter revisions, authorize cleanup
+or prove absence of effects. Recovery remains COMPENSATION_REQUIRED until canonical
+owner completion. No new API, grant, runtime property or customer definition exists.
+
+Focused regressions in checkoutCommandStatusContract and checkoutPaymentDenialRecovery
+cover exact code persistence/projection, unknown-code filtering, wrong-scope refusal,
+and repeated no-effect reads of the original failed recovery.

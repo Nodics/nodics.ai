@@ -21,7 +21,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageinstallerInstalledRuntimeApplicationBuilder",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -33,7 +33,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagebuilderWorkspaceGeneration",
     "routeType": "PAGE",
-    "deliveryState": "ONLINE",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   }

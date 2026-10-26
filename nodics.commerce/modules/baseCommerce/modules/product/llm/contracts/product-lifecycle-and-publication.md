@@ -1,5 +1,25 @@
 # Product contracts
 
+## Human Publication Decisions
+
+The Product-owned `productPublicationWorkflow` release 0.0.2 declares the
+`productReview` TASK's explicit `policy.decisionContract` as `APPROVAL`.
+Process projects this declaration from the exact published version and supplies
+bounded owner review context from its matching `product.applyPublicationDecision`
+action. Axis renders this contract without Product-specific task-name rules.
+Completion accepts a Boolean `approved` and optional bounded `reason`; rejection
+requires a nonblank reason. Generic completion payloads fail validation.
+Existing Process permissions and callback authority remain unchanged; this
+presentation/decision declaration grants no reviewer access or activation.
+
+Install the forward contribution through the existing Process definition owner.
+Never overwrite the 0.0.1 contribution, installed versions or pending task policy.
+An existing version-1 instance remains bound to its original graph and does not
+gain approval controls from a source update. Reconcile those pending instances
+through governed lifecycle operations before starting any replacement approval;
+do not complete them blindly, create duplicate publications or invent a migration.
+The source change alone proves neither installed adoption nor live activation.
+
 ## Consumed Product Pins
 
 Governed customer enrichment forwards the retained projection's exact

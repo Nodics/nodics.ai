@@ -29,18 +29,38 @@ used after that composition, or replaced with caller-supplied status. Each new
 request rechecks the owners. A failed read stays unavailable; reuse does not grant
 permission, retry a command or certify Online readiness.
 
-The remaining application-status report uses at most four local workers per
-composition. It calls the same captured reader, settles every profile despite
+The owner setting `backofficeApplicationInitialization.readinessWorkers` defaults
+to 4 in `config/properties.js`; `applicationReadinessWork` accepts only integer
+overrides from 1 through 16. The captured reader queues documentation and report
+reads under that composition-local budget. The report settles every profile despite
 synchronous throws or rejections, and assembles successes and errors in their
 respective input-relative order. Successful `undefined` remains a success; no
 outcome grants readiness. Duplicate profiles retain their output positions while
 the reader reuses their exact result or rejection. A new composition rechecks
 owners, including after failure, and simultaneous actors never share a reader.
-This fixed implementation ceiling is not a caller-selected policy, global queue
-or authentication cache. Later service overrides must preserve these invariants.
-Documentation-navigation concurrency and all readiness/admission gates remain
-unchanged. Nested owner work and concurrent requests can exceed four total
-operations; the pool does not guarantee latency or replace owner transport limits.
+This is trusted layered owner policy, not a caller-selected request field, global
+queue or authentication cache. Later service overrides must preserve these
+invariants. Nested BEFORE observations stay serial under the profile budget,
+including when owner code clones the request. Direct profile reads use the same
+configured stage budget. All readiness/admission gates remain unchanged. Separate
+HTTP requests and internal owner work can exceed the budget; the pool does not
+guarantee latency or replace owner transport limits. In particular, a frontend
+issuing separate profile queries does not participate in this composition queue.
+
+Authenticated bootstrap additionally projects `applicationReadinessScheduling`:
+`{ contractVersion: 1, concurrency, priorityBurst }`. Values come only from
+`backofficeApplicationInitialization.browserReadiness` in framework properties
+(defaults 1 and 1), with layered overrides validated as integers 1–16 by
+`applicationReadinessWork.browserPolicy()`. No customer/Kickoff override is
+required. Only these inert values are projected, never configuration secrets or
+authority. Axis consumes this budget for its Setup status GET queue, covering
+initial, poll, manual and post-operation reads. Manual/expanded priority must yield
+after the configured burst to oldest waiting work. This bounds one page session,
+not all users or backend stage calls. Backend deployment precedes the client:
+missing policy must not trigger an unbounded fallback. Commands, source freshness,
+timeouts, admission, registration and transport retry policy remain unchanged.
+Live acceptance must measure one expanded-profile page load, request peak and
+duration, complete truthful counts and lease health after coordinated deployment.
 
 Routine `MEDIA_ASSET_MANIFEST` status uses one Media-owned persisted CURRENT
 metadata aggregate per manifest (1–100 unique assets), not a byte-inspection

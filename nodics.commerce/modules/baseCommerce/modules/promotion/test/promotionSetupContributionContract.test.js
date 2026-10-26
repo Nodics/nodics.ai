@@ -20,6 +20,7 @@ const setup = require('../src/service/defaultPromotionSetupContributionService')
 const operation = require('../src/service/defaultPromotionOperationService');
 const publication = require('../src/service/defaultPromotionPublicationService');
 const exact = require('../../pricing/src/service/defaultExactAmountService');
+const couponOffer = require('../src/service/defaultCouponOfferService');
 const save = require(path.join(root, 'nodics.foundation/modules/nDatabase/database/src/service/procs/save/defaultModelSaveInitializerService'));
 const concurrency = require(path.join(root, 'nodics.foundation/modules/nDatabase/database/src/service/schema/defaultModelConcurrencyService'));
 
@@ -39,7 +40,8 @@ function fixture(t) {
         commandReference: 'packCommand001', policyFingerprint: publication.fingerprint(policy) }], couponBatches: [] };
     const request = { contribution, tenant: 'tenantA', enterpriseCode: 'issuerA', authData: {
         tenant: 'tenantA', enterpriseCode: 'issuerA', tokenType: 'access', principalType: 'human', loginId: 'operatorA' } };
-    const settings = { budgetAdmission: { maximumCampaignsPerContribution: 50 },
+    const settings = { couponOffers: structuredClone(require('../config/properties').promotion.couponOffers),
+        budgetAdmission: { maximumCampaignsPerContribution: 50 },
         publication: { runtimeRole: 'ONLINE', delivery: { enabled: true, storeCodes: ['storeA'], rootCodesByStore: { storeA: ['rootA'] } } } };
     const rows = [], histories = {}, state = { writes: 0, reads: 0, lost: false, malformed: false, allowed: true,
         indexes: [{ unique: true, key: { code: 1 } }] };
@@ -62,6 +64,7 @@ function fixture(t) {
     } };
     global.SERVICE = {
         DefaultPromotionBudgetAdmissionService: { ...admission },
+        DefaultCouponOfferService: couponOffer,
         DefaultPromotionOperationService: operation,
         DefaultExactAmountService: exact,
         DefaultModelConcurrencyService: concurrency,
@@ -100,6 +103,52 @@ function fixture(t) {
     }
     return { policy, payload, request, settings, rows, state, model, histories };
 }
+
+test('budget admission preserves the complete activated coupon offer through generated save and exact replay', async t => {
+    const f = fixture(t);
+    f.policy.couponOffer = { version: 1, supply: { mode: 'LIMITED', quantity: 12 }, ownerLimit: 2,
+        expiry: { mode: 'FIXED', at: '2030-01-01T00:00:00.000Z' },
+        requirements: { type: 'BOTH', priceRef: 'priceA', certificates: { quantity: 1,
+            categoryCode: 'categoryA', milestoneCode: 'milestoneA', brandCodes: ['brandA'], modelCodes: ['modelA'] } },
+        terms: ['Retain the approved promise.'] };
+    f.policy.issuerEnterpriseRef = { tenant: 'tenantA', code: 'issuerA' };
+    f.policy.vendorEnterpriseRef = { tenant: 'tenantA', code: 'issuerA' };
+    f.payload.campaigns[0].policyFingerprint = publication.fingerprint(f.policy);
+    const expected = structuredClone(f.policy.couponOffer);
+    const generatedSave = SERVICE.DefaultPromotionService.save;
+    SERVICE.DefaultPromotionService.save = async command => {
+        await couponOffer.protect(command);
+        assert.deepEqual(command.model.couponOffer, expected);
+        return generatedSave(command);
+    };
+    await setup.installContribution(f.request);
+    assert.deepEqual(f.rows[0].couponOffer, expected);
+    assert.notEqual(f.rows[0].couponOffer, f.policy.couponOffer);
+    f.rows[0].budget.spent = '3'; f.rows[0].revision = 1;
+    const retry = await setup.installContribution(f.request);
+    assert.equal(retry.data.campaigns[0].replayed, true);
+    assert.equal(f.state.writes, 1);
+    assert.equal(f.rows[0].budget.spent, '3');
+    assert.deepEqual(f.rows[0].couponOffer, expected);
+});
+
+test('budget admission rejects malformed current offers and absent validation ownership before insertion', async t => {
+    const f = fixture(t);
+    const valid = { version: 1, supply: { mode: 'UNLIMITED' }, expiry: { mode: 'NONE' },
+        requirements: { type: 'REWARDS', priceRef: 'priceA' }, terms: [] };
+    for (const invalid of [null, {}, { ...valid, version: 0 }, { ...valid, supply: { mode: 'LIMITED', quantity: 0 } },
+        { ...valid, requirements: { type: 'REWARDS' } }, { ...valid, legacy: true }]) {
+        f.policy.couponOffer = invalid;
+        f.payload.campaigns[0].policyFingerprint = publication.fingerprint(f.policy);
+        await assert.rejects(setup.installContribution(f.request), { code: 'ERR_PROMOTION_COUPON_OFFER_INVALID' });
+        assert.equal(f.state.writes, 0);
+    }
+    f.policy.couponOffer = valid;
+    f.payload.campaigns[0].policyFingerprint = publication.fingerprint(f.policy);
+    delete SERVICE.DefaultCouponOfferService;
+    await assert.rejects(setup.installContribution(f.request), { code: 'ERR_PROMOTION_BUDGET_ADMISSION_UNCONFIRMED' });
+    assert.equal(f.state.writes, 0);
+});
 
 test('trusted pacing precedes fresh preflight and issuance outside transactions without changing scope', async t => {
     const f = fixture(t), events = [];

@@ -54,13 +54,13 @@
           "moduleName": "product",
           "sectionCode": "accessGroups",
           "version": "0.0.4",
-          "checksum": "b0465d025065192f3abd1492de958223557a04e361fd5d76b2b8937bfad6a987"
+          "checksum": "7709ab168d1333f6c14e81882071cb576cbbbe0c2e46795de1bbf3ac6675c9fb"
         },
         {
           "moduleName": "publish",
           "sectionCode": "accessGroups",
           "version": "0.0.4",
-          "checksum": "28cb993e9e0921c36eb54be7e89548a3ebb2cb691e805b32f1b56904223f49ba"
+          "checksum": "0a05769f4a5822e7cd8a0abc3b1601a4e3ed6e3c1777704f1bac621730876c9b"
         }
       ]
     },
@@ -85,7 +85,7 @@
       "installer": "PROCESS_DEFINITION",
       "sourceRoot": "init-v001",
       "files": {
-        "init-v001/records/process/productPublicationWorkflowDefinitionData.js": "42b7789deec9e2e13d2c82bd8d0bd790510bf608e19d5e574f11310b6160e6e3"
+        "init-v001/records/process/productPublicationWorkflowDefinitionData.js": "6a26294847c76f86717860ce45865b6711d8d9f0b1c08db68d83248807b5f343"
       }
     },
     "sample-v001": {
@@ -119,7 +119,7 @@
     },
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "docs-v002",
+      "contentPath": "docs-v001",
       "pack": "product",
       "version": "0.0.2",
       "owningDomain": "documentation",
@@ -135,7 +135,7 @@
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "cms-records",
-      "sourceAuthority": "data/docs-v002/records/documentation",
+      "sourceAuthority": "data/docs-v001/records/documentation",
       "sites": [
         "nodicsDocumentationSite"
       ],
@@ -143,16 +143,16 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "80d386e8c7d2cbfecdb3a60b3ad9640d15ae4be3bccbfcfbbcad68e013d19f2a",
+      "releaseChecksum": "e7d6b0f11e228dafc7897b4f61dfbd1f953e21cae027eaa124e52d8df98fd633",
       "generatedHashes": {
-        "docs-v002/records/documentation/productDocumentationComponentData.js": "ebf6d7e838b40f6bb992b891a7ab70b5ae2353b48843c4ac3023ea80ae448d52",
-        "docs-v002/records/documentation/productDocumentationPageMetadataData.js": "10be4552a5f84f6cbcc2eeb50972d452203078a68fac72f0754fff6fc6317c8a",
-        "docs-v002/records/documentation/productDocumentationNodeData.js": "61b5bbb04b81e74f89c7cb0995f9d8023aac060b8f18d71e837f83892b6f7add",
-        "docs-v002/records/documentation/productDocumentationSearchMetadataData.js": "5c2f1948e48a1402c04695758890c00c38903fa3e56bab9062ff01bf14ee435b",
-        "docs-v002/records/documentation/productDocumentationPageData.js": "c8c6395ecdc11286a01c99badc44dc6f8158e616c4af30915e43f77a7c66a2bd",
-        "docs-v002/records/documentation/productDocumentationRouteData.js": "8c802f6c24e671662a99a80adf1ad6a98a8e4d4778f2778f9664aa9dd819136a",
-        "docs-v002/records/documentation/productDocumentationPublicationStateData.js": "28f2f80e70c974cdd4a15fe9affcf590857cff9942d00658fb5d59c63ff5348a",
-        "docs-v002/headers/100_productDocumentationContentPackHeader.js": "67d32ef7820a459069f9913c759b720daf533c2c8f6ae3dc493fc7dfd9cc43e3"
+        "docs-v001/records/documentation/productDocumentationComponentData.js": "905429108bf62fe3eaca55988c3fbbc58fd0dc8ae95f5ff71bbc27647964190b",
+        "docs-v001/records/documentation/productDocumentationPageMetadataData.js": "5473f760facefeb9b275f46ef62b6ca6f7db81672d9d7f7f22ecc78094d9e871",
+        "docs-v001/records/documentation/productDocumentationNodeData.js": "61b5bbb04b81e74f89c7cb0995f9d8023aac060b8f18d71e837f83892b6f7add",
+        "docs-v001/records/documentation/productDocumentationSearchMetadataData.js": "5c2f1948e48a1402c04695758890c00c38903fa3e56bab9062ff01bf14ee435b",
+        "docs-v001/records/documentation/productDocumentationPageData.js": "c8c6395ecdc11286a01c99badc44dc6f8158e616c4af30915e43f77a7c66a2bd",
+        "docs-v001/records/documentation/productDocumentationRouteData.js": "8c802f6c24e671662a99a80adf1ad6a98a8e4d4778f2778f9664aa9dd819136a",
+        "docs-v001/records/documentation/productDocumentationPublicationStateData.js": "ddbfa95f71ca13ee5355b13ae47b10a56eaf22003036fc5c7cc309cf756a8ba4",
+        "docs-v001/headers/100_productDocumentationContentPackHeader.js": "67d32ef7820a459069f9913c759b720daf533c2c8f6ae3dc493fc7dfd9cc43e3"
       },
       "includes": [
         {
@@ -215,20 +215,20 @@
           "moduleName": "profile",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "version": "0.0.3",
+          "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
+          "version": "0.0.3",
+          "checksum": "402b7ebffc05ac529f465c228700437b830cfb0f873a15ac92d5b7b5b9a3a9c8",
           "partition": "DEFAULT"
         },
         {
@@ -268,13 +268,13 @@
           "moduleName": "axis",
           "sectionCode": "accessGroups",
           "version": "0.0.3",
-          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
-          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "version": "0.0.3",
+          "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
@@ -314,7 +314,7 @@
           "moduleName": "product",
           "sectionCode": "businessAccessGroups",
           "version": "0.0.2",
-          "checksum": "169cfa0e8a6d055dcb28d1a0581e4646271b7a06890bc5472bc32dee99def2c0"
+          "checksum": "0342c825765613bd85e227191f60bb411306f5eb000b68ef2c52a546cb256823"
         }
       ]
     }

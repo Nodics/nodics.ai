@@ -674,6 +674,56 @@ test('target transport routes require runtime internal identity and distinct Onl
 });
 const assert = require('node:assert/strict');
 const provider = require('../src/service/defaultPromotionPublicationService');
+
+test('coupon publication requires canonical offer policy before capture, validation and target preparation', async () => {
+    const f = setup();
+    const defaults = require('../config/properties').promotion;
+    global.CONFIG = { get: key => key === 'promotion' ? defaults : undefined };
+    global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
+    global.SERVICE.DefaultCouponOfferService = require('../src/service/defaultCouponOfferService');
+    const row = global.SERVICE.DefaultPromotionService.rows.get('promotion');
+    const validOffer = { version: 1, supply: { mode: 'LIMITED', quantity: 100 }, expiry: { mode: 'NONE' },
+        requirements: { type: 'REWARDS', priceRef: 'reviewed-price' }, terms: ['Single use'] };
+    for (const invalid of [
+        { conditions: { sourceProductCode: 'coupon-product' } },
+        { purchasedCouponPolicy: { validityDays: 30, terms: ['Single use'] } },
+        { couponOffer: { ...validOffer, requirements: undefined } },
+        { couponOffer: validOffer, purchasedCouponPolicy: { validityDays: 30 } },
+    ]) {
+        const bad = { ...row, ...invalid };
+        global.SERVICE.DefaultPromotionService.rows.set('promotion', bad);
+        await assert.rejects(f.release());
+        assert.equal(f.sourceStore.release.rows.size, 0, 'invalid source cannot be retained');
+        const payload = { tenant: request.tenant, enterpriseCode: request.enterpriseCode,
+            rootType: 'promotion', rootCode: 'promotion', records: [{ schema: 'promotion', policy: bad }] };
+        const fingerprint = f.source.fingerprint(payload);
+        const retained = { ...payload, code: fingerprint, fingerprint, payload };
+        const source = { ...f.source, getVersion: async () => retained };
+        await assert.rejects(source.validate({}, retained, request));
+        await assert.rejects(f.target.prepareTarget(retained, request));
+        assert.equal(f.targetStore.release.rows.size, 0, 'invalid target must not be retained');
+    }
+    global.SERVICE.DefaultPromotionService.rows.set('promotion', { ...row, conditions: { couponRequired: true }, couponOffer: validOffer });
+    const release = await f.release();
+    assert.deepEqual(release.payload.records[0].policy.couponOffer, validOffer);
+    const publication = { domain: 'promotion', rootType: 'promotion', rootCode: 'promotion', sourceVersion: release.code };
+    assert.equal((await f.source.validate(publication, release, request)).valid, true);
+    await f.target.prepareTarget(release, request);
+});
+test('generic code-required promotion publishes without purchasable coupon offer policy', async () => {
+    const f = setup();
+    const row = global.SERVICE.DefaultPromotionService.rows.get('promotion');
+    global.SERVICE.DefaultPromotionService.rows.set('promotion', {
+        ...row, conditions: { couponRequired: true }, actions: { discount: '1.00' },
+    });
+    const release = await f.release();
+    assert.deepEqual(release.payload.records[0].policy.conditions, { couponRequired: true });
+    assert.equal(Object.hasOwn(release.payload.records[0].policy, 'couponOffer'), false);
+    const publication = { domain: 'promotion', rootType: 'promotion', rootCode: 'promotion', sourceVersion: release.code };
+    assert.equal((await f.source.validate(publication, release, request)).valid, true);
+    await f.target.prepareTarget(release, request);
+    assert.equal(f.targetStore.release.rows.size, 1);
+});
 const schemas = require('../src/schemas/schemas').promotion;
 /** Exercises source admission with real permission, schema-access and canonical identity owners; stores remain isolated doubles. */
 function publisherFixture() {

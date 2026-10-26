@@ -39,7 +39,7 @@ function recordsOf(filePath) {
 }
 
 function assertDocumentationSection(moduleRoot, moduleName, section) {
-    const release = moduleName === 'loyaltyWallet' ? 'docs-v002' : 'docs-v001';
+    const release = 'docs-v001';
     assert.equal(section.kind, 'CONTENT_PACK');
     assert.equal(section.owningDomain, 'documentation');
     assert.equal(section.destinationRole, 'WCMS_STAGED');
@@ -85,7 +85,7 @@ dataModules.forEach(moduleName => {
             return;
         }
         assert.equal(section.kind, 'DATA_RELEASE');
-        const identity = ['permissionCatalogue', 'transferPermissions', 'transferNotificationPermission', 'specialAccessGroups', 'specialAccessRoles'].includes(sectionName);
+        const identity = Object.keys(section.files || {}).some(file => file.includes('/records/identity/'));
         const workspace = sectionName === 'participationWorkspace';
         assert.equal(section.owningDomain, identity || workspace ? moduleName : 'loyalty');
         const targetsProfileEnterprise = Object.keys(section.files || {}).some(relativeFile => relativeFile.includes('/profile/'));

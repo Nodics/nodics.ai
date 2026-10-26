@@ -9,9 +9,14 @@
 
  */
 
-'use strict';
-
-/** @description Module-owned documentation images hydrated through Media provider storage. */
+/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
+"use strict";
+/**
+ * @module profile/data/docs-v001/records/documentation/profileDocumentationMediaData
+ * @description Owns canonical profileDocumentationMediaData successor records; installation and publication remain governed.
+ * @layer data
+ * @owner profile
+ */
 module.exports = {
   "record0": {
     "code": "nodicsDocsImage_c3589b67dcdfbef11b44a85d",

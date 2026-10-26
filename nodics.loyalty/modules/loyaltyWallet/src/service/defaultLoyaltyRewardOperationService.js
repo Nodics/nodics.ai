@@ -12,6 +12,7 @@
 "use strict";
 
 const crypto = require("node:crypto");
+const { isDeepStrictEqual } = require("node:util");
 const LEDGER = require("../../../loyaltyLedger/src/service/defaultLoyaltyLedgerPostingService");
 const UTILS = require("../../../loyaltyCore/src/utils/utils");
 
@@ -839,6 +840,9 @@ module.exports = {
    * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
    */
   reserve: async function (request) {
+    if ((request.sourceType || request.payload?.sourceType) === 'PAYMENT' &&
+        !SERVICE.DefaultLoyaltyReservationDecisionService?.owns(request))
+      return this.service('DefaultLoyaltyReservationDecisionService').reserve(request);
     const protectedHold = this.authorizeProtectedHold(request);
     request = this.operationRequest(request, ENUMS.LoyaltyLedgerEntryType.RESERVE.key);
     request.reservationCode = this.reservationCode(request);
@@ -881,7 +885,17 @@ module.exports = {
         created: now,
         updated: now,
       };
-      let savedBalance = await this.saveBalance(request, after);
+      await this.saveBalance(request, after);
+      // Generated update returns an acknowledgement, not the balance document.
+      // Read within the same transaction and verify every owner-controlled field.
+      const savedBalance = await this.getBalance(request, false);
+      const expectedBalance = this.persistenceModel(after);
+      delete expectedBalance._new;
+      if (!savedBalance || !(savedBalance.updated instanceof Date) ||
+          !Number.isFinite(savedBalance.updated.getTime()) ||
+          Object.keys(expectedBalance).filter(key => key !== "updated").some(key =>
+            !isDeepStrictEqual(savedBalance[key], expectedBalance[key])))
+        this.fail("ERR_LOYALTY_RESERVATION_DECISION", "Persisted reservation balance cannot be confirmed");
       let savedLedgerEntry = await this.saveLedgerEntry(request, ledgerEntry);
       let savedReservation = await this.saveReservation(
         request,
@@ -1010,7 +1024,16 @@ module.exports = {
         revision: Number(reservation.revision || 0) + 1,
         updated: now,
       });
-      let savedBalance = await this.saveBalance(request, after);
+      await this.saveBalance(request, after);
+      // Generated update returns an acknowledgement; prove the transaction-local balance instead.
+      const savedBalance = await this.getBalance(request, false);
+      const expectedBalance = this.persistenceModel(after);
+      delete expectedBalance._new;
+      if (!savedBalance || !(savedBalance.updated instanceof Date) ||
+          !Number.isFinite(savedBalance.updated.getTime()) ||
+          Object.keys(expectedBalance).filter(key => key !== "updated").some(key =>
+            !isDeepStrictEqual(savedBalance[key], expectedBalance[key])))
+        this.fail("ERR_LOYALTY_RESERVATION_DECISION", "Persisted capture balance cannot be confirmed");
       let savedLedgerEntry = await this.saveLedgerEntry(request, ledgerEntry);
       let savedRedemption = await this.saveRedemption(request, redemption);
       let savedReservation = await this.saveReservation(
@@ -1085,7 +1108,16 @@ module.exports = {
         revision: Number(reservation.revision || 0) + 1,
         updated: now,
       });
-      let savedBalance = await this.saveBalance(request, after);
+      await this.saveBalance(request, after);
+      // Generated update acknowledges the write; it does not return the balance document.
+      const savedBalance = await this.getBalance(request, false);
+      const expectedBalance = this.persistenceModel(after);
+      delete expectedBalance._new;
+      if (!savedBalance || !(savedBalance.updated instanceof Date) ||
+          !Number.isFinite(savedBalance.updated.getTime()) ||
+          Object.keys(expectedBalance).filter(key => key !== "updated").some(key =>
+            !isDeepStrictEqual(savedBalance[key], expectedBalance[key])))
+        this.fail("ERR_LOYALTY_RESERVATION_DECISION", "Persisted release balance cannot be confirmed");
       let savedLedgerEntry = await this.saveLedgerEntry(request, ledgerEntry);
       let savedReservation = await this.saveReservation(
         request,

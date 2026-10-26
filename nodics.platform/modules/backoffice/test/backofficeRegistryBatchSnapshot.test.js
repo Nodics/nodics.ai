@@ -36,6 +36,8 @@ function fixture(hooks = {}) {
     let claimChecks = 0;
     const store = {
         get: async key => records.get(key),
+        deleteIfExpiresAt: async (key, expiry) =>
+            records.get(key)?.expiresAt === expiry && records.delete(key),
         set: async (key, value) => {
             await hooks.beforeSet?.(key, value);
             records.set(key, value);
@@ -80,7 +82,7 @@ function fixture(hooks = {}) {
         },
     };
     const registry = Object.assign({}, definition, { _store: store,
-        _metrics: { registrations: 0, renewals: 0, rejected: 0 } });
+        _metrics: { registrations: 0, renewals: 0, rejected: 0, expirations: 0 } });
     registry.assertAuthorityClaimsAvailable = async function (...args) {
         claimChecks++;
         return definition.assertAuthorityClaimsAvailable.apply(this, args);
@@ -128,6 +130,45 @@ test('72-module registration and renewal each publish one consolidated snapshot'
     assert.equal(f.registry._metrics.registrations, 72);
     assert.equal(f.registry._metrics.renewals, 72);
     assert.deepEqual(f.audits.map(event => event.outcome), ['registered', 'renewed']);
+});
+
+test('registration timing attributes an outstanding catalogue call without retaining authority data', async () => {
+    const entered = deferred(), resume = deferred();
+    const f = fixture({ reconcileRuntime: async () => { entered.resolve(); await resume.promise; } });
+    const batch = f.batch('timed', ['module']);
+    const pending = f.registry.registerBatch(batch, f.auth(batch));
+    await entered.promise;
+    const timing = f.registry._metrics.registrationTiming;
+    assert.equal(timing.batch.active, 1);
+    assert.equal(timing.catalogue.active, 1);
+    assert.equal(timing.leases.completed, 1);
+    assert.equal(timing.snapshot, undefined);
+    resume.resolve();
+    await pending;
+    assert.deepEqual(Object.keys(timing).sort(), ['activeCatalogue', 'audit', 'batch', 'catalogue', 'leases', 'snapshot']);
+    for (const metric of Object.values(timing)) {
+        assert.equal(metric.active, 0);
+        assert.equal(metric.completed, 1);
+        assert.equal(metric.rejected, 0);
+        assert(Object.values(metric).every(value => Number.isSafeInteger(value) && value >= 0));
+    }
+    assert.equal(JSON.stringify(timing).includes(batch.instanceId), false);
+});
+
+test('registration timing preserves rejection identity and clears active counters', async () => {
+    const failure = new Error('private owner failure');
+    const f = fixture({ reconcileRuntime: async () => { throw failure; } });
+    const batch = f.batch('failedTiming', ['module']);
+    await assert.rejects(f.registry.registerBatch(batch, f.auth(batch)), error => error === failure);
+    const timing = f.registry._metrics.registrationTiming;
+    assert.equal(timing.batch.rejected, 1);
+    assert.equal(timing.catalogue.rejected, 1);
+    assert(Object.values(timing).every(metric => metric.active === 0));
+    assert.equal(JSON.stringify(timing).includes(failure.message), false);
+    assert.throws(() => f.registry.measureRegistrationPhase('catalogue', () => { throw failure; }),
+        error => error === failure);
+    assert.equal(timing.catalogue.active, 0);
+    assert.equal(timing.catalogue.rejected, 2);
 });
 
 test('partial failure waits for late sibling writes before refreshing persisted leases', async () => {
@@ -230,6 +271,55 @@ test('a slow reconciliation cannot publish an older snapshot over a concurrent r
     assert.deepEqual(f.snapshots.at(-1).map(item => item.moduleName).sort(), ['early', 'later']);
 });
 
+test('expiry reconciliation cannot erase a concurrent registration or its observers', async () => {
+    const resume = deferred();
+    const entered = deferred();
+    const f = fixture({ reconcileActive: async () => {
+        entered.resolve();
+        await resume.promise;
+    } });
+    const availability = new Set();
+    const discovery = new Set();
+    global.SERVICE.DefaultBackofficeAvailabilityService = {
+        scheduleObservation: lease => availability.add(lease.instanceId),
+        reconcileActiveInstances: ids => {
+            for (const id of availability) if (!ids.includes(id)) availability.delete(id);
+            return 0;
+        },
+    };
+    global.SERVICE.DefaultBackofficeDiscoveryService = {
+        scheduleDiscovery: lease => discovery.add(lease.moduleName),
+        reconcileActiveModules: names => {
+            for (const name of discovery) if (!names.includes(name)) discovery.delete(name);
+            return 0;
+        },
+    };
+    const old = f.batch('expired', ['old']);
+    await f.standalone(old);
+    f.records.get('old:expired').expiresAt = Date.now() - 1;
+    const sweep = f.registry.expireStale();
+    await entered.promise;
+    const fresh = f.batch('fresh', ['new']);
+    await f.standalone(fresh);
+    resume.resolve();
+    assert.equal(await sweep, 1);
+    assert.deepEqual(f.snapshots.at(-1).map(item => item.moduleName), ['new']);
+    assert.deepEqual([...availability], ['fresh']);
+    assert.deepEqual([...discovery], ['new']);
+    assert.equal(f.records.has('new:fresh'), true);
+});
+
+test('catalogue failure cannot prevent expiry from publishing remaining owners', async () => {
+    const failure = new Error('catalogue unavailable');
+    const f = fixture({ reconcileActive: async () => { throw failure; } });
+    await f.standalone(f.batch('expired', ['old']));
+    await f.standalone(f.batch('active', ['current']));
+    f.records.get('old:expired').expiresAt = Date.now() - 1;
+    await assert.rejects(f.registry.expireStale(), error => error === failure);
+    assert.equal(f.records.has('old:expired'), false);
+    assert.deepEqual(f.snapshots.at(-1).map(item => item.moduleName), ['current']);
+});
+
 test('every authority claim is still checked, including duplicate rejection', async () => {
     const f = fixture();
     const owner = f.batch('owner', ['claimed']);
@@ -300,4 +390,22 @@ test('body-chosen private flags and invalid scope cannot defer snapshots or writ
     await f.standalone(batch);
     assert.equal(f.scans, 1);
     assert.equal(f.snapshots.length, 1);
+});
+
+
+test('actual Promotion operational report descriptor survives registration and rejects unknown roles', async () => {
+    const f = fixture();
+    global.SERVICE.DefaultBackofficeCapabilityDefinitionService = require('../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService');
+    const capability = require('../../../../nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionBackofficeCapabilityService').getCapability();
+    const batch = f.batch('promotionRuntime', ['promotion']);
+    batch.runtimeRole = { code: 'COMMERCE', publication: 'OPERATIONAL' };
+    batch.registrations[0].backoffice = capability;
+    await f.registry.registerBatch(batch, f.auth(batch));
+    const retained = [...f.records.values()].find(item => item.moduleName === 'promotion');
+    const report = retained.backoffice.navigation.find(item => item.id === 'coupon-acquisition-reporting');
+    assert.deepEqual(report.backendWorkspace.ownerSelector, { runtimeRoleCode: 'COMMERCE', publicationRole: 'OPERATIONAL' });
+    assert.deepEqual(retained.runtimeRole, batch.runtimeRole);
+    const invalid = structuredClone(batch);
+    invalid.registrations[0].backoffice.navigation.find(item => item.id === 'coupon-acquisition-reporting').backendWorkspace.ownerSelector.publicationRole = 'UNKNOWN';
+    await assert.rejects(f.registry.registerBatch(invalid, f.auth(invalid)), /Invalid module registration batch/);
 });

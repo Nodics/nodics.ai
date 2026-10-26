@@ -26,7 +26,7 @@ const { isDeepStrictEqual: same } = require("node:util");
  * completed purchases remain final-sale.
  * Inputs and outputs are specified on each exported member below.
  * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
- * Exported members: bundles, settings, rows, listing, availability, rewardTerms, reserve, unit,
+ * Exported members: bundles, settings, rows, listing, availability, rewardTerms, purchaseCommand, recoverPrepayment, authorizationPurchase, authorizationCompensationDisposition, authorizationReleaseProof, inspectAuthorizationRelease, reserve, unit,
  * purchase, loyalty, wallet, captureLedger, capture, earning, confirm, record, resolve, status,
  * fenceCompensation, release.
  * @override Customize through the existing loader-visible module members, preserving private
@@ -107,7 +107,11 @@ module.exports = {
     if (!row || ref.revision !== manifest.revision || ref.digest !== manifest.digest || row.manifestRevision !== manifest.revision ||
         row.evidence.manifestDigest !== manifest.digest || listing.phase !== "PUBLISHED" || listing.release ||
         listing.termsDigest !== this.bundles().digest(listing.terms) || listing.terms.storeCode !== r.storeCode ||
-        listing.product.sku !== r.sku || projection.payload.variantSkuMap?.[listing.product.variantCode] !== r.sku ||
+        (r.sku !== undefined && listing.product.sku !== r.sku) ||
+        (r.variantCode !== undefined && listing.product.variantCode !== r.variantCode) ||
+        projection.payload.variantCodes?.length !== 1 ||
+        projection.payload.variantCodes[0] !== listing.product.variantCode ||
+        projection.payload.variantSkuMap?.[listing.product.variantCode] !== listing.product.sku ||
         listing.publication?.targetVersion !== projection.publicationVersion ||
         listing.publication?.productCode !== r.productCode || listing.publication.status !== "ONLINE" ||
         listing.publication.confirmed !== true || !listing.publication.receiptCode)
@@ -154,6 +158,125 @@ module.exports = {
       throw new Error("Governed listing reward terms are required");
     return structuredClone(reward);
   },
+  /** Derives the single canonical purchase identity from original participant, Cart and retained listing terms. */
+  purchaseCommand: function (r, entry, listing, auction) {
+    const b = this.bundles(), buyer = b.owner(r.ownerRef), terms = listing.evidence.listing.terms, reward = this.rewardTerms(terms);
+    const code = "bundle-operation:" + b.digest([r.tenant, r.enterpriseCode, r.ownerId, r.idempotencyKey, entry.code, "PURCHASE"]);
+    const command = { publicationCode: listing.code, buyerRef: buyer, ownerId: r.ownerId, actorRef: r.actorRef,
+      orderCode: r.payload.orderCode, cartCode: r.payload.cartCode, entryCode: entry.code, productCode: entry.productCode,
+      sku: entry.sku, storeCode: r.storeCode, locale: r.locale, checkoutIdempotencyKey: r.idempotencyKey,
+      idempotencyKey: r.idempotencyKey + ":digital:" + entry.code + ":0", reward, gross: auction ? auction.amount : terms.amount,
+      participantEnterpriseCode: r.participantEnterpriseCode || r.authData.enterpriseCode || r.authData.entCode,
+      currency: terms.currency, fee: this.settings().feeAmount, net: auction ? auction.amount : terms.amount, finalSale: true,
+      ...(auction ? { auctionFunds: { commitmentCode: auction.commitmentCode, roundCode: auction.roundCode, bidCode: auction.bidCode,
+        priceQuoteCode: auction.priceQuoteCode, reservationCode: auction.reservationCode } } : {}) };
+    return { code, command, digest: b.digest(command) };
+  },
+  /**
+   * Fences the original prepayment bundle key in the existing PURCHASE operation, or releases its actual claim.
+   * @param {Object} r Original admitted Checkout owner and original Cart/Order/key.
+   * @param {Object} entry Canonical single original Cart entry.
+   * @param {Object} projection Retained Product classification and published bundle binding.
+   * @param {boolean|string} mode True for completed read-only replay, RECONCILE_PREFLIGHT for cancelled-owner inspection, false for fenced effects.
+   * @returns {Promise<void>} Exact cancelled purchase and no original listing claim confirmed.
+   * @remarks Uses existing operation insertion/CAS and cancellation/release owners; never releases content holds.
+   * Failure behavior: Foreign, paid, late or uncertain owner evidence fails closed; no Payment denial invented.
+   */
+  recoverPrepayment: async function (r, entry, projection, mode = false) {
+    const inspectOnly = mode === true, preflight = mode === "RECONCILE_PREFLIGHT";
+    let stage = "OWNER_ADMISSION";
+    try {
+    const b = this.bundles(), recovery = SERVICE.DefaultCheckoutCompensationRecoveryService;
+    const attributes = projection?.payload?.localizedAttributes;
+    if (attributes?.productType !== "DIGITAL" || attributes.digitalDeliveryType !== "DIGITAL_OWNERSHIP" ||
+        attributes.inventoryStrategy !== "DIGITAL_COMMERCE" || r.productCode !== entry.productCode || r.sku !== entry.sku)
+      throw new Error("Original bundle Product classification is required");
+    await b.authorize(r, b.owner(r.ownerRef), "BUNDLE_BUY");
+    stage = "CHECKPOINT_PROOF";
+    const checkpoint = await recovery.checkpoint(r), plan = recovery.qualifyPrepaymentCoupon(r, checkpoint);
+    const fence = checkpoint.evidence.compensationRecovery;
+    const reconciliation = fence?.reconciliation;
+    const revision = reconciliation ? 4 : 2;
+    if (reconciliation) {
+      const previous = recovery.failedPrepaymentBundle(r, plan, reconciliation.previous);
+      const expected = { fromRevision: 2, previous, proof: recovery.prepaymentReconciliationProof(reconciliation.proof) };
+      if (!same(reconciliation, expected) || previous.attemptId !== fence.attemptId || previous.cartCode !== fence.cartCode)
+        throw new Error("Original reconciliation history changed");
+    }
+    if (r.idempotencyKey !== r.commandCode || plan.entryCode !== entry.code ||
+        checkpoint.cartCode !== r.payload?.cartCode || checkpoint.orderCode !== r.payload?.orderCode ||
+        entry.cartCode !== checkpoint.cartCode || String(entry.quantity) !== "1" ||
+        fence?.kind !== "PREPAYMENT_UNCERTAIN_BUNDLE" || fence.reservationType !== "BUNDLE" ||
+        fence.uncertainKey !== plan.uncertainKey || fence.entryCode !== entry.code || fence.cartCode !== entry.cartCode ||
+        fence.ownerId !== r.ownerId || fence.enterpriseCode !== r.enterpriseCode || fence.tenant !== r.tenant ||
+        fence.commandCode !== r.commandCode ||
+        (preflight ? checkpoint.status !== "COMPENSATION_REQUIRED" || fence.status !== "UNCONFIRMED" || checkpoint.revision !== 2 || reconciliation !== undefined
+          : inspectOnly ? checkpoint.status !== "COMPENSATED" || fence.status !== "COMPLETED" || checkpoint.revision !== revision
+          : checkpoint.status !== "COMPENSATION_REQUIRED" || fence.status !== "RUNNING" || checkpoint.revision !== revision - 1) ||
+        await recovery.originalPaymentRecordCount(r) !== 0) throw new Error("Original prepayment fence is required");
+    stage = "LISTING_PROOF";
+    let listing = await this.listing(r, projection);
+    if (listing.status !== "HELD" || same(listing.ownerRef, r.ownerRef)) throw new Error("Original bundle listing is unavailable");
+    const { code, command, digest } = this.purchaseCommand(r, entry, listing);
+    const verify = row => {
+      if (!row || row.purpose !== "PURCHASE" || row.manifestCode !== listing.manifestCode || row.manifestRevision !== listing.manifestRevision ||
+          row.commandDigest !== digest || !same(row.evidence.command, command) ||
+          !same(row.recipientRef, r.ownerRef) || !same(row.ownerRef, listing.ownerRef) ||
+          row.evidence.capture || row.evidence.transfer || !["RESERVED", "CANCELLING", "CANCELLED"].includes(row.status))
+        throw new Error("Original bundle cancellation is unconfirmed");
+      return row;
+    };
+    stage = "PURCHASE_PROOF";
+    let row = await b.read(r, "DefaultDigitalBundleOperationService", code);
+    const proof = () => ({ purchaseCode: code, purchaseRevision: row.revision, commandDigest: digest,
+      listingCode: listing.code, listingRevision: listing.revision, listingEvidenceDigest: b.digest(listing.evidence) });
+    if (preflight || reconciliation && !inspectOnly) {
+      verify(row);
+      if (row.status !== "CANCELLED" || listing.evidence.purchaseClaim != null ||
+          reconciliation && !same(proof(), reconciliation.proof)) throw new Error("Original cancellation reconciliation changed");
+      if (preflight) {
+        if (await recovery.originalPaymentRecordCount(r) !== 0) throw new Error("Original Payment absence changed");
+        return proof();
+      }
+    }
+    if (inspectOnly) {
+      verify(row);
+      if (row.status !== "CANCELLED" || listing.evidence.purchaseClaim?.code === code) throw new Error("Original bundle cancellation changed");
+    } else {
+      const claim = listing.evidence.purchaseClaim;
+      if (claim && (claim.code !== code || claim.digest !== digest || !same(claim.command, command)))
+        throw new Error("Listing has a conflicting purchase claim");
+      stage = "PURCHASE_FENCE";
+      if (!row) row = await b.insert(r, "DefaultDigitalBundleOperationService", { ...b.scope(r), code,
+        manifestCode: listing.manifestCode, manifestRevision: listing.manifestRevision, ownerRef: listing.ownerRef, recipientRef: r.ownerRef,
+        purpose: "PURCHASE", status: claim ? "RESERVED" : "CANCELLED", revision: 0, checkpoints: {}, commandDigest: digest,
+        idempotencyKey: command.idempotencyKey, correlationId: r.correlationId || r.idempotencyKey,
+        evidence: { command, manifestDigest: listing.evidence.manifestDigest,
+          manifestEnterpriseCode: listing.evidence.manifestEnterpriseCode, finalSale: true } });
+      verify(row);
+      // A real business marker is required: managed CAS intentionally suppresses identical-value writes.
+      stage = "LISTING_FENCE";
+      const cancellation = { contractVersion: 1, purchaseCode: code, commandDigest: digest, attemptId: fence.attemptId };
+      if (!same(listing.evidence.purchaseCancellation, cancellation))
+        listing = await b.update(r, listing, { evidence: { ...listing.evidence, purchaseCancellation: cancellation } });
+      const unit = this.unit(row, "RESERVED");
+      stage = "OWNER_RELEASE";
+      await this.fenceCompensation(r, unit);
+      await this.release(r, unit);
+      stage = "OWNER_READBACK";
+      row = verify(await b.read(r, "DefaultDigitalBundleOperationService", code));
+      listing = await SERVICE.DefaultDigitalCommerceAuctionService.read(r, listing.code);
+      if (row.status !== "CANCELLED" || listing.evidence.purchaseClaim?.code === code) throw new Error("Original claim release is unconfirmed");
+    }
+    stage = "PAYMENT_AFTER_OWNER";
+    if (await recovery.originalPaymentRecordCount(r) !== 0) throw new Error("Original Payment absence changed");
+    } catch (error) {
+      const failure = new Error("Original bundle recovery is unconfirmed");
+      failure.code = "ERR_CHECKOUT_COMPENSATION_UNCONFIRMED";
+      failure.recoveryStage = stage;
+      throw failure;
+    }
+  },
   /**
    * Claims the listing once; a lost insert response resumes the claim's original complete command.
    * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
@@ -177,33 +300,39 @@ module.exports = {
       throw new Error("Original quantity-one Checkout command is required");
     let listing = await SERVICE.DefaultDigitalCommerceAuctionService.read(r, availability.publicationCode);
     const terms = listing.evidence.listing.terms, reward = this.rewardTerms(terms);
-    if (r.payload.paymentMethod !== "LOYALTY_REWARD" || r.payload.programCode !== reward.programCode ||
+    let auction;
+    if (terms.saleMode === "AUCTION") {
+      auction = await SERVICE.DefaultCheckoutAuctionService.rewardPaymentTerms(r);
+      if (auction.contract !== "CHECKOUT_AUCTION_REWARD_V1" || auction.publicationCode !== listing.code ||
+          auction.productCode !== entry.productCode || auction.variantCode !== entry.variantCode ||
+          auction.priceQuoteCode !== entry.priceQuoteCode || auction.storeCode !== r.storeCode ||
+          auction.checkoutIdempotencyKey !== r.idempotencyKey || auction.cartCode !== r.payload.cartCode ||
+          auction.orderCode !== r.payload.orderCode || !same(auction.ownerRef, buyer) || !same(auction.actorRef, r.actorRef) ||
+          auction.programCode !== reward.programCode || auction.rewardTypeCode !== reward.rewardTypeCode || auction.scale !== reward.scale ||
+          auction.currency !== terms.currency || SERVICE.DefaultExactAmountService.compare(auction.amount, terms.amount) < 0)
+        throw new Error("Exact selected auction bundle payment is required");
+    } else if (r.auctionFunds || r.payload.paymentMethod !== "LOYALTY_REWARD" || r.payload.programCode !== reward.programCode ||
         r.payload.rewardTypeCode !== reward.rewardTypeCode || r.payload.rewardCurrency !== terms.currency ||
         SERVICE.DefaultExactAmountService.compare(String(r.payload.rewardAmount), terms.amount) !== 0)
       throw new Error("Exact reward-only bundle payment is required");
     const entries = await this.rows(r, "DefaultCartEntryService", { ownerId: r.ownerId, cartCode: r.payload.cartCode, status: "ACTIVE" }, 1);
     if (entries.length !== 1 || entries[0].code !== entry.code || entries[0].productCode !== entry.productCode ||
-        entries[0].sku !== entry.sku || String(entries[0].quantity) !== "1") throw new Error("Whole bundle requires its quantity-one Cart");
+        entries[0].sku !== entry.sku || String(entries[0].quantity) !== "1" ||
+        auction && (entries[0].variantCode !== auction.variantCode || entries[0].priceQuoteCode !== auction.priceQuoteCode))
+      throw new Error("Whole bundle requires its quantity-one Cart");
     if (same(buyer, listing.ownerRef)) throw new Error("Same-owner bundle purchase is prohibited");
-    const code = "bundle-operation:" + b.digest([r.tenant, r.enterpriseCode, r.ownerId, r.idempotencyKey, entry.code, "PURCHASE"]);
-    const command = { publicationCode: listing.code, buyerRef: buyer, ownerId: r.ownerId, actorRef: r.actorRef,
-      orderCode: r.payload.orderCode, cartCode: r.payload.cartCode, entryCode: entry.code, productCode: entry.productCode,
-      sku: entry.sku, storeCode: r.storeCode, locale: r.locale, checkoutIdempotencyKey: r.idempotencyKey,
-      idempotencyKey: r.idempotencyKey + ":digital:" + entry.code + ":0", reward, gross: terms.amount,
-      participantEnterpriseCode: r.participantEnterpriseCode || r.authData.enterpriseCode || r.authData.entCode,
-      currency: terms.currency, fee: this.settings().feeAmount, net: terms.amount, finalSale: true };
-    const digest = b.digest(command);
+    const { code, command, digest } = this.purchaseCommand(r, entry, listing, auction);
     const existing = await b.read(r, "DefaultDigitalBundleOperationService", code);
     if (existing) {
       if (existing.commandDigest !== digest || existing.evidence.command.publicationCode !== listing.code)
         throw new Error("Original purchase command changed");
-      if (existing.status === "CANCELLED") throw new Error("Original purchase was cancelled");
+      if (["CANCELLED", "CANCELLING"].includes(existing.status)) throw new Error("Original purchase was cancelled");
       return this.unit(existing, "RESERVED");
     }
-    if (terms.saleMode !== "FIXED") throw new Error("Auction selection requires the owning Checkout handoff");
-    if (!listing.evidence.purchaseClaim && (terms.startsAt !== null && Date.parse(terms.startsAt) > Date.now() ||
+    if (!auction && terms.saleMode !== "FIXED") throw new Error("Auction selection requires the owning Checkout handoff");
+    if (!auction && !listing.evidence.purchaseClaim && (terms.startsAt !== null && Date.parse(terms.startsAt) > Date.now() ||
         terms.endsAt !== null && Date.parse(terms.endsAt) <= Date.now())) throw new Error("Listing purchase window is closed");
-    if (availability.available !== true && !listing.evidence.purchaseClaim || listing.status !== "HELD" ||
+    if (!auction && availability.available !== true && !listing.evidence.purchaseClaim || listing.status !== "HELD" ||
         listing.evidence.listing.product.productCode !== entry.productCode || listing.evidence.listing.product.sku !== entry.sku ||
         terms.storeCode !== r.storeCode || listing.evidence.listing.release)
       throw new Error("Listing cannot be purchased");
@@ -223,6 +352,7 @@ module.exports = {
       idempotencyKey: command.idempotencyKey, correlationId: r.correlationId || r.idempotencyKey,
       evidence: { command, manifestDigest: listing.evidence.manifestDigest,
         manifestEnterpriseCode: listing.evidence.manifestEnterpriseCode, finalSale: true } });
+    if (row.status !== "RESERVED") throw new Error("Original purchase was cancelled");
     return this.unit(row, "RESERVED");
   },
   /**
@@ -324,7 +454,8 @@ module.exports = {
     const ownerType = command.buyerRef.schema.toUpperCase();
     const value = await this.loyalty(r, "/reward-ledger-evidence", { enterpriseCode: command.participantEnterpriseCode,
       ownerType, ownerCode: command.buyerRef.code, programCode: command.reward.programCode, rewardTypeCode: command.reward.rewardTypeCode,
-      sourceType: "PAYMENT", sourceCode: command.orderCode, entryCode });
+      sourceType: command.auctionFunds ? "BIDDING" : "PAYMENT",
+      sourceCode: command.auctionFunds ? command.auctionFunds.bidCode : command.orderCode, entryCode });
     if (value?.contractVersion !== 1 || value.tenant !== r.tenant || value.enterpriseCode !== command.participantEnterpriseCode ||
         value.ownerType !== ownerType || value.ownerCode !== command.buyerRef.code || value.wallet?.ownerType !== ownerType ||
         value.wallet.ownerCode !== command.buyerRef.code || value.wallet.status !== "OPEN" || value.wallet.active === false ||
@@ -372,17 +503,36 @@ module.exports = {
         [payment, auth].some(p => p.cartCode !== c.cartCode || p.evidence?.methodCode !== "LOYALTY_REWARD" ||
           p.evidence.providerCode !== providerCode || p.evidence.programCode !== c.reward.programCode ||
           p.evidence.rewardTypeCode !== c.reward.rewardTypeCode)) throw new Error("Exact original bundle payment is unconfirmed");
+    const auction = c.auctionFunds, captureProof = payment.evidence.auctionCapture;
+    if (auction) {
+      if (["commitmentCode", "roundCode", "bidCode", "priceQuoteCode", "reservationCode"]
+          .some(key => typeof auction[key] !== "string" || !auction[key]) ||
+          !same(auth.evidence.auctionFunds, { commitmentCode: auction.commitmentCode }) ||
+          !same(payment.evidence.auctionFunds, { commitmentCode: auction.commitmentCode }) ||
+          typeof captureProof?.redemptionCode !== "string" || !captureProof.redemptionCode ||
+          !same(captureProof, { contractVersion: 1, commitmentCode: auction.commitmentCode,
+            redemptionCode: captureProof.redemptionCode, captureLedgerEntryCode: payment.evidence.providerReference,
+            roundCode: auction.roundCode, bidCode: auction.bidCode, reservationCode: auction.reservationCode,
+            idempotencyKey: payment.idempotencyKey, sourceType: "BIDDING", sourceCode: auction.bidCode,
+            targetType: "AUCTION_ROUND", targetCode: auction.roundCode }) ||
+          auth.evidence.providerReference !== auction.reservationCode)
+        throw new Error("Original auction capture provenance is unconfirmed");
+    } else if (captureProof || payment.evidence.auctionFunds || auth.evidence.auctionFunds)
+      throw new Error("Unexpected auction capture provenance");
     const wallet = await this.captureLedger(r, c, payment.evidence.providerReference), ledger = wallet.entries[0];
     if (ledger.active === false || ledger.walletCode !== wallet.wallet.code || ledger.entryType !== "CAPTURE" ||
         ledger.programCode !== c.reward.programCode || ledger.rewardTypeCode !== c.reward.rewardTypeCode ||
-        ledger.idempotencyKey !== payment.idempotencyKey || ledger.sourceType !== "PAYMENT" || ledger.sourceCode !== c.orderCode ||
-        ledger.targetType !== "ORDER" || ledger.targetCode !== c.orderCode || ledger.reservationCode !== auth.evidence.providerReference ||
+        ledger.idempotencyKey !== payment.idempotencyKey || ledger.sourceType !== (auction ? "BIDDING" : "PAYMENT") ||
+        ledger.sourceCode !== (auction ? auction.bidCode : c.orderCode) ||
+        ledger.targetType !== (auction ? "AUCTION_ROUND" : "ORDER") || ledger.targetCode !== (auction ? auction.roundCode : c.orderCode) ||
+        ledger.reservationCode !== auth.evidence.providerReference ||
         [payment, auth].some(p => p.evidence.walletCode !== wallet.wallet.code) ||
         SERVICE.DefaultExactAmountService.compare(String(ledger.amount), c.gross) !== 0)
       throw new Error("Original bundle buyer debit is unconfirmed");
     return { paymentRef: { module: "paymentCore", schema: "paymentTransactionEntry", code: payment.code },
       ledgerRef: { module: "loyaltyLedger", schema: "rewardLedgerEntry", code: ledger.code },
-      walletCode: wallet.wallet.code, amount: c.gross, currency: c.currency };
+      walletCode: wallet.wallet.code, amount: c.gross, currency: c.currency,
+      ...(auction ? { auctionCapture: structuredClone(captureProof) } : {}) };
   },
   /**
    * Verifies stable canonical seller credit evidence before marking proceeds available.
@@ -543,6 +693,69 @@ module.exports = {
       paymentConfirmed: Boolean(row.evidence.capture), wholeTransferConfirmed: Boolean(row.evidence.transfer) };
   },
   /**
+   * Resolves one original Checkout bundle with fresh buyer authority and exact immutable purchase/claim binding.
+   * @param {Object} r Original admitted owner/actor, merchant and Checkout key/Cart/Order.
+   * @param {Object[]} reservations The exact retained checkpoint reservation set, never caller replacement selectors.
+   * @returns {Promise<Object>} Canonical purchase row, unit and original listing.
+   * @remarks Read-only; no cancellation, financial work or content-hold release.
+   * Failure behavior: Foreign/mixed/changed/captured purchases or conflicting listing claims fail closed.
+   */
+  authorizationPurchase: async function (r, reservations) {
+    const b = this.bundles();
+    await b.authorize(r, b.owner(r.ownerRef), "BUNDLE_BUY");
+    if (!Array.isArray(reservations) || reservations.length !== 1 || reservations[0].digitalDeliveryType !== "DIGITAL_OWNERSHIP" ||
+        reservations[0].offerAllocationCode || !/^bundle-operation:[a-f0-9]{64}$/.test(reservations[0].code || ""))
+      throw new Error("One original bundle purchase is required");
+    const selected = reservations[0];
+    const unit = await this.resolve(r, { code: selected.code, ownerId: r.ownerId,
+      orderCode: r.payload.orderCode, checkoutIdempotencyKey: r.idempotencyKey });
+    const row = await this.purchase(r, unit), c = row.evidence.command;
+    if (row.code !== "bundle-operation:" + b.digest([r.tenant, r.enterpriseCode, r.ownerId, r.idempotencyKey, c.entryCode, "PURCHASE"]) ||
+        !same(c.buyerRef, r.ownerRef) || !same(row.recipientRef, r.ownerRef) || !same(c.actorRef, r.actorRef) ||
+        c.participantEnterpriseCode !== r.participantEnterpriseCode || c.cartCode !== r.payload.cartCode ||
+        selected.idempotencyKey !== c.idempotencyKey || c.idempotencyKey !== r.idempotencyKey + ":digital:" + c.entryCode + ":0" ||
+        !["RESERVED", "CANCELLING", "CANCELLED"].includes(row.status) || row.evidence.capture || row.evidence.transfer)
+      throw new Error("Original bundle authorization scope changed");
+    const listing = await SERVICE.DefaultDigitalCommerceAuctionService.read(r, c.publicationCode), claim = listing.evidence.purchaseClaim;
+    if (listing.status !== "HELD" || listing.manifestCode !== row.manifestCode || listing.manifestRevision !== row.manifestRevision ||
+        !same(listing.ownerRef, row.ownerRef) || listing.evidence.listing.release ||
+        (claim ? claim.code !== row.code || claim.digest !== row.commandDigest || !same(claim.command, c) : row.status !== "CANCELLED"))
+      throw new Error("Original bundle purchase claim changed");
+    await b.authorize(r, b.owner(r.ownerRef), "BUNDLE_BUY");
+    return { row, unit, listing };
+  },
+  /** Fences only the original bundle before Payment decision reconciliation; never releases its claim or content holds. */
+  authorizationCompensationDisposition: async function (r, reservations) {
+    const recovery = SERVICE.DefaultCheckoutCompensationRecoveryService;
+    const checkpoint = await recovery.checkpoint(r);
+    recovery.denialScope(r, checkpoint);
+    if (checkpoint.evidence.couponAcquisitionRecovery.paymentAttemptUnconfirmed !== true ||
+        !same(checkpoint.evidence.couponAcquisitionRecovery.reservations, reservations)) throw new Error("Original attempted Payment plan is required");
+    const { unit } = await this.authorizationPurchase(r, reservations);
+    const fence = await this.fenceCompensation(r, unit);
+    if (fence.confirmed !== true || fence.compensationAllowed !== true || fence.code !== unit.code ||
+        !["CANCELLING", "CANCELLED"].includes(fence.status)) throw new Error("Original bundle cancellation fence is unconfirmed");
+    return { disposition: "RELEASE_ALLOWED", outcomes: [{ code: unit.code, disposition: "RELEASE_ALLOWED" }] };
+  },
+  /** Independently verifies the original terminal owner decision and exact false uncertainty guard before any bundle release. */
+  authorizationReleaseProof: async function (r, checkpoint, unit) {
+    const recovery = SERVICE.DefaultCheckoutCompensationRecoveryService, plan = checkpoint.evidence.couponAcquisitionRecovery;
+    recovery.denialScope(r, checkpoint);
+    if (plan.paymentAttemptUnconfirmed !== false || !checkpoint.evidence.paymentDenialDecision ||
+        plan.reservations.length !== 1 || plan.reservations[0].code !== unit.code ||
+        plan.reservations[0].idempotencyKey !== unit.idempotencyKey || plan.reservations[0].digitalDeliveryType !== "DIGITAL_OWNERSHIP")
+      throw new Error("Original bundle terminal Payment proof is required");
+    await recovery.verifyAuthorizationDenial(r, checkpoint);
+    await this.authorizationPurchase(r, plan.reservations);
+  },
+  /** Completed acquisition replay checks original cancelled purchase/claim and fresh Payment proof without repeating effects. */
+  inspectAuthorizationRelease: async function (r, reservations) {
+    const checkpoint = await SERVICE.DefaultCheckoutCompensationRecoveryService.checkpoint(r);
+    const { row, unit, listing } = await this.authorizationPurchase(r, reservations);
+    await this.authorizationReleaseProof(r, checkpoint, unit);
+    if (row.status !== "CANCELLED" || listing.evidence.purchaseClaim?.code === row.code) throw new Error("Original bundle release is unconfirmed");
+  },
+  /**
    * Provides Checkout a durable cancellation fence before it considers any Payment reversal. Never
    * unlocks listing content holds.
    * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
@@ -592,9 +805,12 @@ module.exports = {
     if (!checkpoint || !["COMPENSATED", "COMPENSATION_REQUIRED"].includes(checkpoint.status) ||
         checkpoint.evidence?.completed?.some(phase => ["ORDERED", "PAYMENT_CAPTURED", "DIGITAL_SOLD"].includes(phase)) ||
         !Array.isArray(checkpoint.evidence?.compensation)) throw new Error("Original Checkout compensation proof is required");
+    const attempted = checkpoint.evidence.couponAcquisitionRecovery;
+    if (attempted && !checkpoint.evidence.paymentCompensationIntent) await this.authorizationReleaseProof(r, checkpoint, unit);
     const payments = await this.rows({ ...r, enterpriseCode: c.participantEnterpriseCode }, "DefaultPaymentTransactionEntryService", { ownerId: c.ownerId, orderCode: c.orderCode }, this.settings().maximumPaymentRecords);
     if (payments.some(p => p.evidence?.operation === "CAPTURE") || payments.some(p =>
-      p.evidence?.operation === "AUTHORIZE" && !payments.some(v => v.evidence?.operation === "VOID" && v.status === "VOIDED" &&
+      p.evidence?.operation === "AUTHORIZE" && !(attempted && checkpoint.evidence.paymentDenialDecision &&
+        ["DECLINED", "CANCELLED"].includes(p.status)) && !payments.some(v => v.evidence?.operation === "VOID" && v.status === "VOIDED" &&
         v.idempotencyKey === c.checkoutIdempotencyKey + ":payment:void" &&
         checkpoint.evidence.compensation.some(outcome => outcome.type === "PAYMENT_VOID" && outcome.status === "COMPLETED" &&
           outcome.paymentTransactionCode === v.code && outcome.providerReference === v.evidence.providerReference))))

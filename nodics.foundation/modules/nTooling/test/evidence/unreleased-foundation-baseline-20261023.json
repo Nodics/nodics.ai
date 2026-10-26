@@ -1,0 +1,36 @@
+{
+  "scope": "nodics.ai/nodics.foundation only; source consolidation, no live adoption",
+  "status": "FOUNDATION_SOURCE_VALIDATED_CROSS_TREE_FINDINGS_REMAIN",
+  "changes": [
+    "nTooling latest docs-v002 content consolidated into docs-v001; removed docs-v002; semantic version 0.0.2 preserved; owner checksums refreshed",
+    "Import sample-v901/sample-v902 and retained-root manifest moved to test/fixtures/incrementalAcceptance/data; shipping manifest no longer selects them",
+    "Incremental acceptance coordinator moved from src/service/acceptance to test/helpers; fixtures verified from retained bytes and exercised via canonical disposable-module discovery",
+    "nSetup enduring unreleased owner baseline clarified; generic release/version/retention machinery unchanged",
+    "Reusable opt-in DefaultProjectDataManifestService.validateUnreleasedBaseline source assertion added; not wired into runtime or ordinary manifest generation",
+    "Foundation bootstrap tests now reference current Profile preservedServiceEmployeeData source"
+  ],
+  "baseline": {
+    "selectedRoot": "nodics.foundation",
+    "dependencyRoots": ["nodics.ai"],
+    "manifests": 21,
+    "sections": 30,
+    "retainedRoots": 0,
+    "unselectedPayloadFiles": 0,
+    "result": "PASS"
+  },
+  "tests": {
+    "focusedPassed": 45,
+    "focusedFailed": 0,
+    "scopedDiffCheck": "PASS",
+    "wholeFramework": "FAIL: unselected eWaste/docs-v001/headers/100_eWasteDocumentationContentPackHeader.js at last run",
+    "earlierCrossTreeFinding": "commercialAgreement:agreementWorkspace publicationReview missing nonempty postPublicationCapabilities; reported to parent, not edited"
+  },
+  "semanticCollisionReview": {
+    "foundationDataRecordsInspected": 81,
+    "unresolvedRecordModules": 0,
+    "finding": "nCatalog Init and Sample both write catalog IDs defaultProductCatalog/defaultContentCatalog. Sample adds subCatalogs to Init-created records. Existing cross-lane semantic overlap, not a forward-version patch; retained pending parent decision."
+  },
+  "crossTreeReferences": "No remaining active code references found to nTooling docs-v002 or the removed incremental coordinator path in searched framework siblings or Kickoff authored source. Historical evidence was not rewritten.",
+  "preservedWork": "Pre-existing nPublish edits untouched; authored incremental fixture bytes retained under test ownership.",
+  "runtimeEffects": "None: no reset, import, grants, funding, restart, commit or receipt mutation."
+}

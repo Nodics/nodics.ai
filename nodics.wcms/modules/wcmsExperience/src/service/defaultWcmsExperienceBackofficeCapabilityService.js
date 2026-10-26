@@ -52,7 +52,7 @@ module.exports = {
     /** Returns Experience Studio navigation entries. @param {Object} backoffice BackOffice config. @returns {Array<Object>} Navigation entries. */
     navigation: function (backoffice) {
         let documentationRoute = backoffice.documentationRoute || '/docs/capabilities/content-publishing/experience-targeting';
-        let group = { id: 'content-experience', label: 'Content and Experience', order: 500 };
+        let group = { id: 'content', label: 'Content and Experience', order: 200 };
         return [
             this.navigationEntry('wcms-experience-studio', 'Experience Studio', '/content/experience-studio', 'experience', 560, group, documentationRoute, undefined, ['WCMS_EXPERIENCE_VIEW']),
             this.navigationEntry('wcms-experience-placements', 'Placements', '/content/experience-studio/placements', 'target', 561, group, documentationRoute, 'wcms-experience-studio', ['WCMS_EXPERIENCE_VIEW', 'WCMS_EXPERIENCE_EDIT']),

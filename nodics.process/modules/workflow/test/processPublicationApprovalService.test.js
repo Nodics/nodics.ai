@@ -101,6 +101,26 @@ const request = { tenant: 'default', publicationApproval: { publicationCode: 'ho
     diagnostic = await service.diagnose({ tenant: 'default', authData: {}, runtimeOperation: {
         publicationCode: 'home-v2', publicationRevision: 4 } });
     assert.strictEqual(diagnostic.data.status, 'TASK_REFERENCE_MISSING');
+    existing = { ...existing, currentNode: 'review', definitionCode: 'cmsPublicationApproval', version: 1 };
+    let repairedTaskCount = 0;
+    const beforeRepairInstallCount = definitionInstallCount;
+    SERVICE.DefaultProcessRuntimeLifecycleService.requireVersion = async () => ({ graph: {} });
+    SERVICE.DefaultProcessRuntimeLifecycleService.findNode = () => ({ code: 'review', type: 'TASK' });
+    SERVICE.DefaultProcessRuntimeLifecycleService.createTaskForNode = async (input, instance, node, options) => {
+        repairedTaskCount++;
+        assert.strictEqual(instance, existing);
+        assert.strictEqual(options.taskCode, existing.code + '-review');
+        tasks = [{ code: options.taskCode, status: 'OPEN' }];
+        return tasks[0];
+    };
+    startRequest = undefined;
+    const repaired = await service.start(request);
+    assert.strictEqual(repaired.data.instance, existing);
+    assert.strictEqual(repaired.data.replay, true);
+    await service.start(request);
+    assert.strictEqual(repairedTaskCount, 1);
+    assert.strictEqual(startRequest, undefined, 'Task recovery must not start a replacement instance');
+    assert.strictEqual(definitionInstallCount, beforeRepairInstallCount, 'Installed definition must not replay data');
     existing = undefined;
     diagnostic = await service.diagnose({ tenant: 'default', authData: {}, runtimeOperation: {
         publicationCode: 'home-v2', publicationRevision: 4 } });

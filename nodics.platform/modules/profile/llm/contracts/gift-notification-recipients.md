@@ -72,7 +72,7 @@ intent and inbox. Isolated storage and credential transport cover both original
 sides, all events, missing grants/receipts, drift, denied permission, lost ack and
 stale pending suppression. No production adapter double is introduced.
 
-Canonical public guidance is in `data/docs-v002/records/documentation/` and the
-selected documentation manifest. The v001 predecessor remains sealed. Source/unit
+Canonical public guidance is in `data/docs-v001/records/documentation/` and the
+selected documentation manifest. Unreleased snapshots share one baseline. Source/unit
 acceptance is not installed runtime qualification, provider activation, live
 delivery or E2E acceptance. No notification changes gift ownership or decisions.

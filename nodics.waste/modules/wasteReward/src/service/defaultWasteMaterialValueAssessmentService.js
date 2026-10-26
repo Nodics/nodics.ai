@@ -104,7 +104,7 @@ module.exports = {
         return settings;
     },
     /**
-     * Requires trusted internal service authority and the exact capability permission.
+     * Requires existing service or canonical native Platform Admin authority and the exact capability permission.
      * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
      * @param {string} permission Exact owner capability permission; not inferred from roles.
      * @returns {void} Admission succeeds without return data; effects and evidence checks are described above.
@@ -113,9 +113,10 @@ module.exports = {
      */
     authorize: function (request, permission) {
         const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
-        if (!request.tenant || (auth.tenant && auth.tenant !== request.tenant) || auth.principalType !== 'service' || !auth.loginId ||
+        if (!request.tenant || (auth.tenant && auth.tenant !== request.tenant) || !auth.loginId ||
+            !(auth.principalType === 'service' || security?.hasPlatformFullAccess?.(request) === true) ||
             !security || !security.isPermissionGranted(permission, security.getGrantedPermissions(request), {}))
-            this.fail('FORBIDDEN', 'Authorized owner service and tenant are required');
+            this.fail('FORBIDDEN', 'Authorized owner service or native Platform administrator and tenant are required');
     },
     /**
      * Validates references without accepting unqualified evidence booleans.

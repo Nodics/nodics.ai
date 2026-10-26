@@ -35,7 +35,7 @@ module.exports = {
     /** Reveals a privately authenticated delivered purchase through retained encrypted issuance only. @param {Object} request Reveal request. @returns {Promise<Object>} Private reveal result. */
     reveal: async function (request) {
         const digital = SERVICE.DefaultDigitalCommerceEntitlementService;
-        request = digital.revealContext(request);
+        request = await digital.revealContext(request);
         const scoped = await digital.couponReadContext(request);
         const coupon =
             await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon(

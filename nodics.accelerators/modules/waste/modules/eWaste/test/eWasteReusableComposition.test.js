@@ -206,7 +206,7 @@ test("default marketplace list returns the authoritative catalogue pages and tot
     available: false,
     saleMode: undefined,
   };
-  assert.deepEqual(projected, { ...expected, acquisitionRequirements: null });
+  assert.deepEqual(projected, { ...expected, acquisitionRequirements: null, expiry: null });
   assert.deepEqual([await service.marketplaceOffer({}, asset, {})], [
     {
       ...expected,

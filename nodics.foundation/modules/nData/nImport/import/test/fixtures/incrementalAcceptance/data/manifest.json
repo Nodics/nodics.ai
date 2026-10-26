@@ -1,0 +1,66 @@
+{
+  "contractVersion": 2,
+  "module": "importAcceptanceFixture",
+  "sections": {
+    "incrementalAcceptance": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "version": "1.0.1",
+      "sourceRoot": "sample-v902",
+      "displayName": "Governed incremental acceptance",
+      "description": "Explicit Local-only disabled import-definition upgrade and conflict recovery fixture.",
+      "owningDomain": "import",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "LOCAL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "sample-v902/headers/incrementalAcceptance0Header.js": "ab067d735c7d921f8faab23a306a5793c45152cacac7beb6b1f56f38dd580e01",
+        "sample-v902/records/incrementalAcceptance0Data.js": "28826edcf144ae32794902dcd50323e9907b4650c615075321cb8ab9e35fd7b8",
+        "sample-v902/headers/incrementalAcceptance1Header.js": "ab2d422080de8bbe074ce5fe87acf52d1578cd4ad0f4f3107485e388878360fb",
+        "sample-v902/records/incrementalAcceptance1Data.js": "2ed83b376fdfac1e8e2154baa0cc23c0d5cd5e79395d79ece6c641fd50290e65"
+      }
+    }
+  },
+  "retainedRoots": {
+    "sample-v901": {
+      "files": {
+        "sample-v901/headers/incrementalAcceptanceHeader.js": "06b8119610059937ec94b5e8638066b46cbd2554d06fad66f5fc6d728479290c",
+        "sample-v901/records/incrementalAcceptanceData.js": "2d3d5f2e20b3439e0d62647266cf4b53156e50bb6f7a786c1af082da02bd5b26"
+      },
+      "sections": {
+        "incrementalAcceptance": {
+          "kind": "DATA_RELEASE",
+          "dataType": "sample",
+          "version": "1.0.0",
+          "sourceRoot": "sample-v901",
+          "displayName": "Governed incremental acceptance",
+          "description": "Explicit Local-only disabled import-definition upgrade and conflict recovery fixture.",
+          "owningDomain": "import",
+          "lifecycle": "REFERENCE",
+          "destinationRole": "PLATFORM",
+          "environmentScope": [
+            "LOCAL"
+          ],
+          "sensitivity": "PUBLIC",
+          "versioningPolicy": "NONE",
+          "publicationPolicy": "NONE",
+          "initialPublicationPolicy": "NONE",
+          "removalPolicy": "RETAIN",
+          "selectionPolicy": "EXPLICIT",
+          "files": {
+            "sample-v901/headers/incrementalAcceptanceHeader.js": "06b8119610059937ec94b5e8638066b46cbd2554d06fad66f5fc6d728479290c",
+            "sample-v901/records/incrementalAcceptanceData.js": "2d3d5f2e20b3439e0d62647266cf4b53156e50bb6f7a786c1af082da02bd5b26"
+          }
+        }
+      }
+    }
+  }
+}

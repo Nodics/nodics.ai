@@ -239,7 +239,8 @@ module.exports = {
    * @param {Object} input Operation input/selectors validated by this owner; supplied identities do not
    * grant authority.
    * @returns {Promise<Object>} Exact authorized gift status, retained decision and resume qualification.
-   * @remarks Effects: Read-only operation lookup and participant admission.
+   * @remarks Effects: Read-only operation lookup with fresh participant read admission before and
+   * after persistence. Resume eligibility is retained-state evidence, not decision authority.
    * Failure behavior: Rejects foreign participant, missing exact operation or changed authority.
    * @override Override through the effective module member; retain the original owner, scope and
    * evidence checks described above.
@@ -248,12 +249,12 @@ module.exports = {
     if (Object.keys(input).sort().join(',') !== 'operationCode,ownerRef' || Object.keys(r.query || {}).length)
       throw new Error('Exact gift reference is required');
     const b = SERVICE.DefaultDigitalBundleService, check = this.fence(r), ownerRef = b.owner(input.ownerRef);
-    await b.authorize(r, ownerRef, 'BUNDLE_CREATE'); check();
+    await b.authorize(r, ownerRef, 'HOLDINGS_READ'); check();
     const row = await this.exact(r, 'DefaultDigitalBundleOperationService', { code: this.key(input.operationCode) }); check();
     if (!row || row.purpose !== 'GIFT' || ![row.ownerRef, row.recipientRef].some(o => same(o, ownerRef)))
-      throw new Error('Original gift is unavailable');
+      throw new CLASSES.NodicsError('ERR_AUTH_00003');
     const sender = same(row.ownerRef, ownerRef);
-    await b.authorize(r, ownerRef, sender ? 'GIFT_CANCEL' : 'GIFT_RECEIVE'); check();
+    await b.authorize(r, ownerRef, 'HOLDINGS_READ'); check();
     const decision = row.evidence?.decision;
     return { contractVersion: 1, ownerRef, operationCode: row.code, status: row.status, revision: row.revision,
       decision: decision || null, canResume: (sender ? decision === 'CANCEL' : ['ACCEPT', 'DECLINE'].includes(decision)) &&

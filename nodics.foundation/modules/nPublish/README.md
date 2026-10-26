@@ -3,6 +3,9 @@
 The disabled-by-default [exact-plan setup observer](llm/contracts/setup-observation.md)
 separates shared/foreign read proof from human submission, approval and activation.
 Recognized permission is not a grant; native adoption requires explicit review.
+The baseline observer preserves pending approval, release identity and bounded
+workflow diagnostics for BackOffice while independently proving every READY claim.
+Raw owner context remains private; observation grants no lifecycle action authority.
 The [native review recipe](llm/examples/setup-observation-native-review.md) records
 the exact plan/caller shape and source-only deployment participation checks.
 

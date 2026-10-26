@@ -50,7 +50,7 @@ global.UTILS = Object.assign({}, commonUtils, {
 const userGroupsData = require("./fixtures/compatibility/bootstrapGroupsLegacy.js");
 const employeeData = {
   ...require("../data/init-v001/records/user/defaultEmployeeData"),
-  ...require("../data/init-v001/records/user/defaultServiceEmployeeData"),
+  ...require("./fixtures/unreleasedPredecessor/init-v001/records/user/defaultServiceEmployeeData"),
 };
 let groupTree = [
   {

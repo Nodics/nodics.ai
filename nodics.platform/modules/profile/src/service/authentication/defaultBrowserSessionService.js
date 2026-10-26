@@ -446,6 +446,16 @@ module.exports = {
         let config = this.config(request);
         this.validateOrigin(request, config);
         let cookies = this.cookies(request);
+        const csrfHeader = request.httpRequest?.headers?.['x-csrf-token'];
+        // Another same-host application may already have ended this shared
+        // session. No credential means no revocation; do not expire a newer
+        // concurrent session with a Set-Cookie response to this absent one.
+        if (!Object.hasOwn(cookies, config.refreshCookieName) &&
+            !Object.hasOwn(cookies, config.csrfCookieName) &&
+            (csrfHeader === undefined || csrfHeader === '')) {
+            request.httpResponse.setHeader('Cache-Control', 'no-store');
+            return Promise.resolve(true);
+        }
         this.validateCsrf(request, config, cookies);
         let refreshToken = cookies[config.refreshCookieName];
         let operation = refreshToken

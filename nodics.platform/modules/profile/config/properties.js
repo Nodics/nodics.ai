@@ -70,7 +70,10 @@ module.exports = {
   },
   profilePlatformAdministratorEvidence: {
     enabled: true,
-    allowedPermissions: ["loyalty.wallet.testCredit"],
+    allowedPermissions: ["identity.credential.rotate", "system.schema.manage", "loyalty.program.partnerEligibility.manage", "loyalty.wallet.testCredit", "loyalty.transfers.manage", "commerce.promotion.approve",
+      "commerce.promotion.read", "commerce.promotion.draft.write", "commerce.promotion.manage",
+      "commerce.product.read", "commerce.product.write", "commerce.product.archive",
+      "commerce.pricing.read", "commerce.pricing.write", "commerce.pricing.publish"],
     maximumGroups: 100,
   },
   profileParticipantDirectory: {
@@ -165,6 +168,12 @@ module.exports = {
     },
   },
   identityGovernance: {
+    serviceScopeManagement: {
+      permission: "identity.credential.rotate",
+      maximumScopeCodes: 128,
+      maximumIdentifierLength: 192,
+      maximumLoginIdLength: 320,
+    },
     customerRegistration: {
       importPlacement: {
         metadataOwnerService: "DefaultModelImportProcessService",

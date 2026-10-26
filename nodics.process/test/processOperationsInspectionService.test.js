@@ -23,6 +23,7 @@ const assert = require('assert');
 global.CONFIG = {
     get: function (key) {
         if (key === 'defaultTenant') return 'default';
+        if (key === 'process') return require('../modules/workflow/config/properties').process;
         return undefined;
     }
 };
@@ -48,7 +49,8 @@ function createGeneratedService(store, captures) {
     return {
         get: async function (request) {
             captures.push(clone(request));
-            return { code: 'SUC_DBS_00000', result: store.filter(item => matches(item, request.query)).map(clone) };
+            const result = store.filter(item => matches(item, request.query)).map(clone);
+            return { code: 'SUC_DBS_00000', count: result.length, result };
         }
     };
 }

@@ -139,13 +139,23 @@ module.exports = {
    * evidence checks described above.
    */
   records: async function (request, query, options) {
-    const result = await SERVICE.DefaultBiddingAuctionRoundService.get({
-      ...SERVICE.DefaultBiddingService.context(request),
-      query: { ...query, enterpriseCode: request.enterpriseCode },
-      searchOptions: options || { pageSize: 1, pageNumber: 1 },
-    });
+    let result;
+    try {
+      result = await SERVICE.DefaultBiddingAuctionRoundService.get({
+        ...SERVICE.DefaultBiddingService.context(request),
+        query: { ...query, enterpriseCode: request.enterpriseCode },
+        searchOptions: options || { pageSize: 1, pageNumber: 1 },
+      });
+    } catch (_) {
+      throw new CLASSES.NodicsError('ERR_BIDDING_ROUND_READ_UNAVAILABLE');
+    }
     const value = SERVICE.DefaultBiddingAuctionPortsService.unwrap(result);
-    return Array.isArray(value) ? value : value ? [value] : [];
+    return (Array.isArray(value) ? value : value ? [value] : []).map(row => {
+      const result = { ...row };
+      for (const field of ['startsAt', 'endsAt', 'graceEndsAt'])
+        if (result[field] instanceof Date) result[field] = result[field].toISOString();
+      return result;
+    });
   },
   /**
    * Missing and foreign records share the same failure.
@@ -368,8 +378,10 @@ module.exports = {
       code, listingKey, tenant: request.tenant, enterpriseCode: request.enterpriseCode, publicationCode: offer.publicationCode,
       productCode: p.productCode, storeCode: p.storeCode, variantCode: p.variantCode,
       sellerRef: offer.sellerRef, sourceRef: offer.sourceRef, floor: offer.floor, currency: offer.store.currency,
-      startsAt: offer.startsAt, endsAt: offer.endsAt,
-      graceEndsAt,
+      // Nullable date unions retain explicit business nulls; persist non-null values as BSON dates.
+      startsAt: offer.startsAt === null ? null : new Date(offer.startsAt),
+      endsAt: offer.endsAt === null ? null : new Date(offer.endsAt),
+      graceEndsAt: graceEndsAt === null ? null : new Date(graceEndsAt),
       policy: { holdTiming: policy.holdTiming, graceHours: policy.graceHours,
         maximumBids: policy.maximumBids, maximumCommands: policy.maximumCommands },
       status: "OPEN", revision: 0, sequence: 0, bids: {}, commands: {}, pending: null,
@@ -405,6 +417,7 @@ module.exports = {
       successfulOrder: bid.successfulOrder, history: bid.history.map(({ amount, revision, successfulOrder, at }) => ({ amount, revision, successfulOrder, at })),
       ...(seller ? { buyerRef: bid.buyerRef } : {}),
       fundsStatus: round.pending?.action === "UPDATE" && round.pending.bidCode === bid.code ? "PROCESSING"
+        : round.status === "COMPLETED" && round.selection?.bidCode === bid.code ? "CAPTURED"
         : round.status === "FAILED" && round.selection?.bidCode === bid.code ? "RECONCILED"
         : bid.release ? "RELEASED" : bid.reservation ? "RESERVED" : "NOT_RESERVED",
       allowedActions: !round.pending && this.intake(round) && bid.status === "OPEN" && this.same(request.buyerRef, bid.buyerRef)
@@ -423,8 +436,9 @@ module.exports = {
         ? [...(request.buyerRef && !this.same(request.buyerRef, round.sellerRef) ? ["PLACE"] : []), ...(seller ? ["SELECT", "CANCEL"] : [])]
         : seller && round.status === "GRACE" && this.now() < Date.parse(round.graceEndsAt) ? ["SELECT"] : [],
       ...(selected ? { selection: { bidCode: round.selection.bidCode, amount: round.selection.amount,
-        status: round.status === "FAILED" ? "FAILED_RECONCILED" : round.selection.handoff ? "CHECKOUT_READY" : "PROCESSING", priceQuoteCode: round.selection.priceQuoteCode,
+        status: round.status === "COMPLETED" ? "COMPLETED" : round.status === "FAILED" ? "FAILED_RECONCILED" : round.selection.handoff ? "CHECKOUT_READY" : "PROCESSING", priceQuoteCode: round.selection.priceQuoteCode,
         cartCode: round.selection.checkout?.cartCode, orderCode: round.selection.checkout?.orderCode,
+        ...(round.status === "COMPLETED" ? { receiptCode: round.selection.reconciliation.receiptCode } : {}),
         expiresAt: round.selection.checkout?.expiresAt,
         ...(!seller && this.same(request.buyerRef, round.selection.buyerRef) && round.selection.handoff && round.status === 'SELECTED'
           ? { purchase: { kind: 'AUCTION', roundCode: round.code, bidCode: round.selection.bidCode,

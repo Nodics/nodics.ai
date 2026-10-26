@@ -123,6 +123,22 @@ module.exports = {
       maximumTextLength: 500,
       maximumPageNumber: 10000,
     },
+    administrativeAuthoring: {
+      evidencePath: "/identity/platform-administrator/evidence",
+      recipientPath: "/participants/resolve",
+      identityTarget: { moduleName: "profile", connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, apiVersion: "v0" },
+      timeoutMs: 10000,
+      maximumGraphRecords: 100,
+      maximumGraphBytes: 262144,
+      maximumDepth: 12,
+      labels: { title: "Cross-enterprise Product management", targetEnterpriseCode: "Product owner Enterprise", createGraph: "Create catalogue graph" },
+      graphFields: {
+        product: ["code", "name", "catalogVersion", "productType", "fulfillmentStrategy", "digitalDeliveryType", "status"],
+        productVariant: ["code", "productCode", "sku", "productType", "fulfillmentStrategy", "digitalDeliveryType", "attributes", "status"],
+        productLocalization: ["code", "productCode", "locale", "name", "description", "slug", "seo", "attributes", "classificationValues", "media", "status"],
+        productVariantLocalization: ["code", "productCode", "variantCode", "locale", "attributes", "media", "status"],
+      },
+    },
     marketplaceAuthoring: {
       enabled: false,
       catalogVersion: null,

@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @description Imports module-owned documentation Media followed by CMS records. */
+/** @description Imports explicitly selected owner CMS documentation into Staged. */
 module.exports = {
   "cms": {
     "productDocumentationNodeData": {

@@ -22,3 +22,11 @@ stable Loyalty idempotency, concurrent reconciliation and restart recovery. Its 
 synthetic; it does not qualify recycler payment, live Loyalty or an external financial provider.
 `materialPermissionImportAcceptance.test.js` executes the actual permission release through Foundation's admitted
 identity-authority import dispatch without installing grants.
+
+Permanent opt-in simulation adapters are described in the [owner contract](llm/contracts/material-value.md).
+They use governed mock evidence records and explicit synthetic markers; they do
+not qualify real registry issuance or recycler payment. No Local adoption is automatic.
+
+Installed Local mock acceptance now has an owner command; see the installed HTTP
+section in [the owner contract](llm/contracts/material-value.md) for exact selections, authorization,
+effects and evidence limits. Plan mode makes no HTTP calls.

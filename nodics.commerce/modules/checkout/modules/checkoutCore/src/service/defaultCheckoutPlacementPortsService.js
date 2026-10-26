@@ -211,6 +211,112 @@ module.exports = {
       orderedEntryCount: entries.length,
     };
   },
+  /** Qualifies the existing checkpoint's unique identity, insert-only capability and owner-managed revision CAS; never initializes storage. */
+  paymentJournalPersistence: async function (request) {
+    const model = NODICS.getModels('checkoutCore', request.tenant)?.[UTILS.createModelName('checkoutCheckpoint')];
+    if (!model || model.versioned === true || model.primaryKey !== 'code' || typeof model.compareAndSetItem !== 'function' ||
+        typeof model.updateItems !== 'function' || model.rawSchema?.definition?.revision?.type !== 'int' ||
+        SERVICE.DefaultModelConcurrencyService.getField(model.rawSchema) || model.dataBase?.getOptions?.()?.modelUpdateOptions?.upsert === true) throw new Error('Checkout Payment journal CAS is unavailable');
+    const indexes = await SERVICE.DefaultDatabaseModelHandlerService.inspectIndexes(model);
+    if (indexes?.versioned !== false || !indexes.indexes?.some(index => index.unique === true && !index.sparse &&
+        !index.partialFilterExpression && (!index.collation || index.collation.locale === 'simple') && index.key?.code === 1 &&
+        Object.keys(index.key).every(key => ['code', 'tenant'].includes(key)))) throw new Error('Checkout Payment journal identity is unavailable');
+  },
+  /** Inserts and verifies the original pre-dispatch checkpoint. Only this successful insertion may dispatch; ambiguous acknowledgements never grant ownership. */
+  claimPaymentDispatch: async function (request, checkpoint, method, reservations) {
+    const same = require('node:util').isDeepStrictEqual;
+    checkpoint.results.paymentJournalAttempted = true;
+    const expectedPhases = ['VALIDATED', 'CALCULATED', ...(request.ownerRef?.schema === 'enterprise' ? ['SPENDING_ADMITTED'] : []), 'RESERVED', 'DIGITAL_RESERVED'];
+    if (request.auctionFunds || !request.ownerRef || !request.actorRef || typeof request.ownerId !== 'string' || !request.ownerId ||
+        method.methodCode !== 'LOYALTY_REWARD' ||
+        !same(checkpoint.completed, expectedPhases) || method.idempotencyKey !== request.idempotencyKey + ':payment' ||
+        method.orderCode !== request.payload.orderCode || method.cartCode !== request.payload.cartCode ||
+        ['tenant', 'ownerId', 'ownerRef', 'actorRef', 'participantEnterpriseCode'].some(k => !same(method[k], request[k]) || !same(checkpoint[k], request[k])) ||
+        checkpoint.enterpriseCode !== request.enterpriseCode || checkpoint.idempotencyKey !== request.idempotencyKey ||
+        method.enterpriseCode !== (request.authData?.enterpriseCode || request.authData?.entCode || request.enterpriseCode) ||
+        !same(checkpoint.merchantScope, request.merchantScope) ||
+        !['walletCode', 'programCode', 'rewardTypeCode', 'amount', 'currency'].every(k => typeof method[k] === 'string' && method[k].trim()) ||
+        !/^(0|[1-9]\d*)(\.\d+)?$/.test(method.amount) || !/[1-9]/.test(method.amount) ||
+        !Array.isArray(reservations) || reservations.length > 256 || !Array.isArray(checkpoint.results.reservation) || checkpoint.results.reservation.length > 256)
+      throw new Error('Original Payment journal scope is invalid');
+    await this.paymentJournalPersistence(request);
+    const units = reservations.map(unit => {
+      if (!unit || typeof unit.code !== 'string' || !unit.code || typeof unit.idempotencyKey !== 'string' ||
+          !unit.idempotencyKey.startsWith(request.idempotencyKey + ':digital:')) throw new Error('Original Digital reservation identity is required');
+      return { code: unit.code, idempotencyKey: unit.idempotencyKey,
+        ...(unit.offerAllocationCode ? { offerAllocationCode: unit.offerAllocationCode } : {}),
+        ...(unit.digitalDeliveryType ? { digitalDeliveryType: unit.digitalDeliveryType } : {}) };
+    });
+    const inventory = checkpoint.results.reservation.map(unit => {
+      if (typeof unit?.code !== 'string' || !unit.code) throw new Error('Original Inventory reservation identity is required');
+      return { code: unit.code };
+    });
+    const intent = Object.fromEntries(['walletCode', 'programCode', 'rewardTypeCode', 'amount'].map(k => [k, method[k]]));
+    const journal = { contractVersion: 1, claimId: require('node:crypto').randomUUID(), paymentKey: method.idempotencyKey,
+      orderCode: method.orderCode, cartCode: method.cartCode, currency: method.currency,
+      completed: structuredClone(checkpoint.completed), inventoryReservations: inventory, digitalReservations: units };
+    const governed = units.length > 0 && units.every(unit => unit.offerAllocationCode || unit.digitalDeliveryType === 'DIGITAL_OWNERSHIP');
+    const model = { code: request.idempotencyKey, idempotencyKey: request.idempotencyKey, tenant: request.tenant,
+      enterpriseCode: request.enterpriseCode, ownerId: request.ownerId, cartCode: method.cartCode, orderCode: method.orderCode,
+      revision: 0, status: 'COMPENSATION_REQUIRED', correlationId: checkpoint.correlationId || request.idempotencyKey,
+      evidence: { ownerRef: request.ownerRef, actorRef: request.actorRef, participantEnterpriseCode: request.participantEnterpriseCode,
+        ...(request.merchantScope ? { merchantScope: request.merchantScope } : {}), orderCode: method.orderCode,
+        originalAuthorization: intent, originalPaymentDispatch: journal, completed: structuredClone(checkpoint.completed),
+        inventoryReservationRecoveryRequired: false, digitalReservationRecoveryRequired: false,
+        errorCode: 'ERR_CHECKOUT_PAYMENT_UNCONFIRMED',
+        compensation: inventory.map(unit => ({ type: 'INVENTORY_RELEASE', code: unit.code, status: 'FAILED', errorCode: 'INVENTORY_RELEASE_UNCONFIRMED' })).concat(units.map(unit => ({ type: unit.digitalDeliveryType === 'DIGITAL_OWNERSHIP' ? 'DIGITAL_OWNERSHIP_RELEASE' : 'DIGITAL_COUPON_RELEASE',
+          code: unit.code, status: 'FAILED', errorCode: 'DIGITAL_RELEASE_PENDING_PAYMENT_EVIDENCE' }))),
+        ...(governed ? { couponAcquisitionRecovery: { status: 'READY', orderCode: method.orderCode, cartCode: method.cartCode,
+          paymentMethod: 'LOYALTY_REWARD', paymentAttemptUnconfirmed: true, reservations: units } } : {}) } };
+    const response = await SERVICE.DefaultCheckoutCheckpointService.save({ tenant: request.tenant,
+      authData: this.serviceAuthData(request), model: this.persistenceModel(model), options: { insertOnly: true, recursive: false } });
+    if (typeof response?.code !== 'string' || !/^SUC_/.test(response.code) || !response.result ||
+        [response, response.result].some(value => value.error || value.success === false || value.acknowledged === false ||
+          value.writeConcernError || value.writeConcernErrors?.length || value.writeErrors?.length ||
+          value.errors !== undefined && (!Array.isArray(value.errors) || value.errors.length)))
+      throw new Error('Original Payment journal insertion is unconfirmed');
+    const saved = await SERVICE.DefaultCheckoutCompensationRecoveryService.checkpoint({ ...request, commandCode: request.idempotencyKey });
+    if (Object.keys(model).some(k => !same(saved[k], model[k]))) throw new Error('Original Payment journal readback is unconfirmed');
+    checkpoint.results.originalAuthorization = structuredClone(intent);
+    checkpoint.results.paymentJournal = structuredClone(saved);
+    return saved;
+  },
+  /** Requires the still-owned checkpoint before any terminal effects; a competing recovery or uncertain readback fences this worker. */
+  paymentDispatchCheckpoint: async function (request, checkpoint) {
+    const prior = checkpoint.results.paymentJournal;
+    if (!prior) throw new Error('Original Payment journal is unconfirmed');
+    const same = require('node:util').isDeepStrictEqual;
+    if (['tenant', 'enterpriseCode', 'ownerId'].some(k => !same(request[k], prior[k])) ||
+        ['ownerRef', 'actorRef', 'participantEnterpriseCode', 'merchantScope'].some(k => !same(request[k], prior.evidence[k])))
+      throw new Error('Original Payment claimant scope changed');
+    const current = await SERVICE.DefaultCheckoutCompensationRecoveryService.checkpoint({ ...request, commandCode: checkpoint.idempotencyKey });
+    if (['code', 'idempotencyKey', 'tenant', 'enterpriseCode', 'ownerId', 'cartCode', 'orderCode', 'revision', 'status', 'evidence']
+        .some(k => !same(current[k], prior[k]))) throw new Error('Original Payment journal ownership changed');
+    return current;
+  },
+  /** Recognizes a completed original pre-dispatch journal without changing its command identity. Owner/actor and merchant admission remain the caller's responsibility. */
+  completedPaymentJournal: function (row) {
+    const journal = row?.evidence?.originalPaymentDispatch;
+    return row?.status === 'COMPLETED' && typeof row.code === 'string' && row.code.length > 0 &&
+      row.code === row.idempotencyKey && typeof row.orderCode === 'string' && row.orderCode.length > 0 &&
+      row.orderCode === row.evidence?.orderCode && typeof row.cartCode === 'string' && row.cartCode.length > 0 &&
+      journal?.contractVersion === 1 && journal.paymentKey === row.code + ':payment' &&
+      journal.orderCode === row.orderCode && journal.cartCode === row.cartCode;
+  },
+  /** Advances the original checkpoint by exact CAS, retaining original intent and dispatch evidence; never upserts a second terminal row. */
+  persistPlacementCheckpoint: async function (checkpoint, request, model) {
+    if (!checkpoint.results.paymentJournalAttempted) return this.save(SERVICE.DefaultCheckoutCheckpointService, checkpoint.tenant, model, this.serviceAuthData(request));
+    const prior = await this.paymentDispatchCheckpoint(request, checkpoint);
+    if (model.tenant !== prior.tenant || model.ownerId !== prior.ownerId || model.enterpriseCode !== prior.enterpriseCode ||
+        model.cartCode !== prior.cartCode || model.orderCode !== prior.orderCode || model.idempotencyKey !== prior.idempotencyKey ||
+        ['ownerRef', 'actorRef', 'participantEnterpriseCode', 'merchantScope'].some(k => !require('node:util').isDeepStrictEqual(model.evidence?.[k], prior.evidence[k])))
+      throw new Error('Original Payment terminal scope changed');
+    const saved = await SERVICE.DefaultCheckoutCompensationRecoveryService.transition({ ...request, commandCode: checkpoint.idempotencyKey }, prior,
+      model.status, { ...Object.fromEntries(Object.entries(model.evidence).filter(([, value]) => value !== undefined)), originalAuthorization: prior.evidence.originalAuthorization,
+        originalPaymentDispatch: prior.evidence.originalPaymentDispatch });
+    checkpoint.results.paymentJournal = structuredClone(saved);
+    return saved;
+  },
   /** Selects a Payment-owned customer payment method service. @param {Object} request Checkout request. @param {Object} calculation Cart calculation. @returns {Object} Prepared method. */
   preparePaymentMethod: function (request, calculation) {
     const payload = request.payload || {};
@@ -442,29 +548,43 @@ module.exports = {
         const digitalEntries = (calculation.entries || []).filter(entry => self.digitalReservationEntry(entry));
         if (digitalEntries.length && (typeof cart.locale !== "string" || !cart.locale.trim()))
           throw new Error("Persisted Cart locale is required for digital reservation");
+        let digitalCalculation = calculation;
+        if (request.auctionFunds) {
+          const entries = (calculation.entries || []).map(entry => {
+            const matches = (cart.entries || []).filter(value => value.code === entry.code);
+            const retained = matches[0], quote = entry.priceDecision?.priceQuoteCode;
+            if (matches.length !== 1 || retained.productCode !== entry.productCode || retained.variantCode !== entry.variantCode ||
+                retained.sku !== entry.sku || String(retained.quantity) !== String(entry.quantity) ||
+                typeof retained.priceQuoteCode !== "string" || !retained.priceQuoteCode || quote !== retained.priceQuoteCode ||
+                entry.priceDecision?.quoteOrderCode !== request.payload.orderCode ||
+                entry.priceQuoteCode !== undefined && entry.priceQuoteCode !== retained.priceQuoteCode)
+              throw new Error("Original auction Cart and calculated quote binding changed");
+            return { ...entry, priceQuoteCode: retained.priceQuoteCode };
+          });
+          digitalCalculation = { ...calculation, entries };
+        }
         return digital.reserveForCheckout(self.digitalOwnerRequest({ ...request, storeCode: cart.storeCode,
-          ...(digitalEntries.length ? { locale: cart.locale } : {}) }), calculation);
+          ...(digitalEntries.length ? { locale: cart.locale } : {}) }), digitalCalculation);
       },
       requiresPayment: async (request, calculation, digitalReservations) => !(await self.certificateOnly(request, calculation, digitalReservations)),
-      authorizePayment: async (request, calculation, digitalReservations) => {
+      authorizePayment: async (request, calculation, digitalReservations, placementCheckpoint) => {
         if (await self.certificateOnly(request, calculation, digitalReservations)) return undefined;
         let preparation = request, auctionBinding;
         if (request.auctionFunds) {
-          if (request.payload.paymentMethod !== "LOYALTY_REWARD") throw new Error("Selected auction requires its original reward hold");
-          if (["walletCode", "programCode", "rewardTypeCode", "rewardAmount", "rewardCurrency", "providerToken"]
-            .some(key => request.payload[key] !== undefined)) throw new Error("Selected auction funding is retained by Checkout");
-          const { row } = await SERVICE.DefaultCheckoutAuctionService.paymentTerms({ ...request,
-            orderCode: request.payload.orderCode, cartCode: request.payload.cartCode,
-            amount: calculation.totalAmount, currency: calculation.currency });
+          const proof = await SERVICE.DefaultCheckoutAuctionService.rewardPaymentTerms(request, calculation);
           preparation = { ...request, payload: { ...request.payload,
-            walletCode: row.terms.reservation.walletCode, programCode: row.terms.reservation.programCode,
-            rewardTypeCode: row.terms.reservation.rewardTypeCode, rewardAmount: row.terms.amount, rewardCurrency: row.terms.currency } };
-          auctionBinding = { commitmentCode: row.code };
+            walletCode: proof.walletCode, programCode: proof.programCode,
+            rewardTypeCode: proof.rewardTypeCode, rewardAmount: proof.amount, rewardCurrency: proof.currency } };
+          auctionBinding = { commitmentCode: proof.commitmentCode };
         }
         const prepared = self.preparePaymentMethod(preparation, calculation);
         const method = auctionBinding ? Object.freeze({ ...prepared, auctionFunds: auctionBinding }) : prepared;
         if (method.methodCode === "CASH_ON_DELIVERY")
           return self.recordOfflineAuthorization(request, method);
+        if (method.methodCode === 'LOYALTY_REWARD' && !auctionBinding) {
+          if (!placementCheckpoint) throw new Error('Original Payment checkpoint is required');
+          await self.claimPaymentDispatch(request, placementCheckpoint, method, digitalReservations);
+        }
         const adapter = self.paymentAdapter(method);
         if (
           adapter === SERVICE.DefaultStripeSandboxAdapterService &&
@@ -513,6 +633,11 @@ module.exports = {
           throw new Error("Order requires its authoritative persisted Cart Store");
         const discount =
           (calculation.decisions && calculation.decisions.discount) || {};
+        const correlationId = request.auctionFunds ? authorization?.correlationId : request.correlationId;
+        if (request.auctionFunds && (typeof correlationId !== "string" || !correlationId ||
+            authorization.orderCode !== request.payload.orderCode || authorization.cartCode !== request.payload.cartCode ||
+            authorization.idempotencyKey !== request.idempotencyKey + ":payment"))
+          throw new Error("Original auction authorization correlation is unavailable");
         const model = {
           code: request.payload.orderCode,
           tenant: request.tenant,
@@ -522,7 +647,7 @@ module.exports = {
           status: "PLACED",
           revision: 0,
           idempotencyKey: request.idempotencyKey,
-          correlationId: request.correlationId,
+          correlationId,
           currency: calculation.currency,
           subtotalAmount: calculation.subtotal,
           promotionDiscountAmount:
@@ -569,7 +694,7 @@ module.exports = {
               revision: 0,
               idempotencyKey:
                 request.idempotencyKey + ":order-entry:" + entry.code,
-              correlationId: request.correlationId,
+              correlationId: request.auctionFunds ? order.correlationId : request.correlationId,
               productCode: entry.productCode,
               sku: entry.sku,
               quantity: entry.quantity,
@@ -708,7 +833,7 @@ module.exports = {
             status: "READY",
             revision: 0,
             idempotencyKey: request.idempotencyKey + ":fulfillment",
-            correlationId: request.correlationId,
+            correlationId: request.auctionFunds ? order.correlationId : request.correlationId,
             currency: order.currency,
             totalAmount: order.totalAmount,
           };
@@ -726,6 +851,7 @@ module.exports = {
             )
           : sales,
       complete: async (checkpoint, result) => {
+        if (checkpoint.results.paymentJournalAttempted) await self.paymentDispatchCheckpoint(checkpoint, checkpoint);
         const cartClosure = await self.closeCart({
           ...checkpoint,
           tenant: checkpoint.tenant,
@@ -746,11 +872,12 @@ module.exports = {
             status: "COMPLETED",
             revision: 0,
             idempotencyKey: checkpoint.idempotencyKey,
-            correlationId: checkpoint.correlationId,
+            correlationId: checkpoint.auctionFunds ? result.order.correlationId : checkpoint.correlationId,
             evidence: {
               ownerRef: checkpoint.ownerRef, actorRef: checkpoint.actorRef,
               participantEnterpriseCode: checkpoint.participantEnterpriseCode,
               merchantScope: checkpoint.merchantScope,
+              ...(checkpoint.results.originalAuthorization ? { originalAuthorization: structuredClone(checkpoint.results.originalAuthorization) } : {}),
               completed: checkpoint.completed,
               orderCode: result.order.code,
               promotionRedemptionCode:
@@ -790,7 +917,7 @@ module.exports = {
           }
           return owner.insert(checkpoint, SERVICE.DefaultCheckoutCheckpointService, { ...model, active: true });
         }
-        return self.save(SERVICE.DefaultCheckoutCheckpointService, checkpoint.tenant, model, self.serviceAuthData(checkpoint));
+        return self.persistPlacementCheckpoint(checkpoint, checkpoint, model);
       },
       notifyCommitted: (request, result) =>
         SERVICE.DefaultDigitalCommerceNotificationService?.request(
@@ -801,6 +928,7 @@ module.exports = {
           "PURCHASED",
         ),
       compensate: async (checkpoint, error, request) => {
+        if (checkpoint.results.paymentJournalAttempted) await self.paymentDispatchCheckpoint(request, checkpoint);
         const outcomes = [];
         const bundleUnits = (checkpoint.results.digitalReservation || []).filter(unit =>
           unit.providerOwner === 'digitalCore' && unit.digitalDeliveryType === 'DIGITAL_OWNERSHIP' && unit.manifestCode);
@@ -864,7 +992,7 @@ module.exports = {
             retained = retained.result !== undefined ? retained.result : retained.data;
           }
           if (!Array.isArray(retained) || retained.length > 1) throw new Error("Checkout payment recovery read is unconfirmed");
-          if (retained[0]) {
+          if (retained[0] && !checkpoint.results.paymentJournal) {
             const row = retained[0];
             if (row.tenant !== checkpoint.tenant || row.ownerId !== checkpoint.ownerId || row.code !== checkpoint.idempotencyKey ||
               row.idempotencyKey !== checkpoint.idempotencyKey || !["COMPENSATED", "COMPENSATION_REQUIRED"].includes(row.status) ||
@@ -1058,9 +1186,7 @@ module.exports = {
         if (governedAcquisition) for (const unit of checkpoint.results.digitalReservation) outcomes.push({
           type: unit.digitalDeliveryType === 'DIGITAL_OWNERSHIP' ? 'DIGITAL_OWNERSHIP_RELEASE' : 'DIGITAL_COUPON_RELEASE',
           code: unit.code, status: 'FAILED', errorCode: 'DIGITAL_RELEASE_PENDING_PAYMENT_EVIDENCE' });
-        const saved = await self.save(
-          SERVICE.DefaultCheckoutCheckpointService,
-          checkpoint.tenant,
+        const saved = await self.persistPlacementCheckpoint(checkpoint, request || checkpoint,
           {
             code: checkpoint.idempotencyKey,
             tenant: checkpoint.tenant,
@@ -1081,12 +1207,14 @@ module.exports = {
               orderCode: request?.payload?.orderCode,
               ...(governedAcquisition ? {
                 couponAcquisitionRecovery: { status: 'READY', orderCode: request.payload.orderCode, cartCode: request.payload.cartCode,
+                  paymentMethod: request.payload.paymentMethod,
                   paymentAttemptUnconfirmed: checkpoint.results.paymentAttempted === true && !checkpoint.results.authorization,
                   reservations: checkpoint.results.digitalReservation.map(unit => ({ code: unit.code,
                     idempotencyKey: unit.idempotencyKey,
                     ...(unit.offerAllocationCode ? { offerAllocationCode: unit.offerAllocationCode } : {}),
                     ...(unit.digitalDeliveryType ? { digitalDeliveryType: unit.digitalDeliveryType } : {}) })) }
               } : {}),
+              ...(checkpoint.results.originalAuthorization ? { originalAuthorization: structuredClone(checkpoint.results.originalAuthorization) } : {}),
               completed: checkpoint.completed,
               compensation: JSON.parse(JSON.stringify(outcomes)),
               ...(paymentCompensationIntent ? { paymentCompensationIntent } : {}),
@@ -1098,7 +1226,6 @@ module.exports = {
               errorCode: error.code || "PLACEMENT_FAILED",
             },
           },
-          self.serviceAuthData(request || checkpoint),
         );
         if (governedAcquisition) {
           const recovery = SERVICE.DefaultCheckoutCompensationRecoveryService;

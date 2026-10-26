@@ -21,7 +21,7 @@ const dataRoot = path.resolve(__dirname, "../data");
 const section = require(path.join(dataRoot, "manifest.json")).sections.merchantEvidencePermission;
 
 test("Pricing owns the bounded merchant evidence permission definition", () => {
-  assert.equal(section.sourceRoot, "init-v002");
+  assert.equal(section.sourceRoot, "init-v001");
   assert.equal(section.selectionPolicy, "EXPLICIT");
   const header = require(path.join(dataRoot, section.sourceRoot,
     "headers/identity/pricingMerchantEvidencePermissionHeader")).profile.pricingMerchantEvidencePermission;

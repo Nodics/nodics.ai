@@ -222,7 +222,14 @@ test("capture requires Bidding selection and Checkout terminal fence and uses th
   f.state.checkout = true; f.state.unfenced = true;
   await assert.rejects(auctions.capture(request), { code: "ERR_LOYALTY_AUCTION_FORBIDDEN" });
   f.state.unfenced = false;
-  await auctions.capture(request); await auctions.capture(request);
+  const receipt = await auctions.capture(request), replay = await auctions.capture(request);
+  assert.deepEqual(replay, receipt);
+  assert.equal(receipt.captureLedgerEntryCode, f.rows.RewardRedemption[0].captureLedgerEntryCode);
+  assert.deepEqual(receipt.captureEvidence, { contractVersion:1, redemptionCode:receipt.redemptionCode,
+    captureLedgerEntryCode:receipt.captureLedgerEntryCode, roundCode:request.payload.roundCode,
+    bidCode:request.payload.sourceCode, reservationCode:receipt.reservation.code,
+    idempotencyKey:request.payload.idempotencyKey, sourceType:'BIDDING',sourceCode:request.payload.sourceCode,
+    targetType:'AUCTION_ROUND',targetCode:request.payload.roundCode });
   assert.equal(f.balance().reserved, "0.00"); assert.equal(f.balance().spent, "4.00");
   assert.equal(f.rows.RewardRedemption.length, 1); assert.equal(f.rows.RewardLedgerEntry.length, 2);
   assert.equal(f.rows.RewardRedemption[0].providerReference, "checkout-receipt");
@@ -273,4 +280,123 @@ test("owner command mutation during evidence lookup cannot change reviewed funds
   SERVICE.DefaultModuleService.invokeModule = async r => { r.requestBody.command.amount = "1.00"; return original(r); };
   await assert.rejects(f.reserve(), { code: "ERR_LOYALTY_AUCTION_FORBIDDEN" });
   assert.equal(f.state.writes, 0);
+});
+
+test('auction reserve persists explicit null expiry through real save initializer and BSON schema; invalid expiry rolls back', async t => {
+  const f = fixture(t);
+  const root = '../../../../nodics.foundation/modules/nDatabase/';
+  const initializer = require(root + 'database/src/service/procs/save/defaultModelSaveInitializerService');
+  const mongo = require(root + 'mongodb/src/schemas/model').default;
+  const handler = require(root + 'mongodb/src/service/model/defaultMongodbDatabaseModelHandlerService');
+  const rawSchema = require('../../loyaltyReservation/src/schemas/schemas').loyaltyReservation.rewardReservation;
+  const { BSON } = require('mongodb');
+  const previousUtils = global.UTILS;
+  t.after(() => { global.UTILS = previousUtils; });
+  global.UTILS = { ...previousUtils, isBlank: value => value == null || !Object.keys(value).length };
+  SERVICE.DefaultModelValidatorService = require(root + 'database/src/service/model/defaultModelValidatorService');
+  SERVICE.DefaultModelValidatorService = { ...SERVICE.DefaultModelValidatorService, LOG: { debug() {} } };
+  const originalSave = SERVICE.DefaultRewardReservationService.save;
+  let invalid = true;
+  const model = { ...mongo, rawSchema, versioned: false, transactionOptions: () => ({}),
+    insertOne: async row => {
+      const persisted = BSON.deserialize(BSON.serialize(row));
+      if (invalid) persisted.expiresAt = 'not-a-date';
+      const actual = persisted.expiresAt === null ? 'null' : persisted.expiresAt instanceof Date ? 'date' : typeof persisted.expiresAt;
+      const allowed = [].concat(handler.resolveBsonType(rawSchema.definition.expiresAt.type));
+      assert.ok(allowed.includes(actual), 'expiresAt must satisfy generated BSON schema');
+      await originalSave({ ...pending, model: persisted });
+      return { acknowledged: true };
+    } };
+  let pending;
+  SERVICE.DefaultRewardReservationService.save = async request => {
+    pending = request;
+    const result = await initializer.persistModel({ ...request, schemaModel: model });
+    return { code: 'SUC_SAVE', result };
+  };
+  const before = clone(f.rows);
+  await assert.rejects(f.reserve(), /expiresAt/);
+  assert.deepEqual(f.rows, before);
+  invalid = false;
+  const result = await f.reserve();
+  assert.equal(result.reservation.expiresAt, null);
+  assert.equal(f.held().holdPolicy, 'AUCTION_ROUND');
+  assert.equal(f.balance().available, '6.00');
+  assert.equal(f.balance().reserved, '4.00');
+  const held = clone(f.rows);
+  assert.deepEqual(await f.reserve(), result);
+  assert.deepEqual(f.rows, held);
+  assert.equal([].concat(handler.resolveBsonType(rawSchema.definition.expiresAt.type)).includes('date'), true);
+});
+
+for (const operation of ['release', 'capture']) for (const corrupt of [false, true]) test('selected '+operation+' uses persisted balance after native update acknowledgement; corrupt=' + corrupt, async t => {
+  const f = fixture(t); await f.reserve(); f.state.checkout = true;
+  const root = '../../../../nodics.foundation/modules/nDatabase/';
+  const update = require(root + 'database/src/service/procs/update/defaultModelsUpdateInitializerService');
+  const timestamp = require(root + 'database/src/service/interceptors/defaultInterceptorService');
+  const mongo = require(root + 'mongodb/src/schemas/model').default;
+  const { BSON } = require('mongodb');
+  const oldUtils = global.UTILS; t.after(() => { global.UTILS = oldUtils; });
+  global.UTILS = { ...oldUtils, isBlank: value => !value || !Object.keys(value).length };
+  const schema = { ...mongo, versioned: false, rawSchema: require('../src/schemas/schemas').loyaltyWallet.loyaltyWalletRewardBalance,
+    dataBase: { getOptions: () => ({}) }, transactionOptions: () => ({}),
+    updateMany: async (query, patch) => {
+      assert.equal(patch.$set._id, undefined);
+      const row = f.rows.LoyaltyWalletRewardBalance.find(row => Object.entries(query).every(([k,v]) => row[k] === v));
+      if (!row) return { acknowledged: true, modifiedCount: 0 };
+      Object.assign(row, BSON.deserialize(BSON.serialize(patch.$set)));
+      if (corrupt) row.available = '999.00';
+      return { acknowledged: true, modifiedCount: 1 };
+    } };
+  SERVICE.DefaultLoyaltyWalletRewardBalanceService.update = async request => {
+    assert.equal(request.transactionContext, f.state.token);
+    const input = { ...request, schemaModel: schema }; await timestamp.setUpdatedTimestamp(input, {});
+    return { code: 'SUC_UPDATE', result: await update.persistUpdates(input) };
+  };
+  const before = clone(f.rows), command = f.command('original:payment:'+operation, { orderCode: 'original-order' });
+  if (corrupt) { await assert.rejects(auctions[operation](command)); assert.deepEqual(f.rows, before); return; }
+  const result = await auctions[operation](command);
+  assert.equal(result.reservation.status, operation === 'capture' ? 'CAPTURED' : 'RELEASED'); assert.equal(f.balance().available, operation === 'capture' ? '6.00' : '10.00');
+  assert.equal(f.balance().spent, operation === 'capture' ? '4.00' : '0.00'); assert.equal(f.balance().reserved, '0.00');
+  assert.equal(f.rows.RewardLedgerEntry.length, 2);
+  const after = clone(f.rows); assert.deepEqual(await auctions[operation](command), result); assert.deepEqual(f.rows, after);
+});
+
+for (const field of ['sourceType','targetCode','redemptionCode']) test('capture evidence corruption rolls back '+field,async t=>{
+  const f=fixture(t); await f.reserve(); f.state.checkout=true;
+  const service=SERVICE.DefaultRewardLedgerEntryService, get=service.get;
+  service.get=async r=>{ const response=await get(r); const rows=response.result;
+    for(const row of Array.isArray(rows)?rows:rows?[rows]:[]) if(row.entryType==='CAPTURE') row[field]='foreign';
+    return response; };
+  await assert.rejects(auctions.capture(f.command('capture',{orderCode:'order'})),{code:'ERR_LOYALTY_AUCTION_PERSISTENCE'});
+  assert.equal(f.rows.RewardRedemption.length,0);assert.equal(f.rows.RewardLedgerEntry.length,1);
+  assert.equal(f.balance().spent,'0.00');
+});
+
+for (const defect of [null,'terminal','decision','authorization','key','amount']) test('selected inspect read-only Checkout proof '+(defect||'success'),async t=>{
+ const f=fixture(t);await f.reserve();f.state.checkout=true;
+ const remote=SERVICE.DefaultModuleService.invokeModule;
+ SERVICE.DefaultModuleService.invokeModule=async r=>{
+   const receipt=await remote(r);
+   if(r.apiName==='/checkout/auction-funds/evidence') {
+     receipt.decision='INSPECT';receipt.terminalFence=false;receipt.authorizationFence=true;
+     if(defect==='terminal')receipt.terminalFence=true;
+     if(defect==='decision')receipt.decision='RELEASE';
+     if(defect==='authorization')delete receipt.authorizationFence;
+     if(defect==='key')receipt.idempotencyKey='foreign';
+     if(defect==='amount')receipt.amount='999';
+   }
+   return receipt;
+ };
+ const before=clone(f.rows),writes=f.state.writes,request=f.command('original:payment',{orderCode:'order'});
+ if(defect)await assert.rejects(auctions.inspect(request),{code:'ERR_LOYALTY_AUCTION_FORBIDDEN'});
+ else {const result=await auctions.inspect(request);assert.equal(result.confirmed,true);assert.equal(result.reservation.status,'RESERVED');}
+ assert.deepEqual(f.rows,before);assert.equal(f.state.writes,writes);assert.equal(request.purchaseReceipt,undefined);
+});
+for(const operation of ['capture','release']) test('inspect proof cannot authorize '+operation,async t=>{
+ const f=fixture(t);await f.reserve();f.state.checkout=true;
+ const remote=SERVICE.DefaultModuleService.invokeModule;
+ SERVICE.DefaultModuleService.invokeModule=async r=>{const receipt=await remote(r);
+  if(r.apiName==='/checkout/auction-funds/evidence')Object.assign(receipt,{decision:'INSPECT',terminalFence:false,authorizationFence:true});return receipt;};
+ const before=clone(f.rows);await assert.rejects(auctions[operation](f.command('original:'+operation,{orderCode:'order'})),{code:'ERR_LOYALTY_AUCTION_FORBIDDEN'});
+ assert.deepEqual(f.rows,before);
 });

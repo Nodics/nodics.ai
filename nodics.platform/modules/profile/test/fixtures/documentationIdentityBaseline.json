@@ -1,0 +1,12 @@
+[
+  {
+    "code": "nodicsDocsMetadataplatformOverview",
+    "documentId": "platform.overview",
+    "targetRoute": "nodicsDocsRouteplatformOverview"
+  },
+  {
+    "code": "nodicsDocsMetadatasecurityIdentityAccessGovernance",
+    "documentId": "security.identity-access-governance",
+    "targetRoute": "nodicsDocsRoutesecurityIdentityAccessGovernance"
+  }
+]

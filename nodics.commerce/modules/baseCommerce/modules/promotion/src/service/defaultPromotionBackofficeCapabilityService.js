@@ -51,15 +51,17 @@ module.exports = {
             icon: 'commerce',
             navigation: [
                 d.nativeWorkspace({ id: 'coupon-offer-authoring', label: 'Coupon Offers', moduleName: 'promotion',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
                     route: '/commerce/coupon-offers', order: 1315, permission: 'commerce.promotion.read', featureState: 'ACTIVE',
                     summary: 'Author governed coupon offers with immutable benefits, supply, purchase requirements and retained terms.',
                     backendWorkspace: { contractVersion: 1, renderer: 'axis.workspace.native', workspaceCode: 'promotion.couponOffers',
                         viewCode: 'authoring', title: 'Coupon Offers', ownerSelector: { runtimeRoleCode: 'COMMERCE_STAGED', publicationRole: 'STAGED' } } }),
                 d.nativeWorkspace({ id: 'coupon-acquisition-reporting', label: 'Coupon Acquisition', moduleName: 'promotion',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
                     route: '/commerce/coupon-acquisition', order: 1316, permission: 'commerce.promotion.read', featureState: 'ACTIVE',
                     summary: 'Review aggregate coupon acquisition and redemption outcomes without exposing purchasing-owner identities.',
                     backendWorkspace: { contractVersion: 1, renderer: 'axis.workspace.native', workspaceCode: 'promotion.couponAcquisition',
-                        viewCode: 'reporting', title: 'Coupon Acquisition', ownerSelector: { runtimeRoleCode: 'COMMERCE', publicationRole: 'ONLINE' } } }),
+                        viewCode: 'reporting', title: 'Coupon Acquisition', ownerSelector: { runtimeRoleCode: 'COMMERCE', publicationRole: 'OPERATIONAL' } } }),
                 d.workbench({
                     id: 'promotions',
                     label: 'Promotion Workspace',

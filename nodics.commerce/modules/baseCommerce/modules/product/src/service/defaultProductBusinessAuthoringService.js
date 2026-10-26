@@ -13,6 +13,7 @@ const { isDeepStrictEqual } = require('node:util');
 
 // Private, request-local persistence admission. Only execute can mint these tokens.
 const admissions = new WeakMap();
+const administrativeRequests = new WeakMap();
 
 /**
  * @module product/service/DefaultProductBusinessAuthoringService
@@ -53,6 +54,13 @@ module.exports = {
     },
     /** Requires an employee's signed enterprise; caller scope aliases never broaden authority. */
     scope: function (request, operation) {
+        const administrative = administrativeRequests.get(request);
+        if (administrative) {
+            if (operation !== 'read' && operation !== administrative.operation) this.fail('SCOPE');
+            if (['create','update','archive'].includes(operation) && (CONFIG.get('runtimeRole')?.publication !== 'STAGED' ||
+                !SERVICE.DefaultSchemaAuthoringPolicyService?.describe(this.schema()).authoringAllowed)) this.fail('SCOPE');
+            return administrative.scope();
+        }
         const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
         const enterpriseCode = auth.enterpriseCode || auth.entCode, principal = auth.principalId || auth.loginId || auth.code;
         const valid = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value);
@@ -111,9 +119,11 @@ module.exports = {
         const definition = Object.fromEntries(metadata.readFields.map(name => [name, schema.definition[name] ||
             (name === 'versionId' ? { type: 'int', required: true } : undefined)]));
         if (Object.values(definition).some(value => !value)) this.fail('STORAGE');
-        definition.status = { ...definition.status, default: 'DRAFT' };
+        const statuses = ['DRAFT', 'ACTIVE'].filter(value => !definition.status.enum || definition.status.enum.includes(value));
+        definition.status = { ...definition.status, enum: statuses, default: statuses.includes('DRAFT') ? 'DRAFT' : undefined };
         const config = { ...schema.backoffice, fields: Object.fromEntries(metadata.readFields.map(name =>
-            [name, { readOnly: !metadata.writableFields.includes(name) }])),
+            [name, { ...schema.backoffice.fields?.[name],
+                readOnly: !metadata.writableFields.includes(name) || schema.backoffice.fields?.[name]?.readOnly === true }])),
             searchableFields: ['code', 'name'], sortableFields: ['code', 'name', 'status'],
             filterFields: ['code', 'name', 'status', 'catalogVersion'],
             form: { sections: { details: { label: 'Product details', fields: metadata.writableFields } },
@@ -121,8 +131,10 @@ module.exports = {
         const projected = { ...schema, definition };
         const authoring = utility.getAuthoringAuthority(schema);
         const writable = CONFIG.get('runtimeRole')?.publication === 'STAGED' && authoring.authoringAllowed &&
+            (!administrativeRequests.has(request) || administrativeRequests.get(request).writeQualified === true) &&
             this.permitted(request, this.policy().writePermission);
         const route = operation => {
+            if (administrativeRequests.has(request)) return {method:'POST',path:'/business/products/administrative/'+operation,apiVersion:'v0',active:true};
             const target = utility.findOperationRoute('product', 'DefaultProductBusinessAuthoringController', operation);
             if (!target) this.fail('STORAGE');
             return target;
@@ -138,7 +150,7 @@ module.exports = {
             mutationPolicy: { ...utility.buildMutationPolicy(config), savePath: 'PRODUCT_OWNER_COMMAND',
                 lifecycle: 'PUBLISHABLE', publishRequired: true, deleteStrategy: 'NONE' },
             authoring, fields: utility.buildFields('product', projected, config).map(field => field.name === 'status'
-                ? { ...field, enum: ['DRAFT', 'ACTIVE'], enumOptions: (field.enumOptions || []).filter(option => option.value !== 'ARCHIVED') }
+                ? { ...field, enumOptions: (field.enumOptions || []).filter(option => statuses.includes(option.value)) }
                 : field), form: utility.buildForm('product', projected, config),
             relationships: [], aggregateOperations: [], concurrency: { mode: 'COMPARE_AND_SET', field: 'versionId', required: true, managed: true },
             queryCapabilities: utility.buildQueryCapabilities(projected, config, 'code'),
@@ -150,6 +162,35 @@ module.exports = {
                 deleteImpact: { method: 'POST', path: '/business/products', apiVersion: 'v0', active: false },
                 bulk: { method: 'POST', path: '/business/products', apiVersion: 'v0', active: false } },
         };
+    },
+    /** Native administrative wrappers preserve ordinary root fields and reuse the same private versioned writer. */
+    executeAdministrative: async function (request, operation) {
+        if (administrativeRequests.has(request)) this.fail('SCOPE');
+        const administrative = await SERVICE.DefaultProductAdministrativeAuthoringService.context(request, operation);
+        administrativeRequests.set(request, administrative);
+        try {
+            let result;
+            if(operation==='capabilities') {
+                administrative.writeQualified=false;
+                try { await administrative.provePermission('writePermission'); administrative.writeQualified=true; }
+                catch (_) { administrative.bound(); }
+                let graphQualified=false;
+                try { SERVICE.DefaultProductAdministrativeCatalogueService.storage(administrative); graphQualified=true; }
+                catch (_) { administrative.bound(); }
+                result={crossEnterpriseManagement:true,descriptor:this.descriptor(request),
+                labels:structuredClone(administrative.policy.labels),graphOperations:{
+                    create:{method:'POST',path:'/business/products/administrative/graph-create',apiVersion:'v0',active:graphQualified&&administrative.writeQualified},
+                    continue:{method:'POST',path:'/business/products/administrative/graph-continue',apiVersion:'v0',active:graphQualified&&administrative.writeQualified},
+                    read:{method:'POST',path:'/business/products/administrative/graph-read',apiVersion:'v0',active:graphQualified}}};
+            }
+            else if(['graphCreate','graphRead','graphContinue'].includes(operation)) {
+                result=await SERVICE.DefaultProductAdministrativeCatalogueService.execute(request,operation);
+                return {targetEnterpriseCode:administrative.audit.targetEnterpriseCode,result,audit:structuredClone(administrative.audit)};
+            }
+            else result=await this.execute(request,operation,administrative.input.command);
+            if(operation!=='graphCreate'&&operation!=='graphRead') await administrative.revalidate();
+            return {targetEnterpriseCode:administrative.scope().enterpriseCode,result,audit:structuredClone(administrative.audit)};
+        } finally {administrativeRequests.delete(request);}
     },
     /** Single admission entry; immutable input and authority are pinned until completion, then retired. */
     execute: async function (request, operation, input) {
@@ -257,23 +298,29 @@ module.exports = {
                 'createdBy', 'updatedBy', 'ownerId', 'ownerType', 'accessGroups', '_id'].includes(name) ||
                 name.startsWith('$') || name.includes('.') || typeof value !== 'string' || !value.trim() ||
                 value.length > limit || /[\u0000-\u001f\u007f]/.test(value) ||
-                !schema.definition[name] || (schema.definition[name].enum && !schema.definition[name].enum.includes(value))) this.fail('INPUT');
+                !schema.definition[name] || schema.definition[name].readOnly === true || schema.backoffice.fields?.[name]?.readOnly === true ||
+                (schema.definition[name].enum && !schema.definition[name].enum.includes(value))) this.fail('INPUT');
             if (name === 'status' && !['DRAFT', 'ACTIVE'].includes(value)) this.fail('INPUT');
             model[name] = value.trim();
         }
         if (creating) {
             this.code(model.code); this.code(model.catalogVersion);
             if (!model.name) this.fail('INPUT');
-            model.status ||= 'DRAFT';
+            if (!model.status) {
+                if (schema.definition.status.enum && !schema.definition.status.enum.includes('DRAFT')) this.fail('INPUT');
+                model.status = 'DRAFT';
+            }
         } else if (!Object.keys(model).length) this.fail('INPUT');
         return model;
     },
     /** Creates version zero or appends exactly one scoped successor; no upsert, delete, publication or automatic retry. */
     writeAdmitted: async function (token, payload) {
-        const { operation, scope, storage } = this.admitted(token);
+        const { operation, scope, storage, request } = this.admitted(token);
+        const revalidate = async () => { await administrativeRequests.get(request)?.revalidate(); this.admitted(token); };
         if (operation === 'create') {
             const model = this.writableModel(payload, true);
             if (await this.loadRoot(token, model.code, true)) this.fail('CONFLICT');
+            await revalidate();
             const response = await storage.service.save({ ...this.local(token), query: { tenant: scope.tenant, enterpriseCode: scope.enterpriseCode, code: model.code },
                 model: { ...model, tenant: scope.tenant, enterpriseCode: scope.enterpriseCode, revision: 0, versionId: 0,
                     createdBy: scope.principal, updatedBy: scope.principal } });
@@ -306,6 +353,7 @@ module.exports = {
             (model.catalogVersion !== undefined && model.catalogVersion !== current.catalogVersion)) this.fail('CONFLICT');
         // Lifecycle UI sends a row echo; it never becomes the archive write model or authority.
         if (operation === 'archive' && payload.model !== undefined && !isDeepStrictEqual(payload.model, this.project(current))) this.fail('INPUT');
+        await revalidate();
         const response = await storage.service.update({ ...this.local(token), query: { tenant: scope.tenant, enterpriseCode: scope.enterpriseCode,
             code: current.code, versionId: current.versionId, revision: current.revision },
             model: { ...model, revision: current.revision + 1, updatedBy: scope.principal } });

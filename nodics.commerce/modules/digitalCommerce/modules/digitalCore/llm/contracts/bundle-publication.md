@@ -89,6 +89,40 @@ Store-owner handoff. The manifest retains its owner partition while the listing
 operation is scoped to the Store enterprise; `manifest()` resolves the retained
 original partition for checkout/release consumers.
 
+### Runtime Publication Proof
+
+`/internal/bundle-listings/proof` accepts exactly `{operationCode,storeCode}`:
+one original `bundle-operation:<sha256>` and one bounded Store identifier. It
+requires the original service runtime and `commerce.digital.bundle.publish`.
+Tenant and Enterprise aliases, including headers, must agree with the signed
+runtime. The runtime Enterprise is deployment identity, not the listing partition.
+
+Digital independently obtains the selected active same-tenant Store through its
+existing Product Store-context handoff. A different Store Enterprise must pass
+`DefaultPublicationApprovalWorkflowService.requireRuntimeEnterprise` using the
+existing `publish.approvalWorkflow.runtimeEnterpriseScope` policy. There is no
+fallback to an unqualified cross-Enterprise search or rewritten signed claims.
+Only a private persistence context selects the proven Store Enterprise; the
+original request, bearer and auth aliases remain unchanged.
+
+The fixed generated operation owner receives the exact tenant, Store Enterprise
+and operation code, uncached and nonrecursive, with page one and page size two
+for duplicate detection. Proof requires one acknowledged array row, explicit
+count one and consistent optional totals. It checks active LISTING identity,
+tenant, Enterprise, retained publication code, terms digest and selected Store.
+Absent, duplicate, truncated or foreign evidence refuses. Manifest reads retain
+the original seller namespace from the validated operation, never the runtime or
+Store namespace. Original held-component checks still apply.
+
+Before returning proof, Digital rereads the exact operation and canonical Store
+and rejects drift. Original auth, aliases, input, owner settings and Enterprise
+selection policy are pinned and rechecked across each await. Reads grant no
+hold, release, authoring or publication authority. Focused tests cover a selected
+cross-Enterprise held operation, same-scope operation, denied selection, malformed
+selectors, incomplete/foreign rows and asynchronous alias/record/Store drift.
+All persistence and remote I/O in those tests are isolated; live held operations,
+runtime selections and deployment configuration are untouched.
+
 Bundle manifests and operations are created through the generated managed-revision
 save path. Digital first proves the installed primary identity, managed CAS and
 unconditional unique index; it does not request the separate unversioned
@@ -159,9 +193,11 @@ No server, imports, provider calls, database, browser, E2E or release was run.
 ## Owner Acceptance
 
 `acceptance:digital-bundle-publication --execute` consumes one explicitly reviewed
-local profile containing an existing participant owner, at least one eligible
-certificate, at least one realized available Carbon lot, and explicit fixed-price
-listing terms. It creates or exactly replays the immutable manifest and original
+local profile containing an existing participant owner, a nonempty selection of
+eligible certificates, realized available Carbon lots, or both, and explicit
+fixed-price listing terms. Certificate-only acceptance requires no Carbon lot.
+Each run proves only its selected composition; it does not close the other
+composition cases. It creates or exactly replays the immutable manifest and original
 publication command. It never provisions identities, holdings, contexts,
 permissions, Product records or runtime grants.
 
@@ -174,3 +210,22 @@ component. Participant, Digital-runtime and Product-runtime credentials are
 supplied only through environment variables. Reusable timeout and command
 registration remain in `digitalCore/config/properties.js`; concrete fixture values
 belong to the selecting project.
+
+## Exact published-phase replay
+
+A retained listing at phase PUBLISHED must freshly inspect Pricing and Product,
+validate their canonical bindings and require exact equality with its retained
+receipts. It must not call Product publish or rewrite the unchanged publication
+checkpoint. Managed concurrency correctly leaves no-op revisions unchanged;
+requiring a successor for that replay would prevent the original Bidding handoff.
+A missing auction reference continues through the original deterministic round
+key, then persists that actual change with the existing strict managed CAS.
+Completed replay performs fresh inspections without a Digital revision write.
+Changed/missing/failed receipt proof refuses before Bidding; holds, bindings and
+original publication receipts remain intact. Generic bundle update and successor
+validation are unchanged.
+
+`test/digitalBundlePublicationReplay.test.js` exercises interruption before round
+creation through actual managed concurrency, generated update initializer,
+timestamp interceptor and Mongo adapter over isolated BSON storage. It also
+covers completed replay, fresh receipt drift/failure and real CAS conflicts.

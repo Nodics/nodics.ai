@@ -49,6 +49,8 @@ module.exports = {
       "axisOperationalUserGroup"
     ],
     "permissions": [
+      "carbon.holdings.read",
+      "waste.materialValue.read",
       "commerce.dispute.review",
       "commerce.refund.execute",
       "commerce.backoffice.view",

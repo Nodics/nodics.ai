@@ -2,6 +2,32 @@
   "contractVersion": 2,
   "module": "bidding",
   "sections": {
+    "participantTransactionAccess": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "bidding Enterprise participant transactions",
+      "description": "Exact parent-free participant group and Enterprise role; definitions only, no assignment or financial qualification.",
+      "owningDomain": "bidding",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v001/headers/identity/010_biddingParticipantTransactionGroupHeader.js": "1adf3a47c7b7c5a4b60a0698b945503908ba984a9ee0751f880fca9564f61cfd",
+        "init-v001/records/identity/biddingParticipantTransactionGroupData.js": "68af5f50e123cae310835e5db756a215981b34a3b26cc51092173a4eff7d60b9",
+        "init-v001/headers/identity/020_biddingParticipantTransactionRoleHeader.js": "adbbfa827bd71ca321cbdb14a8d9e5bc60f0f98dea9621c0641ac3a3144f89d2",
+        "init-v001/records/identity/biddingParticipantTransactionRoleData.js": "ac2a6793c987cad9ad9dfd4e38e7d7de5d0c07d3ceb1d46036f552b24098e77b"
+      }
+    },
     "auctionCloseSchedule": {
       "kind": "DATA_RELEASE",
       "dataType": "init",

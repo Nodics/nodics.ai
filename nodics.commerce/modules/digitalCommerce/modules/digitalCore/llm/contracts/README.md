@@ -1,5 +1,10 @@
 # Digital Core Contracts
 
+For [payment denial cleanup](../../../../../checkout/modules/checkoutCore/llm/contracts/payment-denial-cleanup.md),
+Digital independently inspects the original Payment/Loyalty decision and rejects
+copied receipts, unknown historical effects and any original Order/capture.
+Keep paymentAttemptUnconfirmed exactly false as a necessary, insufficient guard.
+
 See [coupon acquisition source](coupon-acquisition-source.md) for v2 checkpoints,
 typed owners, finality/no-expiry, reporting and remaining shared integrations.
 Its [inert expiry sweep](coupon-acquisition-source.md#inert-expiry-sweep) defines
@@ -28,6 +33,12 @@ onward transfer remains manual review; generic entitlement policy does not grant
 
 The private, non-cacheable customer route requires COMMERCE, signed customer
 access, current `commerce.digital.own.reveal` and exact tenant/enterprise/owner.
+Every revealContext entry awaits fresh Profile ownership. The canonical customer
+code is distinct from the unchanged signed principal; a supplied owner must match
+Profile's code, never an actor alias. Re-entering through Promotion preserves
+this rule and the private request context. Original authority, bearer and selectors
+are pinned across Profile resolution; caller flags or copied owner fields are not
+proof. Enterprise allow/deny and all committed-evidence checks remain required.
 It delegates cryptographic retention to Promotion and nSystem, not a Digital
 model, plaintext field or parallel vault. `authorizeCouponReveal` reuses the
 existing committed notification-evidence owner independently of notification
@@ -63,6 +74,12 @@ transactional/provider doubles; it covers success, repeat reveal, role/scope/pri
 denial, incomplete/foreign capture/delivery, expiry/refund/revocation and a decryption
 race. These executed source tests are not native payment/topology/key qualification.
 
+Coupon forward recovery reads the original Cart's bounded locale and verifies
+its owner, participant and merchant scope against the retained Order context.
+It never substitutes a caller/default locale, reprices, or requires reopening a
+closed original Cart. Test controller recovery without inheriting the placement
+request's locale, including selected seller-policy admission.
+
 Digital sale confirmation forwards Checkout's persisted-cart Store context to
 Promotion so published campaign validation cannot fall back to mutable rules.
 Digital Core does not select policy roots or reconstruct campaign records.
@@ -85,11 +102,20 @@ the uncertain command key to existing Checkout compensation; an uncertain unit
 keeps COMPENSATION_REQUIRED even when known releases succeed. No automatic replay
 of an ambiguous acquisition is implied. Release evidence cannot treat SOLD as ACTIVE.
 
-The bounded `recoverUncertainCouponReservation` adapter resolves only unit zero
+The acquisition owner's `failureCheckpoint` independently enforces the retained
+Checkout plan's `paymentAttemptUnconfirmed === false` before releasing inputs.
+A balance-negative error, caller-supplied no-effects flag or empty Payment rows
+cannot override an unconfirmed authorization. Direct input-release calls retain
+the same guard as Checkout compensation; receipt absence is not denial proof.
+
+The bounded `recoverUncertainReservation` adapter resolves only unit zero
 from the retained original command namespace. It reads the exact buyer's Cart
 entry and single active-entry Cart through existing generated owners with explicit
 SUC/count and uncached nonrecursive reads. Cart, enterprise, quantity and Product/SKU
-must agree; it does not reconstruct purchase authority from current Product data.
+must agree. Retained Product classification selects the owner; it is not purchase
+or release authority. Only exact COUPON_CODE/COUPON_CODE_POOL dispatches Promotion.
+Canonical DIGITAL_OWNERSHIP bundles dispatch the original-key settlement recovery
+described in [bundle holdings](bundle-holdings-and-gifts.md#prepayment-purchase-cancellation).
 Promotion queries the exact original reservation key, rejects conflicting or
 incomplete evidence, and releases only an unused RESERVED unit through its existing
 lifecycle CAS/readback. An acknowledged empty key has no release effect. Neither

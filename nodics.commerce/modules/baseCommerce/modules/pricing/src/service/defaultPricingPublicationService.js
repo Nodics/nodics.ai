@@ -13,6 +13,8 @@
 // Only fixed admitted target execution can bind a continuation to its private context.
 const targetGuards = new WeakMap();
 const targetContext = Symbol('Pricing private target context');
+const administrativeContexts = new WeakMap();
+const administrativeContext = Symbol('Pricing private native publication context');
 
 /**
  * @module pricing/src/service/defaultPricingPublicationService
@@ -43,6 +45,85 @@ const targetContext = Symbol('Pricing private target context');
  * authority.
  */
 module.exports = {
+    /** Freshly admits each bounded lifecycle command; no admission survives an HTTP request. */
+    executeAdministrativePublication: async function (token) {
+        const owner = SERVICE.DefaultPricingAdministrativeAuthoringService;
+        const admitted = owner.admitted(token);
+        if (admitted.operation !== 'publication') throw new Error('Native publication admission required');
+        const request = { ...admitted.request, enterpriseCode: admitted.input.targetEnterpriseCode,
+            [administrativeContext]: true };
+        const pin = this.fingerprint({ authData: request.authData, tenant: request.tenant, enterpriseCode: request.enterpriseCode,
+            entCode: request.entCode, authorization: request.authorization, headers: request.httpRequest?.headers });
+        administrativeContexts.set(request, { token, pin });
+        try {
+            this.checkAdministrativeContext(request);
+            const { operation, ...command } = admitted.input.command;
+            if (operation === 'create') return await this.createGoverned(request, command);
+            request.publicationCode = command.publicationCode;
+            request.expectedRevision = command.expectedRevision;
+            const lifecycle = SERVICE.DefaultPublicationLifecycleService;
+            const publication = await lifecycle.get(request);
+            await this.authorizeAdministrativeOperation(publication, request, operation);
+            if (publication.revision !== command.expectedRevision) throw new Error('Native publication revision changed');
+            await this.getVersion(publication, request);
+            if (operation === 'read') return publication;
+            return await lifecycle.executeAdministrativeOperation(publication, request, operation);
+        } finally { administrativeContexts.delete(request); }
+    },
+    /** Binds fresh native authority to the canonical journal, never a caller-provided domain or target. */
+    authorizeAdministrativeOperation: async function (publication, request, operation) {
+        const context = this.checkAdministrativeContext(request);
+        if (!context) throw new Error('Native Pricing lifecycle admission required');
+        const c = SERVICE.DefaultPricingAdministrativeAuthoringService.admitted(context.token), command = c.input.command;
+        if (command.operation !== operation || publication.domain !== 'pricing' || publication.code !== command.publicationCode ||
+            publication.sourceVersion !== command.sourceVersion || publication.tenantCode !== c.auth.tenant ||
+            publication.enterpriseCode !== c.input.targetEnterpriseCode || publication.requestedBy !== c.auth.loginId ||
+            !['priceBook', 'priceRow'].includes(publication.rootType)) throw new Error('Native Pricing publication identity changed');
+        const identity = this.fingerprint(Object.fromEntries(['code', 'domain', 'rootType', 'rootCode', 'sourceVersion',
+            'tenantCode', 'enterpriseCode', 'requestedBy', 'correlationId'].map(key => [key, publication[key]])));
+        if (context.journalIdentity && context.journalIdentity !== identity) throw new Error('Native Pricing journal identity changed');
+        context.journalIdentity = identity;
+        await this.refreshAdministrativeContext(request);
+        return { tenant: c.auth.tenant, enterpriseCode: c.input.targetEnterpriseCode };
+    },
+    /** nPublish consumes only this currently admitted journal-bound scope; ordinary callers receive no exception. */
+    administrativeApprovalScope: function (publication, request) {
+        const context = this.checkAdministrativeContext(request);
+        if (!context) return undefined;
+        const c = SERVICE.DefaultPricingAdministrativeAuthoringService.admitted(context.token), command = c.input.command;
+        if (command.operation !== 'requestApproval' || publication.domain !== 'pricing' || publication.code !== command.publicationCode ||
+            publication.sourceVersion !== command.sourceVersion || publication.tenantCode !== c.auth.tenant ||
+            publication.enterpriseCode !== c.input.targetEnterpriseCode || publication.requestedBy !== c.auth.loginId)
+            throw new Error('Native Pricing approval identity changed');
+        if (context.journalIdentity !== this.fingerprint(Object.fromEntries(['code', 'domain', 'rootType', 'rootCode', 'sourceVersion',
+            'tenantCode', 'enterpriseCode', 'requestedBy', 'correlationId'].map(key => [key, publication[key]]))))
+            throw new Error('Native Pricing approval journal changed');
+        return { tenant: c.auth.tenant, enterpriseCode: c.input.targetEnterpriseCode };
+    },
+    /** Product may resolve only the exact approved reference currently being checked by this private admission. */
+    administrativeProductScope: function (publication, request) {
+        const context = this.checkAdministrativeContext(request);
+        if (!context || context.productIdentity !== this.fingerprint(publication)) throw new Error('Native Product proof admission required');
+        return this.scope(request);
+    },
+    /** Rejects copied, retired or drifting native contexts; business target never becomes a signed enterprise alias. */
+    checkAdministrativeContext: function (request) {
+        const context = administrativeContexts.get(request);
+        if (request[administrativeContext] && !context) throw new Error('Copied or retired native Pricing publication context');
+        if (!context) return undefined;
+        const admitted = SERVICE.DefaultPricingAdministrativeAuthoringService.admitted(context.token);
+        if (admitted.operation !== 'publication' || request.enterpriseCode !== admitted.input.targetEnterpriseCode ||
+            this.fingerprint({ authData: request.authData, tenant: request.tenant, enterpriseCode: request.enterpriseCode,
+                entCode: request.entCode, authorization: request.authorization, headers: request.httpRequest?.headers }) !== context.pin)
+            throw new Error('Native Pricing publication scope changed');
+        return context;
+    },
+    /** Refreshes Profile before source writes without changing nPublish or Process authority. */
+    refreshAdministrativeContext: async function (request) {
+        const context = this.checkAdministrativeContext(request);
+        if (context) await SERVICE.DefaultPricingAdministrativeAuthoringService.revalidate(context.token);
+        this.checkAdministrativeContext(request);
+    },
     /** Executes one fixed, already source-authorized controller target operation with private original-caller continuation. */
     executePublicationTarget: async function (operation, input, context, originalRequest) {
         if (!['prepare', 'activate', 'reconcile'].includes(operation) || context[targetContext] || targetGuards.has(context))
@@ -75,6 +156,7 @@ module.exports = {
      * evidence checks described above.
      */
     checkTargetContext: function (request) {
+        this.checkAdministrativeContext(request);
         SERVICE.DefaultPricingBundleListingService?.checkContext?.(request);
         const guard = targetGuards.get(request);
         if (request[targetContext] && !guard) throw new Error('Copied or retired Pricing target context');
@@ -231,26 +313,36 @@ module.exports = {
     approvedProduct: async function (reference, request) {
         reference = this.productReference(reference);
         const auth = request.authData || {}, scope = this.scope(request);
-        if (auth.principalType !== 'human' || auth.tokenType !== 'access' || auth.isSystem || auth.tenant !== scope.tenant ||
+        if (!this.checkAdministrativeContext(request) && (auth.principalType !== 'human' || auth.tokenType !== 'access' || auth.isSystem || auth.tenant !== scope.tenant ||
             (auth.entCode || auth.enterpriseCode) !== scope.enterpriseCode ||
             [auth.tenantCode, request.tenantCode].some(value => value !== undefined && value !== auth.tenant) ||
             !(auth.principalId || auth.loginId || auth.code) ||
-            [auth.entCode, auth.enterpriseCode, request.entCode, request.enterpriseCode].some(value => value !== undefined && value !== scope.enterpriseCode))
+            [auth.entCode, auth.enterpriseCode, request.entCode, request.enterpriseCode].some(value => value !== undefined && value !== scope.enterpriseCode)))
             throw new Error('Signed book-owner publisher is required for row capture');
         const lifecycle = SERVICE.DefaultPublicationLifecycleService, provider = SERVICE.DefaultProductPublicationVersionProviderService;
         if (!lifecycle?.get || !provider?.getVersion) throw new Error('Product publication evidence unavailable');
         const publication = await lifecycle.get({ ...request, publicationCode: reference.publicationCode });
+        this.checkAdministrativeContext(request);
         if (publication?.domain !== 'product' || publication.rootType !== 'product' || publication.rootCode !== reference.productCode ||
             publication.tenantCode !== request.tenant || publication.enterpriseCode !== this.scope(request).enterpriseCode ||
             publication.sourceVersion !== reference.sourceVersion || publication.targetVersion !== reference.targetVersion ||
             publication.state !== 'ONLINE' || !publication.auditTrail?.some(row => row.toState === 'APPROVED') ||
             !publication.activationOperation?.key) throw new Error('Product has no exact approved publication');
-        const manifest = await provider.getVersion(publication, request);
+        const native = this.checkAdministrativeContext(request);
+        let manifest;
+        if (native) {
+            await this.refreshAdministrativeContext(request);
+            native.productIdentity = this.fingerprint(publication);
+            try { manifest = await SERVICE.DefaultProductPublicationGraphService.resolvePricingAdministrativeProof(publication, request); }
+            finally { delete native.productIdentity; }
+        } else manifest = await provider.getVersion(publication, request);
+        this.checkAdministrativeContext(request);
         if (manifest?.version !== reference.targetVersion || manifest.root?.code !== reference.productCode ||
             String(manifest.root.versionId) !== reference.sourceVersion || manifest.root.enterpriseCode !== this.scope(request).enterpriseCode ||
             this.fingerprint(manifest.scope) !== this.fingerprint({ tenant: request.tenant, productCode: reference.productCode, storeCode: reference.storeCode }))
             throw new Error('Approved Product graph mismatch');
         const status = await this.productStatus(reference, { operationKey: publication.activationOperation.key }, request);
+        this.checkAdministrativeContext(request);
         const evidence = { operationKey: publication.activationOperation.key, revision: status?.revision };
         this.assertProductStatus(reference, evidence, status, request);
         return evidence;
@@ -291,14 +383,20 @@ module.exports = {
     },
     /** Creates the nPublish request from retained capture with fixed domain and trusted scope. */
     createGoverned: async function (request, input) {
-        request = { ...request, authData: structuredClone(request.authData || {}) };
+        if (!this.checkAdministrativeContext(request)) request = { ...request, authData: structuredClone(request.authData || {}) };
         input = structuredClone(input);
         const scope = this.scope(request);
         const release = await this.capture(request, input);
-        return SERVICE.DefaultPublicationLifecycleService.create({ ...request, publication: {
+        await this.refreshAdministrativeContext(request);
+        const publication = await SERVICE.DefaultPublicationLifecycleService.create({ ...request, publication: {
             code: input.publicationCode, domain: 'pricing', rootType: input.rootType, rootCode: input.rootCode,
             sourceVersion: release.code, tenantCode: scope.tenant, enterpriseCode: scope.enterpriseCode
         } });
+        if (this.checkAdministrativeContext(request) && (publication?.code !== input.publicationCode || publication.domain !== 'pricing' ||
+            publication.rootType !== input.rootType || publication.rootCode !== input.rootCode || publication.sourceVersion !== release.code ||
+            publication.tenantCode !== scope.tenant || publication.enterpriseCode !== scope.enterpriseCode))
+            throw new Error('Native Pricing publication outcome does not match retained policy');
+        return publication;
     },
     /** Independently authorizes target commands against stored nPublish intent, never caller-supplied approval. */
     authorizeTarget: async function (command, request) {
@@ -625,6 +723,8 @@ targetReceiptContract: 'v1',
     },
     /** Admits the real Staged publisher for this owner's fixed scoped persistence, never generic schema CRUD. */
     sourcePersistenceAuth: function (request) {
+        const native = this.checkAdministrativeContext(request);
+        if (native) return SERVICE.DefaultPricingAdministrativeAuthoringService.local(native.token).authData;
         const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
         if (auth.principalType !== 'human' || !security?.getGrantedPermissions || !security.isPermissionGranted ||
             !['publish.lifecycle.create', 'commerce.product.publish', CONFIG.get('publish')?.setup?.permissions?.pricing]
@@ -706,6 +806,7 @@ targetReceiptContract: 'v1',
         if (existing) { if (!matches(existing)) throw new Error('Retained publication identity conflict'); return existing; }
         this.checkTargetContext(request);
         try {
+            await this.refreshAdministrativeContext(request);
             await service.save({ tenant: request.tenant, authData: this.sourcePersistenceAuth(request), model: { ...model, revision: 0 } });
         } catch (error) {
             existing = await this.readRecord(service, model.code, request);
@@ -722,7 +823,7 @@ targetReceiptContract: 'v1',
      * @returns {Promise<Object>} Retained release; use its code as nPublish sourceVersion.
      */
     capture: async function (request, input) {
-        request = { ...request, authData: structuredClone(request.authData || {}) };
+        if (!this.checkAdministrativeContext(request)) request = { ...request, authData: structuredClone(request.authData || {}) };
         input = structuredClone(input);
         this.requireSource();
         const services = {"priceBook":"DefaultPriceBookService","priceRow":"DefaultPriceRowService"};
@@ -740,6 +841,7 @@ targetReceiptContract: 'v1',
             }
             const response = await SERVICE[services[ref.schema]].get({ tenant: request.tenant, authData: this.sourcePersistenceAuth(request),
                 query: { ...this.scope(request), code: ref.code, versionId: ref.versionId }, searchOptions: { limit: 2 } });
+            this.checkAdministrativeContext(request);
             if (!response || !Array.isArray(response.result) || response.result.length !== 1 ||
                 response.result[0].code !== ref.code || response.result[0].versionId !== ref.versionId) throw new Error('Exact policy version unavailable');
             records.push({ schema: ref.schema, policy: this.capturePolicy(ref.schema, response.result[0], request) });
@@ -933,10 +1035,14 @@ targetReceiptContract: 'v1',
             const row = this.rowRelease(release.payload);
             this.assertProductStatus(row.reference, row.evidence, await this.productStatus(row.reference, row.evidence, request), request);
         }
+        await this.refreshAdministrativeContext(request);
         await this.transport().prepareTarget(release, request, publication);
-        return this.transport().switchTarget({ publication, operationKey: publication.activationOperation.key,
+        await this.refreshAdministrativeContext(request);
+        const result = await this.transport().switchTarget({ publication, operationKey: publication.activationOperation.key,
             targetVersion: release.code, expectedVersion: publication.activationOperation.previousOnlineVersion,
             expectedRevision: publication.activationOperation.previousOnlineRevision }, request);
+        this.checkAdministrativeContext(request);
+        return result;
     },
     /** Restores retained policy through target CAS without touching operational state. */
     rollback: async function (publication, targetVersion, request) {

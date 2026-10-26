@@ -58,6 +58,7 @@ function generatedService() {
 function matches(row, query) {
     return Object.entries(query).every(([key, value]) => key === '$and' ? value.every(part => matches(row, part)) :
         key === '$or' ? value.some(part => matches(row, part)) : value && typeof value === 'object' ?
+            value.$exists !== undefined ? (_.get(row, key) !== undefined) === value.$exists :
             value.$regex !== undefined ? new RegExp(value.$regex, value.$options).test(row[key]) :
                 value.$in ? value.$in.includes(row[key]) : value.$ne !== undefined ? row[key] !== value.$ne : false : row[key] === value);
 }
@@ -182,6 +183,348 @@ function admit(request, route) {
         { nextSuccess: resolve, error: (_request, _response, error) => reject(error) }));
 }
 const create = { code: 'root-a', name: 'Campaign A', priority: 3 };
+const offerCreate = () => ({ ...create, actions: { discountType: 'PERCENT', discountValue: '10' },
+    budget: { limit: '3000' },
+    conditions: { sourceProductCode: 'product-a' }, couponOffer: { version: 1,
+        supply: { mode: 'LIMITED', quantity: 100 }, ownerLimit: 1,
+        expiry: { mode: 'FIXED', at: '2026-11-08T19:59:59.999Z' },
+        requirements: { type: 'REWARDS', priceRef: 'price-a' }, terms: ['Single use.'] },
+    vendorEnterpriseRef: { moduleName: 'profile', schemaName: 'enterprise', code: 'marketplace-a' } });
+
+test('issuer-authorized new offer selects an active vendor without consent, publication or scope authority', async t => {
+    const f = fixture(t), reads = [];
+    f.request.authData.permissions.push('commerce.promotion.manage');
+    SERVICE.DefaultModuleService = { invokeModule: async request => {
+        reads.push(request);
+        return { result: [{ code: 'marketplace-a', active: true }] };
+    } };
+    await command(f, 'create', offerCreate());
+    assert.equal(reads.length, 1);
+    assert.equal(reads[0].apiName, '/references/read');
+    assert.deepEqual(reads[0].requestBody, { type: 'enterprise', codes: ['marketplace-a'] });
+    assert.equal(reads[0].tenant, 'tenant-a');
+    const saved = f.inserted[0];
+    assert.equal(saved.enterpriseCode, 'enterprise-a');
+    assert.equal(saved.issuerEnterpriseRef.code, 'enterprise-a');
+    assert.deepEqual(saved.vendorEnterpriseRef, offerCreate().vendorEnterpriseRef);
+    assert.equal(saved.status, 'DRAFT');
+    assert.equal(saved.active, false);
+    for (const key of ['sellerAuthorizations', 'budgetAdmission', 'approval']) assert.equal(saved[key], undefined);
+    await assert.rejects(command(f, 'update', { query: { code: saved.code, versionId: saved.versionId },
+        model: { vendorEnterpriseRef: { ...saved.vendorEnterpriseRef, code: 'other' } } }));
+    assert.equal(f.inserted.length, 1);
+    const own = offerCreate();
+    own.code = 'own-offer';
+    delete own.vendorEnterpriseRef;
+    await command(f, 'create', own);
+    assert.equal(f.inserted[1].vendorEnterpriseRef.code, 'enterprise-a');
+    assert.equal(reads.length, 1, 'omission preserves existing own-issuer behavior');
+});
+
+test('new vendor selection refuses missing, inactive, ambiguous and failed Profile evidence before save', async t => {
+    const f = fixture(t);
+    f.request.authData.permissions.push('commerce.promotion.manage');
+    for (const result of [[], [{code: 'other', active: true}], [{code: 'marketplace-a', active: false}],
+        [{code: 'marketplace-a', active: true}, {code: 'marketplace-a', active: true}], {success: false}]) {
+        SERVICE.DefaultModuleService = { invokeModule: async () => ({result}) };
+        await assert.rejects(command(f, 'create', offerCreate()));
+        assert.equal(f.inserted.length, 0);
+    }
+});
+
+test('new offer uses canonical versioned lifecycle to reviewed ACTIVE without changing budget or rights', async t => {
+    const f = fixture(t), input = offerCreate();
+    delete input.vendorEnterpriseRef;
+    input.couponOffer.expiry.at = '2099-11-08T19:59:59.999Z';
+    f.request.authData.permissions.push('commerce.promotion.manage');
+    await command(f, 'create', input);
+    assert.deepEqual(owner.describeLifecycle(f.request,f.history.at(-1)).map(a=>a.actionCode),['SUBMIT','ARCHIVE']);
+    const act = async (action, version, revision = version) => facade[action]({ ...f.request, promotionCode: input.code,
+        payload: {expectedVersionId:version, expectedRevision:revision, reasonCode:'Reviewed exact offer'} });
+    assert.equal((await act('submitPromotion',0)).promotion.status,'SUBMITTED');
+    assert.deepEqual(owner.describeLifecycle(f.request,f.history.at(-1)),[]);
+    await assert.rejects(act('approvePromotion',1), 'maker cannot approve own submission');
+    f.request.authData.principalId = 'reviewer-a';
+    await assert.rejects(act('approvePromotion',1), 'manage does not grant approval');
+    f.request.authData.permissions.push('commerce.promotion.approve');
+    assert.deepEqual(owner.describeLifecycle(f.request,f.history.at(-1)).map(a=>a.actionCode),['APPROVE']);
+    assert.equal((await act('approvePromotion',1)).promotion.status,'APPROVED');
+    await assert.rejects(act('schedulePromotion',1), 'stale version cannot activate');
+    assert.equal((await act('schedulePromotion',2)).promotion.status,'ACTIVE');
+    const saved = f.history.at(-1);
+    assert.equal(saved.active,true);
+    assert.deepEqual(saved.budget,input.budget);
+    assert.deepEqual(saved.couponOffer,input.couponOffer);
+    assert.deepEqual(saved.actions,input.actions);
+    assert.equal(saved.enterpriseRef.code,'enterprise-a');
+    assert.equal(saved.approval.submittedBy,'employee-a');
+    assert.equal(saved.approval.approvedBy,'reviewer-a');
+    assert.equal(saved.sellerAuthorizations,undefined);
+    assert.equal(saved.budgetAdmission,undefined);
+    await assert.rejects(act('submitPromotion',3));
+    assert.equal((await act('suspendPromotion',3)).promotion.status,'SUSPENDED');
+    assert.equal((await act('archivePromotion',4)).promotion.status,'ARCHIVED');
+});
+
+function administrativeFixture(t) {
+    const f = fixture(t);
+    SERVICE.DefaultPromotionAdministrativeReviewService = require('../src/service/defaultPromotionAdministrativeReviewService');
+    const input = offerCreate();
+    input.couponOffer.expiry.at = '2099-11-08T19:59:59.999Z';
+    f.seed({ ...input, enterpriseCode: 'enterprise-a', code: 'root-a', status: 'SUBMITTED',
+        approval: { submittedBy: 'issuer-maker', submittedAt: '2026-01-01T00:00:00.000Z' } });
+    const request = { tenant: 'tenant-a', promotionCode: 'root-a', authorization: 'Bearer native-original',
+        authData: { tenant: 'tenant-a', entCode: 'platform', loginId: 'native-admin', authVersion: 3,
+            authenticationMethod: 'PASSWORD', principalType: 'human', tokenType: 'access',
+            userGroups: [{code:'employeeUserGroup'}], permissions: ['commerce.promotion.read','commerce.promotion.approve'] },
+        payload: { issuerEnterpriseCode: 'enterprise-a' } };
+    const calls = [];
+    SERVICE.DefaultModuleService = { invokeModule: async call => {
+        calls.push(structuredClone(call));
+        assert.equal(call.header.Authorization, 'Bearer native-original');
+        assert.equal(call.header['X-Enterprise-Code'], 'platform');
+        assert.equal(call.tenant, 'tenant-a');
+        if (call.apiName === '/identity/platform-administrator/evidence') return { result: {
+            contractVersion: 1, nonce: call.requestBody.nonce, permission: 'commerce.promotion.approve',
+            tenant: 'tenant-a', enterpriseCode: 'platform', actorCode: 'native-admin', authVersion: 3,
+            principalType: 'human', platformAdministrator: true } };
+        assert.equal(call.apiName, '/participants/resolve');
+        return { result: { contractVersion: 1, tenant: 'tenant-a', recipient: { ownerType: 'ENTERPRISE', ownerCode: 'enterprise-a' } } };
+    } };
+    const approve = () => { request.payload = { issuerEnterpriseCode: 'enterprise-a', expectedVersionId: 0, expectedRevision: 0, reasonCode: 'Exact reviewed terms' };
+        return owner.administrativeReview(request, true); };
+    return { ...f, adminRequest: request, profileCalls: calls, approve };
+}
+
+function administrativeAuthoringFixture(t) {
+    const f = administrativeFixture(t);
+    f.history.length = 0;
+    delete f.adminRequest.promotionCode;
+    delete f.adminRequest.payload;
+    f.adminRequest.authData.permissions.push('commerce.promotion.draft.write', 'commerce.promotion.manage');
+    const invoke = SERVICE.DefaultModuleService.invokeModule;
+    SERVICE.DefaultModuleService.invokeModule = async call => {
+        if (call.apiName === '/references/read') return { result: [{ code: 'marketplace-a', active: true }] };
+        const result = await invoke(call);
+        if (call.requestBody.nonce) result.result.permission = call.requestBody.permission;
+        return result;
+    };
+    const run = (operation, command) => {
+        f.adminRequest.httpRequest = { body: { issuerEnterpriseCode: 'enterprise-a', command: structuredClone(command) },
+            headers: { authorization: 'Bearer native-original', 'x-enterprise-code': 'platform' } };
+        return controller['administrative' + operation[0].toUpperCase() + operation.slice(1)](f.adminRequest);
+    };
+    return { ...f, run };
+}
+
+test('native Admin creates, reads, updates and submits exact issuer drafts through the existing writer', async t => {
+    const f = administrativeAuthoringFixture(t), original = structuredClone(f.adminRequest.authData);
+    const input = offerCreate(); input.couponOffer.expiry.at = '2099-11-08T19:59:59.999Z';
+    const created = await f.run('create', input);
+    assert.equal(created.data.promotion.status, 'DRAFT');
+    assert.equal(f.history[0].enterpriseCode, 'enterprise-a');
+    assert.equal(f.history[0].issuerEnterpriseRef.code, 'enterprise-a');
+    assert.equal(f.history[0].createdBy, 'native-admin');
+    assert.equal(f.history[0].approval.administrativeAuthoring.actorEnterpriseCode, 'platform');
+    assert.equal(f.history[0].budgetAdmission, undefined);
+    assert.equal(f.history[0].sellerAuthorizations, undefined);
+    const read = await f.run('read', { code: input.code });
+    assert.deepEqual(read.data.promotion.couponOffer, input.couponOffer);
+    await f.run('update', { query: { code: input.code, versionId: 0 }, model: { name: 'Reviewed offer' } });
+    await f.run('submit', { code: input.code, expectedVersionId: 1, expectedRevision: 1, reasonCode: 'Reviewed terms' });
+    assert.equal(f.history.at(-1).status, 'SUBMITTED');
+    assert.equal(f.history.at(-1).approval.submittedBy, 'native-admin');
+    assert.deepEqual(f.adminRequest.authData, original);
+    assert(!JSON.stringify(f.history).includes('native-original'));
+    assert(f.profileCalls.some(call => call.requestBody.permission === 'commerce.promotion.manage'));
+    const proofs = f.profileCalls.filter(call => call.requestBody.nonce);
+    assert.equal(new Set(proofs.map(call => call.requestBody.nonce)).size, proofs.length);
+    const review = { ...f.adminRequest, httpRequest: undefined, promotionCode: input.code,
+        payload: { issuerEnterpriseCode: 'enterprise-a', expectedVersionId: 2, expectedRevision: 2, reasonCode: 'Review' } };
+    await assert.rejects(owner.administrativeReview(review, true), /Maker-checker/);
+    await assert.rejects(f.run('schedule', { code: input.code, expectedVersionId: 2, expectedRevision: 2, reasonCode: 'Schedule' }));
+    assert.equal(f.inserted.length, 3);
+});
+
+test('Admin schedules independently approved current policy without issuer impersonation', async t => {
+    const f = administrativeAuthoringFixture(t);
+    f.seed({ status: 'APPROVED', approval: { submittedBy: 'maker', approvedBy: 'checker' } });
+    const result = await f.run('schedule', { code: 'root-a', expectedVersionId: 0, expectedRevision: 0, reasonCode: 'Activate' });
+    assert.equal(result.data.promotion.status, 'ACTIVE');
+    assert.equal(f.history.at(-1).approval.lastActionBy, 'native-admin');
+    assert.equal(f.history.at(-1).approval.approvedBy, 'checker');
+    await assert.rejects(f.run('schedule', { code: 'root-a', expectedVersionId: 0, expectedRevision: 0, reasonCode: 'Replay' }));
+    assert.equal(f.inserted.length, 1);
+});
+
+test('Admin authoring refuses forged scope, unknown operations, financial inputs and prewrite authority drift', async t => {
+    for (const patch of [{ tenant: 'foreign' }, { enterpriseCode: 'enterprise-a' }, { status: 'ACTIVE' },
+        { budgetAdmission: {} }, { issuerEnterpriseRef: { code: 'other' } }]) {
+        const f = administrativeAuthoringFixture(t);
+        await assert.rejects(f.run('create', { ...create, ...patch }));
+        assert.equal(f.inserted.length, 0);
+    }
+    for (const fault of ['header', 'revoked', 'target', 'mutated']) {
+        const f = administrativeAuthoringFixture(t), invoke = SERVICE.DefaultModuleService.invokeModule;
+        SERVICE.DefaultModuleService.invokeModule = async call => {
+            const result = await invoke(call);
+            if (fault === 'target' && !call.requestBody.nonce) result.result.tenant = 'foreign';
+            if (fault === 'revoked' && f.calls.length && call.requestBody.nonce) result.result.platformAdministrator = false;
+            if (fault === 'header') f.adminRequest.httpRequest.headers['x-enterprise-code'] = 'enterprise-a';
+            return result;
+        };
+        if (fault === 'mutated') f.setAfterRead(() => { f.adminRequest.httpRequest.body.command.name = 'Injected'; });
+        await assert.rejects(f.run('create', create));
+        assert.equal(f.inserted.length, 0, fault);
+    }
+    const f = administrativeAuthoringFixture(t);
+    await assert.rejects(owner.administrativeAuthoring(f.adminRequest, 'approve'));
+    await assert.rejects(owner.administrativeAuthoring(f.adminRequest, '__proto__'));
+    for (const name of ['Read', 'Create', 'Update', 'Submit', 'Schedule']) {
+        const route = require('../src/router/routers').promotion.backoffice['administrative' + name];
+        assert.equal(route.method, 'POST'); assert.equal(route.cache.enabled, false);
+        assert.equal(route.controller, 'DefaultPromotionBusinessWorkbenchController');
+    }
+});
+
+test('native administrative review uses exact issuer and original actor through generated versioned approval', async t => {
+    const f = administrativeFixture(t), before = structuredClone(f.history[0]), auth = structuredClone(f.adminRequest.authData);
+    const reviewed = await owner.administrativeReview(f.adminRequest);
+    assert.equal(reviewed.issuerEnterpriseCode, 'enterprise-a');
+    assert.equal(reviewed.lifecycleActions[0].issuerEnterpriseCode, 'enterprise-a');
+    assert.equal(f.inserted.length, 0);
+    const approved = await f.approve();
+    assert.equal(approved.promotion.status, 'APPROVED');
+    assert.equal(f.inserted.length, 1);
+    const saved = f.history.at(-1);
+    for (const key of ['tenant','enterpriseCode','couponOffer','budget','actions','conditions','vendorEnterpriseRef']) assert.deepEqual(saved[key],before[key]);
+    assert.equal(saved.approval.approvedBy, 'native-admin');
+    assert.equal(saved.approval.administrativeReview.actorEnterpriseCode, 'platform');
+    assert.equal(saved.approval.administrativeReview.issuerEnterpriseCode, 'enterprise-a');
+    assert.equal(saved.active, false);
+    assert.equal(saved.budgetAdmission, undefined);
+    assert.equal(saved.sellerAuthorizations, undefined);
+    assert.deepEqual(f.adminRequest.authData, auth);
+    assert(!JSON.stringify(saved).includes('native-original'));
+    const proofs = f.profileCalls.filter(c=>c.requestBody.nonce);
+    assert.equal(new Set(proofs.map(c=>c.requestBody.nonce)).size, proofs.length);
+    assert(proofs.length >= 4);
+    await assert.rejects(f.approve());
+    assert.equal(f.inserted.length, 1);
+});
+
+test('administrative approval retains actual maker-checker and disallows ordinary draft access', async t => {
+    const f = administrativeFixture(t);
+    f.history[0].approval.submittedBy = 'native-admin';
+    assert.deepEqual((await owner.administrativeReview(f.adminRequest)).lifecycleActions, []);
+    await assert.rejects(f.approve(), /Maker-checker/);
+    await assert.rejects(owner.transition({...f.adminRequest, actionCode:'APPROVE'}));
+    assert.equal(f.inserted.length, 0);
+});
+
+test('administrative review rejects invalid proof fields and cross-tenant or foreign target evidence', async t => {
+    for (const patch of [{nonce:'old'}, {tenant:'foreign'}, {enterpriseCode:'enterprise-a'}, {actorCode:'other'},
+        {authVersion:4}, {permission:'commerce.promotion.manage'}, {principalType:'service'}, {platformAdministrator:false}]) {
+        const f = administrativeFixture(t), invoke = SERVICE.DefaultModuleService.invokeModule;
+        SERVICE.DefaultModuleService.invokeModule = async c => { const r=await invoke(c); if(c.requestBody.nonce)Object.assign(r.result,patch); return r; };
+        await assert.rejects(f.approve()); assert.equal(f.inserted.length,0);
+    }
+    const f = administrativeFixture(t), invoke = SERVICE.DefaultModuleService.invokeModule;
+    SERVICE.DefaultModuleService.invokeModule = async c => { const r=await invoke(c); if(!c.requestBody.nonce)r.result.tenant='foreign'; return r; };
+    await assert.rejects(f.approve()); assert.equal(f.inserted.length,0);
+});
+
+test('administrative approval revalidates authority after load and rejects mutation before dispatch', async t => {
+    const f = administrativeFixture(t);
+    let revoked=false;
+    const invoke=SERVICE.DefaultModuleService.invokeModule;
+    SERVICE.DefaultModuleService.invokeModule=async c=>{const r=await invoke(c);if(revoked&&c.requestBody.nonce)r.result.platformAdministrator=false;return r;};
+    f.setAfterRead(()=>{revoked=true;});
+    await assert.rejects(f.approve());assert.equal(f.inserted.length,0);
+    revoked=false;
+    f.setAfterRead(()=>{f.adminRequest.payload.issuerEnterpriseCode='other';});
+    await assert.rejects(f.approve());assert.equal(f.inserted.length,0);
+});
+
+test('administrative routes expose target-bound owner review without client status or scope authority', async t => {
+    const f=administrativeFixture(t), service=SERVICE.DefaultPromotionAdministrativeReviewService;
+    const routes=require('../src/router/routers').promotion.backoffice;
+    for(const name of ['administrativeReviewCapabilities','administrativeReview','administrativeApprove']) {
+        assert.equal(routes[name].permission,'commerce.promotion.approve');
+        assert.equal(routes[name].method,'POST');assert.equal(routes[name].cache.enabled,false);
+    }
+    const presentation=require('../data/backoffice/promotionCouponOfferPresentationData');
+    SERVICE.DefaultPromotionBackofficeCapabilityService={couponOfferPresentationData:()=>presentation};
+    const invoke=SERVICE.DefaultModuleService.invokeModule;
+    SERVICE.DefaultModuleService.invokeModule=async c=>{const r=await invoke(c);if(!c.requestBody.nonce)r.result.recipient.ownerCode=c.requestBody.ownerCode;return r;};
+    const request={...f.adminRequest,promotionCode:undefined,payload:{}};
+    const caps=await service.capabilities(request);
+    assert.equal(caps.crossEnterpriseReview,true);assert.equal(caps.review.targetField,'issuerEnterpriseCode');
+    assert.equal(caps.labels.confirmApproval,presentation.labels.confirmApproval);
+    const http={body:{issuerEnterpriseCode:'enterprise-a'},params:{promotionCode:'root-a'},headers:{authorization:'Bearer native-original'}};
+    const result=await nativeController.administrativeReview({...f.adminRequest,httpRequest:http});
+    assert.equal(result.data.issuerEnterpriseCode,'enterprise-a');
+    assert.equal(result.data.lifecycleActions[0].expectedVersionId,0);
+    for(const extra of [{status:'APPROVED'},{tenant:'foreign'},{enterpriseCode:'enterprise-a'},{expectedRevision:0}]) {
+        f.adminRequest.payload={issuerEnterpriseCode:'enterprise-a',...extra};
+        await assert.rejects(owner.administrativeReview(f.adminRequest));
+    }
+    assert.equal(f.inserted.length,0);
+});
+
+test('lifecycle refuses absent budget, spend injection, unsupported transitions and expired terms', async t => {
+    const f = fixture(t), input = offerCreate();
+    delete input.vendorEnterpriseRef;
+    f.request.authData.permissions.push('commerce.promotion.manage');
+    for (const budget of [{limit:'-1'}, {limit:'1',spent:'0'}, {limit:1}, {limit:'NaN'}])
+        await assert.rejects(command(f,'create',{...input,budget}));
+    delete input.budget;
+    await command(f,'create',input);
+    await assert.rejects(facade.submitPromotion({...f.request,promotionCode:input.code,
+        payload:{expectedVersionId:0,expectedRevision:0,reasonCode:'Review'}}));
+    assert.equal(f.inserted.length,1);
+    const current = {...f.history[0],budget:{limit:'0'}};
+    const scope={actorId:'reviewer-a'};
+    const cmd={action:'SCHEDULE',query:{revision:0},reason:'Review'};
+    assert.throws(()=>owner.lifecycleModel(current,cmd,scope));
+    current.status='APPROVED';current.approval={submittedBy:'maker-a',approvedBy:'reviewer-a'};
+    current.couponOffer={...current.couponOffer,expiry:{mode:'FIXED',at:'2000-01-01T00:00:00.000Z'}};
+    assert.throws(()=>owner.lifecycleModel(current,cmd,scope));
+    current.couponOffer.expiry.at='2099-11-08T19:59:59.999Z';current.validFrom='2099-01-01T00:00:00.000Z';
+    assert.equal(owner.lifecycleModel(current,cmd,scope).status,'SCHEDULED');
+    assert.equal(owner.lifecycleModel(current,cmd,scope).active,false);
+});
+
+test('vendor input cannot select an issuer, inject scope, waive manage access or survive authority drift', async t => {
+    const f = fixture(t);
+    await assert.rejects(command(f, 'create', offerCreate()));
+    f.request.authData.permissions.push('commerce.promotion.manage');
+    for (const patch of [{issuerEnterpriseRef: {code: 'other'}}, {enterpriseCode: 'other'},
+        {vendorEnterpriseRef: {moduleName: 'other', schemaName: 'enterprise', code: 'marketplace-a'}},
+        {vendorEnterpriseRef: {...offerCreate().vendorEnterpriseRef, permissions: ['*']}}]) {
+        await assert.rejects(command(f, 'create', {...offerCreate(), ...patch}));
+    }
+    SERVICE.DefaultModuleService = { invokeModule: async () => {
+        f.request.authData.entCode = 'other';
+        return {result: [{code: 'marketplace-a', active: true}]};
+    } };
+    await assert.rejects(command(f, 'create', offerCreate()));
+    assert.equal(f.inserted.length, 0);
+});
+
+test('shared owner approval policy is the only maker-checker gate and shared scheduling policy is honored', t => {
+    fixture(t);
+    const input=offerCreate(); input.couponOffer.expiry.at='2099-11-08T19:59:59.999Z';
+    const current={...input,status:'SUBMITTED',revision:0,approval:{submittedBy:'actor-a'}};
+    const command={action:'APPROVE',query:{revision:0},reason:'Reviewed'},scope={actorId:'actor-a'};
+    assert.throws(()=>owner.lifecycleModel(current,command,scope),/Maker-checker/);
+    SERVICE.DefaultPromotionOperationService={...operation,assertLifecycleApproval:()=>{}};
+    const approved=owner.lifecycleModel(current,command,scope);
+    const scheduled=owner.lifecycleModel({...current,...approved},{...command,action:'SCHEDULE'},scope);
+    assert.equal(scheduled.status,'ACTIVE','SCHEDULE does not impose another actor-separation rule');
+    SERVICE.DefaultPromotionOperationService.lifecycleTargetStatus=()=> 'SCHEDULED';
+    assert.equal(owner.lifecycleModel({...current,...approved},{...command,action:'SCHEDULE'},scope).status,'SCHEDULED');
+});
 const update = { query: { code: 'root-a', versionId: 0 }, model: { name: 'Revised', priority: 5 },
     options: { recursive: false, returnModified: true } };
 
