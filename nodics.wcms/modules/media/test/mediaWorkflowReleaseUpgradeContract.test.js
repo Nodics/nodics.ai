@@ -31,7 +31,11 @@ function errors() { global.CLASSES = { NodicsError: class extends Error { constr
 test('consolidated workflow uses explicit release selection without replaying installed historical releases', async () => {
     errors();
     const owner = { name: 'media', path: path.resolve(__dirname, '..') };
-    const f = fixture({ modules: { media: owner }, runtimeRole: 'PROCESS' });
+    const configuration = structuredClone(require('../../../../nodics.foundation/modules/nData/nImport/import/config/properties').data.dataReleases);
+    configuration.installers = { ...configuration.installers, PROCESS_DEFINITION: 'DefaultProcessDefinitionContributionService' };
+    const f = fixture({ modules: { media: owner }, runtimeRole: 'PROCESS', configuration });
+    f.publication = 'OPERATIONAL';
+    global.SERVICE.DefaultProcessDefinitionContributionService = installer;
     const release = manifest.sections.mediaPublicationWorkflow;
     assert.equal(release.sourceRoot, 'init-v001'); assert.equal(release.version, '0.0.1');
     assert.deepEqual(Object.keys(release.files), [currentFile.slice('../data/'.length)]);
@@ -53,6 +57,8 @@ test('consolidated workflow uses explicit release selection without replaying in
     assert.deepEqual(explicit.releases[0].declaredFiles, Object.keys(release.files));
     assert.deepEqual(f.installations, before); assert.equal(f.imports.length, 0);
     f.runtimeRole = 'WCMS_STAGED';
+    f.publication = 'STAGED';
+    delete global.SERVICE.DefaultProcessDefinitionContributionService;
     await assert.rejects(f.service.preparePlan({ releaseRequest: { dataType: 'init', releaseCodes: ['media:mediaPublicationWorkflow'] } }), /destination/);
 });
 

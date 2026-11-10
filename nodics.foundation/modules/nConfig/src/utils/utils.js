@@ -307,7 +307,9 @@ module.exports = {
                 .filter(entry => entry.name[0] !== '.' && !['node_modules', 'templates', 'docs'].includes(entry.name))
                 .filter(entry => entry.isDirectory() || entry.isSymbolicLink())
                 .map(entry => path.join(folder, entry.name))
-                .filter(child => path.basename(child) === 'modules' || fs.existsSync(path.join(child, 'package.json')));
+                .filter(child => path.basename(child) === 'modules' ||
+                    (folder === sourceDiscovery.root && path.basename(child) === 'envs') ||
+                    fs.existsSync(path.join(child, 'package.json')));
         } else {
             children = this.subFolders(folder);
         }

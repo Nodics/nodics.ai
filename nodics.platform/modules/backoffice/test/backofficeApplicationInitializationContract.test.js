@@ -42,6 +42,7 @@ global.CONFIG = {
   get: (key) =>
     key === "backofficeApplicationInitialization"
       ? {
+          target: require("../config/properties").backofficeApplicationInitialization.target,
           projectCode: "example.project",
           operatorOrigin: "https://operator.example.test",
           profiles: {
@@ -157,9 +158,9 @@ global.CONFIG = {
 };
 global.NODICS = { getInternalAuthToken: () => "service-token" };
 // Routing integration is covered separately against the canonical deployment alias owner.
-service.applicationTargetBinding = (connectionName, runtimeRole) => ({
+service.applicationTargetBinding = (connectionName) => ({
   connectionName,
-  targetAuthority: { server: connectionName, runtimeRole: { code: runtimeRole } },
+  targetAuthority: { server: connectionName, publication: "STAGED" },
 });
 let moduleInvocationHandler = async (request) => ({
   data: {
@@ -313,7 +314,7 @@ global.fetch = async (url, options) => {
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.deepStrictEqual(initiateRequest.targetAuthority, {
-    server: "wcmsStaged", runtimeRole: { code: "WCMS_STAGED" },
+    server: "wcmsStaged", publication: "STAGED",
   });
   assert.strictEqual(initiateRequest.requestBody.forceRefresh, true);
   assert.strictEqual(
@@ -785,7 +786,7 @@ global.fetch = async (url, options) => {
   assert.strictEqual(contentPackRequest.local, false);
   assert.strictEqual(contentPackRequest.connectionName, "wcmsStaged");
   assert.deepStrictEqual(contentPackRequest.targetAuthority, {
-    server: "wcmsStaged", runtimeRole: { code: "WCMS_STAGED" },
+    server: "wcmsStaged", publication: "STAGED",
   });
   assert.strictEqual(contentPackRequest.moduleName, "system");
   assert.strictEqual(
@@ -799,9 +800,11 @@ global.fetch = async (url, options) => {
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(contentPackRequest.methodName, "POST");
+  assert.strictEqual(contentPackRequest.moduleName, "cms");
+  assert.deepStrictEqual(contentPackRequest.requestBody, { requestedBy: "admin", correlationId: "request-1" });
   assert.strictEqual(
     contentPackRequest.apiName,
-    "/internal/content-packs/nodicsDocumentation/imports",
+    "/publication/baselines/frameworkdocs/content-pack/imports",
   );
   assert.throws(
     () =>

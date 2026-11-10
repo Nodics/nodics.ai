@@ -20,10 +20,10 @@ const startup = require('../../src/service/project/defaultProjectRuntimeStartSer
  * Call in an isolated test process because nConfig owns process-wide registries.
  * Customer callers provide coordinates and expected exposure, then assert their choices.
  */
-module.exports = function prepareRuntime(options) {
+module.exports = async function prepareRuntime(options) {
     const selected = probe.coordinates(options);
     startup.resolveServer(selected.projectRoot, selected.server, { ENV: selected.environment });
-    const result = probe.resolve(selected);
+    const result = await probe.resolve(selected);
     assert.equal(NODICS.getServerName(), selected.server);
     assert.equal(NODICS.getSelectedEnvironmentName(), selected.environment);
     assert.equal(NODICS.getEnvironmentName(), startup.resolveProjectCode(selected.projectRoot));

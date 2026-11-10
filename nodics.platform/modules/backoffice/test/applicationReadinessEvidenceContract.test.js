@@ -49,7 +49,7 @@ const profile = {
   target: {
     moduleName: "cms",
     connectionName: "contentStaged",
-    runtimeRole: "WCMS_STAGED",
+    publication: "STAGED",
   },
 };
 const step = {
@@ -57,7 +57,7 @@ const step = {
   type: "DATA_RELEASE",
   required: true,
   targetServer: "contentStaged",
-  targetRuntimeRole: "WCMS_STAGED",
+  targetRuntimeRole: "STAGED",
   dataType: "sample",
 };
 function owner() {
@@ -70,7 +70,7 @@ function owner() {
     capabilityProjection: (profile, projection) => ({
       blockers: service.capabilityBlockers(projection),
     }),
-    applicationTargetBinding: () => ({ connectionName: "contentStaged" }),
+    applicationTargetBinding: () => ({ connectionName: "contentStaged", targetAuthority: { server: "contentStaged", publication: "STAGED" } }),
   });
 }
 
@@ -258,7 +258,6 @@ test("one blocked Platform group does not erase a successful publication runtime
   for (const replacement of [
     { ...current, status: "UNKNOWN" },
     { ...current, status: "UNAVAILABLE" },
-    { ...current, targetRuntimeRole: "WCMS_ONLINE" },
     { ...current, targetServer: "differentServer" },
   ]) assert.equal(selected.capabilityDependencies(profile, {
     ...projection, preparation: { steps: [replacement] },
