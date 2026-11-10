@@ -36,7 +36,7 @@ module.exports = {
         const target = workflow.target();
         const execution = await SERVICE.DefaultModuleService.invokeModule({
             moduleName: 'workflow', connectionName: target.connectionName,
-            connectionType: target.connectionType, targetAuthority: { runtimeRole: target.runtimeRole },
+            connectionType: target.connectionType, targetAuthority: { ...target.targetAuthority },
             local: false, tenant: request.tenant,
             header: { tenant: request.tenant, 'x-enterprise-code': auth.entCode },
             methodName: 'POST', apiName: '/instances/' + encodeURIComponent(input.instanceCode) + '/actions/claim',

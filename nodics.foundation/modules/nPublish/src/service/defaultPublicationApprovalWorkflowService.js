@@ -29,7 +29,7 @@ module.exports = {
         if (!policy || !/^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(policy.definitionCode || '') ||
             !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(policy.ownerModule || '') ||
             policy.actionKey !== policy.ownerModule + '.applyPublicationDecision' ||
-            !policy.sourceRuntimeRole ||
+            policy.sourcePublication !== 'STAGED' || Object.hasOwn(policy, 'sourceRuntimeRole') ||
             (policy.requesterBinding !== undefined && policy.requesterBinding !== 'NATIVE_ACTOR') ||
             (policy.requesterBinding === 'NATIVE_ACTOR' &&
                 (!/^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(policy.reviewNodeCode || '') ||
@@ -42,7 +42,12 @@ module.exports = {
     /** Rejects execution outside the explicitly selected Staged authority. */
     assertSource: function (policy) {
         const role = CONFIG.get('runtimeRole') || {};
-        if (role.publication !== 'STAGED' || role.code !== policy.sourceRuntimeRole) {
+        const agent = SERVICE.DefaultModuleRegistrationAgentService;
+        if (role.publication !== policy.sourcePublication || policy.sourcePublication !== 'STAGED' ||
+            !agent?.getLocalModules?.().includes(policy.ownerModule) ||
+            !agent.isOwningRegistration(agent.buildOwnershipEvidence(policy.ownerModule, {
+                ...NODICS.getRawModule(policy.ownerModule), rawSchema: NODICS.getModule(policy.ownerModule)?.rawSchema
+            }))) {
             throw new CLASSES.NodicsError('ERR_PUB_00002', 'Publication approval requires its configured Staged runtime');
         }
     },
@@ -51,7 +56,11 @@ module.exports = {
     target: function () {
         const target = ((CONFIG.get('publish') || {}).approvalWorkflow || {}).target || {};
         if (!target.connectionName || target.connectionName === 'default' ||
-            !target.connectionType || target.runtimeRole !== 'PROCESS') {
+            !target.connectionType || Object.hasOwn(target, 'runtimeRole') ||
+            !target.targetAuthority || target.targetAuthority.publication !== 'OPERATIONAL' ||
+            Object.keys(target.targetAuthority).some(key => !['publication', 'server', 'environment'].includes(key)) ||
+            ['server', 'environment'].some(key => Object.hasOwn(target.targetAuthority, key) &&
+                (typeof target.targetAuthority[key] !== 'string' || !target.targetAuthority[key].trim() || target.targetAuthority[key] !== target.targetAuthority[key].trim()))) {
             throw new CLASSES.NodicsError('ERR_PUB_00001', 'Publication Process authority is unavailable');
         }
         return target;
@@ -90,7 +99,7 @@ module.exports = {
         }
         const read = suffix => SERVICE.DefaultModuleService.invokeModule({
             moduleName: 'workflow', connectionName: target.connectionName,
-            connectionType: target.connectionType, targetAuthority: { runtimeRole: 'PROCESS' },
+            connectionType: target.connectionType, targetAuthority: { ...target.targetAuthority },
             local: false, tenant: request.tenant,
             header: { Authorization: authorization, tenant: request.tenant, 'x-enterprise-code': auth.entCode },
             methodName: 'GET', apiName: '/definitions/' + encodeURIComponent(policy.definitionCode) + suffix,
@@ -242,7 +251,7 @@ module.exports = {
         }
         const result = await SERVICE.DefaultModuleService.invokeModule({
             moduleName: 'workflow', connectionName: target.connectionName,
-            connectionType: target.connectionType, targetAuthority: { runtimeRole: target.runtimeRole },
+            connectionType: target.connectionType, targetAuthority: { ...target.targetAuthority },
             local: false, tenant: request.tenant,
             header: { Authorization: authorization, tenant: request.tenant, 'x-enterprise-code': request.authData.entCode || request.authData.enterpriseCode },
             methodName: 'POST', apiName: '/instances', timeoutMs: target.timeoutMs,
