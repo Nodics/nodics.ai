@@ -52,7 +52,7 @@ async function fixture() {
   const configuration = {
     defaultTenant: "default",
     defaultEnterprise: "platform",
-    runtimeRole: "PLATFORM",
+    runtimeRole: { code: "PLATFORM", publication: "OPERATIONAL" },
     environment: { class: "LOCAL" },
     enterpriseManagement: {},
     authSecurity: structuredClone(
@@ -105,7 +105,10 @@ async function fixture() {
     path: path.resolve(__dirname, ".."),
     index: 1,
   };
+  const enumKeys = require("../src/utils/enums").ContactType.definition;
+  global.ENUMS = { ContactType: Object.fromEntries(enumKeys.map(key => [key, { key }])) };
   global.NODICS = {
+    getModule: name => name === "profile" ? { rawSchema: require("../src/schemas/schemas").profile } : undefined,
     getNodicsHome: () => path.resolve(__dirname, "../../../../nodics.foundation"),
     getCustomHome: () => path.resolve(__dirname, "../../../.."),
     getActiveModules: () => ["profile"],
@@ -131,6 +134,7 @@ async function fixture() {
       getSystemAuthData: () => ({ isSystem: true }),
     },
     DefaultDataReleaseService: { ...releases },
+    DefaultSchemaAuthoringPolicyService: require(foundation + "nDatabase/database/src/service/schema/defaultSchemaAuthoringPolicyService"),
     DefaultImportUtilityService: { ...importUtility },
     DefaultSystemDataImportInitializerService: {
       ...initializer,
@@ -253,7 +257,7 @@ async function fixture() {
 test("forward Init authority receives human/guest identities while dynamic tenants receive only service identities and groups", async () => {
   const f = await fixture();
   const manifest = require("../data/manifest.json");
-  assert.equal(manifest.sections["init-v001"].version, "0.0.8");
+  assert.equal(manifest.sections["init-v001"].version, "0.0.9");
   assert.equal(manifest.sections["init-v001"].sourceRoot, "init-v001");
   assert.equal(manifest.retainedRoots, undefined);
   releases.validateRetainedRoots(path.resolve(__dirname, "../data"), manifest);
@@ -579,7 +583,7 @@ test("startup owner admits an explicit forward Init version but still rejects ch
   assert.equal(
     f.configuration.identityGovernance.migration.assessment.bootstrapReview
       .sources[0].version,
-    "0.0.8",
+    "0.0.9",
   );
   const reviewSource =
     f.configuration.identityGovernance.migration.assessment.bootstrapReview.sources[0];
@@ -716,7 +720,7 @@ test("inventory/source/installation drift and wrong original operator reject rev
     },
     (f) => {
       f.configuration.identityGovernance.migration.assessment.bootstrapReview.sources[0].version =
-        "0.0.9";
+        "0.0.8";
     },
     (f) => {
       f.installations.values().next().value.checksum = "b".repeat(64);

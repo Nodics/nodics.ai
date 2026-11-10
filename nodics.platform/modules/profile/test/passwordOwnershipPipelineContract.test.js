@@ -137,7 +137,7 @@ function fixture(guarded = true) {
       key === "defaultErrorCodes"
         ? { DataImportError: "ERR_IMP_00000" }
         : key === "runtimeRole"
-          ? "PLATFORM"
+          ? { code: "PLATFORM", publication: "OPERATIONAL" }
           : key === "environment"
             ? { class: "LOCAL" }
         : undefined,
@@ -256,7 +256,8 @@ function fixture(guarded = true) {
     };
   global.NODICS = {
     getModels: () => models,
-    getModule: () => undefined,
+    getModule: name => name === "profile" ? { name } : undefined,
+    getRawModule: name => name === "profile" ? { name, path: require("node:path").resolve(__dirname, "..") } : undefined,
     getSelectedEnvironmentName: () => "local",
   };
   global.SERVICE = {

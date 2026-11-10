@@ -155,7 +155,8 @@ test('target and callback routes require service tokens; Media Process release i
     }
     const props = require('../config/properties');
     assert.equal(props.media.publication.versionProviderEnabled, false);
-    assert.equal(props.publish.providers, undefined);
+    assert.equal(props.publish.providers.versionProviders.media.cases.OPERATIONAL, null);
+    assert.equal(props.publish.providers.versionProviders.media.cases.STAGED, 'DefaultMediaPublicationVersionProviderService');
     const release = require('../data/manifest.json').sections.mediaPublicationWorkflow;
     assert.equal(release.selectionPolicy, 'EXPLICIT'); assert.equal(release.destinationRole, 'PROCESS');
     assert.equal(release.installer, 'PROCESS_DEFINITION');
@@ -169,7 +170,7 @@ test('target and callback routes require service tokens; Media Process release i
     const action = props.process.actionAdapters.definitions['media.applyPublicationDecision'];
     assert.equal(action.remote.requiresCompletedTask, true);
     assert.equal(action.remote.apiName, routes.applyPublicationDecision.key);
-    assert.equal(action.remote.runtimeRole, 'WCMS_STAGED');
+    assert.deepEqual(action.remote.targetAuthority, { publication: 'STAGED' });
 });
 
 test('same-code forward Media release uses existing installer upgrade and preserves immutable v1 source', async () => {

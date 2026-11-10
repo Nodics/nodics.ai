@@ -109,7 +109,10 @@ test('metadata versioning is owner opt-in only and capture verifies the installe
     const properties = require('../config/properties');
     const schemaHandler = require('../../../../nodics.foundation/modules/nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService');
     const originalGet = CONFIG.get;
-    const policies = structuredClone(properties.schemaPolicies);
+    const bindings = require('../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService');
+    const policies = bindings.resolve(properties.schemaPolicies, {}, {
+        serverCode: 'mediaOperational', readRuntimeProperty: () => 'OPERATIONAL',
+    });
     CONFIG.get = key => key === 'schemaPolicies' ? policies : originalGet(key);
     assert.deepEqual(schemas.media.schemaPolicies, ['publicationVersioned']);
     for (const [name, schema] of Object.entries(schemas)) {

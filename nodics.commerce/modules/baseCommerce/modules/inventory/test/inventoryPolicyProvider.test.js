@@ -495,9 +495,9 @@ test('disabled capture API delegates through owner facade with authenticated sco
 
 test('fixed callback delegates Process authority and null registrations stay disabled', async () => {
     const config = require('../config/properties');
-    assert.equal(config.publish.providers.versionProviders.inventory, null);
-    assert.equal(config.publish.providers.domainAdapters.inventory, null);
-    assert.equal(config.publish.providers.workflowProviders.inventory, null);
+    assert.equal(config.publish.providers.versionProviders.inventory.cases.OPERATIONAL, null);
+    assert.equal(config.publish.providers.domainAdapters.inventory.cases.OPERATIONAL, null);
+    assert.equal(config.publish.providers.workflowProviders.inventory.cases.OPERATIONAL, null);
     assert.equal(config.inventory.publication.delivery.enabled, false);
     let selected;
     global.SERVICE = { DefaultPublicationApprovalCallbackService: { applyDecision: async (request, scope) => { selected = scope; return { accepted: true }; } } };
@@ -895,7 +895,7 @@ test('capture and activation remain deployment-qualified with no registration fa
 
 test('capture requires the effective tenant CURRENT versioned model, not qualification flag alone', async () => {
     const f = setup();
-    assert.equal(require('../config/properties').schemaPolicies.inventory.publicationVersioned.isVersionedEnabled, false);
+    assert.equal(require('../config/properties').schemaPolicies.inventory.publicationVersioned.isVersionedEnabled.cases.OPERATIONAL, false);
     const expected = Object.keys(f.sources).sort();
     assert.deepEqual(Object.entries(schemas).filter(([, schema]) =>
         schema.schemaPolicies?.includes('publicationVersioned')).map(([name]) => name).sort(), expected);

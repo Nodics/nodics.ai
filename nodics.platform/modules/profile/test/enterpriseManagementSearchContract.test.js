@@ -712,6 +712,7 @@ async function run() {
     canonicalIdentity: "nodics.platform/modules/profile",
   };
   NODICS.getRawModule = () => rawModule;
+  NODICS.getModule = () => ({ rawSchema: rawModule.rawSchema });
   NODICS.getServerName = () => "platformServer";
   SERVICE.DefaultRouterService = {
     prepareUrl: () => "http://localhost:4300/nodics/profile/v0",

@@ -526,9 +526,9 @@ test('Staged policy guards reject operational mutations and nested consumption w
 
 test('fixed callback delegates Process authority and null registrations stay disabled', async () => {
     const config = require('../config/properties');
-    assert.equal(config.publish.providers.versionProviders.promotion, null);
-    assert.equal(config.publish.providers.domainAdapters.promotion, null);
-    assert.equal(config.publish.providers.workflowProviders.promotion, null);
+    assert.equal(config.publish.providers.versionProviders.promotion.cases.OPERATIONAL, null);
+    assert.equal(config.publish.providers.domainAdapters.promotion.cases.OPERATIONAL, null);
+    assert.equal(config.publish.providers.workflowProviders.promotion.cases.OPERATIONAL, null);
     assert.equal(config.promotion.publication.delivery.enabled, false);
     let selected;
     global.SERVICE = { DefaultPublicationApprovalCallbackService: { applyDecision: async (request, scope) => { selected = scope; return { accepted: true }; } } };
@@ -1000,7 +1000,7 @@ test('capture and activation remain deployment-qualified with no registration fa
 
 test('capture requires the effective tenant CURRENT versioned model, not qualification flag alone', async () => {
     const f = setup();
-    assert.equal(require('../config/properties').schemaPolicies.promotion.publicationVersioned.isVersionedEnabled, false);
+    assert.equal(require('../config/properties').schemaPolicies.promotion.publicationVersioned.isVersionedEnabled.cases.OPERATIONAL, false);
     const expected = Object.keys(f.sources).sort();
     assert.deepEqual(Object.entries(schemas).filter(([, schema]) =>
         schema.schemaPolicies?.includes('publicationVersioned')).map(([name]) => name).sort(), expected);

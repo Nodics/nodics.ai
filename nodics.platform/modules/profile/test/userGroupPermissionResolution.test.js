@@ -529,9 +529,17 @@ assert.strictEqual(
   apiAdminEmployee.identityMigrationVersion,
   authProperties.identityGovernance.migration.version,
 );
-assert.equal(documentationAuthorEmployee, undefined);
-assert.equal(axisViewerEmployee, undefined);
-assert.deepEqual(Object.values(employeeData).map(employee => employee.loginId).sort(), ["admin", "apiAdmin"]);
+assert(
+  documentationAuthorEmployee,
+  "Default Documentation Author employee should be seeded",
+);
+assert.strictEqual(documentationAuthorEmployee.active, false);
+assert.deepStrictEqual(documentationAuthorEmployee.userGroups, [
+  "documentationAuthorUserGroup",
+]);
+assert(axisViewerEmployee, "Default Axis Viewer employee should be seeded");
+assert.strictEqual(axisViewerEmployee.active, false);
+assert.deepStrictEqual(axisViewerEmployee.userGroups, ["axisViewerUserGroup"]);
 
 let baseUserGroup = Object.values(userGroupsData).find(
   (group) => group.code === "userGroup",

@@ -34,6 +34,8 @@ module.exports = {
             active: true
         },
         principalType: 'customer',
-        userGroups: ['customerUserGroup']
+        userGroups: ['customerUserGroup'],
+        addresses: ['defaultCustomerAddress'],
+        contacts: ['defaultCustomerContact']
     }
 };
