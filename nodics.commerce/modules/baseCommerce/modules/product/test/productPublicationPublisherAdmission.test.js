@@ -108,6 +108,14 @@ test('runtime administrator retry reads the exact retained issuer graph without 
     const administrator = { tenant: f.request.tenant, enterpriseCode: 'platform', publicationCode: publication.code,
         expectedRevision: 8, authData: { ...f.request.authData, entCode: 'platform', principalId: 'runtime-operator',
             userGroups: ['runtimeConfigAdminUserGroup'], permissions: ['commerce.product.publish', 'publish.lifecycle.retry'] } };
+    const routes = require(foundation + 'nPublish/src/router/routers').publish;
+    NODICS.getRouter = (name, module) => {
+        assert.equal(module, 'publish');
+        return {
+            publish_publicationlifecycle_retry: routes.publicationLifecycle.retry,
+            publish_publicationoperations_recover: routes.publicationOperations.recover,
+        }[name];
+    };
     let retainedRequest;
     const recovery = { ...lifecycle, getRepository: () => ({ get: async () => publication }),
         transition: async (_record, state) => publication = { ...publication, state, revision: 9 },

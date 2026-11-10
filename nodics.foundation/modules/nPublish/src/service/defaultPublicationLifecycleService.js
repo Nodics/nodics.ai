@@ -231,10 +231,16 @@ module.exports = {
             !['code', 'domain', 'rootCode', 'rootType', 'sourceVersion', 'enterpriseCode', 'tenantCode']
                 .every(field => publication[field] === retained[field]) ||
             typeof retained.enterpriseCode !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,191}$/.test(retained.enterpriseCode) ||
-            !security?.hasAccessGroup({ ...request, router: { accessGroups: ['runtimeConfigAdminUserGroup'] } })) return undefined;
-        const granted = security.getGrantedPermissions(request);
-        if (!['publish.lifecycle.retry', 'publish.operations.recover'].some(permission =>
-            security.isPermissionGranted(permission, granted, {}))) return undefined;
+            !security) return undefined;
+        const admitted = ['publish_publicationlifecycle_retry', 'publish_publicationoperations_recover'].some(name => {
+            const router = NODICS.getRouter?.(name, 'publish');
+            if (router?.secured !== true || router.active === false || !router.authTokenTypes?.includes('access') ||
+                !Array.isArray(router.accessGroups) || !router.accessGroups.length ||
+                !security.getRoutePermissions(router).length) return false;
+            const scoped = { ...request, router };
+            return security.hasAccessGroup(scoped) && security.hasRoutePermission(scoped);
+        });
+        if (!admitted) return undefined;
         return { tenant: retained.tenantCode, enterpriseCode: retained.enterpriseCode };
     },
     /** Revalidates a failed immutable publication before any later approval or activation attempt. */
