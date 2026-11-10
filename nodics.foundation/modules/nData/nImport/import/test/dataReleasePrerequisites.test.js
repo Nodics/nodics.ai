@@ -35,6 +35,7 @@ function fixture(t, onImport) {
     t.after(() => fs.rmSync(root, { recursive: true, force: true }));
     const modules = {}, manifests = {};
     const state = releaseExecution({ modules, runtimeRole: 'PLATFORM', onImport });
+    state.publication = 'OPERATIONAL';
     const importInitData = SERVICE.DefaultImportService.importInitData;
     SERVICE.DefaultImportService.importInitData = async request => {
         const result = await importInitData(request);
@@ -45,10 +46,12 @@ function fixture(t, onImport) {
     const service = state.service;
     const write = moduleName => fs.writeFileSync(path.join(modules[moduleName].path, 'data/manifest.json'), JSON.stringify(manifests[moduleName]));
     const add = (moduleName, sectionCode, overrides = {}) => {
-        if (!modules[moduleName]) {
-            modules[moduleName] = { name: moduleName, path: path.join(root, moduleName), index: '90' };
+        if (!manifests[moduleName]) {
+            modules[moduleName] = { ...modules[moduleName], name: moduleName, path: path.join(root, moduleName), index: '90' };
             manifests[moduleName] = { contractVersion: 2, module: moduleName, sections: {} };
         }
+        modules.authority ??= { name: 'authority' };
+        (modules.authority.rawSchema ??= {})[sectionCode] = { model: true };
         const dataType = overrides.dataType || 'init', sourceRoot = dataType + '-v001';
         const header = sourceRoot + '/headers/' + sectionCode + 'Header.js';
         const record = sourceRoot + '/records/' + sectionCode + 'Data.js';
@@ -265,13 +268,13 @@ test('missing section, wrong type, wrong destination, wrong version and changed 
     for (const mutate of [
         () => { delete f.manifests.optionalOwner.sections.permissions; },
         () => { section.dataType = 'core'; },
-        () => { section.destinationRole = 'WASTE'; },
+        () => { section.environmentScope = ['PRODUCTION']; },
         () => { section.version = '1.0.0'; },
         () => { f.manifests.authority.sections.bootstrap.prerequisites[0].checksum = '0'.repeat(64); f.write('authority'); }
     ]) {
         f.manifests.optionalOwner.sections.permissions = section;
         Object.assign(section, original); mutate(); f.write('optionalOwner');
-        await assert.rejects(f.service.installStartupReleases({}), /prerequisite|destination/);
+        await assert.rejects(f.service.installStartupReleases({}), /prerequisite|destination|environment/);
         assert.equal(f.imports.length, 0); assert.equal(f.installations.length, 0);
     }
 });
@@ -491,7 +494,7 @@ test('dependency receipts are isolated by tenant and environment', async t => {
 });
 
 test('actual Profile graph resolves absent owners from restricted Platform roots without activation or row writes', async () => {
-    const previous = { CONFIG: global.CONFIG, NODICS: global.NODICS, SERVICE: global.SERVICE, UTILS: global.UTILS };
+    const previous = { CONFIG: global.CONFIG, NODICS: global.NODICS, SERVICE: global.SERVICE, UTILS: global.UTILS, ENUMS: global.ENUMS };
     const project = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-restricted-source-project-'));
     try {
         const repo = path.resolve(__dirname, '../../../../../..');
@@ -504,6 +507,12 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
         discovery.indexModuleRecords(records, modules);
         const rawSnapshot = structuredClone(modules);
         const f = releaseExecution({ modules, runtimeRole: 'PLATFORM' });
+        f.publication = 'OPERATIONAL';
+        const enumKeys = require('../../../../../../nodics.platform/modules/profile/src/utils/enums').ContactType.definition;
+        global.ENUMS = { ContactType: Object.fromEntries(enumKeys.map(key => [key, { key }])) };
+        NODICS.getModule = name => name === 'profile' ? {
+            rawSchema: require('../../../../../../nodics.platform/modules/profile/src/schemas/schemas').profile
+        } : undefined;
         NODICS.getActiveModules = () => ['profile'];
         NODICS.getIndexedModules = () => new Map([['profile', modules.profile]]);
         NODICS.getNodicsHome = () => path.join(repo, 'nodics.foundation');
@@ -544,7 +553,7 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
         assert.equal(plan.prerequisiteReferences.length, pinned.length + 2);
         assert.equal(plan.releases.length, pinned.length + 3);
         assert.equal(plan.releases.at(-1).releaseCode, 'profile:init-v001');
-        assert.equal(plan.releases.at(-1).version, '0.0.8');
+        assert.equal(plan.releases.at(-1).version, manifest.sections['init-v001'].version);
         const cart = plan.releases.find(release => release.moduleName === 'cart');
         assert(cart, 'the real absent Cart prerequisite is resolved without loading Cart');
         const cartRequest = f.service.createImportRequest(request, { ...plan, releases: [cart] }, false);

@@ -16,7 +16,7 @@ const { test, beforeEach, afterEach } = require("node:test");
 const handler = require("../src/service/enterprise/defaultEnterpriseHandlerService");
 const listener = require("../src/service/enterprise/defaultEnterpriseUpdateListenerService");
 let previous;
-beforeEach(() => { previous = Object.fromEntries(["SERVICE", "CONFIG", "NODICS", "CLASSES", "UTILS", "_"].map(key => [key, global[key]])); });
+beforeEach(() => { previous = Object.fromEntries(["SERVICE", "CONFIG", "NODICS", "CLASSES", "UTILS", "ENUMS", "_"].map(key => [key, global[key]])); });
 afterEach(() => { for (const [key, value] of Object.entries(previous)) if (value === undefined) delete global[key]; else global[key] = value; });
 function fixture() {
   global._ = require("lodash");
@@ -77,6 +77,8 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
   const importProperties = require("../../nData/nImport/import/config/properties");
   global.UTILS = { ...global.UTILS,
     resolveInstalledSourceDescriptor: require("../../nConfig/src/utils/utils").resolveInstalledSourceDescriptor.bind(require("../../nConfig/src/utils/utils")) };
+  const enumKeys = require("../../../../nodics.platform/modules/profile/src/utils/enums").ContactType.definition;
+  global.ENUMS = { ContactType: Object.fromEntries(enumKeys.map(key => [key, { key }])) };
   const provisioningPolicy = require("../../../../nodics.platform/modules/profile/config/properties").profileTenantProvisioning;
   // Installed governed assignments, not configuration, approve tenant binding.
   const migration = { ...authProperties.identityGovernance.migration,
@@ -103,12 +105,13 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
     : name === "profileTenantProvisioning" ? { ...provisioningPolicy, enabled: true }
     : name === "runtimeIdentity" ? { instanceCode: scope.instanceCode }
     : name === "authSecurity" ? { ...structuredClone(authProperties.authSecurity),
+      bootstrapIdentity: require("../../../../nodics.platform/modules/profile/config/properties").authSecurity.bootstrapIdentity,
       internalToken: { ...authProperties.authSecurity.internalToken, maximumLifetimeSeconds: 300 },
       apiKey: { ...authProperties.authSecurity.apiKey, pepper: "fictional-test-pepper-not-for-deployment-only", requireScopes: true } }
     : name === "identityGovernance" ? { migration }
     : name === "bootstrapIdentity" ? { source: "environment", adminPassword: "offline-admin-password-long-unique", servicePassword: "offline-service-password-long-unique", serviceApiKey: "offline-service-api-key-long-unique-2026" }
     : name === "data" ? importProperties.data
-    : name === "runtimeRole" ? { code: "PLATFORM" }
+    : name === "runtimeRole" ? { code: "PLATFORM", publication: "OPERATIONAL" }
     : name === "environment" ? { class: "LOCAL" } : original(name, tenant);
   Object.assign(NODICS, { isModuleActive: () => true, getActiveModules: () => scope.modules,
     getNodicsHome: () => require("node:path").resolve(__dirname, "../../.."),
@@ -116,6 +119,7 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
     getInternalAuthToken: tenant => f.state.tokens[tenant],
     getEnvironmentName: () => scope.projectCode, getSelectedEnvironmentName: () => scope.environmentCode,
     getServerName: () => scope.serverCode,
+    getModule: name => name === "profile" ? { rawSchema: require("../../../../nodics.platform/modules/profile/src/schemas/schemas").profile } : undefined,
     getRawModule: name => name === "profile" ? { name, path: require("node:path").resolve(__dirname, "../../../../nodics.platform/modules/profile") } : undefined });
   let grantActive = true;
   const proofReads = [], issuedTenants = [];
@@ -159,6 +163,7 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
     DefaultIdentityMigrationAuditService: { save: async () => { throw new Error("Read-only validation cannot emit a mutation audit"); } },
     DefaultPrincipalSecurityStampGovernanceService: require("../../../../nodics.platform/modules/profile/src/service/identity/defaultPrincipalSecurityStampGovernanceService"),
     DefaultAuthenticationProviderService: Object.assign(Object.create(authentication), { recordAuthEvent: async () => true }),
+    DefaultSchemaAuthoringPolicyService: require("../../nDatabase/database/src/service/schema/defaultSchemaAuthoringPolicyService"),
     DefaultRuntimeAuthorizationService: authorization,
     DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
     DefaultUserStateService: { findUserState: async request => {

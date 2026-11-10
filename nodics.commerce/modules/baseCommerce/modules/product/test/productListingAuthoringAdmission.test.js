@@ -55,19 +55,19 @@ function humanFixture(t, expectedEnterprise = 'enterprise-a') {
   const transports = [], stores = [], storeReads = [];
   let afterProof = () => {}, afterStore = () => {}, storeResponse;
   f.configuration.product.marketplaceAuthoring.intentSource = { moduleName: 'sourceOwner', connectionName: 'source-owner',
-    connectionType: 'abstract', runtimeRole: 'WASTE', timeoutMs: 15000, allowInsecureLoopback: false };
+    connectionType: 'abstract', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMs: 15000, allowInsecureLoopback: false };
   f.configuration.product.marketplaceAuthoring.storeSource = { moduleName: 'store', connectionName: 'commerce',
-    connectionType: 'abstract', runtimeRole: 'COMMERCE', timeoutMs: 15000, allowInsecureLoopback: false };
+    connectionType: 'abstract', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMs: 15000, allowInsecureLoopback: false };
   const staged = { principalType: 'service', tokenType: 'service', serviceId: 'staged-runtime', tenant: 'tenant-a', entCode: 'default',
     runtimeInstanceId: 'staged-instance', runtimeScope: { projectCode: 'project-a', environmentCode: 'projectLocal', serverCode: 'staged',
       instanceCode: 'staged-instance', assignmentCode: 'staged-assignment' }, modules: ['store'], permissions: ['commerce.store.read'] };
   const placementPair = { storeCode: 'store-a', enterpriseCode: 'enterprise-a' };
-  const storeConfig = { placementRead: { enabled: true, runtimeRole: 'COMMERCE', callers: [{ tenant: staged.tenant,
+  const storeConfig = { placementRead: { enabled: true, callers: [{ tenant: staged.tenant,
     principalEnterpriseCode: staged.entCode, serviceId: staged.serviceId, ...staged.runtimeScope, placements: [placementPair] }] } };
   // Separate receiver globals model the operational Store owner; only its generated I/O is synthetic.
   const receiver = { exports: {}, require, structuredClone, CONFIG: { get: key => key === 'store' ? storeConfig :
     key === 'runtimeRole' ? { code: 'COMMERCE', publication: 'OPERATIONAL' } : f.configuration[key] },
-    SERVICE: { DefaultServiceTokenService: runtime, DefaultIdentityGovernanceService: identity, DefaultLoggerService: logger,
+    SERVICE: { DefaultModuleService: { isLocalModuleActive: name => name === "store" }, DefaultServiceTokenService: runtime, DefaultIdentityGovernanceService: identity, DefaultLoggerService: logger,
       DefaultStoreService: { get: async request => { storeReads.push(structuredClone(request));
         return { code: 'SUC_FIND_00000', result: [structuredClone(store)], count: 1 }; } } } };
   receiver.module = { exports: receiver.exports };
@@ -122,7 +122,7 @@ test('human listing uses independent original proof and actual version-zero writ
     assert.deepEqual(Object.keys(input.header).sort(), ['Authorization', 'tenant']);
     assert.equal(input.maxAttempts, 1); assert.equal(input.followRedirects, false);
     assert.deepEqual(input.requestBody, f.selectors);
-    assert.deepEqual(input.targetAuthority, { runtimeRole: 'WASTE' });
+    assert.deepEqual(input.targetAuthority, { publication: 'OPERATIONAL' });
   }
   for (const input of f.stores) {
     assert.equal(input.apiName, '/internal/stores/placement'); assert.equal(input.local, false);
@@ -135,7 +135,7 @@ test('human listing uses independent original proof and actual version-zero writ
     assert.equal(input.followRedirects, false); assert.equal(input.rejectUnauthorized, true);
     assert.deepEqual(input.secureTransport, { required: true, allowInsecureLoopback: false });
     assert.deepEqual(input.requestBody, { contractVersion: 1, storeCode: 'store-a' });
-    assert.deepEqual(input.targetAuthority, { runtimeRole: 'COMMERCE' });
+    assert.deepEqual(input.targetAuthority, { publication: 'OPERATIONAL' });
   }
   const root = f.records.get('DefaultProductService:' + result.data.productCode);
   assert.deepEqual(root.listingAuthoring.sourceProof, result.data.sourceProof);
@@ -180,13 +180,13 @@ test('partner source authors without Pricing or settlement semantics and retains
   const sourceRef = { module: 'partnerAssets', schema: 'ownedAsset', code: f.selectors.assetCode };
   f.proof.sourceRef = sourceRef; f.proof.productCommand.sourceRef = structuredClone(sourceRef);
   f.configuration.product.marketplaceAuthoring.intentSource.moduleName = 'partnerAssets';
-  f.configuration.product.marketplaceAuthoring.intentSource.runtimeRole = 'PARTNER_ASSETS';
+  f.configuration.product.marketplaceAuthoring.intentSource.targetAuthority = { publication: 'OPERATIONAL', server: 'partner-owner' };
   const before = structuredClone(f.proof);
   const result = await owner.createHuman(f.request);
   assert.equal(f.inserts.length, 6);
   assert.equal(result.sourceProof.intentDigest, before.intentDigest);
   assert.deepEqual(f.proof, before);
-  assert(f.transports.every(input => input.moduleName === 'partnerAssets' && input.targetAuthority.runtimeRole === 'PARTNER_ASSETS'));
+  assert(f.transports.every(input => input.moduleName === 'partnerAssets' && input.targetAuthority.publication === 'OPERATIONAL' && input.targetAuthority.server === 'partner-owner'));
   assert.equal(Object.hasOwn(before, 'policyRefs'), false);
   assert.equal(Object.hasOwn(before, 'priceRowIntent'), false);
   assert.deepEqual(f.records.get('DefaultProductService:' + result.productCode).listingAuthoring.sourceRef, sourceRef);
@@ -425,7 +425,7 @@ test('remote Store transport defaults and invalid bindings refuse without local 
   });
   assert.equal(properties.product.marketplaceAuthoring.storeSource.moduleName, 'store');
   assert.equal(properties.product.marketplaceAuthoring.storeSource.connectionName, null);
-  assert.equal(properties.product.marketplaceAuthoring.storeSource.runtimeRole, 'COMMERCE');
+  assert.equal(properties.product.marketplaceAuthoring.storeSource.targetAuthority.publication, 'OPERATIONAL');
   assert.equal(properties.product.marketplaceAuthoring.storeSource.allowInsecureLoopback, false);
 });
 
@@ -1256,4 +1256,33 @@ test("actual projection builder retains complete digital ownership classificatio
     assert.equal(availability.reasonCode, "DIGITAL_OWNERSHIP_NOT_SELECTED");
   }
   assert.equal(physicalCalls, 0); assert.equal(couponCalls, 0);
+});
+
+
+test('intent-source publication is explicit and physical role selectors cannot authorize proof reads', async t => {
+  for (const authority of [undefined, 'WASTE', {}, { publication: 'STAGED' }, { publication: 'ONLINE' },
+    { runtimeRole: 'WASTE' }, { publication: 'OPERATIONAL', runtimeRole: 'WASTE' }, { publication: 'OPERATIONAL', server: '' }]) {
+    const f = humanFixture(t); f.configuration.product.marketplaceAuthoring.intentSource.targetAuthority = authority;
+    await assert.rejects(owner.createHuman(f.request));
+    assert.equal(f.transports.length, 0); assert.equal(f.inserts.length, 0);
+  }
+  const f = humanFixture(t); f.configuration.product.marketplaceAuthoring.intentSource.runtimeRole = 'WASTE';
+  await assert.rejects(owner.createHuman(f.request));
+  assert.equal(f.transports.length, 0); assert.equal(f.inserts.length, 0);
+});
+
+
+test('Store placement rejects role and wrong publication selectors and forwards exact operational pins', async t => {
+  for (const targetAuthority of [undefined, {}, {publication:'STAGED'}, {publication:'ONLINE'},
+    {runtimeRole:'COMMERCE'}, {publication:'OPERATIONAL', runtimeRole:'COMMERCE'}]) {
+    const f=humanFixture(t); f.configuration.product.marketplaceAuthoring.storeSource.targetAuthority=targetAuthority;
+    await assert.rejects(owner.createHuman(f.request)); assert.equal(f.stores.length,0); assert.equal(f.inserts.length,0);
+  }
+  const f=humanFixture(t), signed=structuredClone(f.request.authData);
+  const target={publication:'OPERATIONAL',server:'regrouped-store',environment:'unit'};
+  f.configuration.product.marketplaceAuthoring.storeSource.targetAuthority=target;
+  await owner.createHuman(f.request);
+  assert.equal(f.stores.length,2);
+  for(const call of f.stores) assert.deepEqual(call.targetAuthority,target);
+  assert.deepEqual(f.request.authData,signed);
 });

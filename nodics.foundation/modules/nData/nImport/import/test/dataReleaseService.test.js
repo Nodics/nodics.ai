@@ -63,7 +63,7 @@ const fixture = require('./helpers/releaseExecution')({
     } },
     configuration: {
         allowedContractVersions: [1, 2], maximumFilesPerRelease: 10, maximumModulesPerRun: 5,
-        allowDowngrade: false, destinationEnforced: true, allowedDestinationRoles: ['WCMS_STAGED'],
+        allowDowngrade: false, destinationEnforced: true,
         initializationProfiles: { testFoundation: { enabled: true, label: 'Test foundation',
             description: 'Install the test foundation.', completionMessage: 'The test foundation is ready.',
             steps: [{ dataType: 'init' }, { dataType: 'core' }] } },
@@ -96,29 +96,15 @@ const routers = require('../src/router/routers');
     assert.strictEqual(discovered[0].lifecycle, 'PUBLISHABLE');
     assert.strictEqual(discovered[0].destinationRole, 'WCMS_STAGED');
 
-    // Exercise throwing destination validation independently of any customer runtime.
-    const policy = service.configuration();
-    const originalRoles = policy.allowedDestinationRoles;
-    for (const role of ['PLATFORM', 'WCMS_STAGED', 'COMMERCE', 'COMMERCE_STAGED',
-        'PROCESS', 'ENGAGEMENT', 'LOYALTY', 'WASTE', 'LOCATION']) {
+    // Role labels are inert; selected owner and explicit publication determine admission.
+    for (const role of ['PLATFORM', 'WCMS_STAGED', 'ARBITRARY']) {
         fixture.runtimeRole = role;
-        policy.allowedDestinationRoles = [role];
-        assert.strictEqual(service.validateDestination({ destinationRole: role, environmentScope: ['LOCAL'] }), true);
-        const rejected = role === 'COMMERCE_STAGED' ? ['UNRELATED', 'WCMS_STAGED', 'COMMERCE'] : ['UNRELATED'];
-        for (const destinationRole of rejected) {
-            assert.throws(() => service.validateDestination({ destinationRole, environmentScope: ['LOCAL'] }), {
-                code: 'ERR_IMP_00004', message: 'Data release is not permitted for runtime destination ' + role
-            });
-        }
+        assert.strictEqual(service.validateDestination(discovered[0]), true);
     }
-    fixture.runtimeRole = 'WCMS_STAGED';
-    policy.allowedDestinationRoles = originalRoles;
-    assert.throws(() => service.validateDestination({
-        destinationRole: 'COMMERCE_STAGED', environmentScope: ['LOCAL']
-    }), { code: 'ERR_IMP_00004', message: 'Data release is not permitted for runtime destination WCMS_STAGED' });
-    assert.throws(() => service.validateDestination({
-        destinationRole: 'WCMS_STAGED', environmentScope: ['PRODUCTION']
-    }), { code: 'ERR_IMP_00004', message: 'Data release is not permitted for environment LOCAL' });
+    fixture.publication = 'ONLINE';
+    assert.throws(() => service.validateDestination(discovered[0]), /Staged destination/);
+    fixture.publication = 'STAGED';
+    assert.throws(() => service.validateDestination({ ...discovered[0], environmentScope: ['PRODUCTION'] }), /environment/);
 
     const initialPreflight = await service.preflight({
         tenant: 'default', releaseRequest: { dataType: 'core', releaseCodes: ['testModule:core-v001'] }
@@ -156,13 +142,13 @@ const routers = require('../src/router/routers');
     assert.strictEqual(service.isDestinationCompatible(catalogue.data[0]), true);
     assert.strictEqual(service.isDestinationCompatible(Object.assign({}, catalogue.data[0], {
         destinationRole: 'PROCESS'
-    })), false);
+    })), true);
 
     let profiles = await service.getInitializationProfiles({ tenant: 'default' });
     assert.strictEqual(profiles.data.length, 1);
     assert.strictEqual(profiles.data[0].profileCode, 'testFoundation');
     assert.strictEqual(profiles.data[0].moduleIndex, '60.99');
-    assert.strictEqual(profiles.data[0].destinationRole, 'WCMS_STAGED');
+    assert.strictEqual(profiles.data[0].publicationContext, 'STAGED');
     assert.deepStrictEqual(profiles.data[0].steps.map(step => step.dataType), ['init', 'core']);
     assert.strictEqual(profiles.data[0].steps[1].releases[0].status, 'NOT_INSTALLED');
     let profileValidation = await service.runInitializationProfile({ tenant: 'default',
@@ -407,12 +393,12 @@ const routers = require('../src/router/routers');
 
     assert.throws(() => service.validateLifecycleMetadata({ owningDomain: 'test.domain' }, 'testModule', 'core'),
         /metadata is incomplete/);
-    assert.throws(() => service.validateLifecycleMetadata({
+    assert.doesNotThrow(() => service.validateLifecycleMetadata({
         owningDomain: 'test.domain', lifecycle: 'PUBLISHABLE', destinationRole: 'ONLINE',
         environmentScope: ['LOCAL'], sensitivity: 'PUBLIC', versioningPolicy: 'IMMUTABLE',
         publicationPolicy: 'REQUIRED', initialPublicationPolicy: 'ADMIN_INITIATED',
         removalPolicy: 'UNPUBLISH_OR_RETIRE'
-    }, 'testModule', 'core'), /must target a Staged runtime/);
+    }, 'testModule', 'core'));
     assert.throws(() => service.validatePublicationReview({ title: '<script>', entities: [] }, 'testModule', 'core'),
         /metadata is invalid|text is invalid/);
 
@@ -516,7 +502,7 @@ const routers = require('../src/router/routers');
         assert.strictEqual(folderOnlyReleases.length, 1);
         assert.strictEqual(folderOnlyReleases[0].releaseCode, 'folderOnlyModule:core-v001');
         assert.strictEqual(folderOnlyReleases[0].version, '0.0.0');
-        assert.strictEqual(folderOnlyReleases[0].destinationRole, 'WCMS_STAGED');
+        assert.strictEqual(folderOnlyReleases[0].destinationRole, undefined);
         assert.deepStrictEqual(folderOnlyReleases[0].declaredFiles.sort(), [
             'core-v001/headers/folderHeader.js',
             'core-v001/records/folderData.js'

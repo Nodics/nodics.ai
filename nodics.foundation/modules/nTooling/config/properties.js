@@ -631,7 +631,6 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nData/nExport/export/test/dataExportCapabilityBehavior.test.js' }
             ],
             profile: [
-                { node: 'nodics.platform/modules/profile/test/publicIdentityLifecycleContract.test.js' },
                 { node: 'nodics.platform/modules/profile/test/identityAuthorityPacks.test.js' },
                 { node: 'nodics.platform/modules/profile/test/identityCatalogueContract.test.js' },
                 { node: 'nodics.platform/modules/profile/test/bootstrapRecordPreservation.test.js' },

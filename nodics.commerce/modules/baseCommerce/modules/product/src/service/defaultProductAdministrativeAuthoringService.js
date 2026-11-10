@@ -138,7 +138,7 @@ module.exports = {
             !permission ||
             policy.identityTarget?.moduleName !== 'profile' ||
             !policy.identityTarget.connectionName ||
-            policy.identityTarget.targetAuthority?.runtimeRole !== 'PLATFORM' ||
+            (policy.identityTarget.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(policy.identityTarget.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
             !/^v\d+$/.test(policy.identityTarget.apiVersion) ||
             !Number.isSafeInteger(policy.timeoutMs) ||
             policy.timeoutMs < 1 ||

@@ -109,7 +109,9 @@ module.exports = {
             !allowed.remote ||
             key !== declaration.actionKey ||
             allowed.remote.moduleName !== declaration.moduleName ||
-            allowed.remote.apiName !== declaration.apiName
+            allowed.remote.target !== declaration.target ||
+            allowed.remote.apiName !== declaration.apiName ||
+            !require("node:util").isDeepStrictEqual(allowed.remote.targetAuthority, declaration.targetAuthority)
         ) {
             throw new CLASSES.NodicsError(
                 'ERR_PROCESS_00019',
@@ -201,6 +203,7 @@ module.exports = {
             !target.connectionName ||
             target.connectionName === 'default' ||
             !declaration.moduleName ||
+            !SERVICE.DefaultProcessActionAdapterRegistryService.validRemoteAuthority(declaration) ||
             !declaration.apiName
         ) {
             throw new CLASSES.NodicsError('ERR_PROCESS_00019', 'Remote process action target is unavailable');
@@ -214,7 +217,7 @@ module.exports = {
                 moduleName: declaration.moduleName,
                 connectionName: target.connectionName,
                 connectionType: target.connectionType || policy.connectionType,
-                targetAuthority: { runtimeRole: declaration.runtimeRole },
+                targetAuthority: { ...declaration.targetAuthority },
                 local: false,
                 methodName: 'POST',
                 apiName: declaration.apiName,

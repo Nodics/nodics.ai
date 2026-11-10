@@ -65,7 +65,8 @@ test("explicit remote actions consume inactive owner declarations without activa
       names,
     );
     assert(
-      actions.every((action) => action.remote.requiresCompletedTask === true),
+      actions.every((action) => action.remote.requiresCompletedTask === true &&
+        action.remote.targetAuthority.publication === "STAGED" && !("runtimeRole" in action.remote)),
     );
     actions[0].remote.apiName = "/changed";
     assert.equal(
@@ -284,6 +285,8 @@ function fixture() {
           input.model.$set || input.model,
         ))
           _.set(row, key, _.cloneDeep(value));
+        for (const key of Object.keys(input.model.$unset || {}))
+          _.unset(row, key);
         if (kind === "article") state.articleWrites++;
         return {
           code: "SUC_SYS_00000",
@@ -374,10 +377,13 @@ function fixture() {
       get: async () => ({ state: "ONLINE" }),
       publishApproved: async (input) => {
         state.publications++;
-        return { code: input.publication.code, state: "PUBLISHED" };
+        return { ..._.cloneDeep(input.publication), state: "ONLINE" };
       },
     },
     DefaultModuleService: {
+      // The isolated Editorial endpoint owns STAGED; Process uses its separate signed runtime fixture.
+      isLocalModuleActive: moduleName => moduleName === 'editorial',
+      isCurrentRuntimeAuthority: authority => authority.publication === 'STAGED',
       invokeModule: async (options) => {
         assert.equal(options.local, false);
         assert.equal(options.maxAttempts, 1);
@@ -1051,4 +1057,37 @@ test("a failed authoritative update envelope cannot dispatch even with a positiv
       false,
     );
   }
+});
+
+test('remote actions preserve publication and deployment pins and reject retired or malformed routing before minting a handle', async () => {
+  for (const authority of [undefined, {}, {runtimeRole: 'WCMS_STAGED'}, {publication:'UNKNOWN'},
+    {publication:'STAGED',server:''}, {publication:'STAGED',environment:[]}, {publication:'STAGED',other:true}]) {
+    const f = fixture(); completedTask(f);
+    f.settings.actionAdapters.definitions['editorial.applyDecision'].remote.targetAuthority = authority;
+    await assert.rejects(registry.execute(f.request, execution(f)), /target is unavailable/);
+    assert.equal(f.instance.activeRemoteAction, undefined);
+    assert.equal(f.articleWrites, 0);
+  }
+  const f = fixture(); completedTask(f);
+  const remote = f.settings.actionAdapters.definitions['editorial.applyDecision'].remote;
+  remote.runtimeRole = 'WCMS_STAGED';
+  await assert.rejects(registry.execute(f.request, execution(f)), /target is unavailable/);
+  assert.equal(f.instance.activeRemoteAction, undefined);
+  delete remote.runtimeRole;
+  remote.targetAuthority = {publication:'STAGED',server:'customAuthor',environment:'local'};
+  const invoke = SERVICE.DefaultModuleService.invokeModule;
+  SERVICE.DefaultModuleService.invokeModule = async options => {
+    if (options.moduleName === 'editorial') assert.deepEqual(options.targetAuthority, remote.targetAuthority);
+    return invoke(options);
+  };
+  await registry.execute(f.request, execution(f));
+  assert.equal(f.instance.activeRemoteAction.status, 'COMPLETED');
+});
+
+test('an execution cannot swap its allowlisted destination publication before handle creation', async () => {
+  const f = fixture(); completedTask(f);
+  const declaration = {...f.settings.actionAdapters.definitions['editorial.applyDecision'].remote,
+    actionKey:'editorial.applyDecision',targetAuthority:{publication:'ONLINE'}};
+  await assert.rejects(transport.begin(f.request, execution(f), declaration, f.processAuth), /unavailable/);
+  assert.equal(f.instance.activeRemoteAction, undefined);
 });

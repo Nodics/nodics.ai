@@ -72,6 +72,17 @@ module.exports = {
         });
     },
 
+    /** Validates explicit DMS owner publication and optional exact deployment pins; retired roles never route. */
+    validRemoteAuthority: function (remote) {
+        const authority = remote && remote.targetAuthority;
+        return !!authority && typeof authority === 'object' && !Array.isArray(authority) &&
+            !Object.hasOwn(remote, 'runtimeRole') &&
+            ['STAGED', 'ONLINE', 'OPERATIONAL'].includes(authority.publication) &&
+            Object.keys(authority).every(key => ['publication', 'server', 'environment'].includes(key)) &&
+            ['server', 'environment'].every(key => !Object.hasOwn(authority, key) ||
+                (typeof authority[key] === 'string' && !!authority[key].trim() && authority[key] === authority[key].trim()));
+    },
+
     /** Reads only an explicitly selected owner's remote action declaration, without activating its runtime or merging its configuration. */
     ownerDefinition: function (key) {
         const match = /^([A-Za-z][A-Za-z0-9_-]*)\.([A-Za-z][A-Za-z0-9_]*)$/.exec(key);
@@ -88,7 +99,7 @@ module.exports = {
         if (!definition || definition.moduleName !== match[1] || definition.operation !== match[2] ||
             !definition.remote || definition.remote.moduleName !== match[1] ||
             typeof definition.remote.target !== 'string' || !definition.remote.target ||
-            typeof definition.remote.runtimeRole !== 'string' || !definition.remote.runtimeRole ||
+            !this.validRemoteAuthority(definition.remote) ||
             typeof definition.remote.apiName !== 'string' || !definition.remote.apiName.startsWith('/') ||
             definition.service || definition.method) {
             throw new CLASSES.NodicsError('ERR_PROCESS_00019', 'Owner remote action declaration is invalid: ' + key);

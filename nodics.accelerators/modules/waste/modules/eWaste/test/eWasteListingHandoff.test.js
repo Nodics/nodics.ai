@@ -101,14 +101,14 @@ function fixture(t) {
         ],
       },
     },
-    targetAuthorities: { commerceStaged: { runtimeRole: "COMMERCE_STAGED" } },
+    targetAuthorities: { commerceStaged: { publication: "STAGED" } },
   };
   global.CONFIG = {
     get: (key) =>
       key === 'identityGovernance' ? require('../../../../../../nodics.foundation/modules/nAuth/config/properties').identityGovernance : key === "eWaste"
         ? config
         : key === "waste"
-          ? { operations: { requireScopes: true, maximumScopePoints: 1000 } }
+          ? { operations: { ...require("../../../../../../nodics.waste/modules/wasteCore/config/properties").waste.operations, requireScopes: true, maximumScopePoints: 1000 } }
           : {},
   };
   global.SERVICE = {
@@ -951,7 +951,7 @@ test("actual Product source-evidence owner emits supported lifecycle states and 
               moduleName: "store",
               connectionName: "commerce",
               connectionType: "abstract",
-              runtimeRole: "COMMERCE",
+              targetAuthority: { publication: "OPERATIONAL" },
               timeoutMs: 15000,
               allowInsecureLoopback: false,
             },

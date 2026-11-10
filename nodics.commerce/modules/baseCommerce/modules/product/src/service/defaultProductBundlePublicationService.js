@@ -39,7 +39,7 @@ module.exports = {
   policy: function () {
     const p = CONFIG.get("product")?.marketplaceAuthoring?.bundlePublication;
     if (p?.enabled !== true || p.source?.moduleName !== "digitalCore" || !p.source.connectionName ||
-        p.source.targetAuthority?.runtimeRole !== "COMMERCE" || !Number.isSafeInteger(p.source.timeoutMs) ||
+        (p.source.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(p.source.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) || !Number.isSafeInteger(p.source.timeoutMs) ||
         p.source.timeoutMs < 1 || p.source.maxAttempts !== 1) throw new Error("Automatic bundle publication is not configured");
     return structuredClone(p);
   },
