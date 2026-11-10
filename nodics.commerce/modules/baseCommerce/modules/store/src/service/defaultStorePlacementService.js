@@ -33,7 +33,7 @@ module.exports = {
             throw new Error('Exact Store placement selectors are required');
         const check = () => {
             const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'store');
-            const policy = CONFIG.get('store')?.placementRead, role = CONFIG.get('runtimeRole');
+            const policy = CONFIG.get('store')?.placementRead;
             if (auth !== originalAuth || request.router !== originalRouter || !equal(state(), initial) ||
                 auth.principalType !== 'service' || auth.isSystem || !auth.permissions?.includes('commerce.store.read') ||
                 SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection?.(request) !== true ||
@@ -44,7 +44,7 @@ module.exports = {
                 [auth.enterpriseCode, request.entCode, request.enterpriseCode, request.httpRequest?.headers?.entCode,
                     request.httpRequest?.headers?.['x-enterprise-code'], request.httpRequest?.headers?.['X-Enterprise-Code']]
                     .some(value => value !== undefined && value !== auth.entCode) ||
-                policy?.enabled !== true || !identifier(policy.runtimeRole) || role?.code !== policy.runtimeRole || role.publication !== 'OPERATIONAL' ||
+                policy?.enabled !== true || SERVICE.DefaultModuleService?.isLocalModuleActive?.('store') !== true || CONFIG.get('runtimeRole')?.publication !== 'OPERATIONAL' ||
                 !Array.isArray(policy.callers) || !policy.callers.length || policy.callers.length > 100)
                 throw new Error('Original qualified Store placement caller is required');
             for (const caller of policy.callers) {

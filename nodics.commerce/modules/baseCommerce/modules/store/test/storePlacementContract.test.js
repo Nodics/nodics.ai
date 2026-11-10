@@ -59,29 +59,9 @@ const dispatcher = require(
 );
 const clone = (value) => structuredClone(value);
 
-test("Store owns the semantic Online read role without enabling callers", (t) => {
-  const descriptor = Object.getOwnPropertyDescriptor(global, "_");
-  t.after(() => {
-    if (descriptor) Object.defineProperty(global, "_", descriptor);
-    else delete global._;
-  });
-  global._ = require("lodash");
-  const loader = require(
-    foundation + "nConfig/src/service/DefaultFrameworkInitializerService",
-  );
-  for (const role of ["COMMERCE", "COMMERCE_STAGED", "UNRELATED"]) {
-    const effective = loader.deriveRuntimeRoleProfile(
-      { ...clone(properties), runtimeRole: { code: role } },
-      "store",
-    );
-    assert.equal(
-      effective.store.placementRead.runtimeRole,
-      role === "COMMERCE" ? "COMMERCE" : null,
-    );
-    assert.equal(effective.store.placementRead.enabled, false);
-    assert.deepEqual(effective.store.placementRead.callers, []);
-    assert.equal(effective.store.runtimeRoleProfiles, undefined);
-  }
+test("Store placement defaults do not select a physical runtime role", () => {
+  assert.deepEqual(properties.store.placementRead, { enabled: false, callers: [] });
+  assert.equal(properties.store.runtimeRoleProfiles, undefined);
 });
 
 /** Compiles the real service generator template without changing generated source. */
@@ -180,7 +160,6 @@ function fixture(t) {
     store: {
       placementRead: {
         enabled: true,
-        runtimeRole: "COMMERCE",
         callers: [caller],
       },
     },
@@ -261,7 +240,7 @@ function fixture(t) {
     },
   };
   const generated = generatedStore();
-  global.SERVICE = {
+  global.SERVICE = { DefaultModuleService: { isLocalModuleActive: moduleName => ["store"].includes(moduleName), },
     DefaultStorePlacementService: owner,
     DefaultStoreMerchantReadService: require("../src/service/defaultStoreMerchantReadService"),
     DefaultServiceTokenService: runtime,
@@ -478,9 +457,9 @@ for (const [name, mutate] of [
     },
   ],
   [
-    "wrong receiver",
+    "nonlocal receiver",
     (f) => {
-      f.config.runtimeRole.code = "OTHER";
+      SERVICE.DefaultModuleService.isLocalModuleActive = () => false;
     },
   ],
   [
@@ -787,7 +766,7 @@ test("copied/mutated fixed query is denied before driver I/O, simultaneous origi
 
 test("inert owner defaults and route do not expose generic schema or write authority", () => {
   assert.equal(properties.store.placementRead.enabled, false);
-  assert.equal(properties.store.placementRead.runtimeRole, null);
+  assert.equal(properties.store.placementRead.runtimeRole, undefined);
   assert.deepEqual(properties.store.placementRead.callers, []);
   assert.equal(
     properties.apiExposure.categories.storePlacementRead.enabled,
@@ -797,4 +776,23 @@ test("inert owner defaults and route do not expose generic schema or write autho
   assert.deepEqual(route.authTokenTypes, ["service"]);
   assert.equal(route.requestPrivacy.sensitive, true);
   assert.equal(route.cache.enabled, false);
+});
+
+
+test("Store admits arbitrary display code, but refuses actual remote-only/inactive owners and ownership loss during read", async t => {
+  const f = fixture(t);
+  const dms = require(foundation + "nService/src/service/module/defaultModuleService");
+  const previous = global.NODICS;
+  let active = true, remoteOnly = false;
+  global.NODICS = { ...previous, isModuleActive: name => name === "store" && active };
+  SERVICE.DefaultModuleService = dms;
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly }) }) };
+  f.config.runtimeRole.code = "UNRELATED";
+  assert.equal((await owner.placement(f.request)).store.code, "store-a");
+  remoteOnly = true; await assert.rejects(owner.placement(f.request));
+  remoteOnly = false; active = false; await assert.rejects(owner.placement(f.request));
+  active = true;
+  const get = SERVICE.DefaultStoreService.get;
+  SERVICE.DefaultStoreService.get = async function (r) { const result = await get.call(this, r); remoteOnly = true; return result; };
+  await assert.rejects(owner.placement(f.request));
 });
