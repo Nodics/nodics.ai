@@ -40,16 +40,15 @@ const admission = {
         .some(value => value !== undefined && value !== auth.entCode)) this.fail();
     const enterpriseCode = body.enterpriseCode === undefined ? auth.entCode : body.enterpriseCode;
     const delegated = enterpriseCode !== auth.entCode;
-    let environment, runtimeRole;
+    let environment;
     if (delegated) {
       const selection = policy?.businessCallers;
       environment = NODICS.getSelectedEnvironmentName();
-      runtimeRole = CONFIG.get("runtimeRole")?.code;
       const coordinates = ["projectCode", "environmentCode", "serverCode", "instanceCode", "assignmentCode"];
       const fields = ["tenant", "principalEnterpriseCode", "enterpriseCode", "serviceId", ...coordinates];
       const identifier = value => typeof value === "string" && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value);
       const callers = selection?.callers;
-      if (selection?.enabled !== true || selection.runtimeRole !== "COMMERCE" || runtimeRole !== selection.runtimeRole ||
+      if (selection?.enabled !== true || SERVICE.DefaultModuleService?.isLocalModuleActive?.("pricing") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL" ||
           !Array.isArray(callers) || !callers.length || callers.length > 100 || callers.some(grant =>
             !grant || Object.keys(grant).sort().join(",") !== [...fields].sort().join(",") ||
             fields.some(key => !identifier(grant[key]))) ||
@@ -60,7 +59,7 @@ const admission = {
     }
     const context = { tenant: input.tenant, enterpriseCode, authData: auth };
     admissions.set(context, { input, request: this.requestState(input), context: structuredClone(context),
-      body: structuredClone(body), policy: structuredClone(policy), delegated, environment, runtimeRole,
+      body: structuredClone(body), policy: structuredClone(policy), delegated, environment,
       publication: structuredClone(CONFIG.get("pricing")?.publication) });
     this.admitted(context);
     return context;
@@ -68,11 +67,11 @@ const admission = {
   /** Rejects copied scopes and request, policy, privacy or deployment drift around every awaited read. @param {Object} context Original admitted scope. @returns {void} */
   admitted: function (context) {
     const pin = admissions.get(context);
-    if (!pin || !isDeepStrictEqual(context, pin.context) || !isDeepStrictEqual(this.requestState(pin.input), pin.request) ||
+    if (SERVICE.DefaultModuleService?.isLocalModuleActive?.("pricing") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL" || !pin || !isDeepStrictEqual(context, pin.context) || !isDeepStrictEqual(this.requestState(pin.input), pin.request) ||
         !isDeepStrictEqual(CONFIG.get("pricing")?.merchantEvidence, pin.policy) ||
         !isDeepStrictEqual(CONFIG.get("pricing")?.publication, pin.publication) ||
         SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection?.(pin.input) !== true ||
-        pin.delegated && (NODICS.getSelectedEnvironmentName() !== pin.environment || CONFIG.get("runtimeRole")?.code !== pin.runtimeRole)) this.fail();
+        pin.delegated && (NODICS.getSelectedEnvironmentName() !== pin.environment)) this.fail();
   },
   /** Supplies private owner persistence, never altered runtime claims or general schema access. @param {Object} context Exact admitted scope. @returns {Object} Local persistence auth. */
   ownerAuth: function (context) {
@@ -113,6 +112,7 @@ module.exports = {
   fail: admission.fail,
   /** Reusable fixed runtime caller binding; a permission alone never supplies a buyer. @param {Object} input Verified request. @returns {Promise<Object>} Signed authority. */
   authorize: async function (input) {
+    if (SERVICE.DefaultModuleService?.isLocalModuleActive?.("pricing") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") this.fail();
     if (
       SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection?.(input) !==
       true
@@ -123,7 +123,6 @@ module.exports = {
     const publication = structuredClone(CONFIG.get("pricing")?.publication);
     const businessSelection = input.payload?.enterpriseCode !== undefined && input.payload.enterpriseCode !== input.authData?.entCode;
     const environment = businessSelection ? NODICS.getSelectedEnvironmentName() : undefined;
-    const runtimeRole = businessSelection ? CONFIG.get("runtimeRole")?.code : undefined;
     const signed = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(
       input,
       "pricing",
@@ -149,14 +148,16 @@ module.exports = {
       if (!isDeepStrictEqual(admission.requestState(input), state) ||
           !isDeepStrictEqual(CONFIG.get("pricing")?.merchantEvidence, policy) ||
           !isDeepStrictEqual(CONFIG.get("pricing")?.publication, publication) ||
+          SERVICE.DefaultModuleService?.isLocalModuleActive?.("pricing") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL" ||
           SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection?.(input) !== true ||
-          businessSelection && (NODICS.getSelectedEnvironmentName() !== environment || CONFIG.get("runtimeRole")?.code !== runtimeRole)) this.fail();
+          businessSelection && (NODICS.getSelectedEnvironmentName() !== environment)) this.fail();
     }
     SERVICE.DefaultPromotionOperationService.requireOperationalRuntime();
     if (input.tenant !== tenant || !isDeepStrictEqual(input.authData, auth) ||
         !isDeepStrictEqual(admission.requestState(input), state) ||
         !isDeepStrictEqual(CONFIG.get("pricing")?.merchantEvidence, policy) ||
         !isDeepStrictEqual(CONFIG.get("pricing")?.publication, publication) ||
+          SERVICE.DefaultModuleService?.isLocalModuleActive?.("pricing") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL" ||
         SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection?.(input) !== true) this.fail();
     return auth;
   },

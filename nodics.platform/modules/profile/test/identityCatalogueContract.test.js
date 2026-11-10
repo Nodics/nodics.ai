@@ -286,8 +286,9 @@ function releaseFixture(t, tenantGroupsOnly = false) {
   const f = fixture(), profileServices = SERVICE;
   f.rows.permission.length = 0; f.rows.enterpriseRole.length = 0; f.rows.userGroup.length = 0;
   const importRoot = "../../../../nodics.foundation/modules/nData/nImport/import";
-  const modules = { profile: { name: "profile", path: root, index: "10" } };
+  const modules = { profile: { name: "profile", path: root, index: "10", rawSchema: {} } };
   const releaseState = require(importRoot + "/test/helpers/releaseExecution")({ modules, runtimeRole: "PLATFORM" });
+  releaseState.publication = "OPERATIONAL";
   Object.assign(SERVICE, profileServices, { DefaultDataReleaseService: releaseState.service });
   const originalGet = CONFIG.get;
   CONFIG.get = key => key === "defaultTenant" ? "authority" : key === "defaultEnterprise" ? "PLATFORM" : originalGet(key);
@@ -296,6 +297,7 @@ function releaseFixture(t, tenantGroupsOnly = false) {
   const manifest = { contractVersion: 2, module: "profile", sections: {} };
   const sourceRows = new Map(), order = [];
   const add = (sectionCode, schemaName, models, prerequisites, selectionPolicy = "EXPLICIT") => {
+    modules.profile.rawSchema[schemaName] = { model: true };
     const header = "init-v001/headers/" + sectionCode + "Header.js", records = "init-v001/records/" + sectionCode + "Data.js";
     const sources = {
       [header]: "module.exports = " + JSON.stringify({ profile: { [sectionCode]: { options: {

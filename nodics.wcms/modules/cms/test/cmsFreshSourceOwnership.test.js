@@ -22,8 +22,8 @@ const repoRoot = path.resolve(__dirname, '../../../..');
 require('node:test').test('fresh framework CMS ownership uses explicit successor metadata within v001', () => {
     const assert = require('node:assert/strict');
     for (const [owner, code, version] of [
-        ['nodics.wcms/modules/cms', 'init-v001', '0.0.3'],
-        ['nodics.platform/modules/axis', 'axisBaseline', '0.0.2']
+        ['nodics.wcms/modules/cms', 'init-v001', '0.0.4'],
+        ['nodics.platform/modules/axis', 'axisBaseline', '0.0.3']
     ]) {
         const section = require(path.join(repoRoot, owner, 'data/manifest.json')).sections[code];
         assert.equal(section.version, version, owner);

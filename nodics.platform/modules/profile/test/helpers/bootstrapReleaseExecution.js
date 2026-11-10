@@ -31,7 +31,8 @@ module.exports = async function executeBootstrapRelease(schemaName, tenant, work
             lifecycle: 'REFERENCE', environmentScope: ['ALL'], sensitivity: 'INTERNAL', versioningPolicy: 'NONE', publicationPolicy: 'NONE',
             initialPublicationPolicy: 'NONE', removalPolicy: 'RETAIN', files: Object.fromEntries(Object.entries(files).map(([file, bytes]) =>
                 [file, crypto.createHash('sha256').update(bytes).digest('hex')])) } } }));
-        const state = require(foundation + 'nData/nImport/import/test/helpers/releaseExecution')({ modules: { seedOwner: { name: 'seedOwner', path: root } }, runtimeRole: 'PLATFORM' });
+        const state = require(foundation + 'nData/nImport/import/test/helpers/releaseExecution')({ modules: { seedOwner: { name: 'seedOwner', path: root }, profile: { name: 'profile', rawSchema: { [schemaName]: { model: true } } } }, runtimeRole: 'PLATFORM' });
+        state.publication = "OPERATIONAL";
         const config = global.CONFIG;
         global.CONFIG = { get: key => config.get(key) ?? prior.CONFIG?.get(key) };
         global.NODICS = { ...prior.NODICS, ...global.NODICS };

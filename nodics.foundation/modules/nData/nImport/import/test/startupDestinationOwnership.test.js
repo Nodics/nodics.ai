@@ -20,17 +20,15 @@ const test = require("node:test");
 const path = require("node:path");
 const lodash = require("lodash");
 const service = require("../src/service/release/defaultDataReleaseService");
-const initializer = require("../../../../nConfig/src/service/DefaultFrameworkInitializerService");
+const authoring = require("../../../../nDatabase/database/src/service/schema/defaultSchemaAuthoringPolicyService");
 const root = path.resolve(__dirname, "../../../../../..");
 
 function setup(role = "WCMS_ONLINE") {
-  const properties = initializer.deriveRuntimeRoleDataReleases(
-    lodash.merge(
-      {},
-      require("../config/properties"),
-      require(path.join(root, "nodics.wcms/config/properties")),
-      { runtimeRole: { code: role }, environment: { class: "LOCAL" } },
-    ),
+  const properties = lodash.merge(
+    {},
+    require("../config/properties"),
+    require(path.join(root, "nodics.wcms/config/properties")),
+    { runtimeRole: { code: role, publication: role === "WCMS_STAGED" ? "STAGED" : "ONLINE" }, environment: { class: "LOCAL" } },
   );
   const modules = Object.fromEntries(
     ["cms", "media", "wcms", "editorial"].map((name, index) => [
@@ -43,11 +41,13 @@ function setup(role = "WCMS_ONLINE") {
       },
     ]),
   );
+  const schemas = {};
   let effects = 0;
   global.CONFIG = { get: (key) => properties[key] };
   global.NODICS = {
     getActiveModules: () => Object.keys(modules),
     getRawModule: (name) => modules[name],
+    getModule: (name) => modules[name] && { ...modules[name], rawSchema: schemas[name] || {} },
     getSelectedEnvironmentName: () => "local",
   };
   global.CLASSES = {
@@ -59,6 +59,7 @@ function setup(role = "WCMS_ONLINE") {
     },
   };
   global.SERVICE = {
+    DefaultSchemaAuthoringPolicyService: authoring,
     DefaultDataInstallationService: {
       get: async () => {
         effects += 1;
@@ -66,15 +67,15 @@ function setup(role = "WCMS_ONLINE") {
       },
     },
   };
+  const staged = service.discoverReleases("init").find(release => release.releaseCode === "cms:init-v001");
+  for (const {moduleName, schemaName} of service.releaseDestinationTargets(staged)) {
+    (schemas[moduleName] ??= {})[schemaName] = { model: true };
+  }
   return { properties, effects: () => effects };
 }
 
-test("actual Online initializer excludes Media Process releases through effective empty role allowance", async () => {
+test("actual Online initializer excludes Media Process releases without the selected installer", async () => {
   const fixture = setup();
-  assert.deepEqual(
-    fixture.properties.data.dataReleases.allowedDestinationRoles,
-    [],
-  );
   const discovered = service.discoverReleases("init");
   const candidate = discovered.find(
     (release) => release.releaseCode === "media:mediaPublicationWorkflow",
@@ -133,27 +134,13 @@ test("actual Staged release selection remains admitted; Online cannot import Sta
   });
 });
 
-test("empty, explicit, omitted and mismatched role allowances stay identical to manual destination policy", () => {
+test("manual destination policy requires local ownership and refuses retired role allowances", () => {
   const { properties } = setup();
-  const release = { destinationRole: "WCMS_ONLINE", environmentScope: ["ALL"] };
-  for (const allowed of [[], ["WCMS_STAGED"], ["WCMS_ONLINE"]]) {
-    properties.data.dataReleases.allowedDestinationRoles = allowed;
-    const admitted = allowed.includes("WCMS_ONLINE");
-    assert.equal(service.isDestinationCompatible(release), admitted);
-    if (admitted) assert.equal(service.validateDestination(release), true);
-    else
-      assert.throws(() => service.validateDestination(release), {
-        code: "ERR_IMP_00004",
-      });
-  }
-  delete properties.data.dataReleases.allowedDestinationRoles;
-  assert.equal(service.isDestinationCompatible(release), true);
+  const release = { moduleName: "cms", environmentScope: ["ALL"] };
   assert.equal(service.validateDestination(release), true);
-  assert.equal(
-    service.isDestinationCompatible({
-      ...release,
-      environmentScope: ["PRODUCTION"],
-    }),
-    false,
-  );
+  assert.equal(service.isDestinationCompatible({ ...release, moduleName: "absent" }), false);
+  assert.equal(service.isDestinationCompatible({ ...release, environmentScope: ["PRODUCTION"] }), false);
+  properties.data.dataReleases.allowedDestinationRoles = ["WCMS_ONLINE"];
+  assert.equal(service.isDestinationCompatible(release), false);
+  assert.throws(() => service.validateDestination(release), /allowedDestinationRoles is retired/);
 });

@@ -212,14 +212,20 @@ test('canonical operational Commerce serves Product while Staged and wrong autho
     assert.throws(() => target.assertOnline(), /authority/);
 });
 
-test('governed routes and provider selections are disabled pending migration; fixed workflow is explicitly installable', () => {
+test('governed route exposure is disabled by default and the fixed workflow is explicitly installable', () => {
     const routes = require('../src/router/routers').product.operator, properties = require('../config/properties');
     for (const key of ['createGoverned', 'applyPublicationDecision', 'targetDeploy', 'targetStatus', 'targetRollback', 'targetWithdraw', 'authorizeTarget']) {
         assert.equal(routes[key].active, true); assert.equal(routes[key].secured, true);
         assert.equal(properties.apiExposure.categories[routes[key].apiExposure].enabled, false);
     }
-    assert.equal(properties.publish.providers.domainAdapters.product, null);
-    assert.equal(properties.product.discovery.activationService, null);
+    const bindings = require('../../../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService');
+    const resolveAdapter = publication => bindings.resolve(properties, {}, {
+        serverCode: 'testServer', readRuntimeProperty: () => publication,
+    }).publish.providers.domainAdapters.product;
+    assert.equal(resolveAdapter('STAGED'), 'DefaultProductPublicationAdapterService');
+    assert.equal(resolveAdapter('ONLINE'), null);
+    assert.equal(resolveAdapter('OPERATIONAL'), null);
+    assert.equal(properties.product.discovery.activationService.cases.STAGED, null);
     const release = require('../data/manifest.json').sections.productPublicationWorkflow;
     assert.equal(release.selectionPolicy, 'EXPLICIT');
     assert.equal(release.sourceRoot, 'init-v001');
@@ -525,7 +531,7 @@ test('target records reuse managed concurrency and only six qualified sources se
         assert.equal(schemas[name].backoffice.mutationMode, 'READ_ONLY');
     }
     const policy = require('../config/properties').schemaPolicies.product.catalogueVersioned;
-    assert.deepEqual(policy, { isVersionedEnabled: false });
+    assert.deepEqual(policy, { isVersionedEnabled: true, versionedReadMode: 'CURRENT' });
     for (const name of Object.keys(graph.services())) assert(schemas[name].schemaPolicies.includes('catalogueVersioned'));
     for (const name of ['productPublication', 'productSearchProjection', 'productPublicationManifest', 'productPublicationPointer']) {
         assert(!schemas[name].schemaPolicies.includes('catalogueVersioned'));
