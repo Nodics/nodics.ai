@@ -29,7 +29,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "wasteCore accessGroups",
       "description": "Explicit wasteCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "wasteCore",
@@ -53,13 +53,13 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+          "version": "0.0.3",
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
@@ -80,27 +80,27 @@
         {
           "moduleName": "product",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
+          "version": "0.0.3",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "402b7ebffc05ac529f465c228700437b830cfb0f873a15ac92d5b7b5b9a3a9c8",
           "partition": "DEFAULT"
         },
@@ -165,7 +165,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "wasteCore enterpriseRoles",
       "description": "Explicit wasteCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "wasteCore",
@@ -189,8 +189,8 @@
         {
           "moduleName": "wasteCore",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "e1cf2a419480a12359c790d7252d9462380137841ad04dd7161d98ae0b0a4d08"
+          "version": "0.0.3",
+          "checksum": "1162e4ca6dc54f5e4271a19431e37d8442f4f26a6a3dc2cb08ab267a06d8523c"
         }
       ]
     },
@@ -206,7 +206,7 @@
     "businessAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Waste business access groups",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "wasteCore",
@@ -230,13 +230,13 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+          "version": "0.0.3",
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
@@ -252,7 +252,7 @@
     "businessAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Waste business access roles",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "wasteCore",
@@ -276,8 +276,8 @@
         {
           "moduleName": "wasteCore",
           "sectionCode": "businessAccessGroups",
-          "version": "0.0.1",
-          "checksum": "5361498fe72056d2f53021082f01e50a4a06f954ed7d47e661aadeb53d974ad1"
+          "version": "0.0.2",
+          "checksum": "c53ae66a8315b9c61968900076445522c0a1d633908a967587b57909f574c2a2"
         }
       ]
     }

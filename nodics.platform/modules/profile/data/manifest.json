@@ -53,7 +53,7 @@
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "profile permissionCatalogue",
       "description": "Explicit profile identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "profile",
@@ -77,7 +77,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "profile accessGroups",
       "description": "Explicit profile identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "profile",
@@ -150,7 +150,7 @@
         {
           "moduleName": "cms",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
           "partition": "DEFAULT"
         },
@@ -206,7 +206,7 @@
         {
           "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
@@ -311,21 +311,21 @@
         {
           "moduleName": "product",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "402b7ebffc05ac529f465c228700437b830cfb0f873a15ac92d5b7b5b9a3a9c8",
           "partition": "DEFAULT"
         },
@@ -411,7 +411,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "profile enterpriseRoles",
       "description": "Explicit profile identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "profile",
@@ -435,19 +435,19 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+          "version": "0.0.3",
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
+          "version": "0.0.3",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         }
@@ -456,7 +456,7 @@
     "init-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.9",
       "description": "Profile first-install identities; preserves existing records and requires module-owned authority definitions.",
       "owningDomain": "profile",
       "lifecycle": "REFERENCE",
@@ -487,6 +487,12 @@
           "version": "0.0.1",
           "checksum": "06ad5ee344b908ee4749d2126146813c9ebfe0a906b20d20590624d279923a68",
           "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.3",
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "axis",
@@ -539,8 +545,21 @@
         },
         {
           "moduleName": "cms",
+          "sectionCode": "accessGroups",
+          "version": "0.0.4",
+          "checksum": "21f0cfcec9774fa3ba4c705c9868ac884bafa4342fa4324640d1dd898f49afc6"
+        },
+        {
+          "moduleName": "cms",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.3",
+          "checksum": "4dbbfb472cd8a3a4ba775d4aac342a6610865a1c40b92bd10b40a530be3fcb27",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "cms",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
           "partition": "DEFAULT"
         },
@@ -568,8 +587,8 @@
         {
           "moduleName": "config",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "1820417dedaa18e512ed4f48358a566667815f62bb4ecd22def3a916220c7a82"
+          "version": "0.0.3",
+          "checksum": "93f8971273a009cc9433863ed32bc22b05b77d0f9d2522c5dd12770e66fb298c"
         },
         {
           "moduleName": "config",
@@ -636,8 +655,21 @@
         },
         {
           "moduleName": "digitalCore",
+          "sectionCode": "accessGroups",
+          "version": "0.0.3",
+          "checksum": "3f83909885dfa658d2f50405849a24b87ef3e4f1ee7ddef9d6269c831357050c"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.3",
+          "checksum": "1a43a19b7a089d16867bef1f20904090ac72046948642c8ed1050b93b68c42a2",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
@@ -668,6 +700,12 @@
           "version": "0.0.1",
           "checksum": "b96be3694de6ed7b00209597ac395f01676a6a37c8b842f8b969c61fe005edff",
           "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "engagementCore",
+          "sectionCode": "accessGroups",
+          "version": "0.0.3",
+          "checksum": "41608c5410ae443e7752726b36e4b3d113409071d0b648f6ca2d7b63708a632e"
         },
         {
           "moduleName": "engagementCore",
@@ -748,6 +786,19 @@
         },
         {
           "moduleName": "order",
+          "sectionCode": "accessGroups",
+          "version": "0.0.4",
+          "checksum": "214c4a0b8ed588a745a3a5046d79ac826e711cde0d2e788339ad6c331f071048"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.4",
+          "checksum": "5a61dbf63c90cc73884e7c86604c5c174fd8a5262e37e8fd6dc97fd61c0e0cb0",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "order",
           "sectionCode": "permissionCatalogue",
           "version": "0.0.1",
           "checksum": "7b8cfbcac58a8f106aa3e066bd200a0ea32e3b23fc22619602ea85a5e241c421",
@@ -776,21 +827,41 @@
         },
         {
           "moduleName": "product",
+          "sectionCode": "accessGroups",
+          "version": "0.0.4",
+          "checksum": "7709ab168d1333f6c14e81882071cb576cbbbe0c2e46795de1bbf3ac6675c9fb"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.5",
+          "checksum": "c53ad995aeb446b4b55cf53462b6775e8436c8130f8c2d911c5497b59ccb1568",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "product",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
+          "version": "0.0.3",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.3",
+          "checksum": "f9ac85c0f210f38d23fb24df54e458975c063e7a67ad21c43657ca93a0239afc",
+          "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
@@ -803,10 +874,29 @@
         },
         {
           "moduleName": "promotion",
+          "sectionCode": "accessGroups",
+          "version": "0.0.4",
+          "checksum": "642958f362319e7b5457ac5270630f19c6b30800e1e3df1e584ed7c7677ed245"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.4",
+          "checksum": "486c58fb3295f555ef843ad8fbf601bedaf8475058607151afcb9df9d0436ebc",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "402b7ebffc05ac529f465c228700437b830cfb0f873a15ac92d5b7b5b9a3a9c8",
           "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "publish",
+          "sectionCode": "accessGroups",
+          "version": "0.0.4",
+          "checksum": "0a05769f4a5822e7cd8a0abc3b1601a4e3ed6e3c1777704f1bac621730876c9b"
         },
         {
           "moduleName": "publish",
@@ -828,6 +918,12 @@
           "version": "0.0.1",
           "checksum": "15e3d0d0541dab1e8c850ca7650c8127d0cef53df891931bcb5f76b5f6dccd1b",
           "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "store",
+          "sectionCode": "accessGroups",
+          "version": "0.0.3",
+          "checksum": "4ac4660d7d4b6cbab800c5713617e90f75fff82bc13e5e95758a266d829cb2fb"
         },
         {
           "moduleName": "store",
@@ -865,10 +961,16 @@
           "partition": "DEFAULT"
         },
         {
-          "moduleName": "wasteCarbon",
-          "sectionCode": "transferFinalizationPermission",
-          "version": "0.0.1",
-          "checksum": "86c3ad0b68a5cf3bc191ebd19328d9bd272d8f9ecaf028bb0d4d36adfc8010cd",
+          "moduleName": "wasteCore",
+          "sectionCode": "accessGroups",
+          "version": "0.0.3",
+          "checksum": "1162e4ca6dc54f5e4271a19431e37d8442f4f26a6a3dc2cb08ab267a06d8523c"
+        },
+        {
+          "moduleName": "wasteCore",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.3",
+          "checksum": "9bdab5ab8ca772bb4ec1d8759aabe7c9afc7d0e9cb3c410033d51d10cf4afa39",
           "partition": "DEFAULT"
         },
         {
@@ -914,17 +1016,75 @@
           "partition": "DEFAULT"
         },
         {
-          "moduleName": "wasteCarbon",
-          "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
-          "checksum": "6a71b997ef08f8e7626d0a32f9d7177d9ef73f51dc4e87b66758f13cc1b09ba3",
+          "moduleName": "cms",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.3",
+          "checksum": "27da70956d363dd1c46bd3c31615f688040847949f1ff381b61631233d6a3ff7"
+        },
+        {
+          "moduleName": "cms",
+          "sectionCode": "businessAccessRoles",
+          "version": "0.0.3",
+          "checksum": "cda603e97ea76579cd49285f8e82d207369d3b56b38724e228e7642381c83ee5",
           "partition": "DEFAULT"
         },
         {
-          "moduleName": "wasteReward",
-          "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
-          "checksum": "7f10365d6fdc95a42c8893a9d05e885d88b4d924a2b7b12e32860b61ecfb4777",
+          "moduleName": "order",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.2",
+          "checksum": "60c7982b011f94fdc8fb08891822c39fe644d0d1912b5da9bd52ea7f52c1943b"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "businessAccessRoles",
+          "version": "0.0.2",
+          "checksum": "1273055eea2f9284d047574fa66a5169af2163da075d9fc656b45e907314d11c",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.2",
+          "checksum": "0342c825765613bd85e227191f60bb411306f5eb000b68ef2c52a546cb256823"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "businessAccessRoles",
+          "version": "0.0.2",
+          "checksum": "572820f9d0579c34ff32237962509028aee5c2133e346917a229775163d66170",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.2",
+          "checksum": "070c871c1a5ede568ab3665b258b7104cdc3b0f42acb0644b7ef0355aa4c1d64"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "businessAccessRoles",
+          "version": "0.0.2",
+          "checksum": "c48e8b95c7c64a075764d16c6223d7f2784cf49db95044142c10e6e09f4d6a7e",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteCore",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.2",
+          "checksum": "c53ae66a8315b9c61968900076445522c0a1d633908a967587b57909f574c2a2"
+        },
+        {
+          "moduleName": "wasteCore",
+          "sectionCode": "businessAccessRoles",
+          "version": "0.0.2",
+          "checksum": "2377b6b3c3ddde4a061afe9da36f51b5df35c73a45453d3506aad6216889cc53",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteCarbon",
+          "sectionCode": "transferFinalizationPermission",
+          "version": "0.0.2",
+          "checksum": "86c3ad0b68a5cf3bc191ebd19328d9bd272d8f9ecaf028bb0d4d36adfc8010cd",
           "partition": "DEFAULT"
         }
       ]

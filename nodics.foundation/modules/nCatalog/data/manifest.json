@@ -29,7 +29,7 @@
     "init-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "description": "Catalog Framework init data",
       "owningDomain": "catalog",
       "lifecycle": "REFERENCE",

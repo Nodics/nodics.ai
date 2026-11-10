@@ -5,7 +5,7 @@
     "core-reference": {
       "kind": "DATA_RELEASE",
       "dataType": "core",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "E-Waste Preset Reference",
       "description": "Reusable electronic-waste taxonomy, policy, collection, and impact presets for nodics.waste.",
       "owningDomain": "waste",

@@ -6,7 +6,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "init",
       "sourceRoot": "init-v001",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "loyaltyWallet Enterprise participant transactions",
       "description": "Exact parent-free participant group and Enterprise role; definitions only, no assignment or financial qualification.",
       "owningDomain": "loyaltyWallet",
@@ -247,7 +247,7 @@
     "specialAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Reviewed Sample Credit Group",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "loyaltyWallet",
@@ -271,8 +271,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
+          "version": "0.0.3",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "loyaltyWallet",
@@ -286,7 +286,7 @@
     "specialAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "Reviewed Sample Credit Role",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "loyaltyWallet",
@@ -310,8 +310,8 @@
         {
           "moduleName": "loyaltyWallet",
           "sectionCode": "specialAccessGroups",
-          "version": "0.0.1",
-          "checksum": "15200837017575ee6f0f407ef2f1808ca1cc1064dfed1c401f12f43a9c91d969"
+          "version": "0.0.2",
+          "checksum": "32a475b64e4fdfb37f6f979d2d9cad78b759be705cfeaaf080695bb158dc5fc5"
         }
       ]
     },
@@ -319,7 +319,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "init",
       "sourceRoot": "init-v001",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Loyalty participant access groups",
       "description": "Customer participation groups for transfer and partner-conversion capabilities",
       "owningDomain": "loyaltyWallet",
@@ -342,8 +342,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660",
+          "version": "0.0.3",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7",
           "partition": "DEFAULT"
         },
         {
@@ -385,7 +385,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "init",
       "sourceRoot": "init-v001",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "loyaltyWallet internal enterprise capabilities",
       "description": "Parent-free internal capability groups; no new profile, employee assignment or financial records.",
       "owningDomain": "loyaltyWallet",
@@ -422,7 +422,7 @@
         {
           "moduleName": "loyaltyWallet",
           "sectionCode": "participantTransactionAccess",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "d0aa5acf4a5d57a2ad60e9d5082566c3bea91cb3e6b4004b8a2c4b25a209bba5",
           "partition": "DEFAULT"
         },

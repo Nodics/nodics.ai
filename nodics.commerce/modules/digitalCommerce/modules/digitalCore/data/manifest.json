@@ -6,7 +6,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "init",
       "sourceRoot": "init-v001",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "digitalCore Enterprise participant transactions",
       "description": "Exact parent-free participant group and Enterprise role; definitions only, no assignment or financial qualification.",
       "owningDomain": "digitalCore",
@@ -31,7 +31,7 @@
         {
           "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
@@ -120,7 +120,7 @@
     "participantAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Digital bundle participant access groups",
       "description": "Customer participation group for self-owned Digital bundle composition, gifting and publication.",
       "owningDomain": "digitalCore",
@@ -144,8 +144,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660",
+          "version": "0.0.3",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7",
           "partition": "DEFAULT"
         },
         {
@@ -160,7 +160,7 @@
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "digitalCore permissionCatalogue",
       "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "digitalCore",
@@ -184,7 +184,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "digitalCore accessGroups",
       "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "digitalCore",
@@ -208,20 +208,20 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+          "version": "0.0.3",
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
@@ -237,7 +237,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "digitalCore enterpriseRoles",
       "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "digitalCore",
@@ -261,8 +261,8 @@
         {
           "moduleName": "digitalCore",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "47dbf8c23fa445e116f32742d35c6cd9b9ee945b5919a321b0ddea889ec67a29"
+          "version": "0.0.3",
+          "checksum": "3f83909885dfa658d2f50405849a24b87ef3e4f1ee7ddef9d6269c831357050c"
         }
       ]
     },
@@ -383,7 +383,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "init",
       "sourceRoot": "init-v001",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "digitalCore internal enterprise capabilities",
       "description": "Parent-free internal capability groups; no new profile, employee assignment or financial records.",
       "owningDomain": "digitalCore",
@@ -406,7 +406,7 @@
         {
           "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
@@ -420,8 +420,8 @@
         {
           "moduleName": "digitalCore",
           "sectionCode": "participantTransactionAccess",
-          "version": "0.0.1",
-          "checksum": "103528acd20fc28aeecf14b217f1656e2937cf5a84cd3f275343e0e71303e688",
+          "version": "0.0.2",
+          "checksum": "d97d7235bdd6ced642fab639d02958ffdf4d54471d84d95b03fe7f926a01db1f",
           "partition": "DEFAULT"
         },
         {

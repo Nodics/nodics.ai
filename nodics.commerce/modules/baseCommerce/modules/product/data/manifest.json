@@ -5,7 +5,7 @@
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "product permissionCatalogue",
       "description": "Explicit product identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "product",
@@ -29,7 +29,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.5",
       "displayName": "product enterpriseRoles",
       "description": "Explicit product identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "product",
@@ -53,14 +53,14 @@
         {
           "moduleName": "product",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "4b19aea018afc99eec52219a0409a0397e412e423ab6a00d3d5ca00a415bfd13"
+          "version": "0.0.4",
+          "checksum": "7709ab168d1333f6c14e81882071cb576cbbbe0c2e46795de1bbf3ac6675c9fb"
         },
         {
           "moduleName": "publish",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "4d47083f2082be7115c3215f77097e6f1d87ae4c9c7648cdbea61e2bdf6f76a1"
+          "version": "0.0.4",
+          "checksum": "0a05769f4a5822e7cd8a0abc3b1601a4e3ed6e3c1777704f1bac621730876c9b"
         }
       ]
     },
@@ -91,7 +91,7 @@
     "sample-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "sample",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "description": "Product sample data",
       "owningDomain": "product",
       "lifecycle": "PUBLISHABLE",
@@ -170,7 +170,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.4",
       "displayName": "product accessGroups",
       "description": "Explicit product identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "product",
@@ -208,27 +208,27 @@
         {
           "moduleName": "product",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
+          "version": "0.0.3",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "402b7ebffc05ac529f465c228700437b830cfb0f873a15ac92d5b7b5b9a3a9c8",
           "partition": "DEFAULT"
         },
@@ -244,7 +244,7 @@
     "businessAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Products business access groups",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "product",
@@ -268,20 +268,20 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+          "version": "0.0.3",
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "product",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
           "partition": "DEFAULT"
         }
@@ -290,7 +290,7 @@
     "businessAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Products business access roles",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "product",
@@ -314,8 +314,8 @@
         {
           "moduleName": "product",
           "sectionCode": "businessAccessGroups",
-          "version": "0.0.1",
-          "checksum": "122752d767b6d3bbe82270f1bd41a514af33d3647330dadf97e4acef8010a00e"
+          "version": "0.0.2",
+          "checksum": "0342c825765613bd85e227191f60bb411306f5eb000b68ef2c52a546cb256823"
         }
       ]
     }

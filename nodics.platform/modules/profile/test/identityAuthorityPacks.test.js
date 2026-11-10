@@ -38,6 +38,7 @@ const bootstrapForwardPermissions = new Set([
   "merchantEvidencePermission",
   "runtimeEvidencePermissions",
   "verificationExecutePermission",
+  "transferFinalizationPermission",
 ]);
 for (const [name, owner] of modules) {
   const file = path.join(owner.path, "data/manifest.json");
@@ -115,7 +116,7 @@ test("prerequisite graph is acyclic and every reference pins the exact owner byt
   };
   for (const code of sections.keys()) visit(code);
   const init = JSON.parse(fs.readFileSync(path.join(modules.get("profile").path, "data/manifest.json"))).sections["init-v001"];
-  assert.equal(init.version, "0.0.8", "changed installed dependency graph requires an explicit successor, not rehashed history");
+  assert.equal(init.version, "0.0.9", "changed installed dependency graph requires an explicit successor, not rehashed history");
   const laterOptionalOwners = new Set(["commercialAgreement:permissionCatalogue", "wasteCarbon:permissionCatalogue", "wasteReward:permissionCatalogue"]);
   assert.deepEqual(new Set(init.prerequisites.map(ref => ref.moduleName + ":" + ref.sectionCode)),
     new Set([...sections.keys()].filter(code => !laterOptionalOwners.has(code))));
