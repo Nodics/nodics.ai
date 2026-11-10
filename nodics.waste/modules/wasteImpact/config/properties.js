@@ -19,6 +19,7 @@
  * emissions coefficient. Disable the default fallback factor by setting it to null.
  */
 module.exports = {
+  data: { dataReleases: { installers: { WASTE_OPENING_IMPACT: "DefaultWasteOpeningImpactContributionService" } } },
     // Inert inventory; an allowed local server must explicitly select this capability.
     localResetProvider: {
         "contributions": {
@@ -45,7 +46,9 @@ module.exports = {
             provider: 'Provider', dataset: 'Dataset version', baseline: 'Baseline', treatment: 'Treatment', weight: 'Calculation weight', factor: 'Factor', potential: 'Potential CO₂e savings', equivalent: 'Carbon equivalent (tCO₂e)', basis: 'Calculation basis', source: 'Source', region: 'Region', legacy: 'Unvalidated calculation', unavailable: 'Unavailable', loading: 'Loading assessments…'
         } },
         defaultStatus: 'ESTIMATED',
+        providerProfiles: {},
         calculation: {
+            providerProfile: null,
             providerService: 'DefaultWasteImpactMockProviderService',
             fallbackProviderServices: [],
             timeoutMs: 5000,

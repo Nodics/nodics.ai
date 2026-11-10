@@ -33,6 +33,7 @@ module.exports = {
       "target": {
         "moduleName": "cms",
         "connectionName": "wcmsStaged",
+        "targetAuthority": { "publication": "STAGED" },
         "connectionType": "abstract",
         "timeoutMs": 120000,
         "maxAttempts": 1
@@ -40,26 +41,19 @@ module.exports = {
     }
   },
   "cms": {
-    "runtimeRoleProfiles": {
-      "WCMS_ONLINE": {
-        "publication": {
-          "baselines": {
-            "axis": { "$config": "ref", "path": ["cms", "publication", "baselines", "axis"] }
-          }
-        }
-      }
-    },
     "publication": {
       "baselines": {
         "axis": {
           "releaseCode": "axis:axisBaseline",
+          "releaseVersion": "0.0.1",
           "rootType": "site",
           "rootCode": "axisCmsSite",
-          "employeeCompositionPaths": ["/dashboard", "/lock-screen"],
+          "employeeCompositionPaths": ["/dashboard", "/lock-screen", "/schema-workbench"],
           "sourceVersion": "0"
         },
         "axisassistant": {
           "releaseCode": "axis:core-v001",
+          "releaseVersion": "0.0.1",
           "dataType": "core",
           "rootType": "site",
           "rootCode": "axisCmsSite",
@@ -131,6 +125,18 @@ module.exports = {
   "data": {
     "dataReleases": {
       "initializationProfileDefaults": {
+        "axisAccessDefinitions": {
+          "label": "Axis access definitions",
+          "description": "Install Axis group definitions in each admitted Platform tenant before enterprise employee onboarding.",
+          "completionMessage": "Axis access definitions are current. Employee responsibilities require a separate authorized assignment.",
+          "steps": { "$config": "replace", "value": [{ "dataType": "init", "releaseCodes": ["axis:accessGroups"] }] }
+        },
+        "axisContentAccessDefinitions": {
+          "label": "Content access definitions",
+          "description": "Install the selected Content business group definitions in each admitted Platform tenant before Content responsibilities are assigned.",
+          "completionMessage": "Content group definitions are current. Enterprise roles and employee assignments remain separate reviewed operations.",
+          "steps": { "$config": "replace", "value": [{ "dataType": "init", "releaseCodes": ["cms:businessAccessGroups"] }] }
+        },
         "axisDocumentationFoundation": {
           "steps": {
             "$config": "replace",
@@ -146,18 +152,22 @@ module.exports = {
           }
         }
       },
-      "runtimeRoleProfiles": {
-        "WCMS_STAGED": {
-          "contributions": [
-            {
-              "moduleName": "axis",
-              "sections": [
+      "contributions": {
+        "$config": "keyed",
+        "key": "moduleName",
+        "entries": [
+          {
+            "moduleName": "axis",
+            "sections": {
+              "$config": "replace",
+              "value": [
                 "axisBaseline",
                 "core-v001"
               ]
             }
-          ]
-        }
+          }
+        ],
+        "remove": []
       }
     }
   }

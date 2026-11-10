@@ -11,6 +11,21 @@
 
 /** @module nodics.wcms/config/properties @description Defines reusable WCMS content-pack sources for framework, Axis and customer-project documentation publication. @layer config @owner wcms @override Later layers may override content-pack availability, source versions and publication profile bindings. */
 module.exports = {
+  backofficeFunctionalModuleActivationData: {
+    modules: {
+      "nodics.wcms": {
+        dataPackages: {
+          $config: "keyed",
+          key: "code",
+          entries: [
+            { code: "cms:accessGroups", required: true, trigger: "ACTIVATION", targetModule: "profile" },
+            { code: "cms:enterpriseRoles", required: true, trigger: "ACTIVATION", targetModule: "profile" },
+            { code: "cms:businessAccessRoles", required: true, trigger: "ACTIVATION", targetModule: "profile" },
+          ],
+        },
+      },
+    },
+  },
   "data": {
     "contentPacks": {
       "enabled": true,
@@ -49,26 +64,30 @@ module.exports = {
       }
     },
     "dataReleases": {
-      "runtimeRoleProfiles": {
-        "PROCESS": {
-          "contributions": [
-            {
-              "moduleName": "cms",
-              "sections": [
+      "contributions": {
+        "$config": "keyed",
+        "key": "moduleName",
+        "entries": [
+          {
+            "moduleName": "cms",
+            "sections": {
+              "$config": "replace",
+              "value": [
                 "cmsPublicationApproval"
               ]
-            },
-            {
-              "moduleName": "media",
-              "sections": [
+            }
+          },
+          {
+            "moduleName": "media",
+            "sections": {
+              "$config": "replace",
+              "value": [
                 "mediaPublicationWorkflow"
               ]
             }
-          ]
-        },
-        "WCMS_ONLINE": {
-          "allowedDestinationRoles": []
-        }
+          }
+        ],
+        "remove": []
       }
     }
   },

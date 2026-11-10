@@ -27,7 +27,7 @@
         "core-v001/records/waste/eWasteAssetTypeData.js": "c573b3d5347f4400c9b0a2d24dab11e6ed65af06166403b57a47c8eac01555f1",
         "core-v001/records/waste/eWasteCarbonSettlementPolicyData.js": "a3b880c52f9522d890669db9b918519f5ec6db3bc297e52d996d80cf3cf56957",
         "core-v001/records/waste/eWasteCategoryData.js": "dae6e92d087c8e3e005139317d722bebd731b7e8823ab48b05431ef56db8bf67",
-        "core-v001/records/waste/eWasteCollectionPointTypeData.js": "86299664351cfe45443d4147315973131273e0fde0e8d717aea607f0168ce237",
+        "core-v001/records/waste/eWasteCollectionPointTypeData.js": "42e84da285d33d593470b5809c7a755358cfda0ab08678ff13d2eb57382bc5e5",
         "core-v001/records/waste/eWasteCollectionPresetData.js": "f5fabc7c03f682c9f3a120945959b6947612c3676a50971bbc452d3bfc741cc1",
         "core-v001/records/waste/eWasteCouponRedemptionSettlementPolicyData.js": "95c206269a4a07adcf38aa5665e823ca132daab7efeb857b1ea817a515120e3f",
         "core-v001/records/waste/eWasteEvidencePolicyData.js": "7e4310b62b69b974b4dd07e559e1c7cfce6b792ce735045f632339632f02ed57",
@@ -205,6 +205,31 @@
         "init-v001/headers/identity/eWastePermissionHeader.js": "093e7b89e513aac20ad7a0e16b56ff6d23b24b8d099e48c4a95d0ae1844776dd",
         "init-v001/records/identity/eWastePermissionData.js": "4f12522020c97977d1fc0bf398dc643bbfa17235ea380a93730407fb2aa7602d"
       }
+    },
+    "drop-off-location": {
+      "kind": "DATA_RELEASE",
+      "dataType": "core",
+      "version": "0.0.1",
+      "displayName": "Drop off location",
+      "description": "Reusable drop off location vocabulary for Location.",
+      "owningDomain": "eWaste",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "LOCATION",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "core-v001/headers/location/eWasteDropOffCapabilityHeader.js": "02e6efb9ae8c7d36190f3a40c04aafe770f1b1044530043e6feeb81efa25c1b1",
+        "core-v001/records/location/eWasteDropOffCapabilityData.js": "de275b5fb2be0d378e53bd8c33769c3d351e3419c9110874fcc3a8b24ff7cbe3",
+        "core-v001/records/location/eWasteDropOffTypeData.js": "1b2d7671390b490202039236901818d2e0aa9ba478c6ca4a100c6d98059787fc"
+      },
+      "sourceRoot": "core-v001",
+      "selectionPolicy": "EXPLICIT"
     }
   }
 }

@@ -21,42 +21,69 @@ module.exports = {
     },
   },
   publish: {
-    setup: { permissions: { inventory: "publish.lifecycle.create" } },
-    providers: {
-      domainAdapters: { inventory: null },
-      versionProviders: { inventory: null },
-      workflowProviders: { inventory: null },
-    },
-    approvalWorkflow: {
-      domains: {
-        inventory: {
-          definitionCode: "inventoryPublicationApproval",
-          ownerModule: "inventory",
-          actionKey: "inventory.applyPublicationDecision",
-          sourceRuntimeRole: "COMMERCE_STAGED",
-        },
+    "setup": {
+      "permissions": {
+        "inventory": "publish.lifecycle.create"
       },
+      "observation": {
+        "targetObservers": {
+          "inventory": {
+            "$config": "context",
+            "name": "publication",
+            "cases": {
+              "STAGED": undefined,
+              "ONLINE": "DefaultInventoryPublicationService",
+              "OPERATIONAL": "DefaultInventoryPublicationService"
+            }
+          }
+        }
+      }
     },
-    runtimeRoleProfiles: {
-      COMMERCE_STAGED: {
-        providers: {
-          domainAdapters: { inventory: "DefaultInventoryPublicationService" },
-          versionProviders: { inventory: "DefaultInventoryPublicationService" },
-          workflowProviders: {
-            inventory: "DefaultPublicationApprovalWorkflowService",
-          },
-        },
+    "providers": {
+      "domainAdapters": {
+        "inventory": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "DefaultInventoryPublicationService",
+            "ONLINE": null,
+            "OPERATIONAL": null
+          }
+        }
       },
-      COMMERCE: {
-        setup: {
-          observation: {
-            targetObservers: {
-              inventory: "DefaultInventoryPublicationService",
-            },
-          },
-        },
+      "versionProviders": {
+        "inventory": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "DefaultInventoryPublicationService",
+            "ONLINE": null,
+            "OPERATIONAL": null
+          }
+        }
       },
+      "workflowProviders": {
+        "inventory": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "DefaultPublicationApprovalWorkflowService",
+            "ONLINE": null,
+            "OPERATIONAL": null
+          }
+        }
+      }
     },
+    "approvalWorkflow": {
+      "domains": {
+        "inventory": {
+          "definitionCode": "inventoryPublicationApproval",
+          "ownerModule": "inventory",
+          "actionKey": "inventory.applyPublicationDecision",
+          "sourcePublication": "STAGED"
+        }
+      }
+    }
   },
   process: {
     actionAdapters: {
@@ -67,7 +94,7 @@ module.exports = {
           remote: {
             target: "inventory",
             moduleName: "inventory",
-            runtimeRole: "COMMERCE_STAGED",
+            targetAuthority: { publication: "STAGED" },
             apiName: "/workflow/actions/applyPublicationDecision",
             requiresCompletedTask: true,
           },
@@ -91,105 +118,117 @@ module.exports = {
   },
 
   inventory: {
-    enabled: true,
-    openingReceipts: { maximumInstructions: 1000 },
-    customerSummary: {
-      enabled: true,
-      maximumProductsPerRequest: 100,
-      includeQuantity: false,
-      inStockStatus: "IN_STOCK",
-      outOfStockStatus: "OUT_OF_STOCK",
+    "enabled": true,
+    "openingReceipts": {
+      "maximumInstructions": 1000
     },
-
-    // Registration remains separate from availability; installed qualification is an operator gate.
-    publication: {
-      runtimeRole: null,
-      sourceVersioningQualified: false,
-      delivery: { enabled: false, rootCodes: [] },
-      legacyCasRecovery: { enabled: false, operations: [] },
-      targetTransportProvider: null,
-      maxDependencies: 1000,
-      target: {
-        moduleName: "inventory",
-        connectionName: null,
-        connectionType: "abstract",
-        runtimeRole: "COMMERCE",
-      },
-      sourceAuthority: {
-        moduleName: "inventory",
-        connectionName: null,
-        connectionType: "abstract",
-        runtimeRole: "COMMERCE_STAGED",
-      },
+    "customerSummary": {
+      "enabled": true,
+      "maximumProductsPerRequest": 100,
+      "includeQuantity": false,
+      "inStockStatus": "IN_STOCK",
+      "outOfStockStatus": "OUT_OF_STOCK"
     },
-    runtimeRoleProfiles: {
-      COMMERCE_STAGED: {
-        publication: {
-          runtimeRole: "STAGED",
-          targetTransportProvider:
-            "DefaultInventoryPublicationTransportService",
-        },
+    "publication": {
+      "runtimeRole": {
+        "$config": "context",
+        "name": "publication",
+        "cases": {
+          "STAGED": "STAGED",
+          "ONLINE": "ONLINE",
+          "OPERATIONAL": "ONLINE"
+        }
       },
-      COMMERCE: {
-        publication: {
-          runtimeRole: "ONLINE",
-          targetTransportProvider:
-            "DefaultInventoryPublicationTransportService",
-        },
+      "sourceVersioningQualified": false,
+      "delivery": {
+        "enabled": false,
+        "rootCodes": []
       },
-    },
+      "legacyCasRecovery": {
+        "enabled": false,
+        "operations": []
+      },
+      "targetTransportProvider": "DefaultInventoryPublicationTransportService",
+      "maxDependencies": 1000,
+      "target": {
+        "moduleName": "inventory",
+        "connectionName": null,
+        "connectionType": "abstract",
+        "publication": "OPERATIONAL"
+      },
+      "sourceAuthority": {
+        "moduleName": "inventory",
+        "connectionName": null,
+        "connectionType": "abstract",
+        "publication": "STAGED"
+      }
+    }
   },
   schemaPolicies: {
-    inventory: {
-      publicationVersioned: { isVersionedEnabled: false },
-      openingReceiptHuman: {
-        accessGroups: { commerceInventoryOpeningUserGroup: 2 },
-      },
-      operational: {
-        accessGroups: {
-          adminGroup: 10,
-          commerceOperatorUserGroup: 10,
-          serviceAccountUserGroup: 10,
+    "inventory": {
+      "publicationVersioned": {
+        "isVersionedEnabled": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": true,
+            "ONLINE": false,
+            "OPERATIONAL": false
+          }
         },
+        "versionedReadMode": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "CURRENT",
+            "ONLINE": undefined,
+            "OPERATIONAL": undefined
+          }
+        }
       },
-      tenantOwned: {
-        accessGroups: {
-          adminGroup: 10,
-          commerceOperatorUserGroup: 10,
-          serviceAccountUserGroup: 10,
-        },
+      "openingReceiptHuman": {
+        "accessGroups": {
+          "commerceInventoryOpeningUserGroup": 2
+        }
       },
-      customerOwned: {
-        accessGroups: {
-          adminGroup: 10,
-          commerceOperatorUserGroup: 10,
-          serviceAccountUserGroup: 10,
-          customerUserGroup: 10,
+      "operational": {
+        "accessGroups": {
+          "adminGroup": 10,
+          "commerceOperatorUserGroup": 10,
+          "serviceAccountUserGroup": 10
+        }
+      },
+      "tenantOwned": {
+        "accessGroups": {
+          "adminGroup": 10,
+          "commerceOperatorUserGroup": 10,
+          "serviceAccountUserGroup": 10
+        }
+      },
+      "customerOwned": {
+        "accessGroups": {
+          "adminGroup": 10,
+          "commerceOperatorUserGroup": 10,
+          "serviceAccountUserGroup": 10,
+          "customerUserGroup": 10
         },
-        ownership: {
-          enabled: true,
-          ownerProperty: "ownerId",
-          bypassGroups: {
-            adminGroup: true,
-            commerceOperatorUserGroup: true,
-            serviceAccountUserGroup: true,
+        "ownership": {
+          "enabled": true,
+          "ownerProperty": "ownerId",
+          "bypassGroups": {
+            "adminGroup": true,
+            "commerceOperatorUserGroup": true,
+            "serviceAccountUserGroup": true
           },
-          subjectGroups: { customerUserGroup: true },
-          principalTypes: { customer: true },
-        },
-      },
-    },
-
-    runtimeRoleProfiles: {
-      COMMERCE_STAGED: {
-        inventory: {
-          publicationVersioned: {
-            isVersionedEnabled: true,
-            versionedReadMode: "CURRENT",
+          "subjectGroups": {
+            "customerUserGroup": true
           },
-        },
-      },
-    },
+          "principalTypes": {
+            "customer": true
+          }
+        }
+      }
+    }
   },
   apiExposure: {
     categories: {

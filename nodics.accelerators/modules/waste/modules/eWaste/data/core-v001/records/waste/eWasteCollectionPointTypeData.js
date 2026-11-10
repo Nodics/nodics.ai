@@ -25,7 +25,7 @@ const type = (code, name, baseLocationCategory, capabilities, options) => Object
 }, options || {});
 
 module.exports = {
-    record0: type('E_WASTE_DROP_OFF', 'E-Waste Drop-Off', 'COLLECTION_POINT', ['DROP_OFF', 'RECEIPT']),
+    record0: type('E_WASTE_DROP_OFF', 'E-Waste Drop-Off', 'COLLECTION_POINT', ['DROP_OFF', 'RECEIPT'], { locationTypeCode: 'E_WASTE_DROP_OFF' }),
     record1: type('E_WASTE_BIN', 'E-Waste Bin', 'COLLECTION_POINT', ['DROP_OFF'], { defaultReceiptPolicyCode: 'EWASTE_ASSUMED_RECEIPT' }),
     record2: type('E_WASTE_INSPECTION_POINT', 'E-Waste Inspection Point', 'SERVICE_CENTER', ['DROP_OFF', 'INSPECTION', 'RECEIPT']),
     record3: type('E_WASTE_AGGREGATION_WAREHOUSE', 'E-Waste Aggregation Warehouse', 'WAREHOUSE', ['RECEIPT', 'AGGREGATION', 'TRANSFER']),

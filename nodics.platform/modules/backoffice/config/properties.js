@@ -61,15 +61,11 @@ module.exports = {
   },
 
   backofficeApplicationInitialization: {
-    runtimeRoleProfiles: {
-      PLATFORM: {
-        projectCode: {
-          $config: "env", name: "NODICS_PROJECT_CODE",
-          fallback: { $config: "context", name: "projectCode" },
-        },
-        projectRoot: { $config: "path", base: "project", relative: "" },
-      },
+    projectCode: {
+      $config: "env", name: "NODICS_PROJECT_CODE",
+      fallback: { $config: "context", name: "projectCode" },
     },
+    projectRoot: { $config: "path", base: "project", relative: "" },
     dataReleaseTimeoutMs: 120000,
     preparationStepDefaults: { batchBoundaryBefore: false },
     readinessWorkers: 4,
@@ -84,7 +80,7 @@ module.exports = {
     target: {
       moduleName: "cms",
       connectionType: "abstract",
-      runtimeRole: "WCMS_STAGED",
+      publication: "STAGED",
       timeoutMs: 120000,
       maxAttempts: 1,
     },
@@ -125,6 +121,10 @@ module.exports = {
     recentNavigationLimit: 12,
     minimumRecentNavigationLimit: 1,
     maximumRecentNavigationLimit: 24,
+    sessionRecoveryPresentation: {
+      lockedMessage: "After unlocking, saved records and explicitly retained checkpoints can be recovered. Other unsaved edits may be lost. Actions already submitted may still complete; inspect their status before trying again.",
+      expiredMessage: "Your session has expired. Sign in again to inspect saved records and retained checkpoints. Other unsaved edits may be lost. Submitted actions may have completed; inspect their status before trying again.",
+    },
   },
   backofficeLocalReset: {
     enabled: false,
@@ -137,6 +137,7 @@ module.exports = {
     },
   },
   backofficeRegistry: {
+    documentationReaderSource: "framework",
     enabled: true,
     leaseTtlMs: 30000,
     operationalStateTtlMs: 30000,

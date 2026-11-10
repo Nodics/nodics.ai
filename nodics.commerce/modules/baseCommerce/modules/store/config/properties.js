@@ -11,6 +11,7 @@
 
 /** @module store/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner store */
 module.exports = {
+  data: { dataReleases: { targetValidators: { store: "DefaultStoreContextService" } } },
   // Inert inventory; an allowed local server must explicitly select this capability.
   localResetProvider: {
     contributions: {
@@ -26,10 +27,7 @@ module.exports = {
 
   store: {
     enabled: true,
-    placementRead: { enabled: false, runtimeRole: null, callers: [] },
-    runtimeRoleProfiles: {
-      COMMERCE: { placementRead: { runtimeRole: "COMMERCE" } },
-    },
+    placementRead: { enabled: false, callers: [] },
   },
   apiExposure: { categories: { storePlacementRead: { enabled: false } } },
   schemaPolicies: {

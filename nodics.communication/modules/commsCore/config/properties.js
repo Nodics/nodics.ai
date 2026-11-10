@@ -11,33 +11,37 @@
 /** @module commsCore/config/properties @description Defines provider-neutral Communication delivery and retention defaults. @layer config @owner commsCore @override Projects configure providers and stricter policy through secured layered configuration. */
 module.exports = {
   runtimeConfigurationSchemas: {
-    runtimeRoleProfiles: {
-      ENGAGEMENT: {
-        telegramDelivery: {
-          code: "telegramDelivery",
-          ownerModule: "commsCore",
-          capabilityGroup: "communication",
-          category: "delivery",
-          label: "Telegram delivery channel",
-          description:
-            "Logical bot credential for the Communication delivery runtime. Configuration authoring does not enable a provider or qualify sending.",
-          refreshBehavior: "runtime",
-          updatePermission: "runtime.config.update",
-          viewPermission: "runtime.config.effective.view",
-          fields: [
-            {
-              code: "botToken",
-              label: "Telegram bot token",
-              type: "string",
-              required: true,
-              sensitive: true,
-              credentialReference: "telegram.bot.delivery",
-              pattern: "^\\d+:[^\\s]+$",
-              restartRequired: false,
-              unconfiguredValues: ["", "sample", "placeholder", "changeme"],
-            },
-          ],
+    telegramDelivery: {
+      code: "telegramDelivery",
+      ownerModule: "commsCore",
+      capabilityGroup: "communication",
+      category: "delivery",
+      label: "Telegram delivery channel",
+      description:
+        "Logical bot credential for the Communication delivery runtime. Configuration authoring does not enable a provider or qualify sending.",
+      refreshBehavior: "runtime",
+      updatePermission: "runtime.config.update",
+      viewPermission: "runtime.config.effective.view",
+      fields: [
+        {
+          code: "botToken",
+          label: "Telegram bot token",
+          type: "string",
+          required: true,
+          sensitive: true,
+          credentialReference: "telegram.bot.delivery",
+          pattern: "^\\d+:[^\\s]+$",
+          restartRequired: false,
+          unconfiguredValues: ["", "sample", "placeholder", "changeme"],
         },
+      ],
+    },
+  },
+  activeModules: {
+    compositions: {
+      employeeMail: {
+        selection: "none",
+        domains: [{ code: "employee" }],
       },
     },
   },
@@ -63,7 +67,16 @@ module.exports = {
     templates: {},
     templateResources: {
       enabled: true,
-      modules: {},
+      modules: {
+        profile: {
+          $config: "selected",
+          name: "employeeMail",
+          field: "domains",
+          includes: "employee",
+          value: true,
+          otherwise: false,
+        },
+      },
       selections: {},
       maximumFileBytes: 65536,
       maximumTemplatesPerModule: 100,

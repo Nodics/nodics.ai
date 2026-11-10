@@ -113,3 +113,65 @@ test('domain schema declarations protect source and projection records without r
     assert.equal(policy.describe(store.pointOfService).publishRequired, false);
     assert.equal(policy.describe(store.pointOfService).authoringAllowed, true);
 });
+
+test('Staged source release metadata cannot authorize a generated HTTP save', async () => {
+    stage = 'STAGED';
+    const before = writes;
+    schema.backoffice.mutationMode = 'READ_ONLY';
+    schema.dataRelease = { stagedSourceOperation: 'saveAll' };
+    try {
+        await assert.rejects(controller.saveAll({ moduleName: 'cms', httpRequest: { body: {
+            dataRelease: schema.dataRelease, releaseCode: 'source:content', options: { stagedSourceOperation: 'saveAll' }
+        } } }), error => error.code === 'ERR_AUTH_00003');
+        assert.equal(writes, before);
+    } finally {
+        delete schema.dataRelease;
+        delete schema.backoffice.mutationMode;
+    }
+});
+
+test('reference stage restrictions are strict and intersect publication and read-only policy', () => {
+    const reference = { backoffice: { mutationPolicy: { allowedStages: ['STAGED'] } } };
+    for (const context of ['STAGED', 'ONLINE', 'OPERATIONAL', 'UNASSIGNED', undefined]) {
+        stage = context;
+        assert.equal(policy.describe(reference).publishRequired, false);
+        assert.equal(policy.describe(reference).authoringAllowed, context === 'STAGED');
+    }
+    for (const allowedStages of [null, [], 'STAGED', ['STAGED', 'STAGED'], ['UNASSIGNED'], ['STAGED', false]]) {
+        assert.throws(() => policy.describe({ backoffice: { mutationPolicy: { allowedStages } } }));
+    }
+    stage = 'STAGED';
+    assert.equal(policy.describe({ backoffice: { mutationMode: 'READ_ONLY', mutationPolicy: { allowedStages: ['STAGED'] } } }).authoringAllowed, false);
+    assert.equal(policy.describe({ backoffice: { mutationMode: 'READ_ONLY', mutationPolicy: {
+        publishRequired: true, allowedStages: ['ONLINE']
+    } }, dataRelease: { stagedSourceOperation: 'saveAll' } }).stagedSourceOperation, undefined);
+    for (const context of ['STAGED', 'ONLINE', 'OPERATIONAL']) {
+        stage = context;
+        assert.equal(policy.describe({ backoffice: { mutationPolicy: {
+            publishRequired: true, allowedStages: ['ONLINE']
+        } } }).authoringAllowed, false);
+    }
+});
+
+test('generated reference mutations cannot spoof the configured stage restriction', async () => {
+    const previous = schema.backoffice.mutationPolicy;
+    schema.backoffice.mutationPolicy = { allowedStages: ['STAGED'] };
+    writes = 0;
+    try {
+        for (const context of ['ONLINE', 'OPERATIONAL', undefined]) {
+            stage = context;
+            const descriptor = workbench.buildDescriptor({ moduleName: 'cms', authData: { userGroups: ['adminGroup'] } }, NODICS.getModule(), 'schmanm', 'cms');
+            assert.deepEqual(descriptor.operations, ['search', 'read']);
+            for (const method of ['save', 'saveAll', 'update', 'remove', 'removeByCode']) {
+                await assert.rejects(controller[method]({ moduleName: 'cms', httpRequest: { body: {
+                    model: { code: 'reference' }, runtimeRole: { publication: 'STAGED' },
+                    mutationPolicy: { allowedStages: ['ONLINE', 'OPERATIONAL'] }
+                } } }), error => error.code === 'ERR_AUTH_00003');
+            }
+        }
+        assert.equal(writes, 0);
+        stage = 'STAGED';
+        await controller.save({ moduleName: 'cms', httpRequest: { body: { code: 'reference' } } });
+        assert.equal(writes, 1);
+    } finally { schema.backoffice.mutationPolicy = previous; }
+});

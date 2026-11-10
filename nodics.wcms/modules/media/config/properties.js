@@ -19,28 +19,37 @@
 module.exports = {
   schemaPolicies: {
     media: {
-      publicationVersioned: { isVersionedEnabled: false },
+      publicationVersioned: { $config: "context", name: "publication", cases: {
+        STAGED: {
+          isVersionedEnabled: true,
+          versionedReadMode: "CURRENT",
+          backoffice: { operations: ["search", "read", "create", "update"] },
+        },
+        ONLINE: { isVersionedEnabled: false },
+        OPERATIONAL: { isVersionedEnabled: false },
+      } },
     },
 
-    runtimeRoleProfiles: {
-      WCMS_STAGED: {
-        media: {
-          publicationVersioned: {
-            isVersionedEnabled: true,
-            versionedReadMode: "CURRENT",
-          },
-        },
-      },
-    },
   },
   publish: {
+    providers: {
+      domainAdapters: { media: { $config: "context", name: "publication", cases: {
+        STAGED: "DefaultMediaPublicationVersionProviderService", ONLINE: null, OPERATIONAL: null,
+      } } },
+      versionProviders: { media: { $config: "context", name: "publication", cases: {
+        STAGED: "DefaultMediaPublicationVersionProviderService", ONLINE: null, OPERATIONAL: null,
+      } } },
+      workflowProviders: { media: { $config: "context", name: "publication", cases: {
+        STAGED: "DefaultPublicationApprovalWorkflowService", ONLINE: null, OPERATIONAL: null,
+      } } },
+    },
     approvalWorkflow: {
       domains: {
         media: {
           definitionCode: "mediaPublicationApproval",
           ownerModule: "media",
           actionKey: "media.applyPublicationDecision",
-          sourceRuntimeRole: "WCMS_STAGED",
+          sourcePublication: "STAGED",
           requesterBinding: "NATIVE_ACTOR",
           reviewNodeCode: "mediaReview",
           reviewPermission: "publish.lifecycle.approve",
@@ -48,21 +57,6 @@ module.exports = {
       },
     },
 
-    runtimeRoleProfiles: {
-      WCMS_STAGED: {
-        providers: {
-          domainAdapters: {
-            media: "DefaultMediaPublicationVersionProviderService",
-          },
-          versionProviders: {
-            media: "DefaultMediaPublicationVersionProviderService",
-          },
-          workflowProviders: {
-            media: "DefaultPublicationApprovalWorkflowService",
-          },
-        },
-      },
-    },
   },
   process: {
     actionAdapters: {
@@ -73,7 +67,7 @@ module.exports = {
           remote: {
             target: "media",
             moduleName: "media",
-            runtimeRole: "WCMS_STAGED",
+            targetAuthority: { publication: "STAGED" },
             apiName: "/workflow/actions/applyPublicationDecision",
             requiresCompletedTask: true,
           },
@@ -117,19 +111,46 @@ module.exports = {
     mediaContentResponseHandler: "DefaultMediaContentResponseHandlerService",
   },
   media: {
-    library: { workspace: {}, publicationWorkspace: {} },
+    library: {
+      workspace: {}, publicationWorkspace: {},
+      review: {
+        maximumPreviewBytes: 5242880,
+        previewMimeTypes: ['image/png', 'image/jpeg', 'image/webp', 'image/gif'],
+        presentation: {
+          en: {
+            title: 'Captured asset for review', captured: 'These details belong to the exact source retained for this publication. They may differ from the current working asset.',
+            version: 'Captured version', fileType: 'File type', size: 'File size', preview: 'View reviewed image', hide: 'Hide image',
+            loading: 'Loading captured image…', unavailable: 'The captured evidence could not be confirmed. Refresh it or ask the Media administrator to inspect this original publication.',
+            unsupported: 'Inline preview is unavailable for this file type, size or your current access. Review the original publication with the Media administrator.',
+            historical: 'This is retained review evidence. It does not confirm the current website or grant an approval.',
+            refresh: 'Refresh captured evidence', publication: 'Inspect publication request', openAsset: 'Open working asset',
+          },
+          ar: {
+            title: 'الأصل المحفوظ للمراجعة', captured: 'تخص هذه التفاصيل المصدر المحدد المحفوظ لطلب النشر. وقد تختلف عن الأصل الجاري العمل عليه.',
+            version: 'النسخة المحفوظة', fileType: 'نوع الملف', size: 'حجم الملف', preview: 'عرض الصورة قيد المراجعة', hide: 'إخفاء الصورة',
+            loading: 'جارٍ تحميل الصورة المحفوظة…', unavailable: 'تعذر تأكيد أدلة المراجعة. حدّثها أو اطلب من مسؤول الوسائط فحص طلب النشر الأصلي.',
+            unsupported: 'المعاينة غير متاحة لهذا النوع أو الحجم أو لصلاحياتك الحالية. راجع الطلب الأصلي مع مسؤول الوسائط.',
+            historical: 'هذه أدلة مراجعة محفوظة. لا تؤكد حالة الموقع الحالية ولا تمنح صلاحية الموافقة.',
+            refresh: 'تحديث أدلة المراجعة', publication: 'فحص طلب النشر', openAsset: 'فتح الأصل الجاري',
+          },
+        },
+      },
+    },
     publication: {
       // Unselected until installed schemas, transport, Process and target acceptance are qualified.
       versionProviderEnabled: false,
-      runtimeRole: "",
-      targetTransportProvider: "",
+      runtimeRole: { $config: "context", name: "publication" },
+      targetTransportProvider: { $config: "context", name: "publication",
+        cases: { STAGED: "DefaultMediaPublicationModuleTransportService", ONLINE: null, OPERATIONAL: null } },
       target: {
+        publication: "ONLINE",
         connectionName: "",
         connectionType: "abstract",
         timeoutMs: 30000,
         maxAttempts: 1,
       },
       source: {
+        publication: "STAGED",
         connectionName: "",
         connectionType: "abstract",
         timeoutMs: 30000,
@@ -524,21 +545,6 @@ module.exports = {
       contentDisposition: "inline",
     },
 
-    runtimeRoleProfiles: {
-      WCMS_STAGED: {
-        publication: {
-          runtimeRole: "STAGED",
-          targetTransportProvider:
-            "DefaultMediaPublicationModuleTransportService",
-        },
-      },
-      WCMS_ONLINE: {
-        publication: {
-          runtimeRole: "ONLINE",
-          targetTransportProvider: null,
-        },
-      },
-    },
   },
   apiExposure: {
     categories: {

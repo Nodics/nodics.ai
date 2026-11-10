@@ -11,6 +11,8 @@
 
 /** @module wasteCore/config/properties @description Provides shared Waste defaults. @layer config @owner wasteCore @override Partner modules may refine policy through configuration layering. */
 module.exports = {
+  wasteOpeningSamples: { reviewed: {} },
+  data: { dataReleases: { installers: { WASTE_OPENING_ASSETS: "DefaultWasteOpeningAssetContributionService" } } },
   tooling: {
         commands: {
             'acceptance:waste-backoffice': {
@@ -77,7 +79,7 @@ module.exports = {
     certificateHoldings: { maximumPageSize: 100 },
     certificateCoupons: {
       maximumCertificates: 100,
-      commerce: { connectionName: "commerce", targetAuthority: { runtimeRole: "COMMERCE" }, timeoutMs: 15000 },
+      commerce: { connectionName: "commerce", targetAuthority: { publication: "OPERATIONAL" }, timeoutMs: 15000 },
     },
     installedDataInspection: {
       pageSize: 100,
@@ -141,7 +143,7 @@ module.exports = {
       requireScopes: false,
       requireVerification: false,
       requireDifferentApprover: false,
-      profileTarget: { connectionName: "profile", runtimeRole: "PLATFORM" },
+      profileTarget: { connectionName: "profile", targetAuthority: { publication: "OPERATIONAL" } },
     },
     sourceReference: { requiredFields: ["module", "schema", "code"] },
     idempotency: { required: true },

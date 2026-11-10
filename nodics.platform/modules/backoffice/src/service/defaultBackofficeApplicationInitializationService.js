@@ -152,16 +152,13 @@ module.exports = {
       value.alt.length > 200
     )
       return undefined;
-    let runtimeRole = target && target.runtimeRole;
-    if (
-      typeof runtimeRole !== "string" ||
-      !/^[A-Z][A-Z0-9_]{1,63}$/.test(runtimeRole)
-    )
+    const publication = target && target.publication;
+    if (!["STAGED", "ONLINE", "OPERATIONAL"].includes(publication))
       return undefined;
     return {
       mediaCode: value.mediaCode,
       alt: value.alt.trim(),
-      runtimeRole: runtimeRole,
+      publication: publication,
       active: active === true,
     };
   },
@@ -318,7 +315,7 @@ module.exports = {
                 targetRuntimeRole:
                   pack.targetRuntimeRole ||
                   (profile.target &&
-                    (profile.target.runtimeRole || "WCMS_STAGED")),
+                    (profile.target.publication)),
               },
               pack,
             ),
@@ -714,13 +711,11 @@ module.exports = {
   resolveProfile: function (profile) {
     const configuration =
       CONFIG.get("backofficeApplicationInitialization") || {};
-    return Object.assign({}, profile, {
-      target: Object.assign(
-        {},
-        configuration.target || {},
-        profile.target || {},
-      ),
-    });
+    const target = Object.assign({}, configuration.target || {}, profile.target || {});
+    if (target.runtimeRole !== undefined || target.publication !== "STAGED") {
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application initialization requires STAGED publication, not a runtime role");
+    }
+    return Object.assign({}, profile, { target });
   },
   /** Requires a human principal for initiation while allowing authenticated status reads. */
   /** Executes the documented bounded module operation. */
@@ -788,7 +783,7 @@ module.exports = {
       {
         targetModule: profile.target.moduleName,
         targetConnection: profile.target.connectionName,
-        targetRuntimeRole: profile.target.runtimeRole || "WCMS_STAGED",
+        targetRuntimeRole: profile.target.publication,
       },
     );
     const diagnostic = {
@@ -799,7 +794,7 @@ module.exports = {
       baselineCode: profile.baselineCode,
       targetModule: profile.target.moduleName,
       targetConnection: profile.target.connectionName,
-      targetRuntimeRole: profile.target.runtimeRole || "WCMS_STAGED",
+      targetRuntimeRole: profile.target.publication,
       phase: runtimeInvocationDiagnostic && runtimeInvocationDiagnostic.phase,
       failureCode:
         runtimeInvocationDiagnostic && runtimeInvocationDiagnostic.failureCode,
@@ -850,7 +845,7 @@ module.exports = {
     );
   },
   /** Resolves declared deployment aliases without treating a connection name as server authority. */
-  applicationTargetBinding: function (connectionName, runtimeRole, moduleName) {
+  applicationTargetBinding: function (connectionName, moduleName) {
     const context =
       configurationInitializer.getPropertyBindingContext(__filename);
     const servers = configurationInitializer.discoverDeploymentServers(context);
@@ -891,10 +886,23 @@ module.exports = {
         );
       }
     }
+    const publication = context.readRuntimeProperty(server, ["runtimeRole", "publication"]);
+    if (!["OPERATIONAL", "STAGED", "ONLINE"].includes(publication)) {
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application target requires a declared publication context");
+    }
     return {
       connectionName: server,
-      targetAuthority: { server, runtimeRole: { code: runtimeRole } },
+      targetAuthority: { server, publication },
     };
+  },
+  /** Binds a baseline operation only to the configured publication context. */
+  applicationPublicationTargetBinding: function (target, moduleName) {
+    const binding = this.applicationTargetBinding(target.connectionName, moduleName);
+    if (target.runtimeRole !== undefined || target.publication !== "STAGED" ||
+        binding.targetAuthority.publication !== target.publication) {
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application publication target context differs from its declared server");
+    }
+    return binding;
   },
   /** Invokes one governed data-release validation or installation with the initiating human context. */
   invokeDataReleaseOperation: function (mode, group, request) {
@@ -916,7 +924,6 @@ module.exports = {
       local: false,
       ...this.applicationTargetBinding(
         group.targetServer,
-        group.targetRuntimeRole,
         "import",
       ),
       connectionType: "abstract",
@@ -1857,12 +1864,11 @@ module.exports = {
   capabilityDependencies: function (profile, projection) {
     let dependencies = [];
     let target = (profile && profile.target) || {};
-    if (target.connectionName || target.runtimeRole) {
+    if (target.connectionName) {
       let server;
       try {
         server = this.applicationTargetBinding(
           target.connectionName,
-          target.runtimeRole || "WCMS_STAGED",
           target.moduleName,
         ).connectionName;
       } catch (_) {
@@ -1875,7 +1881,6 @@ module.exports = {
         (projection && projection.publicationTargetResponded === true) ||
         steps.some(step =>
           [target.connectionName, server].includes(step.targetServer) &&
-          step.targetRuntimeRole === (target.runtimeRole || "WCMS_STAGED") &&
           ((step.type === "DATA_RELEASE" && [
             "CURRENT", "SOURCE_READY", "NOT_INSTALLED", "UPDATE_AVAILABLE",
             "DOWNGRADE_AVAILABLE", "INVALID_RELEASE", "RUNNING", "FAILED",
@@ -1885,13 +1890,11 @@ module.exports = {
       );
       dependencies.push({
         kind: "RUNTIME",
-        code: String(server || target.connectionName || target.runtimeRole || "target"),
+        code: String(server || target.connectionName || "target"),
         label: "Publication target runtime",
         required: true,
         server: server,
-        runtimeRole: target.runtimeRole
-          ? String(target.runtimeRole)
-          : "WCMS_STAGED",
+        publication: target.publication,
         status: answered ? "AVAILABLE" : "UNKNOWN",
       });
     }
@@ -2226,8 +2229,6 @@ module.exports = {
           typeof instance.endpoint === "string" &&
           instance.environment === environment &&
           instance.server === target.targetServer &&
-          instance.runtimeRole &&
-          instance.runtimeRole.code === target.targetRuntimeRole &&
           ["UP", "DEGRADED"].includes(instance.state),
       );
       if (routes.length !== 1 || instances.length !== 1) return unavailable;
@@ -2431,7 +2432,7 @@ module.exports = {
       const startedAt = Date.now();
       const response = await SERVICE.DefaultModuleService.invokeModule({
         moduleName: "media", local: false, tenant: request.tenant,
-        ...this.applicationTargetBinding(step.targetServer, step.targetRuntimeRole, "media"),
+        ...this.applicationTargetBinding(step.targetServer, "media"),
         methodName: "POST", apiName: "/storage/readiness", maxAttempts: 1,
         header: {
           Authorization: this.authorizationHeader(request, true), tenant: request.tenant,
@@ -2665,7 +2666,7 @@ module.exports = {
     return parsed.origin;
   },
   /** Resolves a runtime registry owner into the module's HTTP base URL. */
-  moduleBaseUrl: async function (serverCode, moduleName, runtimeRole) {
+  moduleBaseUrl: async function (serverCode, moduleName) {
     const resolver = SERVICE.DefaultBackofficeRegistryService;
     if (!resolver || typeof resolver.resolveRuntimeOwner !== "function") {
       throw new CLASSES.NodicsError(
@@ -2675,7 +2676,6 @@ module.exports = {
     }
     const binding = this.applicationTargetBinding(
       serverCode,
-      runtimeRole,
       moduleName,
     );
     const owner = await resolver.resolveRuntimeOwner({
@@ -2777,7 +2777,7 @@ module.exports = {
   /** Explicit preparation reads exact current bytes before upload reuse or CAS replacement. */
   inspectMediaAsset: async function (step, asset, request) {
     const { form, headers, checksum, descriptor } = this.describeMediaAsset(step, asset, request);
-    const baseUrl = await this.moduleBaseUrl(step.targetServer, 'media', step.targetRuntimeRole);
+    const baseUrl = await this.moduleBaseUrl(step.targetServer, 'media');
     const inspectionResponse = await fetch(
       baseUrl + "/media/v0/storage/upload/inspect",
       {
@@ -2949,7 +2949,9 @@ module.exports = {
           request,
         );
         const result =
-          (response && (response.data || response.result || response)) || {};
+          response?.data ||
+          (Array.isArray(response?.releases) ? response : response?.result) ||
+          {};
         const selected = new Set(receipt.releaseCodes);
         const releases = Array.isArray(result.releases)
           ? result.releases
@@ -3199,14 +3201,14 @@ module.exports = {
         resolved.plan.baselineCode !== profile.baselineCode || owner.digest(profile) !== resolved.plan.profileDigest)
       throw new CLASSES.NodicsError("ERR_BOF_00081");
     if (resolved.plan.baseline && (resolved.plan.baseline.server !== this.applicationTargetBinding(
-        profile.target.connectionName, profile.target.runtimeRole, "publish").connectionName ||
-        resolved.plan.baseline.runtimeRole !== profile.target.runtimeRole))
+        profile.target.connectionName, "publish").connectionName ||
+        this.applicationTargetBinding(resolved.plan.baseline.server, "publish").targetAuthority.publication !== profile.target.publication))
       throw new CLASSES.NodicsError("ERR_BOF_00081");
     const steps = this.preparationSteps(profile).filter(step => step.required !== false);
     if (steps.length !== resolved.plan.stages.length || steps.some(step =>
       !resolved.plan.stages.some(stage => stage.code === step.code &&
         owner.digest(stage.descriptor) === owner.digest(owner.stepIdentity(step)) &&
-        stage.server === this.applicationTargetBinding(step.targetServer, step.targetRuntimeRole, "publish").connectionName)))
+        stage.server === this.applicationTargetBinding(step.targetServer, "publish").connectionName)))
       throw new CLASSES.NodicsError("ERR_BOF_00081");
     return { ...resolved, owner };
   },
@@ -3223,7 +3225,7 @@ module.exports = {
     if (mode === "TARGET") body.operations = operations;
     const response = await SERVICE.DefaultModuleService.invokeModule({
       moduleName: "publish", local: false, tenant: request.tenant,
-      ...this.applicationTargetBinding(target.server, target.runtimeRole, "publish"),
+      ...this.applicationTargetBinding(target.server, "publish"),
       connectionType: "abstract", methodName: "POST", apiName: "/publications/setup/observe",
       requestBody: body, header: { Authorization: "Bearer " + token, tenant: request.tenant },
       timeoutMs: profile.target.timeoutMs, maxAttempts: 1,
@@ -3345,7 +3347,7 @@ module.exports = {
       try {
         if (step.targetRuntimeRole !== "COMMERCE_STAGED" || !step.publicationPlan) throw new CLASSES.NodicsError("ERR_BOF_00081");
         phase = "targetBinding";
-        const binding = this.applicationTargetBinding(step.targetServer, step.targetRuntimeRole, "publish");
+        const binding = this.applicationTargetBinding(step.targetServer, "publish");
         phase = "authorization";
         const authorization = this.authorizationHeader(request, true);
         phase = "invocation";
@@ -3481,9 +3483,8 @@ module.exports = {
       repairBefore = await SERVICE.DefaultModuleService.invokeModule({
         moduleName: profile.target.moduleName,
         local: false,
-        ...this.applicationTargetBinding(
-          profile.target.connectionName,
-          profile.target.runtimeRole || "WCMS_STAGED",
+        ...this.applicationPublicationTargetBinding(
+          profile.target,
           profile.target.moduleName,
         ),
         connectionType: profile.target.connectionType || "abstract",
@@ -3505,9 +3506,8 @@ module.exports = {
     const baselineRequest = {
       moduleName: profile.target.moduleName,
       local: false,
-      ...this.applicationTargetBinding(
-        profile.target.connectionName,
-        profile.target.runtimeRole || "WCMS_STAGED",
+      ...this.applicationPublicationTargetBinding(
+        profile.target,
         profile.target.moduleName,
       ),
       connectionType: profile.target.connectionType || "abstract",
@@ -3756,12 +3756,11 @@ module.exports = {
               code: profile.baselineCode,
               required: true,
               status: "READINESS_RATE_LIMITED",
-              targetServer: this.applicationTargetBinding(
-                profile.target.connectionName,
-                profile.target.runtimeRole || "WCMS_STAGED",
+              targetServer: this.applicationPublicationTargetBinding(
+                profile.target,
                 profile.target.moduleName,
               ).connectionName,
-              targetRuntimeRole: profile.target.runtimeRole || "WCMS_STAGED",
+              targetRuntimeRole: profile.target.publication,
               message: this.targetFailureMessage("ERR_RTR_00004", ""),
             }),
           });
@@ -3780,27 +3779,30 @@ module.exports = {
         "Application profile does not own a documentation content pack",
       );
     }
-    if (operation === "install") this.human(request);
+    const principal = operation === "install" ? this.human(request) : undefined;
     let token = NODICS.getInternalAuthToken(request.tenant);
     if (!token)
       throw new CLASSES.NodicsError(
         "ERR_BOF_00083",
         "Application initialization service authentication is unavailable",
       );
+    const targetModule = operation === "install" ? "cms" : "system";
     return SERVICE.DefaultModuleService.invokeModule({
-      moduleName: "system",
+      moduleName: targetModule,
       local: false,
-      ...this.applicationTargetBinding(
-        profile.target.connectionName,
-        profile.target.runtimeRole || "WCMS_STAGED",
-        "system",
+      ...this.applicationPublicationTargetBinding(
+        profile.target,
+        targetModule,
       ),
       connectionType: profile.target.connectionType || "abstract",
       methodName: operation === "status" ? "GET" : "POST",
-      apiName:
-        "/internal/content-packs/" +
-        encodeURIComponent(profile.contentPackCode) +
-        (operation === "install" ? "/imports" : ""),
+      apiName: operation === "install"
+        ? "/publication/baselines/" + encodeURIComponent(profile.baselineCode) + "/content-pack/imports"
+        : "/internal/content-packs/" + encodeURIComponent(profile.contentPackCode),
+      requestBody: operation === "install" ? {
+        requestedBy: principal,
+        correlationId: request.correlationId || request.requestId
+      } : undefined,
       timeoutMs: profile.target.timeoutMs,
       maxAttempts: profile.target.maxAttempts,
       idempotencyKey:

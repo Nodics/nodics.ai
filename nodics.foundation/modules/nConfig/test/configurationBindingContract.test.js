@@ -281,41 +281,20 @@ test("cycles, unavailable contexts, malformed bindings and unsafe reference path
   );
 });
 
-test("role keyed operations meet the complete base only at projection and preserve ordinary role arrays", () => {
-  const initializer = require("../src/service/DefaultFrameworkInitializerService");
+test("retired role selectors reject instead of silently changing ordinary defaults", () => {
   const apply = (base, layer) => resolver.merge(base, resolver.resolve(layer, base));
-  const role = entries => ({ runtimeRole: { code: "LOCAL" }, example: { runtimeRoleProfiles: {
-    LOCAL: { packages: { $config: "keyed", key: "code", entries } },
-  } } });
-  let properties = apply({}, role([{ code: "assignment" }]));
-  properties = apply(properties, { example: { packages: { $config: "replace", value: [{ code: "identity" }] } } });
-  const fold = p => initializer.deriveRuntimeRoleProfile(p, "example");
-  assert.deepEqual(fold(properties).example.packages, [{ code: "identity" }, { code: "assignment" }]);
-  assert.deepEqual(fold({ ...properties, runtimeRole: { code: "OTHER" } }).example.packages, [{ code: "identity" }]);
-  properties = apply(properties, role([{ code: "assignment", required: true }, { code: "second" }]));
-  properties = apply(properties, { example: { runtimeRoleProfiles: { LOCAL: {
-    packages: { $config: "keyed", key: "code", remove: ["assignment"] },
-  } } } });
-  properties = apply(properties, role([{ code: "assignment", required: false }]));
-  assert.deepEqual(fold(properties).example.packages,
-    [{ code: "identity" }, { code: "second" }, { code: "assignment", required: false }]);
-  assert.equal(fold(properties).example.runtimeRoleProfiles, undefined);
-  const replace = apply(properties, { example: { runtimeRoleProfiles: { LOCAL: {
-    packages: { $config: "replace", value: [{ code: "only" }] },
-  } } } });
-  assert.deepEqual(fold(replace).example.packages, [{ code: "only" }]);
-  const cleared = apply(properties, { example: { runtimeRoleProfiles: { LOCAL: { packages: null } } } });
-  assert.equal(fold(cleared).example.packages, null);
-  assert.deepEqual(JSON.parse(JSON.stringify(fold(properties))).example.packages,
-    [{ code: "identity" }, { code: "second" }, { code: "assignment", required: false }]);
-  let ordinary = apply({}, { runtimeRole: { code: "LOCAL" }, example: {
-    packages: ["base", "tail", "third"], runtimeRoleProfiles: { LOCAL: { packages: ["first", "second"] } },
-  } });
-  ordinary = apply(ordinary, { example: { runtimeRoleProfiles: { LOCAL: { packages: ["changed"] } } } });
-  assert.deepEqual(fold(ordinary).example.packages, ["changed", "second"]);
-  assert.throws(() => fold(apply(properties, role([{ code: "duplicate" }, { code: "duplicate" }]))), /identities conflict/);
-  assert.deepEqual(fold(properties).example.packages,
-    [{ code: "identity" }, { code: "second" }, { code: "assignment", required: false }]);
+  const defaults = { example: { enabled: true, packages: [{ code: "base" }] } };
+  const effective = apply(defaults, { runtimeRole: { code: "CUSTOM" }, example: { enabled: false } });
+  initializer.validateCapabilityConfiguration(effective);
+  assert.equal(effective.example.enabled, false);
+  assert.deepEqual(effective.example.packages, [{ code: "base" }]);
+  assert.throws(() => initializer.validateCapabilityConfiguration(apply(effective, {
+    example: { runtimeRoleProfiles: { CUSTOM: { enabled: true } } },
+  })), /Retired runtimeRoleProfiles/);
+  assert.throws(() => initializer.validateCapabilityConfiguration(apply(effective, {
+    runtimeRole: { roles: ["CUSTOM"] },
+  })), /runtimeRole.roles is retired/);
+  assert.equal(effective.example.enabled, false);
 });
 
 test("explicit collection replacement and keyed changes preserve identity, nested scope and independent later layers", () => {

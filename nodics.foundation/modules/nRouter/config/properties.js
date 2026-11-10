@@ -34,22 +34,6 @@ module.exports = {
   httpHardening: {
     enabled: true,
     trustProxy: false,
-    runtimeRoleProfiles: {
-      PROCESS: {
-        cors: {
-          originEndpointOverrides: {
-            nexus: false,
-          },
-        },
-      },
-      WCMS_STAGED: {
-        cors: {
-          originEndpointOverrides: {
-            nexus: false,
-          },
-        },
-      },
-    },
     body: {
       urlencoded: {
         extended: true,

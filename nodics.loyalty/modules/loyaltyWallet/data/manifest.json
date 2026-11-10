@@ -26,7 +26,23 @@
         "init-v001/records/identity/loyaltyWalletParticipantTransactionGroupData.js": "dab70881afa9070c2f0eee980c7a7a766c2690fb7be93b7613bec563dda3e418",
         "init-v001/headers/identity/020_loyaltyWalletParticipantTransactionRoleHeader.js": "b5dc74cec53187ceefbff390d908fbfe0e3fe065b2bc8f6435760f65202c8dd1",
         "init-v001/records/identity/loyaltyWalletParticipantTransactionRoleData.js": "5e03d116fdb0442af88312f62e4213b5ba7f758df3d1ef2681494dacb250f504"
-      }
+      },
+      "prerequisites": [
+        {
+          "moduleName": "loyaltyWallet",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "838336cb02e48538bb992bd7d2140b0b784b8ffa582451a18bef88399ed1499f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "loyaltyWallet",
+          "sectionCode": "transferPermissions",
+          "version": "0.0.1",
+          "checksum": "df049e825596d034535eba67b80fa9c8b3ebafc71250696a7a85e385b5ba5770",
+          "partition": "DEFAULT"
+        }
+      ]
     },
     "transferNotificationPermission": {
       "kind": "DATA_RELEASE",
@@ -231,7 +247,7 @@
     "specialAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Reviewed Sample Credit Group",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "loyaltyWallet",
@@ -255,8 +271,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
         },
         {
           "moduleName": "loyaltyWallet",
@@ -270,7 +286,7 @@
     "specialAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "Reviewed Sample Credit Role",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "loyaltyWallet",
@@ -294,8 +310,8 @@
         {
           "moduleName": "loyaltyWallet",
           "sectionCode": "specialAccessGroups",
-          "version": "0.0.2",
-          "checksum": "32a475b64e4fdfb37f6f979d2d9cad78b759be705cfeaaf080695bb158dc5fc5"
+          "version": "0.0.1",
+          "checksum": "15200837017575ee6f0f407ef2f1808ca1cc1064dfed1c401f12f43a9c91d969"
         }
       ]
     },
@@ -326,8 +342,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7",
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660",
           "partition": "DEFAULT"
         },
         {
@@ -407,7 +423,7 @@
           "moduleName": "loyaltyWallet",
           "sectionCode": "participantTransactionAccess",
           "version": "0.0.1",
-          "checksum": "8ecbb7f80bd3f25cbac9d0370176f5bb8fad44dbe27d233fdba8e6ec77145973",
+          "checksum": "d0aa5acf4a5d57a2ad60e9d5082566c3bea91cb3e6b4004b8a2c4b25a209bba5",
           "partition": "DEFAULT"
         },
         {

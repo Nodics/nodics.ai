@@ -99,7 +99,9 @@ module.exports = {
     profile: function (code) {
         const config = CONFIG.get('backofficeApplicationInitialization') || {}, raw = config.profiles?.[code];
         if (!raw || raw.enabled === false || raw.code !== code || !raw.owner || !raw.baselineCode) this.fail();
-        return { ...raw, target: { ...config.target, ...raw.target } };
+        const target = { ...config.target, ...raw.target };
+        if (Object.hasOwn(target, 'runtimeRole') || target.publication !== 'STAGED') this.fail();
+        return { ...raw, target };
     },
     /**
      * Projects the canonical preparation-step coordinates used in reviewed plans.
@@ -122,7 +124,7 @@ module.exports = {
         const raw = Array.isArray(preparation.steps) ? preparation.steps : [].concat(profile.dataPackages || []).map(pack => ({
             type: 'DATA_RELEASE', dataType: pack.dataType || (pack.type === 'MEDIA_ASSET_MANIFEST' ? 'media' : pack.kind === 'CORE_CONTENT' ? 'core' : 'sample'),
             targetServer: pack.targetServer || profile.target.connectionName,
-            targetRuntimeRole: pack.targetRuntimeRole || profile.target.runtimeRole || 'WCMS_STAGED', ...pack,
+            targetRuntimeRole: pack.targetRuntimeRole || profile.target.publication, ...pack,
         }));
         return [].concat(preparation.prerequisites || [], raw).filter(step => step && step.enabled !== false && step.required !== false);
     },
@@ -131,7 +133,7 @@ module.exports = {
         const matches = SERVICE.DefaultDataReleaseService.discoverReleases(dataType).filter(item => item.releaseCode === code);
         if (matches.length !== 1 || matches[0].invalidManifest) this.fail();
         return Object.fromEntries(['moduleName', 'releaseCode', 'sectionCode', 'dataType', 'version', 'checksum',
-            'sourceRoot', 'declaredFiles', 'prerequisites', 'installer', 'owningDomain', 'lifecycle', 'destinationRole', 'environmentScope']
+            'sourceRoot', 'declaredFiles', 'prerequisites', 'installer', 'owningDomain', 'lifecycle', 'destinationRole', 'environmentScope', 'selectionPolicy']
             .filter(key => matches[0][key] !== undefined).map(key => [key, structuredClone(matches[0][key])]));
     },
     /** Reuses nImport confinement with a private read budget, never changing global installer limits. */
@@ -149,7 +151,7 @@ module.exports = {
             const descriptor = this.stepIdentity(step), binding = SERVICE.DefaultBackofficeApplicationInitializationService;
             const stage = { code: step.code, descriptor,
                 server: typeof binding?.applicationTargetBinding === 'function'
-                    ? binding.applicationTargetBinding(descriptor.targetServer, descriptor.targetRuntimeRole, 'publish').connectionName : null,
+                    ? binding.applicationTargetBinding(descriptor.targetServer, 'publish').connectionName : null,
                 enterpriseCode: step.operatorEnterpriseCode || null };
             if (descriptor.type === 'DATA_RELEASE') {
                 const matches = releases.discoverReleases(descriptor.dataType).filter(item => item.releaseCode === step.code);

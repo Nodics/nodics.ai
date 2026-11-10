@@ -88,6 +88,16 @@ module.exports = {
       requireNavigationForPublish: false,
       draftDefaults: {},
       componentKinds: [],
+      presentation: {
+        newPageTitle: "New page",
+        pageNameLabel: "Page name",
+        pageNameHelp: "Use a name your team will recognise in the page library.",
+        createdMessage: "Page draft saved. Continue with the saved page to edit it and prepare it for publication.",
+        continueLabel: "Continue with saved page",
+        knownSavedMessage: "Continue in the saved-page editor to change this saved page.",
+        changedAfterCreationMessage: "This form has edits after the saved version. These entries remain here while you inspect the saved copy.",
+        publicationUnconfirmedMessage: "The publication outcome is unconfirmed. Inspect the original request in Publishing before taking another action.",
+      },
     },
     referenceLookup: { requireServiceToken: true, maximumResultCount: 1 },
     delivery: {
@@ -163,14 +173,15 @@ module.exports = {
     publication: {
       enabled: false,
       maximumDeploymentRequestBytes: "64mb",
-      runtimeRole: "UNASSIGNED",
+      runtimeRole: { $config: "context", name: "publication" },
       maxDependencies: 500,
       maxBundleDependencies: 10000,
       maxDepth: 12,
       maxBundleRoutes: 200,
       siteBundleChunkThresholdBytes: 50331648,
       manifestService: "DefaultCmsPublicationManifestOrchestrationService",
-      targetTransportProvider: null,
+      targetTransportProvider: { $config: "context", name: "publication",
+        cases: { STAGED: "DefaultCmsPublicationModuleTransportService", ONLINE: null, OPERATIONAL: null } },
       transactionModuleName: "cms",
       outbox: {
         batchSize: 100,
@@ -185,7 +196,8 @@ module.exports = {
       baselines: {},
       workflow: {
         target: {
-          moduleName: "process",
+          moduleName: "workflow",
+          publication: "OPERATIONAL",
           connectionName: null,
           connectionType: "abstract",
           timeoutMs: 10000,
@@ -194,6 +206,7 @@ module.exports = {
       },
       target: {
         moduleName: "cms",
+        publication: "ONLINE",
         connectionName: null,
         connectionType: "abstract",
         timeoutMs: 30000,
@@ -214,21 +227,6 @@ module.exports = {
       },
     },
 
-    runtimeRoleProfiles: {
-      WCMS_STAGED: {
-        publication: {
-          runtimeRole: "STAGED",
-          targetTransportProvider:
-            "DefaultCmsPublicationModuleTransportService",
-        },
-      },
-      WCMS_ONLINE: {
-        publication: {
-          runtimeRole: "ONLINE",
-          targetTransportProvider: null,
-        },
-      },
-    },
   },
   publish: {
     providers: {

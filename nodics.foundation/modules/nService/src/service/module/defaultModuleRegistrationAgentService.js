@@ -230,6 +230,19 @@ module.exports = {
     return claims;
   },
 
+  /** Reads activation defaults on the registering owner runtime, before BackOffice applies deployment routing. */
+  getOwnerActivationPackages: function (rawModule) {
+    const modules = typeof CONFIG !== "undefined" && CONFIG.get("backofficeFunctionalModuleActivationData")?.modules;
+    if (!modules) return [];
+    const seen = new Set();
+    for (let current = rawModule; current; current = NODICS.getRawModule(current.parent)) {
+      const identity = current.metaData?.nodics?.functionalModule?.identity;
+      if (identity) return modules[identity]?.dataPackages || [];
+      if (!current.parent || seen.has(current.parent)) break;
+      seen.add(current.parent);
+    }
+    return [];
+  },
   /** Returns module-owned activation data packages declared in this module's data manifest. */
   buildActivationDataPackages: function (moduleName, rawModule) {
     if (!rawModule || !rawModule.path) return [];
@@ -239,6 +252,7 @@ module.exports = {
     if (!fs.existsSync(manifestPath)) return [];
     let manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
     let sections = (manifest && manifest.sections) || {};
+    const defaults = this.getOwnerActivationPackages(rawModule);
     return Object.keys(sections)
       .sort()
       .map((sectionCode) => {
@@ -252,12 +266,15 @@ module.exports = {
           section.dataType ||
             this.inferActivationDataType(section, sectionCode),
         );
-        let isActivationRequired =
+        const code = String((manifest.module || moduleName) + ":" + sectionCode);
+        const selected = dataType === "init" && section.selectionPolicy === "EXPLICIT" &&
+          defaults.find(pack => pack.code === code && pack.required === true && pack.trigger === "ACTIVATION");
+        let isActivationRequired = Boolean(selected) ||
           section.selectionPolicy !== "EXPLICIT" &&
           dataType !== "sample" &&
           section.initialPublicationPolicy !== "ADMIN_INITIATED";
         let pack = {
-          code: String((manifest.module || moduleName) + ":" + sectionCode),
+          code,
           classification: String(
             dataType === "sample"
               ? "sample"
@@ -266,7 +283,7 @@ module.exports = {
           owner: String(moduleName),
           required: isActivationRequired,
           trigger: isActivationRequired ? "ACTIVATION" : "USER",
-          targetModule: String(moduleName),
+          targetModule: selected?.targetModule || String(moduleName),
           operation: "IMPORT",
           dataType: dataType,
         };
@@ -274,7 +291,8 @@ module.exports = {
           typeof NODICS !== "undefined" && NODICS.getServerName
             ? String(NODICS.getServerName() || "")
             : "";
-        if (targetServer) pack.targetServer = targetServer;
+        if (selected?.targetServer) pack.targetServer = selected.targetServer;
+        else if (targetServer && pack.targetModule === moduleName) pack.targetServer = targetServer;
         return pack;
       })
       .filter(Boolean);
@@ -292,9 +310,108 @@ module.exports = {
     return "core";
   },
 
+  /** Identifies functional authority from an existing registration, without package-name exemptions.
+   * @param {Object} registration Module registration evidence.
+   * @param {Object} [sourceModule] Trusted installed owner descriptor.
+   * @returns {boolean} Callable/state authority or explicitly declared functional service authority.
+   * @throws {Error} When source-only metadata contradicts authority or a non-callable state owner lacks explicit classification.
+   */
+  isOwningRegistration: function (registration, sourceModule) {
+    const source = this.getModuleOwnershipSource(registration?.moduleName, sourceModule);
+    const declared = source?.metaData?.nodics?.runtime?.ownership;
+    const scope = this.getModuleOwnershipScope(registration?.moduleName, source);
+    const evidence = registration?.clientCallable === true || (Array.isArray(registration?.authorityClaims) && registration.authorityClaims.length > 0);
+    if (scope === "sourceOnly" && evidence) throw new Error("Source-only helper cannot expose callable or persisted authority: " + registration.moduleName);
+    if (registration?.clientCallable !== true && Array.isArray(registration?.authorityClaims) &&
+        registration.authorityClaims.length > 0 && declared === undefined) {
+      throw new Error("Non-callable module authority requires explicit installed ownership metadata: " + registration.moduleName);
+    }
+    return evidence || declared === "functional";
+  },
+
+  /** Creates a lazy installed-source reader for one bounded registration operation.
+   * @returns {Function} Trusted descriptor reader; retain only until the operation settles.
+   * @throws {Error} Propagates canonical discovery failures without fallback or cached authority.
+   * @override Preserve loaded-source precedence and fresh discovery between operations.
+   */
+  createOwnershipSourceResolver: function () {
+    let installed, discoveryFailure;
+    return moduleName => {
+      const loaded = typeof NODICS !== "undefined" && typeof NODICS.getRawModule === "function"
+        ? NODICS.getRawModule(moduleName) : undefined;
+      if (loaded) return loaded;
+      if (typeof UTILS !== "undefined" && typeof UTILS.createInstalledSourceResolver === "function") {
+        if (discoveryFailure) throw discoveryFailure;
+        try { installed ||= UTILS.createInstalledSourceResolver(); }
+        catch (error) { discoveryFailure = error; throw error; }
+        return installed(moduleName);
+      }
+      return this.getModuleOwnershipSource(moduleName);
+    };
+  },
+
+  /** Reads an installed ownership descriptor, never incoming registration fields.
+   * @param {string} moduleName Canonical module identity.
+   * @param {Object} [sourceModule] Canonical loader descriptor.
+   * @returns {Object|undefined} Trusted descriptor if installed.
+   * @throws {Error} If installed discovery is ambiguous or invalid.
+   */
+  getModuleOwnershipSource: function (moduleName, sourceModule) {
+    let source = sourceModule;
+    if (!source && typeof NODICS !== "undefined" && typeof NODICS.getRawModule === "function") source = NODICS.getRawModule(moduleName);
+    if (!source && typeof UTILS !== "undefined" && typeof UTILS.resolveInstalledSourceDescriptor === "function") source = UTILS.resolveInstalledSourceDescriptor(moduleName);
+    return source;
+  },
+
+  /** Resolves ownership scope from trusted installed owner metadata, never wire assertions.
+   * @param {string} moduleName Canonical module identity.
+   * @param {Object} [sourceModule] Trusted source descriptor supplied by the canonical loader.
+   * @returns {string} functional, runtimeLocal or sourceOnly; omission defaults to functional.
+   * @throws {Error} When declared ownership is invalid or source discovery fails.
+   */
+  getModuleOwnershipScope: function (moduleName, sourceModule) {
+    const source = this.getModuleOwnershipSource(moduleName, sourceModule);
+    const scope = source?.metaData?.nodics?.runtime?.ownership;
+    if (scope === undefined) return "functional";
+    if (!["functional", "runtimeLocal", "sourceOnly"].includes(scope)) throw new Error("Invalid module ownership scope: " + moduleName);
+    return scope;
+  },
+
+  /** Builds the shared project/environment/module/publication ownership key.
+   * @param {Object} coordinates Explicit runtime coordinates and runtimeRole.publication.
+   * @param {Object} registration Registration carrying moduleName.
+   * @param {Object} [sourceModule] Trusted source descriptor; omitted callers resolve installed metadata.
+   * @returns {string} Unambiguous serialized ownership key.
+   * @throws {Error} When ownership coordinates are incomplete.
+   */
+  getModuleOwnershipKey: function (coordinates, registration, sourceModule) {
+    const publication = coordinates?.runtimeRole?.publication;
+    if (![coordinates?.projectCode, coordinates?.environment, registration?.moduleName].every(value => typeof value === "string" && value.length > 0) ||
+        !["STAGED", "ONLINE", "OPERATIONAL"].includes(publication)) throw new Error("Module ownership requires explicit project, environment, module and publication context");
+    const parts = [coordinates.projectCode, coordinates.environment, registration.moduleName, publication];
+    if (this.getModuleOwnershipScope(registration.moduleName, sourceModule) === "runtimeLocal") {
+      if (typeof coordinates.server !== "string" || !coordinates.server) throw new Error("Runtime-local ownership requires an explicit logical server");
+      parts.push(coordinates.server);
+    }
+    return JSON.stringify(parts);
+  },
+
+  /** Projects registration authority without tokens, endpoints, providers or registration writes.
+   * @param {string} moduleName Canonical active module identity.
+   * @param {Object} rawModule Module with effective metadata and materialized rawSchema when available.
+   * @returns {Object} Authority evidence; absent effective schemas are explicitly incomplete.
+   */
+  buildOwnershipEvidence: function (moduleName, rawModule) {
+    return { moduleName, ownershipScope: this.getModuleOwnershipScope(moduleName, rawModule), clientCallable: rawModule.metaData?.nodics?.runtime?.router === true,
+      authorityClaims: this.buildAuthorityClaims(moduleName, rawModule),
+      schemaEvidenceComplete: Object.prototype.hasOwnProperty.call(rawModule, "rawSchema") };
+  },
+
   /** Builds a bounded module registration payload from authoritative runtime metadata. */
   buildRegistration: function (moduleName) {
-    let rawModule = NODICS.getRawModule(moduleName) || {};
+    const sourceModule = NODICS.getRawModule(moduleName) || {};
+    const effectiveModule = NODICS.getModule(moduleName);
+    let rawModule = { ...sourceModule, rawSchema: effectiveModule?.rawSchema };
     let metadata = rawModule.metaData || {};
     let nodicsMetadata = metadata.nodics || {};
     let runtime = nodicsMetadata.runtime || {};
@@ -309,7 +426,7 @@ module.exports = {
       moduleIndex: metadata.index || undefined,
       moduleKind: nodicsMetadata.kind || "unknown",
       capabilities: (nodicsMetadata.owns || []).slice(),
-      clientCallable: runtime.router === true,
+      clientCallable: this.buildOwnershipEvidence(moduleName, rawModule).clientCallable,
       runtime: {
         router: runtime.router === true,
         publish: runtime.publish === true,
@@ -323,6 +440,7 @@ module.exports = {
         rawModule,
       ),
     };
+    this.isOwningRegistration(registration, rawModule);
     if (nodicsMetadata.functionalModule) {
       registration.functionalModule = JSON.parse(
         JSON.stringify(nodicsMetadata.functionalModule),

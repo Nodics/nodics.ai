@@ -36,7 +36,7 @@ function fixture(t) {
     const releaseStep = { type: 'DATA_RELEASE', phase: 'BEFORE_PUBLICATION', code: 'partner:reference',
         dataType: 'core', targetServer: 'staged', targetRuntimeRole: 'COMMERCE_STAGED' };
     const profile = { code: 'partner', owner: 'partner', baselineCode: 'partner',
-        target: { connectionName: 'staged', runtimeRole: 'COMMERCE_STAGED' }, preparation: { steps: [releaseStep, publicationStep] } };
+        target: { connectionName: 'staged', publication: 'STAGED' }, preparation: { steps: [releaseStep, publicationStep] } };
     const fileBytes = Buffer.from('{"source":true}\n');
     const prerequisites = [{ moduleName: 'foundation', sectionCode: 'reference', version: '1.0.0', checksum: hash('foundation') }];
     const release = { moduleName: 'partner', releaseCode: 'partner:reference', sectionCode: 'reference', dataType: 'core',
@@ -352,9 +352,12 @@ test('bootstrap plan needs no final operation pins; shared BEFORE qualifies befo
     assert.equal((await f.service.observe(f.request, f.input())).items[0].revision, 5);
 });
 test('read-only plan review material derives current prerequisites and sources, never lifecycle receipts or grants', t => {
-    const f = fixture(t), draft = f.service.describePlan('partner', 'tenantA', 'review-draft');
+    const f = fixture(t);
+    f.release.selectionPolicy = 'EXPLICIT';
+    const draft = f.service.describePlan('partner', 'tenantA', 'review-draft');
     assert.equal(draft.profileDigest, f.service.digest(f.profile)); assert.equal(draft.stages.length, 2);
     assert.equal(draft.stages[0].release.checksum, f.release.checksum);
+    assert.equal(draft.stages[0].release.selectionPolicy, 'EXPLICIT');
     assert.deepEqual(draft.stages[0].release.prerequisites, f.release.prerequisites); assert.equal(draft.stages[0].enterpriseCode, null);
     assert.equal(draft.stages[1].publications, undefined); assert.deepEqual(f.reads, []);
     global.SERVICE.DefaultDataReleaseService.discoverReleases = () => [];
@@ -583,6 +586,7 @@ test('Product actual sealed graph and target pointer descendants use generated p
     global.NODICS.isModuleActive = code => code === 'product';
     global.NODICS.getModels = () => ({ productModel: { versioned: true, rawSchema: { versionedReadMode: 'CURRENT' } } });
     Object.assign(global.SERVICE, { ActualProduct: provider, DefaultProductPublicationGraphService: graph,
+        DefaultModuleService: { isLocalModuleActive: code => code === 'product' },
         DefaultProductPublicationTargetService: target,
         DefaultProductLocalizationPolicyService: require(path.join(directory, 'src/service/defaultProductLocalizationPolicyService')),
         DefaultProductService: gate.service([root], groups), DefaultProductPublicationPointerService: gate.service([pointer], groups) });
@@ -660,3 +664,22 @@ test('absent predecessor from an unqualified target owner is never inferred as n
     delete f.receipt.previousOnlineVersion;
     assert.equal((await f.service.observe(f.request, f.input('TARGET'))).ready, false);
 });
+
+ test('plan compiler adopts BackOffice publication defaults and exact two-argument binding without migrating reviewed role pins', t => {
+    const f=fixture(t), calls=[];
+    delete f.profile.preparation;
+    f.profile.dataPackages=[{code:f.release.releaseCode,kind:'CORE_CONTENT'}];
+    SERVICE.DefaultBackofficeApplicationInitializationService={applicationTargetBinding(...args){
+        calls.push(args);assert.deepEqual(args,['staged','publish']);
+        return {connectionName:'canonicalStaged',targetAuthority:{server:'canonicalStaged',publication:'STAGED'}};
+    }};
+    const draft=f.service.describePlan('partner','tenantA','review-draft');
+    assert.equal(draft.stages[0].descriptor.targetRuntimeRole,'STAGED');
+    assert.equal(draft.stages[0].server,'canonicalStaged');assert.equal(calls.length,1);
+    f.profile.dataPackages[0].targetRuntimeRole='REVIEWED_EXACT_PIN';
+    assert.equal(f.service.describePlan('partner','tenantA','review-draft').stages[0].descriptor.targetRuntimeRole,'REVIEWED_EXACT_PIN');
+    f.profile.target.runtimeRole='WCMS_STAGED';
+    assert.throws(()=>f.service.describePlan('partner','tenantA','review-draft'));
+    delete f.profile.target.runtimeRole;delete f.profile.target.publication;
+    assert.throws(()=>f.service.describePlan('partner','tenantA','review-draft'));
+ });

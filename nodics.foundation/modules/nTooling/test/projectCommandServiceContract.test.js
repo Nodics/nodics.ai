@@ -66,6 +66,19 @@ assert.equal(service.resolveCommands(minimalRoot)['docs:generate'].command, 'pro
 assert.equal(service.defaultCommands()['post-reset:readiness'].home, 'project');
 assert.equal(Object.keys(service.defaultCommands()).some(name => /kickoff/.test(name)), false);
 
+const scopedRoot = createProject();
+const environmentProperties = path.join(scopedRoot, 'envs', 'duShopContainer', 'config');
+fs.mkdirSync(environmentProperties, { recursive: true });
+fs.writeFileSync(path.join(environmentProperties, 'properties.js'), 'module.exports = { runtimeRoleProfiles: {} };');
+service.validateProject(scopedRoot, 'duShopLocal');
+assert.throws(() => service.validateProject(scopedRoot), /duShopContainer.*retired role configuration/);
+assert.throws(() => service.validateProject(scopedRoot, 'duShopContainer'), /duShopContainer.*retired role configuration/);
+assert.throws(() => service.validateProject(scopedRoot, '../envs/duShopLocal'), /Unknown project environment/);
+const sharedProperties = path.join(scopedRoot, 'config');
+fs.mkdirSync(sharedProperties);
+fs.writeFileSync(path.join(sharedProperties, 'properties.js'), 'module.exports = { runtimeRoleProfiles: {} };');
+assert.throws(() => service.validateProject(scopedRoot, 'duShopLocal'), /config\/properties.js.*retired role configuration/);
+
 const descriptorProjectCodeRoot = createProject({ name: 'right.shop' });
 fs.writeFileSync(path.join(descriptorProjectCodeRoot, 'nodics.project.json'), JSON.stringify({ projectCode: 'right.shop' }, null, 2));
 assert.throws(

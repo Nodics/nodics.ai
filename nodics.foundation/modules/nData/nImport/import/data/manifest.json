@@ -78,7 +78,7 @@
     "specialAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Sample Import Operator Group",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "import",
@@ -102,8 +102,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
         },
         {
           "moduleName": "import",
@@ -117,7 +117,7 @@
     "specialAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "Sample Import Operator Role",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "import",
@@ -141,8 +141,8 @@
         {
           "moduleName": "import",
           "sectionCode": "specialAccessGroups",
-          "version": "0.0.2",
-          "checksum": "eaf36effce30a89ec56eb46e3fcf66646b3ff37d24583fcfb4a8f1b56e8f9613"
+          "version": "0.0.1",
+          "checksum": "7a4e4acdb1599b2576700cba3a36f74c938a37554e18b2f4f3d41fdfa7d23ef6"
         }
       ]
     }

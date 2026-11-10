@@ -26,7 +26,23 @@
         "init-v001/records/identity/digitalCoreParticipantTransactionGroupData.js": "ef170bb89ea4e8b0acd1e94302e9e8dc8a0f29d4fb390e2afb9f0c3e1a69b208",
         "init-v001/headers/identity/020_digitalCoreParticipantTransactionRoleHeader.js": "da8187d1c9eae3d06c3c93d121c8662b7353281d2421f8d5796341e7aa9d1c7d",
         "init-v001/records/identity/digitalCoreParticipantTransactionRoleData.js": "35ebe48b03a89bcd0f54542d6cfb4201c1fc9b06d48eaad07868deed17434e7f"
-      }
+      },
+      "prerequisites": [
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "bundleParticipantPermissions",
+          "version": "0.0.1",
+          "checksum": "cefeccf352ca72d3fd91b90497869e0dc76fadcb52b516dfb4e8272d22d6cea9",
+          "partition": "DEFAULT"
+        }
+      ]
     },
     "giftExpirySchedule": {
       "kind": "DATA_RELEASE",
@@ -128,8 +144,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7",
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660",
           "partition": "DEFAULT"
         },
         {
@@ -144,7 +160,7 @@
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "digitalCore permissionCatalogue",
       "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "digitalCore",
@@ -168,7 +184,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "digitalCore accessGroups",
       "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "digitalCore",
@@ -192,20 +208,20 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
+          "version": "0.0.1",
+          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
         },
         {
           "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
@@ -221,7 +237,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "digitalCore enterpriseRoles",
       "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "digitalCore",
@@ -245,8 +261,8 @@
         {
           "moduleName": "digitalCore",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "3f83909885dfa658d2f50405849a24b87ef3e4f1ee7ddef9d6269c831357050c"
+          "version": "0.0.1",
+          "checksum": "47dbf8c23fa445e116f32742d35c6cd9b9ee945b5919a321b0ddea889ec67a29"
         }
       ]
     },
@@ -390,7 +406,7 @@
         {
           "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
@@ -405,7 +421,7 @@
           "moduleName": "digitalCore",
           "sectionCode": "participantTransactionAccess",
           "version": "0.0.1",
-          "checksum": "f890a4d787906ab195a5cc888db7935729d78c5b4a8af50e44fd37e825890713",
+          "checksum": "103528acd20fc28aeecf14b217f1656e2937cf5a84cd3f275343e0e71303e688",
           "partition": "DEFAULT"
         },
         {
@@ -446,6 +462,90 @@
       "files": {
         "init-v001/headers/identity/010_digitalEnterpriseParticipationPermissionHeader.js": "ec618e55fb3680c14f9b3608f8c9c33f16d372e8e143694537ebb4c7754e09e2",
         "init-v001/records/identity/digitalEnterpriseParticipationPermissionData.js": "278a8a35c622f54d700784c7d65f09c882025926e6a271fbc99b263b2cb54ed8"
+      }
+    },
+    "couponReminderWorkflow": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Coupon expiry reminder workflow",
+      "description": "Check opted-in fixed-expiry coupon purchases for eligible recipients.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "OPERATIONAL_VERSIONED",
+      "destinationRole": "PROCESS",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "installer": "PROCESS_DEFINITION",
+      "files": {
+        "init-v001/records/process/digitalCouponExpiryReminderDefinitionData.js": "25a64dae4d20a98a27ad86525d1b3eb55c9844eba5a9188830420a3317ec322a"
+      },
+      "sourceRoot": "init-v001",
+      "selectionPolicy": "EXPLICIT",
+      "capability": {
+        "code": "digitalCouponReminders",
+        "displayName": "Coupon expiry reminders"
+      }
+    },
+    "couponReminderTrigger": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Coupon expiry reminder trigger",
+      "description": "Explicit inactive trigger for the Digital reminder workflow.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PROCESS",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/jobs/digitalCouponExpiryReminderTriggerData.js": "ad8489b1b3e75a8e1c67dddd71f80bee66946d5a13956bac0793953dbb255929",
+        "init-v001/headers/jobs/digitalCouponExpiryReminderTriggerHeader.js": "c0f2e14039b1279e99262e2a535bd0b09aa450438822b866c02db0d83da4978b"
+      },
+      "capability": {
+        "code": "digitalCouponReminders",
+        "displayName": "Coupon expiry reminders"
+      }
+    },
+    "couponReminderSchedule": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Coupon expiry reminder sweep",
+      "description": "Explicit inactive job for the Digital reminder workflow.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "CRON",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/jobs/digitalCouponExpiryReminderJobData.js": "35eaf24a61af6baacb6ce193c579ed69561e01029845d322c6f4a2153009e295",
+        "init-v001/headers/jobs/digitalCouponExpiryReminderJobHeader.js": "3eff5bd366b5870f1a7f54d2607d6d58d1ecadca78c57d049272ce7aa90f6045"
+      },
+      "capability": {
+        "code": "digitalCouponReminders",
+        "displayName": "Coupon expiry reminders"
       }
     }
   }

@@ -17,6 +17,20 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  bootstrapIdentity: {
+    source: "environment",
+    adminPassword: {
+      $config: "env",
+      name: "NODICS_BOOTSTRAP_ADMIN_PASSWORD",
+      fallback: null,
+    },
+    servicePassword: {
+      $config: "env",
+      name: "NODICS_BOOTSTRAP_SERVICE_PASSWORD",
+      fallback: null,
+    },
+    serviceApiKey: { $config: "ref", path: "defaultAuthDetail.apiKey" },
+  },
   profileNotificationRecipients: {
     maximumGroups: 100,
   },
@@ -81,6 +95,16 @@ module.exports = {
     minimumSearchLength: 3,
     maximumSearchLength: 100,
     maximumResults: 20,
+    customerWorkspacePresentation: {
+      title: "Customer directory",
+      description: "Find existing active customers by name prefix or exact customer reference. Enter at least {minimumSearchLength} characters. Up to {maximumResults} matches are shown; refine your search for more precise results. This directory shows display names and references only.",
+      tabLabel: "Find customers",
+      sectionTitle: "Find a customer",
+      searchLabel: "Customer name or reference",
+      searchButtonLabel: "Search customers",
+      referenceLabel: "Customer reference",
+      nameLabel: "Display name",
+    },
   },
   profileAcceptance: {
     enterpriseActorOwner: {
@@ -121,27 +145,24 @@ module.exports = {
         },
       ],
     },
-    runtimeRoleProfiles: {
-      PLATFORM: {
-        telegramExternalIdentity: {
-          $config: "ref",
-          path: "runtimeConfigurationSchemas.telegramExternalIdentity",
-        },
-      },
-      WCMS_STAGED: {
-        telegramExternalIdentity: {
-          $config: "ref",
-          path: "runtimeConfigurationSchemas.telegramExternalIdentity",
-        },
-      },
-    },
   },
   profileRuntimeEnterpriseResolution: {
     enabled: false,
-    runtimeRole: "PLATFORM",
     callers: [],
   },
   authSecurity: {
+    bootstrapIdentity: {
+      required: true,
+      allowedSources: [
+        "environment",
+        "externalProperty",
+        "secretManager",
+        "runtimeSecret",
+      ],
+      localSources: ["localSample", "test"],
+      minimumPasswordLength: 16,
+      minimumApiKeyLength: 32,
+    },
     sessionContextValidation: {
       qualified: false,
       validatorService: "DefaultModuleSessionContextValidationService",
@@ -206,7 +227,7 @@ module.exports = {
           enabled: false,
           ownerService: "DefaultProfileBootstrapIdentityAssessmentService",
           maximumAgeMs: 300000,
-          sources: [{ releaseCode: "profile:init-v001", version: "0.0.8" }],
+          sources: [{ releaseCode: "profile:init-v001", version: "0.0.1" }],
         },
         pageSize: 100,
         maximumPages: 100,
@@ -342,7 +363,6 @@ module.exports = {
   },
   profileCustomerEvidence: {
     enabled: false,
-    runtimeRole: "PLATFORM",
     callers: [],
   },
   profileReferenceRead: {
@@ -550,7 +570,8 @@ module.exports = {
       firstNameLabel: "First name",
       lastNameLabel: "Last name",
       passwordLabel: "New password",
-      passwordHelp: "Choose a password that meets your account policy.",
+      passwordHelp:
+        "Use between {{minimumPasswordLength}} and {{maximumPasswordLength}} characters.",
       recoveryPasswordLabel: "New password you just submitted",
       recoveryPasswordHelp:
         "Re-enter that same password to check the result. A different value requires fresh verification.",
@@ -809,7 +830,7 @@ module.exports = {
       contractVersion: 0,
       title: "Enterprise and User Management",
       description:
-        "Create enterprises, pre-assign enterprise users, and let invited users complete registration from Axis.",
+        "Manage your authorised enterprises and invite employees to complete their access in Axis.",
       renderer: "axis.workspace.backend-operations",
       defaultTab: "enterprises",
       tabs: [
@@ -942,7 +963,7 @@ module.exports = {
               columns: [
                 { field: "email", label: "Email" },
                 { field: "enterpriseCode", label: "Enterprise" },
-                { field: "roleCode", label: "Role" },
+                { field: "roleCode", label: "Responsibility" },
                 { field: "status", label: "Status" },
                 { field: "registeredLoginId", label: "Registered as" },
               ],
@@ -953,6 +974,7 @@ module.exports = {
                   type: "TEXT",
                 },
                 { name: "email", label: "Email", type: "TEXT" },
+                { name: "roleCode", label: "Responsibility", type: "SELECT", options: [{ value: "", label: "Any responsibility" }] },
                 {
                   name: "status",
                   label: "Status",
@@ -1083,6 +1105,7 @@ module.exports = {
       },
       profileEmployeeRecovery: { enabled: false },
       profileMembership: { enabled: false },
+      profileTeam: { enabled: false },
       profileVerifiedContacts: { enabled: false },
     },
   },
@@ -1130,7 +1153,7 @@ module.exports.enterpriseManagement.teamAdministration = {
     installedCoverageQualified: false,
     maximumRecords: 100,
     superAdministratorRoleCodes: ["ENTERPRISE_ADMIN"],
-    nativeSuperAdministratorGroupCodes: ["adminGroup"],
+    nativeSuperAdministratorGroupCodes: ["adminGroup", "platformAdministratorUserGroup"],
   },
   historicalLinkRetirementQualified: false,
   enabled: false,
@@ -1435,7 +1458,7 @@ module.exports.process = {
         remote: {
           target: "profile",
           moduleName: "profile",
-          runtimeRole: "PLATFORM",
+          targetAuthority: { publication: "OPERATIONAL" },
           apiName: "/enterprise-access/applications/process-decision",
           requiresCompletedTask: true,
         },
@@ -1443,3 +1466,10 @@ module.exports.process = {
     },
   },
 };
+
+module.exports.enterpriseManagement.lifecycle = {
+    employeeFields: ["name", "description", "active", "addresses", "contacts"],
+    enterpriseFields: ["name", "description", "active", "addresses", "contacts"],
+    maximumPrincipals: 100,
+    maximumGroups: 100,
+  };

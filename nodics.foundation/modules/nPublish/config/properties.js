@@ -32,7 +32,7 @@ module.exports = {
   publish: {
     approvalWorkflow: {
       // Neutral bridge mechanics; deployments must select a remote connection.
-      target: { connectionName: null, connectionType: "abstract", runtimeRole: "PROCESS" },
+      target: { connectionName: null, connectionType: "abstract", targetAuthority: { publication: "OPERATIONAL" } },
       runtimeEnterpriseScope: { enabled: false, enterpriseCodes: [] },
     },
     setup: {
@@ -60,7 +60,7 @@ module.exports = {
         ONLINE: ["VALIDATING", "ROLLING_BACK", "WITHDRAWING"],
         ROLLING_BACK: ["ROLLED_BACK", "FAILED"],
         WITHDRAWING: ["WITHDRAWN", "FAILED"],
-        FAILED: ["VALIDATING"],
+        FAILED: ["VALIDATING", "ROLLING_BACK", "WITHDRAWING"],
         ROLLED_BACK: ["VALIDATING"],
         WITHDRAWN: ["VALIDATING"],
         REJECTED: ["VALIDATING"],

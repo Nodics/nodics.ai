@@ -21,16 +21,17 @@ module.exports = {
         referenceDemoOwnership: {
             // Demo composition only; runtime policy belongs to owners or actual deployment config.
             configurationPaths: [
-                'backofficeApplicationVisual',
                 'backofficeApplicationInitialization.profiles.*',
-                'backofficeApplicationInitialization.runtimeRoleProfiles.*.profiles.*',
-                'data.dataReleases.runtimeRoleProfiles.*.initializationProfiles.*',
+                'data.dataReleases.initializationProfiles.*',
+                'data.dataReleases.initializationProfileDefaults.*',
                 'cms.publication.baselines.*',
-                'cms.runtimeRoleProfiles.*.publication.baselines.*',
                 'tooling.acceptance.*'
             ],
             // Identity and display values only, never domain behavior or deployment policy.
             configurationLeafPaths: [
+                'locationMapConfiguration.applicationOverrides.*.*.defaultCenterLatitude',
+                'locationMapConfiguration.applicationOverrides.*.*.defaultCenterLongitude',
+                'locationMapConfiguration.applicationOverrides.*.*.defaultZoom',
                 'eWaste.presentation.brandName',
                 'eWaste.presentation.brandByline', 'eWaste.presentation.sampleMode',
                 'eWaste.presentation.walletLabels.*',
@@ -46,11 +47,17 @@ module.exports = {
             accessSchemas: ['permission', 'role', 'enterpriseRole', 'userGroup', 'principalScopeAssignment',
                 'runtimeDeployment', 'runtimeDeploymentGrant', 'runtimeServiceAccount']
         },
+        container: {
+            composeFile: 'envs/{environment}/docker/compose.yaml',
+            generatedDirectory: 'envs/{environment}/generated',
+            environmentFile: 'docker.env'
+        },
         acceptance: {
+            "platformCommand": "acceptance:local",
             "browserValidation": {
                 "enabled": false,
                 "maxEvidenceAgeSeconds": 3600,
-                "reason": "Browser-driven validation is optional because non-local environments may not have an interactive browser runner available."
+                "reason": "Frontend repositories own browser qualification; backend readiness uses API evidence."
             },
             "functionalJourney": {
                 "reason": "Functional acceptance",
@@ -255,6 +262,21 @@ module.exports = {
             ]
         },
         testSuites: {
+            'project-release': [
+                { node: 'nodics.foundation/modules/nTooling/test/releaseCheckCommandContract.test.js' },
+
+                { node: 'nodics.foundation/modules/nTooling/test/projectCommandServiceContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/repositoryBuildCompositionContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/referenceDemoOwnership.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/concreteDefaultOwnership.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/activeModuleGraph.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/configurationBindingContract.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/deploymentModuleOwnershipPlan.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/deploymentProjectionCoordinates.test.js' },
+                { node: 'nodics.commerce/test/publicationConfigurationOwnership.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/destinationContributionDiscovery.test.js' },
+                { node: 'nodics.foundation/modules/nPublish/test/publicationSetupObservation.test.js' }
+            ],
             basic: [
                 { npm: 'check:syntax' },
                 { npm: 'quality:copyright' },
@@ -328,6 +350,7 @@ module.exports = {
                 { node: 'nodics.copilot/modules/copilotWorkbench/test/copilotTargetConfigurationOwnership.test.js' },
                 { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteApplicationConfigurationOwnership.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/configurationBindingContract.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/deploymentProjectionCoordinates.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/scriptsCompletionContract.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/serverGeneratedArtifactContract.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/startupFailureCleanupContract.test.js' },
@@ -456,6 +479,7 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nDatabase/database/test/modelConcurrencyContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/schemaAuthoringAuthorityContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/schemaWorkbenchContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/schemaMutationScopePreservation.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/schemaWorkbenchFormContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/schemaWorkbenchMutationContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/schemaWorkbenchRouterContract.test.js' },
@@ -607,6 +631,7 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nData/nExport/export/test/dataExportCapabilityBehavior.test.js' }
             ],
             profile: [
+                { node: 'nodics.platform/modules/profile/test/publicIdentityLifecycleContract.test.js' },
                 { node: 'nodics.platform/modules/profile/test/identityAuthorityPacks.test.js' },
                 { node: 'nodics.platform/modules/profile/test/identityCatalogueContract.test.js' },
                 { node: 'nodics.platform/modules/profile/test/bootstrapRecordPreservation.test.js' },
@@ -1020,9 +1045,10 @@ module.exports = {
                     { npmRun: ['build'] },
                     { npmRun: ['llm:validate'] },
                     { npmRun: ['quality:ownership'] },
-                    { npmRun: ['quality:docs'] },
-                    { npmRun: ['test:basic'] }
+                    { npmRun: ['quality:docs'] }
                 ],
+                basicSteps: [{ npmRun: ['test:basic'] }],
+                projectQualificationSteps: [{ npmRun: ['test:suite', '--', '--suite=project-release'] }],
                 fullSteps: [
                     { npmRun: ['test:full'] }
                 ]

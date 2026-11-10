@@ -55,7 +55,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.4",
+      "version": "0.0.1",
       "displayName": "order enterpriseRoles",
       "description": "Explicit order identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "order",
@@ -79,8 +79,8 @@
         {
           "moduleName": "order",
           "sectionCode": "accessGroups",
-          "version": "0.0.4",
-          "checksum": "214c4a0b8ed588a745a3a5046d79ac826e711cde0d2e788339ad6c331f071048"
+          "version": "0.0.1",
+          "checksum": "b8b11d8cf93cb7f8f393e76fdd0fb0681ebca90970f31f7c65d2da41373caba8"
         }
       ]
     },
@@ -136,7 +136,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.4",
+      "version": "0.0.1",
       "displayName": "order accessGroups",
       "description": "Explicit order identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "order",
@@ -188,13 +188,13 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         }
@@ -203,7 +203,7 @@
     "specialAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Refund Exception Reviewer Group",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "order",
@@ -227,8 +227,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
         },
         {
           "moduleName": "order",
@@ -242,7 +242,7 @@
     "specialAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Refund Exception Reviewer Role",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "order",
@@ -266,15 +266,15 @@
         {
           "moduleName": "order",
           "sectionCode": "specialAccessGroups",
-          "version": "0.0.2",
-          "checksum": "d40a1fd3d663a7bff2a9ffba949311c70efaccc6050b84cb291abe859d8248a5"
+          "version": "0.0.1",
+          "checksum": "05e8f7bb894c013b94c6368a34dfe4865ab214c5e4d95b7e657e05046b8eae35"
         }
       ]
     },
     "businessAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Orders business access groups",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "order",
@@ -298,13 +298,13 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
+          "version": "0.0.1",
+          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
@@ -320,7 +320,7 @@
     "businessAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Orders business access roles",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "order",
@@ -344,8 +344,8 @@
         {
           "moduleName": "order",
           "sectionCode": "businessAccessGroups",
-          "version": "0.0.2",
-          "checksum": "60c7982b011f94fdc8fb08891822c39fe644d0d1912b5da9bd52ea7f52c1943b"
+          "version": "0.0.1",
+          "checksum": "b24013803bca01579310944555f7a7c05ed996b219f1dda2b867d8035cd36578"
         }
       ]
     },

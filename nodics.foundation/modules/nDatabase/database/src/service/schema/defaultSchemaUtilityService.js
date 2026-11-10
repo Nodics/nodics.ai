@@ -217,6 +217,7 @@ module.exports = {
      * @returns {Object|undefined} Safe descriptor or undefined.
      */
     buildDescriptor: function (request, moduleObject, schemaName, moduleName) {
+        this.assertSchemaHttpEnterpriseScope(request);
         let schema = moduleObject.rawSchema[schemaName];
         moduleName = moduleName || request.moduleName;
         if (!this.isLocalActiveModule(moduleName)) {
@@ -228,6 +229,7 @@ module.exports = {
         if (
             !schema ||
             schema.model !== true ||
+            (schema.tenants && (!Array.isArray(schema.tenants) || !schema.tenants.includes(request.tenant))) ||
             (explicitConfig && explicitConfig.enabled === false) ||
             (!discoverByDefault && (!explicitConfig || explicitConfig.enabled !== true))
         ) {
@@ -249,6 +251,15 @@ module.exports = {
         if (operations.length === 0) {
             return undefined;
         }
+        // Metadata inspection and generic record routing are separate contracts.
+        // A domain may expose schemas while deliberately admitting only its own
+        // internal or business APIs. Never advertise nonexistent generic writes.
+        const recordApiDisabled = schema.router?.enabled === false ||
+            schema.router?.groups?.schemaOperations === false;
+        if (recordApiDisabled) {
+            operations = [];
+            authority = Object.assign({}, authority, { authoringAllowed: false });
+        }
         let displayProperty = config.displayProperty || (schema.definition.code ? 'code' : '_id');
         let displayProperties =
             Array.isArray(config.displayProperties) && config.displayProperties.length > 0
@@ -264,6 +275,11 @@ module.exports = {
             displayProperty: displayProperty,
             displayProperties: displayProperties,
             apiOperations: this.buildApiOperations(request.moduleName, schemaName),
+            ...(recordApiDisabled ? { recordApi: {
+                available: false,
+                reason: 'SCHEMA_ROUTERS_DISABLED',
+                message: 'This runtime does not expose record operations for this schema. Schema inspection remains available.',
+            } } : {}),
             queryCapabilities: this.buildQueryCapabilities(schema, config, displayProperty),
             bulkCapabilities: this.buildBulkCapabilities(operations.includes('delete') ? config : Object.assign({}, config, { bulkOperations: [] })),
             concurrency: this.buildConcurrency(schema, config),
@@ -485,6 +501,24 @@ module.exports = {
         return Array.from(new Set(allowed));
     },
 
+    /** Resolves an optional source-authored ordinary update-field policy without duplicating its owner defaults. Deleted schema fields disappear; malformed or missing selected configuration refuses. @param {Object} schema Effective schema. @param {Object} config Effective backoffice metadata. @returns {Set<string>|undefined} Allowed existing update fields, or unchanged legacy metadata. */
+    resolveUpdateFields: function (schema, config) {
+        let selected = config.updateFields;
+        if (selected === undefined) return undefined;
+        if (selected && !Array.isArray(selected) && typeof selected === 'object' &&
+            Object.keys(selected).join() === 'configurationPath' &&
+            typeof selected.configurationPath === 'string' &&
+            /^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*){0,15}$/.test(selected.configurationPath)) {
+            const parts = selected.configurationPath.split('.');
+            selected = parts.some(part => ['__proto__', 'prototype', 'constructor'].includes(part)) || typeof CONFIG === 'undefined' || typeof CONFIG.get !== 'function' ? undefined : CONFIG.get(parts.shift());
+            for (const part of parts) selected = selected && Object.hasOwn(selected, part) ? selected[part] : undefined;
+        }
+        if (!Array.isArray(selected) || selected.length > 512 ||
+            new Set(selected).size !== selected.length || selected.some(name => typeof name !== 'string' || !/^[A-Za-z][A-Za-z0-9_]{0,127}$/.test(name)))
+            throw new CLASSES.NodicsError('ERR_DBS_00004', 'Schema update field policy is unavailable');
+        return new Set(Object.keys(schema.definition || {}).filter(name => selected.some(root => name === root || name.startsWith(root + '.'))));
+    },
+
     /**
      * Projects effective schema fields without service or secret metadata.
      * @param {Object} schema Effective schema.
@@ -493,13 +527,14 @@ module.exports = {
      */
     buildFields: function (moduleName, schema, config) {
         let excluded = new Set((config.excludedFields || []).concat(['password', 'apiKey', 'apiKeyHash', 'accessGroups']));
+        let updateFields = this.resolveUpdateFields(schema, config);
         let managedFields = new Set(['created', 'updated', 'ownerId', 'ownerType', 'createdBy', 'updatedBy']);
         if (config.concurrency && config.concurrency.managed === true) {
             managedFields.add(config.concurrency.field || 'revision');
         }
         let fieldConfig = config.fields || {};
         return Object.keys(schema.definition || {})
-            .filter((name) => !excluded.has(name))
+            .filter((name) => !excluded.has(name) && !name.split('.').some(part => part.startsWith('$')))
             .map((name) => {
                 let property = schema.definition[name] || {};
                 let override = fieldConfig[name] || {};
@@ -508,7 +543,7 @@ module.exports = {
                 let field = {
                     name: name,
                     label: override.label || property.label || this.humanize(name),
-                    type: property.type || (Array.isArray(property.enum) ? 'string' : 'object'),
+                    type: this.resolveFieldType(property),
                     required: property.required === true,
                     readOnly: property.readOnly === true || override.readOnly === true || managedFields.has(name) || fixedValue !== undefined,
                     primary: property.primary === true,
@@ -522,6 +557,7 @@ module.exports = {
                     origin: this.buildFieldOrigin(moduleName, name, property, override, schema, config),
                     searchable: !!(property.searchOptions && property.searchOptions.enabled === true),
                 };
+                if (property.readOnlyOnUpdate === true || override.readOnlyOnUpdate === true || updateFields && !updateFields.has(name)) field.readOnlyOnUpdate = true;
                 if (reference) field.reference = reference;
                 return field;
             });
@@ -551,11 +587,12 @@ module.exports = {
         if (!reference || reference.enabled === false) return undefined;
         let relationshipConfig = config.relationships || {};
         let override = relationshipConfig[name] || {};
+        let fieldOverride = (config.fields || {})[name] || {};
         let property = schema.definition[name] || {};
         return {
             field: name,
-            label: override.label || property.label || this.humanize(name),
-            description: override.description || property.description || '',
+            label: override.label || fieldOverride.label || property.label || this.humanize(name),
+            description: override.description || fieldOverride.description || property.description || '',
             targetModule: override.targetModule || reference.moduleName || moduleName,
             targetSchema: override.targetSchema || reference.schemaName,
             cardinality: reference.type === 'many' ? 'MANY' : 'ONE',
@@ -661,6 +698,7 @@ module.exports = {
         });
         return {
             contractVersion: 1, sections, hiddenFields: hidden, managedCreateFields: managed, copy,
+            omitEmptyOptionalOnReview: form.omitEmptyOptionalOnReview === true ? true : undefined,
             createOperation: createOperation ? createOperation.name : undefined,
             completionAction: form.completionAction && typeof form.completionAction.label === 'string' &&
                 typeof form.completionAction.path === 'string' && /^\/(?!\/)[^\\]*$/.test(form.completionAction.path)
@@ -668,6 +706,21 @@ module.exports = {
             defaultColumns: (Array.isArray(form.defaultColumns) ? form.defaultColumns :
                 (config.displayProperties || ['name', config.displayProperty || 'code', 'description', 'active'])).filter(name => names.has(name)),
         };
+    },
+
+    /** Projects a nullable native type union to its sole concrete presentation type.
+     * Native schema validation retains nullability; this does not rewrite the schema.
+     * Ambiguous unions cannot be represented by the scalar field contract.
+     * @param {Object} property Effective native property.
+     * @returns {string} Client field type.
+     */
+    resolveFieldType: function (property) {
+        if (!Array.isArray(property.type)) return property.type || (Array.isArray(property.enum) ? 'string' : 'object');
+        const types = [...new Set(property.type.filter(type => type !== 'null'))];
+        if (types.length !== 1 || typeof types[0] !== 'string' || !types[0].trim()) {
+            throw new CLASSES.NodicsError('ERR_DBS_00004', 'Schema field type cannot be represented');
+        }
+        return types[0];
     },
 
     /** Chooses a backend-declared renderer component for Axis. */
@@ -679,10 +732,11 @@ module.exports = {
         }
         if (Array.isArray(property.enum)) return 'select';
         if (property.readOnly === true || property.fixedValue !== undefined || property.fixed !== undefined) return 'readonly';
-        if ((property.type || 'string') === 'object' && this.isLocalizedTextField(name)) {
+        const type = this.resolveFieldType(property);
+        if (type === 'object' && this.isLocalizedTextField(name)) {
             return 'localizedText';
         }
-        switch (property.type || 'string') {
+        switch (type) {
             case 'bool':
             case 'boolean':
                 return 'checkbox';
@@ -755,12 +809,12 @@ module.exports = {
         let configuredSearchableFields = this.configuredFieldList(config.searchableFields, fields, excluded);
         let searchableFields = (configuredSearchableFields || fields).filter((name) => {
             let property = schema.definition[name] || {};
-            return !excluded.has(name) && ['string', undefined].includes(property.type) && (configuredSearchableFields || (property.searchOptions && property.searchOptions.enabled === true));
+            return !excluded.has(name) && this.resolveFieldType(property) === 'string' && (configuredSearchableFields || (property.searchOptions && property.searchOptions.enabled === true));
         });
         let configuredSortableFields = this.configuredFieldList(config.sortableFields, fields, excluded);
         let sortableFields = (configuredSortableFields || fields).filter((name) => {
             let property = schema.definition[name] || {};
-            return !excluded.has(name) && !['array', 'object'].includes(property.type);
+            return !excluded.has(name) && !['array', 'object'].includes(this.resolveFieldType(property));
         });
         if (!sortableFields.includes(displayProperty)) {
             sortableFields.unshift(displayProperty);
@@ -769,14 +823,14 @@ module.exports = {
         let filterFields = (configuredFilterFields || fields)
             .filter((name) => {
                 let property = schema.definition[name] || {};
-                return !excluded.has(name) && !['array', 'object'].includes(property.type) && this.getFilterOperators(property).length > 0;
+                return !excluded.has(name) && !['array', 'object'].includes(this.resolveFieldType(property)) && this.getFilterOperators(property).length > 0;
             })
             .map((name) => {
                 let property = schema.definition[name] || {};
                 return {
                     field: name,
                     label: property.label || this.humanize(name),
-                    type: property.type || 'string',
+                    type: this.resolveFieldType(property),
                     operators: this.getFilterOperators(property),
                     enum: Array.isArray(property.enum) ? property.enum.slice() : undefined,
                 };
@@ -822,7 +876,7 @@ module.exports = {
         if (Array.isArray(property.enum)) {
             return ['EQUALS', 'NOT_EQUALS', 'IN'];
         }
-        switch (property.type || 'string') {
+        switch (this.resolveFieldType(property)) {
             case 'string':
                 return ['EQUALS', 'NOT_EQUALS', 'CONTAINS', 'STARTS_WITH'];
             case 'number':
@@ -888,9 +942,11 @@ module.exports = {
      * @param {Object} input Submitted model.
      * @param {Object} request Secured request context.
      * @param {string} schemaName Compiled schema identity.
-     * @returns {Object} Writable model with trusted scope and original counters.
+     * @param {string} [operation=create] Trusted controller operation; updates preserve existing placement.
+     * @returns {Object} Writable model with create-only trusted scope defaults and original counters.
      */
-    buildGeneratedMutationModel: function (input, request, schemaName) {
+    buildGeneratedMutationModel: function (input, request, schemaName, operation = 'create') {
+        this.assertSchemaHttpEnterpriseScope(request);
         let owner = this.resolveSchemaModule(request.moduleName);
         let schema = owner.moduleObject.rawSchema[schemaName];
         if (!schema || schema.model !== true) throw new CLASSES.NodicsError('ERR_DBS_00004', 'Schema mutation metadata is unavailable');
@@ -898,7 +954,7 @@ module.exports = {
         return this.buildMutationModel(input, {
             fields: this.buildFields(owner.moduleName, schema, config),
             concurrency: this.buildConcurrency(schema, config),
-        }, request);
+        }, request, operation);
     },
 
     /** Returns a bounded request idempotency key. */
@@ -912,13 +968,25 @@ module.exports = {
     getEnterpriseCode: function (request) {
         let headers = request.headers || (request.httpRequest && request.httpRequest.headers) || {};
         let authData = request.authData || {};
-        let value = request.enterpriseCode || request.entCode || authData.enterpriseCode || authData.entCode ||
+        let value = authData.entCode || authData.enterpriseCode || request.enterpriseCode || request.entCode ||
             headers['x-enterprise-code'] || headers['X-Enterprise-Code'] || headers.entCode;
         return typeof value === 'string' && value.trim() ? value.trim() : undefined;
     },
 
+    /** Refuses an explicit enterprise selector that contradicts the signed HTTP actor. */
+    assertSchemaHttpEnterpriseScope: function (request) {
+        const enterprise = request.authData?.entCode || request.authData?.enterpriseCode;
+        if (!request.httpRequest || !enterprise) return;
+        const headers = request.httpRequest.headers || {};
+        if (Object.entries(headers).some(([name, value]) =>
+            ['x-enterprise-code', 'entcode'].includes(name.toLowerCase()) && value !== undefined && value !== enterprise)) {
+            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'The selected enterprise does not match your signed workspace.');
+        }
+    },
+
     /** Builds a mutation model from editable schema fields plus runtime scope. */
-    buildMutationModel: function (input, descriptor, request) {
+    buildMutationModel: function (input, descriptor, request, operation = 'create') {
+        if (!['create', 'update'].includes(operation)) throw new CLASSES.NodicsError('ERR_DBS_00003', 'Schema mutation operation is invalid');
         if (!input || typeof input !== 'object' || Array.isArray(input)) {
             throw new CLASSES.NodicsError('ERR_DBS_00003', 'Schema mutation model is invalid');
         }
@@ -930,22 +998,26 @@ module.exports = {
         descriptor.fields.forEach((field) => {
             let originalCounter = descriptor.concurrency && descriptor.concurrency.managed === true &&
                 descriptor.concurrency.field === field.name;
-            if ((!field.readOnly || originalCounter) && !['tenant', 'enterpriseCode'].includes(field.name) &&
+            if ((!field.readOnly || originalCounter) && (operation !== 'update' || !field.readOnlyOnUpdate || originalCounter) && !['tenant', 'enterpriseCode'].includes(field.name) &&
                 Object.prototype.hasOwnProperty.call(input, field.name)) {
+                if (!originalCounter && Array.isArray(field.enum) && input[field.name] !== undefined && !field.enum.includes(input[field.name])) {
+                    throw new CLASSES.NodicsError('ERR_DBS_00003', 'The value for ' + field.label + ' is not one of the allowed options');
+                }
                 model[field.name] = input[field.name];
             }
         });
         descriptor.fields.forEach((field) => {
             let originalCounter = descriptor.concurrency && descriptor.concurrency.managed === true &&
                 descriptor.concurrency.field === field.name;
+            if (operation === 'update' && (['tenant', 'enterpriseCode'].includes(field.name) || field.readOnlyOnUpdate && !originalCounter)) return;
             if (field.fixedValue !== undefined && !originalCounter) {
                 model[field.name] = field.fixedValue;
             }
         });
-        if (fieldNames.has('tenant')) {
+        if (operation === 'create' && fieldNames.has('tenant')) {
             model.tenant = request.tenant;
         }
-        if (fieldNames.has('enterpriseCode')) {
+        if (operation === 'create' && fieldNames.has('enterpriseCode')) {
             let enterpriseCode = this.getEnterpriseCode(request);
             if (enterpriseCode) {
                 model.enterpriseCode = enterpriseCode;

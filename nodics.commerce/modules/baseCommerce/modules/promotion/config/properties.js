@@ -55,43 +55,69 @@ module.exports = {
     },
   },
   publish: {
-    setup: { permissions: { promotion: "publish.lifecycle.create" } },
-    providers: {
-      domainAdapters: { promotion: null },
-      versionProviders: { promotion: null },
-      workflowProviders: { promotion: null },
-    },
-    approvalWorkflow: {
-      domains: {
-        promotion: {
-          definitionCode: "promotionPublicationApproval",
-          ownerModule: "promotion",
-          actionKey: "promotion.applyPublicationDecision",
-          sourceRuntimeRole: "COMMERCE_STAGED",
-        },
+    "setup": {
+      "permissions": {
+        "promotion": "publish.lifecycle.create"
       },
+      "observation": {
+        "targetObservers": {
+          "promotion": {
+            "$config": "context",
+            "name": "publication",
+            "cases": {
+              "STAGED": undefined,
+              "ONLINE": "DefaultPromotionPublicationService",
+              "OPERATIONAL": "DefaultPromotionPublicationService"
+            }
+          }
+        }
+      }
     },
-
-    runtimeRoleProfiles: {
-      COMMERCE_STAGED: {
-        providers: {
-          domainAdapters: { promotion: "DefaultPromotionPublicationService" },
-          versionProviders: { promotion: "DefaultPromotionPublicationService" },
-          workflowProviders: {
-            promotion: "DefaultPublicationApprovalWorkflowService",
-          },
-        },
+    "providers": {
+      "domainAdapters": {
+        "promotion": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "DefaultPromotionPublicationService",
+            "ONLINE": null,
+            "OPERATIONAL": null
+          }
+        }
       },
-      COMMERCE: {
-        setup: {
-          observation: {
-            targetObservers: {
-              promotion: "DefaultPromotionPublicationService",
-            },
-          },
-        },
+      "versionProviders": {
+        "promotion": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "DefaultPromotionPublicationService",
+            "ONLINE": null,
+            "OPERATIONAL": null
+          }
+        }
       },
+      "workflowProviders": {
+        "promotion": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "DefaultPublicationApprovalWorkflowService",
+            "ONLINE": null,
+            "OPERATIONAL": null
+          }
+        }
+      }
     },
+    "approvalWorkflow": {
+      "domains": {
+        "promotion": {
+          "definitionCode": "promotionPublicationApproval",
+          "ownerModule": "promotion",
+          "actionKey": "promotion.applyPublicationDecision",
+          "sourcePublication": "STAGED"
+        }
+      }
+    }
   },
   process: {
     actionAdapters: {
@@ -102,7 +128,7 @@ module.exports = {
           remote: {
             target: "promotion",
             moduleName: "promotion",
-            runtimeRole: "COMMERCE_STAGED",
+            targetAuthority: { publication: "STAGED" },
             apiName: "/workflow/actions/applyPublicationDecision",
             requiresCompletedTask: true,
           },
@@ -127,193 +153,251 @@ module.exports = {
   },
 
   promotion: {
-    administrativeReview: {
-      evidencePath: "/identity/platform-administrator/evidence",
-      recipientPath: "/participants/resolve",
-      identityTarget: { moduleName: "profile", connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, apiVersion: "v0" },
-      timeoutMs: 10000,
-    },
-    enabled: true,
-    acceptance: {
-      couponOfferLifecycle: {
-        requestTimeoutMs: 30000,
-        maximumOperations: 32,
-      },
-    },
-    couponIssuerMembership: { maximumProducts: 1000 },
-    couponOffers: {
-      maximumCertificates: 100,
-      maximumTerms: 30,
-      maximumTermLength: 1000,
-      maximumPolicyBytes: 65536,
-      maximumParticipants: 100,
-      maximumStores: 100,
-      reservationSeconds: 900,
-      maximumReservationSeconds: 3600,
-    },
-    acquisitionReporting: {
-      channelOptions: [],
-      pageSize: 200,
-      maximumPages: 100,
-      minimumDistinctOwners: 5,
-      refreshIntervalSeconds: 3600,
-      maximumProjectionBytes: 8388608,
-      enabled: false,
-      acceptance: { requestTimeoutMs: 30000 },
-      refresh: {
-        enabled: false,
-        startNode: "DefaultCouponAcquisitionRefreshService.run",
-        callers: [],
-        maximumCallers: 100,
-        target: {
-          moduleName: "promotion", connectionName: "promotion",
-          targetAuthority: { runtimeRole: "COMMERCE" }, apiVersion: "v0",
-          apiName: "/internal/acquisition-report/refresh", timeoutMs: 60000, maxAttempts: 1,
+    "administrativeReview": {
+      "evidencePath": "/identity/platform-administrator/evidence",
+      "recipientPath": "/participants/resolve",
+      "identityTarget": {
+        "moduleName": "profile",
+        "connectionName": "profile",
+        "targetAuthority": {
+          "publication": "OPERATIONAL"
         },
-        validation: {
-          pageSize: { minimum: 1, maximum: 1000 },
-          maximumPages: { minimum: 1, maximum: 1000 },
-          minimumDistinctOwners: { minimum: 2, maximum: 100000 },
-          refreshIntervalSeconds: { minimum: 1, maximum: 31536000 },
-          maximumProjectionBytes: { minimum: 1, maximum: 67108864 },
-          timeoutMs: { minimum: 1, maximum: 300000 },
-          maximumCallers: { minimum: 1, maximum: 1000 },
+        "apiVersion": "v0"
+      },
+      "timeoutMs": 10000
+    },
+    "enabled": true,
+    "acceptance": {
+      "couponOfferLifecycle": {
+        "requestTimeoutMs": 30000,
+        "maximumOperations": 32
+      }
+    },
+    "couponIssuerMembership": {
+      "maximumProducts": 1000
+    },
+    "couponOffers": {
+      "maximumCertificates": 100,
+      "maximumTerms": 30,
+      "maximumTermLength": 1000,
+      "maximumPolicyBytes": 65536,
+      "maximumParticipants": 100,
+      "maximumStores": 100,
+      "reservationSeconds": 900,
+      "maximumReservationSeconds": 3600
+    },
+    "acquisitionReporting": {
+      "channelOptions": [],
+      "pageSize": 200,
+      "maximumPages": 100,
+      "minimumDistinctOwners": 5,
+      "refreshIntervalSeconds": 3600,
+      "maximumProjectionBytes": 8388608,
+      "enabled": false,
+      "acceptance": {
+        "requestTimeoutMs": 30000
+      },
+      "refresh": {
+        "enabled": false,
+        "startNode": "DefaultCouponAcquisitionRefreshService.run",
+        "callers": [],
+        "maximumCallers": 100,
+        "target": {
+          "moduleName": "promotion",
+          "connectionName": "promotion",
+          "targetAuthority": {
+            "publication": "OPERATIONAL"
+          },
+          "apiVersion": "v0",
+          "apiName": "/internal/acquisition-report/refresh",
+          "timeoutMs": 60000,
+          "maxAttempts": 1
         },
-      },
+        "validation": {
+          "pageSize": {
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "maximumPages": {
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "minimumDistinctOwners": {
+            "minimum": 2,
+            "maximum": 100000
+          },
+          "refreshIntervalSeconds": {
+            "minimum": 1,
+            "maximum": 31536000
+          },
+          "maximumProjectionBytes": {
+            "minimum": 1,
+            "maximum": 67108864
+          },
+          "timeoutMs": {
+            "minimum": 1,
+            "maximum": 300000
+          },
+          "maximumCallers": {
+            "minimum": 1,
+            "maximum": 1000
+          }
+        }
+      }
     },
-    acquisitionReportQuery: {
-      maximumDays: 3660,
-      maximumBreakdownRows: 1000,
-      maximumScopeMembers: 1000,
-      rateScale: 4,
-      defaultView: 'ISSUER', defaultScope: 'ENTERPRISE', defaultBreakdown: 'NONE',
-      validation: {
-        maximumDays: { minimum: 1, maximum: 36600 },
-        maximumBreakdownRows: { minimum: 1, maximum: 10000 },
-        maximumScopeMembers: { minimum: 1, maximum: 10000 },
-        rateScale: { minimum: 0, maximum: 12 },
-      },
-    },
-    legacyTokenHashPolicies: [],
-    budgetAdmission: {
-      maximumCampaignsPerContribution: 50,
-    },
-    setupPacing: {
-      preflightDelayMs: 0,
-      issuanceDelayMs: 0,
-    },
-    sellerAuthorization: {
-      enabled: false,
-      qualified: false,
-      maximumSellers: 100,
-    },
-    merchantBenefits: {
-      enabled: false,
-      qualified: false,
-      evidenceService: "DefaultPromotionPricedTransactionAdapterService",
-      itemEvidenceService: null,
-      // SIMULATION requires the independently enabled Fulfillment simulator and exact environment admission.
-      itemEvidenceMode: "VERIFIED",
-      pricedSource: {
-        qualified: false,
-        connectionName: "pricing",
-        timeoutMilliseconds: 10000,
-        allowInsecureLoopback: false,
-      },
-    },
-    purchasedRights: {
-      enabled: false,
-      qualified: false,
-      maximumValidityDays: 3650,
-    },
-
-    // Registration remains separate from availability; installed qualification is an operator gate.
-    publication: {
-      runtimeRole: null,
-      sourceVersioningQualified: false,
-      delivery: { enabled: false, rootCodes: [] },
-      legacyCasRecovery: { enabled: false, operations: [] },
-      targetTransportProvider: null,
-      maxDependencies: 1000,
-
-      target: {
-        moduleName: "promotion",
-        connectionName: null,
-        connectionType: "abstract",
-        runtimeRole: "COMMERCE",
-      },
-      sourceAuthority: {
-        moduleName: "promotion",
-        connectionName: null,
-        connectionType: "abstract",
-        runtimeRole: "COMMERCE_STAGED",
-      },
-    },
-    runtimeRoleProfiles: {
-      COMMERCE_STAGED: {
-        publication: {
-          runtimeRole: "STAGED",
-          targetTransportProvider:
-            "DefaultPromotionPublicationTransportService",
+    "acquisitionReportQuery": {
+      "maximumDays": 3660,
+      "maximumBreakdownRows": 1000,
+      "maximumScopeMembers": 1000,
+      "rateScale": 4,
+      "defaultView": "ISSUER",
+      "defaultScope": "ENTERPRISE",
+      "defaultBreakdown": "NONE",
+      "validation": {
+        "maximumDays": {
+          "minimum": 1,
+          "maximum": 36600
         },
-      },
-      COMMERCE: {
-        publication: {
-          runtimeRole: "ONLINE",
-          targetTransportProvider:
-            "DefaultPromotionPublicationTransportService",
+        "maximumBreakdownRows": {
+          "minimum": 1,
+          "maximum": 10000
         },
-      },
+        "maximumScopeMembers": {
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "rateScale": {
+          "minimum": 0,
+          "maximum": 12
+        }
+      }
     },
+    "legacyTokenHashPolicies": [],
+    "budgetAdmission": {
+      "maximumCampaignsPerContribution": 50
+    },
+    "setupPacing": {
+      "preflightDelayMs": 0,
+      "issuanceDelayMs": 0
+    },
+    "sellerAuthorization": {
+      "enabled": false,
+      "qualified": false,
+      "maximumSellers": 100
+    },
+    "merchantBenefits": {
+      "enabled": false,
+      "qualified": false,
+      "evidenceService": "DefaultPromotionPricedTransactionAdapterService",
+      "itemEvidenceService": null,
+      "itemEvidenceMode": "VERIFIED",
+      "pricedSource": {
+        "qualified": false,
+        "connectionName": "pricing",
+        "timeoutMilliseconds": 10000,
+        "allowInsecureLoopback": false
+      }
+    },
+    "purchasedRights": {
+      "enabled": false,
+      "qualified": false,
+      "maximumValidityDays": 3650
+    },
+    "publication": {
+      "runtimeRole": {
+        "$config": "context",
+        "name": "publication",
+        "cases": {
+          "STAGED": "STAGED",
+          "ONLINE": "ONLINE",
+          "OPERATIONAL": "ONLINE"
+        }
+      },
+      "sourceVersioningQualified": false,
+      "delivery": {
+        "enabled": false,
+        "rootCodes": []
+      },
+      "legacyCasRecovery": {
+        "enabled": false,
+        "operations": []
+      },
+      "targetTransportProvider": "DefaultPromotionPublicationTransportService",
+      "maxDependencies": 1000,
+      "target": {
+        "moduleName": "promotion",
+        "connectionName": null,
+        "connectionType": "abstract",
+        "publication": "OPERATIONAL"
+      },
+      "sourceAuthority": {
+        "moduleName": "promotion",
+        "connectionName": null,
+        "connectionType": "abstract",
+        "publication": "STAGED"
+      }
+    }
   },
   schemaPolicies: {
-    promotion: {
-      publicationVersioned: { isVersionedEnabled: false },
-      operational: {
-        accessGroups: {
-          adminGroup: 10,
-          commerceOperatorUserGroup: 10,
-          serviceAccountUserGroup: 10,
+    "promotion": {
+      "publicationVersioned": {
+        "isVersionedEnabled": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": true,
+            "ONLINE": false,
+            "OPERATIONAL": false
+          }
         },
+        "versionedReadMode": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "CURRENT",
+            "ONLINE": undefined,
+            "OPERATIONAL": undefined
+          }
+        }
       },
-      tenantOwned: {
-        accessGroups: {
-          adminGroup: 10,
-          commerceOperatorUserGroup: 10,
-          serviceAccountUserGroup: 10,
-        },
+      "operational": {
+        "accessGroups": {
+          "adminGroup": 10,
+          "commerceOperatorUserGroup": 10,
+          "serviceAccountUserGroup": 10
+        }
       },
-      customerOwned: {
-        accessGroups: {
-          adminGroup: 10,
-          commerceOperatorUserGroup: 10,
-          serviceAccountUserGroup: 10,
-          customerUserGroup: 10,
+      "tenantOwned": {
+        "accessGroups": {
+          "adminGroup": 10,
+          "commerceOperatorUserGroup": 10,
+          "serviceAccountUserGroup": 10
+        }
+      },
+      "customerOwned": {
+        "accessGroups": {
+          "adminGroup": 10,
+          "commerceOperatorUserGroup": 10,
+          "serviceAccountUserGroup": 10,
+          "customerUserGroup": 10
         },
-        ownership: {
-          enabled: true,
-          ownerProperty: "ownerId",
-          bypassGroups: {
-            adminGroup: true,
-            commerceOperatorUserGroup: true,
-            serviceAccountUserGroup: true,
+        "ownership": {
+          "enabled": true,
+          "ownerProperty": "ownerId",
+          "bypassGroups": {
+            "adminGroup": true,
+            "commerceOperatorUserGroup": true,
+            "serviceAccountUserGroup": true
           },
-          subjectGroups: { customerUserGroup: true },
-          principalTypes: { customer: true },
-        },
-      },
-    },
-
-    runtimeRoleProfiles: {
-      COMMERCE_STAGED: {
-        promotion: {
-          publicationVersioned: {
-            isVersionedEnabled: true,
-            versionedReadMode: "CURRENT",
+          "subjectGroups": {
+            "customerUserGroup": true
           },
-        },
-      },
-    },
+          "principalTypes": {
+            "customer": true
+          }
+        }
+      }
+    }
   },
   apiExposure: {
     categories: {

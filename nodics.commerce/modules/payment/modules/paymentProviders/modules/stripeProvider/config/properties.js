@@ -16,14 +16,5 @@ module.exports = {
     maturity: "OFFLINE_CONFORMANCE",
     sandboxOnly: true,
     liveQualified: false,
-    runtimeRoleProfiles: {
-      COMMERCE: {
-        enabled: true,
-      },
-      COMMERCE_STAGED: {
-        enabled: false,
-        maturity: "NOT_APPLICABLE_FOR_STAGED_CATALOG",
-      },
-    },
   },
 };
