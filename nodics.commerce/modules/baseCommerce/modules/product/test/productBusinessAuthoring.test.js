@@ -380,13 +380,15 @@ test('Online descriptors remain read-only and all source writes are denied regar
 
 test('unqualified ordinary/history/missing version ports fail closed without enabling schema versioning', async t => {
     const f = fixture(t);
+    const configuredVersioning = properties.schemaPolicies.product.catalogueVersioned.isVersionedEnabled;
     for (const change of [() => { f.wrapper.versioned = false; }, () => { f.wrapper.rawSchema.versionedReadMode = 'HISTORY'; },
         () => { f.wrapper.updateVersionedItems = undefined; }]) {
         const before = { versioned: f.wrapper.versioned, mode: f.raw.versionedReadMode, update: f.wrapper.updateVersionedItems };
         change(); await assert.rejects(command(f, 'create', create), { code: 'ERR_PRODUCT_AUTHORING_STORAGE' });
         f.wrapper.versioned = before.versioned; f.raw.versionedReadMode = before.mode; f.wrapper.updateVersionedItems = before.update;
     }
-    assert.equal(properties.schemaPolicies.product.catalogueVersioned.isVersionedEnabled, false); assert.equal(f.calls.length, 0);
+    assert.equal(properties.schemaPolicies.product.catalogueVersioned.isVersionedEnabled, configuredVersioning);
+    assert.equal(f.calls.length, 0);
 });
 
 test('create rejects scope, proof, counters, query operators and undeclared fields; archive cannot hide in ordinary status', async t => {

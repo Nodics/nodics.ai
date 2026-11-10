@@ -11,6 +11,7 @@
 
 'use strict';
 const pricingProofs = new WeakMap();
+const retryScopes = new WeakMap();
 const crypto = require('node:crypto');
 
 // Only verified roots can create a dependency-read capability; request fields cannot supply one.
@@ -87,6 +88,8 @@ module.exports = {
      * evidence checks described above.
      */
     publisherScope: function (request) {
+        const retryScope = retryScopes.get(request);
+        if (retryScope) return retryScope;
         const proof = pricingProofs.get(request);
         if (proof) return proof();
         const automatic = SERVICE.DefaultProductBundlePublicationService?.admission(request);
@@ -304,6 +307,13 @@ module.exports = {
     resolve: async function (publication, request) {
         if (!request || !request.tenant || publication.domain !== 'product' || publication.rootType !== 'product' ||
             !/^(0|[1-9][0-9]*)$/.test(String(publication.sourceVersion))) throw new Error('Exact Product publication identity is required');
+        const retryScope = SERVICE.DefaultPublicationLifecycleService?.retryValidationScope?.(request, publication);
+        if (retryScope) {
+            const graphRead = { ...request };
+            retryScopes.set(graphRead, retryScope);
+            try { return await this.resolve(publication, graphRead); }
+            finally { retryScopes.delete(graphRead); }
+        }
         const root = await this.read(request, { schema: 'product', code: publication.rootCode, versionId: Number(publication.sourceVersion) });
         const selection = root.publicationReferences;
         const limit = this.policy().maximumDependencies;

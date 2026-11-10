@@ -10,6 +10,7 @@
  */
 
 const administrativeOperations = new WeakMap();
+const retryValidations = new WeakMap();
 
 /**
  * @module nPublish/service/DefaultPublicationLifecycleService
@@ -221,13 +222,31 @@ module.exports = {
             workflow && workflow.instanceCode ? { workflowRef: workflow.instanceCode } : {},
             workflow ? { workflow: workflow } : undefined);
     },
+    /** Exposes the exact persisted issuer only during a runtime administrator's authorized retry validation. */
+    retryValidationScope: function (request, publication) {
+        const retained = retryValidations.get(request);
+        const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
+        if (!retained || auth.tokenType !== 'access' || auth.principalType !== 'human' || auth.isSystem ||
+            request.tenant !== auth.tenant || publication.tenantCode !== auth.tenant ||
+            !['code', 'domain', 'rootCode', 'rootType', 'sourceVersion', 'enterpriseCode', 'tenantCode']
+                .every(field => publication[field] === retained[field]) ||
+            typeof retained.enterpriseCode !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,191}$/.test(retained.enterpriseCode) ||
+            !security?.hasAccessGroup({ ...request, router: { accessGroups: ['runtimeConfigAdminUserGroup'] } })) return undefined;
+        const granted = security.getGrantedPermissions(request);
+        if (!['publish.lifecycle.retry', 'publish.operations.recover'].some(permission =>
+            security.isPermissionGranted(permission, granted, {}))) return undefined;
+        return { tenant: retained.tenantCode, enterpriseCode: retained.enterpriseCode };
+    },
     /** Revalidates a failed immutable publication before any later approval or activation attempt. */
     retry: async function (request) {
         let publication = await this.getRepository().get(request.publicationCode, request);
         if (!publication) throw new CLASSES.NodicsError('ERR_PUB_00000', 'Publication request was not found');
         if (publication.state !== 'FAILED') throw new CLASSES.NodicsError('ERR_PUB_00005', 'Only a failed publication can be retried');
         publication = await this.transition(publication, 'VALIDATING', request, {}, { retry: true });
-        return this.validate(Object.assign({}, request, { expectedRevision: publication.revision }));
+        const validation = this.copyRequest(request, { expectedRevision: publication.revision });
+        retryValidations.set(validation, publication);
+        try { return await this.validate(validation); }
+        finally { retryValidations.delete(validation); }
     },
     /** Re-enters validation after a terminal rollback, withdrawal, or rejection; approval must be requested again. */
     resubmit: async function (request) {

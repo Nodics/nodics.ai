@@ -20,6 +20,7 @@ const provider = require('../src/service/defaultProductPublicationVersionProvide
 const properties = require('../config/properties');
 const foundation = '../../../../../../nodics.foundation/modules/';
 const identity = require(foundation + 'nAuth/src/service/identity/defaultIdentityGovernanceService');
+const lifecycle = require(foundation + 'nPublish/src/service/defaultPublicationLifecycleService');
 const security = require(foundation + 'nRouter/src/service/request/defaultSecuredRequestPipelineService');
 const access = require(foundation + 'nDatabase/database/src/service/schema/defaultSchemaAccessHandlerService');
 
@@ -96,6 +97,32 @@ test('foreign Product root is refused before any seal write or nPublish creation
     const f = fixture(); f.rows.product[0].enterpriseCode = 'foreign';
     await assert.rejects(governed.create(f.request, f.input), /missing or changed/);
     assert.equal(f.writes.length, 0); assert.equal(f.lifecycleCalls.length, 0);
+});
+
+test('runtime administrator retry reads the exact retained issuer graph without borrowing the issuer identity', async () => {
+    const f = fixture();
+    const submitted = await governed.create(f.request, f.input);
+    let publication = { ...submitted, tenantCode: f.request.tenant, enterpriseCode: f.request.enterpriseCode,
+        state: 'FAILED', revision: 8,
+        auditTrail: [{ publicationCode: submitted.code, fromState: 'ACTIVATING', toState: 'FAILED', revision: 8 }] };
+    const administrator = { tenant: f.request.tenant, enterpriseCode: 'platform', publicationCode: publication.code,
+        expectedRevision: 8, authData: { ...f.request.authData, entCode: 'platform', principalId: 'runtime-operator',
+            userGroups: ['runtimeConfigAdminUserGroup'], permissions: ['commerce.product.publish', 'publish.lifecycle.retry'] } };
+    let retainedRequest;
+    const recovery = { ...lifecycle, getRepository: () => ({ get: async () => publication }),
+        transition: async (_record, state) => publication = { ...publication, state, revision: 9 },
+        validate: async request => {
+            retainedRequest = request;
+            assert.deepEqual(request.authData, administrator.authData);
+            assert.equal(recovery.retryValidationScope({ ...request }, publication), undefined);
+            assert.equal(recovery.retryValidationScope(request, { ...publication, rootCode: 'foreign' }), undefined);
+            return graph.resolve(publication, request);
+        } };
+    SERVICE.DefaultPublicationLifecycleService = recovery;
+    const manifest = await recovery.retry(administrator);
+    assert.equal(manifest.root.enterpriseCode, f.request.enterpriseCode);
+    assert.equal(recovery.retryValidationScope(retainedRequest, publication), undefined);
+    await assert.rejects(graph.resolve(publication, administrator), /missing or changed/);
 });
 
 test('foreign category dependency is refused before the root seal', async () => {

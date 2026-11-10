@@ -14,6 +14,10 @@ owns installation, assignment and the `COMMERCE_SETUP_PUBLISHER` role; route
 metadata neither creates that role nor grants its permissions. The coupon issuer
 group alone does not admit publication routes. Service approve/reject/activate
 and operator retry/rollback/withdraw retain their previous group/token boundaries.
+Product retry validation reads the immutable source under the issuer recorded in
+the failed journal when the caller has the existing runtime administrator
+recovery permission. The scope applies only to that validation. The administrator
+remains the audit actor, and a fresh Process approval is required for activation.
 
 The configured version provider implements `prepareSetup(request,item)` through
 existing capture and `validateSetup(publication,request,item)` against exact
