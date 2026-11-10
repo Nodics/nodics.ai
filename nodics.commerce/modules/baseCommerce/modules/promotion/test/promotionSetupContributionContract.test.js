@@ -240,6 +240,15 @@ test('preflight is read-only; first insert binds immutable provenance and retry 
     assert.equal(f.state.writes, 1); assert.ok(f.state.reads >= 5);
 });
 
+test('budget setup reports an unconfirmed admission when the selected policy is not activated', async t => {
+    const f = fixture(t);
+    SERVICE.DefaultPromotionPublicationService.readActivated = async () => {
+        throw new Error('No activated policy');
+    };
+    await assert.rejects(setup.preflightContribution(f.request), { code: 'ERR_PROMOTION_BUDGET_ADMISSION_UNCONFIRMED' });
+    assert.equal(f.state.writes, 0);
+});
+
 test('another authorized operator inspects and replays the same pinned intent without replacing original evidence', async t => {
     const f = fixture(t);
     await setup.installContribution(f.request);

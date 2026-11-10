@@ -82,7 +82,14 @@ module.exports = {
     policy: async function (request, input) {
         const publication = SERVICE.DefaultPromotionPublicationService;
         if (!publication.deliveryRoots(request).includes(input.rootCode)) throw this.conflict();
-        const records = await publication.readActivated({ rootType: 'promotion', rootCode: input.rootCode }, request);
+        let records;
+        try {
+            records = await publication.readActivated({ rootType: 'promotion', rootCode: input.rootCode }, request);
+        } catch (error) {
+            const conflict = this.conflict();
+            conflict.addCause?.(error);
+            throw conflict;
+        }
         const selected = records.filter(item => item.schema === 'promotion' && item.policy.code === request.promotionCode);
         if (selected.length !== 1) throw this.conflict();
         const policy = selected[0].policy, exact = SERVICE.DefaultExactAmountService;
