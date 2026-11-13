@@ -8,7 +8,7 @@ started/registered account. See
 for policy, transport, recovery and customization.
 
 Canonical notification guidance is now the selected
-[CMS recipient article](data/docs-v001/records/documentation/profileNotificationRecipientsDocumentationComponentData.js).
+[CMS recipient article](data/docs-v001/records/documentation/profileDocumentationRelease003ComponentData.js).
 The consolidated docs-v001 records remain Staged, not installed or
 published. [Whole-gift recipients](llm/contracts/gift-notification-recipients.md)
 join transfer, coupon and auction wrappers on the existing shared selector.
@@ -164,7 +164,7 @@ See [Documentation](profile-identity-onboarding-guide.md#documentation).
 Canonical framework documentation:
 
 - [Identity and onboarding guide](data/docs-v001/records/documentation/profileDocumentationRelease003ComponentData.js)
-- [Notification recipients guide](data/docs-v001/records/documentation/profileNotificationRecipientsDocumentationComponentData.js)
+- [Notification recipients guide](data/docs-v001/records/documentation/profileDocumentationRelease003ComponentData.js)
 - [Current documentation selection](data/manifest.json)
 
 ## Verification
@@ -179,12 +179,7 @@ Team retry and operator-recovery invariants are defined in the
 
 ## Internal verification transport
 
-See [Internal verification transport](profile-identity-onboarding-guide.md#internal-verification-transport).
-Recovery reuses the declared verification connection and limits; its admitted
-server context selects recovery enablement and purpose independently of onboarding.
-Recovery resolves both native provider IDs and populated credential references
-through the existing credential ownership validator. Cooldown and distributed
-rate refusals return a fixed retry response without provider details.
+See the [internal verification transport](llm/contracts/private-notification-transport.md#internal-verification-transport) for exact admission, failure and recovery boundaries.
 
 ## Invited employee registration
 
@@ -229,37 +224,4 @@ cannot revive an expired invitation or create an employee from it.
 
 ## Ordinary native identity editing
 
-Generated human PATCH requests use the existing Profile management and update
-interceptor owners. Employee edits compare the original `authVersion`; Enterprise
-edits compare `updated`. Both counters remain domain-owned (`managed: false`).
-The Framework `enterpriseManagement.lifecycle` policy declares the ordinary
-editable fields and bounded principal/group inventory. Kickoff selects deployment
-inputs only. Login identity, grants, placement and security stamps are read-only;
-Employee creation uses the invitation owner; Enterprise creation retains its
-declared aggregate. Public physical removal of either retains history and refuses.
-
-An ordinary operator status change uses current persisted actor and group ancestry.
-Self-disable and native administrator status changes require their governed owner.
-Enterprise deactivation requires fresh Platform authority and an exclusive,
-nondefault native tenant. Complete preflight precedes normal generated session-stamp
-updates for Employees and Customers. Shared/default or linked contexts refuse.
-This is conservative ordered retirement, not a multi-record transaction: a partial
-failure can retire sessions while leaving the Enterprise active. Inspect state
-before another intent; never automatically retry or revive credentials.
-
-Generated command receipts use the existing private Profile journal when explicitly
-selected. They attribute the original actor/input and support inspection, not
-replay. Local qualification must separately verify allowed edits, protected/self/
-foreign/stale refusals, session retirement and normal access after reactivation.
-Run `publicIdentityLifecycleContract.test.js` with native session, scope and receipt
-regressions. Source tests alone do not qualify installed or distributed behavior.
-
-Enterprise deactivation events inspect remaining active enterprises using native
-system authority and a fresh bounded existence read. Missing or failed inventory
-holds tenant cleanup and peer notification; it never implies an empty tenant.
-Post-persistence failure requires command/status inspection before a new intent.
-See `test/tenantNamespaceBindingAdmissionContract.test.js`.
-
-Credential metadata and Account lockout status are inspect-only generated schema workspaces. Use Profile authentication/recovery and identity lifecycle owners to change protected state; no generic credential or lockout editor is advertised. See the inspect-only section of the [identity lifecycle contract](llm/contracts/identity-access-lifecycle.md).
-
-The inspect-only credential and lockout views advertise Login ID for quick search. This is a Profile-owned presentation/query default; it adds no mutation or credential authority and never includes secret values in searchable fields.
+See the [ordinary native identity editing reference](llm/contracts/identity-access-lifecycle.md#ordinary-native-identity-editing-reference) for exact admission, failure and recovery boundaries.

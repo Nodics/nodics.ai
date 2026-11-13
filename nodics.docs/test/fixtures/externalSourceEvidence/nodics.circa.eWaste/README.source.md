@@ -1,0 +1,464 @@
+# Circa eWaste
+
+The shared sign-in source includes an explicit Employee participation/terms path
+and owner-issued Customer handoff, with separate cookie/CSRF namespaces and no
+staff permission reuse. The switch stays within Employee cookie scope and returning
+users consume owner current-terms/switch flags without unnecessary renewal.
+Deployment qualifications and contact-preferences customization are documented in the
+[frontend implementation README](src/README.md). Isolated fixtures passed
+in the joint validation batch; source/static checks do not establish live acceptance. Contact verification
+and independent notification consent/suppression use Profile's public self workspace.
+`VITE_CIRCA_CONTACT_PREFERENCES_ENABLED` defaults off; login email is not proof or
+consent, and enabling presentation never qualifies the backend.
+
+Purchase history renders fulfillment outlet evidence only for REDEEMED Commerce
+entitlements with canonical Store reference and positive recorded revision. Store
+authorization/Promotion conditions stay backend-owned; Circa does not choose staff
+scope, redeem an outlet or create another purchase. The extended isolated fixture
+passed; runtime allocations and joint customer acceptance remain gated.
+
+Circa is the connected customer storefront for Nodics Waste, Location, Profile,
+Media, Copilot, Loyalty and Commerce. The local sample runs at
+http://localhost:3600 and keeps customer state in the owning backend services.
+
+## Run and verify
+
+Start the Kickoff runtimes described in the [Circa backend setup guide](../../nodics.kickoff/modules/circa.ewaste/README.md),
+then run `npm install` and `npm run dev -- --host 127.0.0.1 --port 3600` here.
+Run `npm run verify` for types, interaction checks and the production build.
+The live browser checks require the connected local sample services.
+
+The permanent local Telegram Mini App address is
+`https://telegram-circa-local.nodics.dev/telegram`. Route this hostname through
+a named Cloudflare Tunnel to `http://127.0.0.1:3600`, preserving `/telegram`
+and the `/nodics` API paths. The Vite host allowlist and Kickoff Local CORS
+configuration allow this exact hostname. DNS, the running tunnel connector,
+and the Telegram bot's launch URL must also be configured before it is live.
+The local frontend, backend services and tunnel must remain running. Keep tunnel
+credentials outside the repository and do not commit connector tokens.
+
+On the configured development Mac, the named tunnel is `circa-telegram-local`
+(`c263456c-6a1a-4a3e-b9f8-4a77d1d72033`). User LaunchAgents
+`dev.nodics.circa-telegram-tunnel` and `dev.nodics.circa-local-frontend` start
+the connector and frontend at login and restart them after an exit. Their
+configuration is under `~/Library/LaunchAgents/`; private tunnel credentials
+and service logs are under `~/.cloudflared/`. Backend startup remains the
+Kickoff topology's responsibility and can be blocked by its tenant owner-review
+gates. Website reachability alone does not qualify the connected Telegram journey.
+
+Published CMS content and public Media delivery (`/nodics/media/v0/content`) use
+`VITE_CIRCA_WCMS_ONLINE_TARGET`, defaulting to Online on port 4314. Other Media
+operations, including uploads and downloads, retain `VITE_CIRCA_MEDIA_TARGET`
+on Staged port 4312. Private customer photos use authenticated eWaste resource
+`/photo` reads and `/submissions/prepare` uploads through the domain backend.
+Keep the public-content proxy before general Media and domain routes. Docker
+preserves the same split on Online 5314 and Staged 5312 in `docker/nginx.conf`.
+Proxy routing does not import or publish media.
+
+Shared Cart, Checkout, Digital, Bidding and Order requests route to Commerce via
+`VITE_CIRCA_COMMERCE_TARGET` (the local topology uses port 4350). The Docker
+reference routes those same module paths to port 5350. These paths must precede
+the Waste fallback; they preserve the original participant bearer and Enterprise
+header rather than changing identity to the merchant. Backend capabilities,
+permissions and qualified providers must be configured independently of this
+frontend transport setting. `proxyRouting.test.ts` protects the route boundary.
+
+The Local proxy targets Process & Engagement on port 4330 for Engagement and
+Communication, and Waste & Location on port 4370 for Location. These are backend
+targets only: the Circa frontend stays on port 3600. Explicit `VITE_CIRCA_*_TARGET`
+overrides remain available; Docker retains its separate topology.
+
+## Sample accounts
+
+The local sample password is `CircaDemo!2026` for `customer@circa.local`,
+`seller@circa.local`, and `recipient@circa.local`. Profile performs authentication.
+Registration creates an independent customer with an empty wallet.
+
+The opening primary dataset has 20 submissions: 10 approved, 5 pending and 5
+rejected; 118 reward points and 152 illustrative carbon units. Browser validation
+adds real local records and transactions, so the running balances and counts
+change. Reloading the website retains those changes.
+
+## Connected journeys
+
+The website sign-in dialog separates **Personal** from **Enterprise**. Enterprise
+participation keeps Profile's Employee token and signed Enterprise context; it
+does not create or switch to a Customer. Its account shell reads canonical
+Loyalty wallet, Digital entitlement and Bidding projections, and reuses the typed
+bundle-gift and carbon/material views. Personal Employee-to-Customer participation
+and customer-only eWaste journeys remain separate and unchanged. Accepted
+Enterprise memberships require review and fresh Profile evidence before switching.
+See [Enterprise session contract](src/README.md#enterprise-sessions-and-account)
+for exact routes, source dependencies, storage boundaries and unit-only gates.
+This increment does not activate permissions, provider connections or live services.
+
+The wallet includes a confirmed reward-transfer journey through Loyalty's
+participant API. Eligible balances retain program/type identity and canonical
+precision; recipient search is Profile-owned and supports existing Customers
+and Enterprises. Lost acknowledgements retain the original transfer reference
+and use status inspection, not another payment. Changing session discards the
+prior private selection. Loyalty authority, program selection and installed
+permissions remain deployment prerequisites, not frontend grants.
+`VITE_CIRCA_LOYALTY_TARGET` routes local participant calls to the Loyalty runtime
+(local Commerce & Loyalty host port 4350; Docker proxy port 5360). It changes transport only,
+not any business default, permission or funding setting. Renderer unit checks
+do not establish live transfer acceptance.
+
+Purchased-coupon history supports **Refresh purchases** for an authoritative
+read after merchant confirmation. It shows saved receipt, merchant reference and
+valid confirmation time without inventing store evidence or repeating purchase,
+claim, redemption or wallet commands. Failed refreshes hide token-reveal actions;
+changing participant session clears displayed history and invalidates late reveals.
+Customer and Enterprise accounts share canonical Order/Digital history and Digital
+coupon reveal. Enterprise buyer proof uses typed owner references, not the merchant
+namespace; Employee bearer and signed Enterprise stay unchanged. No personal eWaste
+request or Customer conversion is used. Enterprise order-review and merchant-claim
+commands remain outside this renderer; no QR protocol is invented.
+`src/PurchaseHistory.test.tsx` contains independent refresh/session fixtures.
+The visible page refreshes every 60 seconds and on return/focus, pausing while a
+read or reveal is busy. The component's `refreshIntervalMs` presentation option
+accepts 15-300 seconds; invalid values use 60 seconds. This customizes freshness,
+not entitlement eligibility or redemption authority. Failed/loading refreshes
+explicitly mark retained history as potentially stale. Revealed tokens are
+cleared on refresh, session change and unmount-related request invalidation.
+This source increment is not live merchant/store acceptance; store-specific
+redemption evidence and complete programme validation remain open.
+
+- **Submit eWaste** is always available above the Telegram/mobile tab bar and
+  through the website's persistent bottom-right recycling button.
+  Sign-in keeps the submission intent. The active journey replaces that entry
+  action with its own step controls; completion offers **Submit another item**.
+  Starting another item preserves saved drafts under **Items → Drafts**.
+  Leaving the mobile journey returns to Items with the correct URL while keeping
+  Telegram launch parameters.
+  Inside Telegram, the submission screen uses native Back and places Help beside
+  the progress steps. Browser clients retain the in-page header and Back control.
+
+- Shop and Coupons share search, filters, sorting, grid/list controls, exact counts and server pagination with the My Account listing controls. Quick view and direct product detail pages preserve the listing URL state; purchasing still requires explicit review and confirmation. See the [eWaste catalogue owner](../../nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/README.md). Run `node test/live/catalogue-browsing.mjs` for read-only desktop/mobile acceptance.
+
+- Public homepage, three original banner images, asset/coupon previews and a
+  Location-backed collection-centre map with an accessible centre list.
+- Shared Web/Telegram submission controls: permission-aware fresh location,
+  configured backend arrival policy, private photo, automatic configured-provider
+  analysis, correction, persisted draft and one final confirmation.
+- Telegram host shell at `/telegram`, with backend-validated signed launch and
+  shared secure Profile forms. Durable Telegram account linking, source outcome
+  delivery and actual-client acceptance remain pending.
+- My Account, submission status/reasons, owned assets, purchase history and
+  customer-authorized coupon reveal; separate wallet balance and ledger page.
+- `/account` is the customer dashboard: wallet cards, submission status and asset
+  charts, recent items, saved drafts and account shortcuts. Figures use
+  authenticated wallet balances and backend listing totals, including records
+  beyond the current page. Chart labels link to the matching item filters.
+- Account navigation separates My items (`/account/items`) and Wallet
+  (`/account/wallet`, with `/wallet` retained) from Bids (`/account/bids`), Purchases
+  & coupons (`/account/purchases`), and Ownership activity (`/account/activity`).
+  The web header menu and mobile Account screen open these views independently;
+  mobile deep links retain the host launch context and requested section through
+  sign-in. Item listings no longer append transaction or ownership histories.
+- Unfinished submissions live in the separate Drafts collection with saved-photo
+  previews and Continue draft actions. Main Submissions excludes every unfinished
+  state through the backend query, so search, counts and pages remain consistent.
+- Location and photo preparation are temporary until image analysis succeeds.
+  Leaving early or failing analysis creates no new submission or uploaded Media.
+  A successful preparation saves an analyzed draft; final submission remains explicit.
+- Certificate listing and gifting use the common bundle composer. Reward points
+  and carbon reward units stay with the contributor; realized, available carbon
+  credits require separate bundle selection. Illustrative units are not credits.
+  Commerce places orders; Loyalty owns value movement.
+- Contact intake records an Engagement reference and reports its verification
+  requirement. External support delivery requires deployment configuration.
+
+The sample explicitly conveys digital asset ownership, with no physical delivery
+or certified carbon claim. Bidding/hold policy, production merchant redemption,
+role hierarchy and full WCMS page-composition publishing remain deployment work.
+
+## Ownership
+
+Keep frontend contributor guidance in this README and source-near READMEs, not a
+separate `docs/` tree. Published product guides belong to
+[the eWaste documentation owner](../../nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/README.md);
+Circa sample setup and customer-specific journeys belong to
+[the Circa backend module](../../nodics.kickoff/modules/circa.ewaste/README.md).
+
+Frontend contributor guidance for purchase history, coupon evidence, order-review
+recovery, eWaste boundaries and safe customization is in
+[Frontend Implementation README](src/README.md). The October source batch
+adds bounded history/token validation and explicit same-request review recovery.
+Its isolated fixtures passed; connected lifecycle acceptance remains separately gated.
+
+This frontend stores only UI state and authenticated session/draft references.
+It does not own submissions, assets, wallets, coupon codes, or settlement ledgers.
+Project policies and illustrative factors remain layered backend configuration.
+
+## Shared collection-centre map
+
+The customer map reads Location's public `COLLECTION_CENTRE_MAP` configuration.
+It requests the CIRCA surface. The Circa module scopes its Dubai viewport to this
+usage and inherits the project provider. Axis can edit the Circa view separately. Provider/style, viewport, category labels and
+pin colors, visible controls and wheel zoom behavior refresh while the page is
+open (15 seconds by default) and on window focus. Mapbox and Leaflet adapters
+consume the backend descriptors; fallback is allowed only by backend policy.
+The list remains usable when map imagery or settings cannot load.
+
+Configure these values in Axis Map Configuration. Future applications consume
+the same versioned Location endpoint; do not introduce storefront-owned provider
+settings or copy customer access policy into the map. The frontend Location Map
+adapter converts named latitude/longitude values at the provider boundary.
+
+Sharing browser location places a distinct red **You** marker in either map
+renderer and centers the map there. The marker stays visible through centre
+filtering and expansion; sharing again replaces its position. Permission denial
+keeps the centre list available. Browser location remains in component state.
+Run `node test/live/map-location.mjs` against the running local services to verify
+sharing, repeat sharing, filters, expansion, mobile layout and permission denial
+with simulated browser coordinates.
+
+Clicking a centre pin or list entry opens Axis's existing `LocationPopupContent`
+inside the active map provider's popup. Both applications import
+`@nodics/location-map-ui`, with one maintained component and stylesheet in Axis's
+`packages/location-map-ui`. Circa installs the generated archive in `vendor/`;
+normal installation does not require an Axis checkout. Update the package from
+its canonical source rather than creating a Circa-specific popup.
+Run `node test/live/map-centre-details.mjs` for pin/list selection, closing,
+filtering, mobile layout and directions-coordinate validation.
+
+## Backend ownership
+
+Reusable domain APIs are provided by the single eWaste accelerator at
+`/nodics/eWaste/v0`. Profile owns customer registration and identity at `/nodics/profile/v0`;
+Communication and Engagement own delivery and contact intake. Keep those
+boundaries explicit in api.ts; the frontend application name is unchanged.
+
+## Submission acceptance
+
+`npm run test:live` creates a new local customer/submission and exercises automatic
+location/photo/analysis/review. It uses emulated Chromium geolocation at the sample
+`cc-dxb-01`; set `CIRCA_COLLECTION_CENTRE` for a different configured centre. This
+is Web integration evidence, not native Telegram camera/location qualification.
+`CIRCA_EVIDENCE_DIR` selects the screenshot/result directory. Bot credentials belong
+only in the ignored backend environment; a public HTTPS launch URL is still needed.
+
+`CustomerAuthentication` is the single Web and Telegram sign-in/registration
+component. Both use email/password sign-in and name/email/password registration
+through Profile. Anonymous signup uses its opt-in `/customer/browser/register`
+entry with exact-origin and distributed rate checks. Account creation does not
+claim verified email ownership. Host shells call the eWaste channel-entry/link contract and resume after
+authentication. The accelerator selects seamless linked sign-in or the shared
+form. The browser completes one-use handoffs directly with Profile, which retains
+its secure cookies; application codes and sign-in policy are not hardcoded in
+channel shells. There is no channel email lookup or OTP process.
+WhatsApp should reuse this component through its future secure Web handoff; its
+channel adapter remains deferred. A successful registration followed by an
+interrupted sign-in retries authentication without creating another customer.
+Generic owner failures retain their diagnostic code. Reads offer refresh; an
+uncertain write asks the customer to inspect its saved status before retrying.
+The transport does not automatically repeat commands.
+
+### Mobile Centres tab
+
+The shared `/mobile` and `/telegram` Centres tab shows a map above the centre
+list. Search, city, country, centre type, operator, service, accepted-item and
+straight-line distance filters drive both views together. Filter values come
+from the published centre records; unavailable facets are disabled. Accepted-item
+filtering excludes centres without published acceptance categories. Opening hours
+remain informational because the response has no structured opening schedule.
+
+Near me uses the active Web or Telegram location host and enables nearest-first
+sorting and 1–100 km radius choices. Unknown coordinates remain visible in the
+list unless a distance filter requires a position. Cards can focus a centre on
+the map and open directions through the host. Map failures leave the list usable.
+
+### App launch
+
+The initial HTML and mobile Web/Telegram loading state share a local Circa
+splash with a quiet breathing animation and a short entrance transition.
+Branding is available before the host/account requests complete, without a
+minimum loading delay. Reduced-motion settings disable both animations;
+assistive technology retains the loading status. Existing retry screens handle
+startup failures.
+
+### Shared website identity
+
+The mini-app header and compact footer use the same `CircaBrand` renderer and
+published `circa.shell` content as the website, including both logo variants,
+wordmark, byline and footer copy. The header starts white and switches to the
+website's dark-green treatment after scrolling 48 pixels. The mobile tab bar
+uses the website footer palette. The scrollable footer retains the published
+brand message, copyright, Privacy and Terms links; tab navigation remains
+available for the mobile journey. CMS branding loads independently of account
+and centre functionality.
+
+Photo analysis preserves the uploaded evidence when recognition fails. Customers
+can retry the saved photo, replace it, or enter details using the visible mobile
+action bar and the website correction form. A configured general item type keeps
+recognizable items reviewable when the catalogue lacks their exact subtype; the
+review explains that match. Recognition never submits the draft automatically.
+
+The web and mobile item review share an environmental assessment card. Backend
+impact results supply emissions, energy, water, recovery and waste indicators,
+units, status, required evidence and calculation provenance. Missing metrics show
+“Not assessed”; explicit zero and negative net benefit remain visible. Sample
+CO2e calculations are labelled illustrative. Carbon credits require separate
+verification/registry evidence and are not calculated or issued by the frontend.
+Existing saved drafts without the new metadata remain usable and show a pending
+assessment. Refreshing analysis or saving corrected details recalculates impact.
+
+Circa arrival uses fresh reported coordinates and direct distance within the
+backend's inclusive configured centre radius. Accuracy is optional metadata and
+does not block arrival on desktop or mobile. Telegram uses native coordinates
+without waiting for accuracy refinement when the backend has no accuracy gate;
+clients without the native capability use browser geolocation. Real coordinates,
+available accuracy and capture timestamps are preserved. Invalid or stale readings
+still require retry, preserving the draft and photo. The backend remains the
+arrival authority.
+
+Customer confirmation, submitted/reviewed outcomes, account detail and marketplace
+asset detail now share `ItemDetailsCard`, driven by the backend's authorized item
+descriptor. The primary view emphasizes the photo, name, description and available
+environmental assessment; full classification, materials/components, approximate
+ranges, condition and environmental observations expand on demand. Customers edit
+only name and description. Inconclusive analysis can use the configured manual
+review path without asking the customer for technical classifications.
+
+Axis reviewers own classification and physical/environmental corrections. Final
+customer views use the reviewed facts and exact public feedback while original
+submitted facts remain in the backend audit trail. Channel hosts share this
+presentation and API contract. This does not activate an unimplemented channel
+adapter or the separate repair/reuse lifecycle.
+
+`test/live/customer-journey.mjs` supports independent verifier/approver sessions;
+optional marketplace listing requires `CIRCA_LISTING_TEST=true`.
+`test/live/reviewed-descriptor.mjs` checks a supplied local journey fixture and
+its reviewed desktop/mobile detail. These are connected automated browser checks,
+not physical-device or native messaging-client acceptance evidence.
+
+Review links select the exact item through `/mobile?submission=<code>` or the
+Telegram launch `start_param`. The mobile shell keeps the target through shared
+sign-in and opens the authorized full item page. It does not substitute another
+saved draft. Record codes are bounded selectors, never credentials; the backend
+still enforces ownership. Reviewed list titles use the owner-projected identity.
+
+## Customer item workspace
+
+My Account and mobile/Telegram Items share `CustomerWasteWorkspace`: owner-scoped
+submission and asset collections, server-side search/status/category/type/date
+filters, exact counts, stable pagination, and grid/list layouts. Cards expose a
+separate Quick view; image/title/detail links open an independently fetched full
+page. Web routes are `/account/submissions/:code` and `/account/assets/:code`;
+mobile links use `?submission=:code` or `?asset=:code`. Return navigation retains
+filters. Draft continuation is an explicit backend-available action.
+
+The `/account/waste` WCMS Online page supplies banner, copy and detail section
+order through `circa.wasteWorkspace`. Install the customer project's
+`circa.ewaste:customer-workspace` core release into WCMS Staged and publish its
+route through nPublish and Process before serving this frontend. An unavailable
+published page shows a recoverable error. Domain data and permitted actions come
+from `/nodics/eWaste/v0/account/items` and `/account/items/:code`; WCMS contains no
+customer records. The canonical Waste descriptor supplies reviewed identity,
+physical/material details, environmental assessment and public review feedback.
+
+Trade/gift dialogs retain explicit confirmation, displayed revision and command
+idempotency. Their availability is supplied by the backend and revalidated by the
+owning command. Quick view is read-only. Missing evidence stays visibly missing;
+private photos show a loading state until the authorized media read completes.
+Cancelling an unsubmitted trade/gift review preserves the loaded detail and
+keyboard opener without another read. Dismissing an attempted command rereads
+the owner even after a failed response, because the write may already have applied.
+`src/features/waste/WasteDetail.test.tsx` protects both boundaries.
+
+Run `npm run verify` and `node test/live/customer-workspace.mjs`. The latter uses
+the documented local sample customer, exercises listing/detail/reload/filter and
+mobile navigation, and cancels command previews. It does not submit trades or
+prove native Telegram WebView acceptance.
+
+The customer listing starts with its banner. Account email and the duplicate
+wallet strip are not page sections. A shared Updates bell in the web and mobile
+headers opens the Communication inbox on demand. It resolves safe source
+selectors through authorized Waste details and displays the item photo/name,
+plain-language outcome, optional public feedback and a details link. Raw message
+bodies, technical references and URLs are not rendered as customer copy. Missing
+or unauthorized source items use a generic update without exposing item details.
+
+Impact assessments preserve provider/dataset provenance and previous results. Axis uses the backend-authorized assessment endpoints with explicit reasons, confirmation and exact asset revisions. Customer asset details show the accepted environmental assessment and paginated read-only history. CO₂e-to-tonnes conversion is carbon equivalent, not credit issuance; existing reward balances remain separate.
+
+Approval rewards displayed for owned assets come from backend-confirmed Rules
+assessment evidence and Loyalty settlement. The customer application does not
+calculate scores, choose a policy, or infer a reward from environmental metrics.
+During a rolling upgrade it may read legacy valuation fields only as a fallback;
+confirmed and settled reward evidence takes precedence.
+
+Purchase review refreshes the customer wallet before displaying the remaining balance. A failed refresh leaves confirmation unavailable; the backend still authorizes and settles the confirmed transaction.
+
+The browser adapter supports bounded accuracy refinement when explicitly requested
+by a backend policy. Circa's distance-based arrival does not request it.
+Centre browsing remains available inside the mobile/Telegram submission flow
+even when location is unavailable, and Back returns to the same draft.
+Browsing and directions do not unlock photo capture or submission; fresh backend
+arrival verification still governs both on every device.
+
+Location recovery distinguishes bot permission from device accuracy. **Open
+Telegram permissions** appears only after denied access, because Telegram's SDK
+ignores that action when access is already granted. **Location help** opens
+visible device instructions for inaccurate/unavailable readings, including the
+macOS settings path. These controls do not change the shared arrival policy.
+
+Environmental benefit cards render only provider-calculated metrics with valid
+assessment status. Show saved carbon/energy/weight ranges and method context; keep
+missing metrics null in transport, consolidate absent outcomes, and never convert
+prospective input mass into completed diversion or carbon into energy/credits.
+
+INPUT_ONLY assessments show available input mass/count and the backend limitation without claiming emissions savings or a landfill comparison. All channels use the same owner-calculated assessment contract.
+
+Mobile centre discovery refreshes from the backend on each screen mount and visible-page resume (visibility, focus and pageshow). Concurrent refreshes are coalesced and aborted on exit. Search/filter state and the last successful list survive refresh failures; submission arrival and centre eligibility remain fresh backend checks.
+
+## Retained-Data Browser Acceptance
+
+`npm run test:live:mobile-catalogue-contract` checks the two mobile hosts against
+isolated owner fixtures at 320, 390, 768 and 1440 pixels. All owner requests are
+terminated by the fixture; artwork is read from the existing module `/data` pack.
+It is deliberately distinct from the native retained-data runner below.
+
+With the existing native backend and this frontend running, execute
+`npm run test:live:retained-data`. `CIRCA_SITE_URL` selects a loopback HTTP origin;
+the default is `http://localhost:3600`. This batch runs published CMS, catalogue,
+account navigation/dashboard and customer item workspace checks across desktop
+and narrow Web/mobile shells. It expects the existing published sample content,
+catalogue and documented local customer account. It does not install missing data.
+Functional assertions allow the owner's request deadline, not a performance SLA.
+Pagination and submission-notification enrichment are reported as not exercised
+when the retained dataset cannot supply them. An insufficient reward balance is
+verified as a refusal, never replenished by this runner. Isolated frontend tests
+cover these alternate states separately; they do not certify native ownership.
+
+Each scenario blocks business writes before dispatch. Only same-origin Customer
+authentication, session restore and logout POSTs are permitted. Purchases, coupon
+reveal, submissions, gift/trade, refund, inbox mutations and provider sends are not
+allowed. The guard contract has its own executable security checks. A blocked
+command fails acceptance rather than silently qualifying the attempted journey.
+
+The bounded result is written to `/tmp/circa-retained-data-closeout/result.json`
+(`CIRCA_CLOSEOUT_EVIDENCE` overrides that directory). Screenshots remain in each
+scenario's existing local evidence directory and may contain sample account data;
+do not publish them as public assets. The batch does not print authenticated page
+bodies or child assertion output. Failed stages stay failed and can be inspected
+locally using their named script; do not reset/reimport data to conceal a failure.
+The report pins HEAD, the tracked diff and untracked source hashes before/after
+execution; changing source mid-run cannot produce a passing batch.
+
+This is retained-data browser acceptance, not actual Telegram client/device,
+external SMTP/Telegram/Mapbox, real-payment or human screen-reader qualification.
+It does not replay the completed native financial demo or qualify deferred scope.
+
+## Enterprise Membership Availability
+
+Enterprise account controls consume Profile's versioned feature observation from
+the existing `/nodics/backoffice/v0/bootstrap/public` response, at
+`featureAvailability.profile`. No Circa environment flag or copied project default
+defines membership availability. Both discovery and switching must be explicitly
+available before optional switch controls request the membership workspace.
+The signed-in identity remains visible when disabled. Missing/malformed bootstrap
+evidence and denied workspace reads retain an error and retry, not empty choices.
+Profile continues to enforce membership, session and revision checks on switching.
+Older runtime leases without the field remain unknown until the normal deployment
+lifecycle refreshes owner metadata; do not enable the membership API for UI repair.

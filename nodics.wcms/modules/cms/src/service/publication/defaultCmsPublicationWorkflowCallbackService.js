@@ -25,20 +25,20 @@ module.exports = {
         const offset = states.indexOf(publication.state);
         const entries = [].concat(publication.auditTrail || []).filter(entry => entry.revision > expected);
         if (offset < 0 || publication.revision !== expected + offset + 1 || entries.length !== offset + 1)
-            throw new CLASSES.NodicsError('CMS_PUBLICATION_WORKFLOW_DECISION_INVALID', 'The original publication decision is not current');
+            throw new CLASSES.NodicsError('ERR_CMS_00118', 'The original publication decision is not current');
         for (let index = 0; index < entries.length; index++) {
             const entry = entries[index];
             if (entry.publicationCode !== publication.code || entry.revision !== expected + index + 1 ||
                 entry.fromState !== (index === 0 ? 'PENDING_APPROVAL' : states[index - 1]) ||
                 entry.toState !== states[index] || entry.correlationId !== publication.correlationId)
-                throw new CLASSES.NodicsError('CMS_PUBLICATION_WORKFLOW_DECISION_INVALID', 'The original publication decision journal is incomplete');
+                throw new CLASSES.NodicsError('ERR_CMS_00118', 'The original publication decision journal is incomplete');
         }
         const evidence = entries[0].details?.workflow;
         if (!evidence || evidence.instanceCode !== decision.processInstanceCode ||
             evidence.definitionCode !== decision.processDefinitionCode || evidence.version !== Number(decision.processVersion) ||
             entries[0].reason !== decision.reason || publication.state === 'ONLINE' &&
             (!publication.targetVersion || entries.at(-1).details?.version !== publication.targetVersion))
-            throw new CLASSES.NodicsError('CMS_PUBLICATION_WORKFLOW_DECISION_INVALID', 'Publication decision replay does not match its committed evidence');
+            throw new CLASSES.NodicsError('ERR_CMS_00118', 'Publication decision replay does not match its committed evidence');
     },
     /** Validates bounded Process evidence and advances the generic publication lifecycle. */
     applyDecision: async function (request) {
@@ -56,7 +56,7 @@ module.exports = {
                     code: decision.publicationCode,
                     revision: Number(decision.expectedRevision)
                 })) {
-            throw new CLASSES.NodicsError('CMS_PUBLICATION_WORKFLOW_DECISION_INVALID', 'CMS publication workflow decision is invalid');
+            throw new CLASSES.NodicsError('ERR_CMS_00118', 'CMS publication workflow decision is invalid');
         }
         // Elevation is local to CMS Staged and occurs only after the fixed Process runtime and
         // deterministic workflow identity have both been verified.
@@ -73,7 +73,7 @@ module.exports = {
         const current = await SERVICE.DefaultPublicationLifecycleService.get(lifecycleRequest);
         if (current.domain !== 'cms' || current.workflowRef !== decision.processInstanceCode ||
             !decision.correlationId || current.correlationId !== decision.correlationId)
-            throw new CLASSES.NodicsError('CMS_PUBLICATION_WORKFLOW_DECISION_INVALID', 'Publication decision does not match the pending workflow');
+            throw new CLASSES.NodicsError('ERR_CMS_00118', 'Publication decision does not match the pending workflow');
         if (current.state !== 'PENDING_APPROVAL') {
             this.assertDecisionReceipt(current, decision);
             if (['ONLINE', 'REJECTED'].includes(current.state)) return {
@@ -86,7 +86,7 @@ module.exports = {
             return { publicationCode: online.code, state: online.state, revision: online.revision, targetVersion: online.targetVersion };
         }
         if (current.revision !== Number(decision.expectedRevision))
-            throw new CLASSES.NodicsError('CMS_PUBLICATION_WORKFLOW_DECISION_INVALID', 'Publication decision revision changed');
+            throw new CLASSES.NodicsError('ERR_CMS_00118', 'Publication decision revision changed');
         if (!decision.approved) {
             let rejected = await SERVICE.DefaultPublicationLifecycleService.reject(lifecycleRequest);
             return { publicationCode: rejected.code, state: rejected.state, revision: rejected.revision };

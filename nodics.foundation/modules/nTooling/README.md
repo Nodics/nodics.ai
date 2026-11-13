@@ -86,3 +86,8 @@ backend readiness uses API evidence independently of frontend availability.
 Reference artwork remains in the consumed application profile, not a global alias.
 
 Local topology defaults each runtime readiness deadline to 90 seconds in the Framework owner. An actual environment server may intentionally size `nodics.runtimeTooling.readinessTimeoutMs` as a positive safe integer in milliseconds; this changes only the bounded startup wait, never nSystem readiness, terminal registration refusal, ownership or startup rollback. See the topology contract.
+
+Full source promotion uses `npm run release:check -- --execute --full`. The
+Framework-owned gate includes the documentation package's complete source,
+semantic-evidence, coverage and hardening checks. Any refusal blocks qualification.
+Downstream project qualification and live owner acceptance remain separate.

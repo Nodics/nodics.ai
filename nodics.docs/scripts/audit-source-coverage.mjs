@@ -276,7 +276,8 @@ const semanticReview = !customScope && existsSync(semanticReviewPath)
     ? JSON.parse(readFileSync(semanticReviewPath, 'utf8')) : undefined;
 
 function isIgnored(pathValue) {
-    return pathValue.split(sep).some((segment) => ignoredSegments.has(segment));
+    return pathValue.split(sep).some((segment) => ignoredSegments.has(segment)) ||
+        /\/src\/(?:controller|facade|service)\/gen(?:\/|$)/.test(pathValue.split(sep).join('/'));
 }
 
 function walk(folder, visitor) {

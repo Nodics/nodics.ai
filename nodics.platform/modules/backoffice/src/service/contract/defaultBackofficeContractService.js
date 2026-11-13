@@ -188,10 +188,13 @@ module.exports = {
             "fixedFilters",
             "recoveryActions",
             "schemaDiscovery",
+            "ownerSelector",
           ].includes(key),
       )
     )
       return false;
+    if (presentation.ownerSelector !== undefined &&
+        !this.validateWorkspaceOwnerSelector(presentation.ownerSelector)) return false;
     if (presentation.schemaDiscovery !== undefined) {
       const discovery = presentation.schemaDiscovery;
       if (!discovery || typeof discovery !== "object" || Array.isArray(discovery) ||

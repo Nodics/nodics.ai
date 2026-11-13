@@ -1292,3 +1292,40 @@ Employee and Enterprise `backoffice.updateFields` reference the existing lifecyc
 ### Inspect-only credential and lockout schemas
 
 Profile exposes Credential metadata and Account lockout status for authorised inspection only. Their generated HTTP schemas admit search/read and refuse create/update/delete before persistence. These internal records have no public primary reference suitable for ordinary Workbench edits, and credential values remain excluded. Authentication, recovery, lockout and private credential-retirement owners retain their native persistence paths; this is not a new reset, unlock, import or grant mechanism. Customise labels through owner schema metadata, preserving this authority boundary. The publicIdentityLifecycleContract uses the actual authoring gate to protect it; live acceptance additionally checks visible controls and API refusals.
+
+## Ordinary native identity editing reference
+
+Generated human PATCH requests use the existing Profile management and update
+interceptor owners. Employee edits compare the original `authVersion`; Enterprise
+edits compare `updated`. Both counters remain domain-owned (`managed: false`).
+The Framework `enterpriseManagement.lifecycle` policy declares the ordinary
+editable fields and bounded principal/group inventory. Kickoff selects deployment
+inputs only. Login identity, grants, placement and security stamps are read-only;
+Employee creation uses the invitation owner; Enterprise creation retains its
+declared aggregate. Public physical removal of either retains history and refuses.
+
+An ordinary operator status change uses current persisted actor and group ancestry.
+Self-disable and native administrator status changes require their governed owner.
+Enterprise deactivation requires fresh Platform authority and an exclusive,
+nondefault native tenant. Complete preflight precedes normal generated session-stamp
+updates for Employees and Customers. Shared/default or linked contexts refuse.
+This is conservative ordered retirement, not a multi-record transaction: a partial
+failure can retire sessions while leaving the Enterprise active. Inspect state
+before another intent; never automatically retry or revive credentials.
+
+Generated command receipts use the existing private Profile journal when explicitly
+selected. They attribute the original actor/input and support inspection, not
+replay. Local qualification must separately verify allowed edits, protected/self/
+foreign/stale refusals, session retirement and normal access after reactivation.
+Run `publicIdentityLifecycleContract.test.js` with native session, scope and receipt
+regressions. Source tests alone do not qualify installed or distributed behavior.
+
+Enterprise deactivation events inspect remaining active enterprises using native
+system authority and a fresh bounded existence read. Missing or failed inventory
+holds tenant cleanup and peer notification; it never implies an empty tenant.
+Post-persistence failure requires command/status inspection before a new intent.
+See `test/tenantNamespaceBindingAdmissionContract.test.js`.
+
+Credential metadata and Account lockout status are inspect-only generated schema workspaces. Use Profile authentication/recovery and identity lifecycle owners to change protected state; no generic credential or lockout editor is advertised. See the inspect-only section of the [identity lifecycle contract](identity-access-lifecycle.md).
+
+The inspect-only credential and lockout views advertise Login ID for quick search. This is a Profile-owned presentation/query default; it adds no mutation or credential authority and never includes secret values in searchable fields.

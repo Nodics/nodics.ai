@@ -19,13 +19,13 @@ a read-only System content-pack query. CMS verifies the fixed BackOffice caller,
 pins the configured pack/release and delegates execution to nImport; installation
 does not submit approval or publish Online.
 
-The documentation section now selects metadata correction 0.0.3: the registry
-article's page counts match its existing 2,689-word source. Article bodies,
-navigation, routes and shared composition retain their selected bytes. The
-superseded 0.0.2 metadata/header bytes live under test fixtures; the shipping
-manifest selects one version of every canonical record. Its exact
-`docs-backoffice` baseline still requires normal installation, review and Online
-publication. Source validation grants none of those runtime states.
+The documentation section selects 0.0.5 with current operator admission and
+frozen reviewer guidance. Earlier release payloads remain in test fixtures;
+each historical assertion selects its exact version rather than following the
+moving predecessor. The shipping manifest selects one version of every
+canonical record. Its exact `docs-backoffice` baseline still requires normal
+installation, review and Online publication. Source validation grants none of
+those runtime states.
 
 Read [owner guidance](AGENTS.md) before changing behavior. Customize through the established later-loaded configuration, services, providers, schemas and runtime layers described in the guide; do not copy framework owners or bypass their invariants. Verification commands and their limits are retained in the guide. This documentation-only reorganization runs no behavioral tests or operations.
 
@@ -165,31 +165,4 @@ behavior without project-specific alias lists or weaker runtime admission. See
 
 ## Source-owned session recovery guidance
 
-`backofficeAxisPolicy.sessionRecoveryPresentation` supplies bounded inert
-`lockedMessage` and `expiredMessage` text through the effective Axis policy. The
-Framework defaults distinguish saved records and explicit checkpoints from
-unretained edits, and explain that an already submitted action may complete.
-Axis must hide protected data during lock/expiry, retain only the admitted return
-context and never replay a write after reauthentication. The presentation is
-resolved from layered source configuration, not copied into persisted policy
-updates. Older policy snapshots may omit it; malformed supplied text fails closed.
-Later layers may customize wording without changing authentication authority.
-
-Navigation decisions require observed version/checksum and exact draft identity. The first publication can roll back to live module defaults through the same owner. See [the lifecycle contract](llm/contracts/README.md#revision-fenced-navigation-lifecycle); runtime-scoped state is not durable release evidence.
-
-
-Persist readiness observations and startup review through the owning generated
-evidence schemas. Preserve fresh admission, actor/tenant/deployment/build bindings,
-expiry and explicit persistence failures; see [durable readiness](llm/contracts/backoffice-governance-contracts.md#durable-readiness-observations-and-startup-review).
-
-Readiness compares current registration with nConfig’s selected deployment graph. A gracefully deregistered owner remains a missing dependency; retained approval decisions cannot establish current Process availability. See [selected runtime readiness](llm/contracts/backoffice-governance-contracts.md#selected-runtime-readiness).
-
-Setup preparation can request nImport checkpointed continuation, retaining the full selected owner group and returning after one release. Original-actor owner receipts supply progress; BackOffice does not persist another setup execution or impersonate an operator. Older owners must advertise continuation support before this mode is sent. Publication submission remains separate.
-
-Governed repairs retain durable target claims and exact actor-scoped receipts. Restart never grants replay authority; only current owner authorization and verified evidence can close an uncertain result. See [durable repair intents](llm/contracts/backoffice-governance-contracts.md#durable-repair-intents-and-receipts).
-
-Memory registry observations preserve peer runtime membership. Multi-member deployments explicitly select the nCache-backed distributed lease store; catalogue reconciliation fences stale observations and preserves administrator decisions.
-
-The distributed lease store reuses decoded immutable records only after a fresh successful provider read returns identical bytes. `backofficeRegistry.store.maximumDecodedBytes` bounds retained serialized input (16 MiB default, 0 disables, at most 64 MiB); decoded objects add memory overhead. It never caches admission, expiry, availability or authorization. Independent member writes are observed immediately; unavailable providers fail closed. Extend through the existing store seam and retain the decoding/freshness and ownership regressions.
-
-Standard workflow copy belongs to this module in `src/service/localization/workflowMessages.json`. Its contribution exposes stable public-safe UI labels only, never records, permissions or internal errors. English definitions and Arabic reference values use the Localization contribution, draft, review, approval and release APIs; loading the module does not approve or publish translations. Later project layers may supply intentional scoped translations through the same owner workflow. Preserve exact message parameters, authorization and uncertainty guidance.
+See the [source-owned session recovery guidance reference](llm/contracts/backoffice-governance-contracts.md#source-owned-session-recovery-guidance-reference) for exact admission, failure and recovery boundaries.

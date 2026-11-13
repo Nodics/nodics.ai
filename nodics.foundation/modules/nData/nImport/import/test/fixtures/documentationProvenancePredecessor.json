@@ -73,5 +73,6 @@
       "sourceChecksum": "3eb99341cf2ac2fb185f73ddd9d8539e5e2e6463d2041b41f1d0340b25cb1b12",
       "sourceWordCount": 1441
     }
-  ]
+  ],
+  "successorSnapshot": "test/fixtures/documentationPolicyPredecessor"
 }

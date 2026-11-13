@@ -15,6 +15,7 @@
  * @layer test
  */
 import test from 'node:test';
+import { validateFrameworkSourceEvidence } from '../scripts/source-reference-evidence.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -39,64 +40,56 @@ const recoveredHistory = require('./fixtures/historicalOwnerReleases/provenance.
 for (const owner of owners) {
     const ownerRoot = path.join(root, owner);
     const fixture = require(path.join(ownerRoot, 'test/fixtures/documentationSemanticPredecessor.json'));
-    // The later composition-only successor retains these exact article payloads.
-    // Keep the original editorial release regression bound to its recorded selection.
-    const selected = owner === 'nodics.docs'
-        ? require('./fixtures/documentationCompositionBefore003.json').sections.documentation
-        : require(path.join(ownerRoot, 'data/manifest.json')).sections.documentation;
-    const historyRoot = [
-        'nodics.commerce/modules/fulfillment/modules/fulfillmentCore',
-        'nodics.commerce/modules/baseCommerce/modules/promotion'
-    ].includes(owner)
-        ? path.join(root, 'nodics.docs/test/fixtures/historicalOwnerReleases', owner) : undefined;
-    const provenancePredecessor = owner.endsWith('/digitalCore')
-        ? require(path.join(ownerRoot, 'test/fixtures/documentationProvenancePredecessor.json')).sections.documentation : undefined;
-    const historicalSelected = provenancePredecessor || (historyRoot
-        ? require(path.join(historyRoot, 'data/manifest.json')).sections.documentation : selected);
+    const active = require(path.join(ownerRoot, 'data/manifest.json')).sections.documentation;
+    const historyRoot = path.join(root, 'nodics.docs/test/fixtures/historicalOwnerReleases', owner);
+    const recorded = recoveredHistory.owners.find(row => row.owner === owner);
+    const selected = require(path.join(historyRoot, 'data/manifest.json')).sections.documentation;
     const historicalFile = file => {
-        if (historyRoot) return path.join(historyRoot, 'data', file);
-        const predecessor = path.join(ownerRoot, 'test/fixtures/unreleasedPredecessor', file);
-        return owner === 'nodics.docs' && fs.existsSync(predecessor) ? predecessor : path.join(ownerRoot, 'data', file);
+        const predecessor = path.join(historyRoot, 'predecessor', file);
+        return fs.existsSync(predecessor) ? predecessor : path.join(historyRoot, 'data', file);
     };
     const groups = {};
     for (const kind of ['Node', 'PageMetadata', 'SearchMetadata', 'Component', 'Page', 'Route', 'PublicationState']) {
         const file = Object.keys(selected.generatedHashes).find(file => file.endsWith(kind + 'Data.js'));
-        groups[kind] = Object.values(require(path.join(ownerRoot, 'data', file)));
+        groups[kind] = Object.values(require(path.join(historyRoot, 'data', file)));
     }
-    for (const row of groups.Component) if (row.properties?.blocks) articles.set(row.properties.code, row.properties);
-    releases.set(owner, groups);
+    // Current semantic claims read current records, never frozen historical content.
+    const activeGroups = {};
+    for (const kind of ['Node', 'PageMetadata', 'SearchMetadata', 'Component', 'Page', 'Route', 'PublicationState']) {
+        const file = Object.keys(active.generatedHashes).find(file => file.endsWith(kind + 'Data.js'));
+        activeGroups[kind] = Object.values(require(path.join(ownerRoot, 'data', file)));
+    }
+    for (const row of activeGroups.Component) if (row.properties?.blocks) articles.set(row.properties.code, row.properties);
+    releases.set(owner, activeGroups);
+    const historicalArticles = new Map(groups.Component.filter(row => row.properties?.blocks)
+        .map(row => [row.properties.code, row.properties]));
 
     test(owner + ': immutable predecessor and exactly sealed semantic successor', () => {
-        if (historyRoot) {
-            assert.equal(recoveredHistory.revision, '00ad4b6b9375f40873079be97f5afcc030cc9ce5');
-            const recorded = recoveredHistory.owners.find(row => row.owner === owner);
-            assert.equal(contract.sha256(fs.readFileSync(path.join(historyRoot, 'data/manifest.json'))), recorded.manifestSha256);
-        }
-        assert.equal(historicalSelected.version, fixture.successorVersion);
-        if (owner !== 'nodics.docs') assert.equal(historicalSelected.releaseChecksum, fixture.successorChecksum);
-        for (const [file, hash] of Object.entries(fixture.section.generatedHashes)) {
+        assert.equal(recoveredHistory.revision, '00ad4b6b9375f40873079be97f5afcc030cc9ce5');
+        assert.equal(contract.sha256(fs.readFileSync(path.join(historyRoot, 'data/manifest.json'))), recorded.manifestSha256);
+        assert.equal(selected.version, fixture.successorVersion);
+        if (recorded.reconciliation) {
+            assert.equal(fixture.successorChecksum, recorded.reconciliation.originalReceiptChecksum);
+            assert.notEqual(recorded.reconciliation.originalReceiptChecksum, recorded.reconciliation.committedChecksum);
+            assert.equal(selected.releaseChecksum, recorded.reconciliation.committedChecksum);
+        } else assert.equal(selected.releaseChecksum, fixture.successorChecksum);
+        for (const [file, hash] of Object.entries(fixture.section.generatedHashes))
             assert.equal(contract.sha256(fs.readFileSync(historicalFile(file))), hash, file);
-        }
-        for (const [file, hash] of Object.entries(historicalSelected.generatedHashes))
-            assert.equal(contract.sha256(fs.readFileSync(provenancePredecessor && fs.existsSync(path.join(ownerRoot, 'test/fixtures/documentationProvenancePredecessor', file))
-                ? path.join(ownerRoot, 'test/fixtures/documentationProvenancePredecessor', file)
-                : path.join(historyRoot || ownerRoot, 'data', file))), hash, file);
-        assert.equal(historicalSelected.releaseChecksum, contract.releaseChecksum(historicalSelected.generatedHashes));
-        // The active unreleased v001 baseline has its own exact shipping seals.
         for (const [file, hash] of Object.entries(selected.generatedHashes))
-            assert.equal(contract.sha256(fs.readFileSync(path.join(ownerRoot, 'data', file))), hash, file);
+            assert.equal(contract.sha256(fs.readFileSync(path.join(historyRoot, 'data', file))), hash, file);
         assert.equal(selected.releaseChecksum, contract.releaseChecksum(selected.generatedHashes));
-        if (owner !== 'nodics.docs') {
-            assert.equal(contract.validateGeneration(fixture.section, historicalSelected), historicalSelected);
-            assert.throws(() => contract.validateGeneration(fixture.section, {...historicalSelected, version: fixture.section.version}));
-        }
+        for (const [file, hash] of Object.entries(active.generatedHashes))
+            assert.equal(contract.sha256(fs.readFileSync(path.join(ownerRoot, 'data', file))), hash, file);
+        assert.equal(active.releaseChecksum, contract.releaseChecksum(active.generatedHashes));
+        assert.equal(contract.validateGeneration(fixture.section, selected), selected);
+        assert.throws(() => contract.validateGeneration(fixture.section, {...selected, version: fixture.section.version}));
         assert.deepEqual(selected.includes, fixture.section.includes);
         assert.deepEqual(selected.referenceCatalogues, fixture.section.referenceCatalogues);
         assert.equal(selected.pages, fixture.section.pages);
         assert.equal(selected.destinationRole, 'WCMS_STAGED');
         assert.equal(selected.initialPublicationPolicy, 'ADMIN_INITIATED');
         if (owner === 'nodics.docs') {
-            const foundation = require(path.join(ownerRoot, 'data/manifest.json')).sections.foundation;
+            const foundation = require(path.join(historyRoot, 'data/manifest.json')).sections.foundation;
             assert.deepEqual(foundation.generatedHashes, selected.generatedHashes);
             assert.equal(foundation.releaseChecksum, selected.releaseChecksum);
             assert.deepEqual(foundation.includes, []);
@@ -105,7 +98,10 @@ for (const owner of owners) {
 
     test(owner + ': stable identities, exact metadata and unpublished target seals', () => {
         for (const previous of fixture.previousArticles) {
-            const p = articles.get(previous.id);
+            const p = historicalArticles.get(previous.id);
+            const current = articles.get(previous.id);
+            assert.ok(current, previous.id + ': current identity retained');
+            assert.equal(current.route, previous.route);
             assert.ok(p, previous.id);
             assert.equal(p.route, previous.route);
             assert.deepEqual(p.headings.map(({anchor, level}) => ({anchor, level})),
@@ -113,7 +109,7 @@ for (const owner of owners) {
             assert.deepEqual(p.headings, p.blocks.filter(block => block.kind === 'heading')
                 .map(({text, anchor, level}) => ({text, anchor, level})));
             const correction = fixture.corrections.find(row => row.id === p.code);
-            assert.equal(contract.sha256(JSON.stringify(p.blocks)), correction?.articleBlocksSha256 || previous.blocksSha256);
+            assert.equal(contract.sha256(JSON.stringify(p.blocks)), recorded.reconciliation?.articleBlockCorrections?.[p.code] || correction?.articleBlocksSha256 || previous.blocksSha256);
             const body = contract.documentationText(p.blocks);
             const candidates = [body, '# ' + p.title + '\n\n' + body, JSON.stringify(p.blocks)];
             assert.ok(candidates.some(text => contract.sha256(text) === p.source.checksum), p.code);
@@ -129,14 +125,16 @@ for (const owner of owners) {
             assert.deepEqual(meta.sourceEvidence, p.sourceEvidence);
             assert.ok([body, '# ' + p.title + '\n\n' + body].some(text => contract.countWords(text) === p.source.wordCount));
             for (const source of p.sourceEvidence)
-                assert.ok(fs.existsSync(path.resolve(ownerRoot, source)), source);
+                assert.match(recorded.historicalSourceEvidence[source]?.sha256 || '', /^[a-f0-9]{64}$/, source);
+            for (const evidence of current.sourceEvidence) validateFrameworkSourceEvidence({ frameworkRoot: root, ownerRoot,
+                document: { id: current.code, blocks: current.blocks }, evidence });
             const search = groups.SearchMetadata.find(row => row.targetCode === meta.code);
             assert.equal(search.searchText, p.searchText, p.code + ': exact canonical search projection');
         }
         const targets = new Map();
         for (const file of Object.keys(selected.generatedHashes).filter(file =>
             file.includes('/records/') && file.endsWith('Data.js') && !file.endsWith('PublicationStateData.js')))
-            for (const row of Object.values(require(path.join(ownerRoot, 'data', file)))) targets.set(row.code, row);
+            for (const row of Object.values(require(path.join(historyRoot, 'data', file)))) targets.set(row.code, row);
         for (const state of groups.PublicationState) {
             assert.ok(targets.has(state.targetCode), state.targetCode);
             assert.equal(state.checksum, contract.sha256(JSON.stringify(targets.get(state.targetCode))));

@@ -19,7 +19,7 @@ Do not implement APIs outside that contract without updating the action ledger
 first.
 
 Detailed module documentation is maintained in
-[../../../nodics.platform/modules/installer/data/docs-v003/records/documentation/installerDocumentationComponentData.js](data/docs-v003/records/documentation/installerDocumentationComponentData.js).
+[../../../nodics.platform/modules/installer/data/docs-v005/records/documentation/installerDocumentationComponentData.js](data/docs-v005/records/documentation/installerDocumentationComponentData.js).
 
 ## Responsibilities
 

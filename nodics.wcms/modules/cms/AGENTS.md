@@ -124,5 +124,10 @@ access override or return private manifest identities.
 
 Frozen documentation approval reviews include bounded plain-text article blocks and before/after content from the immutable snapshots. Unknown blocks and truncation are explicit; arbitrary source fields and provider URLs are excluded. Existing current-task, tenant, enterprise, reviewer and publication revision checks remain mandatory. The source correction is documented in CMS documentation release 0.0.3; installation and Online approval remain separate.
 
+For a pending site baseline without an explicit catalog, resolve the review catalog
+only from its single exact frozen Site dependency. Verify code and version; reject
+missing, ambiguous or conflicting evidence. Never update the immutable approval
+context or read latest authoring content to fill this projection.
+
 
 A selected page can restore its exact predecessor even when that predecessor was published as part of a larger Site release. The Online owner verifies the current pointer and its previous-manifest lineage inside the transaction, restores only the selected delivery scope and preserves sibling routes. It rejects a stale pointer, missing route, different Site or unrelated predecessor. Review of older Site releases without a catalog field uses the exact frozen Site dependency to prove catalog ownership; a latest authoring read cannot supply that proof.

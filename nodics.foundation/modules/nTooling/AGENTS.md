@@ -1,5 +1,11 @@
 # nTooling Agent Contract
 
+Full Framework release qualification must execute `npm --prefix nodics.docs test`
+through the existing configured release gate. Documentation governance alone does
+not verify immutable content, source-editorial evidence or navigation seals.
+Preserve failure propagation and the focused release-command regression; customer
+projects must not copy this Framework-owned gate.
+
 Unreleased shipping data uses owner-specific v001 with no retained-root snapshots.
 `DefaultProjectDataManifestService.validateUnreleasedBaseline` owns reusable
 read-only checks for framework and customer roots. Preserve semantic versions and exact forward release pins for Init/Core/Sample,

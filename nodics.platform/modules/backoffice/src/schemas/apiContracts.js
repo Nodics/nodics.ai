@@ -473,10 +473,25 @@ const navigationWorkbenchDetailSection = {
     order: { type: "integer" },
   },
 };
+const backendWorkspaceOwnerSelector = {
+  type: "object",
+  additionalProperties: false,
+  minProperties: 1,
+  properties: {
+    runtimeRoleCode: {
+      type: "string",
+      minLength: 1,
+      maxLength: 64,
+      pattern: "^[A-Z][A-Z0-9_]{0,63}$",
+    },
+    publicationRole: { enum: ["STAGED", "ONLINE", "OPERATIONAL"] },
+  },
+};
 const navigationWorkbenchPresentation = {
   type: "object",
   additionalProperties: false,
   properties: {
+    ownerSelector: backendWorkspaceOwnerSelector,
     schemaDiscovery: {
       type: "object",
       additionalProperties: false,
@@ -897,20 +912,6 @@ const backendWorkspaceSection = {
       },
     },
   ],
-};
-const backendWorkspaceOwnerSelector = {
-  type: "object",
-  additionalProperties: false,
-  minProperties: 1,
-  properties: {
-    runtimeRoleCode: {
-      type: "string",
-      minLength: 1,
-      maxLength: 64,
-      pattern: "^[A-Z][A-Z0-9_]{0,63}$",
-    },
-    publicationRole: { enum: ["STAGED", "ONLINE", "OPERATIONAL"] },
-  },
 };
 const enterpriseSetupTaskLabels = [
   "title",

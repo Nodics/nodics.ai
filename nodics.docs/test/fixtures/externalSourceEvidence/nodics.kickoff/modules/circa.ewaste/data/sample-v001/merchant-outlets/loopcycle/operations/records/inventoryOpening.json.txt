@@ -1,0 +1,16 @@
+{
+  "contractVersion": 1,
+  "receipts": [
+    {
+      "code": "opening-circa-local-recycled-accessories-v001",
+      "storeCode": "loopcycle-accessories",
+      "locale": "en",
+      "warehouseCode": "circaLocalLoopCycleWarehouse",
+      "productCode": "CIRCA_LOCAL_RECYCLED_ACCESSORIES",
+      "variantCode": "CIRCA_LOCAL_RECYCLED_ACCESSORIES_VARIANT",
+      "sku": "CIRCA_LOCAL_RECYCLED_ACCESSORIES_SKU",
+      "quantity": "100",
+      "referenceCode": "CIRCA-LOCAL-OUTLET-OPENING-001"
+    }
+  ]
+}

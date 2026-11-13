@@ -1,0 +1,41 @@
+{
+  "name": "nodics.circa.eWaste",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Nodics Circa eWaste customer recycling and circular asset storefront.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "test": "vitest run",
+    "typecheck": "tsc -b",
+    "verify": "npm run typecheck && npm run test && npm run build",
+    "test:live": "node test/live/customer-journey.mjs",
+    "test:live:read-only-guard": "node --test test/live/support/read-only-guard.contract.mjs",
+    "test:live:mobile-catalogue-contract": "node test/live/mobile-catalogue-contract.mjs",
+    "test:live:retained-data": "npm run test:live:read-only-guard && node test/live/retained-data-closeout.mjs"
+  },
+  "dependencies": {
+    "@nodics/location-map-ui": "file:vendor/nodics-location-map-ui-0.0.1.tgz",
+    "@vitejs/plugin-react": "^5.0.0",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.468.0",
+    "mapbox-gl": "^3.30.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.0",
+    "@types/leaflet": "^1.9.20",
+    "@types/node": "^26.2.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "jsdom": "^26.1.0",
+    "vitest": "4.1.11"
+  }
+}

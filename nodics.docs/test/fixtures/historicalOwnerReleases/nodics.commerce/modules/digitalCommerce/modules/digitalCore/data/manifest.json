@@ -1,0 +1,315 @@
+{
+  "contractVersion": 2,
+  "module": "digitalCore",
+  "sections": {
+    "giftExpirySchedule": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Inactive gift expiry schedule",
+      "description": "Explicit inactive Cron-owned whole-gift expiry and interrupted release recovery; no activation.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "CRON",
+      "installer": "CRON_JOB",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/jobs/digitalGiftExpiryJobData.js": "035aef998067c4134d2dbca4a2b5e2296e8a15b9c6ec2e6dc4295dcf4f56587e",
+        "init-v001/headers/jobs/digitalGiftExpiryJobHeader.js": "53555262f7cb0195a3e4fcac11372e51f2187b774568a261ea85d646853e3fe7"
+      }
+    },
+    "bundleParticipantPermissions": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Digital bundle participant permissions",
+      "description": "Digital-owned permission required to compose, gift and publish self-owned bundles.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v002",
+      "files": {
+        "init-v002/headers/identity/digitalBundleParticipantPermissionHeader.js": "ef1432d6765dcc76679299a91f417442b889a34af2190e6130a2fd6c0ca80b97",
+        "init-v002/records/identity/digitalBundleParticipantPermissionData.js": "022b3b84383c0b9330586b63611893baa4ae8fd9d7fc558687ffe2089fcdb545"
+      }
+    },
+    "bundleRuntimePermissions": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Digital bundle runtime permissions",
+      "description": "Digital-owned service permission for retained bundle publication proof consumed by Product Staged.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v003",
+      "files": {
+        "init-v003/headers/identity/digitalBundleRuntimePermissionHeader.js": "f1f1d4375b6c18c0fb073644dbd03f76062dfd86408d7a93a28cba4637ea5726",
+        "init-v003/records/identity/digitalBundleRuntimePermissionData.js": "dd614102da54124c3743f6819190e373ed2eb071262c6c827efe5171d9e7ef4d"
+      }
+    },
+    "participantAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Digital bundle participant access groups",
+      "description": "Customer participation group for self-owned Digital bundle composition, gifting and publication.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v002",
+      "files": {
+        "init-v002/headers/identity/digitalBundleParticipantUserGroupHeader.js": "86f1b05cc40f404b2044508891283a8c348a9295396625554a5c04658a17a888",
+        "init-v002/records/identity/digitalBundleParticipantUserGroupData.js": "0e197b9bb89bf78d2ed5a6d958dc463c20ba523a684618135ff21e5858f37759"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.3",
+          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "bundleParticipantPermissions",
+          "version": "0.0.1",
+          "checksum": "df311ce222f297af63a848a13fb52c21e7b89592002ad442362cf5b775074c0a",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "digitalCore permissionCatalogue",
+      "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/digitalCorePermissionHeader.js": "0651a0f19a442c4052e40d13358e51b6123a6d5bb33ade62ea874e8df5b49852",
+        "init-v001/records/identity/digitalCorePermissionData.js": "705e848b0a1eef2103b4627b0e82dd144e17b75c6e70aacbbc12fd60293dfe5e"
+      }
+    },
+    "accessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.3",
+      "displayName": "digitalCore accessGroups",
+      "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/digitalCoreUserGroupHeader.js": "d56d8f6161c106b2c650ffef671baef3f670370e87326ab4e9000e874aef7855",
+        "init-v001/records/identity/digitalCoreUserGroupData.js": "53ce2b277514871beb8d8edcc6da33043b3655bfb8d52cb39a6eeba24a3ae210"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.3",
+          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "ab53220ee38bb003b43e3f1ed0723afe8499523a31429abd96ddcc3c328b152a",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "store",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "a4989b176f5eb13747bbca9d31972e4e6525e04269d25246f40c756c549b60d3",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "enterpriseRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.3",
+      "displayName": "digitalCore enterpriseRoles",
+      "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/digitalCoreEnterpriseRoleHeader.js": "624ae95ec65821e72bf357fca455bb789a688add1b723eb279b5398dc928979e",
+        "init-v001/records/identity/digitalCoreEnterpriseRoleData.js": "e1a5c18a29dc09126f4baf9b686d616d4c5c33d0881815f073a8abbc1f772673"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "accessGroups",
+          "version": "0.0.3",
+          "checksum": "78b57ae4a3fccd2cb2e0cbe6579afa3821b839d63acf2ea2ee7c7c8e74b18ddf"
+        }
+      ]
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v002",
+      "pack": "digitalCore",
+      "version": "0.0.3",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v002/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "4a38621da07c0e7af00baa79d81775c09888eea8c53e57697b213885f992c63d",
+      "generatedHashes": {
+        "docs-v002/records/documentation/digitalCoreDocumentationRelease003NodeData.js": "bee395fa1f3b7d21460220136c6c431b75b5aa5e44c00d8bfb48921d52236864",
+        "docs-v002/records/documentation/digitalCoreDocumentationRelease003PageMetadataData.js": "de7044875a7f5d4e9124c31ef275b2292a4d5448eaeea8ca0ffcc2ce992250d7",
+        "docs-v002/records/documentation/digitalCoreDocumentationRelease003SearchMetadataData.js": "bf457042cd67520c3cd3cb41ec0c2dca7ebc6b1fa090fece294a88dd58fc4fc0",
+        "docs-v002/records/documentation/digitalCoreDocumentationRelease003ComponentData.js": "12e80c2b16fcda8002482a5987a98aeb1821a65c070ae18d5b49decfa52e5eaa",
+        "docs-v002/records/documentation/digitalCoreDocumentationRelease003PageData.js": "9f2485cdb58717e2dca9f43db0be0f1f789a4a0a074391e9efeabc26b3585b0e",
+        "docs-v002/records/documentation/digitalCoreDocumentationRelease003RouteData.js": "35a9c5f624afad6ba75341cc6348f1736109ca2a792714cb7095313136a134a4",
+        "docs-v002/records/documentation/digitalCoreDocumentationRelease003PublicationStateData.js": "38ebb4660ad2dbd941db662d34aa048470cb1683067fa260bf66f66a6c73b4b7",
+        "docs-v002/headers/100_digitalCoreDocumentationRelease003ContentPackHeader.js": "eefe405174cdf5d1de99e5e7946702da132bb08447a07e7df1f43608076280b3"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ],
+      "referenceCatalogues": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "promotion",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/baseCommerce/modules/promotion/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "cart",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/checkout/modules/cart/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "fulfillmentCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        }
+      ]
+    }
+  }
+}

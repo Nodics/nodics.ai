@@ -1,0 +1,25 @@
+digraph Network {
+  graph [rankdir=TB, bgcolor="#ffffff", pad="0.4", nodesep="0.4", ranksep="0.5", fontname="Helvetica", label="Collection record relationships: source templates, not live inventory", labelloc=t, fontsize=20];
+  node [shape=box, style="rounded,filled", fillcolor="#f3f4f6", color="#64748b", fontname="Helvetica", fontsize=12, margin="0.18,0.12"];
+  edge [color="#475569", fontname="Helvetica", fontsize=10];
+  default [label="Profile: default\nPLATFORM_OWNER", fillcolor="#ccfbf1"];
+  operator [label="Profile: NODICS_WASTE_MANAGEMENT_CO\nProgramme / collection operator", fillcolor="#ccfbf1"];
+  owner [label="Profile: BEAH_RECYCLING_SERVICES\nInfrastructure-owner reference", fillcolor="#fef3c7"];
+  original [label="3 original Circa points\ncc-dxb-01 / 02 / 03"];
+  shared [label="17 shared Waste Collection points\nSeparate setup packages"];
+  sunmarke [label="1 optional Sunmarke point\nSeparately selectable sections"];
+  location [label="Location record\nCoordinates + sourceRef back to point"];
+  address [label="Profile Address record\nLocation.addressRef"];
+  staff [label="Profile employee / membership / groups\nExplicit resource scope, not enterprise role inheritance"];
+  mismatch [label="Source allocation caveat\nCentre staff scopes target shared You&Co\nunder default enterprise context; reconcile before activation", shape=note, fillcolor="#fee2e2"];
+  default -> original [label="operatorEnterpriseRef"];
+  default -> sunmarke [label="operatorEnterpriseRef"];
+  operator -> shared [label="operatorEnterpriseRef"];
+  owner -> shared [label="assetOwnerEnterpriseRef"];
+  original -> location [label="locationRef"];
+  shared -> location;
+  sunmarke -> location;
+  location -> address;
+  staff -> shared [style=dashed, label="qualified target-specific scope"];
+  staff -> mismatch [style=dashed];
+}

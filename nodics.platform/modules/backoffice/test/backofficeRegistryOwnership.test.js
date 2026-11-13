@@ -41,6 +41,14 @@ function provider() {
             for (const key of [...records.keys()]) if (key.startsWith(MATCH.slice(0, -1)) && read(key)) yield key;
         },
         eval: async (script, { keys, arguments: args }) => {
+            if (script.includes('-- backoffice-registry-unchanged-renewal')) {
+                assert(script.includes('redis.call("TIME")'));
+                assert(script.includes('redis.call("GET", KEYS[1]) ~= ARGV[1]'));
+                if (read(keys[0]) !== args[0] || Number(args[1]) <= Date.now() || Number(args[3]) <= Date.now()) return 0;
+                records.set(keys[0], { value: args[2], expiresAt: Number(args[3]) });
+                records.set(keys[1], { value: args[4], expiresAt: Infinity });
+                return 1;
+            }
             if (script.includes('-- backoffice-registry-admission')) {
                 assert(script.includes('redis.call("GET", KEYS[2])'));
                 assert(script.includes('redis.call("SET", KEYS[1], ARGV[2], "PX", ARGV[3])'));
@@ -95,6 +103,38 @@ function fixture(mode) {
 }
 
 for (const mode of ['memory', 'distributed']) {
+    test(`${mode}: identical authorized heartbeats renew without registry scans; changed metadata uses full admission`, async () => {
+        const f = fixture(mode), a = f.replica();
+        await a.registry.register(f.request('a'));
+        let validations = 0;
+        const originalValues = a.store.values.bind(a.store);
+        a.store.values = async () => { validations++; return originalValues(); };
+        for (let i = 0; i < 40; i++) await a.registry.register(f.request('a'));
+        assert.equal(validations, 0, 'unchanged renewals must not scan the whole registry');
+        await a.registry.register(f.request('a', 'a', 'ONLINE', { version: 'new-version' }));
+        if (mode === 'distributed') assert.equal(validations, 1);
+        await assert.rejects(a.registry.register(f.request('b')), /Duplicate functional/);
+        const entries = await originalValues();
+        assert.equal(entries.length, 1);
+        assert.equal(entries[0].value.version, 'new-version');
+    });
+
+    test(`${mode}: a later-layer admission change rejects an otherwise identical renewal`, async () => {
+        const f = fixture(mode), a = f.replica();
+        await a.registry.register(f.request('a'));
+        const before = (await a.store.values())[0].value;
+        a.registry.assertAuthorityClaimsAvailable = () => { throw new Error('Changed layered admission policy'); };
+        await assert.rejects(a.registry.register(f.request('a')), /Changed layered admission policy/);
+        assert.deepEqual((await a.store.values())[0].value, before);
+    });
+
+    test(`${mode}: a customized logical authority helper retains full admission on renewal`, async () => {
+        const f = fixture(mode), a = f.replica();
+        await a.registry.register(f.request('a'));
+        a.registry.getLogicalRuntimeAuthorityKey = () => { throw new Error('Layered logical authority'); };
+        await assert.rejects(a.registry.register(f.request('a')), /Layered logical authority/);
+    });
+
     test(`${mode}: concurrent distinct servers admit one owner; same-server replicas and renewals survive`, async () => {
         const f = fixture(mode);
         const a = f.replica(), b = f.replica();
@@ -184,6 +224,46 @@ for (const mode of ['memory', 'distributed']) {
         assert((await b.store.values()).some(item => item.value.server === 'b'));
     });
 }
+
+test('distributed: renewal cannot overwrite a changed, deleted or just-expired provider lease', async () => {
+    for (const change of ['changed', 'deleted', 'expired']) {
+        const f = fixture('distributed'), a = f.replica();
+        await a.registry.register(f.request('a'));
+        const [entry] = await a.store.values();
+        const originalEval = f.client.eval;
+        f.client.eval = async (script, options) => {
+            if (script.includes('-- backoffice-registry-unchanged-renewal')) {
+                const key = a.store.getStorageKey(entry.key);
+                if (change === 'deleted') f.client.records.delete(key);
+                else {
+                    const record = f.client.records.get(key);
+                    if (change === 'changed') record.value = JSON.stringify({ ...entry.value, endpoint: 'http://localhost:9999' });
+                    else record.expiresAt = Date.now() - 1;
+                }
+            }
+            return originalEval(script, options);
+        };
+        assert.equal(await a.store.renewUnchanged(entry.key, { ...entry.value, expiresAt: Date.now() + 60000 }, 60000), false);
+        if (change === 'changed') assert.equal((await a.store.get(entry.key)).endpoint, 'http://localhost:9999');
+        else assert.equal(await a.store.get(entry.key), undefined);
+    }
+});
+
+test('distributed: renewal advances the ownership revision and unknown metadata cannot take the fast path', async () => {
+    const f = fixture('distributed'), a = f.replica();
+    await a.registry.register(f.request('a'));
+    const [entry] = await a.store.values();
+    const revisionKey = a.store.getStorageKey('$revision');
+    const previousRevision = await f.client.get(revisionKey);
+    assert.equal(await a.store.renewUnchanged(entry.key, { ...entry.value, expiresAt: Date.now() + 60000 }, 60000), true);
+    assert.notEqual(await f.client.get(revisionKey), previousRevision);
+    const current = await a.store.get(entry.key);
+    for (const change of [{ authorityClaims: [{ kind: 'schema' }] }, { runtimeRole: { publication: 'STAGED' } }, { newOwnerField: true }, { registeredAt: 'different' }]) {
+        assert.equal(await a.store.renewUnchanged(entry.key, { ...current, ...change }, 60000), false);
+    }
+    f.client.get = async () => { throw new Error('provider offline'); };
+    await assert.rejects(a.store.renewUnchanged(entry.key, current, 60000), /provider offline/);
+});
 
 test('distributed: provider without atomic admission fails closed and never writes', async () => {
     const f = fixture('distributed'), a = f.replica();

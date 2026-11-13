@@ -105,6 +105,21 @@ module.exports = {
         return this.sameTarget(snapshot, target) && snapshot.page ? snapshot : undefined;
     },
 
+    /** Resolves a site's review catalog from its single frozen root dependency without changing the approval context. */
+    reviewCatalog: async function (publication, manifests, request) {
+        if (this.identity(publication.catalogCode)) return publication.catalogCode;
+        if (publication.catalogCode !== undefined || publication.rootType !== 'site' ||
+            publication.rootCode !== publication.siteCode) this.deny();
+        const sites = (publication.dependencies || []).filter(item =>
+            item.schema === 'cmsSite' && item.code === publication.siteCode);
+        if (sites.length !== 1 || !/^\d+$/.test(String(sites[0].version))) this.deny();
+        const site = await manifests.load(sites[0], request);
+        const catalog = typeof site.catalog === 'string' ? site.catalog : site.catalog?.code;
+        if (site.code !== publication.siteCode || String(site.versionId) !== String(sites[0].version) ||
+            !this.identity(catalog)) this.deny();
+        return catalog;
+    },
+
     /** Reconciles a legacy site release only against its exact frozen Site catalog, never a latest authoring read. */
     baselineCatalogMatches: async function (publication, predecessor, manifest, manifests, request) {
         if (predecessor.catalogCode !== undefined) return predecessor.catalogCode === publication.catalogCode;
@@ -290,8 +305,9 @@ module.exports = {
             ...SERVICE.DefaultIdentityGovernanceService.getSystemAuthData() } };
         const publication = await this.publication(context, instanceCode, scope, read);
         const manifests = provider.manifests();
+        const catalogCode = await this.reviewCatalog(publication, manifests, read);
         const snapshot = await manifests.buildSnapshot(publication, read);
-        const baseline = await this.baseline(publication, snapshot, provider, manifests, read);
+        const baseline = await this.baseline({ ...publication, catalogCode }, snapshot, provider, manifests, read);
         const placements = await manifests.publicationExperiencePlacements(publication, snapshot, read);
         const budget = { remaining: 160000, components: 300, truncated: false };
         const routes = [];
@@ -307,7 +323,7 @@ module.exports = {
         const media = manifests.publicationMediaCodes(publication, snapshot);
         return {
             contractVersion: 1, publicationCode: publication.code, sourceVersion: publication.sourceVersion,
-            revision: publication.revision, taskCode, instanceCode, catalogCode: publication.catalogCode,
+            revision: publication.revision, taskCode, instanceCode, catalogCode,
             prerequisites: { validated: publication.validation?.valid === true,
                 dependencyCount: dependencies.length,
                 dependencies: dependencies.slice(0, 100).map(({ schema, code, version }) => ({ schema, code, version })),

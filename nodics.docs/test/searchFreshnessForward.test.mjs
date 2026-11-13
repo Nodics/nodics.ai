@@ -14,7 +14,10 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import path from 'node:path';import {createRequire} from 'node:module';import {fileURLToPath} from 'node:url';
 const require=createRequire(import.meta.url),root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..'),contract=require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService');
 for(const [owner,changedId] of [['nodics.foundation/modules/nCache/cache','cache.runtime-state-management'],['nodics.copilot/modules/copilotKnowledge','copilot.knowledge-generation-recovery']])test(owner+': search freshness advances immutable documentation without unrelated edits',()=>{
- const dir=path.join(root,owner),fixture=require(path.join(dir,'test/fixtures/documentationSearchPredecessor.json')),previous=fixture.sections.documentation,current=require(path.join(dir,'data/manifest.json')).sections.documentation;
+ const dir=path.join(root,owner),fixture=require(path.join(dir,'test/fixtures/documentationSearchPredecessor.json')),previous=fixture.sections.documentation,active=require(path.join(dir,'data/manifest.json')).sections.documentation;
+ // Cache's later composition-only successor preserves this exact search-content release.
+ const current=owner.endsWith('/cache')?require(path.join(dir,'test/fixtures/documentationCompositionBefore003.json')).sections.documentation:active;
+ assert.deepEqual(active.generatedHashes,current.generatedHashes);assert.equal(active.releaseChecksum,current.releaseChecksum);
  const oldFile=p=>{const frozen=path.join(dir,'test/fixtures/documentationSearchPredecessor',p);return fs.existsSync(frozen)?frozen:path.join(dir,'data',p);},newFile=p=>path.join(dir,'data',p);
  assert.equal(current.version,fixture.successorVersion);contract.validateGeneration(previous,current);assert.throws(()=>contract.validateGeneration(previous,{...current,version:previous.version}));
  for(const [p,h]of Object.entries(previous.generatedHashes))assert.equal(contract.sha256(fs.readFileSync(oldFile(p))),h);for(const [p,h]of Object.entries(current.generatedHashes))assert.equal(contract.sha256(fs.readFileSync(newFile(p))),h);assert.equal(contract.releaseChecksum(current.generatedHashes),current.releaseChecksum);

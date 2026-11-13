@@ -3268,7 +3268,7 @@ module.exports = {
         },
         "docs-cache": {
           "contentPackCode": "cacheDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3289,7 +3289,7 @@ module.exports = {
         },
         "docs-import": {
           "contentPackCode": "importDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3380,7 +3380,7 @@ module.exports = {
         },
         "docs-installer": {
           "contentPackCode": "installerDocumentation",
-          "releaseVersion": "0.0.4",
+          "releaseVersion": "0.0.5",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3394,7 +3394,7 @@ module.exports = {
         },
         "docs-cronjob": {
           "contentPackCode": "cronjobDocumentation",
-          "releaseVersion": "0.0.4",
+          "releaseVersion": "0.0.5",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3422,7 +3422,7 @@ module.exports = {
         },
         "docs-media": {
           "contentPackCode": "mediaDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"

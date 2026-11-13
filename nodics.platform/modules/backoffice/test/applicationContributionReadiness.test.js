@@ -156,7 +156,10 @@ function phasedFixture(t) {
   const state = { ownerReady: true, afterStatus: undefined, postInstallStatus: undefined,
     postInstallMedia: undefined, afterBaseline: undefined };
   const calls = [];
-  global.SERVICE = { DefaultModuleService: { invokeModule: async (input) => {
+  // This suite exercises preparation/observation for an admitted operator.
+  // Canonical actor denial is covered independently by initializationActionPresentation.
+  global.SERVICE = { DefaultBackofficeAdministrativeSecurityService: { allowsRouteAction: () => true },
+    DefaultModuleService: { invokeModule: async (input) => {
     if (input.moduleName === "import") {
       assert.equal(input.header.Authorization, request.httpRequest.headers.authorization);
       const codes = input.requestBody.releaseCodes;

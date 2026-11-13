@@ -1,0 +1,1160 @@
+{
+  "schemaVersion": 1,
+  "boundary": "Existence and exact source bytes at the pinned Git commits. This is not current project compatibility, semantic approval, runtime installation or live acceptance.",
+  "documents": {
+    "accelerators.agora-industry-templates": {
+      "owner": "nodics.docs",
+      "articleBlocksSha256": "dadf0ea1095edc7c9bc470d8b08b43ec7ea4b808c926f8ee67a6449690ce6f35",
+      "references": {
+        "../../nodics.exp/nodics.agora.apparel/package.json": "nodics.agora.apparel/package.json",
+        "../../nodics.exp/nodics.agora.electronics/package.json": "nodics.agora.electronics/package.json",
+        "../../nodics.exp/nodics.agora.telco/package.json": "nodics.agora.telco/package.json"
+      }
+    },
+    "commerce.data-authoring-fulfillment": {
+      "owner": "nodics.docs",
+      "articleBlocksSha256": "8ec3483ca29f64fdc79db00cfa4e971b3ee203f7c1196eb252d8724d067c4ac7",
+      "references": {
+        "../../nodics.kickoff/modules/agora.apparel/data/manifest.json": "nodics.kickoff/modules/agora.apparel/data/manifest.json"
+      }
+    },
+    "applications.suite": {
+      "owner": "nodics.docs",
+      "articleBlocksSha256": "40e793350d4f06e9c344a555ff79205450010d3147809dad4059c15e61f09f76",
+      "references": {
+        "../../nodics.kickoff/data/manifest.json": "nodics.kickoff/data/manifest.json"
+      }
+    },
+    "accelerators.agora-apparel-product-data-authoring": {
+      "owner": "nodics.accelerators/modules/apparel/modules/apparelProduct",
+      "articleBlocksSha256": "ec9e9500017a5dd68686c643219bdb8a4a6c7c874a1278ea41f328ab72f349f7",
+      "references": {
+        "../../../../../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/agoraApparelCatalogHeader.js": "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/agoraApparelCatalogHeader.js",
+        "../../../../../../nodics.kickoff/modules/agora.apparel/data/sample-v001/content/headers/agoraApparelContentHeader.js": "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/headers/agoraApparelContentHeader.js",
+        "../../../../../../nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/assetManifest.js": "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/assetManifest.js"
+      }
+    },
+    "applications.nexus-data-content-guide": {
+      "owner": "nodics.accelerators/modules/nexus/modules/nexus.web",
+      "articleBlocksSha256": "e7d19cc6321bb2de3fde6dc536be651055263d55cb76d4f891784991ddea7ef6",
+      "references": {
+        "../../../../../../nodics.exp/nodics.nexus/package.json": "nodics.nexus/package.json"
+      }
+    },
+    "accelerators.circa-collection-reference": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "articleBlocksSha256": "dc6e708cdeddcbd44212aa9927caa2a2853547acc75de23815ce36c8cdfc7e21",
+      "references": {
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json": "nodics.kickoff/modules/circa.ewaste/data/manifest.json"
+      }
+    },
+    "accelerators.circa-source-inventory": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "articleBlocksSha256": "98a7508e939ceb0b2a2296c100e028c06007c2c95fb5532f5fb7cd059767c442",
+      "references": {
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/outlet-access/headers/circaOutletAccessHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/outlet-access/headers/circaOutletAccessHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/outlet-access/records/circaMerchantOutletScopeData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/outlet-access/records/circaMerchantOutletScopeData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaMerchantOutletAccess.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaMerchantOutletAccess.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-predefined-commerce-staff.md": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-predefined-commerce-staff.md",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/staff-access/headers/circaCommerceStaffAssignmentHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/staff-access/headers/circaCommerceStaffAssignmentHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/staff-access/records/circaCommerceStaffAssignmentData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/staff-access/records/circaCommerceStaffAssignmentData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaCommerceStaffAssignments.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaCommerceStaffAssignments.test.js",
+        "../../../../../../nodics.kickoff/envs/kickoffLocal/platformServer/config/properties.js": "nodics.kickoff/envs/kickoffLocal/platformServer/config/properties.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-demo-credit.md": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-demo-credit.md",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/loyalty-credit/records/loyaltyCredits.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/loyalty-credit/records/loyaltyCredits.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/headers/circaLocalOutletHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/headers/circaLocalOutletHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceBookData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceBookData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceRowData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceRowData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletTaxPolicyData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletTaxPolicyData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletWarehouseData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletWarehouseData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/publication/records/publicationPlan.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/publication/records/publicationPlan.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/operations/records/inventoryOpening.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/operations/records/inventoryOpening.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/headers/circaLocalOutletHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/headers/circaLocalOutletHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceBookData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceBookData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceRowData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceRowData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletTaxPolicyData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletTaxPolicyData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletWarehouseData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletWarehouseData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/publication/records/publicationPlan.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/publication/records/publicationPlan.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/operations/records/inventoryOpening.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/operations/records/inventoryOpening.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/headers/circaLocalOutletHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/headers/circaLocalOutletHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceBookData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceBookData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceRowData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceRowData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletTaxPolicyData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletTaxPolicyData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletWarehouseData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletWarehouseData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/publication/records/publicationPlan.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/publication/records/publicationPlan.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/operations/records/inventoryOpening.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/operations/records/inventoryOpening.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/credit-staff/headers/circaLocalDemoCreditStaffHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/credit-staff/headers/circaLocalDemoCreditStaffHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/credit-staff/records/circaLocalDemoCreditStaffData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/credit-staff/records/circaLocalDemoCreditStaffData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/opening-staff/headers/circaLocalOpeningStaffHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/opening-staff/headers/circaLocalOpeningStaffHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/opening-staff/records/circaLocalOpeningStaffData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/opening-staff/records/circaLocalOpeningStaffData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/fixtures/circaMonetaryOutletSetupSelection.json": "nodics.kickoff/modules/circa.ewaste/test/fixtures/circaMonetaryOutletSetupSelection.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-monetary-outlet-pack.md": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-monetary-outlet-pack.md",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-opening-human-roles.md": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-opening-human-roles.md",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaMonetaryOutletPack.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaMonetaryOutletPack.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/refund-exception-staff/headers/circaLocalUnusedRefundExceptionStaffHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/refund-exception-staff/headers/circaLocalUnusedRefundExceptionStaffHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/refund-exception-staff/records/circaLocalUnusedRefundExceptionStaffData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/refund-exception-staff/records/circaLocalUnusedRefundExceptionStaffData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-unused-refund-exception.md": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-unused-refund-exception.md",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaBoundedHumanRoles.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaBoundedHumanRoles.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaLocalUnusedRefundException.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaLocalUnusedRefundException.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/evidence/circa-native-business-e2e-continuation-2026-10-09.json": "nodics.kickoff/modules/circa.ewaste/test/evidence/circa-native-business-e2e-continuation-2026-10-09.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-participation/headers/circaCustomerParticipationHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-participation/headers/circaCustomerParticipationHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-participation/records/circaCustomerParticipationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-participation/records/circaCustomerParticipationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-digital-participation/headers/circaCustomerDigitalParticipationHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-digital-participation/headers/circaCustomerDigitalParticipationHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-digital-participation/records/circaCustomerDigitalParticipationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-digital-participation/records/circaCustomerDigitalParticipationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/digital-listing-context/headers/circaDigitalBundleListingContextHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/digital-listing-context/headers/circaDigitalBundleListingContextHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/digital-listing-context/records/circaDigitalBundleListingContextData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/digital-listing-context/records/circaDigitalBundleListingContextData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/catalogue/records/publicationPlan.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/catalogue/records/publicationPlan.json"
+      }
+    },
+    "accelerators.circa-catalogue-reference": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "articleBlocksSha256": "fb49849ff78e1846ede484ef454d1a75f02863d18779c62f7edac89c3ed89d4f",
+      "references": {
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js"
+      }
+    },
+    "accelerators.circa-configuration-reference": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "articleBlocksSha256": "6cae1844289d0ff6db7122db7d7b9ef775c6828570c13e8042e07a38a5b8d463",
+      "references": {
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/config/properties.js": "nodics.kickoff/modules/circa.ewaste/config/properties.js"
+      }
+    },
+    "accelerators.circa-overview": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "articleBlocksSha256": "5987d786f143f2941d7fa77e4fe0c83df37b53afcc9109aa2fb7a5c9165625c8",
+      "references": {
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/README.md": "nodics.kickoff/modules/circa.ewaste/README.md",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js"
+      }
+    },
+    "accelerators.circa-data-network": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "articleBlocksSha256": "1ac76a037509f258d83f5ae1b84dfe05e1424775d8e1db704f6116cd06259909",
+      "references": {
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/config/properties.js": "nodics.kickoff/modules/circa.ewaste/config/properties.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js"
+      }
+    },
+    "accelerators.circa-submission-journey": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "articleBlocksSha256": "43c3be045243eafc21c715fbad94ca30ef9ac6bbdf8dc285b375f9b29176cf50",
+      "references": {
+        "../../../../../../nodics.exp/nodics.circa.eWaste/README.md": "nodics.circa.eWaste/README.md"
+      }
+    },
+    "accelerators.circa-operations-rewards": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "articleBlocksSha256": "1bba40b7ca9186cd83e5489ae4e563ee683ba77012833b26d8161faa8c51c392",
+      "references": {
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/config/properties.js": "nodics.kickoff/modules/circa.ewaste/config/properties.js",
+        "../../../../../../nodics.exp/nodics.circa.eWaste/README.md": "nodics.circa.eWaste/README.md"
+      }
+    },
+    "accelerators.circa-coupons-commerce": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "articleBlocksSha256": "3af09e238f188770c53a659153af7340d80c65b00f821ff4032e1a16001067ee",
+      "references": {
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js",
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js": "nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js"
+      }
+    },
+    "accelerators.circa-customization": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "articleBlocksSha256": "185a88ab31132a25c35e37c15d2c18b163077e69abbd7cba2354ef883063e224",
+      "references": {
+        "../../../../../../nodics.kickoff/modules/circa.ewaste/AGENTS.md": "nodics.kickoff/modules/circa.ewaste/AGENTS.md"
+      }
+    },
+    "accelerators.circa-deployment-verification": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "articleBlocksSha256": "d86ebf11db01d3ca781a883b89944098f0be7fe091c653fa68d0627d20c8de8a",
+      "references": {
+        "../../../../../../nodics.exp/nodics.circa.eWaste/package.json": "nodics.circa.eWaste/package.json"
+      }
+    },
+    "commerce.search-guide": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore",
+      "articleBlocksSha256": "3170738781a7af9ebb579988b5549536dca85c53435130dc98872ac457ec3df6",
+      "references": {
+        "../../../../../../../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch": "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch"
+      }
+    },
+    "localization.runtime-authoring": {
+      "owner": "nodics.localization/modules/localizationCore",
+      "articleBlocksSha256": "4a9399da9acd9c9e1e0bd8b9abfc1e9573ba1c3fc57ca984c4bd4ed709371e7d",
+      "references": {
+        "../../../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records": "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records"
+      }
+    },
+    "applications.axis-setup-error-contracts": {
+      "owner": "nodics.platform/modules/backoffice",
+      "articleBlocksSha256": "538e837b2e3c96458362408b1c809c623307b2d3bf016814fb7712972c6ef556",
+      "references": {
+        "../../../../nodics.exp/nodics.axis/package.json": "nodics.axis/package.json"
+      }
+    }
+  },
+  "sources": {
+    "nodics.agora.apparel/package.json": {
+      "repository": "nodics.agora.apparel",
+      "commit": "c78e4d0d31559f0524c8484ba727852b868dca73",
+      "gitPath": "package.json",
+      "kind": "file",
+      "snapshot": "nodics.agora.apparel/package.json.txt",
+      "sha256": "f288577c6bb308474d076f7d095689d60b5ce35fcba4fc97a779779342cf7d7b",
+      "url": "https://github.com/Nodics/nodics.agora.apparel/blob/c78e4d0d31559f0524c8484ba727852b868dca73/package.json"
+    },
+    "nodics.agora.electronics/package.json": {
+      "repository": "nodics.agora.electronics",
+      "commit": "5d2a6cab30a90ef1e38ed5d8b01a1974fc9ac3ca",
+      "gitPath": "package.json",
+      "kind": "file",
+      "snapshot": "nodics.agora.electronics/package.json.txt",
+      "sha256": "4420b8dd5fb54d8a4431c31654678eb6750b9460bd72378dd86129c74547d473",
+      "url": "https://github.com/Nodics/nodics.agora.electronics/blob/5d2a6cab30a90ef1e38ed5d8b01a1974fc9ac3ca/package.json"
+    },
+    "nodics.agora.telco/package.json": {
+      "repository": "nodics.agora.telco",
+      "commit": "509e3570d3417b3f730a5a129200b394ee6c6404",
+      "gitPath": "package.json",
+      "kind": "file",
+      "snapshot": "nodics.agora.telco/package.json.txt",
+      "sha256": "f090dbcc52f7806f028f32fc899409bf2524ad777ff3f149f65f3c3e1f8d8f28",
+      "url": "https://github.com/Nodics/nodics.agora.telco/blob/509e3570d3417b3f730a5a129200b394ee6c6404/package.json"
+    },
+    "nodics.kickoff/modules/agora.apparel/data/manifest.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/agora.apparel/data/manifest.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/agora.apparel/data/manifest.json.txt",
+      "sha256": "6bcb881ba446a0df3bf001c51a69e0a9ee79221660046d848cfd61684247ca4c",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/agora.apparel/data/manifest.json"
+    },
+    "nodics.kickoff/data/manifest.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "data/manifest.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/data/manifest.json.txt",
+      "sha256": "f0bc975f6ef14f91de05a6699d2d626968b0e07498fb9953e1676d1ac036a8c6",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/data/manifest.json"
+    },
+    "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/agoraApparelCatalogHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/agora.apparel/data/sample-v001/commerce/headers/agoraApparelCatalogHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/agoraApparelCatalogHeader.js.txt",
+      "sha256": "31ec1f6f10cf6a8b54323594a9be21b7f585ca6837d12e5835e67f7efc992f9e",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/agora.apparel/data/sample-v001/commerce/headers/agoraApparelCatalogHeader.js"
+    },
+    "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/headers/agoraApparelContentHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/agora.apparel/data/sample-v001/content/headers/agoraApparelContentHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/headers/agoraApparelContentHeader.js.txt",
+      "sha256": "d60d881b8202ce6343b5ef011ed15d3a3d3e088f4b92e51f9218d599a03e9c0d",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/agora.apparel/data/sample-v001/content/headers/agoraApparelContentHeader.js"
+    },
+    "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/assetManifest.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/assetManifest.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/assetManifest.js.txt",
+      "sha256": "31ed68c77c978a63638212b06c5dffe08e7379a5111ba940a023ce7e5c11fc87",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/assetManifest.js"
+    },
+    "nodics.nexus/package.json": {
+      "repository": "nodics.nexus",
+      "commit": "a9f1956908149bdbb5ddd3d1450032896e5ab6d2",
+      "gitPath": "package.json",
+      "kind": "file",
+      "snapshot": "nodics.nexus/package.json.txt",
+      "sha256": "236038c5796669561f76e83fa59142e6d3ec53319144144363227d87936f39db",
+      "url": "https://github.com/Nodics/nodics.nexus/blob/a9f1956908149bdbb5ddd3d1450032896e5ab6d2/package.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/manifest.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/manifest.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/manifest.json.txt",
+      "sha256": "99487bcb14eb991d145ce196624f4efce6f51d0a90e55fe10a4e0b97a0391352",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/manifest.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js.txt",
+      "sha256": "45a28a3fde1aade748d1f1d825003ee2a0485ef288020deb1f70e6898ff46d00",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js.txt",
+      "sha256": "02e16f381a9ddef97339b73225a9a9aef45e42a9673a60ff360aab899f89579f",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js.txt",
+      "sha256": "1de86bd31536cca38ee71739f41ac91de06f907b3a78c9bd40febc170b6e2f0e",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js.txt",
+      "sha256": "97e5e6a9af7c8a4539fa7cd19d1a9e9ea50e6fb530dc3d6e6be8a2aa723d1876",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js.txt",
+      "sha256": "de80755142e516183c3eca2058621e510a5deefb1bd5569460fa4970c96f5eec",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js.txt",
+      "sha256": "2891c9b75bbd5e54369072a514f0fd942107e88cd43592802e64bd991da17b1d",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js.txt",
+      "sha256": "2a9769a9d7a26b706005c348c44c6394026ea0ca07e8a85bc2102b263607f050",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js.txt",
+      "sha256": "40a3bcc4a6558f415ff59492e32c407975e37f47d96fb10ae7cbaa01f9477548",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/test/circaCommerceForwardRelease.test.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js.txt",
+      "sha256": "ce45ada41739550d786c9a965ca3aef16c1eb2ab370b2a006711938f980945e2",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js.txt",
+      "sha256": "47e7c02fe790173fc55b1371de74f1fdff9f55529d3119d160f1f6debe0c8f65",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/llm/contracts/circa-promotion-setup.md",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.source.md",
+      "sha256": "056d93b39e82d259b6478e2c254408852f51b0710c25a6cfe939304ea62ebc09",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json.txt",
+      "sha256": "bf2d83546ee8ae48d7e34c31605748440434834b0134b72ec67c01e33db8ed3d",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js.txt",
+      "sha256": "58d7bbf03af55275fc36e0801901db54028cbc60569b27d94b267265d589ff0a",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/test/circaPromotionInstructionPack.test.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js.txt",
+      "sha256": "b88f514cee89a5c3342c549c56ee4badd5115e3527c44b27263999dbae9735dc",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js.txt",
+      "sha256": "3f9ccd50eecb7086b5942e7203e8e9a826a295bc6b11823e0c6107e6d0a507e6",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/outlet-access/headers/circaOutletAccessHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/outlet-access/headers/circaOutletAccessHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/outlet-access/headers/circaOutletAccessHeader.js.txt",
+      "sha256": "ef1f070e67ff2e4a9ceb2ea12ab3bcdb3c171981597e55593809880adeff5c45",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/outlet-access/headers/circaOutletAccessHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/outlet-access/records/circaMerchantOutletScopeData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/outlet-access/records/circaMerchantOutletScopeData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/outlet-access/records/circaMerchantOutletScopeData.js.txt",
+      "sha256": "e996668088ae93b28ff553eaaaadfd3e2f9e1d2ada5db39548a7c6b53f7b5c80",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/outlet-access/records/circaMerchantOutletScopeData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/test/circaMerchantOutletAccess.test.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/test/circaMerchantOutletAccess.test.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/test/circaMerchantOutletAccess.test.js.txt",
+      "sha256": "ef14e8ecbc567ef5067f92be3375f431e3fa7caaec211956e07459d46a69c1e8",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/test/circaMerchantOutletAccess.test.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-predefined-commerce-staff.md": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/llm/contracts/circa-predefined-commerce-staff.md",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-predefined-commerce-staff.source.md",
+      "sha256": "880ad958c13e3c8d4e17038087d1218d2b8a160db53b384a1e8a40a25ee0a460",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/llm/contracts/circa-predefined-commerce-staff.md"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/staff-access/headers/circaCommerceStaffAssignmentHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/staff-access/headers/circaCommerceStaffAssignmentHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/staff-access/headers/circaCommerceStaffAssignmentHeader.js.txt",
+      "sha256": "3479cffee110bf428b7750b5a5830e757fbb862d4563903f5105d2decd83797a",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/staff-access/headers/circaCommerceStaffAssignmentHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/staff-access/records/circaCommerceStaffAssignmentData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/staff-access/records/circaCommerceStaffAssignmentData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/staff-access/records/circaCommerceStaffAssignmentData.js.txt",
+      "sha256": "5a6afa071be3f40e20a417a652fdc03985bd9e7b657d3318349440d7a787e98e",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/staff-access/records/circaCommerceStaffAssignmentData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/test/circaCommerceStaffAssignments.test.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/test/circaCommerceStaffAssignments.test.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/test/circaCommerceStaffAssignments.test.js.txt",
+      "sha256": "59a397518ba18448d7a99406fe824c8038caaa7830ece3db238e9b9aee4d7d5d",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/test/circaCommerceStaffAssignments.test.js"
+    },
+    "nodics.kickoff/envs/kickoffLocal/platformServer/config/properties.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "envs/kickoffLocal/platformServer/config/properties.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/envs/kickoffLocal/platformServer/config/properties.js.txt",
+      "sha256": "35a3a0ecfb6f933905be42dee0d9ccc4d93993c97e4767bf849496799bc24836",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/envs/kickoffLocal/platformServer/config/properties.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-demo-credit.md": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/llm/contracts/circa-local-demo-credit.md",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-demo-credit.source.md",
+      "sha256": "43eed142b9fd9ada02d0222fb8f2ead090aba9f788db1c63d8b1b6a173b204a9",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/llm/contracts/circa-local-demo-credit.md"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/loyalty-credit/records/loyaltyCredits.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/operations/loyalty-credit/records/loyaltyCredits.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/loyalty-credit/records/loyaltyCredits.json.txt",
+      "sha256": "19cdd9068da60789f36ff2fe0f72ebfd485ff14b3dc96dfe654a48c3db3e7641",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/operations/loyalty-credit/records/loyaltyCredits.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/headers/circaLocalOutletHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/headers/circaLocalOutletHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/headers/circaLocalOutletHeader.js.txt",
+      "sha256": "d9284b764b5ab9891f30b964a609f99ab586f2470db2604d7a1d324c6f6d2810",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/headers/circaLocalOutletHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceBookData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceBookData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceBookData.js.txt",
+      "sha256": "479605ad6319e664734f9d5bbd6bfe6f7bbe5519e815443a3ceb9f453299a985",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceBookData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceRowData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceRowData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceRowData.js.txt",
+      "sha256": "70a6378bd600b92736eb70e0ed76b538e71fd2ab9591eb5d6dfbd603b7f698eb",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletPriceRowData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductData.js.txt",
+      "sha256": "51e3a3b1c75cf92134ed838727d5c49ae9bc7e9577faccf8e93c7174115ed62c",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductLocalizationData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductLocalizationData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductLocalizationData.js.txt",
+      "sha256": "ce19e1b023678c47d4c0f5a22c5417a6318a13d7292e8a569aa773e5dda76763",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductLocalizationData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantData.js.txt",
+      "sha256": "60c77c7002aaa26bb210e8c31a337c4d20e78970f0559c95e6d9912fec415b9e",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantLocalizationData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantLocalizationData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantLocalizationData.js.txt",
+      "sha256": "7c9a3b881d146dbcf7a91de891c480170ce1d8cb8acba8a4086f699cbaf49dca",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletProductVariantLocalizationData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletTaxPolicyData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletTaxPolicyData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletTaxPolicyData.js.txt",
+      "sha256": "fc283ad0102c5acdd219231f997abff189b3dabbf10a634df32940e25edad07a",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletTaxPolicyData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletWarehouseData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletWarehouseData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletWarehouseData.js.txt",
+      "sha256": "85cff84c2e525e9d0a2a6e1600a9d4f61a05c00ed935241e2c75ae62e480bf20",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/commerce/records/circaLocalGreenPerksOutletWarehouseData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/publication/records/publicationPlan.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/publication/records/publicationPlan.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/publication/records/publicationPlan.json.txt",
+      "sha256": "26b72407d893a982c946341fa4c88498a01626214adf0751cfe695124e43a574",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/publication/records/publicationPlan.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/operations/records/inventoryOpening.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/operations/records/inventoryOpening.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/operations/records/inventoryOpening.json.txt",
+      "sha256": "f001d969c79018d61c9221a40a4c6e7a8bf018b0145377e60307070c6cf03476",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/greenperks/operations/records/inventoryOpening.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/headers/circaLocalOutletHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/headers/circaLocalOutletHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/headers/circaLocalOutletHeader.js.txt",
+      "sha256": "d65d21a00a65ae829da98892d56bb67f92caa0334b7adb7e1b6866bbffd9fc82",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/headers/circaLocalOutletHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceBookData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceBookData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceBookData.js.txt",
+      "sha256": "5eb6eb1fd561130d6814b9dac8ee3c89e9ce42a53d5fab793079362c35bc27f9",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceBookData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceRowData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceRowData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceRowData.js.txt",
+      "sha256": "21756cc963788c014e37a8ae5fe7e5faab501ce5b17efa6dec43a4489337d920",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletPriceRowData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductData.js.txt",
+      "sha256": "094b1d0cc1a3968ebfb5b1c53302bfae14608b855a7a1d34212fb71cb480304b",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductLocalizationData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductLocalizationData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductLocalizationData.js.txt",
+      "sha256": "3c553d260fa597c3a299f58d12f67a61fc1c6bd463e8a342dc8ad67836d972c3",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductLocalizationData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantData.js.txt",
+      "sha256": "521c58f5d9e3702172eb0374eaac9867ba7d9ba07e080e36797cd405d0a8e8b0",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantLocalizationData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantLocalizationData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantLocalizationData.js.txt",
+      "sha256": "60db2c34e5578a61efc1e36e8416b4910189cc692e8fbbcca7d728b1dece472b",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletProductVariantLocalizationData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletTaxPolicyData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletTaxPolicyData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletTaxPolicyData.js.txt",
+      "sha256": "378c2f7860b654a84768cca641f248267a319ff36c9ed6cbbbaf329944e1b5d0",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletTaxPolicyData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletWarehouseData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletWarehouseData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletWarehouseData.js.txt",
+      "sha256": "6e88edfe7f2cb3a23c0f28bfb8038300e7f498e281a05747e288ee115dbd2735",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/commerce/records/circaLocalRenewWorksOutletWarehouseData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/publication/records/publicationPlan.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/publication/records/publicationPlan.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/publication/records/publicationPlan.json.txt",
+      "sha256": "1211feddfdfa5a454962466b9ccee6675a3276d00d422868455669ad2053b938",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/publication/records/publicationPlan.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/operations/records/inventoryOpening.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/operations/records/inventoryOpening.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/operations/records/inventoryOpening.json.txt",
+      "sha256": "9ff7aae8de7d72d9591eed9094204a5343a1a33871830f6e55d81d285aee18c8",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/renewworks/operations/records/inventoryOpening.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/headers/circaLocalOutletHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/headers/circaLocalOutletHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/headers/circaLocalOutletHeader.js.txt",
+      "sha256": "b478dc59f99f5f80a1a912384ad87835c0aaf939fbb8d78bb77e540c38c08c43",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/headers/circaLocalOutletHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceBookData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceBookData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceBookData.js.txt",
+      "sha256": "94bacc1df8d2523e191204076bb337cd0af07c2a568995486dc1a310fbcfeef6",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceBookData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceRowData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceRowData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceRowData.js.txt",
+      "sha256": "bf9395e35fb8f49e216de2e0d77850b82c1f1cd60e5321255eaca6612c17aa86",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletPriceRowData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductData.js.txt",
+      "sha256": "3317ee363267275db6d6bc47d0dd588f5d7c1e2c01cb156c29ee6b1aeee613ff",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductLocalizationData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductLocalizationData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductLocalizationData.js.txt",
+      "sha256": "3d2557b25c3c111d21f4b3a6168d877b81b6e0452af83a80304b465842d1d680",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductLocalizationData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantData.js.txt",
+      "sha256": "0096245b76c962fb8f6d8f2136a89c904bf8100d5cbc33cf6ba32515c431680f",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantLocalizationData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantLocalizationData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantLocalizationData.js.txt",
+      "sha256": "4ff8c55d2162aaa4ebe54e958bb1218d001012763d8d1d7fb450e6cdf5acf0c6",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletProductVariantLocalizationData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletTaxPolicyData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletTaxPolicyData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletTaxPolicyData.js.txt",
+      "sha256": "4173f4380fec43903fe55ba3e4817ef7601e4d8d150bbccc6d222247f63d0139",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletTaxPolicyData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletWarehouseData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletWarehouseData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletWarehouseData.js.txt",
+      "sha256": "ea525e8310724570d5382e5017cb0fc583fdb653028e1032397a15e6c028d13a",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/commerce/records/circaLocalLoopCycleOutletWarehouseData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/publication/records/publicationPlan.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/publication/records/publicationPlan.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/publication/records/publicationPlan.json.txt",
+      "sha256": "d5f05c3ceb1dd6f8afbfc637c784498b3fb04c837148efcb3d493633ffdee773",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/publication/records/publicationPlan.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/operations/records/inventoryOpening.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/operations/records/inventoryOpening.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/operations/records/inventoryOpening.json.txt",
+      "sha256": "fda3f4f8ecefc516c67788f83f3c1b9897bb46bb63114dd618cf59431867f20b",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/merchant-outlets/loopcycle/operations/records/inventoryOpening.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/credit-staff/headers/circaLocalDemoCreditStaffHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/credit-staff/headers/circaLocalDemoCreditStaffHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/credit-staff/headers/circaLocalDemoCreditStaffHeader.js.txt",
+      "sha256": "349a20267cfc1fdff1785421970b436d3f56310adfeb97158b75fa270c7c7043",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/credit-staff/headers/circaLocalDemoCreditStaffHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/credit-staff/records/circaLocalDemoCreditStaffData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/credit-staff/records/circaLocalDemoCreditStaffData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/credit-staff/records/circaLocalDemoCreditStaffData.js.txt",
+      "sha256": "2a9059011f63da9f9cb49a850050fd2b96fba2f505f31eac4eb9c3c4fc1468fb",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/credit-staff/records/circaLocalDemoCreditStaffData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/opening-staff/headers/circaLocalOpeningStaffHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/opening-staff/headers/circaLocalOpeningStaffHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/opening-staff/headers/circaLocalOpeningStaffHeader.js.txt",
+      "sha256": "e610c688986629418e8388641da677051f8623456cf409b22e558d9ea8f2dc47",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/opening-staff/headers/circaLocalOpeningStaffHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/opening-staff/records/circaLocalOpeningStaffData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/opening-staff/records/circaLocalOpeningStaffData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/opening-staff/records/circaLocalOpeningStaffData.js.txt",
+      "sha256": "e72c7799b0bb9556c77b2dccf2afc0b1fc94cdb46318e69fef5ea9f8d4e7140d",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/opening-staff/records/circaLocalOpeningStaffData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/test/fixtures/circaMonetaryOutletSetupSelection.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/test/fixtures/circaMonetaryOutletSetupSelection.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/test/fixtures/circaMonetaryOutletSetupSelection.json.txt",
+      "sha256": "f439a3d82addfa7f94a478b8536fd055c7480511027689cf1c96c43f271a903c",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/test/fixtures/circaMonetaryOutletSetupSelection.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-monetary-outlet-pack.md": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/llm/contracts/circa-monetary-outlet-pack.md",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-monetary-outlet-pack.source.md",
+      "sha256": "2185cf15f1006d41e601e73885a5b845fa7162c2011dc27f162aae1ec49a02ae",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/llm/contracts/circa-monetary-outlet-pack.md"
+    },
+    "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-opening-human-roles.md": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/llm/contracts/circa-local-opening-human-roles.md",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-opening-human-roles.source.md",
+      "sha256": "a77fe28607185f03a1b0657513c3cbcb0fb1874dfc427988aff0cdfd9435b0c9",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/llm/contracts/circa-local-opening-human-roles.md"
+    },
+    "nodics.kickoff/modules/circa.ewaste/test/circaMonetaryOutletPack.test.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/test/circaMonetaryOutletPack.test.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/test/circaMonetaryOutletPack.test.js.txt",
+      "sha256": "16e556bb3f93fda02cb065c536b370e1cff966bb86485c3113d71cce5ed848dd",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/test/circaMonetaryOutletPack.test.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/refund-exception-staff/headers/circaLocalUnusedRefundExceptionStaffHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/refund-exception-staff/headers/circaLocalUnusedRefundExceptionStaffHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/refund-exception-staff/headers/circaLocalUnusedRefundExceptionStaffHeader.js.txt",
+      "sha256": "fc229c575a22a3175d9d6d37dbb8e504fda697ff8b3f68f9c4474780da970033",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/refund-exception-staff/headers/circaLocalUnusedRefundExceptionStaffHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/refund-exception-staff/records/circaLocalUnusedRefundExceptionStaffData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/refund-exception-staff/records/circaLocalUnusedRefundExceptionStaffData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/refund-exception-staff/records/circaLocalUnusedRefundExceptionStaffData.js.txt",
+      "sha256": "6e292b5153ee486b6c64b1762bd1dbfbe6681f32663c98c16c94837117ac8e57",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/refund-exception-staff/records/circaLocalUnusedRefundExceptionStaffData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-unused-refund-exception.md": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/llm/contracts/circa-local-unused-refund-exception.md",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-local-unused-refund-exception.source.md",
+      "sha256": "a327da99f1a14d02a6a5fa8b5b18144942f061ffc999cb9b86198cf5dd4c31cb",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/llm/contracts/circa-local-unused-refund-exception.md"
+    },
+    "nodics.kickoff/modules/circa.ewaste/test/circaBoundedHumanRoles.test.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/test/circaBoundedHumanRoles.test.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/test/circaBoundedHumanRoles.test.js.txt",
+      "sha256": "1e9edc2e801529e1c5a2f89c3aebd4271679099b7bfb3cdce986046823c2e08e",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/test/circaBoundedHumanRoles.test.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/test/circaLocalUnusedRefundException.test.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/test/circaLocalUnusedRefundException.test.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/test/circaLocalUnusedRefundException.test.js.txt",
+      "sha256": "c169437853b727a9c79e3ad610d59984a07aab85978beb0c64b2bcb06295d48f",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/test/circaLocalUnusedRefundException.test.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/test/evidence/circa-native-business-e2e-continuation-2026-10-09.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/test/evidence/circa-native-business-e2e-continuation-2026-10-09.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/test/evidence/circa-native-business-e2e-continuation-2026-10-09.json.txt",
+      "sha256": "a44cb5cffa09f0debceec8531461b5d3c3117792549e8a962b3d9f1d48f784e7",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/test/evidence/circa-native-business-e2e-continuation-2026-10-09.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-participation/headers/circaCustomerParticipationHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/customer-participation/headers/circaCustomerParticipationHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-participation/headers/circaCustomerParticipationHeader.js.txt",
+      "sha256": "68ae77f29c062f9bb4201ac002c6a601d35d3128ca35d7637c841c42aac59ab2",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/customer-participation/headers/circaCustomerParticipationHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-participation/records/circaCustomerParticipationData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/customer-participation/records/circaCustomerParticipationData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-participation/records/circaCustomerParticipationData.js.txt",
+      "sha256": "8020a814d8e3c4120946c8f8e381357b0026d2d5f34af27b3b8a32eb785f6b29",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/customer-participation/records/circaCustomerParticipationData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-digital-participation/headers/circaCustomerDigitalParticipationHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/customer-digital-participation/headers/circaCustomerDigitalParticipationHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-digital-participation/headers/circaCustomerDigitalParticipationHeader.js.txt",
+      "sha256": "009e65054c0e3e4aacc9de55e041af539239bd7c2d743b755a25eb96c00c551d",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/customer-digital-participation/headers/circaCustomerDigitalParticipationHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-digital-participation/records/circaCustomerDigitalParticipationData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/customer-digital-participation/records/circaCustomerDigitalParticipationData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/customer-digital-participation/records/circaCustomerDigitalParticipationData.js.txt",
+      "sha256": "1e3a026a79e3cbc53ea5a71e52081faa2ec6d12ec91e3e0d0f45ea17f4915cf1",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/customer-digital-participation/records/circaCustomerDigitalParticipationData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/digital-listing-context/headers/circaDigitalBundleListingContextHeader.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/digital-listing-context/headers/circaDigitalBundleListingContextHeader.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/digital-listing-context/headers/circaDigitalBundleListingContextHeader.js.txt",
+      "sha256": "fd3bf2b41fa177449800a2d781f7b8919cf980063ac2c6859427212418f7b251",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/digital-listing-context/headers/circaDigitalBundleListingContextHeader.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/digital-listing-context/records/circaDigitalBundleListingContextData.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/digital-listing-context/records/circaDigitalBundleListingContextData.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/digital-listing-context/records/circaDigitalBundleListingContextData.js.txt",
+      "sha256": "60b0a0d34bcbcb30e6be2c1a72784fae3fc2f42f433345910b4948038b91d644",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/digital-listing-context/records/circaDigitalBundleListingContextData.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/catalogue/records/publicationPlan.json": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/data/sample-v001/publication/catalogue/records/publicationPlan.json",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/catalogue/records/publicationPlan.json.txt",
+      "sha256": "52b7a31f6b1dd4d18a96a345c4ddafb3996c2ca940023e939eda3f1ed76e8c44",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/data/sample-v001/publication/catalogue/records/publicationPlan.json"
+    },
+    "nodics.kickoff/modules/circa.ewaste/config/properties.js": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/config/properties.js",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/config/properties.js.txt",
+      "sha256": "513f30b90a9ae3d1eed555e0a5c090b93e4e0ccedb2ac8a0ca5310bfef4ebabe",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/config/properties.js"
+    },
+    "nodics.kickoff/modules/circa.ewaste/README.md": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/README.md",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/README.source.md",
+      "sha256": "08b657312818fdeaa70bbf270100296b84a6e8d779e928ccb59de5887db0b274",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/README.md"
+    },
+    "nodics.circa.eWaste/README.md": {
+      "repository": "nodics.circa.eWaste",
+      "commit": "0fdfce9e3be506d6950ecc406ef58e46c77a6e0b",
+      "gitPath": "README.md",
+      "kind": "file",
+      "snapshot": "nodics.circa.eWaste/README.source.md",
+      "sha256": "7ea58e46e27c8db130bafef53ee83a70ff75d167062e969e68fb78e5388723a1",
+      "url": "https://github.com/Nodics/nodics.circa.eWaste/blob/0fdfce9e3be506d6950ecc406ef58e46c77a6e0b/README.md"
+    },
+    "nodics.kickoff/modules/circa.ewaste/AGENTS.md": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/circa.ewaste/AGENTS.md",
+      "kind": "file",
+      "snapshot": "nodics.kickoff/modules/circa.ewaste/AGENTS.source.md",
+      "sha256": "dff207429c369041459cdeb88f361accd45c844886366a0319e6e341f04b903d",
+      "url": "https://github.com/Nodics/nodics.kickoff/blob/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/circa.ewaste/AGENTS.md"
+    },
+    "nodics.circa.eWaste/package.json": {
+      "repository": "nodics.circa.eWaste",
+      "commit": "0fdfce9e3be506d6950ecc406ef58e46c77a6e0b",
+      "gitPath": "package.json",
+      "kind": "file",
+      "snapshot": "nodics.circa.eWaste/package.json.txt",
+      "sha256": "d3729035e9830c4daacf34ef84d402e655ff9a1fc54ff7ffefcf9db534d44ca7",
+      "url": "https://github.com/Nodics/nodics.circa.eWaste/blob/0fdfce9e3be506d6950ecc406ef58e46c77a6e0b/package.json"
+    },
+    "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch",
+      "kind": "directory",
+      "snapshot": "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch/git-tree.txt",
+      "sha256": "273972ba3989348bcf9009b4d6736de2737ca237643497f384e762dec4675a9f",
+      "url": "https://github.com/Nodics/nodics.kickoff/tree/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch"
+    },
+    "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records": {
+      "repository": "nodics.kickoff",
+      "commit": "0dc2afbeab90135fbe5d199679fabbeb942ff29a",
+      "gitPath": "modules/agora.apparel/data/sample-v001/commerce/records",
+      "kind": "directory",
+      "snapshot": "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/git-tree.txt",
+      "sha256": "89e43d41d34cd6bedef491120caf18fc4db1813356f9f361c5fa310059a88540",
+      "url": "https://github.com/Nodics/nodics.kickoff/tree/0dc2afbeab90135fbe5d199679fabbeb942ff29a/modules/agora.apparel/data/sample-v001/commerce/records"
+    },
+    "nodics.axis/package.json": {
+      "repository": "nodics.axis",
+      "commit": "567c3517a69231202fa630e54c26709aeb87e5e1",
+      "gitPath": "package.json",
+      "kind": "file",
+      "snapshot": "nodics.axis/package.json.txt",
+      "sha256": "8a7b2e2802c64f60b2b9f674b7756d6282c8cc2276a2d9135aa58ff4e8419dae",
+      "url": "https://github.com/Nodics/nodics.axis/blob/567c3517a69231202fa630e54c26709aeb87e5e1/package.json"
+    }
+  }
+}

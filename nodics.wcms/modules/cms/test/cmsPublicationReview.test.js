@@ -109,6 +109,74 @@ test('legacy comparison requires the exact frozen Site catalog and preserves cur
     await assert.rejects(review.baselineCatalogMatches(publication,predecessor,manifest,{load:async()=>{throw Error('exact version unavailable')}},{}),/exact version unavailable/);
 });
 
+test('site baseline review resolves only its frozen catalog and leaves the admitted context unchanged', async () => {
+    const dependency = { schema: 'cmsSite', code: 'site', version: '4' };
+    const publication = Object.freeze({ code: 'release', rootType: 'site', rootCode: 'site', siteCode: 'site',
+        sourceVersion: '0', revision: 3, dependencies: [dependency], validation: { valid: true } });
+    const admitted = Object.freeze({ ...context, catalogCode: undefined });
+    const request = { ...caller, httpRequest: { params: { instanceCode, taskCode },
+        headers: { authorization: 'Bearer original-reviewer' } } };
+    const manifests = {
+        load: async (identity, read) => {
+            assert.deepEqual(identity, dependency);
+            assert.equal(read.tenant, scope.tenant);
+            return { code: 'site', versionId: 4, catalog: { code: 'catalog' } };
+        },
+        buildSnapshot: async row => {
+            assert.equal(row, publication);
+            return { site: 'site', path: '/', locale: 'en', channel: 'web', accessMode: 'PUBLIC',
+                page: { code: 'home', name: 'Frozen home', components: [] } };
+        },
+        publicationExperiencePlacements: async () => [], publicationMediaCodes: () => []
+    };
+    global.SERVICE = {
+        DefaultCmsDesignerAccessService: { authorize: (original, permission) => {
+            assert.equal(original.authorization, 'Bearer original-reviewer');
+            assert.equal(permission, 'cms.publication.approve'); return scope;
+        } },
+        DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ privateRead: true }) },
+        DefaultCmsPublicationVersionProviderService: { assertStagedRuntime() {}, manifests: () => manifests }
+    };
+    let bindings = 0, reads = 0;
+    const service = { ...review,
+        binding: async () => { bindings++; return admitted; },
+        publication: async original => { assert.equal(original, admitted); reads++; return publication; },
+        baseline: async projected => {
+            assert.equal(projected.catalogCode, 'catalog');
+            assert.equal(publication.catalogCode, undefined); return { status: 'NEW' };
+        }
+    };
+    const result = await service.inspect(request);
+    assert.equal(result.catalogCode, 'catalog');
+    assert.equal(result.routes[0].page.name, 'Frozen home');
+    assert.equal(result.revision, 3);
+    assert.equal(bindings, 2); assert.equal(reads, 2);
+    assert.equal(admitted.catalogCode, undefined);
+    assert.equal(publication.catalogCode, undefined);
+});
+
+test('catalog resolution refuses absent, ambiguous, foreign and non-exact frozen evidence', async () => {
+    const dependency = { schema: 'cmsSite', code: 'site', version: '4' };
+    const publication = { rootType: 'site', rootCode: 'site', siteCode: 'site', dependencies: [dependency] };
+    const site = { code: 'site', versionId: 4, catalog: 'catalog' };
+    const manifests = { load: async () => site };
+    assert.equal(await review.reviewCatalog(publication, manifests, {}), 'catalog');
+    assert.equal(await review.reviewCatalog({ catalogCode: 'explicit' }, {
+        load: async () => { throw Error('explicit catalog does not require another read'); }
+    }, {}), 'explicit');
+    for (const invalid of [
+        { dependencies: [] }, { dependencies: [dependency, dependency] },
+        { rootType: 'pageRoute' }, { rootCode: 'foreign' }, { catalogCode: null },
+        { dependencies: [{ ...dependency, version: 'latest' }] }
+    ]) await assert.rejects(review.reviewCatalog({ ...publication, ...invalid }, manifests, {}), { code: 'ERR_AUTH_00003' });
+    for (const invalid of [{ code: 'foreign' }, { versionId: 5 }, { catalog: null }, { catalog: '../foreign' }])
+        await assert.rejects(review.reviewCatalog(publication, { load: async () => ({ ...site, ...invalid }) }, {}),
+            { code: 'ERR_AUTH_00003' });
+    await assert.rejects(review.reviewCatalog(publication, { load: async () => {
+        throw Error('exact version unavailable');
+    } }, {}), /exact version unavailable/);
+});
+
 
 test('experience approvals present frozen target values and overrides without opaque JSON identity dumps', () => {
   const route = { site: 'site', path: '/page', locale: 'en', channel: 'web', accessMode: 'PUBLIC', page: { code: 'page', components: [{code:'hero',renderer:'hero',slot:'main',properties:{title:'Base'}}] } };

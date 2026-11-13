@@ -398,3 +398,16 @@ Baseline and application lifecycle status project allowed actions from the origi
 Regression: `test/initializationActionPresentation.test.js` exercises real route evaluators, group/permission separation, tenant mismatch, service refusal and explicit stage selection.
 
 Actor-bound status also narrows preparation and approval-reconciliation repair descriptors using their own canonical route. A denied operator retains diagnostics with `available: false`, `eligibility: NOT_AVAILABLE` and a readable reason; preparation responses receive the same projection. Read-only refresh is unaffected.
+
+
+### Workbench runtime owner selection
+
+Navigation may declare `workbenchPresentation.ownerSelector` using the same strict
+logical `runtimeRoleCode` and/or `publicationRole` fields as backend workspaces.
+It grants no permission and cannot contain a server, URL, tenant or credentials.
+Framework modules own the default selection; custom modules extend logical roles
+without copying physical runtime names into Axis. Axis workspace discovery and
+headline counts must resolve one live authorized match. Missing or multiple
+matches remain unavailable and never fall back to Staged/Online or another server.
+`test/workbenchOwnerDiscoveryContract.test.js` checks the shared strict schema and
+the actual Order capability; Axis tests cover discovery, counts and refusal paths.

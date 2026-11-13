@@ -48,3 +48,10 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+
+Business Workbench navigation selects the single live `OPERATIONAL` owner through
+`workbenchPresentation.ownerSelector`. The Framework contribution owns this default;
+custom runtime server names require no Axis or Kickoff duplication. Dashboard counts
+and workspace discovery share that selection and refuse absent or ambiguous owners.
+The BackOffice `workbenchOwnerDiscoveryContract` test verifies the real contribution.

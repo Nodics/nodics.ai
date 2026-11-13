@@ -197,6 +197,11 @@ The following rules are mandatory:
     lifecycle state, maturity state, implementation state, rendering component,
     related pages, search keywords, topic keywords, visual requirements, and
     generated checksums where applicable.
+    Article headings, source digests and word counts, search text and publication
+    target seals must describe the same selected content. Historical release
+    regressions qualify frozen source snapshots and original citations; current
+    source validation runs separately. Preserve historical discrepancies, and
+    re-review changed claims before renewing byte-bound editorial evidence.
 21. Axis and Nexus have separate presentation responsibilities but one content
     truth. Axis renders authenticated documentation, management previews,
     authoring validation, and role-aware navigation. Nexus renders only public

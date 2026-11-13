@@ -535,7 +535,11 @@ The Framework `release:check --execute --project-qualification` runs the
 clean install, dependency audit, build, governance, and project-boundary tests.
 Use it alongside the downstream project's own verification on pinned Git
 revisions. General Framework promotion uses the regular release check and
-`--full`.
+`--full`. Full qualification also executes the documentation owner's complete
+`npm --prefix nodics.docs test` command: immutable history, current content/source
+seals, semantic review, coverage and hardening. A refusal fails the release;
+documentation governance or an earlier report cannot substitute for this check.
+The same configured command runs in CI without a copied project/workflow plan.
 
 
 

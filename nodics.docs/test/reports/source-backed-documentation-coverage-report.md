@@ -9,8 +9,8 @@ This generated report maps source boundaries to the authoring catalogue, includi
 | Catalogue documents | 179 |
 | Source boundaries scanned | 205 |
 | Needs page or owner mapping | 0 |
-| Needs deeper section | 2 |
-| Covered | 196 |
+| Needs deeper section | 3 |
+| Covered | 195 |
 | Internal-only candidate | 0 |
 | Reviewed shared-guide mapping (not depth certification) | 7 |
 | Classified backlog items | 22 |
@@ -48,8 +48,9 @@ This generated report maps source boundaries to the authoring catalogue, includi
 
 | Classification | Score | Source boundary | Current matches | Key signals |
 | --- | ---: | --- | --- | --- |
-| needs-deeper-section | 77 | `nodics.ai/nodics.commerce/modules/baseCommerce/modules/commercialAgreement` | commerce.search-guide | schemas:1, services:2, controllers:1, routers:2, dataHeaders:3, dataRecords:13, tests:2 |
-| needs-deeper-section | 40 | `nodics.ai/nodics.rulesEngine/modules/rulesApi` | copilot.rules-inspection, rules.deterministic-evaluation | services:3, controllers:2, routers:2, dataHeaders:1, dataRecords:2, tests:3 |
+| needs-deeper-section | 79 | `nodics.ai/nodics.commerce/modules/baseCommerce/modules/commercialAgreement` | commerce.search-guide | schemas:1, services:2, controllers:1, routers:2, dataHeaders:3, dataRecords:13, tests:3 |
+| needs-deeper-section | 59 | `nodics.ai/nodics.discovery/modules/discoveryPublication` | solutions.data-engineering-analytics-platform, copilot.knowledge-generation-recovery | schemas:1, services:6, controllers:2, routers:2, dataHeaders:1, dataRecords:1, tests:6 |
+| needs-deeper-section | 50 | `nodics.ai/nodics.rulesEngine/modules/rulesApi` | copilot.rules-inspection, rules.deterministic-evaluation | services:4, controllers:2, routers:2, dataHeaders:1, dataRecords:3, tests:5 |
 
 ## Verification
 

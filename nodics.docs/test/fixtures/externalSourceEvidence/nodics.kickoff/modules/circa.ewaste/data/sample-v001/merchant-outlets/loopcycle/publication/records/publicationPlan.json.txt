@@ -1,0 +1,80 @@
+{
+  "contractVersion": 1,
+  "items": [
+    {
+      "code": "circa-local-outlet-product-CIRCA_LOCAL_RECYCLED_ACCESSORIES-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_LOCAL_RECYCLED_ACCESSORIES",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-local-outlet-product-CIRCA_LOCAL_RECYCLED_ACCESSORIES-v001",
+        "productCode": "CIRCA_LOCAL_RECYCLED_ACCESSORIES",
+        "storeCode": "loopcycle-accessories",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-local-outlet-priceBook-circaLocalLoopCycleAed-v001",
+      "domain": "pricing",
+      "rootType": "priceBook",
+      "rootCode": "circaLocalLoopCycleAed",
+      "sourceVersion": "c88fd7a9469c1c84f81b85a853e095b0e1ee6cc9518deffb4f53228020438738",
+      "input": {
+        "publicationCode": "circa-local-outlet-priceBook-circaLocalLoopCycleAed-v001",
+        "rootType": "priceBook",
+        "rootCode": "circaLocalLoopCycleAed",
+        "references": [
+          {
+            "schema": "priceBook",
+            "code": "circaLocalLoopCycleAed",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_LOCAL_RECYCLED_ACCESSORIES_AED",
+            "versionId": 0
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa-local-outlet-taxPolicy-circaLocalLoopCycleZeroTax-v001",
+      "domain": "tax",
+      "rootType": "taxPolicy",
+      "rootCode": "circaLocalLoopCycleZeroTax",
+      "sourceVersion": "a0d014bbef9f53870d86c16f541269316ed112db2a89ca521e0b8095c8a5c85b",
+      "input": {
+        "publicationCode": "circa-local-outlet-taxPolicy-circaLocalLoopCycleZeroTax-v001",
+        "rootType": "taxPolicy",
+        "rootCode": "circaLocalLoopCycleZeroTax",
+        "references": [
+          {
+            "schema": "taxPolicy",
+            "code": "circaLocalLoopCycleZeroTax",
+            "versionId": 0
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa-local-outlet-warehouse-circaLocalLoopCycleWarehouse-v001",
+      "domain": "inventory",
+      "rootType": "warehouse",
+      "rootCode": "circaLocalLoopCycleWarehouse",
+      "sourceVersion": "050ce2c186a5fcf519b876e6dece69b3ff15a9949a59ae6460a530b98c42dce7",
+      "input": {
+        "publicationCode": "circa-local-outlet-warehouse-circaLocalLoopCycleWarehouse-v001",
+        "rootType": "warehouse",
+        "rootCode": "circaLocalLoopCycleWarehouse",
+        "references": [
+          {
+            "schema": "warehouse",
+            "code": "circaLocalLoopCycleWarehouse",
+            "versionId": 0
+          }
+        ]
+      }
+    }
+  ]
+}

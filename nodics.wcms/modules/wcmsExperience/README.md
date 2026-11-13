@@ -91,3 +91,11 @@ Placements are frozen as hashed values in the existing publication dependency jo
 Guided Experience Studio inspection uses GET authoring/placements for an exact saved CMS page. The owner returns existing scoped placements, declared slots and configured website targets. PUT on the same endpoint accepts one inspected revision and source stamp, rejects equal-priority overlap, and verifies a single persisted acknowledgement. Content remains CMS-owned; preview and publication remain separate explicit actions. New target identities are established in their business owners, not inferred by Axis. See the guided-authoring governance section.
 
 Standard workflow copy belongs to this module in `src/service/localization/workflowMessages.json`. Its contribution exposes stable public-safe UI labels only, never records, permissions or internal errors. English definitions and Arabic reference values use the Localization contribution, draft, review, approval and release APIs; loading the module does not approve or publish translations. Later project layers may supply intentional scoped translations through the same owner workflow. Preserve exact message parameters, authorization and uncertainty guidance.
+
+The preview access group and role definitions advance to release `0.0.2` so
+retained `0.0.1` receipts are not replayed against changed source bytes. The role
+pins the exact new group release. Both headers retain `ensureReferenceAll`:
+installation creates missing definitions and preserves existing Profile-managed
+authority; it never resets employee credentials or reassigns employees. Install
+through Data Releases and inspect active definitions separately before assigning
+access. An installed checksum mismatch must never be cleared by editing receipts.

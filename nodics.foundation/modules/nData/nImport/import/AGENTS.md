@@ -1,5 +1,10 @@
 # import Agent Contract
 
+History must sort by persisted schema fields (`created`, then `code` by default)
+and translate HTTP limit/offset to the generated owner's paging contract. Preserve
+explicit internal search overrides without losing defaults for an empty object.
+Verify recent-run visibility through owner APIs, not only mocked history replies.
+
 Incremental acceptance payloads and coordinator live under test fixtures/helpers,
 never the shipping data manifest or runtime source. Isolated module roots must use
 canonical release discovery, checksums and retained-root validation. Generic

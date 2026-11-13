@@ -1,0 +1,79 @@
+{
+  "contractVersion": 2,
+  "module": "cache",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "cache permissionCatalogue",
+      "description": "Explicit cache identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "cache",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/cachePermissionHeader.js": "4a6e66c6895e9df871aba58b4f25bbf159a30bb2f5ab0ddb2a0e4ce3e3802e0a",
+        "init-v001/records/identity/cachePermissionData.js": "66a794e161f2de5589197c7f14fa46ac0645ab02ab643242316ce4da82b8d262"
+      }
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "cache",
+      "version": "0.0.2",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "0160d96a1dd94753b739b544e164292a3d5c9dd96b72f6798373c88f5786c63c",
+      "generatedHashes": {
+        "docs-v001/records/documentation/cacheDocumentationNodeData.js": "c2b817585f02cef38bc801c8f2379cda6c41029e6612d0db5bc38e93c36ebd60",
+        "docs-v001/records/documentation/cacheDocumentationPageData.js": "ce20e61e49a7615521c1e144b1271ada7c31181375d556c5c8ad41c6c362879b",
+        "docs-v001/records/documentation/cacheDocumentationRouteData.js": "b27102ecaac72fa84636a8b3278e60e791cfa9afb806ddd9c7e92ab9eb852ef8",
+        "docs-v001/records/documentation/cacheDocumentationRelease002PageMetadataData.js": "1ab5af549a9a25d0771f213a263dcb699ba3e775b6bff693e34fd2f4b9589e35",
+        "docs-v001/records/documentation/cacheDocumentationRelease002PublicationStateData.js": "b9ba4b6285bc9ed4bb64263f10d38020bfbc5aa2f2e91d3b107807906d320660",
+        "docs-v001/records/documentation/cacheDocumentationRelease002SearchMetadataData.js": "9890c043a466fabdfe8d6352c81e044b752459075c30e1539af57bb3d7ef14de",
+        "docs-v001/records/documentation/cacheDocumentationRelease002ComponentData.js": "5581e8431d4f0c308aaf0d73f6e2067fb6ef4bcf070d3da6140034d690118196",
+        "docs-v001/headers/100_cacheDocumentationRelease002ContentPackHeader.js": "bd98a924606bc9229df8e09784cf1bcfefd4252a79ff4c554b2a6ad3dd85e574"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

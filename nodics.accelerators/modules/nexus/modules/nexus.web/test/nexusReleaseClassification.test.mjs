@@ -14,6 +14,7 @@ import fs from 'node:fs';
 import test from 'node:test';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 const require = createRequire(import.meta.url);
 
 test('Nexus reference releases retain immutable destination classification', () => {
@@ -23,6 +24,16 @@ test('Nexus reference releases retain immutable destination classification', () 
   const releases = Object.values(manifest.sections).filter(section => section.kind === 'DATA_RELEASE');
   assert(releases.length);
   for (const release of releases) assert(release.version && release.lifecycle && release.destinationRole);
+});
+
+test('copyright-only byte changes advance the installed corporate release and its CMS selection together', () => {
+  const release = require('../data/manifest.json').sections.nexusCorporateSite;
+  const checksum = createHash('sha256').update(Object.entries(release.files).sort()
+    .map(([file, hash]) => file + ':' + hash).join('|')).digest('hex');
+  const installed = { version: '0.0.4', checksum: '234ff770871da8eba09592471ad4307c65735a7a17c33e876b91e582ab7091d6' };
+  const owner = require('../../../../../../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService');
+  assert(checksum === installed.checksum || owner.compareVersions(release.version, installed.version) > 0);
+  assert.equal(require('../config/properties').cms.publication.baselines.nexus.releaseVersion, release.version);
 });
 
 test('one corporate baseline retains final copy and graph without shipping repair or proof releases', () => {

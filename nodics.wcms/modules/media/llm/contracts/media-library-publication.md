@@ -343,3 +343,49 @@ separate acceptance gates; isolated checks do not certify a customer environment
 ## Retained image consumers
 
 `DefaultMediaDependencyReadinessService.inspectAssets(publication, selection, request)` accepts bounded exact saved asset selections under the original request authority. It verifies retained metadata, immutable versions, physical bytes and a fresh activation-pointer read. Unavailable providers and changed pointers do not qualify. It returns the existing exact Media inspection handoff without executing any stage. Legal hold is retained; it is not implicitly released or treated as a publication ban. CMS keeps sealed-bundle selection; Editorial keeps saved featured-image and revision selection.
+
+## Exact retained review evidence reference
+
+Media exposes two read-only Staged endpoints for a publication's captured source:
+`GET /library/publications/:publicationCode/review?localeCode=en|ar` and
+`GET /library/publications/:publicationCode/review/image`. Both require human
+access tokens, the existing nPublish read access groups, `media.storage.policy.view`
+and `publish.lifecycle.view`; image bytes additionally require `media.content.read`.
+These are intersections of existing rights, not new grants or public delivery.
+The module retains `mediaManagement` exposure and independent API authorization.
+Unselected retained publication or Online source roles reject before inspection.
+
+The owner reads the exact nPublish Media root/source and uncached retained manifest,
+checks its full digest, tenant and existing library enterprise scope before provider
+IO, and projects only captured name, actual metadata version, MIME, byte count and
+SHA-256. It never reads current Media to stand in for an older reviewed source.
+Provider locators, filenames, URLs, private context and credentials do not enter
+this DTO. Metadata reads perform no provider IO and do not prove byte availability.
+`previewAvailable` reflects only configured bounds/type and the current permission;
+opening the image independently verifies exact retained bytes and checksum.
+
+Preview accepts only bounded PNG/JPEG/WebP/GIF, with no-store, nosniff, restrictive
+CSP and no public fallback. Unsupported types, excessive sizes or denied rights
+retain useful metadata without enabling inline preview. Storage reads preserve the
+original tenant/authentication context and narrow the provider read to that asset's
+exact byte count. Review does not create or update assets, approve a task, activate
+Online content or make a historical request current.
+
+Customize `media.library.review` inert EN/AR presentation, a narrower raster type
+subset and `maximumPreviewBytes` within the publication maximum. Media's provider,
+retained manifest and scope checks remain authoritative. Optional working-asset
+handoffs reuse the existing Media capability and frontend catalogue admission;
+opening them performs fresh current inspection and sends no publication command.
+The frontend correlates task publication/root/source identity, hashes preview bytes,
+retires old actor/source responses and revokes image URLs. Process's existing pinned
+review context and decision policy remain unchanged. Completed detail tasks already
+carry that bounded context; no workflow history or actor policy is rewritten.
+
+`mediaPublicationReviewContract.test.js` composes actual owner inspection, controller,
+facade and content handler with isolated generated-service/provider ports. It covers
+positive/negative acknowledgements, no current-row fallback, scope and permission
+denial before bytes, malformed identities, corrupt bytes, preview bounds and safe
+customization. Native roles, private-provider storage and deployment readiness remain
+separate acceptance gates; isolated checks do not certify a customer environment.
+
+Historical documentation provenance release 0.0.2 preserved article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](../../data/manifest.json) now selects its forward successor; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.

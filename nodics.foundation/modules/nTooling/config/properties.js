@@ -1050,6 +1050,7 @@ module.exports = {
                 basicSteps: [{ npmRun: ['test:basic'] }],
                 projectQualificationSteps: [{ npmRun: ['test:suite', '--', '--suite=project-release'] }],
                 fullSteps: [
+                    { npm: ['--prefix', 'nodics.docs', 'test'] },
                     { npmRun: ['test:full'] }
                 ]
             },

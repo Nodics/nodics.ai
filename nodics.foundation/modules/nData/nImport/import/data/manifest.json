@@ -30,7 +30,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "import",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -52,16 +52,16 @@
       "pages": 2,
       "components": 2,
       "routes": 2,
-      "releaseChecksum": "996147a650df73c1604ae3bf36145d4312d8565aae6940d9be174188c570e691",
+      "releaseChecksum": "85e313d36bdc9152dc62cb864fe2f7b19b9cc93cc8b200cd31e8224ddd7cdd0a",
       "generatedHashes": {
         "docs-v001/records/documentation/importDocumentationNodeData.js": "2df53cec6826f227547354c7dfb665a79b7a570657ed4129aad37646da5427e3",
-        "docs-v001/records/documentation/importDocumentationRelease002PageMetadataData.js": "8f80a781a9f767093796da719c87e6afdad49012544d76be1b0304141e57328d",
-        "docs-v001/records/documentation/importDocumentationRelease002PublicationStateData.js": "1b8589ee1f21c9e61dded4af508cb1269c848cce29160fd4344b331ad1329484",
-        "docs-v001/records/documentation/importDocumentationRelease002SearchMetadataData.js": "1652bfdcd8b69d82a101756d6b27d3b35a65f7d669a5c89ce4a8b50315e26cb0",
-        "docs-v001/records/documentation/importDocumentationRelease002ComponentData.js": "e62d05c1d5e7586a107a50289f2fb032a6ac3601fe23d551fedc5f5b5a3baa90",
+        "docs-v001/records/documentation/importDocumentationRelease003PageMetadataData.js": "d37800f309315d0d0e90ecf25bb8dd4e5e338a0a46e1c458fc9920bbb54e1104",
+        "docs-v001/records/documentation/importDocumentationRelease003PublicationStateData.js": "0c0382f63bbaa5adf4889948589d6052123171676edcae0bd1102530a0f82d6c",
+        "docs-v001/records/documentation/importDocumentationRelease003SearchMetadataData.js": "8e0a508e4c0f58f2237f685e77d40f851c07fbbd232c7cae3efec8021880924e",
+        "docs-v001/records/documentation/importDocumentationRelease003ComponentData.js": "9b0eaff93aac7cd78729be9d83c71f90ddfd8141224d4b5e7dd6752fd8723dc6",
         "docs-v001/records/documentation/importDocumentationPageData.js": "4c71d9198d74f63541668ee3ee69840f98672e013f1f86ff5ce1adba7a46f98d",
         "docs-v001/records/documentation/importDocumentationRouteData.js": "b26d67645c32aa7066a856029103df3665a898969a7bd6ee446b304f4777866f",
-        "docs-v001/headers/100_importDocumentationRelease002ContentPackHeader.js": "0cde160bf04a9e981f900ce4130a01a4c8a1820e9101899ade074a4dcea1799e"
+        "docs-v001/headers/100_importDocumentationRelease003ContentPackHeader.js": "06648b10e4fcbe9d2dd5922893f1fa7ca27d1bbf559d91c4147ea2d04a50941c"
       },
       "includes": [
         {

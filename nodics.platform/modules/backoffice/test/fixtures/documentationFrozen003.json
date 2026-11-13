@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "successorVersion": "0.0.5",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "backoffice",
+      "version": "0.0.3",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 4,
+      "components": 4,
+      "routes": 4,
+      "releaseChecksum": "f863e362488687faefc83fcba0a287c849eb0987ee851c7c3feb3373caaac8fc",
+      "generatedHashes": {
+        "docs-v001/records/documentation/backofficeDocumentationRelease002NodeData.js": "0a67722745e13eb90f2e1ed2fba73d4bafaf7c800c644185bd03ee34d86e0457",
+        "docs-v001/records/documentation/backofficeDocumentationRelease003PageMetadataData.js": "c91a86e79234f56f7f390020a0f4aea217dbcea48e69fb78486e539d6616dce6",
+        "docs-v001/records/documentation/backofficeDocumentationRelease003PublicationStateData.js": "d27d9a86e98277f9967d886990fc9349b6ce29df11885658155038fcee655e9c",
+        "docs-v001/records/documentation/backofficeDocumentationRelease002SearchMetadataData.js": "542005e9092b8c8efeb61aa889bb90c832662774b3db7dccc753243e9a75baee",
+        "docs-v001/records/documentation/backofficeDocumentationRelease002ComponentData.js": "92c8fc2680ab63169d740d29fe5d989c2f7324cb6e81b8ce27e7bf709779393c",
+        "docs-v001/records/documentation/backofficeDocumentationPageData.js": "6b659fabcefc24463e74f03fa5c23bfed0407714c2d6b0ef506db47157258c7d",
+        "docs-v001/records/documentation/backofficeDocumentationRouteData.js": "524c21a379fcee5d5b41fb2029bea0bb90b61121df093113bb468c971cfa4078",
+        "docs-v001/headers/102_backofficeDocumentationRelease003ContentPackHeader.js": "bb268f226952b16d264f3072d7503adcc37bbc9863734c23855dc3f873f33b37"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

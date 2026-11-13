@@ -1,0 +1,836 @@
+{
+  "contractVersion": 1,
+  "items": [
+    {
+      "code": "circa-product-CIRCA_ASSET_EWA-1047-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_ASSET_EWA-1047",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_ASSET_EWA-1047-v001",
+        "productCode": "CIRCA_ASSET_EWA-1047",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_ASSET_EWA-1051-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_ASSET_EWA-1051",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_ASSET_EWA-1051-v001",
+        "productCode": "CIRCA_ASSET_EWA-1051",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_ASSET_EWA-1052-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_ASSET_EWA-1052",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_ASSET_EWA-1052-v001",
+        "productCode": "CIRCA_ASSET_EWA-1052",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_ASSET_EWA-1055-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_ASSET_EWA-1055",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_ASSET_EWA-1055-v001",
+        "productCode": "CIRCA_ASSET_EWA-1055",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_ASSET_EWA-1092-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_ASSET_EWA-1092",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_ASSET_EWA-1092-v001",
+        "productCode": "CIRCA_ASSET_EWA-1092",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_CPN-GRN-30-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_CPN-GRN-30",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_CPN-GRN-30-v001",
+        "productCode": "CIRCA_COUPON_CPN-GRN-30",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_CPN-ECO-15-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_CPN-ECO-15",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_CPN-ECO-15-v001",
+        "productCode": "CIRCA_COUPON_CPN-ECO-15",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_CPN-SVC-50-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_CPN-SVC-50",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_CPN-SVC-50-v001",
+        "productCode": "CIRCA_COUPON_CPN-SVC-50",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C01-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C01",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C01-v001",
+        "productCode": "CIRCA_COUPON_GP-C01",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C02-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C02",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C02-v001",
+        "productCode": "CIRCA_COUPON_GP-C02",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C03-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C03",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C03-v001",
+        "productCode": "CIRCA_COUPON_GP-C03",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C04-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C04",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C04-v001",
+        "productCode": "CIRCA_COUPON_GP-C04",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C05-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C05",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C05-v001",
+        "productCode": "CIRCA_COUPON_GP-C05",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C06-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C06",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C06-v001",
+        "productCode": "CIRCA_COUPON_GP-C06",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C07-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C07",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C07-v001",
+        "productCode": "CIRCA_COUPON_GP-C07",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C08-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C08",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C08-v001",
+        "productCode": "CIRCA_COUPON_GP-C08",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C09-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C09",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C09-v001",
+        "productCode": "CIRCA_COUPON_GP-C09",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C10-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C10",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C10-v001",
+        "productCode": "CIRCA_COUPON_GP-C10",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C11-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C11",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C11-v001",
+        "productCode": "CIRCA_COUPON_GP-C11",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-C12-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-C12",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-C12-v001",
+        "productCode": "CIRCA_COUPON_GP-C12",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B01-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B01",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B01-v001",
+        "productCode": "CIRCA_COUPON_GP-B01",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B02-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B02",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B02-v001",
+        "productCode": "CIRCA_COUPON_GP-B02",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B03-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B03",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B03-v001",
+        "productCode": "CIRCA_COUPON_GP-B03",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B04-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B04",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B04-v001",
+        "productCode": "CIRCA_COUPON_GP-B04",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B05-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B05",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B05-v001",
+        "productCode": "CIRCA_COUPON_GP-B05",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B06-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B06",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B06-v001",
+        "productCode": "CIRCA_COUPON_GP-B06",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B07-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B07",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B07-v001",
+        "productCode": "CIRCA_COUPON_GP-B07",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B08-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B08",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B08-v001",
+        "productCode": "CIRCA_COUPON_GP-B08",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B09-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B09",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B09-v001",
+        "productCode": "CIRCA_COUPON_GP-B09",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B10-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B10",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B10-v001",
+        "productCode": "CIRCA_COUPON_GP-B10",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B11-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B11",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B11-v001",
+        "productCode": "CIRCA_COUPON_GP-B11",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-B12-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-B12",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-B12-v001",
+        "productCode": "CIRCA_COUPON_GP-B12",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-A01-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-A01",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-A01-v001",
+        "productCode": "CIRCA_COUPON_GP-A01",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-A02-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-A02",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-A02-v001",
+        "productCode": "CIRCA_COUPON_GP-A02",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-A03-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-A03",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-A03-v001",
+        "productCode": "CIRCA_COUPON_GP-A03",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-A04-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-A04",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-A04-v001",
+        "productCode": "CIRCA_COUPON_GP-A04",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-A05-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-A05",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-A05-v001",
+        "productCode": "CIRCA_COUPON_GP-A05",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-A06-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-A06",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-A06-v001",
+        "productCode": "CIRCA_COUPON_GP-A06",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-A07-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-A07",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-A07-v001",
+        "productCode": "CIRCA_COUPON_GP-A07",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-A08-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-A08",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-A08-v001",
+        "productCode": "CIRCA_COUPON_GP-A08",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-A09-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-A09",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-A09-v001",
+        "productCode": "CIRCA_COUPON_GP-A09",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-A10-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-A10",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-A10-v001",
+        "productCode": "CIRCA_COUPON_GP-A10",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-product-CIRCA_COUPON_GP-A11-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_COUPON_GP-A11",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-product-CIRCA_COUPON_GP-A11-v001",
+        "productCode": "CIRCA_COUPON_GP-A11",
+        "storeCode": "circaMainStore",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-pricing-circaPointsPriceBook-v001",
+      "domain": "pricing",
+      "rootType": "priceBook",
+      "rootCode": "circaPointsPriceBook",
+      "sourceVersion": "eef7a4c55c950ae6271e49d93d66d7313304b84a9bdf80f883394a312e7646c0",
+      "input": {
+        "publicationCode": "circa-pricing-circaPointsPriceBook-v001",
+        "rootType": "priceBook",
+        "rootCode": "circaPointsPriceBook",
+        "references": [
+          {
+            "schema": "priceBook",
+            "code": "circaPointsPriceBook",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_ASSET_EWA-1047_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_ASSET_EWA-1051_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_ASSET_EWA-1052_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_ASSET_EWA-1055_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_ASSET_EWA-1092_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_CPN-ECO-15_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_CPN-GRN-30_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_CPN-SVC-50_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-A01_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-A02_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-A03_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-A04_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-A05_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-A06_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-A07_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-A08_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-A09_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-A10_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-A11_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B01_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B02_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B03_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B04_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B05_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B06_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B07_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B08_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B09_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B10_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B11_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-B12_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C01_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C02_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C03_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C04_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C05_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C06_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C07_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C08_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C09_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C10_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C11_POINTS",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_COUPON_GP-C12_POINTS",
+            "versionId": 0
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa-inventory-circaDigitalRegistry-v001",
+      "domain": "inventory",
+      "rootType": "warehouse",
+      "rootCode": "circaDigitalRegistry",
+      "sourceVersion": "758c1104a1788dc95f2d5b672b9ab28d72066b4e4a7e0bd255f464a9e42e97bf",
+      "input": {
+        "publicationCode": "circa-inventory-circaDigitalRegistry-v001",
+        "rootType": "warehouse",
+        "rootCode": "circaDigitalRegistry",
+        "references": [
+          {
+            "schema": "warehouse",
+            "code": "circaDigitalRegistry",
+            "versionId": 0
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa-tax-circaSamplePointsPolicy-v001",
+      "domain": "tax",
+      "rootType": "taxPolicy",
+      "rootCode": "circaSamplePointsPolicy",
+      "sourceVersion": "bc234b7a629b2799c0a55e3d4857a6f37de490b2783790b39ee09950778953ae",
+      "input": {
+        "publicationCode": "circa-tax-circaSamplePointsPolicy-v001",
+        "rootType": "taxPolicy",
+        "rootCode": "circaSamplePointsPolicy",
+        "references": [
+          {
+            "schema": "taxPolicy",
+            "code": "circaSamplePointsPolicy",
+            "versionId": 0
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "contractVersion": 1,
+  "items": [
+    {
+      "code": "circa-local-outlet-product-CIRCA_LOCAL_DEVICE_CARE_GOODS-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_LOCAL_DEVICE_CARE_GOODS",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-local-outlet-product-CIRCA_LOCAL_DEVICE_CARE_GOODS-v001",
+        "productCode": "CIRCA_LOCAL_DEVICE_CARE_GOODS",
+        "storeCode": "renewworks-repair",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-local-outlet-priceBook-circaLocalRenewWorksAed-v001",
+      "domain": "pricing",
+      "rootType": "priceBook",
+      "rootCode": "circaLocalRenewWorksAed",
+      "sourceVersion": "6a3927a8dbf798e84e6cdb5aaa6fc5338d530404c8b20e8294066cef8e3867e3",
+      "input": {
+        "publicationCode": "circa-local-outlet-priceBook-circaLocalRenewWorksAed-v001",
+        "rootType": "priceBook",
+        "rootCode": "circaLocalRenewWorksAed",
+        "references": [
+          {
+            "schema": "priceBook",
+            "code": "circaLocalRenewWorksAed",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_LOCAL_DEVICE_CARE_GOODS_AED",
+            "versionId": 0
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa-local-outlet-taxPolicy-circaLocalRenewWorksZeroTax-v001",
+      "domain": "tax",
+      "rootType": "taxPolicy",
+      "rootCode": "circaLocalRenewWorksZeroTax",
+      "sourceVersion": "b762f6b2e286e0b858d713b82e0481532a9a4ea380e7df99dafc232af9e624e2",
+      "input": {
+        "publicationCode": "circa-local-outlet-taxPolicy-circaLocalRenewWorksZeroTax-v001",
+        "rootType": "taxPolicy",
+        "rootCode": "circaLocalRenewWorksZeroTax",
+        "references": [
+          {
+            "schema": "taxPolicy",
+            "code": "circaLocalRenewWorksZeroTax",
+            "versionId": 0
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa-local-outlet-warehouse-circaLocalRenewWorksWarehouse-v001",
+      "domain": "inventory",
+      "rootType": "warehouse",
+      "rootCode": "circaLocalRenewWorksWarehouse",
+      "sourceVersion": "f70c03029d7c89de7c5c16bb85ecfe436c9fc1b2d68c56f4a8e457156962bb08",
+      "input": {
+        "publicationCode": "circa-local-outlet-warehouse-circaLocalRenewWorksWarehouse-v001",
+        "rootType": "warehouse",
+        "rootCode": "circaLocalRenewWorksWarehouse",
+        "references": [
+          {
+            "schema": "warehouse",
+            "code": "circaLocalRenewWorksWarehouse",
+            "versionId": 0
+          }
+        ]
+      }
+    }
+  ]
+}

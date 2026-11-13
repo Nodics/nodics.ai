@@ -30,7 +30,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "cache",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",

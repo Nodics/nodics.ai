@@ -22,7 +22,8 @@ const contract = require(path.join(framework, 'nodics.foundation/modules/nToolin
 const previous = require('./fixtures/documentationFrozen001.json').sections.documentation;
 const frozen002 = require('./fixtures/documentationFrozen002.json').sections.documentation;
 const active = contract.readDocumentationRelease(root, 'documentation');
-const next = require('./fixtures/documentationReviewPredecessor.json').sections.documentation;
+const next = require('./fixtures/documentationFrozen003.json').sections.documentation;
+const frozen004 = require('./fixtures/documentationReviewPredecessor.json').sections.documentation;
 const selected = { ...active, manifest: next, fileRoot: path.join(root, 'test/fixtures/documentationReviewPredecessor') };
 const local = { ...selected, children: [] };
 const historicalFile = file => {
@@ -252,10 +253,11 @@ test('existing pack/profile/exact baseline selects the active successor and vali
 });
 
 test('0.0.4 preserves the sealed predecessor and adds only the shared observation guidance', () => {
-    assert.equal(active.manifest.version, '0.0.4');
-    contract.validateGeneration(next, active.manifest);
+    const release004 = { ...selected, manifest: frozen004 };
+    assert.equal(frozen004.version, '0.0.4');
+    contract.validateGeneration(next, frozen004);
     for (const [file, hash] of Object.entries(next.generatedHashes)) assert.equal(contract.sha256(fs.readFileSync(path.join(selected.fileRoot, file))), hash);
-    const current = family({ ...active, children: [] }, 'Component');
+    const current = family({ ...release004, children: [] }, 'Component');
     assert.deepEqual(current.map(r => r.code), components.map(r => r.code));
     for (const old of components) {
         const now = current.find(r => r.code === old.code);
@@ -266,8 +268,8 @@ test('0.0.4 preserves the sealed predecessor and adds only the shared observatio
             for (const phrase of ['partial view', 'distributed lease store', 'compare-and-set', 'activation decision']) assert.ok(body.includes(phrase));
         }
     }
-    for (const suffix of ['Page', 'Route', 'Node']) assert.deepEqual(family({ ...active, children: [] }, suffix), family(local, suffix));
-    const pages = family({ ...active, children: [] }, 'PageMetadata');
+    for (const suffix of ['Page', 'Route', 'Node']) assert.deepEqual(family({ ...release004, children: [] }, suffix), family(local, suffix));
+    const pages = family({ ...release004, children: [] }, 'PageMetadata');
     for (const record of current) {
         const article = record.properties, page = pages.find(p => p.articleComponent === record.code);
         const body = '# ' + article.title + '\n\n' + contract.documentationText(article.blocks);
@@ -276,6 +278,44 @@ test('0.0.4 preserves the sealed predecessor and adds only the shared observatio
         assert.equal(page.sourceChecksum, article.source.checksum);
         assert.equal(page.sourceWordCount, article.source.wordCount);
         assert.equal(page.wordCount, article.source.wordCount);
+        assert.equal(page.sourcePath, article.source.path);
+    }
+});
+
+test('active 0.0.5 preserves 0.0.4 and adds only current operator and frozen reviewer guidance', () => {
+    assert.equal(active.manifest.version, '0.0.5');
+    contract.validateGeneration(frozen004, active.manifest);
+    for (const [file, hash] of Object.entries(frozen004.generatedHashes)) {
+        assert.equal(contract.sha256(fs.readFileSync(path.join(selected.fileRoot, file))), hash, file);
+    }
+    const predecessor = { ...selected, manifest: frozen004, children: [] };
+    const currentRelease = { ...active, children: [] };
+    const prior = family(predecessor, 'Component');
+    const current = family(currentRelease, 'Component');
+    assert.deepEqual(current.map(record => record.code), prior.map(record => record.code));
+    for (const record of prior) {
+        const now = current.find(item => item.code === record.code);
+        assert.deepEqual(now.properties.blocks.slice(0, record.properties.blocks.length), record.properties.blocks);
+        const added = now.properties.blocks.slice(record.properties.blocks.length);
+        if (record.properties.code === 'applications.axis-setup-error-contracts') {
+            assert.equal(added.length, 4);
+            const text = contract.documentationText(added);
+            for (const phrase of ['authenticated human', 'reviewer eligibility', 'revision', 'Framework', 'Kickoff']) assert.ok(text.includes(phrase), phrase);
+        } else assert.deepEqual(added, []);
+    }
+    for (const suffix of ['Page', 'Route', 'Node']) assert.deepEqual(family(currentRelease, suffix), family(predecessor, suffix));
+    const pages = family(currentRelease, 'PageMetadata');
+    for (const record of current) {
+        const article = record.properties;
+        const page = pages.find(item => item.articleComponent === record.code);
+        // This release records authored CMS block provenance. The page title is
+        // separate metadata, not a synthetic Markdown heading in that source.
+        const body = contract.documentationText(article.blocks);
+        assert.equal(page.title, article.title);
+        assert.equal(article.source.checksum, contract.sha256(body));
+        assert.equal(page.sourceChecksum, article.source.checksum);
+        assert.equal(page.wordCount, contract.countWords(body));
+        assert.equal(page.sourceWordCount, contract.countWords(body));
         assert.equal(page.sourcePath, article.source.path);
     }
 });

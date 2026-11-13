@@ -121,3 +121,9 @@ remain exact. Reject missing publication and obsolete role selectors. Preserve
 original actor or internal credentials as specified by each API, signed caller
 grants, tenant/business binding, enablement and qualification. Routing descriptors
 do not activate owners or providers. Tests must express these boundaries explicitly.
+
+
+Order business Workbench navigation declares the Framework-owned OPERATIONAL
+publication role. Axis must use this same owner for counts and workspace reads;
+a Staged copy is never a fallback. Extend logical runtime facts through the shared
+BackOffice contract, not Kickoff defaults or a hardcoded frontend server name.

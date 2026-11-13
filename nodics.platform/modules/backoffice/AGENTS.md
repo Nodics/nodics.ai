@@ -111,6 +111,12 @@ ordinary unselected initialization must still submit the governed CMS baseline.
 - Diagnose registration acknowledgements through the existing secured diagnostics'
   fixed numeric phase timings. Never retain credentials, request/result payloads
   or raw errors in timing evidence; elapsed duration alone does not prove CPU cost.
+- Unchanged live lease renewal may use provider-atomic exact-byte comparison,
+  expiry checks and shared revision advancement after signed identity and source
+  validation. Only `lastSeenAt` and `expiresAt` may differ. New, changed, missing
+  or expired leases retain full ownership admission. Customized ownership or
+  logical-authority methods must retain full admission even for identical leases.
+  Never renew from decoded caches or extend the submitted expiry deadline.
 - Return only client-safe public connection metadata. Never return internal
   tokens, credentials, private keys, secret references, or unapproved internal
   endpoints to the frontend.

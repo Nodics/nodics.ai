@@ -17,6 +17,7 @@
  * @override Projects may replace store behavior while preserving asynchronous TTL, enumeration, diagnostics, and failure contracts.
  */
 const { randomUUID } = require("node:crypto");
+const { isDeepStrictEqual } = require("node:util");
 // Derived decoding only: never an authority cache, and never shared by store instances.
 const decodedStores = new WeakMap();
 
@@ -31,7 +32,7 @@ module.exports = {
 },
 
     _instances: new Map(),
-    _metrics: { reads: 0, writes: 0, deletes: 0, conditionalDeletes: 0, conditionalDeleteConflicts: 0,
+    _metrics: { reads: 0, writes: 0, renewals: 0, deletes: 0, conditionalDeletes: 0, conditionalDeleteConflicts: 0,
         scans: 0, errors: 0, lastSuccessAt: null, lastErrorAt: null },
 
     /** Initializes the configured store without creating provider connections outside nCache. */
@@ -100,6 +101,50 @@ module.exports = {
             cache.values.set(key, { serialized, value, bytes }); cache.bytes += bytes;
         }
         return value;
+    },
+    /** Renews an already admitted live lease only when every non-heartbeat field
+     * is unchanged. The caller must retain signed identity/source checks and use
+     * full admission for customized ownership policy. Provider comparison and
+     * expiry checks are atomic; a missing, changed or expired lease falls back
+     * to normal admission. Advancing the shared revision fences competing new
+     * ownership decisions without rescanning all leases for every heartbeat.
+     */
+    renewUnchanged: function (key, value, ttlMs) {
+        return this.observe('renewals', async () => {
+            const deadline = Math.min(value.expiresAt, Date.now() + Number(ttlMs));
+            if (!Number.isFinite(deadline) || deadline <= Date.now()) return false;
+            const storageKey = this.getStorageKey(key);
+            const client = this.isDistributed() ? this.getDistributedClient() : undefined;
+            const serialized = client ? await client.get(storageKey) : undefined;
+            const current = client ? (serialized ? JSON.parse(serialized) : undefined) : this._instances.get(key);
+            if (!current || !(current.expiresAt > Date.now())) return false;
+            const stable = input => {
+                const result = JSON.parse(JSON.stringify(input));
+                delete result.lastSeenAt;
+                delete result.expiresAt;
+                return result;
+            };
+            if (!isDeepStrictEqual(stable(current), stable(value))) return false;
+            if (!client) {
+                this._instances.set(key, value);
+                return true;
+            }
+            if (typeof client.eval !== 'function') throw new Error('Distributed registry store requires atomic admission support');
+            const script = [
+                '-- backoffice-registry-unchanged-renewal',
+                'if redis.call("GET", KEYS[1]) ~= ARGV[1] then return 0 end',
+                'local clock=redis.call("TIME")',
+                'local now=tonumber(clock[1])*1000+math.floor(tonumber(clock[2])/1000)',
+                'if tonumber(ARGV[2]) <= now or tonumber(ARGV[4]) <= now then return 0 end',
+                'redis.call("SET", KEYS[1], ARGV[3], "PX", math.ceil(tonumber(ARGV[4])-now))',
+                'redis.call("SET", KEYS[2], ARGV[5])',
+                'return 1'
+            ].join('\n');
+            return Number(await client.eval(script, {
+                keys: [storageKey, this.getStorageKey('$revision')],
+                arguments: [serialized, String(current.expiresAt), JSON.stringify(value), String(deadline), randomUUID()]
+            })) === 1;
+        });
     },
     /** Atomically validates a current lease snapshot and writes its replacement.
      * The synchronous validator must be pure and rerunnable. Memory has no yield between

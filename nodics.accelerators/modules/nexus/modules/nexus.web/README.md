@@ -105,6 +105,11 @@ The unreleased Editorial source baseline imports article masters as DRAFT withou
 
 The corporate source release 0.0.4 adds the normal Arabic `/` route with the same page/component identities and 34 reviewed English/Arabic component variants. CMS owns localized-property validation and Process approval remains required before Online delivery. The published header owns language choices; Arabic links name English-only detail and guide destinations. The source advance does not rewrite installed receipts or authorize automatic replay.
 
+Release 0.0.5 preserves those business values and advances the immutable source
+identity for the required copyright header. The CMS baseline selects the same
+version. Existing 0.0.4 receipts remain unchanged; operators validate and install
+the successor through nImport and review publication separately.
+
 Component type declarations are imported before variants using the canonical numbered type source. The immutable release manifest orders dependencies before localized records; a failed installation never changes Online content or its approval.
 
 Home product links, contact anchors, ecosystem statements and form captions are published localized CMS properties. The frontend owns translated interface labels and preserves locale on Editorial detail links.

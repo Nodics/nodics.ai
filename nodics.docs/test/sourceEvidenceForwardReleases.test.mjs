@@ -55,13 +55,12 @@ for (const owner of owners) test(owner + ': source correction uses an immutable 
         for (const [file, expected] of Object.entries(section.generatedHashes))
             assert.equal(contract.sha256(fs.readFileSync(path.join(historyRoot, 'data', file))), expected, file);
     }
-    assert.equal(active.contentPath, 'docs-v001');
     if (owner.endsWith('/shoppingList')) {
         const forward = require(path.join(ownerRoot, 'test/fixtures/documentationProvenancePredecessor.json'));
         assert.equal(forward.sections.documentation.version, selected.version);
         assert.equal(active.version, forward.successorVersion);
         contract.validateGeneration(forward.sections.documentation, active);
-    } else assert.equal(active.version, selected.version);
+    } else contract.validateGeneration(selected, active);
     assert.equal(contract.releaseChecksum(active.generatedHashes), active.releaseChecksum);
     for (const [file, expected] of Object.entries(active.generatedHashes))
         assert.equal(contract.sha256(fs.readFileSync(path.join(ownerRoot, 'data', file))), expected, file);
@@ -91,9 +90,17 @@ for (const owner of owners) test(owner + ': source correction uses an immutable 
             assert.equal(expected[delta.blockIndex].text.split(delta.from).length, 2);
             expected[delta.blockIndex].text = expected[delta.blockIndex].text.replace(delta.from, delta.to);
         }
-        assert.deepEqual(current.blocks, expected);
-        assert.deepEqual(current.sourceEvidence, replaceCitation(old.properties.sourceEvidence, from, to));
-        assert.deepEqual(current.headings, old.properties.headings);
+        if (owner.endsWith('/installer')) {
+            // The later read-only planning qualification appends to the original citation correction.
+            assert.deepEqual(current.blocks.slice(0, expected.length), expected);
+            assert.equal(current.blocks[expected.length].anchor, 'installer-read-only-qualification');
+            assert.match(contract.documentationText(current.blocks.slice(expected.length)), /dry-run plan is not execution/);
+        } else assert.deepEqual(current.blocks, expected);
+        assert.deepEqual(current.sourceEvidence, replaceCitation(old.properties.sourceEvidence, from, to)
+            .concat(owner.endsWith('/installer') ? ['test/installerReadOnlyAcceptance.test.js'] : []));
+        assert.deepEqual(current.headings.slice(0, old.properties.headings.length), old.properties.headings);
+        assert.deepEqual(current.headings, current.blocks.filter(block => block.kind === 'heading')
+            .map(({text, anchor, level}) => ({text, anchor, level})));
         assert.equal(current.route, old.properties.route);
         assert.equal(current.lifecycleState, 'STAGED');
         for (const evidence of current.sourceEvidence) contract.validateSourceEvidence(ownerRoot, evidence);

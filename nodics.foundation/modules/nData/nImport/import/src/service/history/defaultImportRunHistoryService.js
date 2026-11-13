@@ -124,19 +124,29 @@ module.exports = {
                 return;
             }
             let query = this.prepareImportRunHistoryQuery(request || {});
-            let searchOptions = request.searchOptions || this.prepareImportRunHistorySearchOptions(request || {});
-            importRunService.get({
+            let searchOptions = Object.assign({}, this.prepareImportRunHistorySearchOptions(request || {}), request.searchOptions);
+            const filters = this.getImportRunHistoryFilters(request || {});
+            const pageSize = Number(searchOptions.pageSize || CONFIG.get('defaultPageSize'));
+            const pageOffset = request.searchOptions?.pageNumber !== undefined ? 0 : (Number(filters.skip) || 0) % pageSize;
+            const readPage = (options) => importRunService.get({
                 tenant: this.resolveTenant(request || {}),
                 query: query,
-                searchOptions: searchOptions
-            }).then(success => {
+                searchOptions: options
+            });
+            readPage(searchOptions).then(async success => {
+                let records = success.result || [];
+                if (pageOffset && records.length === pageSize) {
+                    const next = await readPage({ ...searchOptions, pageNumber: searchOptions.pageNumber + 1 });
+                    records = records.concat(next.result || []);
+                }
+                if (pageOffset) records = records.slice(pageOffset, pageOffset + pageSize);
                 resolve({
                     code: 'SUC_IMP_00000',
                     message: 'Import run history fetched successfully',
-                    data: success.result || [],
+                    data: records,
                     metadata: {
                         query: query,
-                        count: success.result ? success.result.length : 0,
+                        count: records.length,
                         tenant: this.resolveTenant(request || {})
                     }
                 });
@@ -380,16 +390,17 @@ module.exports = {
         let filters = this.getImportRunHistoryFilters(request);
         let options = {};
         if (filters.limit) {
-            options.limit = Number(filters.limit);
+            options.pageSize = Number(filters.limit);
         }
         if (filters.skip) {
-            options.skip = Number(filters.skip);
+            options.pageNumber = 1 + Math.floor(Number(filters.skip) / (options.pageSize || CONFIG.get('defaultPageSize')));
         }
         if (filters.projection) {
             options.projection = filters.projection;
         }
         options.sort = filters.sort || {
-            creationTime: -1
+            created: -1,
+            code: -1
         };
         return options;
     },

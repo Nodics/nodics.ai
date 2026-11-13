@@ -60,6 +60,13 @@
   corrections in `test/evidence/semantic-documentation-closure.json`. Changed or
   incomplete evidence reopens the item. Coverage keywords and Online state do not
   close editorial gaps or prove provider/live acceptance.
+- Bind historical release regressions to recoverable, hash-qualified snapshots,
+  including their original metadata and citations. Validate current source
+  independently; a later approved source change must not be compared to an old
+  receipt as if the receipt described today's content. Preserve discrepancies
+  explicitly rather than rewriting historical seals. Re-review changed claims
+  before refreshing editorial evidence, and keep article headings, source
+  digests/counts, search text and publication target seals aligned.
 - The central catalogue references canonical accelerator guides; it does not
   duplicate their detail. Keep real customer-specific deployment runbooks/data
   with their backend owner and never invent application-named domain accelerators.
@@ -70,6 +77,14 @@
   Tooling validates target pack, owner and anchor without adding those records or
   assets to import. `includes` remains the only composition selector; references
   never grant publication, access or visibility outside the immutable delivery scope.
+
+Immutable identity includes the recursive composition checksum. When an included
+release changes, advance every installed parent composition affected by that
+change; unchanged local article hashes do not permit reuse of an installed
+version. Preserve payload bytes for composition-only successors and prove them
+against predecessor fixtures. Keep module baseline defaults here and explicit
+deployment release selections in the consuming project. Adopt through nImport
+and normal CMS/Process approval; never overwrite installed receipts.
 
 Source coverage defaults to metadata-declared module roots within this framework
 checkout. It never auto-selects sibling customer/frontend repositories. To audit
@@ -82,3 +97,18 @@ Framework documentation owns its inert acceptance pack descriptor under
 `tooling.acceptance.localBootstrap.documentationPacks`. Axis and customer packs
 own their respective descriptors. Projects select pack codes explicitly; static
 discovery does not import, activate or publish documentation.
+
+Standalone Framework qualification must not read arbitrary sibling checkouts.
+Current Framework source citations remain live path/anchor checks. External
+reference examples use the existing documentation owner's exact Git snapshots
+under `test/fixtures/externalSourceEvidence`, bound to article blocks, owner,
+reference path, commit and source bytes. Missing or changed evidence fails closed.
+These snapshots prove existence at the recorded commit, not current project
+compatibility, semantic approval or installed acceptance. Requalify explicit
+reference changes; never make sibling presence a fallback or copy customer runtime
+behavior into Framework. Run the source-reference isolation and negative tests.
+
+Source coverage excludes runtime-generated `src/controller/gen`, `src/facade/gen`
+and `src/service/gen` adapters, like other generated output. Their presence on a
+running developer checkout must not change the source report or package priority.
+Keep the generated-adapter independence assertion in `sourceCoverageScope.test.mjs`.

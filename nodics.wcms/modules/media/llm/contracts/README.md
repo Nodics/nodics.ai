@@ -30,9 +30,7 @@ See [Documentation](media-lifecycle-contracts.md#documentation).
 
 Canonical framework documentation:
 
-- [nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js](../../data/docs-v001/records/documentation/mediaDocumentationComponentData.js)
-- [nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js](../../data/docs-v001/records/documentation/mediaDocumentationComponentData.js)
-- [nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js](../../data/docs-v001/records/documentation/mediaDocumentationComponentData.js)
+- [nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationRelease003ComponentData.js](../../data/docs-v001/records/documentation/mediaDocumentationRelease003ComponentData.js)
 
 ## Verification
 

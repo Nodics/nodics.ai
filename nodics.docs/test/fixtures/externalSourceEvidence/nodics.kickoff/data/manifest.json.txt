@@ -1,0 +1,80 @@
+{
+  "contractVersion": 2,
+  "module": "nodics.kickoff",
+  "sections": {
+    "documentation": {
+      "referenceCatalogues": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        }
+      ],
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "nodics.kickoff",
+      "version": "0.0.3",
+      "owningDomain": "kickoff.documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "kickoffDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 9,
+      "components": 10,
+      "routes": 9,
+      "releaseChecksum": "cc35d9488fb6fe2e8a6209a63528edc70a005ffb6f0943d075ed464e8cfa61d2",
+      "generatedHashes": {
+        "docs-v001/assets/documentation/assetManifest.js": "f26db9cc3bdd4ffc4958908bf73f4fbc9f637ee12f81f314808f4c10f1612d0a",
+        "docs-v001/assets/documentation/files/images/local-setup/agora-apparel-online.jpg": "edc62b048e82c253de2d9701627c5aeeebc3c0d6d807f4b56af4cce48ca61c9c",
+        "docs-v001/assets/documentation/files/images/local-setup/axis-dashboard.jpg": "db084e3fca2b48dd161b665e4b606366e4b322c618646b14c382dff80de2a80f",
+        "docs-v001/assets/documentation/files/images/local-setup/axis-entry.jpg": "852c731f7d316d83dc30316c717bbf375988557c3419ea29f97cab8164084de0",
+        "docs-v001/assets/documentation/files/images/local-setup/axis-first-launch-initialize.jpg": "832f1b8a4701817190c6b95f331d9e9c26945b3b471577ec240b12343a7a6cc4",
+        "docs-v001/assets/documentation/files/images/local-setup/axis-first-launch-recovery-login.jpg": "2e4c1fe55087470f1bf8e91da07ccd1dfa05bcc6bae0e9459b9af155f1c87621",
+        "docs-v001/assets/documentation/files/images/local-setup/documentation-dashboard.jpg": "7073a2b01464d7e66b7356f4cb869b2d7cffc2b6f95cb5058650c893e91ace11",
+        "docs-v001/assets/documentation/files/images/local-setup/imports-and-exports.jpg": "ef9610558e4e57197d456639de4c8746d66e287172567afcf421dbd2365d25bf",
+        "docs-v001/assets/documentation/files/images/local-setup/module-registry.jpg": "71b7abc25764fc9c4232184ad6bc2b0a04fdb8195cff0655ee3575a55798c082",
+        "docs-v001/assets/documentation/files/images/local-setup/nexus-online.jpg": "cbf9b854bea1e3c7db786b664aa02f3c532449e6bda162e274b14437213fba78",
+        "docs-v001/assets/documentation/files/images/local-setup/process-approval-queue.jpg": "ef0282d59f58eab4596b6ebb3aeb36a872107756e6e22d64ea7621e3f56bb65f",
+        "docs-v001/assets/documentation/files/images/local-setup/publishing.jpg": "d70850a2699ec18d2b8f54b63d4dac399031a4a06c0ea5076200dfa00ba286c0",
+        "docs-v001/assets/documentation/files/images/local-setup/setup-accelerators.jpg": "36bc205dd8d49920aa3c29a0a26245fd7e086f4ed9f670151eb98ed261032ccb",
+        "docs-v001/assets/documentation/files/images/local-setup/swagger-reference.jpg": "867d42f0ffe9c29ed8421b5c694f90d1f0e9ce3540e461caf2da9ddf1c7b627c",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002SiteData.js": "fba884d64fbff0d3e6672ea46505386c8f070f678585a8e3f4509ef9a3e1727b",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002ProductData.js": "151c6517747c4bcc4996fb8e2787c235954b21f8eae8d72b55f1235b443062d1",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002AccessPolicyData.js": "73b637a9da2e5aebbe90acbdd39b6658353cac4635b13fa22ada7c6b4025adbf",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002NavigationData.js": "cf54360d7fc4bab4638c73fe3f8f2caa3e7489335b33e718973158102ebcb32f",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002DashboardData.js": "b4b0be9d2a9bb1bd48598b1976e792b02d07d1b9e79e86f5cb4e60f73a46f820",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002LegacyNavigationCleanupData.js": "80b8990d5f1e4b0b85cf3484f8e0b1f471d19ed9b52189dcda0585c737f0b0aa",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002NodeData.js": "3be5a815b3584c5328332e57a1635bb484582f64f597af0c7c08d511d9f1bd0a",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002PageMetadataData.js": "a7e3b3b69ea86bbc42a9cd5a49084ca8bcc547f740411797336c99f083e49a50",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002PublicationStateData.js": "46d8ffeee6761e9555a42bd5356c2f64285cd2c4d3474ed09c7b255d464d9dc9",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002SearchMetadataData.js": "59c66141f090954672e382fb495af8e9190de3025c8e9af1c05a8a65972c243c",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002TypeCodeData.js": "0e008dbe668223b0a298e1386c9c527871c1f1e7037dce64ba421ea911b0e5f2",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002RendererData.js": "7bda0c6d4b554fa7b38b265a03c38be93d6ea10950faabb0aebf0621b95a6151",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002SlotData.js": "b3e5a94b27a25683d7ebd16c2d87b8545fb53457062a254c10836cf68af1d7a0",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002TemplateData.js": "66f2fb1be98187e90f8100ab7d7cc17d9cf7e441fa7d964458015ad2f2021b01",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002ComponentData.js": "a1bda727d8d58019d78325afa806bb7d66056eefa2529167a93562fb7e380afd",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002PageData.js": "d00514a4e30096213750f861481c300b892482b42af50b4f51a304fa21a9f716",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002RouteData.js": "912cf940a0e80777205037a6dd71685b313d5644e3d4e0e739c03ae7a25fdffb",
+        "docs-v001/records/documentation/kickoffDocumentationRelease002MediaData.js": "e8e767e3bf98de4340313ea113069ea0868e700e2e4e59f9787d090a62b42f7c",
+        "docs-v001/headers/kickoffDocumentationRelease002ContentPackHeader.js": "d7fdc9ea9ec46548305325612ead053adc746f8393cb82f251e6669bf7c15fec"
+      }
+    }
+  }
+}

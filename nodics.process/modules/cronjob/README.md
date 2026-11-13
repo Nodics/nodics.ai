@@ -57,78 +57,11 @@ startup side effects that create duplicate definitions.
 
 ## Execution And Ownership Model
 
-```text
-persisted tenant job -> eligible CronJob module instance -> assigned node pool
-                    -> scheduled/manual trigger -> handler or target module
-                    -> state, log, event, and operational evidence
-```
-
-The persisted definition is authoritative; the in-memory pool is disposable.
-A node creates a scheduler only when its identifier matches `runOnNode` or an
-approved temporary `tempNode`. Node-down handling may create temporary local
-ownership, and node-up handling removes that temporary copy. Projects must
-enable and qualify node monitoring before depending on failover in production.
-
-This model prevents intentional duplicate placement, but it is not a
-distributed transaction or universal exactly-once guarantee. Network
-partitions, delayed failure detection, process termination, and downstream
-timeouts can create uncertain outcomes. Jobs that change external state must
-define an idempotency key, duplicate/overlap policy, timeout, retry safety, and
-reconciliation or compensation behavior.
+See the [execution and ownership model](llm/contracts/README.md#execution-and-ownership-model) for exact admission, failure and recovery boundaries.
 
 ## Lifecycle Commands
 
-CronJob supports create/register, update, run, start, stop, remove, pause, and
-resume through its owning controller, orchestration service, and
-`DefaultCronJobRuntimeService`. The runtime service is the sole process-local
-tenant/job pool authority; later modules may override individual lifecycle
-members without replacing scheduler state or the per-job `CronJob` type.
-State-changing routes are secured command APIs: `POST` for create, run, start,
-stop, pause, and resume; `PATCH` for update; and `DELETE` for removal. Do not
-expose these operations through `GET` or place business logic in route handlers.
-Every lifecycle command route declares the stable
-`cronjob.lifecycle.manage` permission in addition to its access-group guard.
-The reference runtime administrator group receives this permission through the
-identity-governance migration target, but customer projects should narrow it
-for production operators when needed.
-
-Scheduled triggers and manual `run` commands share the job definition and
-handler contract. Manual execution must not bypass tenant context, node
-eligibility, running-job protection, target permissions, logging, or failure
-handling. A human bearer token can authorize a CronJob command; module calls
-performed by the job use the separate tenant-scoped internal service-token flow.
-
-Scheduler bookkeeping uses owner-bound `persistRuntimeState`, never business
-execution authority. The [detailed guide](data/docs-v001/records/documentation/cronjobDocumentationRelease002ComponentData.js)
-defines its permitted fields, exact acknowledgement and drain guarantees.
-
-Axis can present a Cron operation panel, but it remains a client. Saving a job
-uses the Cron-owned generated `cronJob` schema route, and lifecycle buttons call
-Cron-owned command routes. Axis must not create an alternate scheduler state,
-calculate job ownership, or execute job handlers in the browser.
-
-Axis may apply a conservative button policy to reduce operator mistakes. For
-example, an inactive job should not show `run` or `start` as immediately
-available, a running job should make `stop` and `pause` visible, and a paused
-job should make `resume` visible. That policy is only presentation guidance.
-Cron remains the final authority and must validate every command server-side.
-
-The inactive-draft save acknowledgement describes the original save. Its copy
-points operators to Schedule control for the current state, so it remains truthful
-after activation or a completed run. Actual timer inspection and persisted execution
-evidence remain separate from that historical receipt. The current inspection
-also identifies the scheduler time zone and stored expression. Only a proven
-active timer can report a next eligible tick. A tick can be skipped if another
-execution already holds the job.
-
-When a Cron job declares `jobDetail.processTrigger`, Cron may start a governed
-Process trigger through Process APIs. The Cron definition still owns schedule
-and execution timing. Process owns the trigger relationship, started instance,
-task creation, and audit timeline.
-Configured business context is retained, but Cron supplies `source: 'cronjob'`,
-the actual job/tenant, scheduled expression and fire time after merging it. A
-frontend source label or configured conflicting field cannot override that
-provenance. Process and the target still perform independent authorization.
+See the [lifecycle commands](llm/contracts/README.md#lifecycle-commands) for exact admission, failure and recovery boundaries.
 
 ## Resilience And Recovery
 
@@ -205,7 +138,7 @@ environment.
 ## Continue
 
 - Inactive Process schedule drafts: [contract](llm/contracts/inactive-schedule-drafts.md)
-  and [step-by-step guide](data/docs-v001/records/documentation/cronjobDocumentationRelease002ComponentData.js).
+  and [step-by-step guide](data/docs-v005/records/documentation/cronjobDocumentationRelease005ComponentData.js).
   Deployment-approved targets can be reviewed and inserted without scheduling.
   This optional command defaults off and never activates a job.
 - Process capability family: [nodics.process](../../README.md)
@@ -248,7 +181,7 @@ with existing secured routers. Axis client/action/page tests cover malformed
 evidence and scope retirement. Actual scheduled firing and role journeys remain
 separate live acceptance, not inferred from these source checks.
 
-Documentation provenance release 0.0.2 preserves article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](data/manifest.json) selects it; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.
+The [manifest](data/manifest.json) selects documentation release 0.0.5 with current execution and lifecycle instructions. Prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.
 
 ## Execution failure and overlap
 

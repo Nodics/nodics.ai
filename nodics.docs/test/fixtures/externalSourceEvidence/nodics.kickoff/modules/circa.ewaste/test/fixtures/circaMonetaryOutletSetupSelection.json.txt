@@ -1,0 +1,598 @@
+{
+  "contractVersion": 1,
+  "selectionOnly": true,
+  "scope": "FICTIONAL_NATIVE_KICKOFF_LOCAL_ONLY",
+  "approval": {
+    "date": "2026-10-09",
+    "basis": "Direct human instruction approved the exact retained proposal for source data-pack adoption only.",
+    "proposalFile": "test/fixtures/circaMonetaryOutletProposal.json",
+    "proposalSha256": "b33ee29f08d280d49110b50fe362cfdfdac1f2037a4da7aea4dfe27d63b549ab",
+    "operationalAuthority": false,
+    "independentOwnerGatesWaived": false
+  },
+  "declarationsAreOutletOnly": true,
+  "declarationAdoption": "Append these exact outlet scopes and root mappings to separately reviewed existing deployment selections. Preserve every existing marketplace and selected Agora scope; do not replace a full deployment with this outlet-only declaration.",
+  "issuers": [
+    {
+      "slug": "greenperks",
+      "operatorEnterpriseCode": "GREENPERKS_RETAIL",
+      "publicationPlanFile": "sample-v001/merchant-outlets/greenperks/publication/records/publicationPlan.json",
+      "commerceRequest": {
+        "releaseCodes": [
+          "circa.ewaste:circaGreenPerksOutletCommerce"
+        ],
+        "expectedReleases": {
+          "circa.ewaste:circaGreenPerksOutletCommerce": "0.0.1"
+        }
+      },
+      "openingRequest": {
+        "releaseCodes": [
+          "circa.ewaste:circaGreenPerksOutletOpening"
+        ],
+        "expectedReleases": {
+          "circa.ewaste:circaGreenPerksOutletOpening": "0.0.1"
+        }
+      }
+    },
+    {
+      "slug": "renewworks",
+      "operatorEnterpriseCode": "RENEWWORKS_REPAIR_REUSE",
+      "publicationPlanFile": "sample-v001/merchant-outlets/renewworks/publication/records/publicationPlan.json",
+      "commerceRequest": {
+        "releaseCodes": [
+          "circa.ewaste:circaRenewWorksOutletCommerce"
+        ],
+        "expectedReleases": {
+          "circa.ewaste:circaRenewWorksOutletCommerce": "0.0.1"
+        }
+      },
+      "openingRequest": {
+        "releaseCodes": [
+          "circa.ewaste:circaRenewWorksOutletOpening"
+        ],
+        "expectedReleases": {
+          "circa.ewaste:circaRenewWorksOutletOpening": "0.0.1"
+        }
+      }
+    },
+    {
+      "slug": "loopcycle",
+      "operatorEnterpriseCode": "LOOPCYCLE_RECYCLING",
+      "publicationPlanFile": "sample-v001/merchant-outlets/loopcycle/publication/records/publicationPlan.json",
+      "commerceRequest": {
+        "releaseCodes": [
+          "circa.ewaste:circaLoopCycleOutletCommerce"
+        ],
+        "expectedReleases": {
+          "circa.ewaste:circaLoopCycleOutletCommerce": "0.0.1"
+        }
+      },
+      "openingRequest": {
+        "releaseCodes": [
+          "circa.ewaste:circaLoopCycleOutletOpening"
+        ],
+        "expectedReleases": {
+          "circa.ewaste:circaLoopCycleOutletOpening": "0.0.1"
+        }
+      }
+    }
+  ],
+  "steps": [
+    {
+      "code": "circa.ewaste:circaGreenPerksOutletCommerce",
+      "type": "DATA_RELEASE",
+      "required": true,
+      "trigger": "USER",
+      "phase": "BEFORE_PUBLICATION",
+      "dataType": "sample",
+      "targetServer": "commerceStaged",
+      "targetRuntimeRole": "COMMERCE_STAGED"
+    },
+    {
+      "code": "circa.ewaste:circaGreenPerksOutletPublicationPlan",
+      "type": "GOVERNED_PUBLICATIONS",
+      "operatorEnterpriseCode": "GREENPERKS_RETAIL",
+      "required": true,
+      "trigger": "USER",
+      "phase": "AFTER_PUBLICATION",
+      "dataType": "sample",
+      "targetServer": "commerceStaged",
+      "targetRuntimeRole": "COMMERCE_STAGED",
+      "publicationPlan": {
+        "contractVersion": 1,
+        "items": [
+          {
+            "code": "circa-local-outlet-product-CIRCA_LOCAL_CAFE_GOODS-v001",
+            "domain": "product",
+            "rootType": "product",
+            "rootCode": "CIRCA_LOCAL_CAFE_GOODS",
+            "sourceVersion": "1",
+            "input": {
+              "publicationCode": "circa-local-outlet-product-CIRCA_LOCAL_CAFE_GOODS-v001",
+              "productCode": "CIRCA_LOCAL_CAFE_GOODS",
+              "storeCode": "greenperks-cafe",
+              "versionId": 0
+            }
+          },
+          {
+            "code": "circa-local-outlet-product-CIRCA_LOCAL_BISTRO_GOODS-v001",
+            "domain": "product",
+            "rootType": "product",
+            "rootCode": "CIRCA_LOCAL_BISTRO_GOODS",
+            "sourceVersion": "1",
+            "input": {
+              "publicationCode": "circa-local-outlet-product-CIRCA_LOCAL_BISTRO_GOODS-v001",
+              "productCode": "CIRCA_LOCAL_BISTRO_GOODS",
+              "storeCode": "greenperks-bistro",
+              "versionId": 0
+            }
+          },
+          {
+            "code": "circa-local-outlet-priceBook-circaLocalGreenPerksAed-v001",
+            "domain": "pricing",
+            "rootType": "priceBook",
+            "rootCode": "circaLocalGreenPerksAed",
+            "sourceVersion": "4da3f8af0d29d05d6645e9ebecd334837d9b1b84c7f7bfe9907f79e2eae6e302",
+            "input": {
+              "publicationCode": "circa-local-outlet-priceBook-circaLocalGreenPerksAed-v001",
+              "rootType": "priceBook",
+              "rootCode": "circaLocalGreenPerksAed",
+              "references": [
+                {
+                  "schema": "priceBook",
+                  "code": "circaLocalGreenPerksAed",
+                  "versionId": 0
+                },
+                {
+                  "schema": "priceRow",
+                  "code": "CIRCA_LOCAL_BISTRO_GOODS_AED",
+                  "versionId": 0
+                },
+                {
+                  "schema": "priceRow",
+                  "code": "CIRCA_LOCAL_CAFE_GOODS_AED",
+                  "versionId": 0
+                }
+              ]
+            }
+          },
+          {
+            "code": "circa-local-outlet-taxPolicy-circaLocalGreenPerksZeroTax-v001",
+            "domain": "tax",
+            "rootType": "taxPolicy",
+            "rootCode": "circaLocalGreenPerksZeroTax",
+            "sourceVersion": "0d94e6e452c0cd93f64f845797f0c05c1621ee20aab13c2e443043e82cb6854e",
+            "input": {
+              "publicationCode": "circa-local-outlet-taxPolicy-circaLocalGreenPerksZeroTax-v001",
+              "rootType": "taxPolicy",
+              "rootCode": "circaLocalGreenPerksZeroTax",
+              "references": [
+                {
+                  "schema": "taxPolicy",
+                  "code": "circaLocalGreenPerksZeroTax",
+                  "versionId": 0
+                }
+              ]
+            }
+          },
+          {
+            "code": "circa-local-outlet-warehouse-circaLocalCafeWarehouse-v001",
+            "domain": "inventory",
+            "rootType": "warehouse",
+            "rootCode": "circaLocalCafeWarehouse",
+            "sourceVersion": "2caedd5a271a12f2291d4d94d82bfd8b17f5575f3735e7b8fd87771a55a46070",
+            "input": {
+              "publicationCode": "circa-local-outlet-warehouse-circaLocalCafeWarehouse-v001",
+              "rootType": "warehouse",
+              "rootCode": "circaLocalCafeWarehouse",
+              "references": [
+                {
+                  "schema": "warehouse",
+                  "code": "circaLocalCafeWarehouse",
+                  "versionId": 0
+                }
+              ]
+            }
+          },
+          {
+            "code": "circa-local-outlet-warehouse-circaLocalBistroWarehouse-v001",
+            "domain": "inventory",
+            "rootType": "warehouse",
+            "rootCode": "circaLocalBistroWarehouse",
+            "sourceVersion": "e75da78697d6b9a9a92709ec96f6b7367f8715d583addfe57722f396c8a7d3e6",
+            "input": {
+              "publicationCode": "circa-local-outlet-warehouse-circaLocalBistroWarehouse-v001",
+              "rootType": "warehouse",
+              "rootCode": "circaLocalBistroWarehouse",
+              "references": [
+                {
+                  "schema": "warehouse",
+                  "code": "circaLocalBistroWarehouse",
+                  "versionId": 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa.ewaste:circaGreenPerksOutletOpening",
+      "type": "DATA_RELEASE",
+      "operatorEnterpriseCode": "GREENPERKS_RETAIL",
+      "required": true,
+      "trigger": "USER",
+      "phase": "AFTER_PUBLICATION",
+      "dataType": "sample",
+      "targetServer": "commerce",
+      "targetRuntimeRole": "COMMERCE"
+    },
+    {
+      "code": "circa.ewaste:circaRenewWorksOutletCommerce",
+      "type": "DATA_RELEASE",
+      "required": true,
+      "trigger": "USER",
+      "phase": "BEFORE_PUBLICATION",
+      "dataType": "sample",
+      "targetServer": "commerceStaged",
+      "targetRuntimeRole": "COMMERCE_STAGED"
+    },
+    {
+      "code": "circa.ewaste:circaRenewWorksOutletPublicationPlan",
+      "type": "GOVERNED_PUBLICATIONS",
+      "operatorEnterpriseCode": "RENEWWORKS_REPAIR_REUSE",
+      "required": true,
+      "trigger": "USER",
+      "phase": "AFTER_PUBLICATION",
+      "dataType": "sample",
+      "targetServer": "commerceStaged",
+      "targetRuntimeRole": "COMMERCE_STAGED",
+      "publicationPlan": {
+        "contractVersion": 1,
+        "items": [
+          {
+            "code": "circa-local-outlet-product-CIRCA_LOCAL_DEVICE_CARE_GOODS-v001",
+            "domain": "product",
+            "rootType": "product",
+            "rootCode": "CIRCA_LOCAL_DEVICE_CARE_GOODS",
+            "sourceVersion": "1",
+            "input": {
+              "publicationCode": "circa-local-outlet-product-CIRCA_LOCAL_DEVICE_CARE_GOODS-v001",
+              "productCode": "CIRCA_LOCAL_DEVICE_CARE_GOODS",
+              "storeCode": "renewworks-repair",
+              "versionId": 0
+            }
+          },
+          {
+            "code": "circa-local-outlet-priceBook-circaLocalRenewWorksAed-v001",
+            "domain": "pricing",
+            "rootType": "priceBook",
+            "rootCode": "circaLocalRenewWorksAed",
+            "sourceVersion": "6a3927a8dbf798e84e6cdb5aaa6fc5338d530404c8b20e8294066cef8e3867e3",
+            "input": {
+              "publicationCode": "circa-local-outlet-priceBook-circaLocalRenewWorksAed-v001",
+              "rootType": "priceBook",
+              "rootCode": "circaLocalRenewWorksAed",
+              "references": [
+                {
+                  "schema": "priceBook",
+                  "code": "circaLocalRenewWorksAed",
+                  "versionId": 0
+                },
+                {
+                  "schema": "priceRow",
+                  "code": "CIRCA_LOCAL_DEVICE_CARE_GOODS_AED",
+                  "versionId": 0
+                }
+              ]
+            }
+          },
+          {
+            "code": "circa-local-outlet-taxPolicy-circaLocalRenewWorksZeroTax-v001",
+            "domain": "tax",
+            "rootType": "taxPolicy",
+            "rootCode": "circaLocalRenewWorksZeroTax",
+            "sourceVersion": "b762f6b2e286e0b858d713b82e0481532a9a4ea380e7df99dafc232af9e624e2",
+            "input": {
+              "publicationCode": "circa-local-outlet-taxPolicy-circaLocalRenewWorksZeroTax-v001",
+              "rootType": "taxPolicy",
+              "rootCode": "circaLocalRenewWorksZeroTax",
+              "references": [
+                {
+                  "schema": "taxPolicy",
+                  "code": "circaLocalRenewWorksZeroTax",
+                  "versionId": 0
+                }
+              ]
+            }
+          },
+          {
+            "code": "circa-local-outlet-warehouse-circaLocalRenewWorksWarehouse-v001",
+            "domain": "inventory",
+            "rootType": "warehouse",
+            "rootCode": "circaLocalRenewWorksWarehouse",
+            "sourceVersion": "f70c03029d7c89de7c5c16bb85ecfe436c9fc1b2d68c56f4a8e457156962bb08",
+            "input": {
+              "publicationCode": "circa-local-outlet-warehouse-circaLocalRenewWorksWarehouse-v001",
+              "rootType": "warehouse",
+              "rootCode": "circaLocalRenewWorksWarehouse",
+              "references": [
+                {
+                  "schema": "warehouse",
+                  "code": "circaLocalRenewWorksWarehouse",
+                  "versionId": 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa.ewaste:circaRenewWorksOutletOpening",
+      "type": "DATA_RELEASE",
+      "operatorEnterpriseCode": "RENEWWORKS_REPAIR_REUSE",
+      "required": true,
+      "trigger": "USER",
+      "phase": "AFTER_PUBLICATION",
+      "dataType": "sample",
+      "targetServer": "commerce",
+      "targetRuntimeRole": "COMMERCE"
+    },
+    {
+      "code": "circa.ewaste:circaLoopCycleOutletCommerce",
+      "type": "DATA_RELEASE",
+      "required": true,
+      "trigger": "USER",
+      "phase": "BEFORE_PUBLICATION",
+      "dataType": "sample",
+      "targetServer": "commerceStaged",
+      "targetRuntimeRole": "COMMERCE_STAGED"
+    },
+    {
+      "code": "circa.ewaste:circaLoopCycleOutletPublicationPlan",
+      "type": "GOVERNED_PUBLICATIONS",
+      "operatorEnterpriseCode": "LOOPCYCLE_RECYCLING",
+      "required": true,
+      "trigger": "USER",
+      "phase": "AFTER_PUBLICATION",
+      "dataType": "sample",
+      "targetServer": "commerceStaged",
+      "targetRuntimeRole": "COMMERCE_STAGED",
+      "publicationPlan": {
+        "contractVersion": 1,
+        "items": [
+          {
+            "code": "circa-local-outlet-product-CIRCA_LOCAL_RECYCLED_ACCESSORIES-v001",
+            "domain": "product",
+            "rootType": "product",
+            "rootCode": "CIRCA_LOCAL_RECYCLED_ACCESSORIES",
+            "sourceVersion": "1",
+            "input": {
+              "publicationCode": "circa-local-outlet-product-CIRCA_LOCAL_RECYCLED_ACCESSORIES-v001",
+              "productCode": "CIRCA_LOCAL_RECYCLED_ACCESSORIES",
+              "storeCode": "loopcycle-accessories",
+              "versionId": 0
+            }
+          },
+          {
+            "code": "circa-local-outlet-priceBook-circaLocalLoopCycleAed-v001",
+            "domain": "pricing",
+            "rootType": "priceBook",
+            "rootCode": "circaLocalLoopCycleAed",
+            "sourceVersion": "c88fd7a9469c1c84f81b85a853e095b0e1ee6cc9518deffb4f53228020438738",
+            "input": {
+              "publicationCode": "circa-local-outlet-priceBook-circaLocalLoopCycleAed-v001",
+              "rootType": "priceBook",
+              "rootCode": "circaLocalLoopCycleAed",
+              "references": [
+                {
+                  "schema": "priceBook",
+                  "code": "circaLocalLoopCycleAed",
+                  "versionId": 0
+                },
+                {
+                  "schema": "priceRow",
+                  "code": "CIRCA_LOCAL_RECYCLED_ACCESSORIES_AED",
+                  "versionId": 0
+                }
+              ]
+            }
+          },
+          {
+            "code": "circa-local-outlet-taxPolicy-circaLocalLoopCycleZeroTax-v001",
+            "domain": "tax",
+            "rootType": "taxPolicy",
+            "rootCode": "circaLocalLoopCycleZeroTax",
+            "sourceVersion": "a0d014bbef9f53870d86c16f541269316ed112db2a89ca521e0b8095c8a5c85b",
+            "input": {
+              "publicationCode": "circa-local-outlet-taxPolicy-circaLocalLoopCycleZeroTax-v001",
+              "rootType": "taxPolicy",
+              "rootCode": "circaLocalLoopCycleZeroTax",
+              "references": [
+                {
+                  "schema": "taxPolicy",
+                  "code": "circaLocalLoopCycleZeroTax",
+                  "versionId": 0
+                }
+              ]
+            }
+          },
+          {
+            "code": "circa-local-outlet-warehouse-circaLocalLoopCycleWarehouse-v001",
+            "domain": "inventory",
+            "rootType": "warehouse",
+            "rootCode": "circaLocalLoopCycleWarehouse",
+            "sourceVersion": "050ce2c186a5fcf519b876e6dece69b3ff15a9949a59ae6460a530b98c42dce7",
+            "input": {
+              "publicationCode": "circa-local-outlet-warehouse-circaLocalLoopCycleWarehouse-v001",
+              "rootType": "warehouse",
+              "rootCode": "circaLocalLoopCycleWarehouse",
+              "references": [
+                {
+                  "schema": "warehouse",
+                  "code": "circaLocalLoopCycleWarehouse",
+                  "versionId": 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa.ewaste:circaLoopCycleOutletOpening",
+      "type": "DATA_RELEASE",
+      "operatorEnterpriseCode": "LOOPCYCLE_RECYCLING",
+      "required": true,
+      "trigger": "USER",
+      "phase": "AFTER_PUBLICATION",
+      "dataType": "sample",
+      "targetServer": "commerce",
+      "targetRuntimeRole": "COMMERCE"
+    }
+  ],
+  "deliveryDeclarations": {
+    "product": {
+      "runtimeRoleProfiles": {
+        "COMMERCE": {
+          "discovery": {
+            "activationService": "DefaultProductPublicationTargetService",
+            "activationScopes": {
+              "$config": "replace",
+              "value": [
+                {
+                  "tenant": "default",
+                  "storeCode": "greenperks-cafe"
+                },
+                {
+                  "tenant": "default",
+                  "storeCode": "greenperks-bistro"
+                },
+                {
+                  "tenant": "default",
+                  "storeCode": "renewworks-repair"
+                },
+                {
+                  "tenant": "default",
+                  "storeCode": "loopcycle-accessories"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "pricing": {
+      "runtimeRoleProfiles": {
+        "COMMERCE": {
+          "publication": {
+            "delivery": {
+              "enabled": true,
+              "storeCodes": {
+                "$config": "replace",
+                "value": [
+                  "greenperks-cafe",
+                  "greenperks-bistro",
+                  "renewworks-repair",
+                  "loopcycle-accessories"
+                ]
+              },
+              "rootCodesByStore": {
+                "$config": "replace",
+                "value": {
+                  "greenperks-cafe": [
+                    "circaLocalGreenPerksAed"
+                  ],
+                  "greenperks-bistro": [
+                    "circaLocalGreenPerksAed"
+                  ],
+                  "renewworks-repair": [
+                    "circaLocalRenewWorksAed"
+                  ],
+                  "loopcycle-accessories": [
+                    "circaLocalLoopCycleAed"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "tax": {
+      "runtimeRoleProfiles": {
+        "COMMERCE": {
+          "publication": {
+            "delivery": {
+              "enabled": true,
+              "storeCodes": {
+                "$config": "replace",
+                "value": [
+                  "greenperks-cafe",
+                  "greenperks-bistro",
+                  "renewworks-repair",
+                  "loopcycle-accessories"
+                ]
+              },
+              "rootCodesByStore": {
+                "$config": "replace",
+                "value": {
+                  "greenperks-cafe": [
+                    "circaLocalGreenPerksZeroTax"
+                  ],
+                  "greenperks-bistro": [
+                    "circaLocalGreenPerksZeroTax"
+                  ],
+                  "renewworks-repair": [
+                    "circaLocalRenewWorksZeroTax"
+                  ],
+                  "loopcycle-accessories": [
+                    "circaLocalLoopCycleZeroTax"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "inventory": {
+      "runtimeRoleProfiles": {
+        "COMMERCE": {
+          "publication": {
+            "delivery": {
+              "enabled": true,
+              "storeCodes": {
+                "$config": "replace",
+                "value": [
+                  "greenperks-cafe",
+                  "greenperks-bistro",
+                  "renewworks-repair",
+                  "loopcycle-accessories"
+                ]
+              },
+              "rootCodesByStore": {
+                "$config": "replace",
+                "value": {
+                  "greenperks-cafe": [
+                    "circaLocalCafeWarehouse"
+                  ],
+                  "greenperks-bistro": [
+                    "circaLocalBistroWarehouse"
+                  ],
+                  "renewworks-repair": [
+                    "circaLocalRenewWorksWarehouse"
+                  ],
+                  "loopcycle-accessories": [
+                    "circaLocalLoopCycleWarehouse"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

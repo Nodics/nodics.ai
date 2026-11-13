@@ -53,6 +53,7 @@ module.exports = {
     ERR_CMS_00113: { code: '400', message: 'CMS redirect path is invalid' },
     ERR_CMS_00114: { code: '422', message: 'The publication target does not match the saved page or site' },
     ERR_CMS_00115: { code: '503', message: 'Frozen CMS review evidence is temporarily unavailable' },
+    ERR_CMS_00118: { code: '409', message: 'The publication decision does not match its original workflow evidence. Inspect the current publication and approval task before retrying.' },
     ERR_CMS_00117: { code: '409', message: 'Publication receipt is missing or does not match the original operation. Inspect owner evidence before retrying; no publication is confirmed.' },
     ERR_CMS_00116: { code: '409', message: 'The Online route changed or has a different scope. Refresh Publishing and inspect its current release before restoring a version.' }
 };

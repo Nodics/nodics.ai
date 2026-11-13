@@ -1,5 +1,11 @@
 # import
 
+Run history defaults to newest persisted `created` timestamp first, with `code`
+as a stable tie-breaker. The history API translates `limit` and `skip` into the
+generated owner's paging contract; an empty internal search-options object does
+not suppress these defaults. Explicit owner sort/paging customization remains
+supported. History reads never replay imports or rewrite retained receipts.
+
 Internal installed-schema migrations can journal immutable plans and fenced
 checkpoints through the existing `importRun` authority. See the
 [strict migration journal contract](llm/contracts/installed-migration-journal.md)
@@ -175,7 +181,7 @@ owning modules and configuration layers.
 
 The [manifest](data/manifest.json) selects the current immutable documentation:
 
-- [Import, export and migration guide](data/docs-v001/records/documentation/importDocumentationRelease002ComponentData.js)
+- [Import, export and migration guide](data/docs-v001/records/documentation/importDocumentationRelease003ComponentData.js)
 - [Release contracts](llm/contracts/import-release-contracts.md) cover prerequisites,
   staging, media boundaries, layered composition, receipts and recovery.
   Cross-framework TEE/DEAP guidance is discovered through the `nodics.docs`
@@ -183,103 +189,9 @@ The [manifest](data/manifest.json) selects the current immutable documentation:
 
 ## Verification
 
-The optional [incremental acceptance contract](llm/contracts/incremental-acceptance.md)
-provides test-owned disabled-record fixtures and explicit owner-client phases
-for predecessor upgrade, edited-record conflict and partial FAILED-release retry.
-CURRENT replay requires the owner's `ERR_IMP_00003` duplicate rejection and
-unchanged source identity, complete fixture records and run history; it does not
-expect a successful install/skip response.
-Payloads live only in `test/fixtures/incrementalAcceptance/data`; the coordinator
-lives in `test/helpers`. They are absent from the shipping release catalogue.
-Tests use disposable module roots and canonical release discovery/validation.
-The explicit isolated harness uses a distinct test module and private providers;
-it never targets a customer database or grants deployment authority. Execution
-requires approval and normal deployment admission. Offline tests start no runtime.
-Execution retains provider state and stops owned children; offline cleanup refuses
-provider directories. See the contract for the command and prerequisites.
+See the [validation and operational safeguards](llm/contracts/README.md#validation-and-operational-safeguards) for exact admission, failure and recovery boundaries.
 
-`nodics project:run acceptance:staged-sample-data --target-role=<ROLE_STAGED> --release-modules=<module,...>`
-checks the secured sample catalogue and validation APIs using employee authority.
-Start the selected Platform and Staged runtimes through the project's topology
-tooling first. The suite never starts or stops servers. `--help` is inert.
-Application `dataPackages` in effective Platform profiles select the releases;
-the module allowlist ignores inactive applications but fails when nothing matches.
-Application data and fixture selections remain with their owners.
-
-The default is validation-only. `--execute-install` explicitly permits installation;
-the historical storefront-specific environment flag has no effect. Versions come
-from the catalogue, never a guessed fallback. Duplicate/missing identities, wrong
-destinations, changed versions and validation responses claiming execution fail.
-Current releases are skipped; after installation the catalogue must report the
-same selected versions as `CURRENT`. Import errors, including immutable-release
-errors, are not success evidence. Partial installation is not automatically rolled
-back; resolve the failure and retry through nImport. No reset, Online publication,
-permission mutation or approval is performed by this suite.
-
-Run import-focused contract tests when behavior changes, then run:
-
-```bash
-npm --prefix nodics.docs test
-npm run quality:docs
-```
-
-Release composition uses target-qualified headers and current lower JS sources;
-only executing-delta keys reach persistence. Evaluate Init deltas on every boot,
-skip current receipts, and reject running or same-version edited Init releases.
-See [layered composition](llm/contracts/README.md#layered-immutable-source-composition).
-
-This capability declares an inert model-service inventory for [governed Local reset](../../../nSystem/llm/contracts/local-reset.md).
-A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
-
-Release execution claims durable installation receipts through the existing
-managed-counter database contract. Require matching attempt identity for
-completion; never fail unstarted releases or take over a running attempt on a
-timeout. See [concurrent release execution](llm/contracts/README.md#concurrent-release-execution).
-
-Route-category defaults belong to this capability; deployments supply only intentional overrides.
-Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
-
-Own release safeguards and inert initialization profile templates. Deployment selection and exact-release permissions remain mandatory; see the local contract.
-
-Content-pack defaults belong to `data.contentPacks.defaults` in this capability. Selected packs inherit source conventions, update policy and complete presentation fields; partner contributions override only intentional differences. Resolve omitted content paths from the selected manifest section, preserving explicit path overrides and all import authorization/checksum/staging guards. See `llm/contracts/README.md#content-pack-defaults-and-manifest-paths`.
-
-Content-pack staging retains a server-owned `input/data/content-pack` release root.
-Declared headers must be direct `headers/*Header.js` or `*Headers.js` files.
-Nested headers and headerless selections fail before dispatch, not after a
-zero-work import is recorded as complete.
-Finalized Media headers resolve their relative asset pointers from that root,
-including composed packs; source-controlled assets are never moved by import.
-
-Standard release discovery collects exact declared paths before grouping file
-basenames, so independently selected sibling sections cannot hide one another.
-Zero-work runs do not qualify installation. Historical false-current standard
-releases have a Local-only, exact-zero-write recovery through the existing
-explicit `forceCurrent` operation and fenced receipt claim; ordinary immutable
-replays and custom installer replays remain prohibited. See the local contract.
-
-Sample releases are available to authorized manual operators by default, with optional deployment restriction. Only Init can auto-run at startup. Environment scope reads the effective `environment.class` projected by nConfig from the selected environment module metadata; never author it in environment properties or derive it from the selected environment name or another capability policy. Permissions, roles, tenant isolation, release checksums and durable receipts remain mandatory.
-
-Explicit enterprise placement belongs in a checksummed developer release header,
-not imported rows or operator claims. nImport delegates fresh validation through
-`data.dataReleases.targetValidators` and exposes only transient exact-request
-metadata to the owning generated operation. Read the
-[placement contract](llm/contracts/README.md#explicit-enterprise-placement).
-
-Release destination admission follows the selected header module/schema owner and
-explicit publication context. Runtime role labels and role profiles cannot select
-imports. Publishable sources require STAGED and the effective schema's authoring
-policy; missing owners fail before claims. Runtime-local receipts/history stay local.
-See [destination ownership and adoption](llm/contracts/import-release-contracts.md#selected-destination-ownership-and-startup-selection)
-for retired selector rejection, explicit startup coordinates and offline evidence.
-
-Publishable sample source manifests must declare `selectionPolicy: EXPLICIT` to satisfy the existing Staged source admission check. Source packaging regression covers Nexus, CMS and Product sample manifests; runtime admission is unchanged.
-
-Documentation provenance release 0.0.2 preserves article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](data/manifest.json) selects it; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.
-
-Public catalogue action eligibility is actor-bound through existing command routes; see [the release contract](llm/contracts/import-release-contracts.md#actor-bound-catalogue-action-eligibility). Empty or omitted actions mean read-only review, not initialization authority.
-Generic Media-backed file imports preserve every source row until validation.
-Repeated identities and owner-managed fields are reported by row. Direct
-installation applies the same validation before any record dispatch.
+Run the affected owner tests, `npm --prefix nodics.docs test` and `npm run quality:docs`.
 
 ## Recorded release preparation
 

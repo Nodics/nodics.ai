@@ -103,7 +103,7 @@
     "previewAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Experience preview access groups",
       "description": "Defines enterprise access to Experience preview and index status.",
       "owningDomain": "wcmsExperience",
@@ -156,7 +156,7 @@
     "previewAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Experience preview enterprise role",
       "description": "Makes read-only Experience preview access assignable to enterprise employees.",
       "owningDomain": "wcmsExperience",
@@ -180,7 +180,7 @@
         {
           "moduleName": "wcmsExperience",
           "sectionCode": "previewAccessGroups",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "74b1bdda11578c5192e02a3a808a18c2cb6b35a08312c8871722462e94ac4359"
         }
       ]

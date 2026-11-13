@@ -21,6 +21,31 @@ const contract = require('../../nodics.foundation/modules/nTooling/src/service/d
 const previous = require('./fixtures/documentationCompositionBefore003.json').sections;
 const current = require('./fixtures/documentationCompositionBefore004.json').sections;
 const active = require('../data/manifest.json').sections;
+const released007 = require('./fixtures/documentationCompositionBefore008.json').sections;
+const before007 = require('./fixtures/documentationCompositionBefore007.json').sections;
+const cacheRoot = path.resolve(root, '../nodics.foundation/modules/nCache/cache');
+const cacheBefore003 = require(path.join(cacheRoot, 'test/fixtures/documentationCompositionBefore003.json')).sections.documentation;
+
+test('cache 0.0.3 and library 0.0.7 advance composed identities without rewriting article payloads', () => {
+    const cache = require(path.join(cacheRoot, 'data/manifest.json')).sections.documentation;
+    assert.equal(cacheBefore003.version, '0.0.2');
+    assert.equal(cache.version, '0.0.3');
+    assert.deepEqual({ ...cache, version: cacheBefore003.version }, cacheBefore003);
+    assert.equal(before007.documentation.version, '0.0.6');
+    assert.equal(released007.documentation.version, '0.0.7');
+    assert.deepEqual({ ...released007.documentation, version: before007.documentation.version }, before007.documentation);
+    assert.deepEqual(released007.foundation, before007.foundation);
+    assert.equal(released007.foundation.version, '0.0.3');
+    contract.validateGeneration(cacheBefore003, cache);
+    contract.validateGeneration(before007.documentation, released007.documentation);
+    const library = contract.readDocumentationRelease(root);
+    const child = library.children.find(item => item.manifest.pack === 'cache');
+    const standalone = contract.readDocumentationRelease(cacheRoot);
+    assert.equal(child.version, cache.version);
+    assert.equal(child.checksum, standalone.checksum);
+    assert.equal(standalone.children[0].version, active.foundation.version);
+    assert.equal(standalone.children[0].checksum, active.foundation.releaseChecksum);
+});
 
 test('library 0.0.3 advances only the composition version and preserves shared Foundation 0.0.2', () => {
     assert.equal(previous.documentation.version, '0.0.2');
@@ -39,7 +64,7 @@ test('library 0.0.3 advances only the composition version and preserves shared F
 
 test('native content-pack inspection includes current owner versions in its recursive checksum', () => {
     const inspected = contract.readDocumentationRelease(root);
-    assert.equal(inspected.version, '0.0.6');
+    assert.equal(inspected.version, '0.0.8');
     assert.equal(active.foundation.version, '0.0.3');
     assert.deepEqual(active.documentation.includes, current.documentation.includes);
     assert.equal(active.documentation.pack, current.documentation.pack);
@@ -57,7 +82,7 @@ test('native content-pack inspection includes current owner versions in its recu
     assert.equal(backoffice.version, '0.0.5');
     assert.equal(communication.version, '0.0.3');
     assert.equal(communication.manifest.sourceAuthority, 'data/docs-v001/records/documentation');
-    for (const [pack, version] of [['bpm', '0.0.3'], ['installer', '0.0.4'], ['cronjob', '0.0.4']]) {
+    for (const [pack, version] of [['bpm', '0.0.3'], ['installer', '0.0.5'], ['cronjob', '0.0.5'], ['import', '0.0.3'], ['media', '0.0.3']]) {
         assert.equal(inspected.children.find(child => child.manifest.pack.toLowerCase() === pack)?.version, version);
     }
     assert.equal(inspected.children.length, 64);
@@ -65,4 +90,10 @@ test('native content-pack inspection includes current owner versions in its recu
     assert.equal(contract.readDocumentationRelease(root).checksum, inspected.checksum);
     const validated = contract.validateDataRelease(root);
     assert.equal(new Set(validated.documents.map(document => document.id)).size, validated.documents.length);
+});
+
+test('source corrections advance the library without changing its shared Foundation payload', () => {
+    assert.deepEqual({ ...active.documentation, version: released007.documentation.version }, released007.documentation);
+    assert.deepEqual(active.foundation, released007.foundation);
+    contract.validateGeneration(released007.documentation, active.documentation);
 });

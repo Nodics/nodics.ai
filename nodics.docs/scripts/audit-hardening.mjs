@@ -13,6 +13,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import { validateFrameworkSourceEvidence } from './source-reference-evidence.mjs';
 import { createRequire } from 'node:module';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
@@ -227,7 +228,7 @@ function assertSourceEvidence() {
     for (const evidence of document.sourceEvidence || []) {
       if (/^https?:\/\//.test(evidence)) continue;
       try {
-        documentationContract.validateSourceEvidence(document.ownerRoot || docsRoot, evidence);
+        validateFrameworkSourceEvidence({ frameworkRoot: repoRoot, ownerRoot: document.ownerRoot || docsRoot, document, evidence });
       } catch (error) {
         fail(`Invalid source evidence for ${document.id}: ${evidence}: ${error.message}`);
       }

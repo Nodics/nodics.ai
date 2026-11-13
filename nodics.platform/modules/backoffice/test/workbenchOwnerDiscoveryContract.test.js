@@ -52,3 +52,31 @@ test("published contract and runtime validator retain the same bounded discovery
     assert.equal(service.validateNavigationWorkbenchPresentation({ schemaDiscovery: { path, apiVersion } }), true);
   }
 });
+
+
+test("Workbench owner selection admits only inert logical runtime facts", () => {
+  for (const ownerSelector of [{ publicationRole: "OPERATIONAL" }, { runtimeRoleCode: "CUSTOM_COMMERCE" },
+    { runtimeRoleCode: "CUSTOM_COMMERCE", publicationRole: "OPERATIONAL" }]) {
+    assert.equal(service.validateNavigationWorkbenchPresentation({ ownerSelector }), true);
+  }
+  for (const ownerSelector of [{}, null, [], { publicationRole: "UNKNOWN" },
+    { runtimeRoleCode: "lower-case" }, { publicationRole: "OPERATIONAL", endpoint: "https://other.test" },
+    { publicationRole: "OPERATIONAL", enterpriseCode: "other" }, { publicationRole: undefined }]) {
+    assert.equal(service.validateNavigationWorkbenchPresentation({ ownerSelector }), false);
+  }
+  const selector = contracts.backofficeMetadata.properties.navigation.items.properties.workbenchPresentation.properties.ownerSelector;
+  assert.equal(selector, contracts.backendWorkspace.oneOf[1].properties.ownerSelector);
+});
+
+test("actual Order navigation binds workspace and dashboard reads to the operational owner", t => {
+  const previous = global.SERVICE;
+  t.after(() => { global.SERVICE = previous; });
+  global.SERVICE = { DefaultBackofficeCapabilityDefinitionService: definitions };
+  const order = require("../../../../nodics.commerce/modules/checkout/modules/order/src/service/defaultOrderBackofficeCapabilityService").getCapability();
+  assert(order.navigation.length > 0);
+  for (const item of order.navigation.filter(entry => entry.workbenchTarget)) {
+    assert.deepEqual(item.workbenchPresentation.ownerSelector, { publicationRole: "OPERATIONAL" });
+    assert.equal(service.validateNavigationWorkbenchPresentation(item.workbenchPresentation), true);
+    assert.equal(item.workbenchPresentation.schemaDiscovery.path, "/business/orders/schemas");
+  }
+});

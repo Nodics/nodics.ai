@@ -6,7 +6,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "nodics.docs",
-      "version": "0.0.6",
+      "version": "0.0.8",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",

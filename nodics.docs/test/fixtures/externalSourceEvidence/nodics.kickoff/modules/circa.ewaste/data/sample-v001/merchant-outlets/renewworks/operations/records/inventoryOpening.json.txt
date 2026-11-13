@@ -1,0 +1,16 @@
+{
+  "contractVersion": 1,
+  "receipts": [
+    {
+      "code": "opening-circa-local-device-care-v001",
+      "storeCode": "renewworks-repair",
+      "locale": "en",
+      "warehouseCode": "circaLocalRenewWorksWarehouse",
+      "productCode": "CIRCA_LOCAL_DEVICE_CARE_GOODS",
+      "variantCode": "CIRCA_LOCAL_DEVICE_CARE_GOODS_VARIANT",
+      "sku": "CIRCA_LOCAL_DEVICE_CARE_GOODS_SKU",
+      "quantity": "100",
+      "referenceCode": "CIRCA-LOCAL-OUTLET-OPENING-001"
+    }
+  ]
+}

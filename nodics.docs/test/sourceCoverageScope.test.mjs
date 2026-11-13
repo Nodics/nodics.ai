@@ -42,6 +42,12 @@ test('framework scope is stable with arbitrary sibling projects; selected projec
         run([]);
         const reportPath = path.join(docs, 'test/reports/source-backed-documentation-coverage-report.json');
         const baseline = fs.readFileSync(reportPath, 'utf8');
+        for (const kind of ['controller', 'facade', 'service'])
+            write(path.join(framework, 'foundation/src', kind, 'gen/DefaultRuntimeModel.js'),
+                'module.exports = {};');
+        run(['--check']);
+        assert.equal(fs.readFileSync(reportPath, 'utf8'), baseline,
+            'Runtime-generated model adapters cannot alter source coverage or the release report');
         for (const name of ['nodics.kickoff', 'unrelated-customer'])
             write(path.join(home, name, 'package.json'), { name, nodics: { kind: 'application' } });
         run(['--check']);

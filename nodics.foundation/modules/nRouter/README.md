@@ -48,9 +48,7 @@ other routes remain unchanged.
 
 Deep documentation lives in:
 
-- `nodics.foundation/modules/nRouter/data/docs-v001/records/documentation/routerDocumentationComponentData.js`
-- `nodics.foundation/modules/nRouter/data/docs-v001/records/documentation/routerDocumentationComponentData.js`
-- `nodics.foundation/modules/nRouter/data/docs-v001/records/documentation/routerDocumentationComponentData.js`
+- `nodics.foundation/modules/nRouter/data/docs-v001/records/documentation/routerDocumentationRelease002ComponentData.js`
 
 ## Verification
 

@@ -103,6 +103,14 @@ revision before any private CMS reads. Both bindings are rechecked before
 returning evidence. Authoring and generic Publishing routes retain their own
 permissions.
 
+Site-baseline publications may omit a catalog in their original approval context.
+The review projection resolves it only from the single exact frozen `cmsSite`
+root dependency, checking its code, version and catalog identity. Missing,
+ambiguous or mismatched evidence refuses the review. This read-only projection
+does not modify the publication or Process context, use latest authoring content,
+or relax the original task/revision checks. Page publications still require their
+explicit catalog. Later provider layers must preserve these checks.
+
 The no-store projection includes only frozen route/page identities, allowlisted
 plain component text, exact validated dependency pins, Media references and
 changes. CMS compares against the exact same-scope Online pointer and retained
@@ -254,6 +262,10 @@ Copilot source access. Run `test/cmsPublishedKnowledge.test.js`.
 ## Exact callback and receipt recovery
 
 The existing CMS Process callback keeps its fixed API and payload. The admitted Workflow runtime must name the exact stored workflow, pending revision and correlation. A replay succeeds only against the uninterrupted committed decision journal, including the original decision reason and definition/version. It returns the original Online or rejection result without another lifecycle transition; an approved or activating interruption resumes that same activation. A failed, resubmitted or otherwise changed attempt requires its normal owner recovery and review.
+
+Conflicting callback identity or committed decision evidence returns the registered
+`ERR_CMS_00118` / HTTP 409 diagnostic, with no lifecycle mutation. Do not use
+unregistered symbolic error names that the standard error class converts to 500.
 
 Online deployment receipts require a fresh exact owner readback after save, including after a lost acknowledgement or competing write. An absent, ambiguous or conflicting receipt is not success. Reconciliation reports RECEIPT_MISMATCH without overwriting it. Missing evidence is repaired only after a transaction-local pointer recheck and revision CAS fence on every covered scope. The fence advances only technical revisions; it does not change delivery ownership. Pointer drift refuses repair. Recovery retains the original activation operation key and manifest revision and qualifies its matching target receipt before reporting completion.
 

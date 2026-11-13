@@ -22,6 +22,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const { test } = require('node:test');
 
 const repositoryRoot = path.resolve(__dirname, '../../../..');
 const packageJson = require(path.join(repositoryRoot, 'package.json'));
@@ -113,6 +114,9 @@ assert(generatedSuite.findIndex(step => step.node === 'nodics.foundation/modules
 const fullPlan = releaseCheck.createPlan(Object.assign({}, context, {
     args: ['--full']
 }));
+const fullLabels = fullPlan.map(step => releaseCheck.normalizeStep(step).label);
+assert.deepStrictEqual(fullLabels, dryLabels.concat('npm --prefix nodics.docs test', 'npm run test:full'),
+    'Full qualification must execute the owner documentation suite, including semantic evidence and immutable-source checks');
 assert.strictEqual(releaseCheck.normalizeStep(fullPlan[fullPlan.length - 1]).label, 'npm run test:full',
     'Full release validation must include test:full');
 
@@ -150,5 +154,22 @@ try {
 }
 assert.deepStrictEqual(executed, dryPlan.map(step => releaseCheck.normalizeStep(step).label),
     'Execution must run the configured gate in order');
+
+test('a documentation-source failure blocks the full release gate', async () => {
+    const calls = [];
+    const execute = releaseCheck.executeStep;
+    releaseCheck.executeStep = function (runContext, step) {
+        const label = this.normalizeStep(step).label;
+        calls.push(label);
+        if (label === 'npm --prefix nodics.docs test') throw new Error('documentation source refused');
+    };
+    try {
+        await assert.rejects(releaseCheck.run({ ...context, args: ['--execute', '--full'] }),
+            /documentation source refused/);
+        assert.deepStrictEqual(calls, dryLabels.concat('npm --prefix nodics.docs test'));
+    } finally {
+        releaseCheck.executeStep = execute;
+    }
+});
 
 console.log('Release check command contract validated');

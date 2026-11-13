@@ -92,9 +92,7 @@ for composition, connection and API prerequisites.
 
 Deep documentation lives in:
 
-- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationRelease002ComponentData.js`
-- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationRelease002ComponentData.js`
-- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationRelease002ComponentData.js`
+- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationRelease003ComponentData.js`
 
 ## Verification
 
@@ -129,49 +127,7 @@ Physical artifacts, placements, transfer manifests, publication receipts, replic
 
 ## Exact retained review evidence
 
-Media exposes two read-only Staged endpoints for a publication's captured source:
-`GET /library/publications/:publicationCode/review?localeCode=en|ar` and
-`GET /library/publications/:publicationCode/review/image`. Both require human
-access tokens, the existing nPublish read access groups, `media.storage.policy.view`
-and `publish.lifecycle.view`; image bytes additionally require `media.content.read`.
-These are intersections of existing rights, not new grants or public delivery.
-The module retains `mediaManagement` exposure and independent API authorization.
-Unselected retained publication or Online source roles reject before inspection.
-
-The owner reads the exact nPublish Media root/source and uncached retained manifest,
-checks its full digest, tenant and existing library enterprise scope before provider
-IO, and projects only captured name, actual metadata version, MIME, byte count and
-SHA-256. It never reads current Media to stand in for an older reviewed source.
-Provider locators, filenames, URLs, private context and credentials do not enter
-this DTO. Metadata reads perform no provider IO and do not prove byte availability.
-`previewAvailable` reflects only configured bounds/type and the current permission;
-opening the image independently verifies exact retained bytes and checksum.
-
-Preview accepts only bounded PNG/JPEG/WebP/GIF, with no-store, nosniff, restrictive
-CSP and no public fallback. Unsupported types, excessive sizes or denied rights
-retain useful metadata without enabling inline preview. Storage reads preserve the
-original tenant/authentication context and narrow the provider read to that asset's
-exact byte count. Review does not create or update assets, approve a task, activate
-Online content or make a historical request current.
-
-Customize `media.library.review` inert EN/AR presentation, a narrower raster type
-subset and `maximumPreviewBytes` within the publication maximum. Media's provider,
-retained manifest and scope checks remain authoritative. Optional working-asset
-handoffs reuse the existing Media capability and frontend catalogue admission;
-opening them performs fresh current inspection and sends no publication command.
-The frontend correlates task publication/root/source identity, hashes preview bytes,
-retires old actor/source responses and revokes image URLs. Process's existing pinned
-review context and decision policy remain unchanged. Completed detail tasks already
-carry that bounded context; no workflow history or actor policy is rewritten.
-
-`mediaPublicationReviewContract.test.js` composes actual owner inspection, controller,
-facade and content handler with isolated generated-service/provider ports. It covers
-positive/negative acknowledgements, no current-row fallback, scope and permission
-denial before bytes, malformed identities, corrupt bytes, preview bounds and safe
-customization. Native roles, private-provider storage and deployment readiness remain
-separate acceptance gates; isolated checks do not certify a customer environment.
-
-Documentation provenance release 0.0.2 preserves article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](data/manifest.json) selects it; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.
+See the [exact retained review evidence reference](llm/contracts/media-library-publication.md#exact-retained-review-evidence-reference) for exact admission, failure and recovery boundaries.
 
 ## Cross-owner retained image qualification
 

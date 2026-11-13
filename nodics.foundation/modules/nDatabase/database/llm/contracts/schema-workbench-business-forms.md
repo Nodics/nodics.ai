@@ -100,3 +100,41 @@ Each implementing model owner supplies its purpose through existing `backoffice.
 Generated HTTP create/update normalization rejects explicitly supplied writable values outside the effective native enum with ERR_DBS_00003 before persistence. Resolve the field from the same effective utility descriptor; do not validate stripped protected fields or replace native validators, defaults, access checks, reference guards or CAS. This prevents a predictable client validation error from reaching a provider as a server failure. Nested/type/business validation remains with its native owner. Nullable type projection also applies consistently to scalar query/filter capabilities; structured fields are not scalar sort/filter targets.
 
 An explicit modern `x-enterprise-code` or legacy `entCode` header on schema HTTP requests must match the authenticated enterprise. A conflicting selector is refused before descriptor or mutation processing; omitting the header does not change signed scope. Generated create normalization takes the authenticated enterprise before any request selector, and does not accept body-supplied placement.
+
+## Operation-specific update fields reference
+
+An effective schema may declare `backoffice.updateFields` as a bounded list of
+ordinary root field names, or `{ configurationPath: 'owner.policy.fields' }`
+referencing its existing Framework configuration list. This is authored source
+metadata; HTTP input never selects a configuration path. A missing/malformed
+selected policy refuses metadata instead of exposing every field. Deleted schema
+fields disappear. An admitted structured root includes its inline child fields;
+partial nested authorization remains with native field/access validators.
+
+The shared field projection marks other fields `readOnlyOnUpdate: true` without
+making required creation inputs globally read-only. Axis omits these fields from
+update forms and update payloads while preserving original identity/CAS in the
+query. Generated HTTP update normalization excludes them and cannot inject their
+fixed values. Original managed counters retain their existing owner contract.
+Creation, aggregate setup, private service/import and domain authorization remain
+independent. This optional metadata does not create authorization or replay rights.
+
+Profile references its existing `enterpriseManagement.lifecycle.employeeFields`
+and `enterpriseFields` lists; no duplicate list belongs in Kickoff. Custom projects
+may extend the owning list for actual custom schema fields through supported
+layering, within native immutable identity/credential/placement/grant guards.
+
+Schema discovery also preserves the model constructor's declared `tenants`: models restricted to another tenant are omitted before operation/field projection. The verified request tenant is authoritative; body scope cannot make an unprepared global model available. Domain management APIs retain their separate authority and storage contracts. This prevents advertising default-only models as callable business-tenant record workspaces.
+
+Schema discovery distinguishes inspectable metadata from explicitly disabled generic record routers. See [the owner contract](README.md#independently-inspectable-schemas-with-disabled-record-apis); no schema discovery response enables an internal or business API.
+
+Nullable native field unions with one concrete type retain that presentation type in shared schema metadata; native validation remains unchanged. See [business form metadata](schema-workbench-business-forms.md#nullable-native-field-types) and `test/schemaUtilityContract.test.js`.
+
+Schema directives containing a `$`-prefixed path segment are excluded from client field/form metadata. They are not business inputs; HTTP mutation normalization independently refuses operator-like keys, and safe-search projection applies its own field-path guard.
+
+
+Synchronous namespace admission reuses resolved destinations only within its current
+call, including nested peer and durable-pin checks. No approval survives a return,
+exception, await or later request. Preserve selected provider/service overrides,
+fresh configuration and pin refusal; never replace this with a process cache.
+The tenant physical namespace regression covers fresh-call drift and failure recovery.

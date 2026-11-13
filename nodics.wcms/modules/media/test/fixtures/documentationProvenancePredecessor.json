@@ -93,5 +93,6 @@
       "sourceChecksum": "b072b1fe98fc8ad3ffabf86517847677f227d0f77e7a3d88b1ac1c0d73a54645",
       "sourceWordCount": 1678
     }
-  ]
+  ],
+  "successorSnapshot": "test/fixtures/documentationCleanupBefore003"
 }

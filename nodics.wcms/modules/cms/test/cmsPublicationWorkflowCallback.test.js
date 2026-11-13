@@ -60,14 +60,14 @@ const service = require('../src/service/publication/defaultCmsPublicationWorkflo
         d => { d.processInstanceCode = 'cmsPublicationApproval-000000000000000000000000'; },
         d => { d.processDefinitionCode = 'other'; }]) {
         const altered = decision(true); change(altered.publicationDecision);
-        await assert.rejects(service.applyDecision(altered), { code: 'CMS_PUBLICATION_WORKFLOW_DECISION_INVALID' });
+        await assert.rejects(service.applyDecision(altered), { code: 'ERR_CMS_00118' });
         assert.deepEqual(stored, committed);
     }
     for (const change of [s => { s.domain = 'other'; }, s => { s.auditTrail[1].revision++; },
         s => { s.auditTrail[0].details.workflow.version++; }, s => { s.targetVersion = 'different'; },
         s => { s.revision++; }, s => { s.state = 'FAILED'; }, s => { s.workflowRef = 'different'; }]) {
         stored = structuredClone(committed); change(stored);
-        await assert.rejects(service.applyDecision(decision(true)), { code: 'CMS_PUBLICATION_WORKFLOW_DECISION_INVALID' });
+        await assert.rejects(service.applyDecision(decision(true)), { code: 'ERR_CMS_00118' });
     }
     for (const state of ['APPROVED', 'ACTIVATING']) {
         stored = structuredClone(committed); const count = state === 'APPROVED' ? 1 : 2;
@@ -80,5 +80,16 @@ const service = require('../src/service/publication/defaultCmsPublicationWorkflo
     assert.equal(denied.state, 'REJECTED');
     assert.deepEqual(await service.applyDecision(decision(false)), denied); assert.equal(rejected, 1);
     role = 'ONLINE'; await assert.rejects(service.applyDecision(decision(true)), /only by CMS Staged/);
+    // Use the real error class: unregistered symbolic names otherwise become generic HTTP 500 errors.
+    role = 'STAGED'; stored = structuredClone(committed);
+    const statuses = require('../src/utils/statusDefinitions');
+    SERVICE.DefaultStatusService = { get: code => statuses[code] || { code: '500', message: 'Internal error' } };
+    CONFIG.get = key => key === 'cms' ? { publication: { runtimeRole: role } } :
+        key === 'defaultErrorCodes' ? { NodicsError: 'ERR_SYS_00000' } : undefined;
+    global.UTILS = { extractFromMessage: message => ({ code: 'ERR_SYS_00000', responseCode: '500', message }) };
+    CLASSES.NodicsError = require('../../../../nodics.foundation/modules/nCommon/src/lib/nodicsError');
+    const conflict = decision(true); conflict.publicationDecision.reason = 'Conflicting decision';
+    await assert.rejects(service.applyDecision(conflict), { code: 'ERR_CMS_00118', responseCode: '409' });
+    assert.deepEqual(stored, committed);
     console.log('CMS exact callback replay, intermediate recovery and mismatched evidence checks passed');
 })().catch(error => { console.error(error); process.exit(1); });

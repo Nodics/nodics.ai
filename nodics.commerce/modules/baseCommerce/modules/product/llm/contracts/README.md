@@ -86,3 +86,21 @@ rejects configuration. Source/target credentials, connections, installed storage
 qualification, grants and approvals remain independent. Runtime overrides contain
 only intentional differences. The Commerce publication configuration test covers
 these boundaries and later overrides without starting providers.
+
+## Public Coupon Requirements
+
+Product cards and detail preserve Promotion's canonical `acquisitionRequirements`
+inside `availability`. The safe REWARDS/CERTIFICATES/BOTH DTO excludes priceRef,
+stock and campaign evidence. Missing policy is explicit null and unavailable;
+localized attributes are not an alternative authority. See
+[public coupon browsing](README.md#public-coupon-browsing).
+
+`acceptance:coupon-catalogue-availability --execute` is Product's read-only E08
+acceptance. It requires reviewed available and sold-out Product codes, verifies
+each sold-out detail has canonical `OUT_OF_STOCK` availability, and proves the
+code is absent from the complete `AVAILABLE_SHOP` result. It accepts no entitlement
+identifiers and calls no Digital or Checkout API: already purchased coupon rights
+remain entirely with their owning capability and are not cancelled by catalogue
+omission.
+
+Publishable sample releases declare `selectionPolicy: EXPLICIT`. Operators select and validate these releases through nImport or Axis before Staged preparation; they are never implicit startup or default selections. Publication approval remains separate.

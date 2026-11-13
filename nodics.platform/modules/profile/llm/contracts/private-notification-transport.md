@@ -41,3 +41,12 @@ Deferred fixtures: [private outbound transport](../../test/profilePrivateNotific
 [recovery](../../test/employeeRecoveryContract.test.js). These are source-authored,
 NOT RUN. Joint acceptance must include lost acknowledgements, frozen retries,
 capture suppression before transport, provider failure and post-commit isolation.
+
+## Internal verification transport
+
+See [Internal verification transport](../../profile-identity-onboarding-guide.md#internal-verification-transport).
+Recovery reuses the declared verification connection and limits; its admitted
+server context selects recovery enablement and purpose independently of onboarding.
+Recovery resolves both native provider IDs and populated credential references
+through the existing credential ownership validator. Cooldown and distributed
+rate refusals return a fixed retry response without provider details.

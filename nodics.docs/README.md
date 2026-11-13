@@ -18,13 +18,15 @@ validating the contract version, content hashes, functional owners and document
 IDs. Review and publication use the existing CMS, Process and Media owners.
 Axis reads the access-filtered CMS projection, never repository files.
 
-The complete library selects composition release 0.0.6, which includes search
-metadata repairs from Comms Core, nBPM, Installer and Cron. Local has
-composition 0.0.4 installed.
-The successor preserves the shared payloads and 64 source selections, and the
-separate shared Foundation pack remains 0.0.2. Installation, approval and
-publication still run through the existing owners; source validation does not
-change the published library.
+The complete library selects composition release 0.0.8, including the cache
+pack's composition-only successor 0.0.3. Its article bytes remain unchanged;
+the successor identifies its current shared Foundation 0.0.3 dependency.
+The library preserves its shared payloads and 64 source selections. An included
+pack's version or checksum changes the parent's recursive checksum, so each
+previously installed immutable composition needs a forward version even when
+its own article bytes are unchanged. Installation, approval and publication
+still run through the existing owners; source validation does not change the
+published library. Installed versions belong in deployment evidence, not here.
 
 Documentation is CMS data, maintained directly alongside the implemented
 functionality in `data/docs-v001/records/documentation`. Pages, components,
@@ -84,7 +86,7 @@ its report belongs to that owner and cannot overwrite Framework artifacts.
 See the source-backed documentation coverage guide for invocation and boundaries.
 `test/sourceCoverageScope.test.mjs` proves sibling independence and output isolation.
 
-The framework library currently composes 173 guides with 63 independent optional
+The framework library composes module-owned guides and independent optional
 selections. Coverage closure uses canonical `sourceCoverage` declarations for the
 17 previously open boundaries, including composition-only families and five
 schema-defined Location capabilities. Such coverage documents source behavior;
@@ -110,4 +112,16 @@ separately from coverage triage. `test/semanticReviewContract.test.mjs` covers
 stale content/source, scope drift, foreign owners, missing anchors and fabricated
 status strings. This check validates evidence, not prose or deployment.
 
-Framework documentation composition 0.0.4 selects the capability provenance successors. Shared Foundation remains 0.0.2 with exact prior payload bytes; the shared publishing-runbook review remains open. Publication and semantic review are independently evidenced.
+Framework documentation composition 0.0.8 selects the current owner corrections;
+shared Foundation remains 0.0.3 with unchanged payload bytes. Historical release
+tests use frozen, hash-qualified snapshots. Current editorial evidence records
+the original action, current article sections and inspected source bytes; stale
+evidence reopens the review. Import/export policy, Media cleanup and Cron routing
+guidance now reflect their enforcing owners, and Installer metadata matches its
+article. Source qualification and Online publication remain separate evidence.
+
+The full Framework release gate runs this package's complete test command. Local
+Framework citations use current files and anchors. Reference-only citations into
+other repositories use article-bound, hash-qualified Git snapshots so a clean
+Framework checkout is sufficient; they do not certify current customer behavior.
+See `test/fixtures/externalSourceEvidence/manifest.json` for commits and scope.

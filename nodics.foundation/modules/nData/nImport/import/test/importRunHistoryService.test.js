@@ -115,7 +115,13 @@ global.SERVICE.DefaultImportRunHistoryService = historyService;
     assert.strictEqual(historyRequest.query.dataType, 'sample');
     assert.strictEqual(historyRequest.query.modules, 'profile');
     assert.strictEqual(historyRequest.query.sourceName, 'media:tenant-upload');
-    assert.strictEqual(historyRequest.searchOptions.limit, 10);
+    assert.strictEqual(historyRequest.searchOptions.pageSize, 10);
+    assert.deepStrictEqual(historyRequest.searchOptions.sort, { created: -1, code: -1 });
+
+    await historyService.getImportRunHistory({ tenant: 'testTenant', searchOptions: {}, filters: { limit: 5, skip: 10 } });
+    assert.deepStrictEqual(historyRequest.searchOptions, { pageSize: 5, pageNumber: 3, sort: { created: -1, code: -1 } });
+    await historyService.getImportRunHistory({ tenant: 'testTenant', searchOptions: { sort: { startedAt: 1 } }, filters: { limit: 5 } });
+    assert.deepStrictEqual(historyRequest.searchOptions, { pageSize: 5, sort: { startedAt: 1 } });
 
     let detail = await historyService.getImportRun({
         tenant: 'testTenant',
@@ -124,6 +130,25 @@ global.SERVICE.DefaultImportRunHistoryService = historyService;
 
     assert.strictEqual(detail.data.runId, 'importRun_sample_1');
     assert.strictEqual(historyRequest.query.runId, 'importRun_sample_1');
+
+    const originalGet = SERVICE.DefaultImportRunService.get;
+    const rows = Array.from({ length: 11 }, (_, index) => ({ runId: 'row-' + index }));
+    const pages = [];
+    SERVICE.DefaultImportRunService.get = async (request) => {
+        const { pageSize, pageNumber } = request.searchOptions;
+        assert(Number.isSafeInteger(pageNumber));
+        pages.push(pageNumber);
+        return { result: rows.slice((pageNumber - 1) * pageSize, pageNumber * pageSize) };
+    };
+    const offsetHistory = await historyService.getImportRunHistory({ tenant: 'testTenant', filters: { limit: 3, skip: 4 } });
+    assert.deepStrictEqual(offsetHistory.data, rows.slice(4, 7));
+    assert.equal(offsetHistory.metadata.count, 3);
+    assert.deepStrictEqual(pages, [2, 3]);
+    pages.length = 0;
+    const lastPage = await historyService.getImportRunHistory({ tenant: 'testTenant', filters: { limit: 3, skip: 10 } });
+    assert.deepStrictEqual(lastPage.data, rows.slice(10));
+    assert.deepStrictEqual(pages, [4]);
+    SERVICE.DefaultImportRunService.get = originalGet;
 
     let diagnosticsRequest = {
         tenant: 'testTenant',

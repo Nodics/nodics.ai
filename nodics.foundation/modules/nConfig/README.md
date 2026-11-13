@@ -60,7 +60,7 @@ resolution, not permission to import or execute the owner. See the
 
 Deep documentation lives in:
 
-- `nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationRelease002ComponentData.js`
+- `nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationRelease003ComponentData.js`
 
 ## Verification
 

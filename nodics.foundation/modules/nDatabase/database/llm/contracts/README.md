@@ -259,3 +259,22 @@ SafeQuery retains the exact generated HTTP read in SchemaReadAccessPolicy's priv
 ## Independently inspectable schemas with disabled record APIs
 
 An authorized effective schema remains inspectable when its explicit `router.enabled` or `router.groups.schemaOperations` is false. The shared descriptor emits `recordApi: {available:false, reason:"SCHEMA_ROUTERS_DISABLED", message}` and no record operations; mutation mode and authoring become read-only, with no aggregate/bulk execution. This is derived from the effective owning schema, never a browser flag or permission grant. It does not enable a domain internal API. Consumers preserve fields, show the bounded owner notice, withhold counts/search/create and retain Schema inspection. Missing optional status keeps the existing enabled-router contract. Partner schema/router overrides remain subject to ordinary authorization and routing. Run `test/schemaUtilityContract.test.js`.
+
+## Bulk Failure Diagnostics
+
+Bulk-save errors retain capability-owner metadata. The failed record is cloned
+under `metadata.failedModel`, not flattened into the error's authority fields.
+Consumers previously reading `metadata.code` for the failed record must use
+`metadata.failedModel.code`. See the [metadata boundary contract](README.md#bulk-failure-metadata-boundary).
+
+Database reads and readiness share a default handle only when the requested
+module's complete effective configuration matches that tenant's default and the
+handle's acquisition configuration. Malformed overrides and stale handles fail
+closed, including for the default tenant. Configuration drift never authorizes
+automatic reconnection or migration; retained handles remain available for cleanup.
+See [acquired handle admission](tenant-physical-namespace.md#acquired-handle-admission)
+for registration, customization, recovery and isolated test evidence.
+
+Documentation provenance release 0.0.2 preserves article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](../../data/manifest.json) selects it; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.
+
+Public safe-search retains [private generated-read provenance](README.md#generated-public-read-provenance) through the existing read policy owner. This keeps domain scope checks effective after translation without forwarding HTTP body fields or changing private business-owner authority.

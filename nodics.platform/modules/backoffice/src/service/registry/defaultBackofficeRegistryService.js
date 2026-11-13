@@ -333,9 +333,18 @@ module.exports = {
         try { registrationOwnership.getModuleOwnershipKey(observed, observed, source); }
         catch (error) { error.reasonCode = "OWNERSHIP_CONTEXT_INVALID"; throw error; }
       }
-      await store.set(key, observed, leaseTtlMs, owner
-        ? entries => this.assertAuthorityClaimsAvailable(observed, entries, resolveOwnershipSource)
-        : undefined);
+      // Later-layer admission policies always receive a fresh full snapshot.
+      // Only the unchanged standard ownership policy can renew an identical
+      // still-live lease without repeating registry-wide ownership discovery.
+      const standardAdmission = this.assertAuthorityClaimsAvailable === module.exports.assertAuthorityClaimsAvailable &&
+        this.getLogicalRuntimeAuthorityKey === module.exports.getLogicalRuntimeAuthorityKey;
+      const renewed = standardAdmission && typeof store.renewUnchanged === "function" &&
+        await store.renewUnchanged(key, observed, leaseTtlMs);
+      if (!renewed) {
+        await store.set(key, observed, leaseTtlMs, owner
+          ? entries => this.assertAuthorityClaimsAvailable(observed, entries, resolveOwnershipSource)
+          : undefined);
+      }
     } catch (error) {
       if (!error.reasonCode) throw error;
       this._metrics.rejected++;

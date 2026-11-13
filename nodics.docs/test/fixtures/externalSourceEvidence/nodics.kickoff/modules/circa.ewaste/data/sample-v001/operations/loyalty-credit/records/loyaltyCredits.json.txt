@@ -1,0 +1,23 @@
+{
+  "contractVersion": 1,
+  "credits": [
+    {
+      "code": "CIRCA_LOCAL_DEMO_BUYER_POINTS",
+      "customerCode": "circa-customer",
+      "walletCode": "WALLET_ED16C8FCF19E1FE586E3DA5D",
+      "programCode": "circa",
+      "rewardTypeCode": "points",
+      "amount": "7645",
+      "approvalReference": "CIRCA_LOCAL_DEMO_POINT_CREDIT_20261009",
+      "expectedBalance": {
+        "available": "118",
+        "reserved": "0",
+        "earned": "118",
+        "spent": "0",
+        "expired": "0",
+        "reversed": "0",
+        "revision": 0
+      }
+    }
+  ]
+}

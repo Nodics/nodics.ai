@@ -894,3 +894,64 @@ through the secured owner API. Test doubles do not qualify deployed transactions
 ## Fresh lease decoding
 
 Derived immutable parsing reuse must compare the entire serialized record from each fresh provider read. Never serve retained values after missing records, expiry or provider failure; preserve atomic revision admission and current employee authorization. Bound memory through the implementing Framework store policy, isolate store instances and clear the derived cache on shutdown. This is not an authority or readiness cache.
+
+## Unchanged lease renewal
+
+Repeated identical runtime heartbeats must not rescan every observed lease for
+each module. After the existing signed deployment and source checks, the standard
+ownership policy may renew an already admitted live lease when every field except
+`lastSeenAt` and `expiresAt` matches. The provider must atomically compare the exact
+freshly read bytes, check the old and proposed expiry against its clock, write only
+the remaining submitted lifetime, and advance the same admission revision. This
+fences an ownership admission that overlapped the renewal. Missing, expired or
+concurrently changed records return to ordinary full admission; provider failures
+fail closed. No retained parsed object is proof of renewal eligibility.
+
+New ownership, changed claims, endpoints, permissions, runtime coordinates and
+unknown added fields require the existing full validation. Later-layer overrides
+of ownership admission or logical-authority identity always retain that path,
+including unchanged heartbeats; a store override may decline renewal and use
+normal admission. No setting, customer brand or runtime identity enables a bypass.
+Use the ownership tests for memory/distributed replicas, stale deletion, expiry
+and replacement races, custom-policy denial, provider failure, and the deterministic
+zero-scan budget for forty unchanged renewals. Live qualification still requires
+normal runtime registration and sustained readiness; these tests alone make no
+latency or capacity guarantee.
+
+## Source-owned session recovery guidance reference
+
+`backofficeAxisPolicy.sessionRecoveryPresentation` supplies bounded inert
+`lockedMessage` and `expiredMessage` text through the effective Axis policy. The
+Framework defaults distinguish saved records and explicit checkpoints from
+unretained edits, and explain that an already submitted action may complete.
+Axis must hide protected data during lock/expiry, retain only the admitted return
+context and never replay a write after reauthentication. The presentation is
+resolved from layered source configuration, not copied into persisted policy
+updates. Older policy snapshots may omit it; malformed supplied text fails closed.
+Later layers may customize wording without changing authentication authority.
+
+Navigation decisions require observed version/checksum and exact draft identity. The first publication can roll back to live module defaults through the same owner. See [the lifecycle contract](README.md#revision-fenced-navigation-lifecycle); runtime-scoped state is not durable release evidence.
+
+
+Persist readiness observations and startup review through the owning generated
+evidence schemas. Preserve fresh admission, actor/tenant/deployment/build bindings,
+expiry and explicit persistence failures; see [durable readiness](backoffice-governance-contracts.md#durable-readiness-observations-and-startup-review).
+
+Readiness compares current registration with nConfig’s selected deployment graph. A gracefully deregistered owner remains a missing dependency; retained approval decisions cannot establish current Process availability. See [selected runtime readiness](backoffice-governance-contracts.md#selected-runtime-readiness).
+
+Setup preparation can request nImport checkpointed continuation, retaining the full selected owner group and returning after one release. Original-actor owner receipts supply progress; BackOffice does not persist another setup execution or impersonate an operator. Older owners must advertise continuation support before this mode is sent. Publication submission remains separate.
+
+Governed repairs retain durable target claims and exact actor-scoped receipts. Restart never grants replay authority; only current owner authorization and verified evidence can close an uncertain result. See [durable repair intents](backoffice-governance-contracts.md#durable-repair-intents-and-receipts).
+
+Memory registry observations preserve peer runtime membership. Multi-member deployments explicitly select the nCache-backed distributed lease store; catalogue reconciliation fences stale observations and preserves administrator decisions.
+
+The distributed lease store reuses decoded immutable records only after a fresh successful provider read returns identical bytes. `backofficeRegistry.store.maximumDecodedBytes` bounds retained serialized input (16 MiB default, 0 disables, at most 64 MiB); decoded objects add memory overhead. It never caches admission, expiry, availability or authorization. Independent member writes are observed immediately; unavailable providers fail closed. Extend through the existing store seam and retain the decoding/freshness and ownership regressions.
+
+Unchanged live heartbeats renew by atomic provider comparison after normal signed
+identity and source validation. This avoids a registry-wide scan per unchanged
+module while preserving the shared admission revision and expiry deadline.
+Changed or expired records, and customized ownership policies, use full admission.
+See [unchanged lease renewal](backoffice-governance-contracts.md#unchanged-lease-renewal)
+and the ownership regression suite for races, denial and recovery boundaries.
+
+Standard workflow copy belongs to this module in `src/service/localization/workflowMessages.json`. Its contribution exposes stable public-safe UI labels only, never records, permissions or internal errors. English definitions and Arabic reference values use the Localization contribution, draft, review, approval and release APIs; loading the module does not approve or publish translations. Later project layers may supply intentional scoped translations through the same owner workflow. Preserve exact message parameters, authorization and uncertainty guidance.

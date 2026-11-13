@@ -1,0 +1,28 @@
+digraph Circa {
+  graph [rankdir=TB, bgcolor="#ffffff", pad="0.4", nodesep="0.35", ranksep="0.6", fontname="Helvetica", label="Circa / eWaste: product composition and domain authority", labelloc=t, fontsize=22];
+  node [shape=box, style="rounded,filled", fillcolor="#f3f4f6", color="#64748b", fontname="Helvetica", fontsize=13, margin="0.18,0.12"];
+  edge [color="#475569", fontname="Helvetica", fontsize=10, arrowsize=0.7];
+  customer [label="Circa customer UI\nWeb / mobile / Telegram host", fillcolor="#dcfce7"];
+  axis [label="Axis employee operations", fillcolor="#dcfce7"];
+  nexus [label="Nexus product discovery\nMarketing is not runtime acceptance", fillcolor="#fef3c7"];
+  app [label="circa.ewaste reference application\nIdentity, presentation, adapters, data deltas", fillcolor="#ccfbf1"];
+  domain [label="eWaste reusable accelerator\nJourney orchestration / electronics presets", fillcolor="#ccfbf1"];
+  waste [label="Waste\nSubmission / review / receipt / asset / impact"];
+  profile [label="Profile + authentication\nCanonical identity / memberships / scopes"];
+  commerce [label="Commerce + Promotion + Digital Core\nOffers / orders / codes / entitlements"];
+  loyalty [label="Loyalty\nWallet / settlement / reversal evidence"];
+  location [label="Location + Media\nCoordinates / distance / private evidence"];
+  content [label="WCMS + Communication + Engagement\nPublished composition / delivery / contact"];
+  customer -> app [label="trusted API context"];
+  app -> domain [label="focused project overlays"];
+  axis -> domain [label="authorized owner workspaces"];
+  nexus -> app [style=dashed, label="showcases"];
+  domain -> waste;
+  domain -> profile;
+  domain -> commerce;
+  domain -> loyalty;
+  domain -> location;
+  domain -> content;
+  note [label="Frontend presents; domain owners authorize and persist.\nNo parallel Circa wallet, identity, submission or coupon engine.", shape=note, fillcolor="#fef3c7"];
+  waste -> note [style=invis];
+}

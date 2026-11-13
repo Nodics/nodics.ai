@@ -1,0 +1,117 @@
+{
+  "contractVersion": 1,
+  "items": [
+    {
+      "code": "circa-local-outlet-product-CIRCA_LOCAL_CAFE_GOODS-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_LOCAL_CAFE_GOODS",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-local-outlet-product-CIRCA_LOCAL_CAFE_GOODS-v001",
+        "productCode": "CIRCA_LOCAL_CAFE_GOODS",
+        "storeCode": "greenperks-cafe",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-local-outlet-product-CIRCA_LOCAL_BISTRO_GOODS-v001",
+      "domain": "product",
+      "rootType": "product",
+      "rootCode": "CIRCA_LOCAL_BISTRO_GOODS",
+      "sourceVersion": "1",
+      "input": {
+        "publicationCode": "circa-local-outlet-product-CIRCA_LOCAL_BISTRO_GOODS-v001",
+        "productCode": "CIRCA_LOCAL_BISTRO_GOODS",
+        "storeCode": "greenperks-bistro",
+        "versionId": 0
+      }
+    },
+    {
+      "code": "circa-local-outlet-priceBook-circaLocalGreenPerksAed-v001",
+      "domain": "pricing",
+      "rootType": "priceBook",
+      "rootCode": "circaLocalGreenPerksAed",
+      "sourceVersion": "4da3f8af0d29d05d6645e9ebecd334837d9b1b84c7f7bfe9907f79e2eae6e302",
+      "input": {
+        "publicationCode": "circa-local-outlet-priceBook-circaLocalGreenPerksAed-v001",
+        "rootType": "priceBook",
+        "rootCode": "circaLocalGreenPerksAed",
+        "references": [
+          {
+            "schema": "priceBook",
+            "code": "circaLocalGreenPerksAed",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_LOCAL_BISTRO_GOODS_AED",
+            "versionId": 0
+          },
+          {
+            "schema": "priceRow",
+            "code": "CIRCA_LOCAL_CAFE_GOODS_AED",
+            "versionId": 0
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa-local-outlet-taxPolicy-circaLocalGreenPerksZeroTax-v001",
+      "domain": "tax",
+      "rootType": "taxPolicy",
+      "rootCode": "circaLocalGreenPerksZeroTax",
+      "sourceVersion": "0d94e6e452c0cd93f64f845797f0c05c1621ee20aab13c2e443043e82cb6854e",
+      "input": {
+        "publicationCode": "circa-local-outlet-taxPolicy-circaLocalGreenPerksZeroTax-v001",
+        "rootType": "taxPolicy",
+        "rootCode": "circaLocalGreenPerksZeroTax",
+        "references": [
+          {
+            "schema": "taxPolicy",
+            "code": "circaLocalGreenPerksZeroTax",
+            "versionId": 0
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa-local-outlet-warehouse-circaLocalCafeWarehouse-v001",
+      "domain": "inventory",
+      "rootType": "warehouse",
+      "rootCode": "circaLocalCafeWarehouse",
+      "sourceVersion": "2caedd5a271a12f2291d4d94d82bfd8b17f5575f3735e7b8fd87771a55a46070",
+      "input": {
+        "publicationCode": "circa-local-outlet-warehouse-circaLocalCafeWarehouse-v001",
+        "rootType": "warehouse",
+        "rootCode": "circaLocalCafeWarehouse",
+        "references": [
+          {
+            "schema": "warehouse",
+            "code": "circaLocalCafeWarehouse",
+            "versionId": 0
+          }
+        ]
+      }
+    },
+    {
+      "code": "circa-local-outlet-warehouse-circaLocalBistroWarehouse-v001",
+      "domain": "inventory",
+      "rootType": "warehouse",
+      "rootCode": "circaLocalBistroWarehouse",
+      "sourceVersion": "e75da78697d6b9a9a92709ec96f6b7367f8715d583addfe57722f396c8a7d3e6",
+      "input": {
+        "publicationCode": "circa-local-outlet-warehouse-circaLocalBistroWarehouse-v001",
+        "rootType": "warehouse",
+        "rootCode": "circaLocalBistroWarehouse",
+        "references": [
+          {
+            "schema": "warehouse",
+            "code": "circaLocalBistroWarehouse",
+            "versionId": 0
+          }
+        ]
+      }
+    }
+  ]
+}
