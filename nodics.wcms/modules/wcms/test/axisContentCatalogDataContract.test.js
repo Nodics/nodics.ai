@@ -250,9 +250,22 @@ async function verifyCanonicalWcmsStartup() {
     let failImport;
     try {
         const selectedPolicy = structuredClone(require('../../../../nodics.foundation/modules/nData/nImport/import/config/properties').data.dataReleases);
-        selectedPolicy.allowedDestinationRoles = ['WCMS_STAGED'];
+        selectedPolicy.initializationProfiles.axisStartup = {
+            enabled: true, label: 'Axis startup', description: 'Install the selected Axis baseline',
+            completionMessage: 'Axis baseline installed',
+            steps: [{ dataType: 'init', releaseCodes: ['axis:axisBaseline'] }]
+        };
+        selectedPolicy.types.init.startupProfileSelections = [
+            { environmentCode: 'testEnvironment', serverCode: 'testServer', profileCodes: ['axisStartup'] }
+        ];
+        const modules = { axis: { ...require(path.join(axisModuleRoot, 'package.json')), name: 'axis', path: axisModuleRoot, parent: 'nodics.platform' } };
+        for (const [moduleName, headers] of Object.entries(header)) {
+            modules[moduleName] = { name: moduleName, rawSchema: Object.fromEntries(
+                Object.values(headers).map(item => [item.options.schemaName, { model: true }])
+            ) };
+        }
         const state = releaseExecution({
-            modules: { axis: { ...require(path.join(axisModuleRoot, 'package.json')), name: 'axis', path: axisModuleRoot, parent: 'nodics.platform' } },
+            modules,
             configuration: selectedPolicy,
             onImport: async () => { if (failImport) throw failImport; }
         });
@@ -325,7 +338,7 @@ async function verifyCanonicalWcmsStartup() {
         failImport = undefined;
         state.installations.length = 0;
         state.runtimeRole = 'WCMS_ONLINE';
-        selectedPolicy.allowedDestinationRoles = [];
+        state.publication = 'ONLINE';
         const beforeOnline = state.imports.length;
         assert.strictEqual(await wcms.importStartupData(), true);
         assert.strictEqual(state.imports.length, beforeOnline, 'Online must not receive Staged Init through compatibility delegation');

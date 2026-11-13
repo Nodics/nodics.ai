@@ -1,39 +1,50 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 "use strict";
 /** @module wasteCore/utils/openingSampleContribution @description Installs sealed Local illustrations through fixed Waste owners, with conflict detection and recoverable creation. @layer utility @owner wasteCore */
 const { isDeepStrictEqual } = require("node:util");
 
-function fail(message) {
-  throw Object.assign(new Error(message), { code: "ERR_WASTE_OPENING_SAMPLE" });
-}
-
-function exact(row, expected) {
-  return row && Object.keys(expected).every(key => isDeepStrictEqual(row[key], expected[key]));
-}
-
-async function read(request, schema, code, dependencyOwner) {
-  const store = SERVICE.DefaultWastePersistenceService;
-  const lookup = {
-    tenant: request.tenant, authData: request.authData, query: { code }, searchOptions: { pageSize: 2, pageNumber: 1 },
-    options: { recursive: false, skipItemCache: true },
-  };
-  const response = dependencyOwner ? await SERVICE.DefaultModuleService.invokeModule({
-    moduleName: dependencyOwner, targetAuthority: { publication: "OPERATIONAL", server: NODICS.getServerName() },
-    serviceName: "Default" + schema[0].toUpperCase() + schema.slice(1) + "Service",
-    operationName: "get", request: lookup,
-  }) : await store.repository(schema).get({ ...lookup, ...store.context(request) });
-  if (!/^SUC_/.test(response?.code) || response.error || response.success === false ||
-      response.acknowledged === false || response.errors?.length)
-    fail("Opening sample read is unconfirmed for " + schema);
-  const rows = store.records(response);
-  if (rows.length > 1 || rows.some(row => row.code !== code) ||
-      (response.count !== undefined && response.count !== rows.length))
-    fail("Opening sample identity is ambiguous for " + schema);
-  return rows[0];
-}
-
 // Only deployment-pinned, sealed data for these owner-declared schemas can reach generated writes.
 module.exports = function openingSample(owner, installer, schemas, dependencies) {
+  function fail(message) {
+    throw Object.assign(new Error(message), { code: "ERR_WASTE_OPENING_SAMPLE" });
+  }
+
+  function exact(row, expected) {
+    return row && Object.keys(expected).every(key => isDeepStrictEqual(row[key], expected[key]));
+  }
+
+  async function read(request, schema, code, dependencyOwner) {
+    const store = SERVICE.DefaultWastePersistenceService;
+    const lookup = {
+      tenant: request.tenant, authData: request.authData, query: { code }, searchOptions: { pageSize: 2, pageNumber: 1 },
+      options: { recursive: false, skipItemCache: true },
+    };
+    const response = dependencyOwner ? await SERVICE.DefaultModuleService.invokeModule({
+      moduleName: dependencyOwner, targetAuthority: { publication: "OPERATIONAL", server: NODICS.getServerName() },
+      serviceName: "Default" + schema[0].toUpperCase() + schema.slice(1) + "Service",
+      operationName: "get", request: lookup,
+    }) : await store.repository(schema).get({ ...lookup, ...store.context(request) });
+    if (!/^SUC_/.test(response?.code) || response.error || response.success === false ||
+        response.acknowledged === false || response.errors?.length)
+      fail("Opening sample read is unconfirmed for " + schema);
+    const rows = store.records(response);
+    if (rows.length > 1 || rows.some(row => row.code !== code) ||
+        (response.count !== undefined && response.count !== rows.length))
+      fail("Opening sample identity is ambiguous for " + schema);
+    return rows[0];
+  }
+
   async function plan(request) {
     const { contribution, authData: auth } = request;
     const review = CONFIG.get("wasteOpeningSamples")?.reviewed?.[contribution?.releaseCode];

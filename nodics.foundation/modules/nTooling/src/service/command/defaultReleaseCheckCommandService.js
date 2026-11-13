@@ -43,10 +43,17 @@ module.exports = {
     createPlan: function (context) {
         const command = context.command || {};
         const steps = [].concat(command.steps || []);
-        if (this.hasFlag(context, '--full')) {
-            return steps.concat(command.fullSteps || []);
+        if (this.hasFlag(context, '--project-qualification')) {
+            if (this.hasFlag(context, '--full') || !command.projectQualificationSteps) {
+                throw new Error('Project qualification requires a configured plan and cannot be combined with --full');
+            }
+            return steps.concat(command.projectQualificationSteps);
         }
-        return steps;
+        const basic = steps.concat(command.basicSteps || []);
+        if (this.hasFlag(context, '--full')) {
+            return basic.concat(command.fullSteps || []);
+        }
+        return basic;
     },
 
     /**
@@ -85,7 +92,7 @@ module.exports = {
             const normalized = this.normalizeStep(step);
             console.log('  ' + (index + 1) + '. ' + normalized.label);
         });
-        console.log('Run with --execute to execute this gate. Add --full to include full release validation.');
+        console.log('Run with --execute to execute this gate. Add --full to include full release validation. Use --project-qualification with a separately validated downstream project.');
     },
 
     /**

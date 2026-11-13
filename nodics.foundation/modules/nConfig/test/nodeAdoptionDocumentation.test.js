@@ -1,3 +1,14 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 /* Nodics - Copyright (c) 2026. Governed by the root LICENSE. */
 /** @module config/test/nodeAdoptionDocumentation @description Verifies the forward guide release against exact immutable predecessor records and aligned public search/provenance. @owner config @layer test */
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');

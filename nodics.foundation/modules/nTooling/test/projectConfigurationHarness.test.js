@@ -87,11 +87,16 @@ test('the tooling CLI waits for the canonical asynchronous projection before emi
   const source = fs.readFileSync(path.join(__dirname, '../src/service/project/defaultProjectConfigurationProbeService.js'), 'utf8');
   let complete;
   const pending = new Promise(resolve => { complete = resolve; });
-  const writes = [], localModule = { exports: {} };
-  const owner = { resolve: options => { assert.equal(options.server, 'selectedServer'); return pending; } };
-  const localRequire = () => owner; localRequire.main = localModule;
+  const writes = [], exits = [], localModule = { exports: {} }, projectionModule = { exports: {} };
+  let flush;
   const localProcess = { argv: ['node', 'probe', JSON.stringify({ projectRoot: '/independent-project', environment: 'quality', server: 'selectedServer' })],
-    stdout: { write: text => writes.push(text) }, exitCode: 0 };
+    stdout: { write: (text, callback) => { writes.push(text); flush = callback; } },
+    stderr: { write: () => assert.fail('valid projection must not emit an error') }, exit: code => exits.push(code) };
+  const projectionFile = path.join(__dirname, '../../nConfig/src/service/defaultDeploymentConfigurationProjectionService.js');
+  vm.runInNewContext(fs.readFileSync(projectionFile, 'utf8'), { require, module: projectionModule, process: localProcess, __dirname: path.dirname(projectionFile) });
+  const owner = projectionModule.exports;
+  owner.resolve = options => { assert.equal(options.server, 'selectedServer'); return pending; };
+  const localRequire = () => owner; localRequire.main = localModule;
   vm.runInNewContext(source, { require: localRequire, module: localModule, process: localProcess, console: { error() {} } });
   const before = writes.slice();
   const expected = { properties: { selected: 'fixture' }, modules: ['selectedServer'] };
@@ -100,20 +105,27 @@ test('the tooling CLI waits for the canonical asynchronous projection before emi
   assert.deepEqual(before, [], 'a pending promise is not a configuration graph');
   assert.equal(writes.length, 1);
   assert.deepEqual(JSON.parse(writes[0]), expected);
+  assert.deepEqual(exits, [], 'the CLI must wait until stdout is flushed');
+  flush(); assert.deepEqual(exits, [0]);
 });
 
 test('the tooling CLI refuses a failed asynchronous projection without emitting a false graph', async () => {
   const fs = require('node:fs'), vm = require('node:vm');
   const source = fs.readFileSync(path.join(__dirname, '../src/service/project/defaultProjectConfigurationProbeService.js'), 'utf8');
-  const writes = [], errors = [], localModule = { exports: {} };
+  const writes = [], errors = [], exits = [], localModule = { exports: {} }, projectionModule = { exports: {} };
   const failure = new Error('fixture projection refusal');
   const pending = Promise.reject(failure); pending.catch(() => {});
-  const localRequire = () => ({ resolve: () => pending }); localRequire.main = localModule;
-  const localProcess = { argv: ['node', 'probe', '{}'], stdout: { write: text => writes.push(text) }, exitCode: 0 };
+  let flush;
+  const localProcess = { argv: ['node', 'probe', '{}'], stdout: { write: text => writes.push(text) },
+    stderr: { write: (text, callback) => { errors.push(text); flush = callback; } }, exit: code => exits.push(code) };
+  const projectionFile = path.join(__dirname, '../../nConfig/src/service/defaultDeploymentConfigurationProjectionService.js');
+  vm.runInNewContext(fs.readFileSync(projectionFile, 'utf8'), { require, module: projectionModule, process: localProcess, __dirname: path.dirname(projectionFile) });
+  projectionModule.exports.resolve = () => pending;
+  const localRequire = () => projectionModule.exports; localRequire.main = localModule;
   vm.runInNewContext(source, { require: localRequire, module: localModule, process: localProcess, console: { error: error => errors.push(error) } });
   await new Promise(resolve => setImmediate(resolve));
   assert.deepEqual(writes, []);
-  assert.equal(localProcess.exitCode, 1);
-  assert.equal(errors.length, 1);
-  assert.equal(errors[0], failure);
+  assert.deepEqual(errors, ['Configuration projection failed.\n']);
+  assert.deepEqual(exits, [], 'the refusal must be flushed before exit');
+  flush(); assert.deepEqual(exits, [1]);
 });

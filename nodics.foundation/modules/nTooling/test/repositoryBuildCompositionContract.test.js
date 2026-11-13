@@ -33,6 +33,8 @@ try {
     assert(composition.root.startsWith(path.join(serverApprovedTmpRoot, 'scratch') + path.sep),
         'Composition must honor the configured server-approved scratch root');
     const serverProperties = require(path.join(composition.serverRoot, 'config', 'properties.js'));
+    assert.equal(require(path.join(composition.environmentRoot, 'package.json')).nodics.kind, 'group');
+    assert.equal(serverProperties.runtimeRole.publication, 'OPERATIONAL');
     assert(serverProperties.activeModules.modules.includes('nTest'),
         'Repository builds must activate nTest to generate module-owned test artifacts');
     assert(!serverProperties.activeModules.modules.includes(composition.environmentName) &&

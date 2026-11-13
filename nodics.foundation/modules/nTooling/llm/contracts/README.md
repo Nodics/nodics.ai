@@ -46,7 +46,8 @@ dependencyRoots })`. This opt-in read-only repository assertion uses canonical
 package discovery, nImport source/metadata/checksum and prerequisite validation,
 and documentation content-pack validation. It excludes test fixtures and rejects
 non-v001 shipping roots, retained-root snapshots and unselected payloads remaining
-inside v001. Release 0 Init, Core and Sample sections use version `0.0.1`.
+inside v001. Init, Core and Sample sections preserve their semantic release versions;
+changed installed content or prerequisite pins require an explicit newer version.
 Dependency roots resolve exact prerequisites, not additional selected baseline scopes.
 Customer adoption tests call this owner instead of copying traversal logic.
 This method is not called by normal manifest generation, release discovery,

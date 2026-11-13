@@ -10,11 +10,14 @@
  */
 'use strict';
 /** @module localizationCore/service/DefaultLocalizationOperationsService @description Projects coverage, queues, side-by-side values, fallback, and audit analytics for authorized operators. @layer service @owner localizationCore @override Reporting stores may replace projection reads without changing value authority. */
-function validSelectorList(values) {
+
+module.exports = {
+    /** Validates a bounded nonempty list of namespace or locale selectors. */
+    validSelectorList: function (values) {
     return Array.isArray(values) && values.length > 0 && values.length <= 50 &&
         values.every(value => typeof value === 'string' && /^[A-Za-z0-9_.-]{1,64}$/.test(value));
-}
-module.exports = {
+},
+
     /** Resolves bounded keys and values for an operations request. */
     load: async function (request) {
         if (!request || !request.tenant || !Array.isArray(request.namespaces) || !request.namespaces.length || !Array.isArray(request.locales) || !request.locales.length) throw this.error('ERR_LOC_00002', 'Localization operations scope is invalid');
@@ -43,7 +46,7 @@ module.exports = {
     releases: async function (request) {
         const { scopeCode, channel, locales } = request;
         if (!request.tenant || typeof scopeCode !== 'string' || !scopeCode || scopeCode.length > 128 ||
-            typeof channel !== 'string' || !channel || channel.length > 64 || !validSelectorList(locales)) {
+            typeof channel !== 'string' || !channel || channel.length > 64 || !this.validSelectorList(locales)) {
             throw this.error('ERR_LOC_00002', 'Localization release history scope is invalid');
         }
         const repository = SERVICE.DefaultLocalizationReleaseManagementService.repository();
@@ -62,7 +65,7 @@ module.exports = {
         if (((CONFIG.get('localization') || {}).authority || {}).translationMemoryEnabled === false) {
             return { enabled: false, entries: [] };
         }
-        if (!request.tenant || !validSelectorList(request.namespaces) || !validSelectorList(request.locales)) {
+        if (!request.tenant || !this.validSelectorList(request.namespaces) || !this.validSelectorList(request.locales)) {
             throw this.error('ERR_LOC_00002', 'Localization memory scope is invalid');
         }
         const { keys, values } = await this.load(request);

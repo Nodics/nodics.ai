@@ -1,3 +1,14 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 'use strict';
 /** @module wcmsExperience/service/defaultWcmsExperienceOnlineIndexControlService @description Admits Site-scoped operators and routes only fixed Online inspection, retirement and rebuild commands. @layer service @owner wcmsExperience */

@@ -5,7 +5,7 @@
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "cms permissionCatalogue",
       "description": "Explicit cms identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "cms",
@@ -29,7 +29,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.4",
       "displayName": "cms accessGroups",
       "description": "Explicit cms identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "cms",
@@ -53,13 +53,13 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+          "version": "0.0.3",
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "cms",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
           "partition": "DEFAULT"
         },
@@ -73,8 +73,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
+          "version": "0.0.3",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "publish",
@@ -88,7 +88,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "cms enterpriseRoles",
       "description": "Explicit cms identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "cms",
@@ -112,15 +112,15 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+          "version": "0.0.3",
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         }
       ]
     },
     "init-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.4",
       "displayName": "CMS Foundation",
       "description": "Staged CMS source for the default site and type codes. Publication requires administrator initiation.",
       "owningDomain": "cms",
@@ -146,7 +146,7 @@
         {
           "moduleName": "catalog",
           "sectionCode": "init-v001",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "f10ed7a81c3d0ae017448b2e7cadee2d035f78bb436735954d2e82bcf140cadb"
         }
       ]
@@ -177,7 +177,7 @@
     "sample-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "sample",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "description": "Content Management sample data",
       "owningDomain": "cms",
       "lifecycle": "PUBLISHABLE",
@@ -269,7 +269,7 @@
     "businessAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "Content business access groups",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "cms",
@@ -293,20 +293,20 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+          "version": "0.0.3",
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "cms",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
           "partition": "DEFAULT"
         }
@@ -315,7 +315,7 @@
     "businessAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "Content business access roles",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "cms",
@@ -339,8 +339,8 @@
         {
           "moduleName": "cms",
           "sectionCode": "businessAccessGroups",
-          "version": "0.0.1",
-          "checksum": "04dd93803f98b4017d11834503b6cb61aad650661cebba87b0cd91fa9ecc19c4"
+          "version": "0.0.3",
+          "checksum": "27da70956d363dd1c46bd3c31615f688040847949f1ff381b61631233d6a3ff7"
         }
       ]
     },
@@ -371,7 +371,7 @@
     "publicationReviewGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "CMS publication review access groups",
       "description": "Defines access to claim and decide a CMS publication review task.",
       "owningDomain": "cms",
@@ -395,13 +395,13 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+          "version": "0.0.3",
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
@@ -424,7 +424,7 @@
     "publicationReviewRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "CMS publication review enterprise role",
       "description": "Makes CMS publication review assignable independently of publish and rollback authority.",
       "owningDomain": "cms",
@@ -448,8 +448,8 @@
         {
           "moduleName": "cms",
           "sectionCode": "publicationReviewGroups",
-          "version": "0.0.1",
-          "checksum": "2bc3ffa877456a0de25c48ef4719f5cc261c0b116c198e49387dcd9bb3da8a34"
+          "version": "0.0.2",
+          "checksum": "1d187ebb5c6529beffa16a5a35f116483e485b7291242a389d4e83545138c38f"
         }
       ]
     }

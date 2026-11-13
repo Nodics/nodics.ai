@@ -19,6 +19,15 @@ the failed journal when the caller has the existing runtime administrator
 recovery permission. The scope applies only to that validation. The administrator
 remains the audit actor, and a fresh Process approval is required for activation.
 
+Lifecycle inspection and rollback resolve their existing operator groups from
+Framework-owned `publish.lifecycle.operatorAccessGroups.get` and `.rollback`.
+Each selection must be a nonempty array of nonblank group codes; missing or
+malformed policy rejects before authorization. Other route-admitted callers must
+pass the source domain's fresh `authorizeScopedOperator` check. Project overrides
+may replace values without bypassing route permissions, token types or lifecycle
+and domain prerequisites. Owner regression coverage includes inherited defaults,
+overrides, removed-group scope checks and invalid-policy denial.
+
 The configured version provider implements `prepareSetup(request,item)` through
 existing capture and `validateSetup(publication,request,item)` against exact
 retained sources. Product verifies sealed root, source revision and Store;

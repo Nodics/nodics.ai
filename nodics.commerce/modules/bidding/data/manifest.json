@@ -81,7 +81,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "bidding",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -103,15 +103,15 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "c165956aadb665ff4f9091d7b15cf80e1734873b837933053beb41e0651d53c9",
+      "releaseChecksum": "1810bb159465110aed0b7520a1fc9ed8c570c8692c483c6f94bec8585e8cca4a",
       "generatedHashes": {
-        "docs-v001/records/documentation/biddingDocumentationComponentData.js": "689c0cf6981725031e38df289f8b39be8dadb30035a882175fffceac68ddd489",
+        "docs-v001/records/documentation/biddingDocumentationComponentData.js": "adbef808672665fa47cbde16fbb550dd5679218a5301cb6eb4004b7c2186d301",
         "docs-v001/records/documentation/biddingDocumentationPageMetadataData.js": "e80cfee4438e1d523097aec55779d7de5fb29e9e3a4cb0958dad7a3fec093a5b",
         "docs-v001/records/documentation/biddingDocumentationNodeData.js": "7ecdabe293b92c571d0d935f09b594d40da587765e1b8c1f5df48f789efc3f1f",
-        "docs-v001/records/documentation/biddingDocumentationSearchMetadataData.js": "267127e6d83791dfdaf58702b8bc50400f17d74eb6896c775d75d48fd338c3e3",
+        "docs-v001/records/documentation/biddingDocumentationSearchMetadataData.js": "4b91d9229594793eed82902d73b22d730a8dd91f0b64d04931c290c5b43ee265",
         "docs-v001/records/documentation/biddingDocumentationPageData.js": "aa1fc4f76c310c65b3f5805f9d27f54f45b97d1dcec3fdb6a4e2d97d6279f19f",
         "docs-v001/records/documentation/biddingDocumentationRouteData.js": "97bf6a7d9d7b15cb20ad6e7a5e71f5e5cd98442bbc2a707e335bb13a258434a2",
-        "docs-v001/records/documentation/biddingDocumentationPublicationStateData.js": "198745dbcf23533754a1dc223bbdb44430b1b92d1e1791572292c27b6cb0c865",
+        "docs-v001/records/documentation/biddingDocumentationPublicationStateData.js": "6b80c649b3b1824a77dc6e6e1666aa4aabbc3bcb1e2fe135316a71d38dc412cd",
         "docs-v001/headers/100_biddingDocumentationContentPackHeader.js": "d47112965a43c04ef1b89c091bdd58b88f09395b9fedf709b4b54cdb8db676d3"
       },
       "includes": [

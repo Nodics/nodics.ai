@@ -87,7 +87,10 @@ test('the full library composes canonical capability records rather than retaini
         }
         const article = families.Component.records.find(record => record.code === page.articleComponent);
         const search = families.SearchMetadata.records.find(record => record.targetType === 'PAGE' && record.targetCode === page.code);
-        assert.equal(search.searchText, article.properties.searchText, page.documentId + ': stale search projection');
+        // Owner packs may include title and summary as a search prefix; the article
+        // body must still be the exact selected source, without stale projections.
+        assert([article.properties.searchText, search.title + ' ' + search.summary + ' ' + article.properties.searchText]
+            .includes(search.searchText), page.documentId + ': stale search projection');
     }
     const circa = catalogue.documents.find(document => document.id === 'accelerators.circa-overview');
     assert.match(circa.body, /implementing `eWaste` module owns/);
@@ -343,7 +346,7 @@ test('composition-only groups own neither business releases nor documentation pa
                 const implemented = metadata.nodics?.owns?.some(owner => ['service', 'pipeline', 'utility', 'schema', 'router'].includes(owner));
                 if (metadata.nodics?.kind === 'group' && root !== docs && !implemented) {
                     assert(!fs.existsSync(path.join(root, 'data')), metadata.name + ': grouping-only package owns data');
-                    assert(!metadata.nodics.owns.includes('data'), metadata.name + ': grouping-only package declares data ownership');
+                    assert(!metadata.nodics.owns?.includes('data'), metadata.name + ': grouping-only package declares data ownership');
                 }
             }
             visit(root);

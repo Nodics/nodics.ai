@@ -106,7 +106,7 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
     : name === "identityGovernance" ? { migration }
     : name === "bootstrapIdentity" ? { source: "environment", adminPassword: "offline-admin-password-long-unique", servicePassword: "offline-service-password-long-unique", serviceApiKey: "offline-service-api-key-long-unique-2026" }
     : name === "data" ? importProperties.data
-    : name === "runtimeRole" ? { publication: "OPERATIONAL" }
+    : name === "runtimeRole" ? { code: "PLATFORM", publication: "OPERATIONAL" }
     : name === "environment" ? { class: "LOCAL" } : original(name, tenant);
   Object.assign(NODICS, { isModuleActive: () => true, getActiveModules: () => scope.modules,
     getNodicsHome: () => require("node:path").resolve(__dirname, "../../.."),
@@ -159,6 +159,7 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
     DefaultIdentityMigrationAuditService: { save: async () => { throw new Error("Read-only validation cannot emit a mutation audit"); } },
     DefaultPrincipalSecurityStampGovernanceService: require("../../../../nodics.platform/modules/profile/src/service/identity/defaultPrincipalSecurityStampGovernanceService"),
     DefaultAuthenticationProviderService: Object.assign(Object.create(authentication), { recordAuthEvent: async () => true }),
+    DefaultSchemaAuthoringPolicyService: require("../../nDatabase/database/src/service/schema/defaultSchemaAuthoringPolicyService"),
     DefaultRuntimeAuthorizationService: authorization,
     DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
     DefaultUserStateService: { findUserState: async request => {

@@ -1,10 +1,14 @@
 /*
     Nodics - Enterprice Micro-Services Management Framework
+
     Copyright (c) 2026 Nodics All rights reserved.
+
     This software is governed by the Nodics Source-Available Commercial License.
     You may use, copy, modify, deploy, or distribute it only as permitted by the
     root LICENSE file or a separate written agreement with Nodics.
+
  */
+
 /** @module wasteCollection/test/collectionLocationInvocationParity @description Covers the real local module invocation envelope and remote selector parity without changing collection records. @layer test @owner wasteCollection */
 const { test } = require('node:test');
 const assert = require('node:assert/strict');

@@ -25,7 +25,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
+    "stagedVersion": "0.0.3",
     "validationResult": {
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
@@ -60,7 +60,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
+    "stagedVersion": "0.0.3",
     "validationResult": {
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
@@ -95,7 +95,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
+    "stagedVersion": "0.0.3",
     "validationResult": {
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
@@ -128,13 +128,13 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
+    "stagedVersion": "0.0.3",
     "validationResult": {
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "616c21136aeda52dd85d0d5b6373012f66ad909cdc20bb4c763843bb4208b973",
+    "checksum": "ff0f678597f04603e6ace8c90bb53ece5b27f39b44eaae4f40a357da0bffa3c0",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"

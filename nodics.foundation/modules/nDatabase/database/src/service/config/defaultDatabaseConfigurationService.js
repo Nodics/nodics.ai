@@ -20,16 +20,7 @@ const acquiredConfigurations = new WeakMap();
 const configurationObservations = new WeakMap();
 
 /** Reuses an effective destination only within the current synchronous admission observation. */
-function resolveObservedConfiguration(owner, moduleName, tenant) {
-    const observation = configurationObservations.get(owner);
-    if (!observation) return owner.resolveTenantDatabaseConfiguration(moduleName, tenant);
-    let modules = observation.destinations.get(tenant);
-    if (!modules) observation.destinations.set(tenant, modules = new Map());
-    if (!modules.has(moduleName)) {
-        modules.set(moduleName, owner.resolveTenantDatabaseConfiguration(moduleName, tenant));
-    }
-    return modules.get(moduleName);
-}
+
 
 /**
  * @module database/service/config/DefaultDatabaseConfigurationService
@@ -53,6 +44,18 @@ function resolveObservedConfiguration(owner, moduleName, tenant) {
  * @property {Object} SERVICE.DefaultValidatorConfigurationService Builds schema validator chains.
  */
 module.exports = {
+    /** Reuses an effective destination only within the current synchronous admission observation. */
+    resolveObservedConfiguration: function (owner, moduleName, tenant) {
+    const observation = configurationObservations.get(owner);
+    if (!observation) return owner.resolveTenantDatabaseConfiguration(moduleName, tenant);
+    let modules = observation.destinations.get(tenant);
+    if (!modules) observation.destinations.set(tenant, modules = new Map());
+    if (!modules.has(moduleName)) {
+        modules.set(moduleName, owner.resolveTenantDatabaseConfiguration(moduleName, tenant));
+    }
+    return modules.get(moduleName);
+},
+
     rawSchema: {},
     dbs: {},
     interceptors: {},
@@ -183,7 +186,7 @@ module.exports = {
     getDatabaseConfiguration: function (moduleName, tenant) {
         return this.withConfigurationObservation(() => {
             this.validateModuleTenant(moduleName, tenant);
-            const connConfig = resolveObservedConfiguration(this, moduleName, tenant);
+            const connConfig = this.resolveObservedConfiguration(this, moduleName, tenant);
             this.assertTenantDatabaseIsolation(moduleName, tenant, connConfig);
             this.assertTenantNamespaceBinding(tenant);
             return connConfig;
@@ -237,9 +240,9 @@ module.exports = {
             const modules = {};
             const defaultTenant = CONFIG.get('defaultTenant') || 'default';
             for (const moduleName of [...new Set(['default', ...this.getDatabaseActiveModules()])].sort()) {
-                const destination = resolveObservedConfiguration(this, moduleName, tenantCode);
+                const destination = this.resolveObservedConfiguration(this, moduleName, tenantCode);
                 this.assertTenantDatabaseIsolation(moduleName, tenantCode, destination);
-                const base = resolveObservedConfiguration(this, moduleName, defaultTenant);
+                const base = this.resolveObservedConfiguration(this, moduleName, defaultTenant);
                 const baseConfig = CONFIG.get('database', defaultTenant);
                 const targetConfig = CONFIG.get('database', tenantCode);
                 const baseType = _.merge({}, baseConfig.default, baseConfig[moduleName] || {}).options.databaseType;
@@ -463,7 +466,7 @@ module.exports = {
         for (const peer of tenants) {
             if (peer === tenant) continue;
             for (const module of modules) {
-                const other = resolveObservedConfiguration(this, module, peer);
+                const other = this.resolveObservedConfiguration(this, module, peer);
                 for (const channel of ['master', 'test']) {
                     if (!connection[channel]) continue;
                     if (['master', 'test'].some(otherChannel => other[otherChannel] &&
@@ -598,7 +601,7 @@ module.exports = {
                     this.assertTenantNamespaceBinding(tenant);
                     return modules.every(moduleName => {
                         this.validateModuleTenant(moduleName, tenant);
-                        const configuration = resolveObservedConfiguration(this, moduleName, tenant);
+                        const configuration = this.resolveObservedConfiguration(this, moduleName, tenant);
                         this.assertTenantDatabaseIsolation(moduleName, tenant, configuration);
                         const handle = this.getAdmittedTenantDatabase(moduleName, tenant, configuration);
                         return !!(handle && handle.master && handle.master.getConnection && handle.master.getConnection());

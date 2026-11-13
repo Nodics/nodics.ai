@@ -16,6 +16,7 @@ const fs = require('node:fs'), path = require('node:path'), Module = require('no
 const root = path.resolve(__dirname, '../../../../../../..');
 const foundation = relative => require(path.join(root, 'nodics.foundation/modules', relative));
 const mongo = foundation('nDatabase/mongodb/src/schemas/model').default;
+const bindings = foundation('nConfig/src/service/defaultConfigurationBindingService');
 const policy = foundation('nDatabase/database/src/service/schema/defaultSchemaReadAccessPolicyService');
 
 /** Installs actual generated read orchestration over the test's existing authority fixtures. @param {Object} t Test context. @param {Function} records Current original rows by schema. @param {string[]} schemaNames Selected Promotion schemas. @returns {Object} Bounded observations. */
@@ -37,7 +38,10 @@ module.exports = function (t, records, schemaNames = ['coupon', 'couponBatch']) 
     global.UTILS = { isBlank: value => value == null || _.isEmpty(value), isObject: _.isObject,
         generateUniqueCode: () => 'fixture-only' };
     const get = CONFIG.get;
-    global.CONFIG = { get: key => ({ schemaPolicies: require('../../config/properties').schemaPolicies,
+    const schemaPolicies = bindings.resolve(require('../../config/properties').schemaPolicies, {}, {
+        serverCode: 'operationalPromotion', readRuntimeProperty: () => 'OPERATIONAL'
+    });
+    global.CONFIG = { get: key => ({ schemaPolicies,
         accessPoints: { readAccessPoint: 1, fullAccessPoint: 10 }, cache: { enabled: false }, defaultPageNumber: 1 }[key] ?? get(key)) };
     global.CLASSES = { ...CLASSES, PipelineHead: foundation('nPipeline/src/lib/pipelineHead'),
         PipelineNode: foundation('nPipeline/src/lib/pipelineNode') };

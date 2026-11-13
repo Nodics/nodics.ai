@@ -127,13 +127,13 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+          "version": "0.0.3",
+          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.3",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
@@ -181,7 +181,7 @@
           "moduleName": "wcmsExperience",
           "sectionCode": "previewAccessGroups",
           "version": "0.0.1",
-          "checksum": "a961437bd9e133e9ccaa532c7fabbf087f12e3505c9e546bea3d28356d825780"
+          "checksum": "74b1bdda11578c5192e02a3a808a18c2cb6b35a08312c8871722462e94ac4359"
         }
       ]
     }

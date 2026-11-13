@@ -64,8 +64,8 @@ and owner-qualified references. Corrected content and its derived publication
 metadata remain STAGED without invented approval/Online actors. Main deployment
 owners advance exact publication descriptors separately. The frozen-source and
 current content gates live in test/eWasteDocumentationForwardRelease.test.js.
-Current source selectors are documentation 0.0.8 and referenceDocumentation
-0.0.4. Their immediate predecessors remain frozen in
+Current source selectors are documentation 0.0.9 and referenceDocumentation
+0.0.5. Earlier predecessors remain frozen in
 test/fixtures/documentationFrozen006.json. Current guides describe final-sale
 coupons and common Cart/Checkout, not the retired eWaste purchase/reversal
 adapters. Historical refund evidence is not current activation authority.

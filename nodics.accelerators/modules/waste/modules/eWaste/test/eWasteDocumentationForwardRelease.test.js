@@ -199,7 +199,7 @@ test('reviewed deployment adoption selects the exact current successors for both
         assert.equal(descriptor.contentPackCode, packCode);
         assert.equal(pack.source.manifestSection, sectionName);
         assert.equal(descriptor.releaseVersion, manifest.sections[sectionName].version);
-        assert.equal(descriptor.releaseVersion, sectionName === 'documentation' ? '0.0.8' : '0.0.4');
+        assert.equal(descriptor.releaseVersion, sectionName === 'documentation' ? '0.0.9' : '0.0.5');
         contract.validateGeneration(latestPredecessor.sections[sectionName], manifest.sections[sectionName]);
         assert.ok(manifest.sections[sectionName].sites.includes(descriptor.rootCode));
         assert.equal(typeof descriptor.sourceVersion, 'string');

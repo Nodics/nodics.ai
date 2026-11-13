@@ -43,6 +43,7 @@ const validKinds = new Set([
 ]);
 
 const validRuntimeKeys = new Set([
+    'ownership',
     'publish',
     'router',
     'web'
@@ -99,8 +100,13 @@ modules.forEach(module => {
         'nodics.runtime must be an object for package: ' + module.relativePath);
     Object.keys(nodics.runtime).forEach(runtimeKey => {
         assert(validRuntimeKeys.has(runtimeKey), 'Invalid nodics.runtime key `' + runtimeKey + '` for package: ' + module.relativePath);
+        if (runtimeKey === 'ownership') {
+            assert(['functional', 'runtimeLocal', 'sourceOnly'].includes(nodics.runtime.ownership),
+                'Invalid runtime ownership for package: ' + module.relativePath);
+            return;
+        }
         assert.strictEqual(typeof nodics.runtime[runtimeKey], 'boolean',
-            'nodics.runtime values must be boolean for package: ' + module.relativePath);
+            'nodics.runtime flags must be boolean for package: ' + module.relativePath);
     });
 
     if (['framework', 'setup', 'tooling'].includes(nodics.kind)) {

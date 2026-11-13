@@ -32,6 +32,7 @@ async function inspect(mode) {
         if (mode === 'commerce') servers.inventory = { endpoint, options: { remoteOnly: true } };
         fs.writeFileSync(path.join(fixture.serverRoot, 'config/properties.js'), 'module.exports = ' + JSON.stringify({
             activeModules: { groups: [], modules: selected.concat(['nodics.repository-build', fixture.environmentName, fixture.serverName]) },
+            runtimeRole: { publication: 'OPERATIONAL' },
             log: { level: 'error' }, servers
         }) + ';');
         // The source roots make packages discoverable; only selected capability graphs are loaded.

@@ -23,14 +23,17 @@
  */
 // Exact generated read provenance remains process-private and expires with the call.
 const generatedHttpReads = new WeakMap();
-function generatedReadBinding(request) { return JSON.stringify([request.tenant, request.authData]); }
+
 module.exports = {
+    /** Binds private generated-read provenance to the current tenant and authenticated actor. */
+    generatedReadBinding: function (request) { return JSON.stringify([request.tenant, request.authData]); },
+
     /** Retains public origin across safe-query translation without forwarding Express/body fields. Not a permission grant. @param {Object} original Authenticated HTTP input. @param {Object} read Exact generated read. @param {Function} execute Existing generated service call. @returns {Promise<*>} Original result. */
     withGeneratedHttpRead: async function (original, read, execute) {
         if (!original?.httpRequest || typeof original.httpRequest !== 'object' ||
             read.tenant !== original.tenant || read.authData !== original.authData || generatedHttpReads.has(read))
             throw new CLASSES.NodicsError('ERR_AUTH_00003');
-        generatedHttpReads.set(read, generatedReadBinding(read));
+        generatedHttpReads.set(read, this.generatedReadBinding(read));
         try { return await execute(read); }
         finally { generatedHttpReads.delete(read); }
     },
@@ -38,7 +41,7 @@ module.exports = {
     isGeneratedHttpRead: function (request) {
         const proof = generatedHttpReads.get(request);
         if (proof === undefined) return false;
-        if (proof !== generatedReadBinding(request)) throw new CLASSES.NodicsError('ERR_AUTH_00003');
+        if (proof !== this.generatedReadBinding(request)) throw new CLASSES.NodicsError('ERR_AUTH_00003');
         return true;
     },
     /** Resolves fixed read hooks from actual prepared schema metadata, never request flags. Qualification is evidence, not a privacy bypass. @param {Object} model Prepared provider receiver. @returns {Object|null} Effective configured owner. */

@@ -262,6 +262,21 @@ module.exports = {
             ]
         },
         testSuites: {
+            'project-release': [
+                { node: 'nodics.foundation/modules/nTooling/test/releaseCheckCommandContract.test.js' },
+
+                { node: 'nodics.foundation/modules/nTooling/test/projectCommandServiceContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/repositoryBuildCompositionContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/referenceDemoOwnership.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/concreteDefaultOwnership.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/activeModuleGraph.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/configurationBindingContract.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/deploymentModuleOwnershipPlan.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/deploymentProjectionCoordinates.test.js' },
+                { node: 'nodics.commerce/test/publicationConfigurationOwnership.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/destinationContributionDiscovery.test.js' },
+                { node: 'nodics.foundation/modules/nPublish/test/publicationSetupObservation.test.js' }
+            ],
             basic: [
                 { npm: 'check:syntax' },
                 { npm: 'quality:copyright' },
@@ -1030,9 +1045,10 @@ module.exports = {
                     { npmRun: ['build'] },
                     { npmRun: ['llm:validate'] },
                     { npmRun: ['quality:ownership'] },
-                    { npmRun: ['quality:docs'] },
-                    { npmRun: ['test:basic'] }
+                    { npmRun: ['quality:docs'] }
                 ],
+                basicSteps: [{ npmRun: ['test:basic'] }],
+                projectQualificationSteps: [{ npmRun: ['test:suite', '--', '--suite=project-release'] }],
                 fullSteps: [
                     { npmRun: ['test:full'] }
                 ]

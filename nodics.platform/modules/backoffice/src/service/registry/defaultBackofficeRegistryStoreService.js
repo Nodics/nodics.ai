@@ -19,14 +19,17 @@
 const { randomUUID } = require("node:crypto");
 // Derived decoding only: never an authority cache, and never shared by store instances.
 const decodedStores = new WeakMap();
-function freezeLease(value) {
-    if (value && typeof value === "object" && !Object.isFrozen(value)) {
-        Object.values(value).forEach(freezeLease); Object.freeze(value);
-    }
-    return value;
-}
+
 
 module.exports = {
+    /** Recursively freezes decoded lease data without changing provider authority. */
+    freezeLease: function (value) {
+    if (value && typeof value === "object" && !Object.isFrozen(value)) {
+        Object.values(value).forEach(value => this.freezeLease(value)); Object.freeze(value);
+    }
+    return value;
+},
+
     _instances: new Map(),
     _metrics: { reads: 0, writes: 0, deletes: 0, conditionalDeletes: 0, conditionalDeleteConflicts: 0,
         scans: 0, errors: 0, lastSuccessAt: null, lastErrorAt: null },
@@ -87,7 +90,7 @@ module.exports = {
         if (serialized && previous?.serialized === serialized) return previous.value;
         if (previous) { cache.values.delete(key); cache.bytes -= previous.bytes; }
         if (!serialized) return undefined;
-        const value = freezeLease(JSON.parse(serialized));
+        const value = this.freezeLease(JSON.parse(serialized));
         const bytes = Buffer.byteLength(serialized, "utf8");
         if (bytes <= maximum && maximum > 0) {
             while (cache.bytes + bytes > maximum && cache.values.size) {

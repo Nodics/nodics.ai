@@ -6,7 +6,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "init",
       "sourceRoot": "init-v001",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "loyaltyWallet Enterprise participant transactions",
       "description": "Exact parent-free participant group and Enterprise role; definitions only, no assignment or financial qualification.",
       "owningDomain": "loyaltyWallet",
@@ -199,7 +199,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "loyaltyWallet",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -221,15 +221,15 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "71348b45b49742e8653769a2d7b29b1a9d549a9cc9e62930538dfc9f73ade299",
+      "releaseChecksum": "56b201547c0363aa153bb3685b57dd9c1110659365afe3b1e588361ed4aeb862",
       "generatedHashes": {
-        "docs-v001/records/documentation/loyaltyWalletDocumentationComponentData.js": "50c1d3615abb080b35cfa779fa43eb0f65974f39279e0ffc55de849011adc474",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationComponentData.js": "3480daea8fb1b2d1d6400c34d582e35fc780a0fdaf4c27d39050aba5fc1b9a5c",
         "docs-v001/records/documentation/loyaltyWalletDocumentationPageMetadataData.js": "30bbd041e26bf5a83672d03c7dd1650f8f72d76d3192e20471e7680518f2a997",
         "docs-v001/records/documentation/loyaltyWalletDocumentationNodeData.js": "f868470e0f191ed2adee07fbad622b2b1c469579847db64abc2860501901948a",
-        "docs-v001/records/documentation/loyaltyWalletDocumentationSearchMetadataData.js": "257e5b1b4158831db93da3ff2d0f740cf14e8d7d922950dd3f9edb05a04ca585",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationSearchMetadataData.js": "bfb9039bedd7aeb9c52ff2c4feb3a250e6440b69254503737e762e0e96df5160",
         "docs-v001/records/documentation/loyaltyWalletDocumentationPageData.js": "ab89161e83f468b6008444101c3f830ef12d613edf014bc8753abbc1d3110a4e",
         "docs-v001/records/documentation/loyaltyWalletDocumentationRouteData.js": "3dc2f0f1cbf4462ba7d0a35845f45276c42a2915bfa9223e06e5e4d744e00b3f",
-        "docs-v001/records/documentation/loyaltyWalletDocumentationPublicationStateData.js": "395b26e6bcf23d470823be2b404cbbd84dc0830820be47866836752d1ffaf8ac",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationPublicationStateData.js": "5c3328d88684ee23d44f91e9e74287374aa8fb826a6aba4b896efbbe7d33453c",
         "docs-v001/headers/100_loyaltyWalletDocumentationContentPackHeader.js": "6b15d6f4cb436506992b04a49ed540a59c999346e1a65033fe8c2db888fdf451"
       },
       "includes": [
@@ -247,7 +247,7 @@
     "specialAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Reviewed Sample Credit Group",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "loyaltyWallet",
@@ -271,8 +271,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
+          "version": "0.0.3",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
         },
         {
           "moduleName": "loyaltyWallet",
@@ -286,7 +286,7 @@
     "specialAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "displayName": "Reviewed Sample Credit Role",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "loyaltyWallet",
@@ -310,8 +310,8 @@
         {
           "moduleName": "loyaltyWallet",
           "sectionCode": "specialAccessGroups",
-          "version": "0.0.1",
-          "checksum": "15200837017575ee6f0f407ef2f1808ca1cc1064dfed1c401f12f43a9c91d969"
+          "version": "0.0.2",
+          "checksum": "32a475b64e4fdfb37f6f979d2d9cad78b759be705cfeaaf080695bb158dc5fc5"
         }
       ]
     },
@@ -319,7 +319,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "init",
       "sourceRoot": "init-v001",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Loyalty participant access groups",
       "description": "Customer participation groups for transfer and partner-conversion capabilities",
       "owningDomain": "loyaltyWallet",
@@ -342,8 +342,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.1",
-          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660",
+          "version": "0.0.3",
+          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7",
           "partition": "DEFAULT"
         },
         {
@@ -385,7 +385,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "init",
       "sourceRoot": "init-v001",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "loyaltyWallet internal enterprise capabilities",
       "description": "Parent-free internal capability groups; no new profile, employee assignment or financial records.",
       "owningDomain": "loyaltyWallet",
@@ -422,7 +422,7 @@
         {
           "moduleName": "loyaltyWallet",
           "sectionCode": "participantTransactionAccess",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "d0aa5acf4a5d57a2ad60e9d5082566c3bea91cb3e6b4004b8a2c4b25a209bba5",
           "partition": "DEFAULT"
         },

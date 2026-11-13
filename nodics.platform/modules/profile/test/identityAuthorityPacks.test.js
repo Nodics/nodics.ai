@@ -39,6 +39,7 @@ const bootstrapForwardPermissions = new Set([
   "merchantEvidencePermission",
   "runtimeEvidencePermissions",
   "verificationExecutePermission",
+  "transferFinalizationPermission",
 ]);
 for (const [name, owner] of modules) {
   const file = path.join(owner.path, "data/manifest.json");
@@ -116,7 +117,7 @@ test("prerequisite graph is acyclic and every reference pins the exact owner byt
   };
   for (const code of sections.keys()) visit(code);
   const init = JSON.parse(fs.readFileSync(path.join(modules.get("profile").path, "data/manifest.json"))).sections["init-v001"];
-  assert.equal(init.version, "0.0.1", "initial Profile data belongs to the Release 0 baseline");
+  assert.equal(init.version, "0.0.10", "changed bootstrap payload and dependency scope require a forward source version");
   const startupDefinitions = [...sections.keys()].filter(code =>
     code === "config:accessGroups" || code === "profile:accessGroups" ||
     (code !== "commercialAgreement:permissionCatalogue" && /permission/i.test(code.split(":")[1])));

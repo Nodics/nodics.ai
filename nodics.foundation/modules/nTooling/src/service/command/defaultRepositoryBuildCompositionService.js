@@ -128,8 +128,12 @@ module.exports = {
             packageJson: metadata('nodics.repository-build', '9000.00', 'application', 'Repository Build Composition'),
             properties: { project: { code: 'nodics.repository-build', toolingOnly: true } }
         });
+        this.writeFile(path.join(root, 'envs', 'package.json'), JSON.stringify({
+            name: 'nodics.repository-build.environments',
+            nodics: { kind: 'group', runtimeModule: false, loadableByNodicsModuleLoader: false }
+        }, null, 2) + '\n');
         this.writeModule(environmentRoot, {
-            packageJson: metadata('repositoryBuildEnvironment', '9000.10', 'environment', 'Repository Build Environment'),
+            packageJson: metadata('repositoryBuildEnvironment', '9000.10', 'group', 'Repository Build Environment'),
             properties: {
                 environment: { code: 'repositoryBuildEnvironment', toolingOnly: true },
                 log: { level: 'warn' }, event: { remotePublishEnabled: false },
@@ -147,6 +151,7 @@ module.exports = {
         this.writeModule(serverRoot, {
             packageJson: serverPackage,
             properties: {
+                runtimeRole: { publication: 'OPERATIONAL' },
                 activeModules: { groups: [], modules: ['nTest', 'nodics.repository-build'] },
                 servers: { default: { endpoint: { httpHost: '127.0.0.1', httpPort: 4399, httpsHost: '127.0.0.1', httpsPort: 4398 } } }
             }

@@ -1,3 +1,14 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 /* Nodics - Copyright (c) 2026. Governed by the root LICENSE. */
 /** @module cronjob/test/cronJobSingleFlight @description Exercises real owner wrappers with a held target across concurrent commands, natural ticks, stop, and recovery. @layer test @owner cronjob */
 const {test}=require('node:test');const assert=require('node:assert/strict');const _=require('lodash');

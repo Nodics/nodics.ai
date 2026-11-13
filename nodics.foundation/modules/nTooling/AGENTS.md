@@ -2,7 +2,7 @@
 
 Unreleased shipping data uses owner-specific v001 with no retained-root snapshots.
 `DefaultProjectDataManifestService.validateUnreleasedBaseline` owns reusable
-read-only checks for framework and customer roots. Require 0.0.1 for Release 0 Init/Core/Sample,
+read-only checks for framework and customer roots. Preserve semantic versions and exact forward release pins for Init/Core/Sample,
 canonical checksum/prerequisite validation and isolated versioning fixtures.
 
 Reference packs explicitly marked `nodics.referenceDemo: true` are demo-only.

@@ -28,7 +28,11 @@ const bootstrapTimingPhases = new Set([
 ]);
 
 /** Measures one operation with numeric counters only; returns or throws its original outcome without retaining inputs, results or errors. */
-function measureOwnerPhase(phases, phase, operation) {
+
+
+module.exports = {
+    /** Measures one owner operation using numeric counters and preserves its original outcome. */
+    measureOwnerPhase: function (phases, phase, operation) {
   const metric = phases[phase] ||= { active: 0, completed: 0, rejected: 0,
     lastDurationMs: 0, maxDurationMs: 0, totalDurationMs: 0 };
   const started = performance.now();
@@ -46,9 +50,8 @@ function measureOwnerPhase(phases, phase, operation) {
   try { result = operation(); } catch (error) { finish(true); throw error; }
   return Promise.resolve(result).then(value => { finish(false); return value; },
     error => { finish(true); throw error; });
-}
+},
 
-module.exports = {
   _sweepTimer: null,
   _metrics: {
     registrations: 0,
@@ -375,13 +378,13 @@ module.exports = {
 
   /** Measures fixed owner phases without retaining requests, identities, results or errors. */
   measureRegistrationPhase: function (phase, operation) {
-    return measureOwnerPhase(this._metrics.registrationTiming ||= {}, phase, operation);
+    return this.measureOwnerPhase(this._metrics.registrationTiming ||= {}, phase, operation);
   },
 
   /** Measures fixed readiness phases for secured diagnostics; unsupported labels execute unmeasured and never become metric keys. */
   measureBootstrapPhase: function (phase, operation) {
     if (!bootstrapTimingPhases.has(phase)) return operation();
-    return measureOwnerPhase(this._metrics.bootstrapTiming ||= {}, phase, operation);
+    return this.measureOwnerPhase(this._metrics.bootstrapTiming ||= {}, phase, operation);
   },
 
   /** Registers one bounded runtime-instance batch while preserving per-module leases. */

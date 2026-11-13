@@ -20,7 +20,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
+    "stagedVersion": "0.0.4",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -56,7 +56,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
+    "stagedVersion": "0.0.4",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -92,14 +92,14 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
+    "stagedVersion": "0.0.4",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b35b35c1647751fdd3088eab3d1ebfb7e4d3d35040bc248bfa2b8cff0287149c",
+    "checksum": "c66f212a8d08a5f666861fb7700481ae40970bf3c9951c69289d41248debfccf",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -126,14 +126,14 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.3",
+    "stagedVersion": "0.0.4",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b78e0264d22a8f9a38aacfb015be63582e3f5f364f8cce9e41d0cbfbc6b4eda9",
+    "checksum": "5325dc88612ff8822280c73fcc41c17618848ef42bc85c97e1c7d17556589f9f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"

@@ -2328,7 +2328,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
-    "sourceChecksum": "3337e0bcb41223df0af023f43c98d4756800266b6ed92e89e1e9d01d5ab3df00",
+    "sourceChecksum": "1f58950ed4625a5cdc9a05669a6574bdb83de6721b562e795c781f3e5a9b9c6b",
     "sourceWordCount": 2534,
     "audience": [
       "business",

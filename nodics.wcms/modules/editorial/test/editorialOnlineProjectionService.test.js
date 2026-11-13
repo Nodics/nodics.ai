@@ -1,8 +1,14 @@
 /*
-    Nodics - Enterprise Micro-Services Management Framework
+    Nodics - Enterprice Micro-Services Management Framework
+
     Copyright (c) 2026 Nodics All rights reserved.
-    Governed by the root LICENSE or a separate written agreement with Nodics.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
  */
+
 /** @module editorial/test/editorialOnlineProjectionService @description Qualifies Staged transport, original activation recovery and exact command acknowledgements without runtime data access. @layer test @owner editorial */
 const test = require('node:test');
 const assert = require('node:assert/strict');

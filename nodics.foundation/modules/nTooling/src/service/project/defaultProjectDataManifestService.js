@@ -73,8 +73,6 @@ module.exports = {
                             throw new Error('Unreleased baseline section selects non-v001 source: ' + owner.name + ':' + code);
                     }
                     if (section.kind === 'DATA_RELEASE') {
-                        if (selected && ['init', 'core', 'sample'].includes(section.dataType) && section.version !== '0.0.1')
-                            throw new Error('Release 0 data requires manifest version 0.0.1: ' + owner.name + ':' + code);
                         const candidate = { owner, manifestPath, section, code };
                         candidates.set(owner.name + ':' + code, candidate);
                         if (selected) {

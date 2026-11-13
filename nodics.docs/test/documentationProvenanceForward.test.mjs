@@ -40,7 +40,8 @@ for (const owner of owners) test(owner + ': provenance successor preserves inten
         ? require(path.join(ownerRoot, fixture.successorSnapshot + '.json')).sections.documentation
         : require(path.join(ownerRoot, 'data/manifest.json')).sections.documentation;
     const currentFile = file => {
-        const frozen = fixture.successorSnapshot && path.join(ownerRoot, fixture.successorSnapshot, file);
+        const frozen = fixture.successorSnapshot && path.join(ownerRoot,
+            fixture.successorFilesRoot || fixture.successorSnapshot, file);
         return frozen && fs.existsSync(frozen) ? frozen : path.join(ownerRoot, 'data', file);
     };
     const historical = file => {

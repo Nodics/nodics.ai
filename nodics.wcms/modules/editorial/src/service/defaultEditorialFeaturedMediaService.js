@@ -1,10 +1,14 @@
 /*
     Nodics - Enterprice Micro-Services Management Framework
+
     Copyright (c) 2026 Nodics All rights reserved.
+
     This software is governed by the Nodics Source-Available Commercial License.
     You may use, copy, modify, deploy, or distribute it only as permitted by the
     root LICENSE file or a separate written agreement with Nodics.
+
  */
+
 /** @module editorial/service/DefaultEditorialFeaturedMediaService
  * @description Pins the saved article's featured image and consumes Media-owned publication readiness and exact inspection handoff.
  * @layer service @owner editorial

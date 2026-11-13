@@ -1,5 +1,5 @@
 /*
-    Nodics - Enterprise Micro-Services Management Framework
+    Nodics - Enterprice Micro-Services Management Framework
 
     Copyright (c) 2026 Nodics All rights reserved.
 
@@ -8,6 +8,7 @@
     root LICENSE file or a separate written agreement with Nodics.
 
  */
+
 /** @module cronjob/test/cronJobBusinessNavigation @description Existing scheduler transports retain independent permission filtering. @layer test @owner cronjob */
 const test = require('node:test'), assert = require('node:assert/strict');
 const provider = require('../src/service/defaultCronjobBackofficeCapabilityService');

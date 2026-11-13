@@ -35,11 +35,9 @@ function fixture(t) {
     return { root, manifest, write, check: () => service.validateUnreleasedBaseline({ projectRoot: root }) };
 }
 
-test('baseline is read-only, checks the Release 0 version and excludes deliberate test modules', t => {
+test('baseline is read-only, preserves semantic versions and excludes deliberate test modules', t => {
     const f = fixture(t);
     f.manifest.sections.permissionCatalogue.version = '7.8.9'; f.write();
-    assert.throws(f.check, /Release 0 data requires manifest version/);
-    f.manifest.sections.permissionCatalogue.version = '0.0.1'; f.write();
     const before = fs.readFileSync(path.join(f.root, 'data/manifest.json'));
     const excluded = path.join(f.root, 'test/fixtures/versioned');
     fs.mkdirSync(path.join(excluded, 'data/sample-v902'), { recursive: true });
@@ -47,7 +45,7 @@ test('baseline is read-only, checks the Release 0 version and excludes deliberat
     fs.writeFileSync(path.join(excluded, 'data/manifest.json'), '{invalid test-only manifest');
     const result = f.check();
     assert.equal(result.effects, false);
-    assert.equal(result.sections[0].version, '0.0.1');
+    assert.equal(result.sections[0].version, '7.8.9');
     assert.deepEqual(fs.readFileSync(path.join(f.root, 'data/manifest.json')), before);
 });
 

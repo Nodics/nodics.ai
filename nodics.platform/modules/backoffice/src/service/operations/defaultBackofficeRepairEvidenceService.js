@@ -1,4 +1,15 @@
 /*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/*
     Nodics - Enterprise Micro-Services Management Framework
     Copyright (c) 2026 Nodics. Governed by the root LICENSE.
  */
@@ -13,9 +24,13 @@ const { isDeepStrictEqual } = require("node:util");
  * @override Preserve native admission, transaction claims, exact identity and no uncertain replay.
  */
 module.exports = {
+  /** Initializes the evidence owner without creating persistence state. */
   init: async function () { return true; },
+  /** Completes initialization without dispatching repairs. */
   postInit: async function () { return true; },
+  /** Creates a typed repair-evidence error without exposing provider details. */
   fail: function (code = "ERR_BOF_00101") { return new CLASSES.NodicsError(code); },
+  /** Hashes a stable recursively ordered repair identity. */
   hash: function (value) {
     const stable = item => Array.isArray(item) ? item.map(stable) :
       item && typeof item === "object" ? Object.fromEntries(Object.keys(item).sort().map(key => [key, stable(item[key])])) : item;
@@ -50,6 +65,7 @@ module.exports = {
     return { tenant: scope.tenant, authData: identity.getSystemAuthData(), transactionContext,
       options: { recursive: false, skipItemCache: true } };
   },
+  /** Resolves the generated receipt or target-lock service and required operations. */
   store: function (kind) {
     const owner = SERVICE[kind === "lock" ? "DefaultBackofficeRepairTargetService" : "DefaultBackofficeRepairReceiptService"];
     if (!owner || ["get", "save", "update"].some(method => typeof owner[method] !== "function")) throw this.fail();
@@ -64,6 +80,7 @@ module.exports = {
     try { return await owner.execute(binding, work); }
     catch (error) { if (error?.code) throw error; throw this.fail(); }
   },
+  /** Reads one scoped revision and rejects ambiguous or mismatched repair intent. */
   read: async function (scope, kind, transactionContext) {
     const query = kind === "lock" ? { code: scope.targetKey, scopeKey: scope.sharedKey } : { code: scope.code, scopeKey: scope.scopeKey };
     const response = await this.store(kind).get({ ...this.persistence(scope, transactionContext), query, searchOptions: { limit: 2 } });
@@ -73,6 +90,7 @@ module.exports = {
     if (row && kind !== "lock" && row.requestHash !== scope.requestHash) throw this.fail("ERR_BOF_00102");
     return row;
   },
+  /** Performs a revision-fenced owner update and verifies the complete readback. */
   update: async function (scope, kind, row, patch, transactionContext) {
     const response = await this.store(kind).update({ ...this.persistence(scope, transactionContext),
       query: { code: row.code, scopeKey: row.scopeKey, revision: row.revision },
@@ -155,6 +173,7 @@ module.exports = {
     if (row.status === "RUNNING") await this.update(scope, "receipt", row, { status: "UNCERTAIN" });
     return undefined;
   },
+  /** Returns only an already completed durable receipt without repeating the repair. */
   replay: function (row) {
     if (row.status !== "COMPLETED" || !row.result?.receipt?.durable) throw this.fail();
     return { ...JSON.parse(JSON.stringify(row.result)), idempotentReplay: true };

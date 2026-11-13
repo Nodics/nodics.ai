@@ -1936,6 +1936,15 @@ module.exports = {
       const context = this.deploymentPropertyContext({ projectRoot: parent.roots.project,
         environmentCode: parent.environmentCode, serverCode: name, nodeCode: node,
         frameworkRoot: parent.roots.framework, environmentVariables: parent.environmentVariables, runtimeReferences: references });
+      if (parts[0] === "runtimeIdentity") {
+        const identity = this.deriveDeploymentRuntimeIdentity({}, context);
+        if (!_.has(identity, parts)) {
+          throw new Error("Runtime identity reference is unavailable");
+        }
+        return _.cloneDeep(_.get(identity, parts));
+      }
+      // Resolve only the requested property and its references. Resolving all peers would
+      // turn valid bidirectional service connections into recursive full server loads.
       const layers = this.deploymentPropertyFiles(context).filter(file => fs.existsSync(file))
         .map(file => ({properties:require(file),directory:require("node:path").dirname(file)}));
       if (parts[0] === "runtimeIdentity") {

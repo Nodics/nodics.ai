@@ -17,7 +17,8 @@ const _ = require("lodash");
 
 const repositoryRoot = path.resolve(__dirname, "../../../..");
 const authSecurity = require("../src/service/security/defaultAuthSecurityService");
-const authDefaults = require("../config/properties").authSecurity;
+const authDefaults = _.merge({}, require("../config/properties").authSecurity,
+  require("../../../../nodics.platform/modules/profile/config/properties").authSecurity);
 
 function configuration(values) {
   const effective = _.merge(
@@ -49,6 +50,11 @@ const secureConfiguration = configuration({
     jwtVerifyOptions: { algorithm: ["HS256"] },
   },
 });
+
+assert.throws(
+  () => authSecurity.validateBootstrapIdentity({ get: key => key === "authSecurity" ? require("../config/properties").authSecurity : undefined }),
+  /Profile bootstrap identity policy is required/,
+);
 
 assert.throws(
   () => authSecurity.getJwtSecret(configuration({})),

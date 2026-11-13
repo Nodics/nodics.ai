@@ -1,10 +1,14 @@
 /*
     Nodics - Enterprice Micro-Services Management Framework
+
     Copyright (c) 2026 Nodics All rights reserved.
+
     This software is governed by the Nodics Source-Available Commercial License.
     You may use, copy, modify, deploy, or distribute it only as permitted by the
     root LICENSE file or a separate written agreement with Nodics.
+
  */
+
 /** @module wcmsExperience/test/privatePreparation @description Exercises private preparation with the actual guarded Discovery generation protocol. @layer test @owner wcmsExperience */
 const assert = require('node:assert/strict');
 const { test } = require('node:test');

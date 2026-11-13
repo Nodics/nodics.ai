@@ -108,7 +108,10 @@ async function fixture() {
     path: path.resolve(__dirname, ".."),
     index: 1,
   };
+  const enumKeys = require("../src/utils/enums").ContactType.definition;
+  global.ENUMS = { ContactType: Object.fromEntries(enumKeys.map(key => [key, { key }])) };
   global.NODICS = {
+    getModule: name => name === "profile" ? { rawSchema: require("../src/schemas/schemas").profile } : undefined,
     getNodicsHome: () => path.resolve(__dirname, "../../../../nodics.foundation"),
     getCustomHome: () => path.resolve(__dirname, "../../../.."),
     getActiveModules: () => ["profile"],
@@ -258,7 +261,7 @@ async function fixture() {
 test("forward Init authority receives human/guest identities while dynamic tenants receive only service identities and groups", async () => {
   const f = await fixture();
   const manifest = require("../data/manifest.json");
-  assert.equal(manifest.sections["init-v001"].version, "0.0.1");
+  assert.equal(manifest.sections["init-v001"].version, "0.0.10");
   assert.equal(manifest.sections["init-v001"].sourceRoot, "init-v001");
   assert.equal(manifest.retainedRoots, undefined);
   releases.validateRetainedRoots(path.resolve(__dirname, "../data"), manifest);
@@ -591,7 +594,7 @@ test("startup owner admits an explicit forward Init version but still rejects ch
   assert.equal(
     f.configuration.identityGovernance.migration.assessment.bootstrapReview
       .sources[0].version,
-    "0.0.1",
+    "0.0.10",
   );
   const reviewSource =
     f.configuration.identityGovernance.migration.assessment.bootstrapReview.sources[0];
@@ -728,7 +731,7 @@ test("inventory/source/installation drift and wrong original operator reject rev
     },
     (f) => {
       f.configuration.identityGovernance.migration.assessment.bootstrapReview.sources[0].version =
-        "0.0.9";
+        "0.0.8";
     },
     (f) => {
       f.installations.values().next().value.checksum = "b".repeat(64);

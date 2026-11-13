@@ -26,6 +26,7 @@ import { fileURLToPath } from 'node:url';
 import {
   readProjectEnvironmentConfiguration,
 } from './defaultProjectEnvironmentConfigurationService.mjs';
+import tooling from '../defaultToolingCommandService.js';
 import { resolveTemplate } from './defaultProjectContainerConfigurationService.mjs';
 
 const require = createRequire(import.meta.url);
@@ -435,6 +436,9 @@ async function stop() {
 
 async function main() {
   const command = process.argv[2] || 'status';
+  const args = tooling.normalizeArguments(process.argv.slice(3));
+  const environment = tooling.readOption(args, '--environment');
+  if (environment) process.env.ENV = environment;
   if (process.argv.includes('--include-frontends')) throw new Error('Frontend lifecycle belongs to the frontend application');
   if (command === 'start') return start();
   if (command === 'stop') return stop();

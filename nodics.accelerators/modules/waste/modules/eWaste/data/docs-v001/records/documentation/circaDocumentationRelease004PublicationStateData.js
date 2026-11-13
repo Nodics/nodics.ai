@@ -20,7 +20,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -55,7 +55,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -89,7 +89,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -123,7 +123,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -157,7 +157,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -193,7 +193,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -229,7 +229,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -265,7 +265,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -301,7 +301,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -337,7 +337,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -373,7 +373,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -407,7 +407,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -441,7 +441,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -477,7 +477,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -513,7 +513,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -549,7 +549,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -585,7 +585,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -619,7 +619,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -653,7 +653,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -687,7 +687,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -721,7 +721,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -755,7 +755,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -789,7 +789,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -823,7 +823,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -857,7 +857,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -891,7 +891,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -925,7 +925,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -959,7 +959,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -993,7 +993,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",
@@ -1027,7 +1027,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "publicationCode": "circaDocumentation",
     "workflowReference": "circaDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.4",
+    "stagedVersion": "0.0.5",
     "validationResult": {
       "generated": true,
       "sourceAuthority": "data/docs-v001/records/documentation",

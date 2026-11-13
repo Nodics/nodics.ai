@@ -524,6 +524,21 @@ npm exec -- nodics clean --env qa --server jobs
 npm exec -- nodics project:validate
 ```
 
+Project validation checks every environment by default. For an
+environment-scoped release, use `project:validate --environment=<code>` with the
+exact directory name under `envs/`. The gate still checks project and module
+configuration, command ownership, and reference demo data. It checks deployment
+configuration only for the selected environment. Pass the same option to
+`project:run topology:preflight` to preflight that deployment.
+
+The Framework `release:check --execute --project-qualification` runs the
+clean install, dependency audit, build, governance, and project-boundary tests.
+Use it alongside the downstream project's own verification on pinned Git
+revisions. General Framework promotion uses the regular release check and
+`--full`.
+
+
+
 `--env` aliases `--environment`; `--project` aliases `--home`. Target options accept
 both `--name=value` and `--name value`. Duplicate or missing target values fail.
 Start resolves the explicit server through its existing package topology; optional

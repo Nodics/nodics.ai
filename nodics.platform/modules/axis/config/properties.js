@@ -45,7 +45,7 @@ module.exports = {
       "baselines": {
         "axis": {
           "releaseCode": "axis:axisBaseline",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "axisCmsSite",
           "employeeCompositionPaths": ["/dashboard", "/lock-screen", "/schema-workbench"],

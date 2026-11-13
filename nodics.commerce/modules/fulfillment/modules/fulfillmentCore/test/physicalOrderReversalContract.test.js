@@ -22,6 +22,8 @@ const recovery = require('../../../../checkout/modules/order/src/service/default
 const dispute = require('../../../../checkout/modules/order/src/service/defaultOrderDisputeService');
 const lifecycle = require('../../../../checkout/modules/order/src/service/defaultOrderLifecycleService');
 const legacyReturns = require('../src/service/defaultFulfillmentReturnExecutionService');
+const bindings = require('../../../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService');
+const inventoryProperties = require('../../../../baseCommerce/modules/inventory/config/properties');
 
 /** Installs separately scoped transactional doubles and real owner orchestration. */
 async function fixture(resolution = 'CANCELLATION') {
@@ -36,6 +38,7 @@ async function fixture(resolution = 'CANCELLATION') {
     };
     const profile = { enabled:true,orderCodePrefixes:[],storeCodes:{'apparel-store':true},ownerByStore:{'apparel-store':'fulfillmentCore'} };
     const policies = {order:{disputes:{...profile},refunds:{...profile}},fulfillmentCore:{physicalOperations:{enabled:true,evidenceMode:'MANUAL_ATTESTATION',maximumLines:100,maximumReceipts:100}}};
+    policies.inventory = bindings.resolve(inventoryProperties, {}, { readRuntimeProperty: () => 'OPERATIONAL' }).inventory;
     const request = {tenant:'t',code:'case',authorization:'Bearer isolated-test',authData:{tenant:'t',enterpriseCode:'e',principalType:'human',loginId:'reviewer',tokenType:'access'},
         idempotencyKey:'refund-command',payload:{confirmed:true,reason:'Reviewed original physical purchase',expectedRevision:0}};
     const clone = value=>structuredClone(value), matches = (row,query)=>Object.entries(query || {}).every(([key,value])=>row[key]===value);
@@ -55,7 +58,7 @@ async function fixture(resolution = 'CANCELLATION') {
         DefaultOrderOperationService:require('../../../../checkout/modules/order/src/service/defaultOrderOperationService'),
         DefaultSecuredRequestPipelineService:{getGrantedPermissions:()=>state.permission?['commerce.checkout.place','commerce.dispute.review','commerce.fulfillment.return','commerce.refund.execute']:[],
             isPermissionGranted:(permission,granted)=>granted.includes(permission)},
-        DefaultModuleService:{isLocalModuleActive: moduleName => ["fulfillmentCore", "order"].includes(moduleName), invokeModule:async()=>({data:{principalCode:'reviewer',scopes:state.scope?[{scopeType:'ENTERPRISE',scopeCode:'e',tenantCode:'t',capabilityCode:'commerce'}]:[],deniedScopes:[]}})},
+        DefaultModuleService:{isLocalModuleActive: moduleName => ["fulfillmentCore", "order", "inventory"].includes(moduleName), invokeModule:async()=>({data:{principalCode:'reviewer',scopes:state.scope?[{scopeType:'ENTERPRISE',scopeCode:'e',tenantCode:'t',capabilityCode:'commerce'}]:[],deniedScopes:[]}})},
         DefaultDatabaseModelHandlerService:{inspectIndexes:async model=>({versioned:state.versioned,indexes:[{key:{code:1},unique:state.unique},
             ...(model.name==='inventoryBalance'?[{key:{tenant:1,enterpriseCode:1,warehouseCode:1,sku:1},unique:state.unique}]:[])]})},
         DefaultDatabaseTransactionService:{capabilities:()=>({multiRecordAtomic:state.atomic}),assertSchemaEligible:model=>assert.equal(model.rawSchema.transaction.enabled,true),

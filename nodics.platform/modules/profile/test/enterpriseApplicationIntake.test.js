@@ -795,7 +795,7 @@ test("review controller does not disclose private persistence diagnostics", asyn
       !error.message.includes("private-storage-value"),
   );
 });
-test("source workspace publishes the opt-in review list without changing the inherited workspace", () => {
+test("source workspace publishes an inert entry while the authenticated owner supplies the opt-in review list", () => {
   const f = fixture(),
     provider = require("../src/service/defaultProfileBackofficeCapabilityService");
   const before = JSON.stringify(f.config.workspace);
@@ -803,14 +803,14 @@ test("source workspace publishes the opt-in review list without changing the inh
   const workspace = capability.navigation.find(
     (item) => item.id === "enterprises",
   ).backendWorkspace;
-  assert(workspace.tabs.some((tab) => tab.id === "employee-applications"));
+  assert.equal(workspace.renderer, "axis.workspace.native");
+  assert.equal(workspace.workspaceCode, "profile.enterpriseManagement");
+  assert.equal(workspace.tabs, undefined, "registration metadata cannot disclose current role choices");
+  assert(f.management.buildAccessWorkspace({ publicOnly: false }).tabs.some((tab) => tab.id === "employee-applications"));
   assert.equal(JSON.stringify(f.config.workspace), before);
   f.config.applications.enabled = false;
   assert(
-    !provider
-      .getCapability()
-      .navigation.find((item) => item.id === "enterprises")
-      .backendWorkspace.tabs.some((tab) => tab.id === "employee-applications"),
+    !f.management.buildAccessWorkspace({ publicOnly: false }).tabs.some((tab) => tab.id === "employee-applications"),
   );
 });
 test("ordinary administrator invitation command cannot reset a pending application", async () => {

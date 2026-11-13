@@ -401,8 +401,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
-    "sourceChecksum": "a333e007db824a308ed44aacbdcc0531c44fec493885a80a12d1ae7802097b99",
-    "sourceWordCount": 4883,
+    "sourceChecksum": "add6ed7d0dc6c55314410de4b9e3f5a624590458f5b083004f04c637811d1619",
+    "sourceWordCount": 5047,
     "audience": [
       "business",
       "architect",
@@ -427,7 +427,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 4883,
+    "wordCount": 5047,
     "sourceEvidence": [
       "../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json",

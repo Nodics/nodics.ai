@@ -1,3 +1,14 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 'use strict';
 /** @module rulesApi/test/rulesProcessOwnerRouting @description Offline Rules approval and claim routing with original signed scope. @owner rulesApi @layer test */
 const {test}=require('node:test'), assert=require('node:assert/strict');

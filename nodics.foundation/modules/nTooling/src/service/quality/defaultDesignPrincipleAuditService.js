@@ -580,8 +580,11 @@ module.exports = exportedService = {
             for (const entry of fs.readdirSync(folder, {withFileTypes:true})) {
                 if (entry.name.startsWith('.') || skip.has(entry.name) || entry.isSymbolicLink()) continue;
                 const absolute = path.join(folder, entry.name), relative = path.relative(directory, absolute);
-                if (entry.isDirectory()) walk(absolute);
-                else if (entry.name === 'nodics.environment.json') failures.push(relative + ': environment descriptors are prohibited; use existing module configuration');
+                if (entry.isDirectory()) {
+                    if (options.environment && path.relative(directory, folder) === 'envs' &&
+                        entry.name !== options.environment) continue;
+                    walk(absolute);
+                } else if (entry.name === 'nodics.environment.json') failures.push(relative + ': environment descriptors are prohibited; use existing module configuration');
                 else if (entry.name === 'properties.js' && path.basename(folder) === 'config') {
                     try { inspectExports(acorn.parse(fs.readFileSync(absolute, 'utf8'), {ecmaVersion:'latest',sourceType:'script'}), relative); }
                     catch (error) { failures.push(relative + ': configuration syntax must be valid'); }

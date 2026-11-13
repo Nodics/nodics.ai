@@ -70,12 +70,13 @@ module.exports = {
     /** Adds exact domain scope for tenant administrators without expanding the previous operators' reach. */
     assertScopedOperator: async function (operation, request) {
         if (!['get', 'rollback'].includes(operation)) return;
-        const accessGroups = ['runtimeConfigAdminUserGroup'];
-        if (operation === 'get') accessGroups.push('commerceSetupPublisherUserGroup');
+        const denied = () => new CLASSES.NodicsError('ERR_AUTH_00003', 'Publication operation is unavailable in this enterprise scope');
+        const accessGroups = (CONFIG.get('publish') || {}).lifecycle?.operatorAccessGroups?.[operation];
+        if (!Array.isArray(accessGroups) || !accessGroups.length ||
+            accessGroups.some(group => typeof group !== 'string' || !group.trim())) throw denied();
         const security = SERVICE.DefaultSecuredRequestPipelineService;
         if (security.hasAccessGroup({ ...request, router: { accessGroups } })) return;
         const lifecycle = SERVICE.DefaultPublicationLifecycleService;
-        const denied = () => new CLASSES.NodicsError('ERR_AUTH_00003', 'Publication operation is unavailable in this enterprise scope');
         const publication = await lifecycle.get(request).catch(() => { throw denied(); });
         const adapter = lifecycle.getDomainAdapter(publication.domain);
         if (typeof adapter.authorizeScopedOperator !== 'function') throw denied();

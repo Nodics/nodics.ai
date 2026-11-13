@@ -1,10 +1,14 @@
 /*
     Nodics - Enterprice Micro-Services Management Framework
+
     Copyright (c) 2026 Nodics All rights reserved.
+
     This software is governed by the Nodics Source-Available Commercial License.
     You may use, copy, modify, deploy, or distribute it only as permitted by the
     root LICENSE file or a separate written agreement with Nodics.
+
  */
+
 /** @module profile/test/customerBrowserRegistration @description Exercises public signup admission with the real browser origin and form owners, including policy drift and zero-write refusals. @layer test @owner profile */
 const { test, beforeEach } = require("node:test");
 const assert = require("node:assert/strict");

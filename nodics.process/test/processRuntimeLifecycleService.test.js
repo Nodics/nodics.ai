@@ -201,6 +201,7 @@ global.SERVICE = {
   DefaultProcessAuditEventService: createGeneratedService(auditEvents),
   DefaultProcessIncidentService: createGeneratedService(incidents),
   DefaultProcessTriggerService: createGeneratedService(triggers),
+  DefaultProcessOperationsInspectionService: require("../modules/workflow/src/service/operation/defaultProcessOperationsInspectionService"),
   DefaultProcessActionAdapterRegistryService: require("../modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService"),
 };
 

@@ -697,7 +697,8 @@ module.exports = {
           "documentId": "commerce.cart-order",
           "owner": "checkoutCore"
         }
-      ]
+      ],
+      "version": "0.0.5"
     },
     "active": true
   },
@@ -1386,7 +1387,8 @@ module.exports = {
           "owner": "eWaste",
           "anchor": "acceleratorsCircaOperationsRewards-2-review-and-decision-screen-flow"
         }
-      ]
+      ],
+      "version": "0.0.5"
     },
     "active": true
   },
@@ -1814,7 +1816,8 @@ module.exports = {
           "owner": "eWaste",
           "anchor": "acceleratorsCircaSourceInventory-10-issuer-setup-and-publication"
         }
-      ]
+      ],
+      "version": "0.0.5"
     },
     "active": true
   },
@@ -2209,7 +2212,8 @@ module.exports = {
           "documentId": "waste.impact-providers",
           "owner": "wasteImpact"
         }
-      ]
+      ],
+      "version": "0.0.5"
     },
     "active": true
   }

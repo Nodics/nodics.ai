@@ -1,3 +1,14 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 'use strict';
 /** @module cms/test/cmsBaselineRelocationContract @description Offline proof that physical host relocation does not rewrite governed release metadata. @owner cms @layer test */
 const {test} = require('node:test');

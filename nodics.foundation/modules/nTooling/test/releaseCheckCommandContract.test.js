@@ -116,6 +116,11 @@ const fullPlan = releaseCheck.createPlan(Object.assign({}, context, {
 assert.strictEqual(releaseCheck.normalizeStep(fullPlan[fullPlan.length - 1]).label, 'npm run test:full',
     'Full release validation must include test:full');
 
+const projectPlan = releaseCheck.createPlan({ ...context, args: ['--project-qualification'] });
+assert.deepStrictEqual(projectPlan.slice(0, -1), dryPlan.slice(0, -1));
+assert.strictEqual(releaseCheck.normalizeStep(projectPlan.at(-1)).label, 'npm run test:suite -- --suite=project-release');
+assert.throws(() => releaseCheck.createPlan({ ...context, args: ['--project-qualification', '--full'] }), /cannot be combined/);
+
 let printed = [];
 const originalLog = console.log;
 console.log = function (message) {

@@ -34,7 +34,7 @@ test('consolidated selected paths have complete verified hashes', () => {
     for (const [file, hash] of Object.entries(selected.generatedHashes)) {
         assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
     }
-    assert.equal(selected.version, '0.0.2');
+    assert.equal(selected.version, '0.0.3');
     assert.equal(selected.contentPath, 'docs-v001');
     assert.equal(selected.sourceAuthority, 'data/' + selected.contentPath + '/records/documentation');
     assert.equal(fs.existsSync(path.join(root, 'data/docs-v002')), false);

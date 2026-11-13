@@ -636,13 +636,14 @@ test('real Product and Pricing evidence projections cross the Waste consumer bou
   SERVICE.DefaultPublicationLifecycleService = { get: async () => structuredClone(publication) };
   SERVICE.DefaultProductPublicationVersionProviderService = { getVersion: async () => ({ scope, version, root: structuredClone(root) }),
     transport: () => ({ getStatus: async () => structuredClone(status) }) };
-  f.configuration.eWaste = { targetAuthorities: { commerceStaged: { runtimeRole: 'COMMERCE_STAGED' } } };
+  f.configuration.eWaste = { targetAuthorities: { commerceStaged: { publication: 'STAGED' } } };
   const proofTransport = SERVICE.DefaultModuleService.invokeModule;
   const storeRequest = listingRuntimeRequest(f, { contractVersion: 1, storeCode: 'store-a' }, 'listingStoreContext');
   // Replace transport only: real controllers, envelope unwrapping and DTO projections execute.
   SERVICE.DefaultModuleService.invokeModule = async input => {
     if (['/internal/listing-requests/proof', '/internal/stores/placement'].includes(input.apiName)) return proofTransport(input);
     assert.equal(input.connectionName, 'commerceStaged'); assert.equal(input.moduleName, 'product');
+    assert.deepEqual(input.targetAuthority, { publication: 'STAGED' });
     if (input.apiName === '/internal/products/listings/store-context') {
       assert.deepEqual(input.requestBody, storeRequest.payload);
       return { code: 'SUC_SYS_00000', result: await controller.storeContext(storeRequest) };

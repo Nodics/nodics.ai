@@ -111,7 +111,9 @@ test('metadata versioning follows explicit publication context and capture verif
     const properties = bindings.resolve(rawProperties, {}, { readRuntimeProperty: () => 'OPERATIONAL' });
     const schemaHandler = require('../../../../nodics.foundation/modules/nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService');
     const originalGet = CONFIG.get;
-    const policies = structuredClone(properties.schemaPolicies);
+    const policies = bindings.resolve(properties.schemaPolicies, {}, {
+        serverCode: 'mediaOperational', readRuntimeProperty: () => 'OPERATIONAL',
+    });
     CONFIG.get = key => key === 'schemaPolicies' ? policies : originalGet(key);
     assert.deepEqual(schemas.media.schemaPolicies, ['publicationVersioned']);
     for (const [name, schema] of Object.entries(schemas)) {

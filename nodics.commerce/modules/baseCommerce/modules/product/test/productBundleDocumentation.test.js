@@ -18,7 +18,7 @@ const manifest = require('../data/manifest.json').sections.documentation;
 
 test('consolidated Product CMS release documents exact held publication', () => {
   assert.equal(manifest.contentPath, 'docs-v001');
-  assert.equal(manifest.version, '0.0.2');
+  assert.equal(manifest.version, '0.0.3');
   for (const [file, hash] of Object.entries(manifest.generatedHashes))
     assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
   const catalogue = contract.validateDataRelease(root, 'documentation');

@@ -19,7 +19,9 @@
 const crypto = require('node:crypto');
 module.exports = {
   _acknowledgements: new WeakMap(),
+  /** Initializes the readiness evidence owner without provider effects. */
   init: function () { return Promise.resolve(true); },
+  /** Completes readiness evidence initialization without creating observations. */
   postInit: function () { return Promise.resolve(true); },
   /** Reads complete Framework defaults; malformed overrides never become implicit defaults. */
   getConfiguration: function () {

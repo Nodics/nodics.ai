@@ -77,6 +77,7 @@ async function run() {
         DefaultAuthSecurityService: authSecurity,
         DefaultPrincipalSecurityStampService: stampService,
         DefaultModuleService: {
+            isLocalModuleActive: moduleName => { assert.strictEqual(moduleName, 'profile'); return false; },
             buildRequest: request => { capturedRequest = request; return { uri: 'http://profile.test/internal-token', source: request }; },
             fetch: request => Promise.resolve({ result: { authToken: issuedToken } })
         }

@@ -20,6 +20,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const toolingCommandService = require('../defaultToolingCommandService');
 const localRuntimeCredentials = require('../project/defaultProjectLocalRuntimeCredentialService');
 
 module.exports = {
@@ -30,19 +31,20 @@ module.exports = {
      */
     run: async function (context) {
         const operation = context.command.operation || 'validate';
-        this.assertNoProjectDescriptor(context.home);
+        const environment = toolingCommandService.readOption(context.args, '--environment');
         if (operation === 'validate') {
-            this.validateProject(context.home);
+            this.validateProject(context.home, environment);
             const projectCode = this.resolveProjectCode(context.home);
             console.log(JSON.stringify({
                 projectCode: projectCode,
+                ...(environment === undefined ? {} : { environment }),
                 commandCount: Object.keys(this.resolveCommands(context.home)).length,
                 state: 'PASSED'
             }, null, 2));
             return true;
         }
         if (operation === 'run') {
-            this.validateProject(context.home);
+            this.validateProject(context.home, environment);
             return this.runProjectCommand(context.home, context.args[0], context.args.slice(1));
         }
         throw new Error('Unsupported project command operation: ' + operation);
@@ -98,19 +100,28 @@ module.exports = {
     },
 
     /**
-     * Validates the project command contract and script ownership policy.
+     * Validates the project contract, optionally limiting environment configuration to one deployment.
      * @param {string} projectRoot Project root.
+     * @param {string} [environment] Exact environment directory name.
      * @returns {void}
      */
-    validateProject: function (projectRoot) {
+    validateProject: function (projectRoot, environment) {
         this.assertNoProjectDescriptor(projectRoot);
         this.resolveProjectCode(projectRoot);
         const commands = this.resolveCommands(projectRoot);
         Object.entries(commands).forEach(([name, command]) => this.validateCommand(projectRoot, name, command));
         this.validateScriptOwnership(projectRoot, commands);
         this.validateProjectDirectoryBoundaries(projectRoot);
+        if (environment !== undefined) {
+            const environments = path.join(projectRoot, 'envs');
+            if (!fs.existsSync(environments) ||
+                !fs.readdirSync(environments, { withFileTypes: true })
+                    .some(entry => entry.isDirectory() && entry.name === environment)) {
+                throw new Error('Unknown project environment: ' + environment);
+            }
+        }
         const configurationFailures = [];
-        require('../quality/defaultDesignPrincipleAuditService').auditConfigurationSources(configurationFailures, projectRoot, { customerProject: true });
+        require('../quality/defaultDesignPrincipleAuditService').auditConfigurationSources(configurationFailures, projectRoot, { customerProject: true, environment });
         require('../quality/defaultDesignPrincipleAuditService').auditReferenceDemoModules(configurationFailures, projectRoot);
         if (configurationFailures.length) throw new Error('Configuration coding restrictions failed: ' + configurationFailures.join('; '));
     },
@@ -568,7 +579,8 @@ module.exports = {
                 args: [path.join(this.resolveFrameworkRoot(), 'nodics.foundation', 'modules', 'nTooling', 'bin', 'nodics-tool.js'), command.command, '--home=' + commandHome].concat(command.args || [], args || [])
             };
         }
-        const commandEnvironment = this.projectCommandEnvironment(projectRoot, process.env);
+        const selectedEnvironment = toolingCommandService.readOption(args, '--environment');
+        const commandEnvironment = this.projectCommandEnvironment(projectRoot, process.env, selectedEnvironment);
         const result = spawnSync(execution.executable, execution.args, {
             cwd: projectRoot,
             env: Object.assign({}, commandEnvironment, {
@@ -592,10 +604,11 @@ module.exports = {
      *
      * @param {string} projectRoot Project root.
      * @param {Object} environment Current process environment.
+     * @param {string} [explicitEnvironment] Explicit CLI environment for credential lookup.
      * @returns {Object} Command environment.
      */
-    projectCommandEnvironment: function (projectRoot, environment) {
-        const selectedEnvironment = environment.ENV || environment.E ||
+    projectCommandEnvironment: function (projectRoot, environment, explicitEnvironment) {
+        const selectedEnvironment = explicitEnvironment || environment.ENV || environment.E ||
             environment.NODICS_ACCEPTANCE_RUNTIME || this.conventionalLocalEnvironmentName(projectRoot);
         return localRuntimeCredentials.mergeEnvironment(projectRoot, selectedEnvironment, environment);
     },

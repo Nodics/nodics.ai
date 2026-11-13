@@ -1,0 +1,55 @@
+{
+  "reason": "Isolated provenance-only test selection of retained version-2 payloads; not an installed release receipt.",
+  "contractVersion": 2,
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "cms",
+      "version": "0.0.2",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "64b67e1fa09b2ec38baf51b5cf3d3d44ce7646428bff4dc1153e57d3ae9542d8",
+      "generatedHashes": {
+        "docs-v001/records/documentation/cmsDocumentationNodeData.js": "8900d93b89137fd30fc242d2a3ad584d9aa079f93edcf5028c1e67c805dec6ca",
+        "docs-v001/records/documentation/cmsDocumentationPageData.js": "64584f8c7fada9203efbf3a5622c97a85cc227a57c2de289acd00a39e05fe686",
+        "docs-v001/records/documentation/cmsDocumentationRouteData.js": "30c571d8186862e08e3fa52d11b2cd80411377fc02d41ba724a2ba66a3a92e7e",
+        "docs-v001/records/documentation/cmsDocumentationRelease002PageMetadataData.js": "f4a7d6022e6fff91eec074e2b86fa86fc151d6f5fd1109f0107e89321723b9bd",
+        "docs-v001/records/documentation/cmsDocumentationRelease002PublicationStateData.js": "2b13096a965145885cfcf9731f335716036b661481e9cda2a54b39d2cec27388",
+        "docs-v001/records/documentation/cmsDocumentationRelease002SearchMetadataData.js": "c1d6893f9647089a7e5f89593baac474eec340dc49d880b9f65452f111da0fc8",
+        "docs-v001/records/documentation/cmsDocumentationRelease002ComponentData.js": "2b105b91e6f0b2edfbe9187f58b0f42f25b4e538a960af30e3f4d73f21beeb59",
+        "docs-v001/headers/100_cmsDocumentationRelease002ContentPackHeader.js": "11549445e2ccb156b3aef68582fd54e15d9d29247955582658437a84226fd2d7"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

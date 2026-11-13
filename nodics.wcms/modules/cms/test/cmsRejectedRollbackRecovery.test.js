@@ -6,6 +6,7 @@
     This software is governed by the Nodics Source-Available Commercial License.
     You may use, copy, modify, deploy, or distribute it only as permitted by the
     root LICENSE file or a separate written agreement with Nodics.
+
  */
 
 const test=require('node:test');const assert=require('node:assert/strict');const provider=require('../src/service/publication/defaultCmsPublicationVersionProviderService');

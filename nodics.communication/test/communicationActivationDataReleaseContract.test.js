@@ -35,7 +35,7 @@ assert.strictEqual(
   "OPTIONAL_AXIS_INITIATED",
 );
 assert.strictEqual(sections.documentation.contentPath, "docs-v001");
-assert.strictEqual(sections.documentation.version, "0.0.2");
+assert.strictEqual(sections.documentation.version, "0.0.3");
 assert(Object.keys(sections.documentation.generatedHashes).every(file => file.startsWith(sections.documentation.contentPath + "/")));
 assert.strictEqual(sections["runtime-defaults"].sourceRoot, "core-v001");
 assert.strictEqual(sections["sample-templates"].sourceRoot, "sample-v001");

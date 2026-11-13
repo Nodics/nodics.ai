@@ -3107,21 +3107,21 @@ module.exports = {
         },
         "docs-ewaste": {
           "contentPackCode": "eWasteDocumentation",
-          "releaseVersion": "0.0.8",
+          "releaseVersion": "0.0.9",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-commercesearchcore": {
           "contentPackCode": "commerceSearchCoreDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-promotion": {
           "contentPackCode": "promotionDocumentation",
-          "releaseVersion": "0.0.3",
+          "releaseVersion": "0.0.4",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3156,7 +3156,7 @@ module.exports = {
         },
         "docs-product": {
           "contentPackCode": "productDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3184,7 +3184,7 @@ module.exports = {
         },
         "docs-fulfillmentcore": {
           "contentPackCode": "fulfillmentCoreDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3331,7 +3331,7 @@ module.exports = {
         },
         "docs-router": {
           "contentPackCode": "routerDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.2",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3345,7 +3345,7 @@ module.exports = {
         },
         "docs-ntooling": {
           "contentPackCode": "nToolingDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3366,14 +3366,14 @@ module.exports = {
         },
         "docs-loyaltywallet": {
           "contentPackCode": "loyaltyWalletDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-backoffice": {
           "contentPackCode": "backofficeDocumentation",
-          "releaseVersion": "0.0.4",
+          "releaseVersion": "0.0.5",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3408,14 +3408,14 @@ module.exports = {
         },
         "docs-wasteimpact": {
           "contentPackCode": "wasteImpactDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-cms": {
           "contentPackCode": "cmsDocumentation",
-          "releaseVersion": "0.0.4",
+          "releaseVersion": "0.0.5",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3450,7 +3450,7 @@ module.exports = {
         },
         "docs-rulesevaluation": {
           "contentPackCode": "rulesEvaluationDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.2",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3506,7 +3506,7 @@ module.exports = {
         },
         "docs-wcmsexperience": {
           "contentPackCode": "wcmsExperienceDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3520,14 +3520,14 @@ module.exports = {
         },
         "docs-foundation": {
           "contentPackCode": "nodicsDocumentationFoundation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "circadocs": {
           "contentPackCode": "circaDocumentation",
-          "releaseVersion": "0.0.4",
+          "releaseVersion": "0.0.5",
           "rootType": "site",
           "rootCode": "circaDocumentationSite",
           "sourceVersion": "0"

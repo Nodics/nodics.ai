@@ -1,3 +1,14 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 /** @module nodics.docs/test/searchFreshnessForward @description Verifies reviewed search-freshness successors, exact predecessor bytes and aligned authoring/search/publication metadata. @owner nodics.docs @layer test */
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import path from 'node:path';import {createRequire} from 'node:module';import {fileURLToPath} from 'node:url';

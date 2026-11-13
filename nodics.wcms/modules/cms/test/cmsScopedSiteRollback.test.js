@@ -6,8 +6,8 @@
     This software is governed by the Nodics Source-Available Commercial License.
     You may use, copy, modify, deploy, or distribute it only as permitted by the
     root LICENSE file or a separate written agreement with Nodics.
- */
 
+ */
 
 /** Verifies exact lineage and sibling preservation for route rollback from a site bundle. */
 const test=require('node:test');const assert=require('node:assert/strict');

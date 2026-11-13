@@ -171,12 +171,15 @@ module.exports = {
       callback,
     );
   },
+  /** Lists actor-scoped Init executions through the import facade. */
   listInitExecutions: function (request, callback) {
     return this.listExecutions(request, callback, "init");
   },
+  /** Lists actor-scoped Core executions through the import facade. */
   listCoreExecutions: function (request, callback) {
     return this.listExecutions(request, callback, "core");
   },
+  /** Lists actor-scoped Sample executions through the import facade. */
   listSampleExecutions: function (request, callback) {
     return this.listExecutions(request, callback, "sample");
   },
@@ -190,12 +193,15 @@ module.exports = {
       callback,
     );
   },
+  /** Inspects one Init execution without replaying its effects. */
   inspectInitExecution: function (request, callback) {
     return this.inspectExecution(request, callback, "init");
   },
+  /** Inspects one Core execution without replaying its effects. */
   inspectCoreExecution: function (request, callback) {
     return this.inspectExecution(request, callback, "core");
   },
+  /** Inspects one Sample execution without replaying its effects. */
   inspectSampleExecution: function (request, callback) {
     return this.inspectExecution(request, callback, "sample");
   },

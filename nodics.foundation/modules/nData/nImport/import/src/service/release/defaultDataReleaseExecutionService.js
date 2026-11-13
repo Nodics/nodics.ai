@@ -1,3 +1,14 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 /* Nodics - Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 "use strict";
 const crypto = require("node:crypto");
@@ -11,15 +22,19 @@ const executionAdmission = new AsyncLocalStorage();
  * @override Preserve exact source, actor, destination, atomic claims and no implicit replay.
  */
 module.exports = {
+  /** Initializes the execution owner without starting import work. */
   init: async function () {
     return true;
   },
+  /** Completes initialization without claiming an execution. */
   postInit: async function () {
     return true;
   },
+  /** Creates the canonical typed import admission error. */
   fail: function (message) {
     return SERVICE.DefaultDataReleaseService.error("ERR_IMP_00003", message);
   },
+  /** Hashes a serializable immutable execution identity. */
   hash: function (value) {
     return crypto
       .createHash("sha256")
@@ -70,6 +85,7 @@ module.exports = {
       options: { recursive: false, skipItemCache: true },
     };
   },
+  /** Resolves the generated execution-record owner with all required persistence operations. */
   store: function () {
     const service = SERVICE.DefaultDataReleaseExecutionRecordService;
     if (
@@ -95,6 +111,7 @@ module.exports = {
         SERVICE.DefaultDataReleaseService.publicReferenceReleases(plan),
     };
   },
+  /** Accepts only an unambiguous generated-owner read response. */
   rows: function (response) {
     if (
       !response ||
@@ -104,6 +121,7 @@ module.exports = {
       throw this.fail("Import execution readback is unconfirmed");
     return response.result;
   },
+  /** Reads and validates one execution in the exact actor and runtime scope. */
   load: async function (scope, code, required = true) {
     if (!/^releaseExecution_[a-f0-9]{64}$/.test(code || ""))
       throw this.fail("Invalid import execution identity");
@@ -281,6 +299,7 @@ module.exports = {
       })),
     };
   },
+  /** Projects bounded execution progress without exposing stored authority. */
   project: function (row) {
     return {
       code: row.code,
@@ -386,6 +405,7 @@ module.exports = {
       ? admission.executionId
       : undefined;
   },
+  /** Wraps the public execution projection in the normal import response contract. */
   response: async function (row, plan) {
     return {
       code: "SUC_IMP_00000",

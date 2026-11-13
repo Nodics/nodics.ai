@@ -61,7 +61,8 @@ test('Profile baseline discovery retains the exact bootstrap group owners', () =
         assert.equal(baseline.version, manifest.sections['init-v001'].version,
             'discovery must preserve the current owner-governed baseline version');
         assert.deepEqual(baseline.prerequisites.filter(ref => ref.sectionCode === 'accessGroups')
-            .map(ref => ref.moduleName).sort(), ['config', 'profile']);
+            .map(ref => ref.moduleName).sort(), ['config', 'profile'],
+            'optional application roles must remain separate from the minimal bootstrap');
         assert(!baseline.declaredFiles.some(file => file.endsWith('runtimeConfigurationUpdateUserGroupsData.js')));
         assert(!baseline.declaredFiles.some(file => file.endsWith('backofficeCircaUserGroupsData.js')));
         assert(baseline.declaredFiles.some(file => file.includes('/identityBootstrap/')));

@@ -34,7 +34,7 @@ test('composition groups retain composition, not unused or child implementation 
     );
     assert.equal(
         read('nodics.process/modules/workflow').data.dataReleases
-            .runtimeRoleProfiles.PROCESS.installers.PROCESS_DEFINITION,
+            .installers.PROCESS_DEFINITION,
         'DefaultProcessDefinitionContributionService',
     );
     assert.equal(

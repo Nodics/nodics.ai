@@ -27,6 +27,10 @@ never reinterpret a release checksum as a file-only digest.
 Commerce publisher group admission is limited to the six human setup/lifecycle
 routes in that contract. Keep granular permissions and domain/enterprise checks;
 service decisions and activation retain their existing groups and token types.
+Lifecycle get/rollback operator groups resolve from this module's
+`publish.lifecycle.operatorAccessGroups` defaults. Missing or malformed policy
+fails closed; other admitted callers must pass the source domain's scope check.
+Customer configuration may override values, never define or copy these defaults.
 
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 

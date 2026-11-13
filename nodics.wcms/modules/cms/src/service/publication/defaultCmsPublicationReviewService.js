@@ -1,12 +1,23 @@
 /*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/*
     Nodics - governed by the repository LICENSE.
  */
 
 const { isDeepStrictEqual } = require('node:util');
-const identity = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value);
+
 const targetFields = ['site', 'path', 'locale', 'channel', 'accessMode'];
-const targetOf = route => Object.fromEntries(targetFields.map(field => [field, route[field]]));
-const sameTarget = (left, right) => targetFields.every(field => left?.[field] === right[field]);
+
+
 const textFields = ['title', 'heading', 'subtitle', 'body', 'summary', 'description', 'text', 'content', 'markdown', 'label'];
 
 /**
@@ -17,6 +28,15 @@ const textFields = ['title', 'heading', 'subtitle', 'body', 'summary', 'descript
  * @override Preserve original employee admission, exact Process binding, and the safe projection.
  */
 module.exports = {
+    /** Validates a bounded owner publication or Process identity. */
+    identity: function (value) { return typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value); },
+
+    /** Projects only the canonical publication target fields. */
+    targetOf: function (route) { return Object.fromEntries(targetFields.map(field => [field, route[field]])); },
+
+    /** Compares exact canonical publication target coordinates. */
+    sameTarget: function (left, right) { return targetFields.every(field => left?.[field] === right[field]); },
+
     /** Rejects an unrelated, closed, or inaccessible review without exposing publication identity. */
     deny: function () {
         throw new CLASSES.NodicsError('ERR_AUTH_00003', 'This CMS approval task is unavailable to your reviewer account');
@@ -43,7 +63,7 @@ module.exports = {
             task.reviewerEligibility?.eligible === false ||
             review?.contractVersion !== 1 || review.owner !== 'cms' ||
             !context || context.tenantCode !== scope.tenant || context.enterpriseCode !== scope.enterpriseCode ||
-            !identity(context.publicationCode) || review.publicationCode !== context.publicationCode ||
+            !this.identity(context.publicationCode) || review.publicationCode !== context.publicationCode ||
             review.sourceVersion !== context.sourceVersion || review.rootCode !== context.siteCode ||
             !Number.isSafeInteger(context.publicationRevision) ||
             instanceCode !== SERVICE.DefaultCmsPublicationWorkflowService.reference({
@@ -70,7 +90,7 @@ module.exports = {
     route: async function (manifest, target, manifests, request) {
         let snapshot = manifest?.snapshot;
         if (snapshot?.bundleType === 'SITE_INDEX') {
-            const match = snapshot.routes.filter(route => sameTarget(route, target));
+            const match = snapshot.routes.filter(route => this.sameTarget(route, target));
             if (match.length !== 1) return undefined;
             const child = await manifests.getManifest(match[0].manifestCode, request);
             if (child?.publicationCode !== manifest.publicationCode || child.contentHash !== match[0].contentHash)
@@ -78,11 +98,11 @@ module.exports = {
             snapshot = child.snapshot;
         }
         if (snapshot?.bundleType === 'SITE') {
-            const match = snapshot.routes.filter(route => sameTarget(route, target));
+            const match = snapshot.routes.filter(route => this.sameTarget(route, target));
             if (match.length !== 1) return undefined;
             snapshot = SERVICE.DefaultCmsDeliveryService.expandSharedComponents(match[0], snapshot.sharedComponents);
         }
-        return sameTarget(snapshot, target) && snapshot.page ? snapshot : undefined;
+        return this.sameTarget(snapshot, target) && snapshot.page ? snapshot : undefined;
     },
 
     /** Reconciles a legacy site release only against its exact frozen Site catalog, never a latest authoring read. */
@@ -100,7 +120,7 @@ module.exports = {
     baseline: async function (publication, snapshot, provider, manifests, request) {
         try {
             const read = () => publication.rootType === 'site' ? provider.getOnlineVersion(publication, request) :
-                provider.transport().getStatus({ scope: targetOf(snapshot) }, request);
+                provider.transport().getStatus({ scope: this.targetOf(snapshot) }, request);
             const pointer = await read();
             if (pointer === null) return { status: 'NEW' };
             if (typeof pointer?.version !== 'string' || !pointer.version) return { status: 'UNAVAILABLE' };
@@ -242,7 +262,7 @@ module.exports = {
         }
         budget.components -= Math.min(limit, Math.max(current.size, prior.size));
         return {
-            target: targetOf(route),
+            target: this.targetOf(route),
             page: { code: route.page.code, name: route.page.name, renderer: route.page.renderer,
                 template: route.page.templateContract?.code },
             components,
@@ -258,7 +278,7 @@ module.exports = {
     /** Returns only frozen evidence, with no generic lifecycle response or write operation. */
     inspect: async function (original) {
         const { instanceCode, taskCode } = original.httpRequest?.params || {};
-        if (!identity(instanceCode) || !identity(taskCode)) this.deny();
+        if (!this.identity(instanceCode) || !this.identity(taskCode)) this.deny();
         const headers = original.httpRequest?.headers || {};
         const request = { ...original, authorization: headers.authorization || headers.Authorization };
         const scope = SERVICE.DefaultCmsDesignerAccessService.authorize(request, 'cms.publication.approve');

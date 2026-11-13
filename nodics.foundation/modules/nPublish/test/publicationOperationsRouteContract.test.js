@@ -14,13 +14,14 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 const operations = require('../src/router/routers').publish.publicationOperations;
+const defaults = require('../config/properties');
 
 test('registered Staged domains retain scoped administration while disabled global and legacy CMS paths stay closed', async () => {
     const controller = require('../src/controller/defaultPublicationLifecycleController');
     const lifecycle = require('../src/service/defaultPublicationLifecycleService');
     const saved = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES };
     const provider = { validate() {}, getVersion() {}, activate() {}, rollback() {}, requestApproval() {} };
-    const config = { publishEnabled: false, runtimeRole: { publication: 'STAGED' }, publish: { providers: {
+    const config = { publishEnabled: false, runtimeRole: { publication: 'STAGED' }, publish: { lifecycle: structuredClone(defaults.publish.lifecycle), providers: {
         domainAdapters: { product: 'Provider', cms: 'Provider' }, versionProviders: { product: 'Provider', cms: 'Provider' },
         workflowProviders: { product: 'Provider' }, workflowProvider: 'Provider', versionProvider: 'Provider'
     } } };
@@ -70,7 +71,7 @@ test('tenant administrators must pass the source domain scope before inspection 
     const controller = require('../src/controller/defaultPublicationLifecycleController');
     const saved = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES };
     t.after(() => Object.assign(global, saved));
-    global.CONFIG = { get: () => true };
+    global.CONFIG = { get: key => key === 'publish' ? defaults.publish : true };
     global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
     const publication = { domain: 'cms', code: 'menu-publication' };
     const operations = [];
@@ -97,6 +98,43 @@ test('tenant administrators must pass the source domain scope before inspection 
     publication.domain = 'commerce';
     await assert.rejects(controller.get(request('enterprise-a')), { code: 'ERR_AUTH_00003' });
     assert.deepEqual(operations, ['get', 'rollback']);
+});
+
+test('operator group policy inherits owner defaults, supports explicit overrides and rejects missing or malformed policy', async t => {
+    const controller = require('../src/controller/defaultPublicationLifecycleController');
+    const saved = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES };
+    t.after(() => Object.assign(global, saved));
+    const publish = structuredClone(defaults.publish);
+    global.CONFIG = { get: key => key === 'publish' ? publish : undefined };
+    global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
+    const admitted = [], scoped = [];
+    global.SERVICE = {
+        DefaultSecuredRequestPipelineService: { hasAccessGroup: request => {
+            admitted.push([...request.router.accessGroups]);
+            return request.authData.userGroups.some(group => request.router.accessGroups.includes(group));
+        } },
+        DefaultPublicationLifecycleService: {
+            get: async () => ({ domain: 'cms' }),
+            getDomainAdapter: () => ({ authorizeScopedOperator: async operation => { scoped.push(operation); } })
+        }
+    };
+    const request = { authData: { userGroups: ['runtimeConfigAdminUserGroup'] } };
+    await controller.assertScopedOperator('get', request);
+    await controller.assertScopedOperator('rollback', request);
+    assert.deepEqual(admitted, [defaults.publish.lifecycle.operatorAccessGroups.get, defaults.publish.lifecycle.operatorAccessGroups.rollback]);
+    assert.deepEqual(scoped, []);
+    publish.lifecycle.operatorAccessGroups.get = ['reviewedOperator'];
+    await controller.assertScopedOperator('get', request);
+    assert.deepEqual(scoped, ['get'], 'a removed legacy group must use domain authorization');
+    request.authData.userGroups = ['reviewedOperator'];
+    await controller.assertScopedOperator('get', request);
+    assert.deepEqual(scoped, ['get']);
+    for (const invalid of [undefined, null, [], 'reviewedOperator', [''], [true]]) {
+        publish.lifecycle.operatorAccessGroups.get = invalid;
+        const before = admitted.length;
+        await assert.rejects(controller.assertScopedOperator('get', request), { code: 'ERR_AUTH_00003' });
+        assert.equal(admitted.length, before, 'invalid policy must fail before authorization');
+    }
 });
 
 for (const [name, key, permission, method] of [

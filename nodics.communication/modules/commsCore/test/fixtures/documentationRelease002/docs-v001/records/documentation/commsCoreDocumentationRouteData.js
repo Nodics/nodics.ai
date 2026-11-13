@@ -26,7 +26,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecommunicationProviderRunbooks",
     "routeType": "PAGE",
-    "deliveryState": "DRAFT",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -38,7 +38,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecommunicationOverview",
     "routeType": "PAGE",
-    "deliveryState": "DRAFT",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -50,7 +50,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecommunicationEmailSmsTemplates",
     "routeType": "PAGE",
-    "deliveryState": "DRAFT",
+    "deliveryState": "STAGED",
     "accessMode": "PUBLIC",
     "active": true
   }

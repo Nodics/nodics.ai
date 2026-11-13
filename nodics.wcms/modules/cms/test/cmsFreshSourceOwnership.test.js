@@ -19,14 +19,14 @@
 const path = require('node:path');
 const { registerSourceOwnershipTests } = require('./helpers/freshSourceOwnership');
 const repoRoot = path.resolve(__dirname, '../../../..');
-require('node:test').test('fresh framework CMS ownership uses the Release 0 baseline', () => {
+require('node:test').test('fresh framework CMS ownership preserves forward versions in consolidated source roots', () => {
     const assert = require('node:assert/strict');
-    for (const [owner, code] of [
-        ['nodics.wcms/modules/cms', 'init-v001'],
-        ['nodics.platform/modules/axis', 'axisBaseline']
+    for (const [owner, code, version] of [
+        ['nodics.wcms/modules/cms', 'init-v001', '0.0.4'],
+        ['nodics.platform/modules/axis', 'axisBaseline', '0.0.3']
     ]) {
         const section = require(path.join(repoRoot, owner, 'data/manifest.json')).sections[code];
-        assert.equal(section.version, '0.0.1', owner);
+        assert.equal(section.version, version, owner);
         assert(Object.keys(section.files).every(file => file.startsWith('init-v001/')), owner);
     }
 });
@@ -41,7 +41,7 @@ registerSourceOwnershipTests(repoRoot, [
         header: 'nodics.accelerators/modules/nexus/modules/nexus.web/data/sample-v001/content/headers/wcms/nexusCorporateContentHeader.js',
         dir: 'nodics.accelerators/modules/nexus/modules/nexus.web/data/sample-v001/content/records/wcms/corporate',
         site: 'nexusCorporateSite', catalog: 'nexusContentCatalog',
-        prefixes: ['nexusSiteData', 'nexusTypeCodeData', 'nexusRendererData', 'nexusComponentTypeGroupData',
+        prefixes: ['nexusSiteData', '010_nexusTypeCodeData', 'nexusRendererData', 'nexusComponentTypeGroupData',
             'nexusSlotData', 'nexusTemplateData', 'nexusComponentData', 'nexusPageData', 'nexusRouteData', 'nexusNavigationData'],
     },
     {

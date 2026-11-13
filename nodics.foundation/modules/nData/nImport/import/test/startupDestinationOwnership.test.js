@@ -1,4 +1,14 @@
-/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 'use strict';
 /** @module import/test/startupDestinationOwnership @description Qualifies selected destination owners, explicit publication and local receipts without providers. @layer test @owner import */
 const assert = require('node:assert/strict');
@@ -265,4 +275,129 @@ test('canonical publishable sample sections declare explicit selection before St
         }
     }
     assert(checked >= 5);
+});
+
+// Retain actual owner-graph integration coverage alongside isolated admission regressions.
+const lodash = require("lodash");
+const root = path.resolve(__dirname, "../../../../../..");
+function setup(role = "WCMS_ONLINE") {
+  const properties = lodash.merge(
+    {},
+    require("../config/properties"),
+    require(path.join(root, "nodics.wcms/config/properties")),
+    { runtimeRole: { code: role, publication: role === "WCMS_STAGED" ? "STAGED" : "ONLINE" }, environment: { class: "LOCAL" } },
+  );
+  const modules = Object.fromEntries(
+    ["cms", "media", "wcms", "editorial"].map((name, index) => [
+      name,
+      {
+        name,
+        index: "60." + index,
+        parent: "nodics.wcms",
+        path: path.join(root, "nodics.wcms/modules", name),
+      },
+    ]),
+  );
+  const schemas = {};
+  let effects = 0;
+  global.CONFIG = { get: (key) => properties[key] };
+  global.NODICS = {
+    getActiveModules: () => Object.keys(modules),
+    getRawModule: (name) => modules[name],
+    getModule: (name) => modules[name] && { ...modules[name], rawSchema: schemas[name] || {} },
+    getSelectedEnvironmentName: () => "local",
+  };
+  global.CLASSES = {
+    NodicsError: class extends Error {
+      constructor(code, message) {
+        super(message);
+        this.code = code;
+      }
+    },
+  };
+  global.SERVICE = {
+    DefaultSchemaAuthoringPolicyService: authoring,
+    DefaultDataInstallationService: {
+      get: async () => {
+        effects += 1;
+        throw new Error("Unexpected receipt read");
+      },
+    },
+  };
+  const staged = base.discoverReleases("init").find(release => release.releaseCode === "cms:init-v001");
+  for (const {moduleName, schemaName} of base.releaseDestinationTargets(staged)) {
+    (schemas[moduleName] ??= {})[schemaName] = { model: true };
+  }
+  return { properties, effects: () => effects };
+}
+
+test("actual Online initializer excludes Media Process releases without the selected installer", async () => {
+  const fixture = setup();
+  const discovered = base.discoverReleases("init");
+  const candidate = discovered.find(
+    (release) => release.releaseCode === "media:mediaPublicationWorkflow",
+  );
+  assert.ok(
+    candidate,
+    "Current Media workflow must exercise real discovery",
+  );
+  assert.equal(candidate.destinationRole, "PROCESS");
+  assert.equal(candidate.sourceRoot, "init-v001");
+  assert.equal(candidate.invalidManifest, undefined);
+  assert.equal(base.isDestinationCompatible(candidate), false);
+  const result = await base.installStartupReleases({
+    tenant: "default",
+    modules: NODICS.getActiveModules(),
+  });
+  assert.deepEqual(result, { skipped: true, reason: "NO_INIT_RELEASES" });
+  assert.equal(fixture.effects(), 0);
+  await assert.rejects(
+    base.preparePlan({
+      tenant: "default",
+      releaseRequest: {
+        dataType: "init",
+        releaseCodes: [candidate.releaseCode],
+      },
+    }),
+    { code: "ERR_IMP_00004" },
+  );
+  assert.equal(
+    fixture.effects(),
+    0,
+    "Explicit request must refuse before receipt/import operations",
+  );
+});
+
+test("actual Staged release selection remains admitted; Online cannot import Staged or Process releases", () => {
+  setup("WCMS_STAGED");
+  const staged = base
+    .discoverReleases("init")
+    .find((release) => release.releaseCode === "cms:init-v001");
+  assert.ok(staged);
+  assert.equal(staged.destinationRole, "WCMS_STAGED");
+  assert.equal(base.isDestinationCompatible(staged), true);
+  assert.equal(base.validateDestination(staged), true);
+  setup();
+  assert.equal(base.isDestinationCompatible(staged), false);
+  assert.throws(() => base.validateDestination(staged), {
+    code: "ERR_IMP_00004",
+  });
+  const process = base
+    .discoverReleases("init")
+    .find((release) => release.releaseCode === "cms:cmsPublicationApproval");
+  assert.equal(base.isDestinationCompatible(process), false);
+  assert.throws(() => base.validateDestination(process), {
+    code: "ERR_IMP_00004",
+  });
+});
+
+test("manual destination policy requires local ownership and refuses retired role allowances", () => {
+  const { properties } = setup();
+  const release = { moduleName: "cms", environmentScope: ["ALL"] };
+  assert.equal(base.validateDestination(release), true);
+  assert.equal(base.isDestinationCompatible({ ...release, moduleName: "absent" }), false);
+  assert.equal(base.isDestinationCompatible({ ...release, environmentScope: ["PRODUCTION"] }), false);
+  properties.data.dataReleases.allowedDestinationRoles = ["WCMS_ONLINE"];
+  assert.equal(base.isDestinationCompatible(release), false);
+  assert.throws(() => base.validateDestination(release), /allowedDestinationRoles is retired/);
 });

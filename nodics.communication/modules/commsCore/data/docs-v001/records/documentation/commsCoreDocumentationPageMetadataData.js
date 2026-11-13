@@ -161,8 +161,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js",
-    "sourceChecksum": "1614ea3ae40cc56606bdf7a3ea39d4570712734f93051c88fc68f778d5801761",
-    "sourceWordCount": 2412,
+    "sourceChecksum": "e4bbcaa1c7317a2ce9e3ac2a1fb1848278b176b8a06c9af62ede0050a632a8c3",
+    "sourceWordCount": 2468,
     "audience": [
       "business",
       "architect",

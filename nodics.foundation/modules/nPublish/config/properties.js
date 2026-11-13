@@ -41,6 +41,11 @@ module.exports = {
         maximumSourcePayloadBytes: 4194304, plans: {}, callers: {}, profilePlans: {}, targetObservers: {} },
     },
     lifecycle: {
+      // Existing cross-domain operator admission; all other callers require domain scope.
+      operatorAccessGroups: {
+        get: ["runtimeConfigAdminUserGroup", "commerceSetupPublisherUserGroup"],
+        rollback: ["runtimeConfigAdminUserGroup"],
+      },
       initialState: "STAGED",
       onlineState: "ONLINE",
       terminalStates: [

@@ -18,8 +18,11 @@
  */
 const scopedReads = new WeakMap();
 /** Stable plain selector representation; no credential or record values leave this owner. */
-function binding(request) { return JSON.stringify([request.tenant, request.authData]); }
+
 module.exports = {
+    /** Binds private Employee read evidence to the current tenant and authenticated actor. */
+    binding: function (request) { return JSON.stringify([request.tenant, request.authData]); },
+
     /** Public generated human reads require signed Enterprise scope; private owner reads and native Platform authority retain their independent admission. */
     requiresEnterpriseScope: function (request) {
         const publicRead = !!request.httpRequest || SERVICE.DefaultSchemaReadAccessPolicyService?.isGeneratedHttpRead?.(request) === true;
@@ -29,7 +32,7 @@ module.exports = {
     restrictEnterpriseRead: async function (request) {
         if (!this.requiresEnterpriseScope(request)) return true;
         if (scopedReads.has(request)) return this.protectProviderRead(request);
-        const originalBinding = binding(request);
+        const originalBinding = this.binding(request);
         const auth = request.authData;
         if (typeof auth.entCode !== 'string' || !auth.entCode || typeof auth.tenant !== 'string' || request.tenant !== auth.tenant)
             throw new CLASSES.NodicsError('ERR_AUTH_00003');
@@ -39,7 +42,7 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_AUTH_00003');
         const assignments = await business.rows('DefaultEnterpriseAccessAssignmentService', request, membership.authority(),
             { enterpriseCode: auth.entCode, tenantCode: auth.tenant, status: 'REGISTERED', active: true });
-        if (originalBinding !== binding(request)) throw new CLASSES.NodicsError('ERR_AUTH_00003');
+        if (originalBinding !== this.binding(request)) throw new CLASSES.NodicsError('ERR_AUTH_00003');
         const candidates = [{ enterpriseCode: auth.entCode }, { 'metadata.enterpriseCode': auth.entCode },
             { registrationAssignmentCode: { $in: assignments.map(item => item.code) } }];
         if (auth.entCode === CONFIG.get('defaultEnterprise')) candidates.push({ enterpriseCode: { $exists: false },
@@ -48,7 +51,7 @@ module.exports = {
             { $or: [{ enterpriseCode: { $exists: false } }, { enterpriseCode: auth.entCode }] },
             { $or: [{ 'metadata.enterpriseCode': { $exists: false } }, { 'metadata.enterpriseCode': auth.entCode }] }] };
         request.query = { $and: [request.query || {}, scope] };
-        scopedReads.set(request, { binding: binding(request), scope: JSON.stringify(scope) });
+        scopedReads.set(request, { binding: this.binding(request), scope: JSON.stringify(scope) });
         return true;
     },
     /** Provider/export entry cannot skip scope preparation or remove its constraint after an await. */
@@ -57,7 +60,7 @@ module.exports = {
         const proof = scopedReads.get(request);
         const contains = (query, depth = 0) => depth < 12 && query && typeof query === 'object' &&
             (JSON.stringify(query) === proof?.scope || Array.isArray(query.$and) && query.$and.some(item => contains(item, depth + 1)));
-        if (!proof || proof.binding !== binding(request) || !contains(request.query))
+        if (!proof || proof.binding !== this.binding(request) || !contains(request.query))
             throw new CLASSES.NodicsError('ERR_AUTH_00003');
         return true;
     },

@@ -1515,6 +1515,40 @@ module.exports = {
     });
   },
 
+  /** Admits only the model write held by the exact sealed Staged release and schema operation. */
+  hasStagedSourceWriteAccess: function (request) {
+    const write = stagedSourceWriteExecution.getStore();
+    return write?.active === true && write.release.active === true &&
+      request?.tenant === write.release.tenant &&
+      request.schemaModel?.rawSchema === write.schema &&
+      request.schemaModel?.schemaName === write.schemaName &&
+      request.authData?.userGroups?.includes(write.group) === true;
+  },
+
+  /** Binds an opt-in owner writer group to the awaited saveAll, without adding groups to the caller. */
+  executeStagedSourceOperation: async function (request, operationRequest, schemaService) {
+    const release = identityReleaseExecution.getStore();
+    const options = request.header.options;
+    const target = release?.active === true && release.run && release.run === request.importRun &&
+      release.tenant === request.tenant && operationRequest.tenant === request.tenant &&
+      options.operation === "saveAll" && release.stagedTargets?.some(item =>
+        item.moduleName === options.moduleName && item.schemaName === options.schemaName &&
+        item.operation === options.operation && item.dataFilePrefix === options.dataFilePrefix);
+    if (!target) return this.executeIdentityAuthorityOperation(request, operationRequest, schemaService);
+    const schema = NODICS.getModule(options.moduleName)?.rawSchema?.[options.schemaName];
+    const groups = schema?.dataRelease?.stagedSourceWriterGroups;
+    const serviceName = "Default" + options.schemaName[0].toUpperCase() + options.schemaName.slice(1) + "Service";
+    const group = schemaService === SERVICE[serviceName] && Array.isArray(groups) &&
+      groups.find(code => typeof code === "string" && release.operatorGroups.includes(code) &&
+        operationRequest.authData?.userGroups?.includes(code));
+    if (!group) return this.executeIdentityAuthorityOperation(request, operationRequest, schemaService);
+    const write = { active: true, release, schema, schemaName: options.schemaName, group };
+    return stagedSourceWriteExecution.run(write, async () => {
+      try { return await schemaService.saveAll(operationRequest); }
+      finally { write.active = false; }
+    });
+  },
+
   /** Executes an existing schema operation with bounded authority only for its privately bound, immutable Init header. */
   executeIdentityAuthorityOperation: async function (
     request,

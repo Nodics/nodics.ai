@@ -155,7 +155,7 @@ assert.throws(() => service.validateReleaseSection(Object.assign({}, section, { 
 {
     const owner = path.resolve(__dirname, '..');
     const manifest = require('../data/manifest.json').sections.documentation;
-    assert.strictEqual(manifest.version, '0.0.2');
+    assert.strictEqual(manifest.version, '0.0.3');
     assert.strictEqual(manifest.contentPath, 'docs-v001');
     assert.strictEqual(fs.existsSync(path.join(owner, 'data/docs-v002')), false);
     assert.strictEqual(manifest.sourceAuthority, 'data/docs-v001/records/documentation');

@@ -74,5 +74,6 @@
       "sourceWordCount": 1221
     }
   ],
-  "successorSnapshot": "test/fixtures/documentationReviewPredecessor"
+  "successorSnapshot": "test/fixtures/documentationProvenanceSuccessor",
+  "successorFilesRoot": "test/fixtures/documentationReviewPredecessor"
 }

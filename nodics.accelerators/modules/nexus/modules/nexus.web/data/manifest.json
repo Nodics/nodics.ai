@@ -34,7 +34,7 @@
         "sample-v001/content/records/wcms/corporate/nexusSlotData.js": "f7f55233f437e9a841fead78d727ec73c0991b8ade6a595095ff7e7af0a29d71",
         "sample-v001/content/records/wcms/corporate/nexusTemplateData.js": "b7ce40423ca57cb77920105421b8671df93ab81443afeee36995bd3f36beabee",
         "sample-v001/content/records/wcms/corporate/010_nexusTypeCodeData.js": "39f8924678afa86a4614b2856cb9c59c5117cfd209ddb1badde54197ccb50f33",
-        "sample-v001/content/records/wcms/corporate/nexusComponentLocalizationData.js": "ae8abfa00f045900eb926e4756d9a213c10fb8b0f07cf3c9a47f67066d4ac8ee"
+        "sample-v001/content/records/wcms/corporate/nexusComponentLocalizationData.js": "a5d74a369baaf963a24fc3ff75ae7fb5ce6f231e6b998a69222548f61c870330"
       },
       "selectionPolicy": "EXPLICIT"
     },
@@ -42,7 +42,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "sample",
       "sourceRoot": "sample-v001",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Nexus Editorial Source",
       "description": "Local Nexus Editorial authoring source without Online projections",
       "owningDomain": "nexus.editorial",
@@ -97,7 +97,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "sample",
       "sourceRoot": "sample-v001",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Nexus Corporate Media References",
       "description": "Nexus corporate media reference records for backend-owned CMS and Editorial media delivery",
       "owningDomain": "nexus.media",

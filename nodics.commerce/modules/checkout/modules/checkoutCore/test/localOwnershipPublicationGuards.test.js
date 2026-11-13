@@ -1,9 +1,14 @@
 /*
     Nodics - Enterprice Micro-Services Management Framework
+
     Copyright (c) 2026 Nodics All rights reserved.
+
     This software is governed by the Nodics Source-Available Commercial License.
-    Use only as permitted by the root LICENSE or a written agreement with Nodics.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
  */
+
 "use strict";
 /** @module checkoutCore/test/localOwnershipPublicationGuards @description Exercises Commerce local admission with the actual DMS ownership boundary and isolated authority doubles; no servers or persistence. @layer test @owner checkoutCore */
 const test = require("node:test"), assert = require("node:assert/strict");

@@ -47,5 +47,5 @@ test('auction CMS metadata and publication checksums derive from exact canonical
     assert.deepEqual(state.auditTrail, []);
     for (const field of ['onlineVersion', 'actor', 'reviewer', 'approver', 'publisher']) assert.equal(state[field], undefined);
   }
-  assert.equal(records('Route')[0].deliveryState, 'STAGED');
+  assert.equal(records('Route')[0].deliveryState, 'DRAFT');
 });

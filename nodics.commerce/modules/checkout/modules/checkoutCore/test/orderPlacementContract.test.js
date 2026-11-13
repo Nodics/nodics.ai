@@ -61,10 +61,11 @@ test('Checkout derives bound offline capture only from reviewed server policy, n
     const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE };
     t.after(() => { global.CONFIG = previous.CONFIG; global.SERVICE = previous.SERVICE; });
     let policy = { enabled: true, sandboxOnly: true, liveQualified: false, maturity: 'OFFLINE_CONFORMANCE' };
-    let role = 'COMMERCE', captured;
+    let role = { code: 'LOCAL_PAYMENTS', publication: 'OPERATIONAL' }, localOwner = true, captured;
     const adapter = { code: 'stripe-sandbox', execute: async () => { throw new Error('Payment execution is isolated in this routing fixture'); } };
     global.CONFIG = { get: key => key === 'runtimeRole' ? role : key === 'stripeProvider' ? policy : {} };
     global.SERVICE = {
+      DefaultModuleService: { isLocalModuleActive: moduleName => localOwner && moduleName === 'checkoutCore' },
       DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) }, DefaultStripeSandboxAdapterService: adapter,
         DefaultPaymentExecutionService: { execute: async request => { captured = request; return request; } } };
     const owner = { ...placementPorts, paymentRepository: () => ({}) }, ports = owner.create();
@@ -83,12 +84,14 @@ test('Checkout derives bound offline capture only from reviewed server policy, n
         await ports.capturePayment(request, { code: 'order' }, authorization);
         assert.equal(captured.sandboxMode, undefined); policy = original;
     }
-    role = 'COMMERCE_STAGED';
+    for (const candidate of ['COMMERCE', 'COMMERCE_STAGED', { code: 'COMMERCE' }, { publication: 'STAGED' }]) {
+        role = candidate;
+        await ports.capturePayment(request, { code: 'order' }, authorization);
+        assert.equal(captured.sandboxMode, undefined);
+    }
+    role = { publication: 'OPERATIONAL' }; localOwner = false;
     await ports.capturePayment(request, { code: 'order' }, authorization);
-    assert.equal(captured.sandboxMode, undefined);
-    role = { code: 'COMMERCE' };
-    await ports.capturePayment(request, { code: 'order' }, authorization);
-    assert.equal(captured.sandboxMode, 'LOCAL_SANDBOX_DEMO');
+    assert.equal(captured.sandboxMode, undefined, 'a remote-only checkout cannot authorize offline capture');
 });
 
 test('Order placement passes authenticated context into idempotency checkpoint lookup', async () => {

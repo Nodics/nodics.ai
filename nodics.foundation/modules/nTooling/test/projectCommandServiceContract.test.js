@@ -33,7 +33,7 @@ function createProject(packageOverrides = {}) {
         [
             'if (!process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD) throw new Error("missing local bootstrap admin password");',
             'if (!process.env.NODICS_BOOTSTRAP_SERVICE_PASSWORD) throw new Error("missing local bootstrap service password");',
-            'if (!process.env.NODICS_BOOTSTRAP_SERVICE_API_KEY) throw new Error("missing local bootstrap service API key");',
+            'if (!process.env.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY) throw new Error("missing local configuration encryption key");',
             'if (!process.env.NODICS_JWT_SECRET) throw new Error("missing local JWT secret");',
             'if (!process.env.NODICS_API_KEY_PEPPER) throw new Error("missing local API-key pepper");',
             'if (!process.env.NODICS_API_KEY) throw new Error("missing local runtime API key");',
@@ -65,6 +65,19 @@ assert.equal(service.resolveProjectCode(minimalRoot), 'acme.startio');
 assert.equal(service.resolveCommands(minimalRoot)['docs:generate'].command, 'project:documentation-content');
 assert.equal(service.defaultCommands()['post-reset:readiness'].home, 'project');
 assert.equal(Object.keys(service.defaultCommands()).some(name => /kickoff/.test(name)), false);
+
+const scopedRoot = createProject();
+const environmentProperties = path.join(scopedRoot, 'envs', 'duShopContainer', 'config');
+fs.mkdirSync(environmentProperties, { recursive: true });
+fs.writeFileSync(path.join(environmentProperties, 'properties.js'), 'module.exports = { runtimeRoleProfiles: {} };');
+service.validateProject(scopedRoot, 'duShopLocal');
+assert.throws(() => service.validateProject(scopedRoot), /duShopContainer.*retired role configuration/);
+assert.throws(() => service.validateProject(scopedRoot, 'duShopContainer'), /duShopContainer.*retired role configuration/);
+assert.throws(() => service.validateProject(scopedRoot, '../envs/duShopLocal'), /Unknown project environment/);
+const sharedProperties = path.join(scopedRoot, 'config');
+fs.mkdirSync(sharedProperties);
+fs.writeFileSync(path.join(sharedProperties, 'properties.js'), 'module.exports = { runtimeRoleProfiles: {} };');
+assert.throws(() => service.validateProject(scopedRoot, 'duShopLocal'), /config\/properties.js.*retired role configuration/);
 
 const descriptorProjectCodeRoot = createProject({ name: 'right.shop' });
 fs.writeFileSync(path.join(descriptorProjectCodeRoot, 'nodics.project.json'), JSON.stringify({ projectCode: 'right.shop' }, null, 2));

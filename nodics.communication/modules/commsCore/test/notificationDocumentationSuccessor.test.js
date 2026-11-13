@@ -20,14 +20,23 @@ const predecessor = require("./fixtures/notificationDocumentationPredecessor.jso
 const local = suffix => Object.keys(manifest.generatedHashes).filter(file => file.endsWith(suffix + "Data.js"))
   .flatMap(file => Object.values(require(path.join(root, "data", file))));
 test("notification documentation has one consolidated source with verified hashes", () => {
-  assert.equal(manifest.contentPath, "docs-v001"); assert.equal(manifest.version, "0.0.2");
+  assert.equal(manifest.contentPath, "docs-v001"); assert.equal(manifest.version, "0.0.3");
   assert.equal(predecessor.contentPath, "docs-v001");
   for (const [file, hash] of Object.entries(manifest.generatedHashes))
     assert.equal(contract.sha256(fs.readFileSync(path.join(root, "data", file))), hash, file);
   assert.equal(fs.existsSync(path.join(root, "data", "docs-v002")), false);
+  assert.equal(fs.existsSync(path.join(root, "data", "docs-v003")), false);
   assert.equal(manifest.releaseChecksum, contract.releaseChecksum(manifest.generatedHashes));
   assert.equal(manifest.sourceAuthority, "data/docs-v001/records/documentation");
   assert.equal(manifest.installationPolicy, "OPTIONAL_AXIS_INITIATED");
+});
+test("previous documentation release retains its exact recorded bytes", () => {
+  const fixture = path.join(__dirname, "fixtures/documentationRelease002");
+  const previous = require("./fixtures/documentationRelease002/manifest.json");
+  assert.equal(previous.version, "0.0.2");
+  for (const [file, hash] of Object.entries(previous.generatedHashes))
+    assert.equal(contract.sha256(fs.readFileSync(path.join(fixture, file))), hash, file);
+  assert.equal(previous.releaseChecksum, contract.releaseChecksum(previous.generatedHashes));
 });
 test("canonical CMS guide describes all actual wrappers and does not confuse source checks with activation", () => {
   const catalogue = contract.validateDataRelease(root, "documentation");
@@ -57,12 +66,12 @@ test("successor headers, source/search metadata and publication checksums match 
   }
   const targets = new Map([...local("Node"), ...metadata, ...search].map(v => [v.code, v]));
   for (const state of local("PublicationState")) {
-    assert.equal(state.lifecycleState, "STAGED"); assert.equal(state.stagedVersion, "0.0.2");
+    assert.equal(state.lifecycleState, "STAGED"); assert.equal(state.stagedVersion, "0.0.3");
     assert.equal(state.checksum, contract.sha256(JSON.stringify(targets.get(state.targetCode))));
     assert.deepEqual(state.auditTrail, []);
     for (const field of ["onlineVersion", "actor", "reviewer", "approver", "publisher"]) assert.equal(state[field], undefined);
   }
-  for (const route of local("Route")) assert.equal(route.deliveryState, "STAGED");
+  for (const route of local("Route")) assert.equal(route.deliveryState, "DRAFT");
   const headers = Object.keys(manifest.generatedHashes).filter(file => file.includes("/headers/"))
     .flatMap(file => Object.values(require(path.join(root, "data", file))).flatMap(Object.values));
   for (const file of Object.keys(manifest.generatedHashes).filter(file => file.includes("/records/") && file.endsWith("Data.js")))

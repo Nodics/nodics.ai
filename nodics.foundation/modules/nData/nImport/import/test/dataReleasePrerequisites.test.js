@@ -35,6 +35,7 @@ function fixture(t, onImport) {
     t.after(() => fs.rmSync(root, { recursive: true, force: true }));
     const modules = {}, manifests = {};
     const state = releaseExecution({ modules, runtimeRole: 'PLATFORM', onImport });
+    state.publication = 'OPERATIONAL';
     const importInitData = SERVICE.DefaultImportService.importInitData;
     SERVICE.DefaultImportService.importInitData = async request => {
         const result = await importInitData(request);
@@ -48,10 +49,12 @@ function fixture(t, onImport) {
     const write = moduleName => fs.writeFileSync(path.join(modules[moduleName].path, 'data/manifest.json'), JSON.stringify(manifests[moduleName]));
     const add = (moduleName, sectionCode, overrides = {}) => {
         destinationSchemas[sectionCode] = { model: true };
-        if (!modules[moduleName]) {
-            modules[moduleName] = { name: moduleName, path: path.join(root, moduleName), index: '90' };
+        if (!manifests[moduleName]) {
+            modules[moduleName] = { ...modules[moduleName], name: moduleName, path: path.join(root, moduleName), index: '90' };
             manifests[moduleName] = { contractVersion: 2, module: moduleName, sections: {} };
         }
+        modules.authority ??= { name: 'authority' };
+        (modules.authority.rawSchema ??= {})[sectionCode] = { model: true };
         const dataType = overrides.dataType || 'init', sourceRoot = dataType + '-v001';
         const header = sourceRoot + '/headers/' + sectionCode + 'Header.js';
         const record = sourceRoot + '/records/' + sectionCode + 'Data.js';
@@ -516,7 +519,7 @@ test('dependency receipts are isolated by tenant and environment', async t => {
 });
 
 test('actual Profile graph resolves absent owners from restricted Platform roots without activation or row writes', async () => {
-    const previous = { CONFIG: global.CONFIG, NODICS: global.NODICS, SERVICE: global.SERVICE, UTILS: global.UTILS };
+    const previous = { CONFIG: global.CONFIG, NODICS: global.NODICS, SERVICE: global.SERVICE, UTILS: global.UTILS, ENUMS: global.ENUMS };
     const project = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-restricted-source-project-'));
     try {
         const repo = path.resolve(__dirname, '../../../../../..');
@@ -529,9 +532,12 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
         discovery.indexModuleRecords(records, modules);
         const rawSnapshot = structuredClone(modules);
         const f = releaseExecution({ modules, runtimeRole: 'PLATFORM' });
-        NODICS.getModule = name => name === 'profile' ? { ...modules.profile,
-            rawSchema: Object.fromEntries(['permission', 'userGroup', 'enterpriseRole', 'principalScopeAssignment',
-                'employee', 'customer', 'address', 'contact', 'enterprise', 'tenant'].map(name => [name, { model: true }])) } : undefined;
+        f.publication = 'OPERATIONAL';
+        const enumKeys = require('../../../../../../nodics.platform/modules/profile/src/utils/enums').ContactType.definition;
+        global.ENUMS = { ContactType: Object.fromEntries(enumKeys.map(key => [key, { key }])) };
+        NODICS.getModule = name => name === 'profile' ? {
+            rawSchema: require('../../../../../../nodics.platform/modules/profile/src/schemas/schemas').profile
+        } : undefined;
         NODICS.getActiveModules = () => ['profile'];
         NODICS.getIndexedModules = () => new Map([['profile', modules.profile]]);
         NODICS.getNodicsHome = () => path.join(repo, 'nodics.foundation');
@@ -574,7 +580,7 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
             .map(item => item.moduleName).sort(), ['config', 'profile']);
         assert(!plan.releases.some(item => /Roles|businessAccessGroups/.test(item.sectionCode)));
         assert.equal(plan.releases.at(-1).releaseCode, 'profile:init-v001');
-        assert.equal(plan.releases.at(-1).version, '0.0.1');
+        assert.equal(plan.releases.at(-1).version, manifest.sections['init-v001'].version);
         const cart = plan.releases.find(release => release.moduleName === 'cart');
         assert(cart, 'the real absent Cart prerequisite is resolved without loading Cart');
         const cartRequest = f.service.createImportRequest(request, { ...plan, releases: [cart] }, false);

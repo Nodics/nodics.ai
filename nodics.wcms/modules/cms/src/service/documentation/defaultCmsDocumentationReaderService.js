@@ -1,19 +1,30 @@
 /*
     Nodics - Enterprice Micro-Services Management Framework
+
     Copyright (c) 2026 Nodics All rights reserved.
-    Governed by the root LICENSE or a separate written agreement with Nodics.
-*/
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
 
 /** @module cms/documentation/DefaultCmsDocumentationReaderService
  * @description Projects only currently addressed Online documentation manifests for an authorized employee.
  * @owner cms @layer service */
 const docPath = /^\/docs(?:\/[A-Za-z0-9_-]+)+$/;
 const identifier = /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/;
-const validId = value => typeof value === 'string' && identifier.test(value);
-const label = value => typeof value === 'string' && value.trim().length > 0 && value.length <= 256;
+
+
 const scopeFields = ['site', 'path', 'locale', 'channel', 'accessMode'];
 
 module.exports = {
+    /** Validates a bounded published documentation identifier. */
+    validId: function (value) { return typeof value === 'string' && identifier.test(value); },
+
+    /** Validates bounded nonempty documentation presentation text. */
+    label: function (value) { return typeof value === 'string' && value.trim().length > 0 && value.length <= 256; },
+
     /** Requires a fresh employee scope before reading private Online storage. */
     guides: async function (request) {
         const delivery = SERVICE.DefaultCmsDeliveryService;
@@ -80,9 +91,9 @@ module.exports = {
             if (!Array.isArray(response?.result) || response.result.length > 100)
                 throw SERVICE.DefaultCmsDeliveryService.error('ERR_CMS_00090', 'Invalid Online pointer page');
             for (const row of response.result) {
-                if (!label(row.code) || (after && row.code <= after) || row.active !== true || !validId(row.site) ||
+                if (!this.label(row.code) || (after && row.code <= after) || row.active !== true || !this.validId(row.site) ||
                     !docPath.test(row.path) || row.locale !== query.locale || row.channel !== query.channel ||
-                    !query.accessMode.$in.includes(row.accessMode) || !label(row.manifestCode) || rows.length >= 4096 ||
+                    !query.accessMode.$in.includes(row.accessMode) || !this.label(row.manifestCode) || rows.length >= 4096 ||
                     ids.has(row.path))
                     throw SERVICE.DefaultCmsDeliveryService.error('ERR_CMS_00090', 'Ambiguous or invalid Online route');
                 after = row.code;
@@ -106,7 +117,7 @@ module.exports = {
                 markers.set(route.site, p.readerGuide);
             }
             if (component.renderer === 'documentation.component.article' && p.route === route.path &&
-                validId(p.code) && label(p.title) && ['STAGED', 'APPROVED', 'ONLINE'].includes(p.lifecycleState) &&
+                this.validId(p.code) && this.label(p.title) && ['STAGED', 'APPROVED', 'ONLINE'].includes(p.lifecycleState) &&
                 (p.accessMode === 'PUBLIC' || (p.accessMode === 'AUTHENTICATED' && route.accessMode === 'AUTHENTICATED')) &&
                 ['allowedPermissions', 'allowedGroups', 'allowedRoles'].every(key => !p[key] || (Array.isArray(p[key]) && !p[key].length))) {
                 articles.push({ id: p.code, label: p.title, route: route.path, site: route.site, locale: route.locale,
@@ -124,9 +135,9 @@ module.exports = {
         for (const [site, d] of markers) {
             const nav = d.navigation || {}, project = d.guide === 'project';
             const menuRoute = '/docs?guide=' + d.guide;
-            if (!['framework', 'axis', 'project'].includes(d.guide) || !label(d.label) || !label(nav.label) ||
-                !validId(nav.id) || !Number.isSafeInteger(nav.order) || nav.route !== menuRoute ||
-                (project ? !validId(d.projectId) : d.projectId !== undefined) ||
+            if (!['framework', 'axis', 'project'].includes(d.guide) || !this.label(d.label) || !this.label(nav.label) ||
+                !this.validId(nav.id) || !Number.isSafeInteger(nav.order) || nav.route !== menuRoute ||
+                (project ? !this.validId(d.projectId) : d.projectId !== undefined) ||
                 d.route !== (project ? menuRoute + '&project=' + d.projectId : menuRoute)) fail();
             const topics = articles.filter(article => article.site === site);
             if (!topics.length) continue;
@@ -148,7 +159,7 @@ module.exports = {
             if (d.channelReferences !== undefined) {
                 if (!project || !Array.isArray(d.channelReferences) || d.channelReferences.length > 128) fail();
                 for (const ref of d.channelReferences) {
-                    if (!ref || !validId(ref.channelId) || !label(ref.channelLabel) || !validId(ref.site) || !validId(ref.id)) fail();
+                    if (!ref || !this.validId(ref.channelId) || !this.label(ref.channelLabel) || !this.validId(ref.site) || !this.validId(ref.id)) fail();
                     references.push({ guide, ref });
                 }
             }
