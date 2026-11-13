@@ -202,7 +202,51 @@ Retained Media readiness is separate from CMS `ONLINE`. Follow
   publication not created, validation pending, approval not requested, approval
   pending/rejected, failed, rolled back, withdrawn, Online receipt missing,
   Online pointer stale and Online.
+
+The CMS schema declarations select the source records that a sealed Staged
+content release may seed with `saveAll`. The default CMS Init release seeds
+the default site and type codes as publishable source. Publication requires a
+separate administrator action. Catalog records in those releases
+require the local Foundation Catalog owner. Designer commands retain their
+scoped authoring checks. Generic HTTP mutations remain read-only, and publication
+manifests, pointers and deployment receipts have no source-import admission.
+
 # Business Designer Authority
+
+Documentation Designer resolves its article and navigation slots from the
+selected enterprise-owned documentation product through the CMS composition
+documentation model. A registered read-only documentation Site can share the
+Catalog; it cannot become a write target. An explicitly foreign Site still
+blocks the shared Catalog, and existing unowned records cannot be adopted.
+Axis uses the regular composition save and submits the owner-read source stamp
+through the existing publication request. Source-pack records still change
+through their governed release path.
+
+Saved composition reads use the same original human Content View authority,
+explicit enterprise/Site/Catalog and Staged-only admission. Read current exact
+heads, reject tied/malformed/incomplete history and never resurrect retired
+versions. Preserve placement, localization and Media association identities.
+Unsupported nested/embedded graphs, reused placements or multiple routes must
+remain read-only until a faithful projection exists; never flatten them.
+Existing composition saves require the owner source stamp and reject stale
+source before writing. Preserve unexposed owner attributes and translation SEO.
+Initialize required relationship arrays for new records without clearing existing
+relationships. Distinguish an authorized complete missing-page lookup (typed 404)
+from denied, incomplete or foreign evidence; HTTP 404 alone is not absence proof.
+The stamp is preflight evidence, not a transaction or replay protocol. Every
+Designer publication validates actual saved translation readiness, not caller flags.
+Keep the 100-row completeness bound; use exact identity lookup when the scoped
+library cannot be returned completely. Reads never adopt unowned historical data.
+
+Plan a full composition's positions before writing. Reject duplicate identities,
+overlapping desired positions and occupants omitted from the submitted draft.
+Reorder existing placements through scoped versioned saves at unused non-negative
+positions before final placement; never use destructive replacement flags or
+implicitly retire an omitted record. Partial failures require inspection, with no
+rollback or replay claim. Association collision reads and related graph reads must
+resolve complete global code heads before source/active/position filters, preserving
+the original generated authority, tenant and complete affirmative bounded evidence.
+History from a moved/retired record never becomes a current occupant or binding.
 
 CMS business commands require an explicitly enterprise-bound `cmsSite`, not an
 inferred Catalog owner or a broad operator group. Unbound or foreign-owned shared
@@ -256,6 +300,16 @@ any separate submission. Do not add generic CRUD fallback, impact claims, lifecy
 revision locking or transactions that these existing owner commands do not provide.
 # Retained Approval Recovery
 
+The same verified baseline controller owns install-only content-pack preparation
+at `POST /publication/baselines/:baselineCode/content-pack/imports`. Require the
+BackOffice runtime principal before CMS-local authority, Staged placement and a
+delegated human requester. The configured baseline alone selects pack and release;
+body pack/path selectors are forbidden. Validate the selected release before
+nImport dispatch and return its content-pack status. A current pack is read-only.
+This operation never creates or reviews a publication or activates Online. Public
+System/nImport routes keep their original caller authority; no general service
+account schema grant or generic importer elevation is introduced.
+
 BackOffice may explicitly invoke the service-only CMS baseline
 `POST /publication/baselines/:baselineCode/reconcile-approval`. The existing
 baseline controller verifies the BackOffice runtime principal before applying
@@ -277,3 +331,92 @@ This is not a cross-owner transaction or an approval grant.
 Later-layer baseline/provider customization retains these identity, principal,
 readiness and no-import boundaries. Baseline service/controller, target-route,
 BackOffice initialization and Process publication-approval tests protect them.
+
+## Publication context configuration
+
+Ordinary module properties select publication defaults using the existing nConfig
+context binding (`name: publication`). Runtime display labels never select source
+providers or versioned schema policy. Staged selects source transport; Online and
+Operational do not. Missing/unknown context rejects configuration. This selection
+does not supply a target connection, installed qualification, actor grant or
+publication approval. Later deployment overrides retain normal inheritance.
+
+
+## Publication transport placement
+
+Publication transport uses the logical owning module and explicit destination
+`publication` (Online for deployment/status/rollback; Staged for Media source
+proof). The calling module must be locally active in the matching source
+publication context. Physical runtime role names do not select or authorize
+these calls. Preserve explicit connection selection, scoped internal tokens,
+original actor/tenant evidence, operation keys and exact receipt readback;
+configuration alone grants no publication or mutation authority.
+
+
+## Operational action destinations
+
+Owner-configured action targets identify the canonical implementing module and
+explicit `OPERATIONAL` publication, never a physical Commerce or Process role.
+Copilot coupon/notification actions target `digitalCore`; CMS approval and
+Editorial action claims target `workflow`. Preserve existing owner grants,
+original employee or scoped runtime credentials, execution handles, actor/receipt
+bindings and uncertain-operation recovery. CMS/Editorial callbacks additionally
+require local domain ownership in Staged context. Deployment overrides select
+connections; framework-owned publication defaults are inherited.
+
+
+### Published documentation reader menu
+
+An authorized employee reads `GET /delivery/documentation/guides` on WCMS Online.
+The tenant-scoped response contains the published menu and exact topic delivery
+coordinates for the default locale and web channel. An empty response is valid.
+Each documentation pack owns `readerGuide` on its existing CMS navigation
+component. Its guide label, list route and menu entry travel with that component
+through normal Staged installation and approved Site publication. Project channel
+references bind the target Site and document ID. A reference becomes visible when
+the target article and its Framework or Axis guide are both Online. Withdrawing
+the last eligible article removes its menu entry on the next read.
+
+CMS navigation nodes participate in the existing sealed Staged source-release `saveAll` admission, alongside the other declared CMS authoring sources. nImport still verifies the explicit publishable source manifest and exact file seals. Generic HTTP writes and Online source imports remain denied; this does not grant navigation publication or approval.
+
+Designer HTTP entry forwards the original nRouter-authenticated Authorization header into CMS’s existing human admission and pinned identity context. Body or unbound wrapper bearer fields cannot supply that context. Tenant, enterprise, permission, Site/Catalog ownership and generated read/write checks still run in the owner.
+
+Designer metadata queries templates, slots, types and component groups by the authenticated enterprise and its explicitly owned Catalogs before the bounded generated read. Historical unowned references remain outside editable choices; documentation volume cannot consume another application's authoring lookup. This does not raise lookup limits or admit unowned writes.
+
+Designer bounded generated reads select the first page explicitly (`pageSize: 101`, `pageNumber: 1`) as well as the sentinel limit. The database owner normalizes `limit` from page size. Designer still rejects more than 100 matches, incomplete counts, changed tenant/query evidence and unauthorized requests; it never treats a truncated default page as complete metadata.
+
+CMS base BackOffice form metadata orders code and version before descriptive columns. Shared schema projection removes absent fields, and later-layer schema form metadata may customize the view. Preserve authorization, read-only policies and immutable source identity; presentation cannot permit generic writes to governed content.
+
+## Designer names and creation continuation
+
+The optional authoring-model `presentation` contains only the configured strings
+`newPageTitle`, `pageNameLabel`, `pageNameHelp`, `createdMessage`, `continueLabel`,
+`knownSavedMessage`, `changedAfterCreationMessage` and
+`publicationUnconfirmedMessage`. Each is nonempty, at most 1024 characters and
+free of control characters. Extra configuration is not projected. Missing
+presentation remains compatible with older owners; a malformed supplied
+projection fails the owner model rather than becoming executable controls or
+authority. Defaults belong to CMS and project overrides use ordinary nConfig
+layering. This projection does not select a customer application or grant access.
+
+A readable `page.name` uses the existing page field. A code remains the stable
+identity, independently of the display name or browser path. First creation uses
+the normal aggregate save. A later edit reopens the exact saved graph and uses
+its opaque `sourceVersion`; successful creation is not permission to resend an
+unstamped modified copy. A client continuation performs the existing authorized
+GET only, preserves later local intent separately and never assumes an owner
+receipt is a current graph. Publication still reads actual saved readiness and
+uses normal nPublish/Process governance. These are optimistic preflight reads,
+not locks, transactional saves or distributed exactly-once guarantees.
+
+### Application-scoped authoring model
+
+The existing Designer model accepts an optional exact Site and Catalog query. When either is supplied, both must pass the same persisted enterprise-bound CMS scope checks as authoring commands. Its references then belong to that selection. Configured draft defaults are hints only and are returned only when the current authorized metadata proves every selected Site, Catalog, template, page type and slot. Component kind hints require an available component type. Missing or foreign applications never inherit another accelerator's references. Generic empty defaults remain in CMS; application-specific hints remain in their accelerator.
+
+Localization validation orders component/type versions before applying its bounded read. Keep tenant and actor authority intact; retained earlier contracts must not displace the latest declared fields.
+
+## Nested saved composition
+
+A component may contain sections using the existing cmsComponentDetail source/target relation. Reopen the complete bounded tree under the original employee and Site/Catalog scope. Every nested placement, component, localization and Media association contributes to the opaque sourceVersion. Reject cycles, repeated component identities, foreign/unowned references, ambiguous history and unsupported embedded arrays. Parent components are saved before their child placements through the same versioned owner services. A graph save is not a transaction: an uncertain write requires inspection; never replay or claim rollback. Omission never retires a record. Recursive translation readiness remains a publication prerequisite.
+
+The Framework CMS designerAuthoring defaults own maximumCompositionDepth, maximumCompositionComponents and nestedSlot. The owner supplies these limits and active compatible renderer mappings to Axis. A customer may override values or supply genuinely project-specific component fields; never copy defaults to Kickoff. The browser must preserve the tree and unknown inert properties, gate writes by the current operation list, and render nested content through configured typed controls. Run cmsBusinessAuthoringAccess and cmsDesignerCompositionContract, then qualify save/reopen, stale-source refusal, denied scope and normal Process publication live.

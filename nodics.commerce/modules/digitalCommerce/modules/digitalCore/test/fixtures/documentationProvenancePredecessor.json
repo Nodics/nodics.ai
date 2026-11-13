@@ -1,0 +1,115 @@
+{
+  "reason": "Immutable pre-provenance correction selection; not installed-runtime proof",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "digitalCore",
+      "version": "0.0.3",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "fa670a114727034542d95aae266d358b2c20bc12f9a3a2475e3005e3f087006d",
+      "generatedHashes": {
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003NodeData.js": "bee395fa1f3b7d21460220136c6c431b75b5aa5e44c00d8bfb48921d52236864",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003PageMetadataData.js": "4010b2539fb43a8a45d708042e02ea2c6f31a6233f845c2cd5ee35e85a7ee97f",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003SearchMetadataData.js": "4f89fe2a6475fdb9647fabc08ad93d23c79af579e543279dd1205cc04595f948",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003ComponentData.js": "2a002edf90aa065d94bab336fadf7aa8c6acf9db9ca92f2656f2d1c74a043fbd",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003PageData.js": "9f2485cdb58717e2dca9f43db0be0f1f789a4a0a074391e9efeabc26b3585b0e",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003RouteData.js": "bf6efa7ab943430ed7d4b9d6e79ff8fe3679d978449ad4524f42b4edd84415fb",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003PublicationStateData.js": "fd95030d564caf5268934efab3ef23b4926b5c11d82f73318f2e0f3a12c7ca41",
+        "docs-v001/headers/100_digitalCoreDocumentationRelease003ContentPackHeader.js": "eefe405174cdf5d1de99e5e7946702da132bb08447a07e7df1f43608076280b3"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ],
+      "referenceCatalogues": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "promotion",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/baseCommerce/modules/promotion/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "cart",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/checkout/modules/cart/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "fulfillmentCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        }
+      ]
+    }
+  },
+  "successorVersion": "0.0.4",
+  "articles": [
+    {
+      "id": "digital.bundle-holdings-gifts",
+      "componentCode": "nodicsDocsComponentdigitalBundleHoldingsGifts",
+      "previousFile": "docs-v001/records/documentation/digitalCoreDocumentationRelease003ComponentData.js",
+      "currentFile": "docs-v001/records/documentation/digitalCoreDocumentationRelease004ComponentData.js",
+      "blocksSha256": "1693a7cfae47e552470393279ca528630664b44829af5dc0d6a3cde94710b377",
+      "digestMode": "text",
+      "sourceChecksum": "5f06dfd7d2dfa611608b875eaa4f41fe268e49bcea77e7f6d8abdc8f9d236a4d",
+      "sourceWordCount": 1736
+    },
+    {
+      "id": "digital.purchase-delivery-reveal",
+      "componentCode": "nodicsDocsComponentdigitalPurchaseDeliveryReveal",
+      "previousFile": "docs-v001/records/documentation/digitalCoreDocumentationRelease003ComponentData.js",
+      "currentFile": "docs-v001/records/documentation/digitalCoreDocumentationRelease004ComponentData.js",
+      "blocksSha256": "ba91fc98f79f3327b5ce1d9423080ab96865a484ad4c22c17fd3f323bddbb0bb",
+      "digestMode": "text",
+      "sourceChecksum": "4f702c1f509f7a6afab12ce21639cd6b82e8c72b70819d8f8633ab32d44c6bcd",
+      "sourceWordCount": 5577
+    }
+  ]
+}

@@ -88,12 +88,12 @@ module.exports = {
                     description: 'Prevents deletion while an authorized legal hold is active',
                 },
                 allowedExtensions: {
-                    type: 'object',
+                    type: 'array',
                     required: false,
                     description: 'Allowed file extensions for this folder',
                 },
                 allowedMimeTypes: {
-                    type: 'object',
+                    type: 'array',
                     required: false,
                     description: 'Allowed MIME types for this folder',
                 },
@@ -912,3 +912,29 @@ module.exports = {
         },
     },
 };
+
+// Operational evidence is written by its owning lifecycle services, never generic HTTP CRUD.
+for (const schemaName of [
+    'mediaPlacement', 'mediaTransferManifest', 'mediaPublicationReceipt',
+    'mediaPhysicalArtifact', 'mediaReplicationQueue', 'mediaCleanupCandidate',
+]) {
+    const schema = module.exports.media[schemaName];
+    schema.backoffice = Object.assign({}, schema.backoffice, {
+        mutationMode: 'READ_ONLY',
+        operations: ['search', 'read'],
+    });
+}
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.media.mediaFolder.backoffice = Object.assign({ description: "Media storage and upload policies, including access, file limits and retention. Changing policy does not upload or publish files." }, module.exports.media.mediaFolder.backoffice);
+module.exports.media.mediaFormat.backoffice = Object.assign({ description: "Reusable media-format definitions and file-handling policy." }, module.exports.media.mediaFormat.backoffice);
+module.exports.media.media.backoffice = Object.assign({ description: "Governed file metadata and lifecycle. Upload, delivery, publication and cleanup remain Media-owned operations." }, module.exports.media.media.backoffice);
+module.exports.media.mediaSet.backoffice = Object.assign({ description: "Named collections of media items for reuse by business owners." }, module.exports.media.mediaSet.backoffice);
+module.exports.media.mediaSetEntry.backoffice = Object.assign({ description: "Membership and ordering of media items within a media set." }, module.exports.media.mediaSetEntry.backoffice);
+module.exports.media.mediaPlacement.backoffice = Object.assign({ description: "Owner-qualified media publication placement evidence. Use Media lifecycle commands rather than generic record editing." }, module.exports.media.mediaPlacement.backoffice);
+module.exports.media.mediaReplicationQueue.backoffice = Object.assign({ description: "Media replication work and its retained delivery status." }, module.exports.media.mediaReplicationQueue.backoffice);
+module.exports.media.mediaPhysicalArtifact.backoffice = Object.assign({ description: "Physical media artifact identities and retained-byte evidence managed by Media." }, module.exports.media.mediaPhysicalArtifact.backoffice);
+module.exports.media.mediaTransferManifest.backoffice = Object.assign({ description: "Immutable media transfer selections and verification evidence." }, module.exports.media.mediaTransferManifest.backoffice);
+module.exports.media.mediaPublicationReceipt.backoffice = Object.assign({ description: "Retained media publication acknowledgements. Receipts do not independently grant public delivery." }, module.exports.media.mediaPublicationReceipt.backoffice);
+module.exports.media.mediaCleanupCandidate.backoffice = Object.assign({ description: "Media cleanup eligibility evidence. Retention, legal hold and exact owner checks still control removal." }, module.exports.media.mediaCleanupCandidate.backoffice);
+module.exports.media.mediaReference.backoffice = Object.assign({ description: "Business-owner links to governed media or media sets. The reference explains usage without owning the stored file." }, module.exports.media.mediaReference.backoffice);

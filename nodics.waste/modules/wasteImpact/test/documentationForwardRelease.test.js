@@ -36,7 +36,9 @@ test("forward carbon handoff retains source evidence and stays unpublished", () 
     for (const family of ["Component", "Node", "PageMetadata", "SearchMetadata", "PublicationState", "Route"]) {
         for (const row of Object.values(require(path.join(records, `wasteImpactDocumentation${family}Data.js`)))) {
             const state = row.properties || row;
-            assert.equal(family === "Route" ? state.deliveryState : state.lifecycleState, "STAGED", `${family}:${row.code}`);
+            // Routes use CMS delivery state; editorial records use lifecycle state.
+            assert.equal(family === "Route" ? state.deliveryState : state.lifecycleState,
+                family === "Route" ? "DRAFT" : "STAGED", `${family}:${row.code}`);
             for (const field of ["onlineVersion", "reviewer", "approver", "publisher"])
                 assert.equal(Object.hasOwn(state, field), false, `${family}:${field}`);
         }

@@ -16,6 +16,8 @@
  * @owner media
  * @override Later layers may extend projection details while preserving media ownership of media item and media set lifecycle.
  */
+const { isDeepStrictEqual } = require('node:util');
+
 module.exports = {
     /** Initializes media reference lookup. */ init: function () { return Promise.resolve(true); },
     /** Completes media reference lookup initialization. */ postInit: function () { return Promise.resolve(true); },
@@ -43,9 +45,30 @@ module.exports = {
         let service = type === 'MEDIA_SET' ? SERVICE.DefaultMediaSetService : SERVICE.DefaultMediaService;
         if (!service || typeof service.get !== 'function') throw new CLASSES.NodicsError('ERR_MED_00007', 'Media reference authority is unavailable');
         let statuses = type === 'MEDIA_SET' ? (policy.activeMediaSetStatuses || ['ACTIVE']) : (policy.activeMediaStatuses || ['READY', 'CONSUMED']);
-        let response = await service.get({ tenant: request.tenant, authData: request.authData, query: { code: code, status: { $in: statuses } }, searchOptions: { limit: maximum } });
+        const query = { code: code, status: { $in: statuses.slice() } };
+        let response = await service.get({ tenant: request.tenant, authData: request.authData, query: structuredClone(query), searchOptions: { limit: maximum } });
         let items = this.items(response).filter(item => item.code === code && statuses.includes(item.status));
-        if (items.length !== 1) throw new CLASSES.NodicsError('ERR_MED_00008', 'Active media reference is missing or ambiguous');
+        if (items.length !== 1) {
+            const error = new CLASSES.NodicsError('ERR_MED_00008', 'Active media reference is missing or ambiguous');
+            // An affirmative generated empty read precedes any caller write. A
+            // later import phase may hydrate the selected Media dependency.
+            // Ambiguity, denied/provider reads and malformed evidence never retry.
+            if (response && response.code === 'SUC_FIND_00000' && response.count === 0 &&
+                Array.isArray(response.result) && response.result.length === 0 &&
+                isDeepStrictEqual(response.query, query) && !response.error &&
+                (response.total === undefined || response.total === 0) &&
+                (response.success === undefined || response.success === true) &&
+                (response.acknowledged === undefined || response.acknowledged === true) &&
+                (response.errors === undefined || response.errors === null ||
+                    Array.isArray(response.errors) && response.errors.length === 0) &&
+                [response.responseCode, response.statusCode].every(status => status === undefined ||
+                    Number(status) >= 200 && Number(status) < 300)) {
+                error.metadata = Object.assign({}, error.metadata, {
+                    importRetry: { kind: 'DEPENDENCY', writeOutcome: 'NOT_APPLIED' }
+                });
+            }
+            throw error;
+        }
         return items[0];
     },
     /** Returns a minimal projection safe for caller-module reference validation. */

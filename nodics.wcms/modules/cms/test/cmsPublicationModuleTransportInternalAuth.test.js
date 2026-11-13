@@ -24,7 +24,7 @@ const definition = require('../src/service/publication/defaultCmsPublicationModu
 
 function installGlobals() {
     global.CONFIG = { get: key => key === 'cms' ? { publication: { runtimeRole: 'STAGED',
-        target: { moduleName: 'cms', connectionName: 'wcmsOnline', runtimeRole: 'WCMS_ONLINE' } } } : undefined };
+        target: { moduleName: 'cms', connectionName: 'wcmsOnline', publication: 'ONLINE' } } } : key === 'runtimeRole' ? { code: 'RENAMED_CONTENT', publication: 'STAGED' } : undefined };
     global.CLASSES = { NodicsError: class NodicsError extends Error {
         constructor(code, message) { super(message); this.code = code; }
     } };
@@ -35,7 +35,7 @@ test('CMS publication transport refreshes stale internal auth once before retryi
     let token = 'stale-token';
     let refreshes = 0;
     let calls = [];
-    global.NODICS = { getInternalAuthToken: () => token };
+    global.NODICS = { isModuleActive: name => name === 'cms', getInternalAuthToken: () => token };
     global.SERVICE = {
         DefaultInternalAuthenticationProviderService: {
             refreshInternalAuthTokens: async tenant => {
@@ -45,6 +45,7 @@ test('CMS publication transport refreshes stale internal auth once before retryi
             }
         },
         DefaultModuleService: {
+            ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'),
             invokeModule: async request => {
                 calls.push(request);
                 if (request.header.Authorization === 'Bearer stale-token') {
@@ -64,16 +65,19 @@ test('CMS publication transport refreshes stale internal auth once before retryi
     assert.equal(calls.length, 2);
     assert.equal(calls[0].header.Authorization, 'Bearer stale-token');
     assert.equal(calls[1].header.Authorization, 'Bearer fresh-token');
+    assert.deepEqual(calls[0].targetAuthority, { publication: 'ONLINE' });
+    assert.equal(calls[0].local, false);
 });
 
 test('CMS publication transport does not retry non-auth target failures', async () => {
     installGlobals();
     let refreshes = 0;
     let calls = 0;
-    global.NODICS = { getInternalAuthToken: () => 'service-token' };
+    global.NODICS = { isModuleActive: name => name === 'cms', getInternalAuthToken: () => 'service-token' };
     global.SERVICE = {
         DefaultInternalAuthenticationProviderService: { refreshInternalAuthTokens: async () => { refreshes++; } },
         DefaultModuleService: {
+            ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'),
             invokeModule: async () => {
                 calls++;
                 let error = new Error('target unavailable');
@@ -86,4 +90,24 @@ test('CMS publication transport does not retry non-auth target failures', async 
     await assert.rejects(() => service.getStatus({ manifestCode: 'm1' }, { tenant: 'default' }), /target unavailable/);
     assert.equal(refreshes, 0);
     assert.equal(calls, 1);
+});
+
+
+test('transport rejects absent local ownership, wrong context and wrong target publication before dispatch', async () => {
+    for (const fault of ['remote', 'unknown-context', 'wrong-target']) {
+        installGlobals();
+        const originalGet = CONFIG.get;
+        global.CONFIG = { get: key => {
+            if (fault === 'unknown-context' && key === 'runtimeRole') return { code: 'RENAMED_CONTENT' };
+            const value = originalGet(key);
+            if (fault === 'wrong-target' && key === 'cms') value.publication.target.publication = 'STAGED';
+            return value;
+        } };
+        global.NODICS = { isModuleActive: () => fault !== 'remote', getInternalAuthToken: () => 'runtime-token' };
+        global.SERVICE = { DefaultModuleService: {
+            ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'),
+            invokeModule: async () => { assert.fail('Rejected ownership must not dispatch'); },
+        } };
+        await assert.rejects(definition.send('status', {}, { tenant: 'default' }));
+    }
 });

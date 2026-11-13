@@ -45,9 +45,10 @@ module.exports = {
         let selected = comparable(contributions[0]);
         for (let itemIndex = 0; itemIndex < (selected.navigation || []).length; itemIndex++) {
             for (let actionIndex = 0; actionIndex < (selected.navigation[itemIndex].lifecycleActions || []).length; actionIndex++) {
-                let states = contributions.map(metadata => metadata.navigation[itemIndex].lifecycleActions[actionIndex].featureState);
+                // Omitted state is ACTIVE in the admitted contract, not an instruction to hide a permitted action.
+                let states = contributions.map(metadata => metadata.navigation[itemIndex].lifecycleActions[actionIndex].featureState ?? 'ACTIVE');
                 selected.navigation[itemIndex].lifecycleActions[actionIndex].featureState =
-                    states.includes('ACTIVE') ? 'ACTIVE' : states.includes('DISABLED') ? 'DISABLED' : 'HIDDEN';
+                    states.includes('ACTIVE') ? 'ACTIVE' : states.includes('PREVIEW') ? 'PREVIEW' : states.includes('DISABLED') ? 'DISABLED' : 'HIDDEN';
             }
         }
         return selected;

@@ -11,6 +11,8 @@
 
 /** @module commerceSearchCore/config/properties @description Defines Commerce Search runtime policy and schema access. @layer config @owner commerceSearchCore */
 module.exports = {
+  // Search participation follows this capability, independently of runtime role labels.
+  search: { commerceSearchCore: { options: { enabled: true } } },
   tooling: {
     commands: {
       "acceptance:commerce-search-ranking": {

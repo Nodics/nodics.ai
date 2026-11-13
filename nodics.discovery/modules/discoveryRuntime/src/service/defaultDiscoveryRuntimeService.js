@@ -55,6 +55,7 @@ module.exports = {
         let searchQuery = request.searchQuery || request.query || {};
         let projectionRequest = {
             tenant: request.tenant,
+            targetAuthority: request.targetAuthority,
             authData: request.authData,
             moduleName: request.moduleName || 'discoveryProjection',
             indexName: configuration.indexName,

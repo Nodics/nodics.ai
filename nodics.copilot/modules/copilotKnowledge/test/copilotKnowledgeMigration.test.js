@@ -119,6 +119,7 @@ beforeEach(() => {
       ],
     },
   };
+  request.authToken = "signed-employee-fixture";
   rows = new Map();
   blocked = false;
   barrierCalls = 0;
@@ -196,6 +197,7 @@ beforeEach(() => {
     indexDef: {
       indexName: "legacy-physical",
       retirement: {
+        authority: {moduleName:'copilotKnowledge',serviceName:'DefaultCopilotKnowledgeMigrationService',operationName:'validateRetirementAuthority',apiName:'/internal/discovery/retirement-authority',targetAuthority:{publication:'OPERATIONAL'}},
         dedicated: true,
         immutablePhysicalName: true,
         ownerType: "COPILOT_KNOWLEDGE",
@@ -213,7 +215,7 @@ beforeEach(() => {
   elasticModel.defineDefaultIndexRetirement(oldModel);
   newModel = { indexDef: { indexName: "replacement-physical" } };
   global.CLASSES = { NodicsError: class extends Error {} };
-  global.CONFIG = { get: () => configuration };
+  global.CONFIG = { get: key => key === 'discovery' ? {publication:{targetAuthority:{publication:'OPERATIONAL'}},projection:{targetAuthority:{publication:'OPERATIONAL'},retirement:{receiptTargetAuthority:{publication:'OPERATIONAL'}}}} : configuration };
   global.SERVICE = {
     DefaultElasticIndexRetirementService: elastic,
     DefaultModelCommandReceiptService: receipt,
@@ -227,9 +229,26 @@ beforeEach(() => {
     DefaultCopilotKnowledgeSourceRegistryService: require("../src/service/defaultCopilotKnowledgeSourceRegistryService"),
     DefaultCopilotPolicyService: require("../../copilotPolicy/src/service/defaultCopilotPolicyService"),
     DefaultDiscoveryIndexRetirementService: discovery,
+    DefaultDiscoveryPhysicalRetirementService: require('../../../../nodics.discovery/modules/discoveryProjection/src/service/defaultDiscoveryPhysicalRetirementService'),
+    DefaultDiscoveryPhysicalRetirementBoundaryService: require('../../../../nodics.discovery/modules/discoveryProjection/src/service/defaultDiscoveryPhysicalRetirementBoundaryService'),
+    DefaultDiscoveryRetirementReceiptTransportService: require('../../../../nodics.discovery/modules/discoveryProjection/src/service/defaultDiscoveryRetirementReceiptTransportService'),
+    DefaultDiscoveryRetirementReceiptOwnerService: require('../../../../nodics.discovery/modules/discoveryPublication/src/service/defaultDiscoveryRetirementReceiptOwnerService'),
+    DefaultDiscoveryGenerationTransportService: {targetAuthority:()=>({publication:'OPERATIONAL'})},
+    DefaultDiscoveryProjectionTransportService: require('../../../../nodics.discovery/modules/discoveryProjection/src/service/defaultDiscoveryProjectionTransportService'),
+    DefaultModuleService: {...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'),
+      isLocalModuleActive:()=>true,isCurrentRuntimeAuthority:()=>true,recordInvocationResolution:()=>undefined},
+    DefaultAuthorizationProviderService:{authorizeToken:async ({authToken})=>{
+      assert.equal(authToken,request.authToken);
+      return {result:{tokenType:'access',tenant:request.tenant,userGroups:['employeeUserGroup'],loginId:request.authData.loginId,enterpriseCode:request.securityContext.enterprise,permissions:request.securityContext.permissions}};
+    }},
+    DefaultSecuredRequestPipelineService:require('../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService'),
+    DefaultCopilotOrchestrationService:require('../../copilotCore/src/service/defaultCopilotOrchestrationService'),
+    DefaultDiscoveryProjectionOwnerService: {getSearchModel:input=>input.indexName==='legacyKnowledge'?oldModel:newModel},
     DefaultDiscoveryDocumentProjectionService: {
-      getSearchModel: (input) =>
-        input.indexName === "legacyKnowledge" ? oldModel : newModel,
+      targetAuthority:()=>({publication:'OPERATIONAL'}),
+      doDescribeIndex: async (input)=>{const model=input.indexName==='legacyKnowledge'?oldModel:newModel;
+        model.__testBinding=model.__testBinding||require('node:crypto').randomUUID();
+        return {indexName:model.indexDef.indexName,bindingId:model.__testBinding,targetAuthority:{publication:'OPERATIONAL',server:'projection',node:'primary'}};},
     },
     DefaultDiscoveryGenerationPublicationService: {
       read: async () => structuredClone(manifest),
@@ -282,6 +301,21 @@ beforeEach(() => {
       },
     },
   };
+  if (process.env.DISCOVERY_TEST_REMOTE === '1') {
+    // Exercise actual DMS selection with JSON-only transport and isolated owner contexts, not live servers.
+    const contexts = new (require('node:async_hooks').AsyncLocalStorage)();
+    SERVICE.DefaultModuleService.isLocalModuleActive = moduleName => moduleName === (contexts.getStore() || 'copilotKnowledge');
+    SERVICE.DefaultModuleService.invokeRemoteModule = async options => {
+      const payload = JSON.parse(JSON.stringify(options.requestBody));
+      assert.equal(payload.assertCurrent, undefined);
+      assert.equal(payload.replacementEvidence, undefined);
+      if(options.apiName.startsWith('/internal/retirement/'))assert.equal(options.maxAttempts,1);
+      if(options.apiName.startsWith('/internal/retirement-receipt/'))assert.equal(options.maxAttempts,1);
+      return contexts.run(options.moduleName, async () => JSON.parse(JSON.stringify(await SERVICE[options.serviceName][options.operationName]({
+        ...payload, authData: {tokenType:'service', modules:[options.moduleName], runtimeScope:{assignmentCode:'fixture'}}
+      }))));
+    };
+  }
   manifest = {
     revision: 4,
     pendingGeneration: null,
@@ -627,4 +661,36 @@ test("native erasure refuses a provider connection changed during the final owne
   );
   assert.equal(deleteCalls, 0);
   assert.equal(removed, false);
+});
+
+test('fresh signed source credential rejection prevents provider dispatch even with a previously reviewed plan', async () => {
+  const review=await migration.preview(request);
+  SERVICE.DefaultAuthorizationProviderService.authorizeToken=async()=>{throw new Error('revoked');};
+  await assert.rejects(migration.execute({...request,body:{confirmed:true,reviewDigest:review.reviewDigest}}));
+  assert.equal(barrierCalls,0);
+});
+
+test('missing qualified authority binding and changed source target cannot fall back to local domain checks', async () => {
+  const selected=oldModel.indexDef.retirement.authority;
+  delete oldModel.indexDef.retirement.authority;
+  await assert.rejects(migration.preview(request));
+  oldModel.indexDef.retirement.authority={...selected,apiName:'/arbitrary-executor'};
+  await assert.rejects(migration.preview(request));
+  assert.equal(barrierCalls,0);
+});
+
+test('physical facade rejects callback-shaped declarations and never exposes credentials in successful receipts', async () => {
+  await assert.rejects(async()=>discovery.preview({...migration.declaration(request,true),assertCurrent:()=>true}));
+  const review=await migration.preview(request);
+  assert.equal(JSON.stringify(review).includes(request.authToken),false);
+  assert.equal(barrierCalls,0);
+});
+
+test('source callback rejects foreign token tenants and non-employee tokens despite copied migration permissions',async()=>{
+  const authorize=SERVICE.DefaultAuthorizationProviderService.authorizeToken;
+  for(const override of [{tenant:'foreign'},{userGroups:['customerUserGroup']}]){
+    SERVICE.DefaultAuthorizationProviderService.authorizeToken=async r=>({result:{...(await authorize(r)).result,...override}});
+    await assert.rejects(migration.preview(request));
+    assert.equal(barrierCalls,0);
+  }
 });

@@ -17,7 +17,7 @@ global.CONFIG = { get: () => undefined };
 global.SERVICE = {};
 global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
 
-const pack = server => ({ code: 'store:core-reference', owner: 'store',
+const pack = server => ({ code: 'store:testActivationFixture', owner: 'store',
     targetModule: 'store', targetServer: server, required: true, trigger: 'ACTIVATION', dataType: 'core' });
 const observation = server => ({ projectCode: 'project', functionalModule: 'nodics.commerce',
     displayName: 'Commerce', registeredVersion: '0.0.0', moduleIndex: '90.99', required: false,
@@ -37,7 +37,7 @@ function fixture() {
         saveRecord: async ({ model }) => { record = structuredClone(model); return { result: [model] }; },
         updateRecord: async ({ query, model, tenant }) => {
             assert.equal(tenant, 'tenant-one');
-            const matches = Object.entries(query).every(([key, value]) => record[key] === value);
+            const matches = Object.entries(query).every(([key, value]) => require("node:util").isDeepStrictEqual(record[key], value));
             if (matches) Object.assign(record, structuredClone(model));
             return { result: { matchedCount: matches ? 1 : 0, modifiedCount: matches ? 1 : 0 } };
         },
@@ -138,4 +138,18 @@ test('receipt status is scoped by release target, including historical receipt k
     assert.equal(map[service.getActivationPackageKey(pack('commerceOnline'))].status, 'IMPORTED');
     assert.equal(map[service.getActivationPackageKey(pack('commerceStaged'))].status, 'FAILED');
     assert.equal(service.getMatchedCount({ result: { matchedCount: 1, modifiedCount: 0 } }), 1);
+});
+
+test('late renewal fences a captured catalogue reconciliation without changing an administrator decision', async () => {
+    const { service, read } = fixture();
+    await service.reconcileObservation(observation('commerceOnline'), request(1));
+    const originalUpdate = service.updateRecord;
+    const oldTime = read().lastObservedAt;
+    service.updateRecord = async command => {
+        if (command.model.runtimeState === 'OFFLINE') read().lastObservedAt = new Date(oldTime.getTime() + 1);
+        return originalUpdate(command);
+    };
+    assert.equal(await service.reconcileActiveRuntimeLeases([], ['project'], request(1)), 0);
+    assert.equal(read().runtimeState, 'ACTIVE');
+    assert.equal(read().catalogueRevision, 1);
 });

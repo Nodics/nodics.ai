@@ -1,5 +1,13 @@
 # profile AI Examples
 
+For a read-only Customer directory, customize only
+`profileParticipantDirectory.customerWorkspacePresentation` and intended search
+bounds in a later layer. Profile projects the existing participant API as a
+generic Axis listing; missing required input sends no request. Keep name/reference
+projection, OPERATIONAL source selection and original private actor checks. A
+directory match never creates an account or grants recipient, wallet or staff
+authority. See `test/profileCustomerDirectoryWorkspace.test.js`.
+
 For enterprise delegation, use the [accepted semantic example](../contracts/enterprise-delegation.md#customization-and-verification).
 A selected administrator subtree is not an employee grant: give each person exact
 target memberships and roles, and retain independent resource scopes. Source
@@ -85,3 +93,5 @@ localhost, IPv4 loopback and IPv6 loopback requests receive non-Secure cookies;
 HTTPS retains Secure. This is resolved per request without changing shared
 configuration. Exact credentialed CORS, CSRF, proof freshness and refresh rotation
 remain required. Non-loopback HTTP and SameSite=None with non-Secure cookies fail.
+
+For an ordinary native employee edit, inspect the current `authVersion`, then PATCH only the reviewed ordinary fields with that original token and one `Idempotency-Key`. Inspect the original command after uncertain acknowledgement. Do not repeat it after sign-in or substitute the latest token automatically. See `publicIdentityLifecycleContract.test.js`.

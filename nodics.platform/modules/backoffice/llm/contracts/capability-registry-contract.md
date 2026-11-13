@@ -29,6 +29,66 @@ used after that composition, or replaced with caller-supplied status. Each new
 request rechecks the owners. A failed read stays unavailable; reuse does not grant
 permission, retry a command or certify Online readiness.
 
+### Diagnostic projection and admission
+
+The optional `projection=axis-client-v1` is a transport-only view, independent of diagnostic selection. Omission preserves the full legacy response; every other explicit value rejects before reads. After all fresh actor and tenant admission gates, this view retains the effective permission-filtered navigation, policy, startup and baseline admission, profiles, documentation, availability and runtime coordinates. It omits the duplicated raw catalogue and limits module leases to the client connection and identity fields. It requires effective navigation, never mutates registry data, caches authorization or grants access. Axis explicitly selects this view; direct owner operations still authorize every command.
+
+The existing secured `GET /bootstrap` accepts a boolean
+`includeOperationalReadiness` (HTTP query strings `true`/`false`); omitted means
+true. Validate before owner reads. The default/full projection keeps the complete
+fresh aggregate and existing request-local bounded status composition. Explicit
+false skips only its application-status sweep and diagnostic aggregate, returning
+`operationalReadinessObservation: { contractVersion: 1, mode: "ON_DEMAND" }`
+when the owner is present. The response schema requires either that inert
+capability or the full report. The capability is never a readiness result.
+
+Both projections still await fresh registry eligibility, documentation publication
+for navigation, effective employee policy and Axis baseline admission. False may
+return `NOT_READY` or `UNAVAILABLE` admission; it cannot open the application,
+select preparation, publish data or defer an admission gate. Startup findings and
+authorized profile metadata remain in the response. No cross-request authority
+cache, caller-selected scheduling budget or new permission is introduced.
+
+Axis requests the lightweight projection for sign-in, restore, unlock and normal
+catalogue observation. Technical Overview explicitly calls the existing full
+projection under the current employee, tenant and exact BackOffice source, with
+cancellation and no automatic retry/focus/poll sweep. It uses the canonical report
+sections rather than repeating all profile reads. Loading, missing/failed report
+or source replacement stays unverified; a manual refresh performs a new read.
+Owner repair commands still enforce their existing independent permissions and
+eligibility. Client flags never grant execution.
+
+Later-loaded services may customize projection while preserving these gates and
+default compatibility. Router query metadata and response schemas must stay aligned;
+never use false to skip documentation or baseline checks. Focused
+`test/bootstrapProjection.test.js` defers each admission gate, verifies non-ready
+admission and invalid-query refusal before reads; the existing declared-Mocha
+`test/backofficeStatusReadFanoutContract.test.js` still proves full-report ordering,
+settlement, privacy and admission. These are source tests, not a live latency SLA.
+
+Import readiness selects only enabled `DATA_RELEASE` preparation steps (the
+existing omitted-type default remains `DATA_RELEASE`). Media asset manifests and
+governed publication steps retain their own readiness owners; they never become
+nImport catalogue paths. Current profile catalogues supply normalized
+`preparationSteps`, whose `type` remains independent of custom display `kind`.
+Use that existing typed list rather than presentation-only `dataPackages`.
+An explicit empty list is authoritative and a malformed explicit list refuses;
+only direct owner callers omitting the typed list use their raw `dataPackages`.
+Preserve this distinction in later-loaded profile projections. The regression
+exercises the actual profile `describe` projection before target selection.
+Catalogue reads reuse application initialization's
+`applicationTargetBinding(connectionName, "import")`, including declared alias
+resolution and endpoint-equality validation. The resulting canonical server and
+explicit publication are passed unchanged to `DefaultModuleService`. A retired
+`runtimeRole` authority selector, inferred publication, arbitrary server fallback
+or missing binding resolver must not dispatch. The original human Authorization,
+single GET attempt and unavailable-provider reporting remain unchanged. Projects
+customize declared deployment bindings or the existing later-loaded application
+binding service, preserving its validation and nService's authority contract.
+`test/importReadinessTargetBinding.test.js` covers actual nService validation,
+initiating identity, ambiguous/missing binding refusal and preparation-type
+selection. No concurrency or cross-request authority cache is introduced.
+
 The owner setting `backofficeApplicationInitialization.readinessWorkers` defaults
 to 4 in `config/properties.js`; `applicationReadinessWork` accepts only integer
 overrides from 1 through 16. The captured reader queues documentation and report
@@ -153,6 +213,14 @@ packages on the functional-module catalogue record and executes required
 `init`/`core` releases through nImport when a human activates the functional
 module. Optional `sample` releases remain user-triggered.
 
+The Platform, WCMS, Engagement, Commerce and Waste owners declare which
+explicit Init releases belong to their existing **Activate** action. For access
+definitions, the receiver is Profile. nImport resolves each group's and role's
+pinned prerequisites before its dependent release. A deployment supplies
+routing for registered roots through keyed descriptors. Registration alone
+does not execute a release. A successful import makes the definitions
+available for separately authorized responsibilities and assignments.
+
 ## Axis projection boundary
 
 Axis consumes the authenticated BackOffice projection. It must not invent
@@ -245,3 +313,88 @@ Deactivation propagation is bounded by this freshness window, not instantaneous;
 expired or absent state prevents new protected work. Lease removal leaves business
 registration/data intact. Cronjob owns enforcement at job execution and retains
 its existing handling of already-running jobs.
+
+
+Registration ownership discovery is operation-scoped. nService's
+`createOwnershipSourceResolver()` prefers loaded descriptors and lazily creates
+one canonical nConfig installed-source snapshot for all missing descriptors in
+one single registration or validated batch, including atomic-store retries.
+BackOffice binds batch child requests privately and releases the binding when
+each child settles; request fields cannot select a resolver. Later operations
+create fresh snapshots. Discovery errors remain failures for that operation.
+Never cache grants, lease snapshots, admission decisions or source descriptors
+globally. Every retry still checks current atomic lease entries and exact
+project/environment/publication/logical-server boundaries. Runtime-local and
+source-only classification, duplicate/missing source checks and signed module
+scope remain unchanged.
+
+Structural-group reconciliation reads one fresh, completely paged tenant/project catalogue snapshot per runtime batch rather than querying every absent group separately. It preserves canonical/legacy identity order, serial revision-guarded group marks, and fresh functional-module observation reads. A failed page prevents group writes. The snapshot is local to this pass, carries no activation proof and is never reused across actors, projects, batches or heartbeats.
+
+## Form acknowledgement presentation
+
+A backend-operations form may declare `resultSummary` with one to eight unique flat field/label pairs and `resultNavigation` with a bounded label, static local route and up to eight flat query mappings. Both are inert presentation of the acknowledged command DTO. No nested paths, executable methods, external destinations or additional descriptor keys are admitted. Axis renders own scalar fields only and exposes the next step only when its destination exists in the current authorized navigation and every mapped value is present. Destination authorization remains independent. A completed source-bound command remains held across equivalent metadata refreshes; only explicit fresh inspection can admit another intent. Actor, source or scope changes retire the previous receipt.
+
+## Lifecycle action state aggregation
+
+An omitted optional action `featureState` means `ACTIVE`, matching the existing Axis contract. Do not convert missing state or explicit `PREVIEW` to hidden. Structurally identical registered contributions aggregate availability in ACTIVE, PREVIEW, DISABLED, HIDDEN order. Providers remain unchanged; permission filtering, runtime qualification and the destination operation independently admit the action. This restores declared actions without enabling an explicitly disabled workspace or granting business authority.
+A backend workspace string field may declare `minimumLength` (1–4000), no larger
+than its optional `maximumLength`. It applies only to TEXT, EMAIL, PASSWORD and
+MULTILINE presentation fields. Required listing filters must be completed before
+an initial read; invalid metadata rejects and invalid input sends no request.
+This convenience grants no API authority. Native owners still enforce current
+input bounds, authentication and tenant/privacy rules. Generic listings must
+distinguish actual empty arrays from malformed responses and retire private
+evidence on actor/scope/source/section-contract changes. Profile's bounded Customer
+directory is protected by the actual Profile/BackOffice composition regression.
+
+
+### Inherited navigation shortcuts
+
+The fresh authorized effective composition is the sole baseline for an inherited
+shared route. Candidate validation may retain its exact set of module/id identities
+with unchanged permission, feature/availability state, parent and execution
+metadata. Label/order presentation may differ. New or altered conflicting routes,
+authorities absent from this employee scope and repeated stable identities refuse.
+Submitted source traces and route-owner claims do not establish that baseline.
+This allows the existing effective defaults to be previewed without publishing or
+creating a second alias registry. Declared default shortcut diagnostics remain
+visible; validation does not activate capabilities or grant commands.
+
+## Actor-bound Module Registry action presentation
+
+Client-safe functional-module list and detail reads project `allowedActions` for
+the original authenticated human access request. BackOffice derives lifecycle
+eligibility from its canonical route declarations through nRouter's existing
+permission evaluator. Sample installation separately requires Import's `import.sample.run`
+authority. This is read-only presentation metadata, never a grant or a replacement
+for fresh command authorization, current catalogue revisions, dependencies,
+publication requirements or owner execution guards. No customer configuration
+or role map is needed. Missing actor/evaluator metadata projects no actions.
+
+Axis validates the bounded action names; absent metadata means read-only, and
+unknown or duplicate names invalidate the response. Selection, lifecycle and
+sample callbacks recheck this projection before dispatch. Registry data and
+intent state belong to the current session generation, tenant, Enterprise and
+selected BackOffice instance. A missing current owner may retain same-actor
+observations for inspection with commands disabled; it must not expose another
+actor's cache or accept a late response after an actor change.
+
+Verify `functionalModuleActionPresentation.test.js` with the real route-permission
+evaluator, then the Registry client/page tests and native read-only operator and
+qualified administrator journeys. No activation is implied by opening the page.
+
+The Registry sample action calls nImport `/sample/install`; eligibility therefore follows `import.sample.run`, not the retired generic Import permission. The contract regression reads nImport's canonical route declaration to keep this integration aligned.
+
+### Catalogue observations across members
+
+A memory lease store is a partial observation. Registration merges its observations with retained peer observations; only leases actually removed by that member may retire their exact server coordinates. It cannot mark the whole project offline because peers are absent locally. Distributed stores provide a complete provider snapshot. Reconciliation records snapshot-start time, skips rows observed since then and includes lastObservedAt in its compare-and-set alongside the independent administrator revision. Runtime state never overwrites activation decisions. Multi-member deployments select the existing distributed store explicitly; connection and provider choices remain deployment configuration.
+
+Distributed lease admissions are serialized within each process so sibling module heartbeats do not continuously invalidate one another. The provider revision compare-and-set still arbitrates independent members, reruns current ownership validation and never extends the original lease expiry.
+
+### Actor-bound initialization presentation
+
+Baseline and application lifecycle status project allowed actions from the original authenticated human request using nRouter's accepted-token, access-group and action-permission evaluators against canonical BackOffice routes. Missing evaluator or identity is read-only; the projection is never persisted as authority. Narrow Commerce operators retain explicit available AFTER-stage selection and cannot initialize an unselected baseline. Every mutation retains fresh route and domain admission. Process alone qualifies publication reviewers. The Axis baseline facade adds this client projection without moving CMS publication ownership.
+
+Regression: `test/initializationActionPresentation.test.js` exercises real route evaluators, group/permission separation, tenant mismatch, service refusal and explicit stage selection.
+
+Actor-bound status also narrows preparation and approval-reconciliation repair descriptors using their own canonical route. A denied operator retains diagnostics with `available: false`, `eligibility: NOT_AVAILABLE` and a readable reason; preparation responses receive the same projection. Read-only refresh is unaffected.

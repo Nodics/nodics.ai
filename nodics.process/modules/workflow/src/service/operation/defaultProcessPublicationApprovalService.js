@@ -53,6 +53,8 @@ module.exports = {
             TASK_REFERENCE_MISSING: 'Publication is pending approval, but no actionable Process task reference is available.',
             TASK_ASSIGNEE_MISSING: 'Publication approval task exists but has no assignee or review queue evidence.',
             TASK_NOT_ACTIONABLE: 'Publication approval workflow exists, but the known task is not open for decision.',
+            DECISION_CALLBACK_PENDING: 'The reviewer decision is recorded, but the publication callback has not completed.',
+            DECISION_EVIDENCE_MISSING: 'The workflow has no verifiable completed reviewer decision.',
             WAITING_REVIEWER: 'Publication is waiting for reviewer decision.'
         };
         let actions = {
@@ -63,6 +65,8 @@ module.exports = {
             TASK_REFERENCE_MISSING: 'Reconcile publication approval task',
             TASK_ASSIGNEE_MISSING: 'Assign approval task',
             TASK_NOT_ACTIONABLE: 'Review Process workflow state',
+            DECISION_CALLBACK_PENDING: 'Inspect the original Process callback and retry its recorded failure',
+            DECISION_EVIDENCE_MISSING: 'Inspect the original Process task evidence',
             WAITING_REVIEWER: 'Review approval queue'
         };
         let disabled = {
@@ -73,6 +77,8 @@ module.exports = {
             TASK_REFERENCE_MISSING: 'The publication has no actionable Process task reference; reconcile approval before continuing.',
             TASK_ASSIGNEE_MISSING: 'The Process task needs assignee or queue evidence before Axis can present a decision path.',
             TASK_NOT_ACTIONABLE: 'The Process task is not currently open, claimed, or escalated for decision.',
+            DECISION_CALLBACK_PENDING: 'Do not create another approval task or claim Online publication before the callback is acknowledged.',
+            DECISION_EVIDENCE_MISSING: 'A completed instance alone does not prove approval or rejection.',
             WAITING_REVIEWER: 'The publication is waiting for a governed Process reviewer decision.'
         };
         return {
@@ -106,6 +112,14 @@ module.exports = {
             .then(response => response && response.result && response.result[0]);
         if (!instance) return { code: 'SUC_PROCESS_00008',
             data: this.diagnostic('TASK_REFERENCE_MISSING', input) };
+        const context = instance.context || {};
+        if (instance.definitionCode !== 'cmsPublicationApproval' ||
+            this.instanceCode(context.publicationCode, context.publicationRevision) !== input.workflowRef ||
+            input.publicationCode !== undefined && input.publicationCode !== context.publicationCode ||
+            input.publicationRevision !== undefined && input.publicationRevision !== context.publicationRevision)
+            throw new CLASSES.NodicsError('ERR_PROCESS_00001', 'Publication approval diagnostic identity does not match its workflow');
+        input.publicationCode = context.publicationCode;
+        input.publicationRevision = context.publicationRevision;
         let taskResponse = await SERVICE.DefaultProcessTaskService.get({ tenant: request.tenant,
             query: { instanceCode: instance.code, status: { $in: ['OPEN', 'CLAIMED', 'ESCALATED'] } },
             searchOptions: { limit: 1 }, authData: request.authData });
@@ -115,12 +129,13 @@ module.exports = {
                 query: { instanceCode: instance.code }, searchOptions: { limit: 1 }, authData: request.authData });
             task = fallback && fallback.result && fallback.result[0];
         }
-        if (['COMPLETED', 'APPROVED'].includes(String(instance.status || '').toUpperCase())) {
-            return { code: 'SUC_PROCESS_00008', data: this.diagnostic('APPROVED', input, instance, task) };
+        const completedDecision = task?.status === 'COMPLETED' && typeof task.decision?.approved === 'boolean';
+        if (['COMPLETED', 'APPROVED', 'REJECTED'].includes(String(instance.status || '').toUpperCase())) {
+            const status = completedDecision ? (task.decision.approved ? 'APPROVED' : 'REJECTED') : 'DECISION_EVIDENCE_MISSING';
+            return { code: 'SUC_PROCESS_00008', data: this.diagnostic(status, input, instance, task) };
         }
-        if (String(instance.status || '').toUpperCase() === 'REJECTED') {
-            return { code: 'SUC_PROCESS_00008', data: this.diagnostic('REJECTED', input, instance, task) };
-        }
+        if (task?.status === 'COMPLETED') return { code: 'SUC_PROCESS_00008',
+            data: this.diagnostic(completedDecision ? 'DECISION_CALLBACK_PENDING' : 'DECISION_EVIDENCE_MISSING', input, instance, task) };
         if (!task) return { code: 'SUC_PROCESS_00008',
             data: this.diagnostic('TASK_REFERENCE_MISSING', input, instance) };
         if (!['OPEN', 'CLAIMED', 'ESCALATED'].includes(String(task.status || ''))) {

@@ -25,6 +25,7 @@
             "llm"
         ],
         "runtime": {
+            "ownership": "functional",
             "router": false,
             "publish": false,
             "web": false

@@ -11,13 +11,12 @@
 
 'use strict';
 
-/** @module media/test/mediaConfigurationOwnership @description Verifies owner workspace data, isolated overrides and role registration without enabling retained publication. @owner media @layer test */
+/** @module media/test/mediaConfigurationOwnership @description Verifies owner workspace data, isolated overrides and publication-context registration without enabling retained publication. @owner media @layer test */
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const defaults = require('../config/properties');
 const data = require('../data/backoffice/mediaLibraryWorkspaceData');
 const capability = require('../src/service/defaultMediaBackofficeCapabilityService');
-const loader = require('../../../../nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService');
 const bindings = require('../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService');
 test('workspace defaults are data and tuning cannot mutate subsequent projections', (t) => {
     const previous = global.CONFIG;
@@ -46,15 +45,16 @@ test('workspace defaults are data and tuning cannot mutate subsequent projection
         'Media Library',
     );
     assert(data.workspace.tabs.length > 0);
-    assert.deepEqual(defaults.media.library, {
-        workspace: {},
-        publicationWorkspace: {},
-    });
+    assert.deepEqual(defaults.media.library.workspace, {});
+    assert.deepEqual(defaults.media.library.publicationWorkspace, {});
+    assert(defaults.media.library.review.maximumPreviewBytes > 0);
+    assert(defaults.media.library.review.previewMimeTypes.includes('image/png'));
 });
-test('Media role registration leaves installed qualification and endpoints unselected', () => {
-    const staged = loader.deriveRuntimeRoleCapabilityProfiles(
-        bindings.merge(defaults, { runtimeRole: { code: 'WCMS_STAGED' } }),
-    );
+test('Media publication-context registration leaves installed qualification and endpoints unselected', () => {
+    const resolve = publication => bindings.resolve(defaults, {}, {
+        serverCode: 'arbitraryHost', readRuntimeProperty: () => publication,
+    });
+    const staged = resolve('STAGED');
     assert.equal(
         staged.publish.providers.versionProviders.media,
         'DefaultMediaPublicationVersionProviderService',
@@ -65,10 +65,14 @@ test('Media role registration leaves installed qualification and endpoints unsel
         staged.schemaPolicies.media.publicationVersioned.isVersionedEnabled,
         true,
     );
-    const online = loader.deriveRuntimeRoleCapabilityProfiles(
-        bindings.merge(defaults, { runtimeRole: { code: 'WCMS_ONLINE' } }),
-    );
+    assert(!staged.schemaPolicies.media.publicationVersioned.backoffice.operations.includes('delete'));
+    const online = resolve('ONLINE');
     assert.equal(online.media.publication.runtimeRole, 'ONLINE');
     assert.equal(online.media.publication.versionProviderEnabled, false);
-    assert.equal(online.publish.providers, undefined);
+    assert.equal(online.publish.providers.versionProviders.media, null);
+    assert.equal(online.schemaPolicies.media.publicationVersioned.isVersionedEnabled, false);
+    const operational = resolve('OPERATIONAL');
+    assert.equal(operational.media.publication.targetTransportProvider, null);
+    assert.equal(operational.publish.providers.versionProviders.media, null);
+    assert.throws(() => resolve(undefined), /publication context/i);
 });

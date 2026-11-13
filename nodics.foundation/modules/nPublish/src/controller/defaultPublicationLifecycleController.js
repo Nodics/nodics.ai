@@ -67,12 +67,28 @@ module.exports = {
             if (!provider || methods.some(method => typeof provider[method] !== 'function')) return deny();
         }
     },
+    /** Adds exact domain scope for tenant administrators without expanding the previous operators' reach. */
+    assertScopedOperator: async function (operation, request) {
+        if (!['get', 'rollback'].includes(operation)) return;
+        const accessGroups = ['runtimeConfigAdminUserGroup'];
+        if (operation === 'get') accessGroups.push('commerceSetupPublisherUserGroup');
+        const security = SERVICE.DefaultSecuredRequestPipelineService;
+        if (security.hasAccessGroup({ ...request, router: { accessGroups } })) return;
+        const lifecycle = SERVICE.DefaultPublicationLifecycleService;
+        const denied = () => new CLASSES.NodicsError('ERR_AUTH_00003', 'Publication operation is unavailable in this enterprise scope');
+        const publication = await lifecycle.get(request).catch(() => { throw denied(); });
+        const adapter = lifecycle.getDomainAdapter(publication.domain);
+        if (typeof adapter.authorizeScopedOperator !== 'function') throw denied();
+        await adapter.authorizeScopedOperator(operation, publication, request);
+    },
     /** Invokes one lifecycle operation and preserves the standard callback envelope. */
     invoke: function (operation, request, callback) {
         try { this.prepare(request); } catch (error) { if (callback) return callback(error); return Promise.reject(error); }
-        let promise = this.assertAdministration(operation, request).then(() => operation === 'get'
-            ? SERVICE.DefaultPublicationLifecycleService.get(request)
-            : SERVICE.DefaultPublicationLifecycleService[operation](request));
+        let promise = this.assertScopedOperator(operation, request)
+            .then(() => this.assertAdministration(operation, request))
+            .then(() => operation === 'get'
+                ? SERVICE.DefaultPublicationLifecycleService.inspect(request)
+                : SERVICE.DefaultPublicationLifecycleService[operation](request));
         if (!callback) return promise;
         promise.then(result => callback(null, { code: 'SUC_PUB_00000', result: result || null })).catch(callback);
     },

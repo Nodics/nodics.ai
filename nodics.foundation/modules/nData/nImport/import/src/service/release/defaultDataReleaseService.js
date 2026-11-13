@@ -17,10 +17,12 @@ const { AsyncLocalStorage } = require("node:async_hooks");
 const startupReleaseExecution = new AsyncLocalStorage();
 const identityReleaseExecution = new AsyncLocalStorage();
 const identityAuthorityExecution = new AsyncLocalStorage();
+const stagedSourceWriteExecution = new AsyncLocalStorage();
 const identityRequests = new WeakMap();
 const placementRequests = new WeakMap();
 const placementRuns = new WeakMap();
 const zeroWorkRecoveryPlans = new WeakMap();
+const stagedSourceReleases = new WeakSet();
 const releaseSourceOwners = new WeakMap();
 
 /**
@@ -32,6 +34,53 @@ const releaseSourceOwners = new WeakMap();
  */
 module.exports = {
   activeExecutions: new Map(),
+
+  /** Projects action eligibility from actual routes and existing profile execution checks; never grants permission. @param {Object} request Original actor. @param {string} kind Release type or profile. @param {string[]} required Existing profile requirements. @returns {string[]} Actor-bound actions. */
+  clientActions: function (request, kind, required = []) {
+    const auth = request && request.authData,
+      secured = SERVICE.DefaultSecuredRequestPipelineService;
+    if (
+      !auth ||
+      auth.principalType !== "human" ||
+      auth.tokenType !== "access" ||
+      typeof secured?.hasRoutePermission !== "function"
+    )
+      return [];
+    const routes = require("../../router/routers").import.dataReleases;
+    const suffix = { init: "Init", core: "Core", sample: "Sample" }[kind];
+    const commands =
+      kind === "profile"
+        ? {
+            validate: routes.validateInitializationProfile,
+            install: routes.installInitializationProfile,
+          }
+        : suffix
+          ? {
+              validate: routes["preflight" + suffix],
+              install: routes["execute" + suffix],
+            }
+          : {};
+    return Object.entries(commands)
+      .filter(([action, router]) => {
+        if (
+          !router ||
+          secured.hasRoutePermission({ ...request, router }) !== true
+        )
+          return false;
+        if (kind === "profile" && action === "install") {
+          try {
+            this.validateInitializationProfilePermissions(
+              { requiredPermissions: required },
+              request,
+            );
+          } catch {
+            return false;
+          }
+        }
+        return true;
+      })
+      .map(([action]) => action);
+  },
 
   /** Initializes data-release discovery. */
   init: function () {
@@ -56,13 +105,15 @@ module.exports = {
     );
     return {
       code: "SUC_IMP_00000",
-      data: releases.map((release) =>
-        this.toCatalogueItem(
+      data: releases.map((release) => ({
+        ...this.toCatalogueItem(
           release,
           byCode[this.installationCode(tenant, release)],
           this.activeExecutions.has(tenant + ":" + release.dataType),
         ),
-      ),
+        allowedActions: this.clientActions(request, release.dataType),
+        continuationSupported: true,
+      })),
     };
   },
 
@@ -285,13 +336,14 @@ module.exports = {
       return {
         order: index + 1,
         dataType: step.dataType,
-        releases: releases.map((release) =>
-          this.toCatalogueItem(
+        releases: releases.map((release) => ({
+          ...this.toCatalogueItem(
             release,
             installedByCode[this.installationCode(tenant, release)],
             this.activeExecutions.has(tenant + ":" + release.dataType),
           ),
-        ),
+          allowedActions: this.clientActions(request, release.dataType),
+        })),
       };
     });
     let releases = steps.flatMap((step) => step.releases);
@@ -303,17 +355,12 @@ module.exports = {
           .map((step) => "import." + step.dataType + ".run"),
       ),
     ];
-    let configuredRole = CONFIG.get("runtimeRole");
-    let runtimeRole =
-      typeof configuredRole === "string"
-        ? configuredRole
-        : configuredRole && configuredRole.code;
     return {
       profileCode: code,
       label: String(definition.label),
       description: String(definition.description),
       completionMessage: String(definition.completionMessage),
-      destinationRole: runtimeRole,
+      publicationContext: (CONFIG.get("runtimeRole") || {}).publication,
       moduleIndex: moduleIndex,
       status:
         releases.length > 0 &&
@@ -331,6 +378,11 @@ module.exports = {
       blocked: releases.some((item) =>
         ["INVALID_RELEASE", "DOWNGRADE_AVAILABLE"].includes(item.status),
       ),
+      allowedActions: this.clientActions(
+        request,
+        "profile",
+        requiredPermissions,
+      ),
       requiredPermissions: requiredPermissions,
       steps: steps,
     };
@@ -338,29 +390,11 @@ module.exports = {
 
   /** Tests implicit profile discovery against the current semantic destination without weakening explicit validation. */
   isDestinationCompatible: function (release) {
-    let policy = this.configuration();
-    if (policy.destinationEnforced !== true) return true;
-    let configuredRole = CONFIG.get("runtimeRole");
-    let runtimeRole =
-      typeof configuredRole === "string"
-        ? configuredRole
-        : configuredRole && configuredRole.code;
-    const allowed = Array.isArray(policy.allowedDestinationRoles)
-      ? policy.allowedDestinationRoles
-      : runtimeRole
-        ? [runtimeRole]
-        : [];
-    let environment = String(
-      (CONFIG.get("environment") || {}).class || "",
-    ).toUpperCase();
-    return Boolean(
-      runtimeRole &&
-      release.destinationRole === runtimeRole &&
-      allowed.includes(release.destinationRole) &&
-      Array.isArray(release.environmentScope) &&
-      (release.environmentScope.includes("ALL") ||
-        release.environmentScope.includes(environment)),
-    );
+    try {
+      return this.validateDestination(release);
+    } catch (error) {
+      return false;
+    }
   },
 
   /** Resolves the earliest owning module index represented by a guided profile. */
@@ -408,9 +442,150 @@ module.exports = {
     return code;
   },
 
+  /** Lets the native Platform administrator prepare the fixed tenant-local group using normal Init receipts. */
+  setupSampleOperator: async function (request, install) {
+    const input = request.httpRequest?.body;
+    if (
+      !input ||
+      Object.keys(input).sort().join(",") !==
+        "enterpriseCode,expectedVersion" ||
+      typeof input.enterpriseCode !== "string" ||
+      !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(input.enterpriseCode) ||
+      typeof input.expectedVersion !== "string" ||
+      !/^\d+\.\d+\.\d+$/.test(input.expectedVersion)
+    ) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Select an exact enterprise and Sample Import Operator release version",
+      );
+    }
+    return this.setupTenantAccessRelease(
+      request,
+      input,
+      "import:specialAccessGroups",
+      install,
+    );
+  },
+
+  /** Installs one explicit group-only Init release in an admitted business tenant. */
+  setupTenantGroups: async function (request, install) {
+    const input = request.httpRequest?.body;
+    if (
+      !input ||
+      Object.keys(input).sort().join(",") !==
+        "enterpriseCode,expectedVersion,releaseCode" ||
+      typeof input.enterpriseCode !== "string" ||
+      !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(input.enterpriseCode) ||
+      typeof input.expectedVersion !== "string" ||
+      !/^\d+\.\d+\.\d+$/.test(input.expectedVersion) ||
+      typeof input.releaseCode !== "string" ||
+      !/^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(
+        input.releaseCode,
+      )
+    ) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Select an exact enterprise and tenant group release version",
+      );
+    }
+    return this.setupTenantAccessRelease(
+      request,
+      input,
+      input.releaseCode,
+      install,
+      true,
+    );
+  },
+
+  /** Resolves the target from the governed directory while preserving the original Platform actor. */
+  setupTenantAccessRelease: async function (
+    request,
+    input,
+    releaseCode,
+    install,
+    groupOnly = false,
+  ) {
+    const governance = SERVICE.DefaultIdentityCatalogueGovernanceService;
+    const directory = SERVICE.DefaultEnterpriseManagementService;
+    const runtime = SERVICE.DefaultEnterpriseHandlerService;
+    if (
+      !governance?.authorize ||
+      !directory?.retrieveEnterpriseForAccess ||
+      !runtime?.isEnterpriseRuntimeReady
+    ) {
+      throw this.error(
+        "ERR_IMP_00004",
+        "Profile tenant setup authority is unavailable",
+      );
+    }
+    await governance.authorize(request);
+    const { enterprise, tenantCode } =
+      await directory.retrieveEnterpriseForAccess(input.enterpriseCode);
+    if (
+      enterprise?.code !== input.enterpriseCode ||
+      enterprise.active !== true ||
+      typeof tenantCode !== "string" ||
+      !tenantCode ||
+      enterprise.tenant?.code !== tenantCode ||
+      enterprise.tenant.active !== true ||
+      tenantCode === (CONFIG.get("defaultTenant") || "default") ||
+      !runtime.isEnterpriseRuntimeReady(enterprise)
+    ) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "The selected business enterprise is not ready for tenant access setup",
+      );
+    }
+    const scopedRequest = {
+      ...request,
+      tenant: tenantCode,
+      releaseRequest: {
+        dataType: "init",
+        releaseCodes: [releaseCode],
+        expectedReleases: { [releaseCode]: input.expectedVersion },
+      },
+    };
+    const plan = groupOnly ? await this.preparePlan(scopedRequest) : undefined;
+    if (
+      plan &&
+      (plan.tenant !== tenantCode ||
+        !plan.releases.some(
+          (release) =>
+            release.releaseCode === releaseCode &&
+            release.selectionPolicy === "EXPLICIT",
+        ) ||
+        plan.releases.some((release) => {
+          if (release.installer) return true;
+          const targets = this.releaseDestinationTargets(release);
+          return (
+            !targets.length ||
+            targets.some(
+              (target) =>
+                target.moduleName !== "profile" ||
+                target.schemaName !== "userGroup" ||
+                target.operation !== "ensureReferenceAll" ||
+                target.tenants !== undefined,
+            )
+          );
+        }))
+    ) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Tenant access setup requires insert-only Profile groups in the selected tenant",
+      );
+    }
+    const result = install
+      ? await this.execute(scopedRequest, plan)
+      : await this.preflight(scopedRequest, plan);
+    return {
+      ...result,
+      data: { ...result.data, enterpriseCode: enterprise.code },
+    };
+  },
+
   /** Validates a requested immutable plan without executing import handlers or persisting imported business data. */
-  preflight: async function (request) {
-    let plan = await this.preparePlan(request);
+  preflight: async function (request, preparedPlan) {
+    let plan = preparedPlan || (await this.preparePlan(request));
     let operationReleases = await this.operationReleases(plan, "AVAILABLE");
     let executablePlan = this.executablePlan(plan, operationReleases);
     for (const release of executablePlan.releases)
@@ -439,10 +614,20 @@ module.exports = {
         dataType: plan.dataType,
         tenant: plan.tenant,
         releases: operationReleases,
+        ...(plan.requestSelection ? { selection: plan.requestSelection } : {}),
         validation: validation,
         referenceReleases: this.publicReferenceReleases(plan),
         dryRun: dryRun,
         contributionPlans: contributionPlans,
+        ...(SERVICE.DefaultDataReleaseExecutionService
+          ? {
+              continuationSupported: true,
+              execution: await SERVICE.DefaultDataReleaseExecutionService.find(
+                request,
+                plan,
+              ),
+            }
+          : {}),
       },
     };
   },
@@ -488,70 +673,186 @@ module.exports = {
    * @param {string} payloadName Caller-owned JSON basename.
    * @returns {Promise<*>} Fresh JSON after destination, containment and full checksum checks.
    */
-  readContributionPayload: async function (contribution, installerCode, payloadName) {
-    const fail = () => this.error(
-      "ERR_IMP_00003", "Contribution payload is invalid, unavailable or changed",
-    );
+  readContributionPayload: async function (
+    contribution,
+    installerCode,
+    payloadName,
+  ) {
+    const fail = () =>
+      this.error(
+        "ERR_IMP_00003",
+        "Contribution payload is invalid, unavailable or changed",
+      );
     try {
-      if (!contribution || typeof contribution !== "object" ||
-          !/^[A-Z][A-Z0-9_]{1,63}$/.test(installerCode || "") ||
-          typeof payloadName !== "string" ||
-          !/^[A-Za-z0-9][A-Za-z0-9._-]{0,122}\.json$/.test(payloadName) ||
-          !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(contribution.moduleName || "") ||
-          !/^(init|core|sample)(-v\d{3})?$/.test(contribution.sourceRoot || "") ||
-          contribution.installer !== installerCode ||
-          !(this.configuration().installers || {})[installerCode]) throw fail();
+      if (
+        !contribution ||
+        typeof contribution !== "object" ||
+        !/^[A-Z][A-Z0-9_]{1,63}$/.test(installerCode || "") ||
+        typeof payloadName !== "string" ||
+        !/^[A-Za-z0-9][A-Za-z0-9._-]{0,122}\.json$/.test(payloadName) ||
+        !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(
+          contribution.moduleName || "",
+        ) ||
+        !/^(init|core|sample)(-v\d{3})?$/.test(contribution.sourceRoot || "") ||
+        contribution.installer !== installerCode ||
+        !(this.configuration().installers || {})[installerCode]
+      )
+        throw fail();
       this.validateDataType(contribution.dataType);
       this.validateTypePolicy(contribution.dataType);
-      const selector = this.discoveryOwners().find((item) => item.moduleName === contribution.moduleName);
-      if (!selector || (!selector.active && !selector.sections.includes(contribution.sectionCode))) throw fail();
+      const selector = this.discoveryOwners().find(
+        (item) => item.moduleName === contribution.moduleName,
+      );
+      if (
+        !selector ||
+        (!selector.active &&
+          !selector.sections.includes(contribution.sectionCode))
+      )
+        throw fail();
       const owner = NODICS.getRawModule(contribution.moduleName);
-      if (!owner || owner.name !== contribution.moduleName || !owner.path) throw fail();
-      const identity = this.contributionSourceSnapshot(owner, contribution.sourceRoot, []);
+      if (!owner || owner.name !== contribution.moduleName || !owner.path)
+        throw fail();
+      const identity = this.contributionSourceSnapshot(
+        owner,
+        contribution.sourceRoot,
+        [],
+      );
       const matches = this.discoverReleases(contribution.dataType).filter(
         (release) => release.releaseCode === contribution.releaseCode,
       );
       if (matches.length !== 1) throw fail();
       const current = matches[0];
-      if (current.invalidManifest || !current.installer ||
-          ["releaseCode", "moduleName", "sectionCode", "dataType", "version", "checksum",
-            "installer", "sourceRoot", "destinationRole", "lifecycle", "selectionPolicy", "owningDomain"].some(
-            (key) => typeof contribution[key] !== "string" || contribution[key] !== current[key],
-          ) || !Array.isArray(contribution.environmentScope) ||
-          JSON.stringify(contribution.environmentScope) !== JSON.stringify(current.environmentScope)) throw fail();
+      if (
+        current.invalidManifest ||
+        !current.installer ||
+        [
+          "releaseCode",
+          "moduleName",
+          "sectionCode",
+          "dataType",
+          "version",
+          "checksum",
+          "installer",
+          "sourceRoot",
+          "destinationRole",
+          "lifecycle",
+          "selectionPolicy",
+          "owningDomain",
+        ].some(
+          (key) =>
+            typeof contribution[key] !== "string" ||
+            contribution[key] !== current[key],
+        ) ||
+        !Array.isArray(contribution.environmentScope) ||
+        JSON.stringify(contribution.environmentScope) !==
+          JSON.stringify(current.environmentScope)
+      )
+        throw fail();
       this.validateDestination(current);
-      const manifest = this.readAggregateManifest(owner, path.join(owner.path, "data", "manifest.json"));
+      const manifest = this.readAggregateManifest(
+        owner,
+        path.join(owner.path, "data", "manifest.json"),
+      );
       const section = manifest && manifest.sections[current.sectionCode];
-      if (!section || section.kind !== "DATA_RELEASE" || section.installer !== installerCode) throw fail();
-      this.validateLifecycleMetadata(section, current.moduleName, current.dataType, true);
+      if (
+        !section ||
+        section.kind !== "DATA_RELEASE" ||
+        section.installer !== installerCode
+      )
+        throw fail();
+      this.validateLifecycleMetadata(
+        section,
+        current.moduleName,
+        current.dataType,
+        true,
+      );
       const names = current.declaredFiles;
-      if (!Array.isArray(names) || names.length === 0 || new Set(names).size !== names.length) throw fail();
-      const payloads = names.filter((name) => path.posix.basename(name) === payloadName);
+      if (
+        !Array.isArray(names) ||
+        names.length === 0 ||
+        new Set(names).size !== names.length
+      )
+        throw fail();
+      const payloads = names.filter(
+        (name) => path.posix.basename(name) === payloadName,
+      );
       if (payloads.length !== 1) throw fail();
       const payload = payloads[0];
       const declared = Object.keys(section.files || {}).map((name) =>
-        name.startsWith(current.sourceRoot + "/") ? name : current.sourceRoot + "/" + name,
+        name.startsWith(current.sourceRoot + "/")
+          ? name
+          : current.sourceRoot + "/" + name,
       );
-      if (!declared.includes(payload) || new Set(declared).size !== declared.length ||
-          declared.some((name) => name.includes("\\") ||
-            name.split("/").some((part) => !part || part === "." || part === "..") ||
-            !names.includes(name))) throw fail();
-      const before = this.contributionSourceSnapshot(owner, current.sourceRoot, names);
-      const after = this.contributionSourceSnapshot(owner, current.sourceRoot, names);
-      if (!identity.manifest.equals(before.manifest) || !before.manifest.equals(after.manifest) ||
-          before.files.size !== after.files.size ||
-          [...before.files].some(([name, bytes]) => !after.files.get(name)?.equals(bytes))) throw fail();
-      const hashes = names.slice().sort().map((name) => {
-        if (typeof name !== "string" || name.includes("\\") ||
-            name.split("/").some((part) => !part || part === "." || part === "..") ||
-            !name.startsWith(current.sourceRoot + "/") || !after.files.has(name)) throw fail();
-        return name + ":" + crypto.createHash("sha256").update(after.files.get(name)).digest("hex");
-      });
-      if (crypto.createHash("sha256").update(hashes.join("|"))
-        .update(current.prerequisites?.length ? "|prerequisites:" + JSON.stringify(current.prerequisites) : "")
-        .digest("hex") !== current.checksum) throw fail();
+      if (
+        !declared.includes(payload) ||
+        new Set(declared).size !== declared.length ||
+        declared.some(
+          (name) =>
+            name.includes("\\") ||
+            name
+              .split("/")
+              .some((part) => !part || part === "." || part === "..") ||
+            !names.includes(name),
+        )
+      )
+        throw fail();
+      const before = this.contributionSourceSnapshot(
+        owner,
+        current.sourceRoot,
+        names,
+      );
+      const after = this.contributionSourceSnapshot(
+        owner,
+        current.sourceRoot,
+        names,
+      );
+      if (
+        !identity.manifest.equals(before.manifest) ||
+        !before.manifest.equals(after.manifest) ||
+        before.files.size !== after.files.size ||
+        [...before.files].some(
+          ([name, bytes]) => !after.files.get(name)?.equals(bytes),
+        )
+      )
+        throw fail();
+      const hashes = names
+        .slice()
+        .sort()
+        .map((name) => {
+          if (
+            typeof name !== "string" ||
+            name.includes("\\") ||
+            name
+              .split("/")
+              .some((part) => !part || part === "." || part === "..") ||
+            !name.startsWith(current.sourceRoot + "/") ||
+            !after.files.has(name)
+          )
+            throw fail();
+          return (
+            name +
+            ":" +
+            crypto
+              .createHash("sha256")
+              .update(after.files.get(name))
+              .digest("hex")
+          );
+        });
+      if (
+        crypto
+          .createHash("sha256")
+          .update(hashes.join("|"))
+          .update(
+            current.prerequisites?.length
+              ? "|prerequisites:" + JSON.stringify(current.prerequisites)
+              : "",
+          )
+          .digest("hex") !== current.checksum
+      )
+        throw fail();
       const bytes = after.files.get(payload);
-      const limit = this.configuration().maximumContributionPayloadBytes ?? 1024 * 1024;
+      const limit =
+        this.configuration().maximumContributionPayloadBytes ?? 1024 * 1024;
       if (bytes.length > limit) throw fail();
       return JSON.parse(bytes.toString("utf8"));
     } catch (error) {
@@ -562,43 +863,85 @@ module.exports = {
 
   /** Captures only selected declared bytes and their identity manifest without following symlinks. */
   contributionSourceSnapshot: function (owner, sourceRoot, declaredFiles) {
-    const fail = () => this.error("ERR_IMP_00003", "Contribution source is invalid or exceeds its bounds");
+    const fail = () =>
+      this.error(
+        "ERR_IMP_00003",
+        "Contribution source is invalid or exceeds its bounds",
+      );
     const policy = this.configuration();
     const maximumBytes = policy.maximumContributionBytes ?? 8 * 1024 * 1024;
-    const maximumPayload = policy.maximumContributionPayloadBytes ?? 1024 * 1024;
+    const maximumPayload =
+      policy.maximumContributionPayloadBytes ?? 1024 * 1024;
     const maximumFiles = policy.maximumFilesPerRelease || 1024;
-    if (![maximumBytes, maximumPayload, maximumFiles].every(
-      (value) => Number.isSafeInteger(value) && value > 0,
-    ) || !Array.isArray(declaredFiles) || declaredFiles.length > maximumFiles ||
-        new Set(declaredFiles).size !== declaredFiles.length) throw fail();
+    if (
+      ![maximumBytes, maximumPayload, maximumFiles].every(
+        (value) => Number.isSafeInteger(value) && value > 0,
+      ) ||
+      !Array.isArray(declaredFiles) ||
+      declaredFiles.length > maximumFiles ||
+      new Set(declaredFiles).size !== declaredFiles.length
+    )
+      throw fail();
     const ownerRoot = fs.realpathSync(owner.path);
     const dataRoot = path.join(ownerRoot, "data");
     const folder = path.join(dataRoot, sourceRoot);
     let totalBytes = 0;
     const checked = (file, directory) => {
       const stat = fs.lstatSync(file);
-      if (stat.isSymbolicLink() || fs.realpathSync(file) !== file ||
-          (directory ? !stat.isDirectory() : !stat.isFile())) throw fail();
+      if (
+        stat.isSymbolicLink() ||
+        fs.realpathSync(file) !== file ||
+        (directory ? !stat.isDirectory() : !stat.isFile())
+      )
+        throw fail();
       return stat;
     };
     checked(dataRoot, true);
     checked(folder, true);
     const read = (file) => {
       const stat = checked(file, false);
-      if (stat.size > maximumPayload || stat.size > maximumBytes - totalBytes) throw fail();
-      const fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
+      if (stat.size > maximumPayload || stat.size > maximumBytes - totalBytes)
+        throw fail();
+      const fd = fs.openSync(
+        file,
+        fs.constants.O_RDONLY |
+          fs.constants.O_NOFOLLOW |
+          fs.constants.O_NONBLOCK,
+      );
       try {
         const opened = fs.fstatSync(fd);
-        if (!opened.isFile() || opened.dev !== stat.dev || opened.ino !== stat.ino || opened.size !== stat.size) throw fail();
+        if (
+          !opened.isFile() ||
+          opened.dev !== stat.dev ||
+          opened.ino !== stat.ino ||
+          opened.size !== stat.size
+        )
+          throw fail();
         const buffer = Buffer.alloc(stat.size + 1);
-        let length = 0, count;
-        while ((count = fs.readSync(fd, buffer, length, buffer.length - length, null)) > 0) {
+        let length = 0,
+          count;
+        while (
+          (count = fs.readSync(
+            fd,
+            buffer,
+            length,
+            buffer.length - length,
+            null,
+          )) > 0
+        ) {
           length += count;
           if (length > stat.size) throw fail();
         }
         const final = checked(file, false);
-        if (length !== stat.size || final.dev !== stat.dev || final.ino !== stat.ino ||
-            final.size !== stat.size || final.mtimeMs !== stat.mtimeMs || final.ctimeMs !== stat.ctimeMs) throw fail();
+        if (
+          length !== stat.size ||
+          final.dev !== stat.dev ||
+          final.ino !== stat.ino ||
+          final.size !== stat.size ||
+          final.mtimeMs !== stat.mtimeMs ||
+          final.ctimeMs !== stat.ctimeMs
+        )
+          throw fail();
         totalBytes += length;
         return buffer.subarray(0, length);
       } finally {
@@ -608,9 +951,18 @@ module.exports = {
     const manifest = read(path.join(dataRoot, "manifest.json"));
     const files = new Map();
     for (const name of declaredFiles) {
-      if (typeof name !== "string" || name.includes("\\") || !name.startsWith(sourceRoot + "/")) throw fail();
+      if (
+        typeof name !== "string" ||
+        name.includes("\\") ||
+        !name.startsWith(sourceRoot + "/")
+      )
+        throw fail();
       const segments = name.split("/");
-      if (segments.length > 32 || segments.some((part) => !part || part === "." || part === "..")) throw fail();
+      if (
+        segments.length > 32 ||
+        segments.some((part) => !part || part === "." || part === "..")
+      )
+        throw fail();
       let directory = dataRoot;
       for (const segment of segments.slice(0, -1)) {
         directory = path.join(directory, segment);
@@ -761,14 +1113,16 @@ module.exports = {
   },
 
   /** Executes an operator-selected plan through the existing release authority. */
-  execute: async function (request) {
-    const plan = await this.preparePlan(request);
+  execute: async function (request, preparedPlan) {
+    const plan = preparedPlan || (await this.preparePlan(request));
     const typePolicy = (this.configuration().types || {})[plan.dataType] || {};
     if (typePolicy.operatorExecution !== true)
       throw this.error(
         "ERR_IMP_00002",
         "Operator execution is disabled for this data release type",
       );
+    if (request.releaseRequest?.continuation === true)
+      return SERVICE.DefaultDataReleaseExecutionService.continue(request, plan);
     return this.executePreparedPlan(request, plan);
   },
 
@@ -794,14 +1148,12 @@ module.exports = {
           !selection ||
           Object.keys(selection).some(
             (key) =>
-              !["environmentCode", "runtimeRole", "profileCodes"].includes(key),
+              !["environmentCode", "serverCode", "profileCodes"].includes(key),
           ) ||
           typeof selection.environmentCode !== "string" ||
-          !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(
-            selection.environmentCode,
-          ) ||
-          typeof selection.runtimeRole !== "string" ||
-          !/^[A-Z][A-Z0-9_]{0,63}$/.test(selection.runtimeRole) ||
+          !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(selection.environmentCode) ||
+          typeof selection.serverCode !== "string" ||
+          !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(selection.serverCode) ||
           !Array.isArray(codes) ||
           !codes.length ||
           codes.length > 32 ||
@@ -815,8 +1167,7 @@ module.exports = {
       }) ||
       new Set(
         profileSelections.map(
-          (selection) =>
-            selection.environmentCode + ":" + selection.runtimeRole,
+          (selection) => selection.environmentCode + ":" + selection.serverCode,
         ),
       ).size !== profileSelections.length
     ) {
@@ -826,12 +1177,25 @@ module.exports = {
       );
     }
     const environmentCode = NODICS.getSelectedEnvironmentName();
-    const runtimeRole = CONFIG.get("runtimeRole")?.code;
+    const serverCode = profileSelections.length
+      ? NODICS.getServerName?.()
+      : undefined;
+    if (
+      profileSelections.length &&
+      (typeof serverCode !== "string" ||
+        !serverCode ||
+        typeof environmentCode !== "string" ||
+        !environmentCode)
+    )
+      throw this.error(
+        "ERR_IMP_00003",
+        "Startup selection requires explicit environment and server identity",
+      );
     const selectedProfileCodes = profileSelections
       .filter(
         (selection) =>
           selection.environmentCode === environmentCode &&
-          selection.runtimeRole === runtimeRole,
+          selection.serverCode === serverCode,
       )
       .flatMap((selection) => selection.profileCodes);
     const profiles = this.initializationProfiles();
@@ -856,7 +1220,8 @@ module.exports = {
     }
     const releases = this.discoverReleases("init").filter(
       (release) =>
-        modules.has(release.moduleName) &&
+        (modules.has(release.moduleName) ||
+          selectedReleaseCodes.has(release.releaseCode)) &&
         (release.selectionPolicy !== "EXPLICIT" ||
           selectedReleaseCodes.has(release.releaseCode)) &&
         (release.invalidManifest || this.isDestinationCompatible(release)),
@@ -901,11 +1266,20 @@ module.exports = {
 
   /** Freezes complete generated receipt records while preserving physical Mongo identity: some BSON ObjectId versions lose all bytes under structuredClone. */
   startupReceiptSnapshot: function (receipts) {
-    return receipts.map(receipt => {
-      const record = { ...receipt }, id = record._id;
-      if (id && ["ObjectId", "ObjectID"].includes(id._bsontype) && typeof id.toHexString === "function") {
+    return receipts.map((receipt) => {
+      const record = { ...receipt },
+        id = record._id;
+      if (
+        id &&
+        ["ObjectId", "ObjectID"].includes(id._bsontype) &&
+        typeof id.toHexString === "function"
+      ) {
         const hex = id.toHexString();
-        if (!/^[a-f0-9]{24}$/i.test(hex)) throw this.error("ERR_IMP_00003", "Startup receipt identity is invalid");
+        if (!/^[a-f0-9]{24}$/i.test(hex))
+          throw this.error(
+            "ERR_IMP_00003",
+            "Startup receipt identity is invalid",
+          );
         record._id = { bsonType: "ObjectId", hex: hex.toLowerCase() };
       }
       return structuredClone(record);
@@ -916,54 +1290,126 @@ module.exports = {
   startupSourceReview: async function (request, roots) {
     const maximumModulesPerRun = this.configuration().maximumModulesPerRun;
     if (!Number.isSafeInteger(maximumModulesPerRun) || maximumModulesPerRun < 1)
-      throw this.error("ERR_IMP_00003", "Startup release review requires a positive integer maximumModulesPerRun");
+      throw this.error(
+        "ERR_IMP_00003",
+        "Startup release review requires a positive integer maximumModulesPerRun",
+      );
     const tenant = this.resolveTenant(request);
-    const partitions = new Map(), visited = new Set(), visiting = new Set();
-    const reviews = [], observed = [];
+    const partitions = new Map(),
+      visited = new Set(),
+      visiting = new Set();
+    const reviews = [],
+      observed = [];
     const visit = async (release, partition) => {
       const key = JSON.stringify([partition, release.releaseCode]);
-      if (visiting.has(key)) throw this.error("ERR_IMP_00003", "Data release prerequisite cycle: " + release.releaseCode);
+      if (visiting.has(key))
+        throw this.error(
+          "ERR_IMP_00003",
+          "Data release prerequisite cycle: " + release.releaseCode,
+        );
       if (visited.has(key)) return;
       if (visited.size + visiting.size >= maximumModulesPerRun)
-        throw this.error("ERR_IMP_00003", "Data release prerequisite plan exceeds the release limit");
+        throw this.error(
+          "ERR_IMP_00003",
+          "Data release prerequisite plan exceeds the release limit",
+        );
       visiting.add(key);
-      if (release.invalidManifest) throw this.error("ERR_IMP_00003", "Startup release manifest is invalid: " + release.releaseCode);
+      if (release.invalidManifest)
+        throw this.error(
+          "ERR_IMP_00003",
+          "Startup release manifest is invalid: " + release.releaseCode,
+        );
       this.validateDestination(release);
-      if (!partitions.has(partition)) partitions.set(partition, this.startupReceiptSnapshot(await this.getInstallations(partition)));
-      const matches = partitions.get(partition).filter(row => row.code === this.installationCode(partition, release));
-      if (matches.length > 1) throw this.error("ERR_IMP_00003", "Startup installation receipt is ambiguous");
+      if (!partitions.has(partition))
+        partitions.set(
+          partition,
+          this.startupReceiptSnapshot(await this.getInstallations(partition)),
+        );
+      const matches = partitions
+        .get(partition)
+        .filter(
+          (row) => row.code === this.installationCode(partition, release),
+        );
+      if (matches.length > 1)
+        throw this.error(
+          "ERR_IMP_00003",
+          "Startup installation receipt is ambiguous",
+        );
       const installed = matches[0];
-      const proven = installed?.status === "CURRENT" && installed.tenant === partition &&
-        installed.environment === NODICS.getSelectedEnvironmentName() && installed.moduleName === release.moduleName &&
-        installed.releaseCode === release.releaseCode && installed.dataType === "init" &&
-        /^\d+\.\d+\.\d+$/.test(installed.version || "") && /^[a-f0-9]{64}$/.test(installed.checksum || "");
-      const drift = proven && (installed.version !== release.version ||
-        installed.checksum !== release.checksum && !this.isDevelopmentRelease(release.version));
+      const proven =
+        installed?.status === "CURRENT" &&
+        installed.tenant === partition &&
+        installed.environment === NODICS.getSelectedEnvironmentName() &&
+        installed.moduleName === release.moduleName &&
+        installed.releaseCode === release.releaseCode &&
+        installed.dataType === "init" &&
+        /^\d+\.\d+\.\d+$/.test(installed.version || "") &&
+        /^[a-f0-9]{64}$/.test(installed.checksum || "");
+      const drift =
+        proven &&
+        (installed.version !== release.version ||
+          (installed.checksum !== release.checksum &&
+            !this.isDevelopmentRelease(release.version)));
       observed.push({ release, installed, proven });
       if (drift) {
-        reviews.push({ ...this.toCatalogueItem(release, installed, false), tenant: partition });
+        reviews.push({
+          ...this.toCatalogueItem(release, installed, false),
+          tenant: partition,
+        });
       } else {
-        for (const reference of this.validatePrerequisites(release.prerequisites)) {
+        for (const reference of this.validatePrerequisites(
+          release.prerequisites,
+        )) {
           const dependency = this.discoverPrerequisite(reference, "init");
-          if (dependency.version !== reference.version || dependency.checksum !== reference.checksum)
-            throw this.error("ERR_IMP_00003", "Data release prerequisite changed after selection: " + dependency.releaseCode);
-          await visit(dependency, this.prerequisiteTenant(reference, partition));
+          if (
+            dependency.version !== reference.version ||
+            dependency.checksum !== reference.checksum
+          )
+            throw this.error(
+              "ERR_IMP_00003",
+              "Data release prerequisite changed after selection: " +
+                dependency.releaseCode,
+            );
+          await visit(
+            dependency,
+            this.prerequisiteTenant(reference, partition),
+          );
         }
       }
-      visiting.delete(key); visited.add(key);
+      visiting.delete(key);
+      visited.add(key);
     };
     for (const root of roots) await visit(root, tenant);
     if (!reviews.length) return undefined;
-    if (this.activeExecutions.has(tenant + ":init") || observed.some(({ proven }) => !proven))
-      throw this.error("ERR_IMP_00003", "Startup source review requires confirmed CURRENT receipts for the retained graph; missing or uncertain authority requires operator review");
+    if (
+      this.activeExecutions.has(tenant + ":init") ||
+      observed.some(({ proven }) => !proven)
+    )
+      throw this.error(
+        "ERR_IMP_00003",
+        "Startup source review requires confirmed CURRENT receipts for the retained graph; missing or uncertain authority requires operator review",
+      );
     for (const [partition, snapshot] of partitions) {
-      if (!isDeepStrictEqual(snapshot, this.startupReceiptSnapshot(await this.getInstallations(partition))))
-        throw this.error("ERR_IMP_00003", "Startup installation receipts changed during source review");
+      if (
+        !isDeepStrictEqual(
+          snapshot,
+          this.startupReceiptSnapshot(await this.getInstallations(partition)),
+        )
+      )
+        throw this.error(
+          "ERR_IMP_00003",
+          "Startup installation receipts changed during source review",
+        );
     }
     // The selected startup batch is atomic for admission: never execute its fresh
     // prerequisites while another selected authority graph is held for review.
-    return { skipped: true, reason: "INIT_SOURCE_REVIEW_REQUIRED", reviewRequired: true,
-      releases: reviews, deferredReleaseCodes: roots.map(release => release.releaseCode) };
+    return {
+      skipped: true,
+      reason: "INIT_SOURCE_REVIEW_REQUIRED",
+      reviewRequired: true,
+      releases: reviews,
+      deferredReleaseCodes: roots.map((release) => release.releaseCode),
+    };
   },
 
   /** Reports only the current awaited startup Init execution, never caller options. @param {string} tenant Canonical target tenant. @returns {boolean} Whether the startup owner currently installs this tenant's Init releases. */
@@ -973,34 +1419,154 @@ module.exports = {
   },
 
   /** Reports only the exact awaited Profile seed operation, not general startup or a caller-supplied system marker. */
-  isIdentityAuthorityReleaseExecution: function (tenant, schemaName, operation) {
+  isIdentityAuthorityReleaseExecution: function (
+    tenant,
+    schemaName,
+    operation,
+  ) {
     const context = identityAuthorityExecution.getStore();
-    return context?.active === true && context.release.active === true && context.tenant === tenant &&
-      (!schemaName || context.schemaName === schemaName) && (!operation || context.operation === operation);
+    return (
+      context?.active === true &&
+      context.release.active === true &&
+      context.tenant === tenant &&
+      (!schemaName || context.schemaName === schemaName) &&
+      (!operation || context.operation === operation)
+    );
+  },
+
+  /** Admits only the model write held by the exact sealed Staged release and schema operation. */
+  hasStagedSourceWriteAccess: function (request) {
+    const write = stagedSourceWriteExecution.getStore();
+    return (
+      write?.active === true &&
+      write.release.active === true &&
+      request?.tenant === write.release.tenant &&
+      request.schemaModel?.rawSchema === write.schema &&
+      request.schemaModel?.schemaName === write.schemaName &&
+      request.authData?.userGroups?.includes(write.group) === true
+    );
+  },
+
+  /** Binds an opt-in owner writer group to the awaited saveAll, without adding groups to the caller. */
+  executeStagedSourceOperation: async function (
+    request,
+    operationRequest,
+    schemaService,
+  ) {
+    const release = identityReleaseExecution.getStore();
+    const options = request.header.options;
+    const target =
+      release?.active === true &&
+      release.run &&
+      release.run === request.importRun &&
+      release.tenant === request.tenant &&
+      operationRequest.tenant === request.tenant &&
+      options.operation === "saveAll" &&
+      release.stagedTargets?.some(
+        (item) =>
+          item.moduleName === options.moduleName &&
+          item.schemaName === options.schemaName &&
+          item.operation === options.operation &&
+          item.dataFilePrefix === options.dataFilePrefix,
+      );
+    if (!target)
+      return this.executeIdentityAuthorityOperation(
+        request,
+        operationRequest,
+        schemaService,
+      );
+    const schema = NODICS.getModule(options.moduleName)?.rawSchema?.[
+      options.schemaName
+    ];
+    const groups = schema?.dataRelease?.stagedSourceWriterGroups;
+    const serviceName =
+      "Default" +
+      options.schemaName[0].toUpperCase() +
+      options.schemaName.slice(1) +
+      "Service";
+    const group =
+      schemaService === SERVICE[serviceName] &&
+      Array.isArray(groups) &&
+      groups.find(
+        (code) =>
+          typeof code === "string" &&
+          release.operatorGroups.includes(code) &&
+          operationRequest.authData?.userGroups?.includes(code),
+      );
+    if (!group)
+      return this.executeIdentityAuthorityOperation(
+        request,
+        operationRequest,
+        schemaService,
+      );
+    const write = {
+      active: true,
+      release,
+      schema,
+      schemaName: options.schemaName,
+      group,
+    };
+    return stagedSourceWriteExecution.run(write, async () => {
+      try {
+        return await schemaService.saveAll(operationRequest);
+      } finally {
+        write.active = false;
+      }
+    });
   },
 
   /** Executes an existing schema operation with bounded authority only for its privately bound, immutable Init header. */
-  executeIdentityAuthorityOperation: async function (request, operationRequest, schemaService) {
+  executeIdentityAuthorityOperation: async function (
+    request,
+    operationRequest,
+    schemaService,
+  ) {
     const release = identityReleaseExecution.getStore();
     const options = request?.header?.options;
     const operation = options?.operation;
-    const target = release?.active === true && release.run && release.run === request.importRun &&
-      release.tenant === request.tenant && operationRequest.tenant === request.tenant &&
-      release.targets.find(item => item.moduleName === options.moduleName && item.schemaName === options.schemaName &&
-        item.operation === operation && item.dataFilePrefix === options.dataFilePrefix &&
-        (!item.tenants || item.tenants.includes(request.tenant)));
-    const serviceName = target && "Default" + target.schemaName[0].toUpperCase() + target.schemaName.slice(1) + "Service";
-    const context = target && schemaService === SERVICE[serviceName] ? {
-      active: true, release, tenant: request.tenant, schemaName: target.schemaName, operation,
-    } : undefined;
+    const target =
+      release?.active === true &&
+      release.run &&
+      release.run === request.importRun &&
+      release.tenant === request.tenant &&
+      operationRequest.tenant === request.tenant &&
+      release.targets.find(
+        (item) =>
+          item.moduleName === options.moduleName &&
+          item.schemaName === options.schemaName &&
+          item.operation === operation &&
+          item.dataFilePrefix === options.dataFilePrefix &&
+          (!item.tenants || item.tenants.includes(request.tenant)),
+      );
+    const serviceName =
+      target &&
+      "Default" +
+        target.schemaName[0].toUpperCase() +
+        target.schemaName.slice(1) +
+        "Service";
+    const context =
+      target && schemaService === SERVICE[serviceName]
+        ? {
+            active: true,
+            release,
+            tenant: request.tenant,
+            schemaName: target.schemaName,
+            operation,
+          }
+        : undefined;
     return identityAuthorityExecution.run(context, async () => {
-      try { return await schemaService[operation](operationRequest); }
-      finally { if (context) context.active = false; }
+      try {
+        return await schemaService[operation](operationRequest);
+      } finally {
+        if (context) context.active = false;
+      }
     });
   },
 
   /** Applies a trusted validated plan while preserving version ordering and installation receipts. */
   executePreparedPlan: async function (request, plan) {
+    const continuedExecutionId =
+      SERVICE.DefaultDataReleaseExecutionService?.executionIdentity(plan);
     await this.preflightPrerequisitePlan(request, plan);
     for (const release of plan.releases)
       await this.validateReleaseTargets(release, plan.tenant);
@@ -1011,8 +1577,10 @@ module.exports = {
         "A selected data release is still running; establish completion before retry",
       );
     }
-    const recoveries = request.releaseRequest?.forceCurrent === true
-      ? await this.qualifyZeroWorkRecoveries(plan, operationReleases) : new Map();
+    const recoveries =
+      request.releaseRequest?.forceCurrent === true
+        ? await this.qualifyZeroWorkRecoveries(plan, operationReleases)
+        : new Map();
     plan = this.executablePlan(
       plan,
       operationReleases,
@@ -1036,7 +1604,7 @@ module.exports = {
     let results = [];
     let claimedRelease;
     plan = Object.assign({}, plan, {
-      executionId: crypto.randomUUID(),
+      executionId: continuedExecutionId || crypto.randomUUID(),
       forceCurrent:
         request.releaseRequest && request.releaseRequest.forceCurrent === true,
     });
@@ -1044,6 +1612,8 @@ module.exports = {
     try {
       for (let release of plan.releases) {
         await this.assertPrerequisiteReceipts(plan, release);
+        if (stagedSourceReleases.has(release))
+          this.validateDestination(release);
         await this.recordInstallation(plan, release, undefined, "RUNNING");
         claimedRelease = release;
         let releasePlan = Object.assign({}, plan, {
@@ -1054,19 +1624,45 @@ module.exports = {
           releasePlan,
           false,
         );
-        const identity = { active: true, tenant: plan.tenant, request: importRequest,
-          targets: identityRequests.get(importRequest) || [] };
+        const stagedTargets = stagedSourceReleases.has(release)
+          ? this.releaseDestinationTargets(release)
+          : [];
+        if (stagedTargets.length) delete importRequest.importRun;
+        const operatorGroups = Array.isArray(request.authData?.userGroups)
+          ? request.authData.userGroups.filter(
+              (group) => typeof group === "string",
+            )
+          : [];
+        const identity = {
+          active: true,
+          tenant: plan.tenant,
+          request: importRequest,
+          targets: identityRequests.get(importRequest) || [],
+          stagedTargets,
+          operatorGroups,
+        };
         let result;
         try {
-          result = await identityReleaseExecution.run(identity, () => this.invokeImport(importRequest, plan.dataType));
+          result = await identityReleaseExecution.run(identity, () =>
+            this.invokeImport(importRequest, plan.dataType),
+          );
         } finally {
           identity.active = false;
           identityRequests.delete(importRequest);
         }
-        this.assertPrerequisiteImportOutcome(plan, release, importRequest.importRun);
-        if (importRequest.importRun?.status === "NO_DATA" ||
-            importRequest.importRun?.summary?.recordsSucceeded === 0)
-          throw this.error("ERR_IMP_00003", "A zero-work import cannot qualify a data release installation");
+        this.assertPrerequisiteImportOutcome(
+          plan,
+          release,
+          importRequest.importRun,
+        );
+        if (
+          importRequest.importRun?.status === "NO_DATA" ||
+          importRequest.importRun?.summary?.recordsSucceeded === 0
+        )
+          throw this.error(
+            "ERR_IMP_00003",
+            "A zero-work import cannot qualify a data release installation",
+          );
         await this.recordInstallation(
           plan,
           release,
@@ -1091,6 +1687,9 @@ module.exports = {
           dataType: plan.dataType,
           tenant: plan.tenant,
           releases: operationReleases,
+          ...(plan.requestSelection
+            ? { selection: plan.requestSelection }
+            : {}),
           importRun: importRuns[importRuns.length - 1],
           referenceReleases: this.publicReferenceReleases(plan),
           importRuns: importRuns,
@@ -1188,12 +1787,26 @@ module.exports = {
           invalidReleases.map((release) => release.releaseCode).join(", "),
       );
     }
-    const selectedCodes = new Set(releases.map((release) => release.releaseCode));
-    releases = available.filter((release) => selectedCodes.has(release.releaseCode));
+    const selectedCodes = new Set(
+      releases.map((release) => release.releaseCode),
+    );
+    releases = available.filter((release) =>
+      selectedCodes.has(release.releaseCode),
+    );
     let tenant = this.resolveTenant(request);
-    const resolved = this.resolvePrerequisiteReleases(releases, dataType, tenant);
+    const resolved = this.resolvePrerequisiteReleases(
+      releases,
+      dataType,
+      tenant,
+    );
     releases = resolved.releases;
-    available = [...new Map(available.concat(releases).map((release) => [release.releaseCode, release])).values()];
+    available = [
+      ...new Map(
+        available
+          .concat(releases)
+          .map((release) => [release.releaseCode, release]),
+      ).values(),
+    ];
     let expected = body.expectedReleases || {};
     releases.forEach((release) => {
       if (
@@ -1228,29 +1841,75 @@ module.exports = {
       sourceReleases: available,
       prerequisiteReferences: resolved.references,
       referenceReleases: resolved.referenceReleases,
+      // Correlation evidence from the validated owner plan, never a browser dependency planner or execution grant.
+      requestSelection: Object.freeze({
+        contractVersion: 1,
+        requestedReleaseCodes: Object.freeze([...selectedCodes].sort()),
+        prerequisites: Object.freeze(
+          releases
+            .filter((release) => !selectedCodes.has(release.releaseCode))
+            .map((release) =>
+              Object.freeze({
+                releaseCode: release.releaseCode,
+                moduleName: release.moduleName,
+                dataType: release.dataType,
+                version: release.version,
+                checksum: release.checksum,
+              }),
+            ),
+        ),
+      }),
     };
   },
 
   /** Validates exact manifest-owned dependency identities; callers cannot supply paths or widen data types. */
   validatePrerequisites: function (value) {
     if (value === undefined) return [];
-    const fail = () => { throw this.error("ERR_IMP_00003", "Data release prerequisites must be unique exact module, section, version and checksum references"); };
-    if (!Array.isArray(value) || value.length > Number(this.configuration().maximumModulesPerRun || 256)) fail();
+    const fail = () => {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release prerequisites must be unique exact module, section, version and checksum references",
+      );
+    };
+    if (
+      !Array.isArray(value) ||
+      value.length > Number(this.configuration().maximumModulesPerRun || 256)
+    )
+      fail();
     const codes = new Set();
     return value.map((reference) => {
-      if (!reference || typeof reference !== "object" || Array.isArray(reference) ||
-          !["checksum,moduleName,sectionCode,version", "checksum,moduleName,partition,sectionCode,version"].includes(Object.keys(reference).sort().join(",")) ||
-          (Object.hasOwn(reference, "partition") && reference.partition !== "DEFAULT") ||
-          !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(reference.moduleName || "") ||
-          !/^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(reference.sectionCode || "") ||
-          !/^\d+\.\d+\.\d+$/.test(reference.version || "") ||
-          reference.version === "0.0.0" || !/^[a-f0-9]{64}$/.test(reference.checksum || "")) fail();
-      const code = reference.moduleName + ":" + reference.sectionCode + ":" + (reference.partition || "INHERIT");
+      if (
+        !reference ||
+        typeof reference !== "object" ||
+        Array.isArray(reference) ||
+        ![
+          "checksum,moduleName,sectionCode,version",
+          "checksum,moduleName,partition,sectionCode,version",
+        ].includes(Object.keys(reference).sort().join(",")) ||
+        (Object.hasOwn(reference, "partition") &&
+          reference.partition !== "DEFAULT") ||
+        !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(reference.moduleName || "") ||
+        !/^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(reference.sectionCode || "") ||
+        !/^\d+\.\d+\.\d+$/.test(reference.version || "") ||
+        reference.version === "0.0.0" ||
+        !/^[a-f0-9]{64}$/.test(reference.checksum || "")
+      )
+        fail();
+      const code =
+        reference.moduleName +
+        ":" +
+        reference.sectionCode +
+        ":" +
+        (reference.partition || "INHERIT");
       if (codes.has(code)) fail();
       codes.add(code);
-      return { moduleName: reference.moduleName, sectionCode: reference.sectionCode,
-        version: reference.version, checksum: reference.checksum,
-        ...(reference.partition ? { partition: reference.partition } : {}) };
+      return {
+        moduleName: reference.moduleName,
+        sectionCode: reference.sectionCode,
+        version: reference.version,
+        checksum: reference.checksum,
+        ...(reference.partition ? { partition: reference.partition } : {}),
+      };
     });
   },
 
@@ -1259,30 +1918,70 @@ module.exports = {
     if (reference.partition !== "DEFAULT") return tenant;
     const defaultTenant = CONFIG.get("defaultTenant");
     if (typeof defaultTenant !== "string" || !defaultTenant.trim())
-      throw this.error("ERR_IMP_00003", "Default prerequisite partition is unavailable");
+      throw this.error(
+        "ERR_IMP_00003",
+        "Default prerequisite partition is unavailable",
+      );
     return defaultTenant;
   },
 
   /** Resolves one explicit raw owner through the existing aggregate inspector without activating optional code. */
   discoverPrerequisite: function (reference, dataType) {
     const rawOwner = NODICS.getRawModule(reference.moduleName);
-    const owner = rawOwner ||
-      (typeof UTILS !== "undefined" && UTILS.resolveInstalledSourceDescriptor?.(reference.moduleName));
+    const owner =
+      rawOwner ||
+      (typeof UTILS !== "undefined" &&
+        UTILS.resolveInstalledSourceDescriptor?.(reference.moduleName));
     if (!owner?.path || owner.name !== reference.moduleName)
-      throw this.error("ERR_IMP_00004", "Data release prerequisite owner is unavailable: " + reference.moduleName);
+      throw this.error(
+        "ERR_IMP_00004",
+        "Data release prerequisite owner is unavailable: " +
+          reference.moduleName,
+      );
     const manifestPath = path.join(owner.path, "data", "manifest.json");
     const aggregate = this.readAggregateManifest(owner, manifestPath);
     const section = aggregate?.sections?.[reference.sectionCode];
-    if (!section || section.kind !== "DATA_RELEASE" || section.dataType !== dataType)
-      throw this.error("ERR_IMP_00003", "Data release prerequisite is missing or has a different data type: " + reference.moduleName + ":" + reference.sectionCode);
-    const release = this.inspectManifest(owner, dataType, manifestPath, section, reference.sectionCode,
-      true, aggregate.retainedRoots?.[section.sourceRoot]);
-    if (!rawOwner && release.version === reference.version && release.checksum === reference.checksum) releaseSourceOwners.set(release, {
-      owner: structuredClone({ name: owner.name, path: owner.path, index: owner.index,
-        canonicalIdentity: owner.canonicalIdentity, parent: owner.parent }),
-      reference: structuredClone(reference), dataType,
-      source: structuredClone({ ...this.publicRelease(release), declaredFiles: release.declaredFiles }),
-    });
+    if (
+      !section ||
+      section.kind !== "DATA_RELEASE" ||
+      section.dataType !== dataType
+    )
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release prerequisite is missing or has a different data type: " +
+          reference.moduleName +
+          ":" +
+          reference.sectionCode,
+      );
+    const release = this.inspectManifest(
+      owner,
+      dataType,
+      manifestPath,
+      section,
+      reference.sectionCode,
+      true,
+      aggregate.retainedRoots?.[section.sourceRoot],
+    );
+    if (
+      !rawOwner &&
+      release.version === reference.version &&
+      release.checksum === reference.checksum
+    )
+      releaseSourceOwners.set(release, {
+        owner: structuredClone({
+          name: owner.name,
+          path: owner.path,
+          index: owner.index,
+          canonicalIdentity: owner.canonicalIdentity,
+          parent: owner.parent,
+        }),
+        reference: structuredClone(reference),
+        dataType,
+        source: structuredClone({
+          ...this.publicRelease(release),
+          declaredFiles: release.declaredFiles,
+        }),
+      });
     return release;
   },
 
@@ -1291,41 +1990,95 @@ module.exports = {
     const binding = releaseSourceOwners.get(release);
     if (!binding) {
       const owner = NODICS.getRawModule(release.moduleName);
-      if (!owner?.path) throw this.error("ERR_IMP_00004", "Data release source owner is unavailable: " + release.moduleName);
+      if (!owner?.path)
+        throw this.error(
+          "ERR_IMP_00004",
+          "Data release source owner is unavailable: " + release.moduleName,
+        );
       return owner;
     }
-    if (!isDeepStrictEqual({ ...this.publicRelease(release), declaredFiles: release.declaredFiles }, binding.source))
-      throw this.error("ERR_IMP_00003", "Data release source descriptor changed: " + release.releaseCode);
-    const current = this.discoverPrerequisite(binding.reference, binding.dataType);
+    if (
+      !isDeepStrictEqual(
+        {
+          ...this.publicRelease(release),
+          declaredFiles: release.declaredFiles,
+        },
+        binding.source,
+      )
+    )
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release source descriptor changed: " + release.releaseCode,
+      );
+    const current = this.discoverPrerequisite(
+      binding.reference,
+      binding.dataType,
+    );
     const fresh = releaseSourceOwners.get(current);
-    if (!fresh || !isDeepStrictEqual(fresh.owner, binding.owner) || !isDeepStrictEqual(fresh.source, binding.source))
-      throw this.error("ERR_IMP_00003", "Data release source owner changed: " + release.releaseCode);
+    if (
+      !fresh ||
+      !isDeepStrictEqual(fresh.owner, binding.owner) ||
+      !isDeepStrictEqual(fresh.source, binding.source)
+    )
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release source owner changed: " + release.releaseCode,
+      );
     return fresh.owner;
   },
 
   /** Builds a bounded, stable topological plan and pins every edge before any receipt or row write. */
-  resolvePrerequisiteReleases: function (roots, dataType, tenant = CONFIG.get("defaultTenant")) {
+  resolvePrerequisiteReleases: function (
+    roots,
+    dataType,
+    tenant = CONFIG.get("defaultTenant"),
+  ) {
     const key = (partition, code) => JSON.stringify([partition, code]);
-    const known = new Map(roots.map((release) => {
-      const scoped = { ...release, tenant };
-      if (releaseSourceOwners.has(release)) releaseSourceOwners.set(scoped, releaseSourceOwners.get(release));
-      return [key(tenant, release.releaseCode), scoped];
-    }));
-    const visiting = new Set(), visited = new Set(), ordered = [], references = new Map();
+    const known = new Map(
+      roots.map((release) => {
+        const scoped = { ...release, tenant };
+        if (releaseSourceOwners.has(release))
+          releaseSourceOwners.set(scoped, releaseSourceOwners.get(release));
+        return [key(tenant, release.releaseCode), scoped];
+      }),
+    );
+    const visiting = new Set(),
+      visited = new Set(),
+      ordered = [],
+      references = new Map();
     const visit = (release) => {
       const identity = key(release.tenant, release.releaseCode);
-      if (visiting.has(identity)) throw this.error("ERR_IMP_00003", "Data release prerequisite cycle: " + release.releaseCode);
+      if (visiting.has(identity))
+        throw this.error(
+          "ERR_IMP_00003",
+          "Data release prerequisite cycle: " + release.releaseCode,
+        );
       if (visited.has(identity)) return;
       if (known.size > Number(this.configuration().maximumModulesPerRun || 256))
-        throw this.error("ERR_IMP_00003", "Data release prerequisite plan exceeds the release limit");
+        throw this.error(
+          "ERR_IMP_00003",
+          "Data release prerequisite plan exceeds the release limit",
+        );
       visiting.add(identity);
-      for (const reference of this.validatePrerequisites(release.prerequisites)) {
+      for (const reference of this.validatePrerequisites(
+        release.prerequisites,
+      )) {
         const code = reference.moduleName + ":" + reference.sectionCode;
-        const dependencyTenant = this.prerequisiteTenant(reference, release.tenant);
+        const dependencyTenant = this.prerequisiteTenant(
+          reference,
+          release.tenant,
+        );
         const dependencyKey = key(dependencyTenant, code);
         const previous = references.get(dependencyKey);
-        if (previous && (previous.version !== reference.version || previous.checksum !== reference.checksum))
-          throw this.error("ERR_IMP_00003", "Conflicting data release prerequisite pins: " + code);
+        if (
+          previous &&
+          (previous.version !== reference.version ||
+            previous.checksum !== reference.checksum)
+        )
+          throw this.error(
+            "ERR_IMP_00003",
+            "Conflicting data release prerequisite pins: " + code,
+          );
         references.set(dependencyKey, reference);
         let dependency = known.get(dependencyKey);
         if (!dependency) {
@@ -1334,32 +2087,59 @@ module.exports = {
         }
         known.set(dependencyKey, dependency);
         visit(dependency);
-        if (dependency.invalidManifest || dependency.version !== reference.version || dependency.checksum !== reference.checksum)
-          throw this.error("ERR_IMP_00003", "Data release prerequisite changed after selection: " + code);
+        if (
+          dependency.invalidManifest ||
+          dependency.version !== reference.version ||
+          dependency.checksum !== reference.checksum
+        )
+          throw this.error(
+            "ERR_IMP_00003",
+            "Data release prerequisite changed after selection: " + code,
+          );
       }
       visiting.delete(identity);
       visited.add(identity);
       ordered.push(release);
     };
-    roots.forEach(release => visit(known.get(key(tenant, release.releaseCode))));
+    roots.forEach((release) =>
+      visit(known.get(key(tenant, release.releaseCode))),
+    );
     // Complete each dependency frontier before its dependents. This keeps all
     // independent catalogues ahead of groups even when root edges are interleaved.
-    const completed = new Set(), releases = [];
+    const completed = new Set(),
+      releases = [];
     let pending = ordered;
     while (pending.length) {
-      const ready = pending.filter((release) => (release.prerequisites || []).every(
-        (reference) => completed.has(key(this.prerequisiteTenant(reference, release.tenant), reference.moduleName + ":" + reference.sectionCode)),
-      ));
-      if (!ready.length) throw this.error("ERR_IMP_00003", "Data release prerequisite graph cannot be ordered");
+      const ready = pending.filter((release) =>
+        (release.prerequisites || []).every((reference) =>
+          completed.has(
+            key(
+              this.prerequisiteTenant(reference, release.tenant),
+              reference.moduleName + ":" + reference.sectionCode,
+            ),
+          ),
+        ),
+      );
+      if (!ready.length)
+        throw this.error(
+          "ERR_IMP_00003",
+          "Data release prerequisite graph cannot be ordered",
+        );
       for (const release of ready) {
         completed.add(key(release.tenant, release.releaseCode));
         releases.push(release);
       }
-      pending = pending.filter((release) => !completed.has(key(release.tenant, release.releaseCode)));
+      pending = pending.filter(
+        (release) => !completed.has(key(release.tenant, release.releaseCode)),
+      );
     }
-    return { releases: releases.filter(release => release.tenant === tenant),
-      referenceReleases: releases.filter(release => release.tenant !== tenant),
-      references: [...references.values()] };
+    return {
+      releases: releases.filter((release) => release.tenant === tenant),
+      referenceReleases: releases.filter(
+        (release) => release.tenant !== tenant,
+      ),
+      references: [...references.values()],
+    };
   },
 
   /** Foreign dependencies are receipt-only: never install, repair, or copy their receipts. */
@@ -1367,18 +2147,42 @@ module.exports = {
     const partitions = new Map();
     for (const release of releases) {
       if (release.tenant !== this.prerequisiteTenant({ partition: "DEFAULT" }))
-        throw this.error("ERR_IMP_00003", "Default prerequisite partition changed after planning");
-      if (!partitions.has(release.tenant)) partitions.set(release.tenant, await this.getInstallations(release.tenant));
-      const receipt = partitions.get(release.tenant).find(item => item.code === this.installationCode(release.tenant, release));
-      if (!receipt || receipt.status !== "CURRENT" || receipt.version !== release.version || receipt.checksum !== release.checksum)
-        throw this.error("ERR_IMP_00003", "Referenced partition prerequisite is not current: " + release.releaseCode);
+        throw this.error(
+          "ERR_IMP_00003",
+          "Default prerequisite partition changed after planning",
+        );
+      if (!partitions.has(release.tenant))
+        partitions.set(
+          release.tenant,
+          await this.getInstallations(release.tenant),
+        );
+      const receipt = partitions
+        .get(release.tenant)
+        .find(
+          (item) =>
+            item.code === this.installationCode(release.tenant, release),
+        );
+      if (
+        !receipt ||
+        receipt.status !== "CURRENT" ||
+        receipt.version !== release.version ||
+        receipt.checksum !== release.checksum
+      )
+        throw this.error(
+          "ERR_IMP_00003",
+          "Referenced partition prerequisite is not current: " +
+            release.releaseCode,
+        );
     }
   },
 
   /** Distinguishes verified foreign receipts from releases selected for installation. */
   publicReferenceReleases: function (plan) {
-    return (plan.referenceReleases || []).map(release => ({
-      ...this.publicRelease(release), tenant: release.tenant, referenceOnly: true, status: "CURRENT",
+    return (plan.referenceReleases || []).map((release) => ({
+      ...this.publicRelease(release),
+      tenant: release.tenant,
+      referenceOnly: true,
+      status: "CURRENT",
     }));
   },
 
@@ -1386,33 +2190,66 @@ module.exports = {
   validateStartupPrerequisites: async function (plan, states) {
     if (!plan.prerequisiteReferences?.length) return;
     const installations = await this.getInstallations(plan.tenant);
-    const stateByCode = new Map(states.map((release) => [release.releaseCode, release]));
-    for (const release of plan.releases.filter((item) => item.prerequisites?.length)) {
+    const stateByCode = new Map(
+      states.map((release) => [release.releaseCode, release]),
+    );
+    for (const release of plan.releases.filter(
+      (item) => item.prerequisites?.length,
+    )) {
       const state = stateByCode.get(release.releaseCode);
-      const existingOwner = installations.some((receipt) => receipt.dataType === "init" &&
-        receipt.moduleName === release.moduleName && receipt.environment === NODICS.getSelectedEnvironmentName());
-      const unmet = release.prerequisites.some((reference) =>
-        this.prerequisiteTenant(reference, plan.tenant) === plan.tenant &&
-        stateByCode.get(reference.moduleName + ":" + reference.sectionCode)?.status !== "CURRENT");
+      const existingOwner = installations.some(
+        (receipt) =>
+          receipt.dataType === "init" &&
+          receipt.moduleName === release.moduleName &&
+          receipt.environment === NODICS.getSelectedEnvironmentName(),
+      );
+      const unmet = release.prerequisites.some(
+        (reference) =>
+          this.prerequisiteTenant(reference, plan.tenant) === plan.tenant &&
+          stateByCode.get(reference.moduleName + ":" + reference.sectionCode)
+            ?.status !== "CURRENT",
+      );
       if (existingOwner && (state?.status !== "CURRENT" || unmet))
-        throw this.error("ERR_IMP_00003", "Existing Init installation requires an operator-selected prerequisite migration: " + release.releaseCode);
+        throw this.error(
+          "ERR_IMP_00003",
+          "Existing Init installation requires an operator-selected prerequisite migration: " +
+            release.releaseCode,
+        );
     }
   },
 
   /** Requalifies the entire dependency graph and all source composition before the first write. */
   preflightPrerequisitePlan: async function (request, plan) {
     if (!plan.prerequisiteReferences?.length) return;
-    const canonical = new Map(this.discoverReleases(plan.dataType).map((release) => [release.releaseCode, release]));
+    const canonical = new Map(
+      this.discoverReleases(plan.dataType).map((release) => [
+        release.releaseCode,
+        release,
+      ]),
+    );
     for (const reference of plan.prerequisiteReferences) {
       const release = this.discoverPrerequisite(reference, plan.dataType);
       canonical.set(release.releaseCode, release);
     }
     await this.assertReferenceReceipts(plan.referenceReleases);
-    for (const release of [...plan.releases, ...(plan.referenceReleases || [])]) {
+    for (const release of [
+      ...plan.releases,
+      ...(plan.referenceReleases || []),
+    ]) {
       const current = canonical.get(release.releaseCode);
-      if (!current || current.invalidManifest || current.version !== release.version || current.checksum !== release.checksum ||
-          JSON.stringify(current.prerequisites) !== JSON.stringify(release.prerequisites))
-        throw this.error("ERR_IMP_00003", "Data release prerequisite plan changed before execution: " + release.releaseCode);
+      if (
+        !current ||
+        current.invalidManifest ||
+        current.version !== release.version ||
+        current.checksum !== release.checksum ||
+        JSON.stringify(current.prerequisites) !==
+          JSON.stringify(release.prerequisites)
+      )
+        throw this.error(
+          "ERR_IMP_00003",
+          "Data release prerequisite plan changed before execution: " +
+            release.releaseCode,
+        );
       if (!release.tenant || release.tenant === plan.tenant) {
         this.validateDestination(current);
         await this.resolveCompositionSources(plan, release, true);
@@ -1420,7 +2257,10 @@ module.exports = {
     }
     const contributions = await this.preflightContributions(request, plan);
     if (contributions.some((item) => item.ready !== true))
-      throw this.error("ERR_IMP_00003", "Data release prerequisite contribution is not ready");
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release prerequisite contribution is not ready",
+      );
   },
 
   /** A prerequisite must have a current exact tenant/environment receipt before its dependent is claimed. */
@@ -1429,20 +2269,44 @@ module.exports = {
     if (!release.prerequisites?.length) return;
     const receipts = await this.getInstallations(plan.tenant);
     for (const reference of release.prerequisites) {
-      if (this.prerequisiteTenant(reference, plan.tenant) !== plan.tenant) continue;
-      const dependency = { releaseCode: reference.moduleName + ":" + reference.sectionCode, dataType: plan.dataType };
-      const receipt = receipts.find((item) => item.code === this.installationCode(plan.tenant, dependency));
-      if (!receipt || receipt.status !== "CURRENT" || receipt.version !== reference.version || receipt.checksum !== reference.checksum)
-        throw this.error("ERR_IMP_00003", "Data release prerequisite is not current: " + dependency.releaseCode);
+      if (this.prerequisiteTenant(reference, plan.tenant) !== plan.tenant)
+        continue;
+      const dependency = {
+        releaseCode: reference.moduleName + ":" + reference.sectionCode,
+        dataType: plan.dataType,
+      };
+      const receipt = receipts.find(
+        (item) => item.code === this.installationCode(plan.tenant, dependency),
+      );
+      if (
+        !receipt ||
+        receipt.status !== "CURRENT" ||
+        receipt.version !== reference.version ||
+        receipt.checksum !== reference.checksum
+      )
+        throw this.error(
+          "ERR_IMP_00003",
+          "Data release prerequisite is not current: " + dependency.releaseCode,
+        );
     }
   },
 
   /** Partial or unacknowledged standard imports cannot establish a dependency for later writes. */
   assertPrerequisiteImportOutcome: function (plan, release, run) {
     if (!plan.prerequisiteReferences?.length || release.installer) return;
-    if (run?.status !== "COMPLETED" || !Number.isSafeInteger(run.summary?.recordsSucceeded) || run.summary.recordsSucceeded <= 0 ||
-        run.summary.recordsFailed !== 0 || run.failures?.length || run.validationErrors?.length)
-      throw this.error("ERR_IMP_00003", "Data release prerequisite plan import did not complete successfully: " + release.releaseCode);
+    if (
+      run?.status !== "COMPLETED" ||
+      !Number.isSafeInteger(run.summary?.recordsSucceeded) ||
+      run.summary.recordsSucceeded <= 0 ||
+      run.summary.recordsFailed !== 0 ||
+      run.failures?.length ||
+      run.validationErrors?.length
+    )
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release prerequisite plan import did not complete successfully: " +
+          release.releaseCode,
+      );
   },
 
   /**
@@ -1517,7 +2381,8 @@ module.exports = {
         );
       }
       const source = Object.assign({}, candidate, { sourceOnly: true });
-      if (releaseSourceOwners.has(candidate)) releaseSourceOwners.set(source, releaseSourceOwners.get(candidate));
+      if (releaseSourceOwners.has(candidate))
+        releaseSourceOwners.set(source, releaseSourceOwners.get(candidate));
       sources.push(source);
     }
     return sources.concat([release]);
@@ -1675,47 +2540,244 @@ module.exports = {
     return normalized;
   },
 
-  /** Prevents a qualified release from being installed into a runtime role or environment outside its manifest contract. */
-  validateDestination: function (release) {
-    let policy = this.configuration();
-    if (policy.destinationEnforced !== true) return true;
-    if (!release.destinationRole)
+  /** Resolves selected destination owners from immutable headers, never role names or source package identity. */
+  releaseDestinationTargets: function (release) {
+    const owner = this.releaseSourceOwner(release);
+    if (!owner?.path)
       throw this.error(
         "ERR_IMP_00003",
-        "Data release destination metadata is required",
+        "Data release source owner is unavailable",
       );
-    let configuredRole = CONFIG.get("runtimeRole");
-    let runtimeRole =
-      typeof configuredRole === "string"
-        ? configuredRole
-        : configuredRole && configuredRole.code;
-    let allowed = Array.isArray(policy.allowedDestinationRoles)
-      ? policy.allowedDestinationRoles
-      : runtimeRole
-        ? [runtimeRole]
-        : [];
+    const targets = [];
+    for (const file of release.declaredFiles || []) {
+      if (!/(?:^|\/)headers\/.+\.js$/.test(file)) continue;
+      const headers = this.requireReleaseFile(
+        path.resolve(owner.path, "data", file),
+      );
+      for (const [moduleName, definitions] of Object.entries(headers || {})) {
+        for (const header of Object.values(definitions || {})) {
+          const options = header?.options || {};
+          if (options.enabled === false || options.enabled === "false")
+            continue;
+          targets.push({
+            ...options,
+            moduleName:
+              options.moduleName === undefined
+                ? moduleName
+                : options.moduleName,
+          });
+        }
+      }
+    }
+    return targets;
+  },
+
+  /** Computes the canonical seal of an ordered file map and its validated prerequisite pins. */
+  releaseFileChecksum: function (files, prerequisites) {
+    return crypto
+      .createHash("sha256")
+      .update(
+        Object.keys(files)
+          .sort()
+          .map((file) => file + ":" + files[file])
+          .join("|"),
+      )
+      .update(
+        prerequisites.length
+          ? "|prerequisites:" + JSON.stringify(prerequisites)
+          : "",
+      )
+      .digest("hex");
+  },
+
+  /** Verifies the selected source section and its complete file seals for a schema-owned Staged source import. */
+  validateStagedSourceRelease: function (release) {
+    const owner = this.releaseSourceOwner(release);
+    const dataRoot = path.join(owner.path, "data");
+    const manifest = this.readAggregateManifest(
+      owner,
+      path.join(dataRoot, "manifest.json"),
+    );
+    const section = manifest?.sections?.[release.sectionCode];
     if (
-      !runtimeRole ||
-      !allowed.includes(release.destinationRole) ||
-      release.destinationRole !== runtimeRole
-    ) {
+      manifest?.module !== release.moduleName ||
+      section?.kind !== "DATA_RELEASE" ||
+      (section.selectionPolicy ?? "DEFAULT") !== release.selectionPolicy ||
+      (section.dataType === "sample" &&
+        release.selectionPolicy !== "EXPLICIT") ||
+      section.lifecycle !== "PUBLISHABLE" ||
+      section.dataType !== release.dataType ||
+      section.version !== release.version ||
+      section.sourceRoot !== release.sourceRoot ||
+      !isDeepStrictEqual(section.environmentScope, release.environmentScope)
+    )
       throw this.error(
         "ERR_IMP_00004",
-        "Data release is not permitted for runtime destination " +
-          String(runtimeRole || "UNDECLARED"),
+        "Staged source release requires a matching publishable manifest section and selection policy",
       );
-    }
-    let environment = String(
+    this.validateLifecycleMetadata(
+      section,
+      release.moduleName,
+      release.dataType,
+      true,
+    );
+    const current = this.sourceRootFiles(dataRoot, release.sourceRoot);
+    const hashes = Object.fromEntries(
+      release.declaredFiles.map((file) => [file, current[file]]),
+    );
+    const declared = Object.fromEntries(
+      Object.entries(section.files || {}).map(([file, hash]) => [
+        file.startsWith(section.sourceRoot + "/")
+          ? file
+          : section.sourceRoot + "/" + file,
+        hash,
+      ]),
+    );
+    if (
+      !isDeepStrictEqual(declared, hashes) ||
+      this.releaseFileChecksum(
+        hashes,
+        this.validatePrerequisites(section.prerequisites),
+      ) !== release.checksum
+    )
+      throw this.error(
+        "ERR_IMP_00004",
+        "Staged source release files differ from manifest seals",
+      );
+  },
+
+  /** Admits actual selected module/schema owners and explicit publication context before claims or dispatch. */
+  validateDestination: function (release) {
+    const policy = this.configuration();
+    if (Object.hasOwn(policy, "allowedDestinationRoles"))
+      throw this.error(
+        "ERR_IMP_00003",
+        "allowedDestinationRoles is retired; select destination owners explicitly",
+      );
+    if (policy.destinationEnforced === false)
+      throw this.error(
+        "ERR_IMP_00003",
+        "Destination ownership admission cannot be disabled",
+      );
+    const publication = CONFIG.get("runtimeRole")?.publication;
+    if (!["STAGED", "ONLINE", "OPERATIONAL"].includes(publication))
+      throw this.error(
+        "ERR_IMP_00003",
+        "Explicit import publication context is required",
+      );
+    if (release.lifecycle === "PUBLISHABLE" && publication !== "STAGED")
+      throw this.error(
+        "ERR_IMP_00004",
+        "Publishable data requires a Staged destination",
+      );
+    const environment = String(
       (CONFIG.get("environment") || {}).class || "",
     ).toUpperCase();
     if (
+      !Array.isArray(release.environmentScope) ||
+      !release.environmentScope.length
+    )
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release environment metadata is required",
+      );
+    if (
       !release.environmentScope.includes("ALL") &&
       !release.environmentScope.includes(environment)
-    ) {
+    )
       throw this.error(
         "ERR_IMP_00004",
         "Data release is not permitted for environment " + environment,
       );
+    if (release.installer) {
+      const provider = SERVICE[(policy.installers || {})[release.installer]];
+      if (
+        !provider ||
+        typeof provider.preflightContribution !== "function" ||
+        typeof provider.installContribution !== "function"
+      )
+        throw this.error(
+          "ERR_IMP_00004",
+          "Selected destination installer is unavailable",
+        );
+      return true;
+    }
+    let sourceVerified = stagedSourceReleases.has(release);
+    if (sourceVerified) this.validateStagedSourceRelease(release);
+    const targets = this.releaseDestinationTargets(release);
+    if (!targets.length) {
+      if (!NODICS.getModule?.(release.moduleName))
+        throw this.error(
+          "ERR_IMP_00004",
+          "Selected destination module is unavailable",
+        );
+      return true;
+    }
+    for (const target of targets) {
+      if (
+        typeof target.moduleName !== "string" ||
+        !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(target.moduleName)
+      )
+        throw this.error(
+          "ERR_IMP_00003",
+          "Import destination module is invalid",
+        );
+      const module = NODICS.getModule?.(target.moduleName);
+      if (!module || !NODICS.getActiveModules().includes(target.moduleName))
+        throw this.error(
+          "ERR_IMP_00004",
+          "Selected destination module is unavailable: " + target.moduleName,
+        );
+      if (target.schemaName && !target.indexName) {
+        const schema = module.rawSchema?.[target.schemaName];
+        if (!schema || schema.model !== true)
+          throw this.error(
+            "ERR_IMP_00004",
+            "Selected destination schema owner is unavailable: " +
+              target.moduleName +
+              "." +
+              target.schemaName,
+          );
+        const authoring = SERVICE.DefaultSchemaAuthoringPolicyService;
+        if (!authoring || typeof authoring.describe !== "function")
+          throw this.error(
+            "ERR_IMP_00003",
+            "Schema publication authority is unavailable",
+          );
+        const authority = authoring.describe(schema);
+        if (authority.publishRequired && release.lifecycle !== "PUBLISHABLE")
+          throw this.error(
+            "ERR_IMP_00004",
+            "Selected destination schema publication context refuses import",
+          );
+        if (authority.authoringAllowed !== true) {
+          if (
+            authority.stage !== "STAGED" ||
+            authority.publishRequired !== true ||
+            authority.stagedSourceOperation !== "saveAll" ||
+            target.operation !== "saveAll"
+          )
+            throw this.error(
+              "ERR_IMP_00004",
+              "Selected destination schema publication context refuses import",
+            );
+          if (!sourceVerified) this.validateStagedSourceRelease(release);
+          sourceVerified = true;
+          stagedSourceReleases.add(release);
+        }
+      } else if (target.indexName && !target.schemaName) {
+        const validator =
+          SERVICE[(policy.targetValidators || {})[target.moduleName]];
+        if (typeof validator?.validateImportTarget !== "function")
+          throw this.error(
+            "ERR_IMP_00004",
+            "Selected destination index owner validator is unavailable",
+          );
+      } else
+        throw this.error(
+          "ERR_IMP_00003",
+          "Import header requires one explicit schema or index destination",
+        );
     }
     return true;
   },
@@ -1748,7 +2810,12 @@ module.exports = {
   },
 
   /** Keeps execution scoped to releases that can change state. */
-  executablePlan: function (plan, operationReleases, forceCurrent, zeroWorkCodes = new Set()) {
+  executablePlan: function (
+    plan,
+    operationReleases,
+    forceCurrent,
+    zeroWorkCodes = new Set(),
+  ) {
     let executableReleases = new Set(
       (operationReleases || [])
         .filter(
@@ -1757,10 +2824,14 @@ module.exports = {
               release.status,
             ) ||
             (forceCurrent === true &&
-              !(plan.prerequisiteReferences || []).some((reference) =>
-                reference.moduleName + ":" + reference.sectionCode === release.releaseCode) &&
+              !(plan.prerequisiteReferences || []).some(
+                (reference) =>
+                  reference.moduleName + ":" + reference.sectionCode ===
+                  release.releaseCode,
+              ) &&
               release.status === "CURRENT" &&
-              (this.isDevelopmentRelease(release.version) || zeroWorkCodes.has(release.releaseCode))),
+              (this.isDevelopmentRelease(release.version) ||
+                zeroWorkCodes.has(release.releaseCode))),
         )
         .map((release) => release.releaseCode),
     );
@@ -1775,31 +2846,85 @@ module.exports = {
   qualifyZeroWorkRecoveries: async function (plan, releases) {
     const qualified = new Map();
     if (CONFIG.get("environment")?.class !== "LOCAL") return qualified;
-    const candidates = releases.filter(release => release.status === "CURRENT" &&
-      plan.releases.some(source => source.releaseCode === release.releaseCode && !source.installer) &&
-      !this.isDevelopmentRelease(release.version));
+    const candidates = releases.filter(
+      (release) =>
+        release.status === "CURRENT" &&
+        plan.releases.some(
+          (source) =>
+            source.releaseCode === release.releaseCode && !source.installer,
+        ) &&
+        !this.isDevelopmentRelease(release.version),
+    );
     if (!candidates.length) return qualified;
-    const installations = await this.getInstallations(plan.tenant), history = SERVICE.DefaultImportRunService;
+    const installations = await this.getInstallations(plan.tenant),
+      history = SERVICE.DefaultImportRunService;
     if (typeof history?.get !== "function") return qualified;
     for (const release of candidates) {
-      const receipts = installations.filter(row => row.code === this.installationCode(plan.tenant, release));
+      const receipts = installations.filter(
+        (row) => row.code === this.installationCode(plan.tenant, release),
+      );
       if (receipts.length !== 1) continue;
       const receipt = receipts[0];
-      if (receipt?.status !== "CURRENT" || receipt.version !== release.version || receipt.checksum !== release.checksum ||
-          !Number.isSafeInteger(receipt.revision) || receipt.revision < 0 || typeof receipt.runId !== "string" || !receipt.runId) continue;
-      const response = await history.get({ tenant: plan.tenant, query: { runId: receipt.runId },
-        options: { recursive: false, skipItemCache: true }, searchOptions: { pageSize: 2, pageNumber: 1 } });
-      if (!/^SUC_/.test(response?.code || "") || response.error || response.success === false ||
-          response.acknowledged === false || response.errors?.length || !Array.isArray(response.result) || response.result.length !== 1) continue;
+      if (
+        receipt?.status !== "CURRENT" ||
+        receipt.version !== release.version ||
+        receipt.checksum !== release.checksum ||
+        !Number.isSafeInteger(receipt.revision) ||
+        receipt.revision < 0 ||
+        typeof receipt.runId !== "string" ||
+        !receipt.runId
+      )
+        continue;
+      const response = await history.get({
+        tenant: plan.tenant,
+        query: { runId: receipt.runId },
+        options: { recursive: false, skipItemCache: true },
+        searchOptions: { pageSize: 2, pageNumber: 1 },
+      });
+      if (
+        !/^SUC_/.test(response?.code || "") ||
+        response.error ||
+        response.success === false ||
+        response.acknowledged === false ||
+        response.errors?.length ||
+        !Array.isArray(response.result) ||
+        response.result.length !== 1
+      )
+        continue;
       const run = response.result[0];
-      const sources = Array.isArray(run?.dataReleases) ? run.dataReleases.filter(row => row?.releaseCode === release.releaseCode) : [];
-      if (!run || run.runId !== receipt.runId || run.tenant !== plan.tenant || run.dataType !== plan.dataType ||
-          run.status !== "NO_DATA" || run.validationOnly !== false || !Array.isArray(run.modules) || !run.modules.includes(release.moduleName) ||
-          ["recordsRead", "recordsFinalized", "recordsDispatched", "recordsSucceeded", "recordsFailed", "recordsSkipped"]
-            .some(key => run.summary?.[key] !== 0) ||
-          sources.length !== 1 || sources[0].moduleName !== release.moduleName ||
-          sources[0].version !== release.version || sources[0].checksum !== release.checksum) continue;
-      qualified.set(release.releaseCode, { runId: receipt.runId, revision: receipt.revision, checksum: receipt.checksum });
+      const sources = Array.isArray(run?.dataReleases)
+        ? run.dataReleases.filter(
+            (row) => row?.releaseCode === release.releaseCode,
+          )
+        : [];
+      if (
+        !run ||
+        run.runId !== receipt.runId ||
+        run.tenant !== plan.tenant ||
+        run.dataType !== plan.dataType ||
+        run.status !== "NO_DATA" ||
+        run.validationOnly !== false ||
+        !Array.isArray(run.modules) ||
+        !run.modules.includes(release.moduleName) ||
+        [
+          "recordsRead",
+          "recordsFinalized",
+          "recordsDispatched",
+          "recordsSucceeded",
+          "recordsFailed",
+          "recordsSkipped",
+        ].some((key) => run.summary?.[key] !== 0) ||
+        sources.length !== 1 ||
+        sources[0].moduleName !== release.moduleName ||
+        sources[0].version !== release.version ||
+        sources[0].checksum !== release.checksum
+      )
+        continue;
+      qualified.set(release.releaseCode, {
+        runId: receipt.runId,
+        revision: receipt.revision,
+        checksum: receipt.checksum,
+      });
     }
     return qualified;
   },
@@ -1807,8 +2932,14 @@ module.exports = {
   /** Private qualification is bound to the exact preimage; serialized request fields cannot mint it. */
   isZeroWorkRecovery: function (plan, release, receipt) {
     const proof = zeroWorkRecoveryPlans.get(plan)?.get(release.releaseCode);
-    return Boolean(proof && receipt.runId === proof.runId && receipt.revision === proof.revision &&
-      receipt.checksum === proof.checksum && release.checksum === proof.checksum && receipt.version === release.version);
+    return Boolean(
+      proof &&
+      receipt.runId === proof.runId &&
+      receipt.revision === proof.revision &&
+      receipt.checksum === proof.checksum &&
+      release.checksum === proof.checksum &&
+      receipt.version === release.version,
+    );
   },
 
   /** Resolves active owners plus explicitly allowlisted inactive contribution owners without activating their runtime behavior. */
@@ -1856,18 +2987,41 @@ module.exports = {
   /** Inspects one aggregate section under normal discovery admission, with fresh source checks and no retained evidence. */
   discoverManifestRelease: function (reference, dataType) {
     this.validateDataType(dataType);
-    const selector = this.discoveryOwners().find(item => item.moduleName === reference?.moduleName);
-    if (!selector || (!selector.active && !selector.sections.includes(reference.sectionCode)))
-      throw this.error("ERR_IMP_00004", "Data release owner or section is not selected");
+    const selector = this.discoveryOwners().find(
+      (item) => item.moduleName === reference?.moduleName,
+    );
+    if (
+      !selector ||
+      (!selector.active && !selector.sections.includes(reference.sectionCode))
+    )
+      throw this.error(
+        "ERR_IMP_00004",
+        "Data release owner or section is not selected",
+      );
     const owner = NODICS.getRawModule(selector.moduleName);
-    if (!owner?.path) throw this.error("ERR_IMP_00004", "Data release owner is unavailable");
+    if (!owner?.path)
+      throw this.error("ERR_IMP_00004", "Data release owner is unavailable");
     const manifestPath = path.join(owner.path, "data", "manifest.json");
     const aggregate = this.readAggregateManifest(owner, manifestPath);
     const section = aggregate?.sections?.[reference.sectionCode];
-    if (!section || section.kind !== "DATA_RELEASE" || section.dataType !== dataType)
-      throw this.error("ERR_IMP_00003", "Data release section is unavailable or has a different data type");
-    return this.inspectManifest(owner, dataType, manifestPath, section, reference.sectionCode,
-      !selector.active, aggregate.retainedRoots?.[section.sourceRoot]);
+    if (
+      !section ||
+      section.kind !== "DATA_RELEASE" ||
+      section.dataType !== dataType
+    )
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release section is unavailable or has a different data type",
+      );
+    return this.inspectManifest(
+      owner,
+      dataType,
+      manifestPath,
+      section,
+      reference.sectionCode,
+      !selector.active,
+      aggregate.retainedRoots?.[section.sourceRoot],
+    );
   },
 
   /** Discovers active loader-owned releases and explicitly selected destination-qualified contributions. */
@@ -2017,6 +3171,15 @@ module.exports = {
           )
           .forEach((releaseRoot) => {
             try {
+              // Refactoring may leave undeclared directory scaffolding behind.
+              // Inspect containment/symlinks before skipping only genuinely file-empty trees.
+              // Declared sections, descriptors and malformed nonempty sources still fail visibly.
+              if (
+                Object.keys(
+                  this.sourceRootFiles(dataRoot, releaseRoot.sourceRoot),
+                ).length === 0
+              )
+                return;
               let section = this.syntheticReleaseSection(
                 rawModule,
                 dataType,
@@ -2072,12 +3235,6 @@ module.exports = {
 
   /** Builds a minimal runtime section from the conventional release folder contract. */
   syntheticReleaseSection: function (rawModule, dataType, sourceRoot) {
-    let configuredRole = CONFIG.get("runtimeRole");
-    let destinationRole =
-      typeof configuredRole === "string"
-        ? configuredRole
-        : configuredRole && configuredRole.code;
-    let staged = /_STAGED$/.test(String(destinationRole || ""));
     return {
       kind: "DATA_RELEASE",
       dataType: dataType,
@@ -2097,14 +3254,13 @@ module.exports = {
         dataType +
         " data",
       owningDomain: rawModule.name,
-      lifecycle: staged ? "PUBLISHABLE" : "REFERENCE",
-      destinationRole: destinationRole,
+      lifecycle: "REFERENCE",
       environmentScope: ["ALL"],
       sensitivity: "INTERNAL",
-      versioningPolicy: staged ? "IMMUTABLE" : "NONE",
-      publicationPolicy: staged ? "REQUIRED" : "NONE",
-      initialPublicationPolicy: staged ? "ADMIN_INITIATED" : "NONE",
-      removalPolicy: staged ? "UNPUBLISH_OR_RETIRE" : "RETAIN",
+      versioningPolicy: "NONE",
+      publicationPolicy: "NONE",
+      initialPublicationPolicy: "NONE",
+      removalPolicy: "RETAIN",
     };
   },
 
@@ -2369,19 +3525,50 @@ module.exports = {
   },
 
   /** Inspects declared source bytes and metadata without executing headers or records. This offline result is not runtime discovery or installation authority. */
-  inspectSourceManifest: function (rawModule, manifestPath, section, sectionCode) {
-    const actual = this.sourceRootFiles(path.dirname(manifestPath), section.sourceRoot);
-    if (!section.files || typeof section.files !== "object" || Array.isArray(section.files) || !Object.keys(section.files).length)
-      throw this.error("ERR_IMP_00003", "Source inspection requires a nonempty declared files map");
+  inspectSourceManifest: function (
+    rawModule,
+    manifestPath,
+    section,
+    sectionCode,
+  ) {
+    const actual = this.sourceRootFiles(
+      path.dirname(manifestPath),
+      section.sourceRoot,
+    );
+    if (
+      !section.files ||
+      typeof section.files !== "object" ||
+      Array.isArray(section.files) ||
+      !Object.keys(section.files).length
+    )
+      throw this.error(
+        "ERR_IMP_00003",
+        "Source inspection requires a nonempty declared files map",
+      );
     for (const [file, hash] of Object.entries(section.files)) {
       if (!Object.hasOwn(actual, file) || actual[file] !== hash)
-        throw this.error("ERR_IMP_00003", "Source missing file or checksum drift: " + rawModule.name + ":" + sectionCode + "/" + file);
+        throw this.error(
+          "ERR_IMP_00003",
+          "Source missing file or checksum drift: " +
+            rawModule.name +
+            ":" +
+            sectionCode +
+            "/" +
+            file,
+        );
     }
     // Only this offline inspection uses the exact declared snapshot. Runtime discovery still expands source references.
     const inspection = Object.assign(Object.create(this), {
       currentReleaseFiles: () => ({ ...section.files }),
     });
-    return inspection.inspectManifest(rawModule, section.dataType, manifestPath, section, sectionCode, true);
+    return inspection.inspectManifest(
+      rawModule,
+      section.dataType,
+      manifestPath,
+      section,
+      sectionCode,
+      true,
+    );
   },
 
   /** Validates one release section and computes current file integrity from the release folder. */
@@ -2493,11 +3680,7 @@ module.exports = {
       throw this.error("ERR_IMP_00003", "Data release file count is invalid");
     }
     const prerequisites = this.validatePrerequisites(manifest.prerequisites);
-    let checksum = crypto
-      .createHash("sha256")
-      .update(fileNames.map((file) => file + ":" + files[file]).join("|"))
-      .update(prerequisites.length ? "|prerequisites:" + JSON.stringify(prerequisites) : "")
-      .digest("hex");
+    const checksum = this.releaseFileChecksum(files, prerequisites);
     return {
       releaseCode: rawModule.name + ":" + sectionCode,
       selectionPolicy: manifest.selectionPolicy || "DEFAULT",
@@ -2955,7 +4138,6 @@ module.exports = {
     let fields = [
       "owningDomain",
       "lifecycle",
-      "destinationRole",
       "environmentScope",
       "sensitivity",
       "versioningPolicy",
@@ -2983,7 +4165,8 @@ module.exports = {
       !["PUBLISHABLE", "OPERATIONAL_VERSIONED", "REFERENCE"].includes(
         manifest.lifecycle,
       ) ||
-      !/^[A-Z][A-Z0-9_]{1,63}$/.test(manifest.destinationRole) ||
+      (manifest.destinationRole !== undefined &&
+        !/^[A-Z][A-Z0-9_]{1,63}$/.test(manifest.destinationRole)) ||
       !Array.isArray(manifest.environmentScope) ||
       manifest.environmentScope.length === 0 ||
       manifest.environmentScope.some(
@@ -3009,15 +4192,14 @@ module.exports = {
     }
     if (
       manifest.lifecycle === "PUBLISHABLE" &&
-      (!/_STAGED$/.test(manifest.destinationRole) ||
-        manifest.versioningPolicy !== "IMMUTABLE" ||
+      (manifest.versioningPolicy !== "IMMUTABLE" ||
         manifest.publicationPolicy !== "REQUIRED" ||
         manifest.initialPublicationPolicy !== "ADMIN_INITIATED" ||
         manifest.removalPolicy !== "UNPUBLISH_OR_RETIRE")
     ) {
       throw this.error(
         "ERR_IMP_00003",
-        "Publishable data must target a Staged runtime with immutable, administrator-initiated publication semantics",
+        "Publishable data requires immutable, administrator-initiated publication semantics",
       );
     }
     if (
@@ -3048,7 +4230,11 @@ module.exports = {
         "Reference data must not acquire artificial business versioning",
       );
     }
-    return Object.fromEntries(fields.map((field) => [field, manifest[field]]));
+    return Object.fromEntries(
+      [...fields, "destinationRole"]
+        .filter((field) => manifest[field] !== undefined)
+        .map((field) => [field, manifest[field]]),
+    );
   },
 
   /** Projects a bad manifest as a visible but non-executable release. */
@@ -3107,17 +4293,32 @@ module.exports = {
           declaredFiles: release.declaredFiles.slice(),
           sourceOnly: release.sourceOnly === true,
         });
-        if (releaseSourceOwners.has(release)) releaseSourceOwners.set(selected, releaseSourceOwners.get(release));
+        if (releaseSourceOwners.has(release))
+          releaseSourceOwners.set(selected, releaseSourceOwners.get(release));
         return selected;
       }),
     });
     const placements = [];
     const identityTargets = [];
-    const canonicalReleases = this.discoverReleases(plan.dataType).concat(
-      (plan.prerequisiteReferences || []).filter((reference) => plan.releases.some(
-        (release) => release.releaseCode === reference.moduleName + ":" + reference.sectionCode,
-      )).map((reference) => this.discoverPrerequisite(reference, plan.dataType)),
-    ).filter((release, index, list) => list.findIndex((item) => item.releaseCode === release.releaseCode) === index);
+    const canonicalReleases = this.discoverReleases(plan.dataType)
+      .concat(
+        (plan.prerequisiteReferences || [])
+          .filter((reference) =>
+            plan.releases.some(
+              (release) =>
+                release.releaseCode ===
+                reference.moduleName + ":" + reference.sectionCode,
+            ),
+          )
+          .map((reference) =>
+            this.discoverPrerequisite(reference, plan.dataType),
+          ),
+      )
+      .filter(
+        (release, index, list) =>
+          list.findIndex((item) => item.releaseCode === release.releaseCode) ===
+          index,
+      );
     for (const release of plan.releases) {
       if (release.sourceOnly || release.installer) continue;
       const canonical = canonicalReleases.filter(
@@ -3133,7 +4334,11 @@ module.exports = {
       );
       if (canonical.length !== 1) {
         if (plan.prerequisiteReferences?.length)
-          throw this.error("ERR_IMP_00003", "Data release prerequisite source changed before dispatch: " + release.releaseCode);
+          throw this.error(
+            "ERR_IMP_00003",
+            "Data release prerequisite source changed before dispatch: " +
+              release.releaseCode,
+          );
         continue;
       }
       const owner = this.releaseSourceOwner(release);
@@ -3145,24 +4350,57 @@ module.exports = {
         for (const [moduleName, definitions] of Object.entries(headers || {})) {
           for (const [name, header] of Object.entries(definitions || {})) {
             const options = header?.options || {};
-            if (plan.dataType === "init" && (options.moduleName || moduleName) === "profile" &&
-                options.enabled !== false && options.enabled !== "false" && !options.indexName) {
-              const reference = options.operation === "ensureReferenceAll" &&
-                ["permission", "userGroup", "enterpriseRole"].includes(options.schemaName);
-              const bootstrap = options.operation === "ensureBootstrapAll" &&
-                ["employee", "customer", "address", "contact", "enterprise", "tenant"].includes(options.schemaName);
-              const deployment = options.operation === "ensureDeploymentAll" &&
+            if (
+              plan.dataType === "init" &&
+              (options.moduleName || moduleName) === "profile" &&
+              options.enabled !== false &&
+              options.enabled !== "false" &&
+              !options.indexName
+            ) {
+              const reference =
+                options.operation === "ensureReferenceAll" &&
+                ["permission", "userGroup", "enterpriseRole"].includes(
+                  options.schemaName,
+                );
+              const bootstrap =
+                options.operation === "ensureBootstrapAll" &&
+                [
+                  "employee",
+                  "customer",
+                  "address",
+                  "contact",
+                  "enterprise",
+                  "tenant",
+                ].includes(options.schemaName);
+              const deployment =
+                options.operation === "ensureDeploymentAll" &&
                 options.schemaName === "principalScopeAssignment";
-              const serviceScopes = options.operation === "adoptRuntimeServiceScopesAll" &&
+              const serviceScopes =
+                options.operation === "adoptRuntimeServiceScopesAll" &&
                 options.schemaName === "employee";
-              const authorityPartition = plan.tenant === (CONFIG.get("defaultTenant") || "default");
-              const authorityOwned = ["permission", "enterpriseRole", "principalScopeAssignment"].includes(options.schemaName) ||
-                serviceScopes;
-              if ((reference || bootstrap || deployment || serviceScopes) &&
-                  (authorityPartition || !authorityOwned)) {
-                identityTargets.push(Object.freeze({ moduleName: "profile", schemaName: options.schemaName,
-                  operation: options.operation, dataFilePrefix: options.dataFilePrefix || name,
-                  tenants: Array.isArray(options.tenants) ? Object.freeze(options.tenants.slice()) : undefined }));
+              const authorityPartition =
+                plan.tenant === (CONFIG.get("defaultTenant") || "default");
+              const authorityOwned =
+                [
+                  "permission",
+                  "enterpriseRole",
+                  "principalScopeAssignment",
+                ].includes(options.schemaName) || serviceScopes;
+              if (
+                (reference || bootstrap || deployment || serviceScopes) &&
+                (authorityPartition || !authorityOwned)
+              ) {
+                identityTargets.push(
+                  Object.freeze({
+                    moduleName: "profile",
+                    schemaName: options.schemaName,
+                    operation: options.operation,
+                    dataFilePrefix: options.dataFilePrefix || name,
+                    tenants: Array.isArray(options.tenants)
+                      ? Object.freeze(options.tenants.slice())
+                      : undefined,
+                  }),
+                );
               }
             }
             if (
@@ -3224,8 +4462,14 @@ module.exports = {
   /** Binds only an exact release-created request to its in-memory run; serialized markers never qualify. @param {Object} request Existing system initializer request. @returns {boolean} Whether private provenance was bound. */
   bindOperationMetadataRun: function (request) {
     const identity = identityReleaseExecution.getStore();
-    if (identity?.active === true && identity.request === request && !identity.run &&
-        request.importRun && typeof request.importRun === "object") identity.run = request.importRun;
+    if (
+      identity?.active === true &&
+      identity.request === request &&
+      !identity.run &&
+      request.importRun &&
+      typeof request.importRun === "object"
+    )
+      identity.run = request.importRun;
     const admission = placementRequests.get(request);
     if (
       !admission ||
@@ -3310,10 +4554,21 @@ module.exports = {
 
   /** Rejects failed or missing generated receipt acknowledgements, including nested write failures. */
   assertInstallationAcknowledgement: function (response) {
-    if (!/^SUC_/.test(response?.code || "") ||
-        [response, response.result].some(value => value && (value.error || value.success === false ||
-          value.acknowledged === false || value.errors?.length))) {
-      throw this.error("ERR_IMP_00004", "Data installation acknowledgement is unavailable or failed");
+    if (
+      !/^SUC_/.test(response?.code || "") ||
+      [response, response.result].some(
+        (value) =>
+          value &&
+          (value.error ||
+            value.success === false ||
+            value.acknowledged === false ||
+            value.errors?.length),
+      )
+    ) {
+      throw this.error(
+        "ERR_IMP_00004",
+        "Data installation acknowledgement is unavailable or failed",
+      );
     }
   },
 
@@ -3393,7 +4648,8 @@ module.exports = {
         !(
           state === "CURRENT" &&
           plan.forceCurrent &&
-          (this.isDevelopmentRelease(release.version) || this.isZeroWorkRecovery(plan, release, existing))
+          (this.isDevelopmentRelease(release.version) ||
+            this.isZeroWorkRecovery(plan, release, existing))
         )
       ) {
         throw this.error(
@@ -3455,14 +4711,24 @@ module.exports = {
       });
       this.assertInstallationAcknowledgement(updated);
       if (updated.result?.matchedCount !== 1)
-        throw this.error("ERR_IMP_00004", "Data installation update did not confirm its fenced receipt");
+        throw this.error(
+          "ERR_IMP_00004",
+          "Data installation update did not confirm its fenced receipt",
+        );
       return updated;
     }
     const saved = await service.save({ tenant: plan.tenant, model: model });
     this.assertInstallationAcknowledgement(saved);
-    if (saved.result?.code !== code || saved.result.status !== status ||
-        saved.result.executionId !== plan.executionId || saved.result.revision !== 1)
-      throw this.error("ERR_IMP_00004", "Data installation creation did not confirm its claimed receipt");
+    if (
+      saved.result?.code !== code ||
+      saved.result.status !== status ||
+      saved.result.executionId !== plan.executionId ||
+      saved.result.revision !== 1
+    )
+      throw this.error(
+        "ERR_IMP_00004",
+        "Data installation creation did not confirm its claimed receipt",
+      );
     return saved;
   },
 
@@ -3567,13 +4833,23 @@ module.exports = {
     const code =
       release.releaseCode || release.moduleName + ":" + release.dataType;
     if (release.status === "CURRENT") return [];
-    if (release.status === "INVALID_RELEASE" && release.installedVersion === release.version &&
-        release.installedChecksum && release.installedChecksum !== release.checksum) {
-      return [this.releaseReadinessBlocker(release, {
-        code: "VERSION_MISMATCH", repairCode: "INSTALLED_SOURCE_DRIFT", severity: "BLOCKED",
-        message: "Installed release receipt is preserved; same-version source differs. No startup import or grant update was performed.",
-        action: "Review installed authority and source changes with the owning administrator",
-      })];
+    if (
+      release.status === "INVALID_RELEASE" &&
+      release.installedVersion === release.version &&
+      release.installedChecksum &&
+      release.installedChecksum !== release.checksum
+    ) {
+      return [
+        this.releaseReadinessBlocker(release, {
+          code: "VERSION_MISMATCH",
+          repairCode: "INSTALLED_SOURCE_DRIFT",
+          severity: "BLOCKED",
+          message:
+            "Installed release receipt is preserved; same-version source differs. No startup import or grant update was performed.",
+          action:
+            "Review installed authority and source changes with the owning administrator",
+        }),
+      ];
     }
     if (release.status === "RUNNING")
       return [

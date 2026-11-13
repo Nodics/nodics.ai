@@ -20,6 +20,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import configuration from '../../../../nConfig/src/service/DefaultFrameworkInitializerService.js';
+import toolingProperties from '../../../config/properties.js';
 import { readProjectEnvironmentConfiguration, projectEndpointUrl } from './defaultProjectEnvironmentConfigurationService.mjs';
 
 /**
@@ -100,11 +101,15 @@ export function readContainerEnvironmentConfiguration(projectRoot, profileCode) 
   readProjectManifest(projectRoot);
   const selected = selectEnvironmentConfiguration(projectRoot, profileCode, true);
   const environment = selected.code;
-  const profile = selected.properties.tooling?.container;
-  if (!profile) throw new Error('Selected environment does not configure container tooling');
-  const composeFile = profile.composeFile || `envs/${environment}/docker/compose.yaml`;
-  const generatedRoot = path.resolve(projectRoot, resolveTemplate(projectRoot, profile.generatedDirectory || `envs/${environment}/generated`));
+  const configured = selected.properties.tooling?.container;
+  if (!configured) throw new Error('Selected environment does not configure container tooling');
+  const defaults = toolingProperties.tooling.container;
+  const composeFile = configured.composeFile || defaults.composeFile.replaceAll('{environment}', environment);
+  const generatedDirectory = configured.generatedDirectory || defaults.generatedDirectory.replaceAll('{environment}', environment);
+  const environmentFile = configured.environmentFile || defaults.environmentFile;
+  const generatedRoot = path.resolve(projectRoot, resolveTemplate(projectRoot, generatedDirectory));
   const acceptance = { ...selected.properties.tooling?.acceptance };
+  acceptance.platformCommand ||= toolingProperties.tooling.acceptance.platformCommand;
   if (acceptance.urls) {
     let deployment;
     acceptance.urls = Object.fromEntries(Object.entries(acceptance.urls).map(([key, value]) => {
@@ -114,15 +119,17 @@ export function readContainerEnvironmentConfiguration(projectRoot, profileCode) 
     }));
   }
   return {
-    ...profile,
+    ...configured,
     composition: selected.properties.activeModules?.compositions || {},
     acceptance,
     qualificationClass: selected.properties.environment?.class,
-    code: profile.code || profileCode,
+    code: configured.code || profileCode,
     environment,
     composeFile,
+    generatedDirectory,
+    environmentFile,
     composePath: path.resolve(projectRoot, resolveTemplate(projectRoot, composeFile)),
     generatedRoot,
-    environmentPath: path.join(generatedRoot, profile.environmentFile || 'docker.env'),
+    environmentPath: path.join(generatedRoot, environmentFile),
   };
 }

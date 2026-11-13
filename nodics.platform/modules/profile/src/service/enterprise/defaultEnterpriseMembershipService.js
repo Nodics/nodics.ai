@@ -532,7 +532,12 @@ module.exports = {
   },
   /** Admits a human administrator in the exact target or platform context. @param {Object} request Request. @param {string} code Enterprise. @returns {Promise<Object>} Fresh actor. */
   administrator: async function (request, code) {
-    const actor = await this.actor(request),
+    this.policy();
+    return this.verifyAdministrator(request, code);
+  },
+  /** Verifies native administrator authority independently of optional membership activation; linked contexts still require their qualified owner. @param {Object} request Authenticated human request. @param {string} code Exact target enterprise. @returns {Promise<Object>} Current canonical actor. */
+  verifyAdministrator: async function (request, code) {
+    const actor = await this.verifyAuthenticatedActor(request),
       auth = request.authData;
     if (auth.principalType !== "human") this.fail("FORBIDDEN");
     this.permission(request, "profile.enterpriseAccess.assign");
@@ -679,8 +684,8 @@ module.exports = {
     if (!item.membership?.businessAccess) return item.groupCodes;
     return SERVICE.DefaultEnterpriseBusinessAccessService.membershipGroups(item);
   },
-  /** Resolves actual target groups with exact owner reads. @param {string} tenant Target. @param {string[]} codes Responsibility groups. @returns {Promise<Object[]>} Groups. */
-  groups: async function (tenant, codes) {
+  /** Resolves active target groups with exact owner reads. Missing definitions may be omitted for availability discovery only. */
+  groups: async function (tenant, codes, allowUnavailable = false) {
     if (!Array.isArray(codes) || !codes.length || codes.length > 100)
       this.fail("ASSIGNMENT");
     const result = this.rows(
@@ -693,12 +698,12 @@ module.exports = {
       }),
     );
     if (
-      result.length !== new Set(codes).size ||
       new Set(result.map((row) => row.code)).size !== result.length ||
-      result.some((row) => !codes.includes(row.code) || row.active === false)
+      result.some((row) => !codes.includes(row.code)) ||
+      !allowUnavailable && (result.length !== new Set(codes).size || result.some((row) => row.active === false))
     )
       this.fail("ASSIGNMENT");
-    return result;
+    return result.filter(row => row.active !== false);
   },
   /** Marks private owner provenance for generated mutations. @param {Object} request Generated command. @param {string} kind Projection or membership. @returns {Object} Same request. */
   mutation: function (request, kind) {

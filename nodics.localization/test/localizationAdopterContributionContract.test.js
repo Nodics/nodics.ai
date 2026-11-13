@@ -12,7 +12,15 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const root = path.resolve(__dirname, '../..');
+const contributionValidator = require('../modules/localizationCore/src/service/defaultLocalizationContributionService');
+const localization = require('../modules/localizationCore/config/properties').localization;
+const authenticationStatuses = require(path.join(root, 'nodics.foundation/modules/nAuth/src/utils/statusDefinitions'));
+global.CONFIG = { get: (key) => key === 'localization' ? localization : undefined };
+global.SERVICE = {
+    DefaultLocalizationMessageValidationService: require('../modules/localizationCore/src/service/defaultLocalizationMessageValidationService')
+};
 const sources = [
+    ['axis', 'nodics.platform/modules/axis/src/service/defaultAxisBackofficeCapabilityService.js'],
     ['localizationCore', 'nodics.localization/modules/localizationCore/src/service/defaultLocalizationCoreLocalizationContributionService.js'],
     ['nAuth', 'nodics.foundation/modules/nAuth/src/service/defaultAuthLocalizationContributionService.js'],
     ['commsCore', 'nodics.communication/modules/commsCore/src/service/defaultCommunicationLocalizationContributionService.js'],
@@ -27,6 +35,10 @@ sources.forEach(([owner, file]) => {
     assert.equal(contribution.formatVersion, 1);
     assert(contribution.entries.length > 0);
     assert(contribution.entries.every(entry => entry.namespace && entry.key && entry.defaultMessage && entry.exposure));
+    const normalized = contributionValidator.validate(contribution);
+    if (owner === 'nAuth') {
+        assert(normalized.entries.some(entry => `${entry.namespace}.${entry.key}` === authenticationStatuses.ERR_AUTH_00002.messageKey));
+    }
 });
 [
     ['product', 'nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductLocalizationContributionService.js'],

@@ -169,7 +169,22 @@ module.exports = {
         if (input.expectedVersion !== null && typeof input.expectedVersion !== 'string') {
             throw new CLASSES.NodicsError('ERR_MED_00012', 'Expected Online Media version is required');
         }
-        return transport.deploy(input, request);
+        try {
+            return await transport.deploy(input, request);
+        } catch (error) {
+            // A missing acknowledgement may follow a committed pointer and receipt.
+            // Ask the Online owner for this exact operation, without resending it.
+            const evidence = await Promise.resolve().then(() => this.reconcile(publication, request)).catch(() => undefined);
+            const receipt = evidence?.receipt;
+            if (evidence?.status !== 'ACTIVE' || evidence.repaired !== false ||
+                evidence.mediaCode !== publication.rootCode || evidence.manifestCode !== manifest.code ||
+                evidence.version !== manifest.code || evidence.operationKey !== input.operationKey ||
+                evidence.publicationCode !== publication.code ||
+                !receipt || receipt.operationKey !== input.operationKey || receipt.publicationCode !== publication.code ||
+                receipt.sourceVersion !== publication.sourceVersion || receipt.targetVersion !== manifest.code ||
+                receipt.previousOnlineVersion !== input.expectedVersion) throw error;
+            return { version: evidence.version, previousOnlineVersion: receipt.previousOnlineVersion, receipt };
+        }
     },
     /** Restores only a retained target manifest; rollback never reads or reimports current Staged content. */
     rollback: function (publication, targetVersion, request) {

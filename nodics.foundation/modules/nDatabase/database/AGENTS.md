@@ -65,7 +65,7 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 - Share generic HTTP/Workbench mutation-field normalization through the existing
   schema utility owner. Filter unknown/protected/read-only top-level fields,
-  retain original managed counters, apply fixed values and trusted scope, and
+  retain original managed counters, apply fixed values and create-only trusted scope defaults, and
   leave nested validation, access, ownership and persistence with their owners.
   Explicit schema operation restrictions apply to generated HTTP mutations.
   Idempotency-key forwarding is not a durable replay guarantee.
@@ -175,3 +175,28 @@ composed custom methods; never synthesize missing services at startup. See
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+- Handle reads and readiness must share canonical admission: default fallback
+  requires identical full effective tenant configuration and matching acquisition
+  evidence. Reject malformed overrides and stale handles, including the default
+  tenant; retain cleanup access without reconnecting or rewriting tenant pins.
+  Use `addTenantDatabase` for registration, never raw `dbs` mutation. See
+  [acquired handle admission](llm/contracts/tenant-physical-namespace.md#acquired-handle-admission).
+
+- Registration replacement refusal must not leak a newly opened client. The
+  connection owner closes rejected unretained acquisitions, awaits completion,
+  preserves shared clients, and retries failed closes at shutdown. Default
+  fallback must honor the selected `getDatabaseConfiguration` override.
+
+Public safe-query translation must retain exact call-scoped provenance through DefaultSchemaReadAccessPolicyService; never forward Express/body or invent a caller-controlled public/internal flag. Prepare domain query scope before the provider/cache guard, which precedes preGet. Preserve private owner reads and original actor binding. Run generatedHttpReadProvenance and affected domain scope tests.
+
+Generated update normalization must receive the trusted update operation and preserve stored tenant/enterprise placement; only creation injects those defaults. Body input cannot choose the operation.
+
+Operation-specific field metadata follows [update fields](llm/contracts/schema-workbench-business-forms.md#operation-specific-update-fields). Keep source-selected policy resolution in the shared utility, preserve creation inputs/original counters and enforce update normalization independently of the client. Never accept a policy path from HTTP input or duplicate a domain field list in Kickoff.
+
+
+Synchronous namespace admission reuses resolved destinations only within its current
+call, including nested peer and durable-pin checks. No approval survives a return,
+exception, await or later request. Preserve selected provider/service overrides,
+fresh configuration and pin refusal; never replace this with a process cache.
+The tenant physical namespace regression covers fresh-call drift and failure recovery.

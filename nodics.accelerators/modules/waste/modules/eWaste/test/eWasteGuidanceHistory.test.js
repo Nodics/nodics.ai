@@ -88,3 +88,9 @@ test("revision conflict is never hidden as provider fallback", async () => {
   );
   assert.equal(draft.revision, 4);
 });
+
+test('photo-access questions receive privacy guidance before capture help',()=>{
+ const fixed=require('../src/service/defaultEWasteGuidanceService').fixedMessage;
+ for(const question of ['Who can see my uploaded photos?','Who sees my photo?','How is my photo privacy protected?','Can I delete an uploaded photo?']){const reply=fixed(question);assert.match(reply,/authorized reviewers/);assert.doesNotMatch(reply,/take a photo/);}
+ assert.match(fixed('How can I upload a photo?'),/take a photo/);
+});

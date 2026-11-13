@@ -83,7 +83,7 @@ module.exports = {
         }
         let responseHandler = CONFIG.get('responseHandler')[routerDef.responseHandler || 'jsonResponseHandler'];
         SERVICE.DefaultPipelineService.start('requestHandlerPipeline', input, {}).then(success => {
-            SERVICE[responseHandler].handleSuccess(request, response, success);
+            SERVICE[responseHandler].handleSuccess(request, response, success, routerDef);
         }).catch(error => {
             SERVICE[responseHandler].handleError(request, response, error);
         });

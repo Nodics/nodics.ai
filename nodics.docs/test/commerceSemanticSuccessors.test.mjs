@@ -34,11 +34,30 @@ const owners = [
 ];
 const articles = new Map();
 const releases = new Map();
+const recoveredHistory = require('./fixtures/historicalOwnerReleases/provenance.json');
 
 for (const owner of owners) {
     const ownerRoot = path.join(root, owner);
     const fixture = require(path.join(ownerRoot, 'test/fixtures/documentationSemanticPredecessor.json'));
-    const selected = require(path.join(ownerRoot, 'data/manifest.json')).sections.documentation;
+    // The later composition-only successor retains these exact article payloads.
+    // Keep the original editorial release regression bound to its recorded selection.
+    const selected = owner === 'nodics.docs'
+        ? require('./fixtures/documentationCompositionBefore003.json').sections.documentation
+        : require(path.join(ownerRoot, 'data/manifest.json')).sections.documentation;
+    const historyRoot = [
+        'nodics.commerce/modules/fulfillment/modules/fulfillmentCore',
+        'nodics.commerce/modules/baseCommerce/modules/promotion'
+    ].includes(owner)
+        ? path.join(root, 'nodics.docs/test/fixtures/historicalOwnerReleases', owner) : undefined;
+    const provenancePredecessor = owner.endsWith('/digitalCore')
+        ? require(path.join(ownerRoot, 'test/fixtures/documentationProvenancePredecessor.json')).sections.documentation : undefined;
+    const historicalSelected = provenancePredecessor || (historyRoot
+        ? require(path.join(historyRoot, 'data/manifest.json')).sections.documentation : selected);
+    const historicalFile = file => {
+        if (historyRoot) return path.join(historyRoot, 'data', file);
+        const predecessor = path.join(ownerRoot, 'test/fixtures/unreleasedPredecessor', file);
+        return owner === 'nodics.docs' && fs.existsSync(predecessor) ? predecessor : path.join(ownerRoot, 'data', file);
+    };
     const groups = {};
     for (const kind of ['Node', 'PageMetadata', 'SearchMetadata', 'Component', 'Page', 'Route', 'PublicationState']) {
         const file = Object.keys(selected.generatedHashes).find(file => file.endsWith(kind + 'Data.js'));
@@ -48,19 +67,28 @@ for (const owner of owners) {
     releases.set(owner, groups);
 
     test(owner + ': immutable predecessor and exactly sealed semantic successor', () => {
-        assert.equal(selected.version, fixture.successorVersion);
-        if (owner !== 'nodics.docs') assert.equal(selected.releaseChecksum, fixture.successorChecksum);
-        for (const [file, hash] of Object.entries(fixture.section.generatedHashes)) {
-            const source = owner === 'nodics.docs' && fs.existsSync(path.join(ownerRoot, 'test/fixtures/unreleasedPredecessor', file))
-                ? 'test/fixtures/unreleasedPredecessor' : 'data';
-            assert.equal(contract.sha256(fs.readFileSync(path.join(ownerRoot, source, file))), hash, file);
+        if (historyRoot) {
+            assert.equal(recoveredHistory.revision, '00ad4b6b9375f40873079be97f5afcc030cc9ce5');
+            const recorded = recoveredHistory.owners.find(row => row.owner === owner);
+            assert.equal(contract.sha256(fs.readFileSync(path.join(historyRoot, 'data/manifest.json'))), recorded.manifestSha256);
         }
+        assert.equal(historicalSelected.version, fixture.successorVersion);
+        if (owner !== 'nodics.docs') assert.equal(historicalSelected.releaseChecksum, fixture.successorChecksum);
+        for (const [file, hash] of Object.entries(fixture.section.generatedHashes)) {
+            assert.equal(contract.sha256(fs.readFileSync(historicalFile(file))), hash, file);
+        }
+        for (const [file, hash] of Object.entries(historicalSelected.generatedHashes))
+            assert.equal(contract.sha256(fs.readFileSync(provenancePredecessor && fs.existsSync(path.join(ownerRoot, 'test/fixtures/documentationProvenancePredecessor', file))
+                ? path.join(ownerRoot, 'test/fixtures/documentationProvenancePredecessor', file)
+                : path.join(historyRoot || ownerRoot, 'data', file))), hash, file);
+        assert.equal(historicalSelected.releaseChecksum, contract.releaseChecksum(historicalSelected.generatedHashes));
+        // The active unreleased v001 baseline has its own exact shipping seals.
         for (const [file, hash] of Object.entries(selected.generatedHashes))
             assert.equal(contract.sha256(fs.readFileSync(path.join(ownerRoot, 'data', file))), hash, file);
         assert.equal(selected.releaseChecksum, contract.releaseChecksum(selected.generatedHashes));
         if (owner !== 'nodics.docs') {
-            assert.equal(contract.validateGeneration(fixture.section, selected), selected);
-            assert.throws(() => contract.validateGeneration(fixture.section, {...selected, version: fixture.section.version}));
+            assert.equal(contract.validateGeneration(fixture.section, historicalSelected), historicalSelected);
+            assert.throws(() => contract.validateGeneration(fixture.section, {...historicalSelected, version: fixture.section.version}));
         }
         assert.deepEqual(selected.includes, fixture.section.includes);
         assert.deepEqual(selected.referenceCatalogues, fixture.section.referenceCatalogues);

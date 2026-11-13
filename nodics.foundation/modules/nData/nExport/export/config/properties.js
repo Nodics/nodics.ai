@@ -33,6 +33,9 @@ module.exports = {
       dataExport: {
         enabled: false,
       },
+      dataExportStatus: {
+        enabled: true,
+      },
     },
   },
 };

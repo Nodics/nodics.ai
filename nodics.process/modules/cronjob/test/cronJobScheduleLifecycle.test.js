@@ -59,7 +59,11 @@ beforeEach(() => {
     async createJob(token, definition) {
       calls.push("create");
       let active = false;
-      const timer = { running: false };
+      const timer = {
+        running: false,
+        cronTime: { zone: "UTC" },
+        nextDate: () => new Date("2027-01-01T00:00:00.000Z"),
+      };
       this.jobPool.tenant ||= {};
       this.jobPool.tenant[definition.code] = {
         getDefinition: () => definition,
@@ -148,7 +152,17 @@ async function command(intent = "ACTIVATE", revision = 0) {
 test("review is inert; activation, inspection, stop and reactivation use the original Cron pool", async () => {
   const start = await command();
   assert.deepEqual(calls, []);
-  assert.equal((await lifecycle.execute(start)).data.state, "ACTIVE");
+  const draft = (await lifecycle.inspect(request({ code: row.code }))).data;
+  assert.equal(draft.state, "SAVED_INACTIVE");
+  assert.equal(draft.timing.nextRunAt, null);
+  assert.ok(draft.timing.timeZone);
+  const active = (await lifecycle.execute(start)).data;
+  assert.equal(active.state, "ACTIVE");
+  assert.deepEqual(active.timing, {
+    expression: "0 0 * * * *",
+    timeZone: "UTC",
+    nextRunAt: "2027-01-01T00:00:00.000Z",
+  });
   assert.deepEqual(calls, ["create", "start"]);
   config.scheduleDrafts.activationEnabled = false;
   assert.equal(

@@ -35,9 +35,9 @@ function fixture(t) {
     state.invocations.push(input);
     return { accepted: true };
   } } };
-  const owner = { ...service, applicationTargetBinding(server, runtimeRole) {
+  const owner = { ...service, applicationTargetBinding(server) {
     state.bindings++;
-    return { connectionName: server, targetAuthority: { server, runtimeRole: { code: runtimeRole } } };
+    return { connectionName: server, targetAuthority: { server, publication: "OPERATIONAL" } };
   } };
   const request = { tenant: "default", authData: { principalId: "operator" },
     httpRequest: { headers: { authorization: "Bearer original-operator" } } };
@@ -62,7 +62,7 @@ test("data-release dispatch selects current bounded owner policy with unchanged 
       assert.equal(invocation.local, false);
       assert.equal(invocation.maxAttempts, 1);
       assert.deepEqual(invocation.header, { Authorization: "Bearer original-operator" });
-      assert.deepEqual(invocation.targetAuthority, { server: "commerce", runtimeRole: { code: "COMMERCE" } });
+      assert.deepEqual(invocation.targetAuthority, { server: "commerce", publication: "OPERATIONAL" });
       assert.deepEqual(invocation.requestBody, {
         dataType: "sample", releaseCodes: ["partner:issuance"], expectedReleases: undefined,
       });

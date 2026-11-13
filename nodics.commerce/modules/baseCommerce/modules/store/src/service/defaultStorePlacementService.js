@@ -14,6 +14,10 @@ const { isDeepStrictEqual: equal } = require('node:util');
 const operations = new WeakSet(), reads = new WeakMap(), localIdentities = new WeakSet();
 const callerKeys = ['tenant', 'principalEnterpriseCode', 'serviceId', 'projectCode', 'environmentCode', 'serverCode', 'instanceCode', 'assignmentCode'];
 module.exports = {
+    /** Uses canonical safe HTTP errors for refused placement evidence; provider failures retain their original error. */
+    error: function (message, code = 'ERR_AUTH_00003') {
+        return new CLASSES.NodicsError(code, message);
+    },
     /** Validates a bounded literal identity; later layers may tighten but never accept wildcards. */
     isIdentifier: function (value) {
         return typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,191}$/.test(value);
@@ -21,7 +25,7 @@ module.exports = {
     /** Reads one fixed tenant/Store twice under an exact in-flight deployment admission; never resolves a fallback Store. */
     placement: async function (request) {
         const identifier = value => this.isIdentifier(value);
-        if (operations.has(request)) throw new Error('Store placement operation is already admitted');
+        if (operations.has(request)) throw this.error('Store placement operation is already admitted');
         const originalAuth = request.authData, originalRouter = request.router;
         const state = () => structuredClone({ auth: request.authData, tenant: request.tenant, tenantCode: request.tenantCode,
             enterpriseCode: request.enterpriseCode, entCode: request.entCode, payload: request.payload, query: request.query,
@@ -30,10 +34,10 @@ module.exports = {
             policy: CONFIG.get('store')?.placementRead, role: CONFIG.get('runtimeRole') });
         const initial = state(), input = structuredClone(request.payload || {});
         if (Object.keys(input).sort().join(',') !== 'contractVersion,storeCode' || input.contractVersion !== 1 || !identifier(input.storeCode))
-            throw new Error('Exact Store placement selectors are required');
+            throw this.error('Exact Store placement selectors are required', 'ERR_SYS_00001');
         const check = () => {
             const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'store');
-            const policy = CONFIG.get('store')?.placementRead, role = CONFIG.get('runtimeRole');
+            const policy = CONFIG.get('store')?.placementRead;
             if (auth !== originalAuth || request.router !== originalRouter || !equal(state(), initial) ||
                 auth.principalType !== 'service' || auth.isSystem || !auth.permissions?.includes('commerce.store.read') ||
                 SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection?.(request) !== true ||
@@ -44,21 +48,21 @@ module.exports = {
                 [auth.enterpriseCode, request.entCode, request.enterpriseCode, request.httpRequest?.headers?.entCode,
                     request.httpRequest?.headers?.['x-enterprise-code'], request.httpRequest?.headers?.['X-Enterprise-Code']]
                     .some(value => value !== undefined && value !== auth.entCode) ||
-                policy?.enabled !== true || !identifier(policy.runtimeRole) || role?.code !== policy.runtimeRole || role.publication !== 'OPERATIONAL' ||
+                policy?.enabled !== true || SERVICE.DefaultModuleService?.isLocalModuleActive?.('store') !== true || CONFIG.get('runtimeRole')?.publication !== 'OPERATIONAL' ||
                 !Array.isArray(policy.callers) || !policy.callers.length || policy.callers.length > 100)
-                throw new Error('Original qualified Store placement caller is required');
+                throw this.error('Original qualified Store placement caller is required');
             for (const caller of policy.callers) {
                 if (!caller || Object.keys(caller).sort().join(',') !== [...callerKeys, 'placements'].sort().join(',') ||
                     callerKeys.some(key => !identifier(caller[key])) || !Array.isArray(caller.placements) ||
                     !caller.placements.length || caller.placements.length > 100 || caller.placements.some(pair => !pair ||
                         Object.keys(pair).sort().join(',') !== 'enterpriseCode,storeCode' || !identifier(pair.storeCode) || !identifier(pair.enterpriseCode)))
-                    throw new Error('Exact Store deployment placement binding is required');
+                    throw this.error('Exact Store deployment placement binding is required');
             }
             const callers = policy.callers.filter(caller => caller.tenant === auth.tenant && caller.principalEnterpriseCode === auth.entCode &&
                 caller.serviceId === auth.serviceId && caller.instanceCode === auth.runtimeInstanceId &&
                 ['projectCode', 'environmentCode', 'serverCode', 'instanceCode', 'assignmentCode'].every(key => caller[key] === auth.runtimeScope?.[key]));
             const pairs = callers.length === 1 ? callers[0].placements.filter(pair => pair.storeCode === input.storeCode) : [];
-            if (pairs.length !== 1) throw new Error('Store placement is not bound to this deployment');
+            if (pairs.length !== 1) throw this.error('Store placement is not bound to this deployment');
             return pairs[0].enterpriseCode;
         };
         const enterpriseCode = check();
@@ -79,7 +83,7 @@ module.exports = {
                 } finally { reads.delete(context); }
             };
             const first = await read(), fresh = await read(); check();
-            if (!equal(first, fresh)) throw new Error('Store placement changed during readback');
+            if (!equal(first, fresh)) throw this.error('Store placement changed during readback');
             return { contractVersion: 1, tenant: originalAuth.tenant, store: first };
         } finally { operations.delete(request); }
     },
@@ -87,7 +91,7 @@ module.exports = {
     checkPersistenceRead: function (request, model) {
         if (!localIdentities.has(request.authData)) return;
         const grant = reads.get(request);
-        if (!grant) throw new Error('Private Store placement read admission is required');
+        if (!grant) throw this.error('Private Store placement read admission is required');
         grant.check();
         if (!equal(request.authData, grant.auth) || request.query !== grant.query || request.options !== grant.options ||
             request.searchOptions !== grant.search || request.tenant !== grant.queryValue.tenant ||
@@ -95,7 +99,7 @@ module.exports = {
             request.options.recursive !== false || request.options.skipItemCache !== true ||
             request.searchOptions.pageSize !== 2 || request.searchOptions.limit !== 2 || request.searchOptions.pageNumber !== 1 ||
             model && (model.moduleName !== 'store' || model.schemaName !== 'store' || request.schemaModel !== model))
-            throw new Error('Store placement persistence context changed');
+            throw this.error('Store placement persistence context changed');
     },
     /** Validates the generated success envelope and schema-bound enterprise reference, then returns only public placement fields. */
     project: function (response, tenant, storeCode, enterpriseCode) {
@@ -109,7 +113,7 @@ module.exports = {
             !Number.isSafeInteger(row.revision) || row.revision < 1 || !this.isIdentifier(enterprise) || enterprise !== enterpriseCode ||
             ['moduleName', 'module'].some(key => ref && Object.hasOwn(ref, key) && ref[key] !== 'profile') ||
             ['schemaName', 'schema'].some(key => ref && Object.hasOwn(ref, key) && ref[key] !== 'enterprise'))
-            throw new Error('Exact active Store placement is unavailable');
+            throw this.error('Exact active Store placement is unavailable');
         return { code: row.code, enterpriseCode: enterprise, revision: row.revision, active: true, status: 'ACTIVE' };
     }
 };

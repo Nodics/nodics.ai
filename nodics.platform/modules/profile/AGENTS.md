@@ -1,5 +1,12 @@
 # profile Agent Contract
 
+Browser customer registration uses the default-off Profile browser form entry,
+exact origin and distributed request/identity limits. Keep service registrations
+service-only; never inject a service credential into a storefront. Fix public
+placement to configured defaults and preserve fresh active-placement, optional
+eligibility, uniqueness and credential ownership in the existing signup pipeline.
+See `llm/contracts/customer-registration-form.md` and its browser admission tests.
+
 Promotion administrative authoring also consumes native evidence for
 `commerce.promotion.read`, `commerce.promotion.draft.write` and
 `commerce.promotion.manage`. These allowlist entries grant no access: fresh
@@ -312,6 +319,11 @@ Unused invitation withdrawal uses the serialized team owner, private committed
 evidence and a separately false `invitationWithdrawalQualified` flag. Reject
 started registration, claimed identity, accepted membership and default-admin
 withdrawal. Do not reactivate withdrawn invitations through generic CRUD.
+Its default-off `profileTeam` transport/task is independent of optional
+membership switching. Native administrator proof reuses the canonical actor and
+permission owner; linked contexts keep membership qualification. Native tasks
+offer only unused-invitation withdrawal, never unqualified membership lifecycle
+actions. See the current-enterprise Team workspace contract and its owner tests.
 
 Configuration-wide authorization invalidation requires nAuth's qualified policy
 epoch shared across issuing/validating runtimes. Persisted hooks do not detect
@@ -416,18 +428,8 @@ External launch proof freshness is checked at session issuance. Continuing a cha
 This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
 
-Runtime admission reuses direct RUNTIME_DEPLOYMENT principal scope assignments. Never infer approval from headers, topology, broad groups or cross-tenant permission. Scope mutations await existing principal invalidation; the pre-update hook owns atomic version allocation.
-
-Startup validates retained runtime grants read-only in every environment. Never
-derive permissions, group ancestry or credential scopes from migration properties,
-restore administrator passwords/lockouts, or recreate missing authority on restart.
-First-install records use governed nImport data packs; later changes use Profile
-commands and their existing invalidation hooks. Valid narrowed grants must survive
-validation unchanged. Session groups use persisted ancestry only. See runtime
-deployment grants in `llm/contracts/identity-access-lifecycle.md`.
-
-Forward Init uses fixed-schema `ensureBootstrapAll` wrappers for Employee,
-Customer, Address, Contact, Enterprise and Tenant. Keep the shared admission in
+Profile Init seeds Employee, Customer, Enterprise and Tenant through fixed-schema
+`ensureBootstrapAll` wrappers. Project data may also use Address and Contact wrappers. Keep the shared admission in
 the existing bootstrap owner: private nImport context, fresh exact identity reads,
 no writes for retained active/inactive records, and generated insert-only creation
 for missing records. Never reclassify principals, reset credentials, change
@@ -439,13 +441,6 @@ runtime grants exist. Defer its post-save activation event only through the
 actual nImport startup execution context, never caller flags. Ordinary saves
 still await owner preparation/publication; publication acknowledgement does not
 prove remote runtime readiness. See `llm/contracts/enterprise-tenant-provisioning.md`.
-
-Requested runtime modules must be a subset of the exact matched deployment grant in every environment. Neither a `Local` suffix nor `requireExactModules: false` relaxes this ceiling; Local shared-principal compatibility is independent. See [runtime deployment grants](llm/contracts/identity-access-lifecycle.md#runtime-deployment-grants) and the issuance-owner fixture `test/profileRuntimeBoundInternalToken.test.js`.
-
-Tenant preparation uses the existing governed Init release owner before read-only
-identity validation. Deployment grants and credentials remain governed records in
-all environments. Neither package metadata nor runtime configuration may create
-or expand persisted authority, even when a provisioning selector is enabled.
 
 Generated Profile reads return the canonical `{code, result}` envelope, with a
 success code and result array; they do not set a Boolean `success: true`. Runtime
@@ -472,8 +467,10 @@ with admin/apiAdmin defaults matching Profile Init data. Runtime API-key login
 metadata does not select the initializer employee. Custom identities require
 matching governed Init data; partial checks never reset existing credentials.
 Human bootstrap employees and the credential-bearing guest are authority-tenant
-Init records, not automatic tenant administrators. The forward `profile:init-v001`
-`0.0.2` source (`init-v001`) separates service employees and uses existing layered
+Init records, not automatic tenant administrators. Keep `profile:init-v001` pinned
+to the approved permission vocabulary and only the `profile:accessGroups` and
+`config:accessGroups` bootstrap groups. Select optional groups and enterprise
+roles through explicit capability setup. The Init source separates service employees and uses existing layered
 header `options.tenants` intersection for humans/guest. Preserve per-tenant
 groups/services, configured authority selectors, retained release evidence and
 the unchanged nonauthority review refusal. Never repair old clones by changing
@@ -503,6 +500,10 @@ validation when both cookie names are absent and no nonempty CSRF header exists.
 Return no cookie writes in this branch; do not erase a concurrent new session.
 Partial/malformed cookies, stale proof and revocation errors stay fail-closed.
 See `profileBrowserLogoutRecovery.test.js` and identity-access-lifecycle.
+A consumed/missing refresh proof must likewise return no cookie writes: a delayed
+losing restore may follow a newer rotation. Preserve the unauthenticated result,
+no-store headers, Origin/CSRF validation and explicit logout cleanup; never turn
+a cache miss into a replacement credential. Cover both principal namespaces.
 
 During a governed Local reset, the provider's private authority may reach scope
 cleanup after Employee deletion. Profile must prove principal absence through an
@@ -571,3 +572,38 @@ and exact bounded assignment lookup without enabling optional cross-enterprise
 membership. Linked projections and existing assignments retain their qualification
 and acceptance checks. Never interpret failed/ambiguous lookup as no assignment,
 or substitute scopes for persisted permission grants.
+
+Local evidence/credit admission requires `DefaultModuleService.isLocalModuleActive("profile")`
+and explicit `runtimeRole.publication: OPERATIONAL`. Physical role codes and role
+membership do not establish ownership. A loaded remote-only module must refuse.
+Retain independent permissions, tenant/Enterprise scope, signed deployment pins,
+private capture and policy revalidation. Recheck ownership around owner reads;
+cohosting grants no authority and changes no database ownership.
+
+Profile issues short-lived internal service tokens only after native apiAdmin API-key
+proof in the requested tenant and enterprise. nConfig derives exact placement
+and active/remote module scope from installed topology. Keep named permissions,
+empty JWT groups, security stamps, namespace pins and domain caller checks.
+The signed assignmentCode is a stable placement identifier for existing caller
+pins. Startup and renewal do not consult per-runtime assignment rows. Profile
+Init includes admin, apiAdmin and the existing authority-tenant guest Customer.
+
+Shared-tenant Employee reads must retain signed Enterprise isolation. Keep
+original-selector intersection, bounded registered-assignment lookup, consistent
+native bindings and provider preparation proof together in the existing Employee
+read interceptor and protected-schema callback. Do not enable optional mutation
+guards or move this mechanism into Kickoff. Preserve native Platform/mechanical
+admission and test own/foreign reads with `employeeEnterpriseReadScope.test.js`.
+
+Fresh management tasks must mirror the command's original Platform-context
+creation boundary: scoped enterprise administrators keep registry/invitation
+tasks without the unsupported creation form. Keep shared guidance in Profile
+properties. Invitation commands reject invalid or elapsed expiry before storage;
+normal expiry and historical assignments remain intact. Cover Platform overrides,
+scoped humans and zero-write invalid dates in enterpriseManagementWorkspaceContract.
+Setup inspection/resumption controls additionally require native PASSWORD human
+Platform authority in the fresh workspace projection. Do not show them to scoped
+administrators or external-proof contexts; command-time native/stamp checks remain
+independent and mandatory.
+
+Ordinary native identity editing follows [the identity lifecycle contract](llm/contracts/identity-access-lifecycle.md#ordinary-native-identity-editing). Keep domain-owned CAS, original actor/placement, bounded session retirement, private inspect-only receipts and governed invitation/administrator boundaries.

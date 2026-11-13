@@ -264,7 +264,7 @@ module.exports = {
     const same = require("node:util").isDeepStrictEqual;
     const identifier = value => typeof value === "string" && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value);
     const policy = CONFIG.get("profileRuntimeEnterpriseResolution"), payload = request.payload;
-    if (policy?.enabled !== true || CONFIG.get("runtimeRole")?.code !== policy.runtimeRole ||
+    if (policy?.enabled !== true || (SERVICE.DefaultModuleService?.isLocalModuleActive?.("profile") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") ||
         !payload || Object.keys(payload).sort().join(",") !== "contractVersion,enterpriseCode" ||
         payload.contractVersion !== 1 || !identifier(payload.enterpriseCode) || Object.keys(request.query || {}).length) fail();
     const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, CONFIG.get("profileModuleName") || "profile");
@@ -289,7 +289,7 @@ module.exports = {
     const check = () => {
       if (!same(CONFIG.get("profileRuntimeEnterpriseResolution"), pin.policy) || !same(request.authData, pin.auth) ||
           !same(request.payload, pin.payload) || request.tenant !== pin.auth.tenant ||
-          CONFIG.get("runtimeRole")?.code !== pin.policy.runtimeRole ||
+          (SERVICE.DefaultModuleService?.isLocalModuleActive?.("profile") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") ||
           NODICS.getSelectedEnvironmentName() !== pin.auth.runtimeScope.environmentCode ||
           [request.tenantCode, request.authData.tenantCode].some(value => value !== undefined && value !== pin.auth.tenant) ||
           [request.entCode, request.enterpriseCode, request.httpRequest?.headers?.["x-enterprise-code"]]

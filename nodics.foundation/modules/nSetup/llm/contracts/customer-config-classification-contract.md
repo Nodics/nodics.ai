@@ -40,6 +40,43 @@ existing module metadata and validated file/manifest contracts instead of
 making each partner repeat them. Preserve explicit activation, authorization
 and publication choices; folder presence never grants execution authority.
 
+## Deployment and database configuration
+
+Apply [deployment independence](nodics-principles.md#deployment-independence-of-functional-owners).
+A supported module relocation or consolidation is a customer topology/configuration
+change, requiring zero framework source edits. Infer required module dependencies
+from selected entry modules and canonical metadata; do not ask customers to mirror
+the selection in redundant role/profile inventories. This inference supplies
+composition, not business activation, permissions or publication consent.
+Select one logical owning runtime per `(module, publication context)` pair.
+Staged, Online and Operational each permit only one owner for a given module;
+a module may separately run in Staged and Online. Different runtime-role labels
+must not disguise competing owners within the same publication context. Replicas
+share their logical runtime's ownership. Shared infrastructure code loading does
+not declare another functional owner.
+Runtime-local health/configuration/token/import-history mechanics retain their
+runtime scope. Foundation membership alone is no exemption from functional
+ownership. Product, Wallet and Discovery state must retain their unique
+module/publication owner; local mechanics may not become competing functional
+stores or authorities. Express deployment differences through existing module
+and runtime context, without additional role/profile registries.
+
+Database defaults and provider definitions belong to the implementing framework
+owners. Resolve each module's effective configuration by deep inheritance, retaining
+inherited sibling options when a customer overrides a destination leaf. A module
+with no explicit destination override may inherit its applicable default. Once a
+destination is explicitly selected, missing/invalid configuration or connection
+failure must fail closed, not redirect to the runtime default, another schema,
+another provider or another functional owner. Do not flatten all cohosted modules
+onto one database merely because they share a process.
+
+Schemas remain owned by their defining modules. Preserve their selected destinations
+across relocation unless a separate destination change is explicitly requested.
+Changing configuration does not migrate existing records, alter installed receipts,
+reset schemas or authorize imports. Validate effective per-module destinations and
+provider selections independently of process count; source configuration alone is
+not evidence that existing data has moved.
+
 ## Mandatory Default Ownership Gate
 
 Every configurable property has one implementing framework-module owner. That
@@ -59,7 +96,7 @@ helper, generator, or another module.
 
 This property rule does not relocate governed business records, identity and
 permission assignments, data-release selections, or runtime topology metadata.
-Those remain with their existing authorities and contracts. Deployment inputs
+Those remain with their existing authorities and contracts. Reuse bounded runtime alias/package projections for canonical target facts instead of defining customer-only helper properties or duplicating topology. Deployment inputs
 such as endpoints or credential references must populate framework-defined
 properties at their established runtime scope; the scope does not become a
 second property-definition/default owner.
@@ -86,14 +123,15 @@ activation/merge boundary. Classify each leaf of mixed objects separately:
   through their established metadata/data authorities. Where deployment values
   are represented as properties, the framework owner defines the property and
   baseline; project/environment/server/node layers provide only actual
-  overrides. Standard role behavior belongs to owner-contributed runtime-role
-  profiles; explicit capability activation remains with its existing topology
-  authority.
+  overrides. Standard capability behavior belongs to its implementing owner;
+  topology derives required dependencies from selected entry modules. Existing
+  owner-contributed profiles must not require customers to repeat that inferred
+  composition. Explicit business activation retains its existing authority.
 - Business records, permission/role assignments, approval definitions and
   demo offers remain governed owner data. Moving a sample setting into a
   framework default does not make its ownership correct.
 
-Registration is not activation or authorization. Selecting a publishable schema
+Registration is not activation or authorization. Correcting a missing category declaration must preserve its prior effective exposure, including explicit unknown-category denial; use the existing nRouter neutral-inheritance contract rather than an enabling customer workaround. Selecting a publishable schema
 declares eligibility, not approval, destination authority, source qualification,
 asset release or import permission. Standard provider registration may be
 framework-owned while capability enablement and owner checks remain explicit.
@@ -123,6 +161,12 @@ Record uncertain findings separately from confirmed violations. Static scanning
 is inventory evidence, not effective-inheritance proof. When testing is explicitly
 on hold, author the regression changes but leave validation and refactor closure
 pending until the complete batch can be checked.
+
+Check declarative bindings with both configured and unconfigured inputs before
+classifying equal values as duplicates. If the configured input changes the
+result, retain the intentional deployment binding. Scope a reusable provider
+profile to runtimes that execute its consumer, and verify both selected and
+unselected runtimes before removing copied wiring.
 
 ## Strict boundary across every framework layer
 
@@ -428,65 +472,50 @@ customer, environment, server and node configuration, including generators.
   dependency order and launch-only environment values. Do not author
   `tooling.runtime` in server `config/properties.js`; those files are reserved
   for effective runtime behavior and server-specific overrides.
-- Search capability enablement belongs to module/customer/environment-owned
-  `search.runtimeRoleProfiles` or environment-level search connection overrides.
-  Do not copy per-index `search.<module>.options.enabled` blocks into every
-  server config; the selected runtime role should project the same effective
-  search graph. Keep nSearch default-disabled unless a role/profile explicitly
-  opts in.
-- Data-release availability and generic guided initialization profiles are
-  derived from the selected runtime module graph, data manifests, destination
-  metadata and explicit module-owned contribution selectors. Do not move
-  `data.dataReleases.runtimeRoleProfiles` from server config into environment
-  config as another catalogue. Environment config may supply deployment facts,
-  not repeated release inventories. Keep only curated project/module profiles
-  where business wording, explicit release-code subsets or cross-runtime
-  content selection cannot be inferred from the module loader.
-- Publication module activation is derived from the semantic runtime role. WCMS
-  Staged declares `runtimeRole.publication: "STAGED"` and WCMS Online declares
-  `runtimeRole.publication: "ONLINE"`; nConfig projects the effective
-  `publishEnabled` flag for legacy consumers. Do not author `publishEnabled` in
-  runtime server `config/properties.js`.
-- Reference payment-provider enablement belongs to project/module-owned
-  runtime-role policy, not runtime server files. Provider modules keep safe
-  defaults such as disabled sandbox adapters; a customer project may opt a
-  runtime role into the provider through `<provider>.runtimeRoleProfiles`.
-  Server config must not repeat `stripeProvider` enablement for every Commerce
-  runtime.
+- Search participation definitions and defaults belong to each implementing
+  module in `search.<module>.options`. nSearch owns provider mechanics and safe
+  global defaults. Customer/runtime layers contain only actual enablement or
+  connection overrides. Readiness consumes the effective merged configuration;
+  a physical runtime name never selects another search-policy catalogue.
+- Data-release availability and guided initialization are derived from the
+  selected module graph, manifests, destination metadata and module-owned keyed
+  contributions. Do not maintain role-keyed release inventories. Curated project
+  selections remain legitimate for business wording or explicitly selected data;
+  contribution availability never authorizes import or changes installed history.
+- Runtime publication context is explicit: STAGED, ONLINE or OPERATIONAL.
+  Reusable publication defaults belong to the capability and may use bounded
+  nConfig publication-context bindings. Activation and ownership derive from the
+  selected module graph and explicit context, not physical server names or a
+  second role-profile membership list. Existing derived `publishEnabled` remains
+  a projection, never a customer-authored independent authority.
+- Provider modules own complete safe defaults, including disabled payment
+  adapters. Enabling an adapter for a particular deployment is an actual customer
+  or runtime override. Do not introduce provider role-profile selectors or enable
+  a provider solely because a server has a particular display code.
 - Runtime service-auth defaults belong to nAuth and governed runtime credential
-  layers. Framework defaults may supply tenant and enterprise code; nAuth owns
-  the `defaultAuthDetail.apiKey` deployment binding. Runtime server config must
-  not repeat the same API-key binding for every server. Use later governed
-  external, tenant or persisted runtime configuration for deliberate credential
-  replacement.
-- HTTP hardening has two owners. Deployment origins and published frontend
-  addresses belong at the environment layer. Runtime-role CORS policy, such as
-  denying a public frontend for an authoring or process role, belongs in
-  module/customer `httpHardening.runtimeRoleProfiles`. Runtime server config
-  must not repeat role-level `httpHardening` blocks.
-- Runtime-role inventories belong to module-owned role profiles, not server
-  overrides. Examples include `localResetProvider.profiles`,
-  `copilot.runtimeRoleProfiles`, `apiExposure.runtimeRoleProfiles` and
-  BackOffice reset provider lists. Environment config may enable or disable a
-  policy for an environment, but server config must not repeat capability
-  inventories, Copilot source registries or API exposure categories that can be
-  selected by module/runtime role.
-- Runtime-role business behavior follows the same profile pattern. Framework
-  modules may use `product.runtimeRoleProfiles`, `cart.runtimeRoleProfiles` and
-  `fulfillmentCore.runtimeRoleProfiles` for reusable Commerce role behavior.
-  Application modules may override only their own market or domain choices. Root
-  customer-project config must not collect reusable defaults merely to make
-  server files smaller, and runtime server config must not repeat Product
-  discovery/catalogue, Cart customer defaults or Fulfillment shipping policies.
-- Data release selections follow the same ownership rule. Generic release
-  contributions, installers and destination policies belong to their owning
-  framework/root module runtime-role profile. Environment setup profiles belong
-  at the selected environment layer. Server config may retain only the selected
-  runtime's true deployment facts, such as an isolated database name; it must
-  not repeat `data.dataReleases` inventories. When administrative activation
-  packages need a target runtime's deployment fact, use bounded nConfig
-  `runtime` projection instead of an early `ref` that freezes a framework
-  default before the target server override is applied.
+  layers. nAuth owns the `defaultAuthDetail.apiKey` deployment binding; server
+  files must not repeat the same binding. Deliberate credential replacement uses
+  the existing governed external, tenant or persisted runtime configuration.
+- nRouter owns reusable HTTP hardening defaults. Deployment origins and frontend
+  addresses belong to customer/environment configuration. A runtime-specific
+  origin restriction is an explicit override on that runtime; never put
+  application endpoint names or physical runtime roles in framework policy.
+- Capability inventories, API exposure definitions, Copilot mechanics and reset
+  contributions belong to implementing modules. Derive available capabilities
+  from the selected module graph. Availability is separate from authorization,
+  qualification and operator selection. Do not copy inventories into server files
+  or add role-profile catalogues to make composition work.
+- Reusable Product, Cart, Fulfillment and other business behavior belongs to
+  ordinary owner-module defaults. Application modules override actual market or
+  domain choices only. Customer roots must not collect missing framework defaults
+  simply to shorten server files. `runtimeRoleProfiles` and `runtimeRole.roles`
+  are retired structures, not supported configuration extension mechanisms.
+- Generic release contributions, installers and destination policies belong to
+  implementing modules. Environment setup selections remain environment-owned;
+  runtime files retain only true deployment overrides. Resolve destination
+  ownership by module and publication context, with explicit server selection
+  where required. For target deployment facts use bounded nConfig `runtime`
+  projection, not an early `ref` freezing a default before its override applies.
 - External identity mechanics and runtime configuration schemas belong to their
   implementing framework provider or reusable accelerator/channel module.
   Profile owns provider mechanics and assertion policy; eWaste owns its reusable
@@ -525,7 +554,7 @@ customer, environment, server and node configuration, including generators.
   enforces password strength and distinct admin/service credentials. Framework
   defaults, JWT secrets, API-key peppers, service passwords/keys and predictable
   binding fallbacks must use nConfig secret inputs. Do not publish
-  credential-bearing customer files. Bootstrap provisioning and current runtime
+  credential-bearing customer files. Credential-map value/token literals and nonempty binding fallbacks are equally prohibited; migrate through private deployment inputs or secured runtime APIs without rotating or overwriting an existing governed value. Bootstrap provisioning and current runtime
   proof have distinct lifecycles; runtime proof never falls back to the admin.
 - A cleanup must preserve credential rotation/revocation, strict distributed auth
   state, runtime grants, import authorization, destination checks and immutable

@@ -72,7 +72,7 @@ test('original controller bearer reaches registered Product and Pricing safe-sea
         assert.deepEqual(call.requestBody, { pageNumber: 1, pageSize: 10, filters: { operator: 'AND', items: [
             { field: 'code', operator: 'EQUALS', value: 'package' }, { field: 'versionId', operator: 'EQUALS', value: 0 } ] } });
         assert.equal(call.header.Authorization, request.authorization); assert.equal(call.header['X-Enterprise-Code'], 'default');
-        assert.equal(call.targetAuthority.runtimeRole, 'COMMERCE_STAGED'); assert.equal(call.maxAttempts, 1);
+        assert.equal(call.targetAuthority.publication, 'STAGED'); assert.equal(call.maxAttempts, 1);
     }
     assert.equal(calls.length, 4);
 });

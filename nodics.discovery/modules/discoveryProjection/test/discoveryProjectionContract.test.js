@@ -14,7 +14,7 @@
 const assert = require('node:assert/strict');
 const schemas = require('../src/schemas/schemas');
 const builder = require('../src/service/defaultDiscoveryDocumentBuilderService');
-const projectionService = require('../src/service/defaultDiscoveryDocumentProjectionService');
+const projectionService = require('../src/service/defaultDiscoveryProjectionOwnerService');
 
 /** @module discoveryProjection/test/discoveryProjectionContract @description Verifies generic Discovery document projection. @layer test @owner discoveryProjection */
 
@@ -69,6 +69,8 @@ global.CLASSES = { SearchError: class SearchError extends Error {
     }
 } };
 
+global.SERVICE.DefaultModuleService = {isLocalModuleActive: () => true, isCurrentRuntimeAuthority: () => true};
+global.SERVICE.DefaultDiscoveryDocumentProjectionService = {targetAuthority: () => ({publication: 'OPERATIONAL'})};
 projectionService.doSave({ tenant: 'default', model: doc }).then(result => {
     assert.equal(result.success, true);
     assert.equal(pipelineSeen.pipelineName, 'doSaveModelsInitializerPipeline');

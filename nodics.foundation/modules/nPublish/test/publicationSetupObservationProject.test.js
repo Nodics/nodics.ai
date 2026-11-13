@@ -28,8 +28,9 @@ test('actual native graphs keep full profile validation on Platform and target-o
         t.after(() => { for (const [key, value] of Object.entries(previous))
             value === undefined ? delete global[key] : global[key] = value; });
         const harness = createProjectConfigurationTestHarness({ projectRoot, frameworkRoot: path.resolve(__dirname, '../../../..') });
-        const servers = ['platformServer', 'wcmsStagedServer', 'wcmsOnlineServer', 'processServer', 'commerceServer',
-            'commerceStagedServer', 'engagementServer', 'loyaltyServer', 'locationServer', 'wasteServer'];
+        const topology = harness.loadEnvironment('kickoffLocal').topology;
+        const servers = topology.groups.backends.filter(runtime => runtime.enabled !== false).map(runtime => runtime.server);
+        assert(servers.includes('platformServer'), 'the supplied reference scenario requires its declared Platform owner');
         const graphs = Object.fromEntries(servers.map(server => [server, harness.loadRuntime(server, 'kickoffLocal')]));
         const platform = graphs.platformServer;
         global.CONFIG = { get: key => platform[key] };
@@ -79,16 +80,15 @@ test('actual native graphs keep full profile validation on Platform and target-o
             assert.throws(() => observer.provider(domain), 'Online must not inherit source/workflow registration');
         }
         const script = `
+            (async () => {
             const path = require('node:path'), crypto = require('node:crypto');
             const input = JSON.parse(process.argv[1]);
-            require(path.join(input.frameworkRoot, 'nodics.foundation/modules/nConfig/src/service/defaultDeploymentConfigurationProjectionService'))
+            await require(path.join(input.frameworkRoot, 'nodics.foundation/modules/nConfig/src/service/defaultDeploymentConfigurationProjectionService'))
                 .resolve(input);
-            global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message || code); this.code = code; } } };
-            const releases = require(path.join(input.frameworkRoot, 'nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService'));
-            global.SERVICE = { DefaultDataReleaseService: releases,
-                DefaultContentPackService: require(path.join(input.frameworkRoot,
-                    'nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService')) };
-            const owner = require(path.join(input.frameworkRoot, 'nodics.foundation/modules/nPublish/src/service/defaultPublicationSetupObservationService'));
+            const releases = SERVICE.DefaultDataReleaseService;
+            const owner = SERVICE.DefaultPublicationSetupObservationService;
+            if (!releases || !owner || !SERVICE.DefaultContentPackService || !SERVICE.DefaultSchemaAuthoringPolicyService)
+                throw Error('Resolved publication and schema-authority owners are required');
             const original = CONFIG.get.bind(CONFIG), defaults = require(path.join(input.frameworkRoot, 'nodics.foundation/modules/nPublish/config/properties')).publish.setup.observation;
             CONFIG.get = key => key === 'publish' ? { setup: { observation: { ...defaults,
                 ...original(key)?.setup?.observation, enabled: true } } } : original(key);
@@ -112,7 +112,8 @@ test('actual native graphs keep full profile validation on Platform and target-o
             }
             const pins = input.steps.map(step => {
                 const release = owner.describeRelease(step.code, step.dataType);
-                releases.validateDestination(release);
+                try { releases.validateDestination(release); }
+                catch (error) { throw new Error('Source destination refused for ' + step.code + ' (' + error.code + ')', { cause: error }); }
                 const snapshot = owner.sourceSnapshot(release);
                 const checksum = crypto.createHash('sha256').update(release.declaredFiles.slice().sort().map(name =>
                     name + ':' + crypto.createHash('sha256').update(snapshot.files.get(name)).digest('hex')).join('|'))
@@ -121,6 +122,7 @@ test('actual native graphs keep full profile validation on Platform and target-o
                 return { code: step.code, checksum, files: release.declaredFiles.length };
             });
             process.stdout.write(JSON.stringify({ planOwnerAvailable: Boolean(NODICS.getRawModule(input.planOwner)), baselinePins, pins }));
+            })().catch(error => { console.error(error); process.exitCode = 1; });
         `;
         let releaseCount = 0;
         for (const server of servers) {

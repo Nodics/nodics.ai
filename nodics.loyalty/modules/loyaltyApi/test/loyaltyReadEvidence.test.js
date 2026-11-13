@@ -48,8 +48,9 @@ function fixture(t) {
       captureLedgerEntryCode: "capture", idempotencyKey: "checkout:payment:capture", correlationId: "checkout" })],
   };
   const reads = [], state = { truncate: false, foreign: false };
-  global.CONFIG = { get: key => key === "authSecurity" ? { internalToken: { runtimeAccessGroups: ["serviceAccountUserGroup"] } } : undefined };
-  global.SERVICE = { DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"), DefaultServiceTokenService: runtime, DefaultLoyaltyRewardOperationService: operations, DefaultLoyaltyReadEvidenceService: evidence,
+  global.NODICS = { isModuleActive: name => name === "loyaltyWallet", getSelectedEnvironmentName: () => "local" };
+  global.CONFIG = { get: key => key === "runtimeRole" ? { code: "COHOST", publication: "OPERATIONAL" } : key === "authSecurity" ? { internalToken: { runtimeAccessGroups: ["serviceAccountUserGroup"] } } : undefined };
+  global.SERVICE = { DefaultModuleService: require("../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService.js"), DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"), DefaultServiceTokenService: runtime, DefaultLoyaltyRewardOperationService: operations, DefaultLoyaltyReadEvidenceService: evidence,
     DefaultLoggerService: { hasPrivateCaptureProtection: () => true } };
   global.FACADE = { DefaultLoyaltyInternalFacade: facade };
   for (const name of Object.keys(rows)) SERVICE[name] = {
@@ -213,9 +214,9 @@ test("owner lookup retains original business grant and rejects selector/storage 
     () => { SERVICE.DefaultLoggerService.hasPrivateCaptureProtection = () => false; },
     f => { f.authData.permissions = []; }, f => { f.policy.callers = []; }]) {
     const f = fixture(t), originalGet = CONFIG.get;
-    f.policy = { runtimeRole: "LOYALTY", callers: [{ tenant: "tenant", principalEnterpriseCode: "enterprise", enterpriseCode: "business",
+    f.policy = { callers: [{ tenant: "tenant", principalEnterpriseCode: "enterprise", enterpriseCode: "business",
       serviceId: "runtime", ...f.authData.runtimeScope }] };
-    global.CONFIG = { get: key => key === "loyalty" ? { api: { readEvidence: f.policy } } : key === "runtimeRole" ? { code: "LOYALTY" } : originalGet(key) };
+    global.CONFIG = { get: key => key === "loyalty" ? { api: { readEvidence: f.policy } } : key === "runtimeRole" ? { code: "COHOST", publication: "OPERATIONAL" } : originalGet(key) };
     global.NODICS = { getSelectedEnvironmentName: () => "local" };
     const request = f.request({ ...f.p, enterpriseCode: "business" }), get = SERVICE.DefaultLoyaltyWalletService.get;
     SERVICE.DefaultLoyaltyWalletService.get = async generated => { const result = await get(generated); change(f, request, generated); return result; };
@@ -396,8 +397,8 @@ test("unqualified private entry refuses before any provider read; a copied paylo
 test("business enterprise evidence requires one exact deployment grant, preserves principal enterprise and rejects header-only delegation", async t => {
   const f = fixture(t), grant = { tenant: "tenant", principalEnterpriseCode: "enterprise", enterpriseCode: "business", serviceId: "runtime", ...f.authData.runtimeScope };
   for (const rows of Object.values(f.rows)) for (const row of rows) delete row.tenant;
-  const policy = { runtimeRole: "LOYALTY", callers: [grant] }, originalGet = CONFIG.get;
-  global.CONFIG = { get: k => k === "loyalty" ? { api: { readEvidence: policy } } : k === "runtimeRole" ? { code: "LOYALTY" } : originalGet(k) };
+  const policy = { callers: [grant] }, originalGet = CONFIG.get;
+  global.CONFIG = { get: k => k === "loyalty" ? { api: { readEvidence: policy } } : k === "runtimeRole" ? { code: "COHOST", publication: "OPERATIONAL" } : originalGet(k) };
   global.NODICS = { getSelectedEnvironmentName: () => "local" };
   const request = { ...f.request({ ...f.p, enterpriseCode: "business", walletCode: "wallet" }),
     enterpriseCode: "enterprise", entCode: "enterprise", httpRequest: { headers: { "x-enterprise-code": "enterprise" } } }, original = structuredClone(f.authData);
@@ -495,8 +496,8 @@ test("Enterprise exact ledger admission retains every original runtime grant coo
   const f = fixture(t), get = CONFIG.get;
   f.rows.DefaultLoyaltyWalletService[0].ownerType = "ENTERPRISE";
   const grant = { tenant: "tenant", principalEnterpriseCode: "enterprise", enterpriseCode: "business",
-    serviceId: "runtime", ...f.authData.runtimeScope }, policy = { runtimeRole: "LOYALTY", callers: [grant] };
-  global.CONFIG = { get: key => key === "loyalty" ? { api: { readEvidence: policy } } : key === "runtimeRole" ? { code: "LOYALTY" } : get(key) };
+    serviceId: "runtime", ...f.authData.runtimeScope }, policy = { callers: [grant] };
+  global.CONFIG = { get: key => key === "loyalty" ? { api: { readEvidence: policy } } : key === "runtimeRole" ? { code: "COHOST", publication: "OPERATIONAL" } : get(key) };
   global.NODICS = { getSelectedEnvironmentName: () => "local" };
   const request = f.request({ ...f.p, ownerType: "ENTERPRISE", enterpriseCode: "business", entryCode: "capture", sourceType: "PAYMENT", sourceCode: "order" });
   const original = structuredClone(f.authData);
@@ -514,4 +515,17 @@ test("Enterprise exact ledger admission retains every original runtime grant coo
   SERVICE.DefaultRewardLedgerEntryService.get = async r => { const result = await read(r); request.payload.ownerType = "CUSTOMER"; return result; };
   await assert.rejects(evidence.ledgerEvidence(request), /unavailable/);
   assert.deepEqual(f.authData, original);
+});
+
+
+test("Wallet evidence refuses remote-only ownership even for the principal's own enterprise", async t => {
+  const f = fixture(t), request = f.request({ ...f.p, walletCode: "wallet" });
+  let remoteOnly = true;
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly }) }) };
+  await assert.rejects(evidence.walletEvidence(request));
+  assert.equal(f.reads.length, 0);
+  remoteOnly = false;
+  const read = SERVICE.DefaultLoyaltyWalletService.get;
+  SERVICE.DefaultLoyaltyWalletService.get = async input => { const result = await read(input); remoteOnly = true; return result; };
+  await assert.rejects(evidence.walletEvidence(request));
 });

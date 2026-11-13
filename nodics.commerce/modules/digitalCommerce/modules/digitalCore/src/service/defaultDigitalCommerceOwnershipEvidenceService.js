@@ -40,7 +40,7 @@ const owner = {
   /** Admits only an explicitly approved scoped runtime, never a generic service group or request-selected owner. */
   authorize: function (request, input) {
     const policy = CONFIG.get("digitalCore")?.ownershipEvidence;
-    if (policy?.enabled !== true || CONFIG.get("runtimeRole")?.code !== policy.runtimeRole ||
+    if (policy?.enabled !== true || (SERVICE.DefaultModuleService?.isLocalModuleActive?.("digitalCore") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") ||
         SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection?.(request) !== true) this.fail();
     const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "digitalCore");
     const permission = input?.kind === "ADMIT_BINDING" ? "commerce.product.publish" : "commerce.digital.own.read";
@@ -70,7 +70,7 @@ const owner = {
         [proof.request.enterpriseCode, proof.request.entCode, proof.request.httpRequest?.headers?.["x-enterprise-code"]]
           .some(value => value !== undefined && value !== proof.auth.entCode) ||
         !isDeepStrictEqual(CONFIG.get("digitalCore")?.ownershipEvidence, proof.policy) || !isDeepStrictEqual(context.input, proof.input) ||
-        CONFIG.get("runtimeRole")?.code !== proof.policy.runtimeRole ||
+        (SERVICE.DefaultModuleService?.isLocalModuleActive?.("digitalCore") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") ||
         NODICS.getSelectedEnvironmentName() !== proof.auth.runtimeScope.environmentCode ||
         SERVICE.DefaultLoggerService.hasPrivateCaptureProtection(proof.request) !== true ||
         context.tenant !== proof.auth.tenant || context.enterpriseCode !== context.input.enterpriseCode) this.fail();
@@ -264,12 +264,9 @@ const owner = {
         p.selectors.locales.some(value => !this.identifier(value)) || new Set(p.selectors.locales).size !== p.selectors.locales.length) this.fail();
     const owner = policy.bindingAdmission;
     const authority = owner?.targetAuthority;
-    const exactAuthority = typeof authority === "string" ? this.identifier(authority) :
-      authority && typeof authority === "object" && !Array.isArray(authority) &&
-      this.identifier(authority.server) && this.identifier(authority.runtimeRole?.code) &&
-      authority.runtimeRole.publication === "OPERATIONAL" &&
-      Object.keys(authority).every(key => ["server", "runtimeRole", "environment"].includes(key)) &&
-      Object.keys(authority.runtimeRole).sort().join() === "code,publication" &&
+    const exactAuthority = authority && typeof authority === "object" && !Array.isArray(authority) &&
+      this.identifier(authority.server) && authority.publication === "OPERATIONAL" &&
+      Object.keys(authority).every(key => ["server", "publication", "environment"].includes(key)) &&
       (authority.environment === undefined || this.identifier(authority.environment));
     if (owner?.enabled !== true || !exactAuthority || !["moduleName", "connectionName", "apiName"].every(key => typeof owner[key] === "string" && owner[key]) ||
         !owner.apiName.startsWith("/internal/")) this.fail();

@@ -16,6 +16,9 @@
  * @owner cms
  * @override Customer WCMS modules may override focused methods to strengthen authoring rules while keeping Catalog-first ownership and existing CMS schemas.
  */
+const { createHash } = require('node:crypto');
+const designerCodePattern = /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/;
+
 module.exports = {
     /** Initializes the designer composition service lifecycle. */
     init: function () { return Promise.resolve(true); },
@@ -47,7 +50,7 @@ module.exports = {
                     navigation: 'cms.cmsNavigationNode',
                     publishing: 'publish.publicationRequest and cms publication manifest contracts'
                 },
-                operations: ['validateDraftComposition', 'saveDraftComposition', 'addSection', 'updateSection', 'deleteSection',
+                operations: ['listDraftPages', 'getDraftComposition', 'validateDraftComposition', 'saveDraftComposition', 'addSection', 'updateSection', 'deleteSection',
                     'reorderSection', 'addComponent', 'updateComponent', 'deleteComponent', 'reorderComponent',
                     'associateMedia', 'detachMedia', 'assignRoute', 'assignNavigation', 'validatePublishReadiness',
                     'submitForPublication'].filter(operation => {
@@ -62,11 +65,72 @@ module.exports = {
                     frontendPersistence: false,
                     pixelPerfectRendering: false
                 },
-                defaults: this.clientAuthoringDefaults(),
+                defaults: this.clientAuthoringDefaults(metadata),
+                presentation: this.authoringPresentation(),
                 retirement: this.retirementPresentation(),
                 metadata
             }
         };
+    },
+
+    /** Lists existing scoped pages through the read-only Designer owner. */
+    listDraftPages: function (request) { return SERVICE.DefaultCmsDesignerReadService.listPages(request); },
+
+    /** Reopens one exact scoped page through the read-only Designer owner. */
+    getDraftComposition: function (request) { return SERVICE.DefaultCmsDesignerReadService.getDraft(request); },
+
+    /** Resolves the existing documentation product's root page, template and slots without modifying source-pack records. */
+    getDocumentationDraftModel: async function (request) {
+        const access = this.access();
+        const { siteCode, catalogCode } = await access.scope(request, 'cms.authoring.write');
+        const read = (owner, query) => access.records(owner, request, { ...query, active: true });
+        const one = values => {
+            const distinct = new Map(values.map(value => [JSON.stringify(value), value]));
+            if (distinct.size !== 1 || distinct.has(undefined))
+                throw this.error('ERR_CMS_00103', 'The documentation product does not have one qualified authoring template.');
+            return distinct.values().next().value;
+        };
+        const product = one((await read('DefaultCmsDocumentationProductService', { site: siteCode, contentCatalog: catalogCode }))
+            .map(row => ({ rootPath: row.publicRootPath, locale: row.defaultLocale })));
+        if (typeof product.rootPath !== 'string' || !/^\/docs\/[A-Za-z0-9][A-Za-z0-9/_-]*$/.test(product.rootPath) ||
+            typeof product.locale !== 'string' || !product.locale)
+            throw this.error('ERR_CMS_00103', 'The documentation product has no valid root route.');
+        const rootRoute = one((await read('DefaultCmsPageRouteService', { site: siteCode, path: product.rootPath, channel: 'web' }))
+            .map(row => ({ code: this.codeOf(row.page), accessMode: row.accessMode })));
+        const page = one((await read('DefaultCmsPageService', { code: rootRoute.code }))
+            .filter(row => Array.isArray(row.cmsSite) && row.cmsSite.map(this.codeOf).includes(siteCode))
+            .map(row => ({ templateCode: this.codeOf(row.template), typeCode: this.codeOf(row.typeCode), renderer: row.renderer })));
+        if (page.renderer !== 'documentation.page.article' || !page.templateCode || !page.typeCode ||
+            !['PUBLIC', 'AUTHENTICATED'].includes(rootRoute.accessMode))
+            throw this.error('ERR_CMS_00103', 'The documentation product has no qualified article renderer.');
+        const slots = await read('DefaultCmsSlotDefinitionService', { template: page.templateCode });
+        const type = name => one(slots.filter(slot => slot.name === name)
+            .flatMap(slot => (slot.allowedComponentTypes || []).map(this.codeOf)));
+        const articleTypeCode = type('article'), navigationTypeCode = type('navigation');
+        if (!articleTypeCode || !navigationTypeCode)
+            throw this.error('ERR_CMS_00103', 'The documentation template has no qualified article and navigation slots.');
+        const localization = CONFIG.get('cms')?.localization || {};
+        access.authorize(request, 'cms.authoring.write');
+        return { result: { siteCode, catalogCode, rootPath: product.rootPath, ...page,
+            articleTypeCode, navigationTypeCode, accessMode: rootRoute.accessMode,
+            locale: localization.legacyRouteLocale || product.locale } };
+    },
+
+    /** Projects only bounded configured form copy; it never grants an operation or embeds executable form controls. */
+    authoringPresentation: function () {
+        const configured = this.authoringPolicy().presentation;
+        if (configured === undefined) return undefined;
+        if (!configured || typeof configured !== 'object' || Array.isArray(configured))
+            throw this.error('ERR_CMS_00100', 'CMS Designer presentation configuration is invalid.');
+        const result = {};
+        for (const key of ['newPageTitle', 'pageNameLabel', 'pageNameHelp', 'createdMessage', 'continueLabel',
+            'knownSavedMessage', 'changedAfterCreationMessage', 'publicationUnconfirmedMessage']) {
+            const value = configured[key];
+            if (typeof value !== 'string' || !value.trim() || value.length > 1024 || /[\u0000-\u001f\u007f]/.test(value))
+                throw this.error('ERR_CMS_00100', 'CMS Designer presentation configuration is invalid.');
+            result[key] = value;
+        }
+        return result;
     },
 
     /** Supplies inert retirement review copy; permitted operations remain the only command admission projection. */
@@ -104,36 +168,55 @@ module.exports = {
     saveDraftComposition: async function (request) {
         let draft = this.normalizeDraft(request.cmsDesigner || request.body || {});
         let evidence = await this.validateDraftGraph(request, draft);
+        const scope = await this.access().scope(request, 'cms.authoring.write');
+        const existing = await this.access().assertIdentity('DefaultCmsPageService', request, draft.page.code, scope);
+        if (existing.length && draft.sourceVersion === undefined)
+            throw this.error('ERR_CMS_00111', 'This page already exists. Open its saved composition before editing it.');
+        if (draft.sourceVersion !== undefined) {
+            const current = (await this.getDraftComposition(request)).result;
+            if (!current.editable || current.sourceVersion !== draft.sourceVersion) {
+                throw this.error('ERR_CMS_00111', 'The saved composition changed or requires another editor. Reopen it before saving.');
+            }
+        }
+        const placementPlan = await this.planDraftPlacements(request, draft, scope);
+        for (const move of placementPlan.moves)
+            await this.saveRecord('DefaultCmsComponentDetailService', request, move);
         let saved = {};
         saved.page = await this.saveRecord('DefaultCmsPageService', request, this.pageModel(draft));
         saved.components = [];
         saved.localizations = [];
         saved.sections = [];
         saved.media = [];
-        for (let sectionIndex = 0; sectionIndex < draft.sections.length; sectionIndex++) {
-            let section = draft.sections[sectionIndex];
-            for (let componentIndex = 0; componentIndex < section.components.length; componentIndex++) {
-                let component = section.components[componentIndex];
-                saved.components.push(await this.saveRecord('DefaultCmsComponentService', request, this.componentModel(component)));
-                for (let localization of component.localizations) {
-                    saved.localizations.push(await this.saveRecord('DefaultCmsComponentLocalizationService', request,
-                        this.localizationModel(component, localization)));
-                }
-                saved.sections.push(await this.saveRecord('DefaultCmsComponentDetailService', request,
-                    this.sectionModel(draft, section, component, sectionIndex, componentIndex)));
-                for (let mediaIndex = 0; mediaIndex < component.media.length; mediaIndex++) {
-                    await SERVICE.DefaultCmsContractValidationService.validateComponentMedia(Object.assign({}, request, {
-                        model: this.mediaModel(component, component.media[mediaIndex], mediaIndex)
-                    }));
-                    saved.media.push(await this.saveRecord('DefaultCmsComponentMediaService', request,
-                        this.mediaModel(component, component.media[mediaIndex], mediaIndex)));
+        const saveSections = async (sections, source) => {
+            for (let sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
+                const section = sections[sectionIndex];
+                for (let componentIndex = 0; componentIndex < section.components.length; componentIndex++) {
+                    const component = section.components[componentIndex];
+                    saved.components.push(await this.saveRecord('DefaultCmsComponentService', request, this.componentModel(component)));
+                    await saveSections(component.sections || [], component.code);
+                    for (const localization of component.localizations) saved.localizations.push(await this.saveRecord(
+                        'DefaultCmsComponentLocalizationService', request, this.localizationModel(component, localization)));
+                    saved.sections.push(await this.saveRecord('DefaultCmsComponentDetailService', request,
+                        this.sectionModel({ page: { code: source } }, section, component, sectionIndex, componentIndex)));
+                    for (let mediaIndex = 0; mediaIndex < component.media.length; mediaIndex++) {
+                        const model = this.mediaModel(component, component.media[mediaIndex], mediaIndex);
+                        await SERVICE.DefaultCmsContractValidationService.validateComponentMedia({ ...request, model });
+                        saved.media.push(await this.saveRecord('DefaultCmsComponentMediaService', request, model));
+                    }
                 }
             }
-        }
-        if (draft.route) saved.route = await this.assignRoute(Object.assign({}, request, { cmsDesigner:
-            Object.assign({ siteCode: draft.siteCode, catalogCode: draft.catalogCode }, this.routeIntent(draft)) }));
-        if (draft.navigation) saved.navigation = await this.assignNavigation(Object.assign({}, request, { cmsDesigner:
-            Object.assign({ siteCode: draft.siteCode, catalogCode: draft.catalogCode }, this.navigationIntent(draft)) }));
+        };
+        await saveSections(draft.sections, draft.page.code);
+        const navigation = draft.navigation && this.navigationIntent(draft);
+        const route = draft.route && this.routeIntent(draft);
+        const navigationEntry = route && this.navigationEntry(route, navigation);
+        const scopedIntent = model => Object.assign({ siteCode: draft.siteCode, catalogCode: draft.catalogCode }, model);
+        // Page links can be frozen with the route only after their owner accepts the menu write.
+        if (navigationEntry) saved.navigation = await this.assignNavigation({ ...request, cmsDesigner: scopedIntent(navigation) });
+        if (route) saved.route = await this.assignRoute({ ...request, cmsDesigner: scopedIntent(route) },
+            navigation ? navigationEntry || null : undefined);
+        // A separate ROUTE node may reference the route just saved above.
+        if (navigation && !navigationEntry) saved.navigation = await this.assignNavigation({ ...request, cmsDesigner: scopedIntent(navigation) });
         await this.invalidateDelivery(request);
         return { result: { status: 'DRAFT_SAVED', evidence: evidence, saved: saved } };
     },
@@ -166,6 +249,7 @@ module.exports = {
     addComponent: async function (request) {
         this.access().authorize(request, 'cms.authoring.write');
         let model = this.componentIntent(request.cmsDesigner || request.body || {});
+        this.validateConfiguredContent(model);
         if (model.renderer) {
             await SERVICE.DefaultCmsContractValidationService.validateRenderer({ model: { renderer: model.renderer } });
         }
@@ -201,9 +285,10 @@ module.exports = {
     },
 
     /** Assigns one draft route to a CMS page after route uniqueness validation. */
-    assignRoute: async function (request) {
+    assignRoute: async function (request, navigationEntry) {
         this.access().authorize(request, 'cms.authoring.write');
         let model = this.routeIntent(request.cmsDesigner || request.body || {});
+        if (navigationEntry !== undefined) model.navigationEntry = navigationEntry;
         await SERVICE.DefaultCmsContractValidationService.validateRoute({ model: model });
         await this.validateRouteUniqueness(request, model);
         return { result: await this.saveRecord('DefaultCmsPageRouteService', request, model) };
@@ -222,6 +307,10 @@ module.exports = {
         let draft = this.normalizeDraft(request.cmsDesigner || request.body || {});
         let evidence = await this.validateDraftGraph(request, draft);
         if (!draft.route) throw this.error('ERR_CMS_00106', 'A route is required before a CMS draft can be publication-ready');
+        if (this.compositionEntries(draft).some(({ component }) =>
+            component.localizations.some(localization => localization.status !== 'READY'))) {
+            throw this.error('ERR_CMS_00106', 'Review each entered translation and mark it ready before submitting for publication');
+        }
         if (!draft.navigation && this.authoringPolicy().requireNavigationForPublish) {
             throw this.error('ERR_CMS_00106', 'A navigation node is required before this CMS draft can be publication-ready');
         }
@@ -232,14 +321,23 @@ module.exports = {
     submitForPublication: async function (request) {
         this.access().authorize(request, 'cms.authoring.write');
         let draft = this.normalizeDraft(request.cmsDesigner || request.body || {});
+        const current = (await this.getDraftComposition(request)).result;
+        if (!current.editable || draft.sourceVersion !== undefined && current.sourceVersion !== draft.sourceVersion)
+            throw this.error('ERR_CMS_00111', 'The saved composition changed or needs another editor. Reopen it before requesting publication.');
+        // Every Designer publication validates actual saved translations, never
+        // a caller's unsaved READY flags or omitted variants.
+        draft = this.normalizeDraft(current.draft);
         let readiness = await this.validatePublishReadiness(Object.assign({}, request, { cmsDesigner: draft }));
         let routeIntent = this.routeIntent(draft);
         let route = await this.resolveSavedRouteVersion(request, routeIntent);
+        const entry = this.navigationEntry(routeIntent, draft.navigation && this.navigationIntent(draft));
+        if (!require('node:util').isDeepStrictEqual(route.navigationEntry || null, entry || null))
+            throw this.error('ERR_CMS_00106', 'Save the page with its current menu entry before submitting for publication');
         let sourceVersion = route.versionId === undefined ? route.revision : route.versionId;
         if (sourceVersion === undefined || sourceVersion === null) {
             throw this.error('ERR_CMS_00106', 'Saved CMS route version is required before submitting to Publishing');
         }
-        let publicationCode = ['cms', route.site, route.code, sourceVersion].filter(Boolean).join('-');
+        let publicationCode = this.derivedCode('publication', ['cms', route.site, route.code, String(sourceVersion)]);
         let publication = {
             code: publicationCode,
             domain: 'cms',
@@ -298,43 +396,63 @@ module.exports = {
     normalizeDraft: function (input) {
         let draft = input && typeof input === 'object' && !Array.isArray(input) ? input : {};
         let page = draft.page && typeof draft.page === 'object' && !Array.isArray(draft.page) ? draft.page : {};
+        const pageCode = this.requiredCode(page.code || draft.pageCode, 'page.code');
         return {
             catalogCode: this.requiredCode(draft.catalogCode, 'catalogCode'),
             siteCode: this.requiredCode(draft.siteCode, 'siteCode'),
             templateCode: this.requiredCode(draft.templateCode, 'templateCode'),
+            ...(draft.sourceVersion === undefined ? {} : { sourceVersion: this.sourceVersion(draft.sourceVersion) }),
             page: {
-                code: this.requiredCode(page.code || draft.pageCode, 'page.code'),
+                code: pageCode,
                 name: this.requiredText(page.name || page.code || draft.pageCode, 'page.name'),
                 typeCode: this.requiredCode(page.typeCode || 'contentPageType', 'page.typeCode'),
                 renderer: page.renderer
             },
             route: draft.route || null,
             navigation: draft.navigation || null,
-            sections: this.normalizeSections(draft.sections)
+            sections: this.normalizeSections(draft.sections, pageCode, { seen: new Set([pageCode]), count: 0 }, 0)
         };
     },
 
     /** Normalizes designer sections while allowing any number of slots. */
-    normalizeSections: function (sections) {
-        if (!Array.isArray(sections)) return [];
-        return sections.map((section, index) => {
+    normalizeSections: function (sections, pageCode, state = { seen: new Set([pageCode]), count: 0 }, depth = 0) {
+        if (!Array.isArray(sections) || !sections.length) return [];
+        if (depth > this.authoringPolicy().maximumCompositionDepth) throw this.error("ERR_CMS_00104", "The composition exceeds its supported nesting depth");
+        const nextIndex = new Map();
+        return sections.map(section => {
             let safe = section && typeof section === 'object' && !Array.isArray(section) ? section : {};
+            const slot = this.requiredCode(safe.slot || 'default', 'section.slot');
+            const index = safe.index === undefined ? nextIndex.get(slot) || 0 : Number(safe.index);
+            if (!Number.isSafeInteger(index) || index < 0 || safe.index === null || safe.index === '' || typeof safe.index === 'boolean')
+                throw this.error('ERR_CMS_00104', 'Section order must be a non-negative safe integer');
+            const components = this.normalizeComponents(safe.components, pageCode, slot, state, depth);
+            nextIndex.set(slot, Math.max(nextIndex.get(slot) || 0, index + components.length));
             return {
                 code: safe.code,
-                slot: this.requiredCode(safe.slot || 'default', 'section.slot'),
-                index: Number.isInteger(Number(safe.index)) ? Number(safe.index) : index,
-                components: this.normalizeComponents(safe.components)
+                slot,
+                index,
+                components
             };
         });
     },
 
     /** Normalizes designer component intents. */
-    normalizeComponents: function (components) {
+    normalizeComponents: function (components, pageCode, slot, state, depth) {
         if (!Array.isArray(components)) return [];
         return components.map(component => {
             let safe = component && typeof component === 'object' && !Array.isArray(component) ? component : {};
+            // Axis sends this established default for a new page. Bound that
+            // exact generated value while still validating other explicit codes.
+            const axisDefault = pageCode + slot.charAt(0).toUpperCase() + slot.slice(1) + 'Component';
+            const code = safe.code === axisDefault && !designerCodePattern.test(axisDefault)
+                ? this.derivedCode('component', [pageCode, slot, 'Component'])
+                : this.requiredCode(safe.code, 'component.code');
+            if (state.seen.has(code) || ++state.count > this.authoringPolicy().maximumCompositionComponents)
+                throw this.error("ERR_CMS_00104", "Use distinct content blocks within the supported composition size");
+            state.seen.add(code);
             return {
-                code: this.requiredCode(safe.code, 'component.code'),
+                code,
+                sections: this.normalizeSections(safe.sections, code, state, depth + 1),
                 typeCode: this.requiredCode(safe.typeCode, 'component.typeCode'),
                 renderer: safe.renderer,
                 accessMode: safe.accessMode || 'AUTHENTICATED',
@@ -361,31 +479,107 @@ module.exports = {
             await this.validateRouteUniqueness(request, route);
         }
         const planned = [['DefaultCmsPageService', this.pageModel(draft)]];
-        draft.sections.forEach((section, sectionIndex) => section.components.forEach((component, componentIndex) => {
+        const graph = this.compositionEntries(draft);
+        for (const { component, placement, depth } of graph) {
+            if (depth > 0) await this.validateComponentForSlot(request, component, {});
             planned.push(['DefaultCmsComponentService', this.componentModel(component)]);
-            planned.push(['DefaultCmsComponentDetailService', this.sectionModel(draft, section, component, sectionIndex, componentIndex)]);
+            planned.push(['DefaultCmsComponentDetailService', placement]);
             component.localizations.forEach(locale => planned.push(['DefaultCmsComponentLocalizationService', this.localizationModel(component, locale)]));
             component.media.forEach((media, index) => planned.push(['DefaultCmsComponentMediaService', this.mediaModel(component, media, index)]));
-        }));
+        }
         if (draft.route) planned.push(['DefaultCmsPageRouteService', this.routeIntent(draft)]);
         if (draft.navigation) planned.push(['DefaultCmsNavigationNodeService', this.navigationIntent(draft)]);
         for (const [serviceName, model] of planned) {
             await this.access().assertIdentity(serviceName, request, model.code, scope);
             await this.assertModelScope(serviceName, request, model, scope, planned);
         }
+        for (const [serviceName, model] of planned) {
+            if (serviceName === 'DefaultCmsComponentMediaService') {
+                await SERVICE.DefaultCmsContractValidationService.validateDraftComponentMediaReference(
+                    Object.assign({}, request, { model }));
+            }
+        }
+        const placementPlan = await this.planDraftPlacements(request, draft, scope);
         return {
             catalog: { code: catalog.code, name: catalog.name, catalogType: catalog.catalogType },
             site: { code: site.code, name: site.name, catalog: site.catalog },
             template: { code: template.code, name: template.name, renderer: template.renderer, slots: slots.map(slot => slot.name) },
             sectionCount: draft.sections.length,
-            componentCount: draft.sections.reduce((total, section) => total + section.components.length, 0)
+            componentCount: graph.length,
+            reorderedPlacementCount: placementPlan.moves.length
         };
+    },
+
+    /** Flattens a normalized tree without losing parent/placement identity or child order. */
+    compositionEntries: function (draft) {
+        const entries = [];
+        const visit = (sections, source, depth) => sections.forEach((section, sectionIndex) => section.components.forEach((component, componentIndex) => {
+            entries.push({ component, depth, placement: this.sectionModel({ page: { code: source } }, section, component, sectionIndex, componentIndex) });
+            visit(component.sections || [], component.code, depth + 1);
+        }));
+        visit(draft.sections, draft.page.code, 0);
+        return entries;
+    },
+
+    /** Plans collision-free versioned moves without retiring omitted placements or assuming an atomic graph save. */
+    planDraftPlacements: async function (request, draft, scope) {
+        const service = 'DefaultCmsComponentDetailService';
+        const reader = SERVICE.DefaultCmsDesignerReadService;
+        const planned = this.compositionEntries(draft).map(entry => entry.placement);
+        const sources = [...new Set([draft.page.code, ...this.compositionEntries(draft).map(entry => entry.component.code)])];
+        const current = [];
+        for (const source of sources) current.push(...(await reader.currentHeads(service, request, { source }, scope)).filter(row => row.active === true));
+        const position = model => JSON.stringify([model.source, model.slot, model.index]);
+        const codes = new Set(), positions = new Set();
+        for (const model of planned) {
+            if (!Number.isSafeInteger(model.index) || model.index < 0 || codes.has(model.code) || positions.has(position(model)))
+                throw this.error('ERR_CMS_00104', 'Each placement needs its own identity and an unambiguous slot position');
+            codes.add(model.code); positions.add(position(model));
+            const history = await this.access().assertIdentity(service, request, model.code, scope);
+            if (history.length && reader.heads(history)[0].source !== model.source)
+                throw this.error('ERR_CMS_00104', 'A saved placement cannot be moved from another parent by this composition');
+        }
+        if (current.some(row => !Number.isSafeInteger(row.index) || row.index < 0))
+            throw this.error('ERR_CMS_00104', 'The saved placement order requires owner inspection');
+        for (const model of planned) {
+            if (current.some(row => row.code !== model.code && position(row) === position(model) && !codes.has(row.code)))
+                throw this.error('ERR_CMS_00104', 'A saved placement outside this draft occupies the requested position; omission does not retire it');
+        }
+        const next = new Map();
+        const group = row => JSON.stringify([row.source, row.slot]);
+        for (const row of [...current, ...planned]) next.set(group(row), Math.max(next.get(group(row)) || 0, row.index + 1));
+        const moves = [];
+        for (const model of planned) {
+            const existing = current.find(row => row.code === model.code);
+            if (!existing || position(existing) === position(model)) continue;
+            const spare = next.get(group(existing));
+            if (!Number.isSafeInteger(spare)) throw this.error('ERR_CMS_00104', 'No safe temporary position is available for this reorder');
+            next.set(group(existing), spare + 1);
+            // Keep the original source, target and slot while freeing its old position.
+            moves.push(Object.assign({}, existing, { index: spare }));
+        }
+        return { moves };
     },
 
     /** Validates page and type-code references used by a designer draft. */
     validatePageReferences: async function (request, draft) {
         await this.getSingle('DefaultCmsTypeCodeService', request, { code: draft.page.typeCode, kind: 'PAGE', active: true }, 'ERR_CMS_00100');
+        const defaults = this.authoringPolicy().draftDefaults;
+        await this.validateTypeRenderer(request, draft.page, defaults?.pageTypeCode === draft.page.typeCode ? [defaults.pageRenderer] : []);
         return true;
+    },
+
+    /** Rejects renderer choices outside the type's active mapping and admitted legacy Designer keys. */
+    validateTypeRenderer: async function (request, item, compatibleRenderers) {
+        if (item.renderer === undefined) return;
+        const mappingService = SERVICE.DefaultCmsTypeCode2RendererService;
+        const mappings = typeof mappingService?.get === 'function'
+            ? await this.getMany('DefaultCmsTypeCode2RendererService', request, { code: item.typeCode, active: true })
+            : [];
+        const accepted = compatibleRenderers.concat(mappings.filter(mapping => mapping.deprecated !== true)
+            .map(mapping => mapping.renderer)).filter(renderer => typeof renderer === 'string' && renderer.length);
+        if ((mappings.length || accepted.length) && !accepted.includes(item.renderer))
+            throw this.error('ERR_CMS_00100', 'Choose an active renderer mapped to the selected content type');
     },
 
     /** Validates arbitrary slot sections against template-owned slot definitions. */
@@ -418,6 +612,8 @@ module.exports = {
     /** Validates one component type against a template slot allowlist. */
     validateComponentForSlot: async function (request, component, slot) {
         let typeCode = await this.getSingle('DefaultCmsTypeCodeService', request, { code: component.typeCode, kind: 'COMPONENT', active: true }, 'ERR_CMS_00100');
+        const kinds = this.authoringPolicy().componentKinds;
+        await this.validateTypeRenderer(request, component, kinds.filter(kind => kind.typeCode === component.typeCode).map(kind => kind.renderer));
         if (SERVICE.DefaultCmsContentLocalizationService) {
             SERVICE.DefaultCmsContentLocalizationService.validateTypeContract(typeCode);
             component.localizations.forEach(localization => SERVICE.DefaultCmsContentLocalizationService.validateVariant(
@@ -466,12 +662,68 @@ module.exports = {
             typeCode: draft.page.typeCode,
             template: draft.templateCode,
             renderer: draft.page.renderer,
-            cmsComponents: []
+            // Embedded relationships are not edited by this flat composition intent.
         };
     },
 
-    /** Builds one CMS component model. */
+    /** Validates inert owner-configured content controls before any component or graph write. */
+    validateConfiguredContent: function (component) {
+        const kinds = (this.authoringPolicy().componentKinds || []).filter(kind =>
+            kind.typeCode === component.typeCode && kind.fields !== undefined);
+        if (!kinds.length) return;
+        const fail = message => { throw this.error('ERR_CMS_00100', message); };
+        if (kinds.length !== 1) fail('CMS content field configuration is ambiguous');
+        const validateDeclarations = (fields, nested = false) => {
+            if (!Array.isArray(fields) || fields.length > 16) fail('CMS content fields are incompatible');
+            const names = new Set();
+            for (const field of fields) {
+                if (!field || typeof field !== 'object' ||
+                    typeof field.property !== 'string' || !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(field.property) ||
+                    ['constructor', 'prototype', '__proto__'].includes(field.property) || names.has(field.property) ||
+                    typeof field.label !== 'string' || !field.label.trim() || field.label.length > 160 ||
+                    !['text', 'multiline', 'items'].includes(field.control) || nested && field.control === 'items' ||
+                    field.required !== undefined && typeof field.required !== 'boolean' ||
+                    field.maxLength !== undefined && (!Number.isSafeInteger(field.maxLength) || field.maxLength < 1 || field.maxLength > 100000) ||
+                    field.maximumItems !== undefined && (!Number.isSafeInteger(field.maximumItems) || field.maximumItems < 1 || field.maximumItems > 32)) {
+                    fail('CMS content fields are incompatible');
+                }
+                names.add(field.property);
+                if (field.control === 'items') {
+                    validateDeclarations(field.itemFields, true);
+                    if (!field.itemFields.length) fail('CMS content item fields are unavailable');
+                }
+            }
+        };
+        validateDeclarations(kinds[0].fields);
+        const properties = component.properties || {};
+        if (!properties || typeof properties !== 'object' || Array.isArray(properties)) fail('CMS content properties must be an object');
+        const variants = component.localizations || [];
+        const ownValue = (source, name) => Object.getOwnPropertyDescriptor(source, name)?.value;
+        const check = (fields, values, required) => {
+            if (!values || typeof values !== 'object' || Array.isArray(values)) fail('CMS content properties must be an object');
+            for (const field of fields) {
+                const value = ownValue(values, field.property);
+                if (value === undefined || value === null || typeof value === 'string' && !value.trim()) {
+                    if (required && field.required) fail('Complete the required content field: ' + field.label);
+                    continue;
+                }
+                if (field.control === 'items') {
+                    if (!Array.isArray(value) || value.length > (field.maximumItems || 32) || required && field.required && !value.length)
+                        fail('Complete the content list: ' + field.label);
+                    value.forEach(item => check(field.itemFields, item, true));
+                } else if (typeof value !== 'string' || field.maxLength !== undefined && value.length > field.maxLength) {
+                    fail('Content text is invalid or too long: ' + field.label);
+                }
+            }
+        };
+        check(kinds[0].fields, properties, true);
+        // Optional translations cannot change declared value types or collection bounds.
+        variants.forEach(variant => check(kinds[0].fields, variant.properties || {}, false));
+    },
+
+    /** Builds one CMS component model after configured content validation. */
     componentModel: function (component) {
+        this.validateConfiguredContent(component);
         return {
             code: component.code,
             active: true,
@@ -479,14 +731,14 @@ module.exports = {
             renderer: component.renderer,
             properties: component.properties,
             accessMode: component.accessMode,
-            subComponents: []
+            // Child placements retain their canonical source/target records; legacy reference arrays are preserved.
         };
     },
 
     /** Builds one locale variant persisted separately from shared component properties. */
     localizationModel: function (component, localization) {
         return {
-            code: [component.code, localization.locale].join('-'),
+            code: localization.code || this.derivedCode('localization', [component.code, localization.locale]),
             componentCode: component.code,
             locale: localization.locale,
             properties: localization.properties,
@@ -504,16 +756,18 @@ module.exports = {
             target: component.code,
             slot: section.slot,
             active: true,
-            index: Number.isInteger(Number(section.index)) ? Number(section.index) : sectionIndex + componentIndex
+            index: (Number.isInteger(Number(section.index)) ? Number(section.index) : sectionIndex) + componentIndex
         };
     },
 
     /** Builds one CMS component-media model from a normalized component/media intent. */
     mediaModel: function (component, media, index) {
         let safe = media && typeof media === 'object' && !Array.isArray(media) ? media : {};
+        const code = safe.code || safe.componentMediaCode ||
+            this.derivedCode('media', [component.code, safe.role || 'primary', safe.mediaCode || safe.mediaSetCode || index]);
         return {
-            code: safe.code || safe.componentMediaCode || [component.code, safe.role || 'primary', safe.mediaCode || safe.mediaSetCode || index].join('-'),
-            componentMediaCode: safe.componentMediaCode || safe.code || [component.code, safe.role || 'primary', safe.mediaCode || safe.mediaSetCode || index].join('-'),
+            code,
+            componentMediaCode: safe.componentMediaCode || code,
             componentCode: component.code,
             mediaCode: safe.mediaCode,
             mediaSetCode: safe.mediaSetCode,
@@ -533,7 +787,7 @@ module.exports = {
         let route = draft.route && typeof draft.route === 'object' && !Array.isArray(draft.route) ? draft.route : draft;
         let pageCode = draft.page && draft.page.code || route.page || route.pageCode;
         return {
-            code: route.code || [draft.siteCode || route.site, pageCode, 'route'].filter(Boolean).join('-'),
+            code: route.code || this.derivedCode('route', [draft.siteCode || route.site, pageCode, 'route']),
             site: route.site || draft.siteCode,
             path: route.path,
             locale: route.locale || 'default',
@@ -547,13 +801,23 @@ module.exports = {
         };
     },
 
+    /** Projects an active, same-page menu entry into the route version; other navigation stays private. */
+    navigationEntry: function (route, navigation) {
+        if (!navigation || navigation.status !== 'ACTIVE' || navigation.parent || navigation.restrictions.length ||
+            navigation.site !== route.site || navigation.locale !== route.locale || navigation.channel !== route.channel ||
+            route.routeType !== 'PAGE' || navigation.nodeType !== 'PAGE' || navigation.targetPage !== route.page ||
+            typeof navigation.title !== 'string' || !navigation.title.trim() || navigation.title.length > 512 ||
+            !Number.isSafeInteger(navigation.position) || navigation.position < 0) return undefined;
+        return { code: navigation.code, title: navigation.title.trim(), position: navigation.position };
+    },
+
     /** Builds or normalizes navigation assignment intent. */
     navigationIntent: function (draft) {
         let navigation = draft.navigation && typeof draft.navigation === 'object' && !Array.isArray(draft.navigation) ? draft.navigation : draft;
         let pageCode = draft.page && draft.page.code || navigation.targetPage || navigation.pageCode;
         let pageName = draft.page && draft.page.name || navigation.name || navigation.title || pageCode;
         return {
-            code: navigation.code || [draft.siteCode || navigation.site, pageCode, 'nav'].filter(Boolean).join('-'),
+            code: navigation.code || this.derivedCode('navigation', [draft.siteCode || navigation.site, pageCode, 'nav']),
             site: navigation.site || draft.siteCode,
             parent: navigation.parent,
             name: navigation.name || navigation.title || pageName,
@@ -574,7 +838,7 @@ module.exports = {
     /** Normalizes one component-detail intent from a route body. */
     componentDetailIntent: function (input) {
         return {
-            code: input.code || [input.source, input.slot || 'default', input.target].filter(Boolean).join('-'),
+            code: input.code || this.derivedCode('placement', [input.source, input.slot || 'default', input.target]),
             source: this.requiredCode(input.source || input.pageCode || input.componentCode, 'source'),
             target: this.requiredCode(input.target || input.targetComponentCode, 'target'),
             slot: this.requiredCode(input.slot || 'default', 'slot'),
@@ -593,7 +857,7 @@ module.exports = {
             properties: input.properties,
             localizations: Array.isArray(input.localizations) ? input.localizations.map(this.normalizeLocalization.bind(this)) : [],
             accessMode: input.accessMode || 'AUTHENTICATED',
-            subComponents: Array.isArray(input.subComponents) ? input.subComponents : []
+            subComponents: Array.isArray(input.subComponents) ? input.subComponents : undefined
         };
     },
 
@@ -611,10 +875,18 @@ module.exports = {
         if (serviceName === 'DefaultCmsComponentDetailService' &&
             rows.some(row => row.authoringScope.siteCode !== modelScope.siteCode)) this.access().deny();
         let service = this.service(serviceName);
+        const current = rows.length ? SERVICE.DefaultCmsDesignerReadService.heads(rows)[0] : {};
+        // Preserve attributes outside this command's projection. Undefined optional
+        // values do not erase saved SEO, extensions or nested relationships.
+        const merged = Object.assign({}, current, Object.fromEntries(Object.entries(model).filter(([, value]) => value !== undefined)));
+        // New page records require their relationship array. Existing arrays
+        // remain owner-read data and are never cleared by a flat edit.
+        if (serviceName === 'DefaultCmsPageService' && merged.cmsComponents === undefined) merged.cmsComponents = [];
+        if (serviceName === 'DefaultCmsComponentService' && merged.subComponents === undefined) merged.subComponents = [];
         this.access().authorize(request, 'cms.authoring.write');
         try {
             let response = await service.save({ tenant: request.tenant, authData: this.access().persistenceAuth(),
-                model: this.access().nextModel(Object.assign({}, model, {
+                model: this.access().nextModel(Object.assign({}, merged, {
                     authoringScope: modelScope }), rows) });
             const saved = this.access().savedRecord(response);
             this.access().authorize(request, 'cms.authoring.write');
@@ -644,7 +916,7 @@ module.exports = {
 
     /** Fetches exactly one matching record or throws the requested CMS error. */
     getSingle: async function (serviceName, request, query, code, optionalWhenMissing) {
-        let items = await this.safeGet(serviceName, request, query);
+        let items = await this.currentReferences(serviceName, request, query);
         if (items.length === 1) return items[0];
         if (optionalWhenMissing && items.length === 0) return Object.assign({ code: query.code, name: query.code }, query);
         throw this.error(code, 'Required CMS designer reference is unavailable');
@@ -652,7 +924,15 @@ module.exports = {
 
     /** Fetches many matching records through a generated service. */
     getMany: async function (serviceName, request, query) {
-        return this.safeGet(serviceName, request, query);
+        return this.currentReferences(serviceName, request, query);
+    },
+
+    /** Resolves retained reference history before applying active-state filters; retired heads never resurrect. */
+    currentReferences: async function (serviceName, request, query) {
+        const sourceQuery = { ...query };
+        delete sourceQuery.active;
+        const heads = SERVICE.DefaultCmsDesignerReadService.heads(await this.safeGet(serviceName, request, sourceQuery));
+        return query.active === undefined ? heads : heads.filter(row => row.active === query.active);
     },
 
     /** Performs a safe generated-service get and normalizes its result array. */
@@ -668,27 +948,40 @@ module.exports = {
     /** Builds the client-safe backend metadata needed by Axis Designer forms. */
     authoringMetadata: async function (request) {
         const enterpriseCode = this.access().authorize(request, 'cms.backoffice.view').enterpriseCode;
-        let sites = await this.safeGet('DefaultCmsSiteService', request, { active: true, enterpriseCode });
+        const selected = this.access().inputScope(request);
+        const scope = selected.siteCode || selected.catalogCode
+            ? await this.access().scope(request, 'cms.backoffice.view') : undefined;
+        let sites = await this.currentReferences('DefaultCmsSiteService', request, { active: true, enterpriseCode,
+            ...(scope ? { code: scope.siteCode, catalog: scope.catalogCode } : {}) });
         if (sites.some(site => site.enterpriseCode !== enterpriseCode)) this.access().deny();
         let catalogs = this.catalogsFromSites(sites);
-        const referenceRows = async serviceName => (await this.access().records(serviceName, request, { active: true }))
-            .filter(row => !row.authoringScope || row.authoringScope.enterpriseCode === enterpriseCode &&
-                catalogs.some(catalog => catalog.code === row.authoringScope.catalogCode));
+        // Query only editable Catalog references before the owner's bounded read.
+        // Historical unowned content cannot become authoring authority or exhaust
+        // this enterprise's lookup with another application's documentation.
+        const referenceRows = async serviceName => this.currentReferences(serviceName, request, {
+            active: true,
+            'authoringScope.enterpriseCode': enterpriseCode,
+            'authoringScope.catalogCode': { $in: catalogs.map(catalog => catalog.code) }
+        });
         let templates = await referenceRows('DefaultCmsPageTemplateService');
         let slots = await referenceRows('DefaultCmsSlotDefinitionService');
         let typeCodes = await referenceRows('DefaultCmsTypeCodeService');
         let groups = await referenceRows('DefaultCmsComponentTypeGroupService');
+        const mappings = SERVICE.DefaultCmsTypeCode2RendererService ? await referenceRows('DefaultCmsTypeCode2RendererService') : [];
+        const currentMappings = SERVICE.DefaultCmsDesignerReadService.heads(mappings).filter(row => row.active === true && row.deprecated !== true);
         let mediaFolders = await this.safeOptionalGet('DefaultMediaFolderService', request, { status: 'ACTIVE' });
         let mediaFormats = await this.safeOptionalGet('DefaultMediaFormatService', request, { status: 'ACTIVE' });
         let navigationNodes = await this.safeOptionalGet('DefaultCmsNavigationNodeService', request,
-            { status: 'ACTIVE', 'authoringScope.enterpriseCode': enterpriseCode });
+            { status: 'ACTIVE', 'authoringScope.enterpriseCode': enterpriseCode,
+                ...(scope ? { site: scope.siteCode, 'authoringScope.catalogCode': scope.catalogCode } : {}) });
         return {
             contentCatalogs: catalogs.map(this.catalogReference.bind(this)),
             sites: sites.map(this.siteReference.bind(this)),
             pageTemplates: templates.map(this.templateReference.bind(this)),
             slotDefinitions: slots.map(this.slotReference.bind(this)),
             pageTypes: typeCodes.filter(item => item.kind === 'PAGE').map(this.typeReference.bind(this)),
-            componentTypes: typeCodes.filter(item => item.kind === 'COMPONENT').map(this.typeReference.bind(this)),
+            componentTypes: typeCodes.filter(item => item.kind === 'COMPONENT').map(item => ({ ...this.typeReference(item),
+                renderers: currentMappings.filter(mapping => mapping.code === item.code).map(mapping => mapping.renderer) })),
             componentTypeGroups: groups.map(this.componentTypeGroupReference.bind(this)),
             mediaFolders: mediaFolders.map(this.mediaFolderReference.bind(this)),
             mediaFormats: mediaFormats.map(this.mediaFormatReference.bind(this)),
@@ -754,6 +1047,7 @@ module.exports = {
     templateReference: function (item) {
         return {
             code: item.code,
+            catalogCode: item.authoringScope?.catalogCode,
             name: item.name || item.displayName || item.code,
             renderer: item.renderer,
             typeCode: this.codeOf(item.typeCode || item.pageTypeCode)
@@ -764,6 +1058,7 @@ module.exports = {
     slotReference: function (item) {
         return {
             code: item.code,
+            catalogCode: item.authoringScope?.catalogCode,
             name: item.name || item.slot || item.code,
             templateCode: this.codeOf(item.template || item.templateCode),
             allowedComponentTypes: Array.isArray(item.allowedComponentTypes) ? item.allowedComponentTypes.map(this.codeOf.bind(this)).filter(Boolean) : [],
@@ -777,6 +1072,7 @@ module.exports = {
     typeReference: function (item) {
         return {
             code: item.code,
+            catalogCode: item.authoringScope?.catalogCode,
             name: item.name || item.displayName || item.code,
             kind: item.kind,
             propertySchema: item.propertySchema
@@ -787,11 +1083,19 @@ module.exports = {
     normalizeLocalization: function (input) {
         let safe = input && typeof input === 'object' && !Array.isArray(input) ? input : {};
         return {
+            ...(safe.code === undefined ? {} : { code: this.requiredCode(safe.code, 'localization.code') }),
             locale: this.requiredText(safe.locale, 'localization.locale'),
             properties: safe.properties && typeof safe.properties === 'object' && !Array.isArray(safe.properties) ? safe.properties : {},
             seo: safe.seo && typeof safe.seo === 'object' && !Array.isArray(safe.seo) ? safe.seo : undefined,
             status: safe.status || 'DRAFT'
         };
+    },
+
+    /** Admits an opaque owner-read stamp only as stale-source preflight evidence, never as scope authority. */
+    sourceVersion: function (value) {
+        if (typeof value !== 'string' || !/^[a-f0-9]{64}$/.test(value))
+            throw this.error('ERR_CMS_00100', 'Reopen the saved composition before saving.');
+        return value;
     },
 
     /** Returns a client-safe component type group reference. */
@@ -865,7 +1169,8 @@ module.exports = {
         }
         for (const detail of model.subComponents || []) {
             const code = this.codeOf(detail);
-            const placements = await this.access().assertIdentity('DefaultCmsComponentDetailService', request, code, scope, true);
+            const placements = planned.filter(([owner, item]) => owner === 'DefaultCmsComponentDetailService' && item.code === code).map(([, item]) => item);
+            if (!placements.length) placements.push(...await this.access().assertIdentity('DefaultCmsComponentDetailService', request, code, scope, true));
             if (placements.some(placement => placement.source !== model.code)) this.access().deny();
         }
         for (const [owner, code] of references) {
@@ -901,6 +1206,9 @@ module.exports = {
         let configured = typeof CONFIG !== 'undefined' && CONFIG.get ? (CONFIG.get('cms') || {}).designerAuthoring : {};
         return Object.assign({
             maximumReferenceLookupItems: 100,
+            maximumCompositionDepth: 6,
+            maximumCompositionComponents: 100,
+            nestedSlot: "default",
             requireNavigationForPublish: false,
             draftDefaults: {},
             componentKinds: []
@@ -908,13 +1216,25 @@ module.exports = {
     },
 
     /** Returns client-safe authoring defaults without exposing unrelated runtime policy. */
-    clientAuthoringDefaults: function () {
-        let policy = this.authoringPolicy();
+    clientAuthoringDefaults: function (metadata = {}) {
+        const policy = this.authoringPolicy(), draft = policy.draftDefaults || {};
+        const site = (metadata.sites || []).find(item => item.code === draft.siteCode && item.catalogCode === draft.catalogCode);
+        const template = (metadata.pageTemplates || []).find(item => item.code === draft.templateCode && item.catalogCode === draft.catalogCode);
+        const pageType = (metadata.pageTypes || []).find(item => item.code === draft.pageTypeCode && item.catalogCode === draft.catalogCode);
+        const slots = (metadata.slotDefinitions || []).filter(item => item.templateCode === draft.templateCode && item.catalogCode === draft.catalogCode);
+        const valid = Boolean(site && template && pageType && Array.isArray(draft.slots) &&
+            draft.slots.every(name => slots.some(slot => slot.name === name)));
+        const componentKinds = (Array.isArray(policy.componentKinds) ? policy.componentKinds : [])
+            .filter(kind => (metadata.componentTypes || []).some(type => type.code === kind.typeCode &&
+                (!site || type.catalogCode === site.catalogCode)))
+            .map(kind => ({ ...kind, compatibleRenderers: [...new Set([kind.renderer, ...(metadata.componentTypes || [])
+                .filter(type => type.code === kind.typeCode).flatMap(type => type.renderers || [])])] }));
         return {
             maximumReferenceLookupItems: policy.maximumReferenceLookupItems,
+            nesting: { maximumDepth: policy.maximumCompositionDepth, maximumComponents: policy.maximumCompositionComponents, defaultSlot: policy.nestedSlot },
             requireNavigationForPublish: policy.requireNavigationForPublish,
-            draftDefaults: policy.draftDefaults,
-            componentKinds: Array.isArray(policy.componentKinds) ? policy.componentKinds : []
+            draftDefaults: valid ? structuredClone(draft) : {},
+            componentKinds: structuredClone(componentKinds)
         };
     },
 
@@ -924,18 +1244,27 @@ module.exports = {
         return {
             supportedLocales: Array.isArray(configured.supportedLocales) ? configured.supportedLocales : [],
             defaultLocale: configured.defaultLocale || 'en',
+            routeLocale: configured.legacyRouteLocale || configured.defaultLocale || 'en',
             fallbackLocales: Array.isArray(configured.fallbackLocales) ? configured.fallbackLocales : []
         };
     },
 
     /** Builds a stable component-detail code for page/component placement. */
     sectionCode: function (pageCode, section, component) {
-        return [pageCode, section.slot, component.code].filter(Boolean).join('-');
+        return this.derivedCode('placement', [pageCode, section.slot, component.code]);
+    },
+
+    /** Keeps existing derived IDs and bounds longer ones without losing tuple identity. */
+    derivedCode: function (kind, parts) {
+        const legacy = parts.filter(value => value !== undefined && value !== null && value !== '').join('-');
+        if (designerCodePattern.test(legacy)) return legacy;
+        const digest = createHash('sha256').update(JSON.stringify([kind, parts])).digest('hex');
+        return kind + '-' + digest;
     },
 
     /** Validates and returns a safe Nodics code. */
     requiredCode: function (value, label) {
-        if (typeof value !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value)) {
+        if (typeof value !== 'string' || !designerCodePattern.test(value)) {
             throw this.error('ERR_CMS_00100', label + ' is invalid');
         }
         return value;

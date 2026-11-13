@@ -13,7 +13,6 @@
 const assert = require('node:assert/strict');
 const { fork } = require('node:child_process');
 const { randomUUID, randomBytes } = require('node:crypto');
-const { createClient } = require('redis');
 const { performance } = require('node:perf_hooks');
 const configuration = require('./authIntegrationTestConfiguration').load();
 /** Creates a bounded request channel to a separate production-owner test process. */
@@ -36,9 +35,7 @@ async function run() {
     if (!configuration.redisUrl) { console.log('Runtime Redis live contract NOT EXECUTED: supply NODICS_AUTH_REDIS_LIVE_URL and --require-live'); return; }
     const replicas = [worker(), worker()], prefix = 'nodics-runtime-test-' + randomUUID(), secret = randomBytes(48).toString('base64url');
     const tenant = configuration.tenant;
-    const client = createClient({ url: configuration.redisUrl, socket: { reconnectStrategy: false } }); client.on('error', () => {});
     try {
-        await client.connect();
         await Promise.all(replicas.map((replica, index) => replica.call('initialize', { url: configuration.redisUrl, secret, prefix, instance: 'worker-' + index })));
         const options = { tenant, runtimeInstanceId: 'worker-0', serviceId: 'worker-principal', authVersion: 1, tokenLife: 60, modules: ['cronjob'], permissions: ['jobs.execute'],
             runtimeScope: { assignmentCode: 'explicit-test-grant', projectCode: 'runtime.test', environmentCode: 'test', serverCode: 'worker', instanceCode: 'worker-0' } };
@@ -89,11 +86,10 @@ async function run() {
             staleIssuerRejected: true, tenantIsolation: true, moduleAndInstanceScope: true, inactiveAndExpiredStateRejected: true,
             expiredTokensRejected: true, disconnectedClientRejected: true, providerReconnectRecovered: true, burstTokens: 64, burstMs, p95BudgetMs, benchmark }));
     } finally {
-        await Promise.allSettled(replicas.map(async replica => { try { await replica.call('stop'); } finally { replica.child.kill(); } }));
-        if (client.isOpen) {
-            const keys = []; for await (const batch of client.scanIterator({ MATCH: '*' + prefix + '*', COUNT: 100 })) keys.push(...[].concat(batch));
-            if (keys.length) await client.del(keys); await client.quit();
-        }
+        await Promise.allSettled(replicas.map(async replica => {
+            try { await replica.call('cleanup', { tenants: [tenant, tenant + '_other'] }); }
+            finally { try { await replica.call('stop'); } finally { replica.child.kill(); } }
+        }));
     }
 }
 run().catch(error => { console.error(error); process.exitCode = 1; });

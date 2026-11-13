@@ -144,6 +144,10 @@ module.exports = {
       request,
     );
   },
+  /** Delegates the authenticated current-enterprise task to the authoritative Profile service. */
+  getManagementWorkspace: function (request) {
+    return SERVICE.DefaultEnterpriseManagementService.getManagementWorkspace(request);
+  },
   /** Delegates backend-driven workspace delivery to the authoritative Profile service. */
   getAccessWorkspace: function (request) {
     return Promise.resolve(

@@ -51,11 +51,11 @@ module.exports = {
 
     /** Returns Experience Studio navigation entries. @param {Object} backoffice BackOffice config. @returns {Array<Object>} Navigation entries. */
     navigation: function (backoffice) {
-        let documentationRoute = backoffice.documentationRoute || '/docs/capabilities/content-publishing/experience-targeting';
+        let documentationRoute = backoffice.documentationRoute || '/docs/framework/wcms-experience-placement-delivery';
         let group = { id: 'content', label: 'Content and Experience', order: 200 };
         return [
             this.navigationEntry('wcms-experience-studio', 'Experience Studio', '/content/experience-studio', 'experience', 560, group, documentationRoute, undefined, ['WCMS_EXPERIENCE_VIEW']),
-            this.navigationEntry('wcms-experience-placements', 'Placements', '/content/experience-studio/placements', 'target', 561, group, documentationRoute, 'wcms-experience-studio', ['WCMS_EXPERIENCE_VIEW', 'WCMS_EXPERIENCE_EDIT']),
+            this.navigationEntry('wcms-experience-placements', 'Placements', '/content/experience-studio/placements', 'target', 561, group, documentationRoute, 'wcms-experience-studio', ['WCMS_EXPERIENCE_VIEW']),
             this.navigationEntry('wcms-experience-preview', 'Preview', '/content/experience-studio/preview', 'preview', 562, group, documentationRoute, 'wcms-experience-studio', ['WCMS_EXPERIENCE_PREVIEW']),
             this.navigationEntry('wcms-experience-index-status', 'Index Status', '/content/experience-studio/index-status', 'search', 563, group, documentationRoute, 'wcms-experience-studio', ['WCMS_EXPERIENCE_PUBLISH_STATUS'])
         ];
@@ -78,6 +78,12 @@ module.exports = {
                 documentationRoute: documentationRoute
             },
             featureState: 'PREVIEW',
+            ...(id === 'wcms-experience-preview' ? { lifecycleActions: [{
+                id: 'prepare-private-preview', label: 'Prepare private preview', intent: 'CREATE', featureState: 'ACTIVE', order: 10,
+                permission: 'WCMS_EXPERIENCE_PREVIEW', ownerModule: 'wcmsExperience',
+                handlerAction: 'preparePreview', httpMethod: 'POST',
+                operationRoute: '/nodics/wcmsExperience/v0/authoring/preparation'
+            }] } : {}),
             requiredPermissions: requiredPermissions || ['WCMS_EXPERIENCE_VIEW']
         };
     }

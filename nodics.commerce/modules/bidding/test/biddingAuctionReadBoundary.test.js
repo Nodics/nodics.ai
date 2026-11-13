@@ -29,7 +29,7 @@ function fixture(t) {
   global.CLASSES = { NodicsError };
   global.UTILS = { isObject: x => x && typeof x === 'object', isBlank: x => !x || !Object.keys(x).length };
   global.CONFIG = { get: key => key === 'bidding' ? { stores: { store: { enterpriseCode:'merchant', locale:'en' } } } : undefined };
-  global.SERVICE = { DefaultBiddingService:bidding, DefaultNegotiatedPriceService:quote, DefaultBiddingAuctionPortsService:ports };
+  global.SERVICE = { DefaultModuleService: { isLocalModuleActive: moduleName => ["bidding"].includes(moduleName), }, DefaultBiddingService:bidding, DefaultNegotiatedPriceService:quote, DefaultBiddingAuctionPortsService:ports };
   const state = { rows:[], calls:[], fail:false };
   const schema = { ...mongo, versioned:false, rawSchema:require('../src/schemas/schemas').bidding.biddingAuctionRound,
     transactionOptions: () => ({}),

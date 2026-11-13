@@ -2,14 +2,14 @@
 
 ## Logical Target Defaults
 
-The PLATFORM role inherits `workbench.target.productModule: product` and
+The active Workbench module supplies `workbench.target.productModule: product` and
 `pricingModule: pricing` from this owner. Projects select the connection and
 target runtime authority; these logical module names neither choose a deployment
-nor enable commands, providers, API access or employee permissions. Other roles
-do not inherit this target profile. Later customer/node overrides remain valid
+nor enable commands, providers, API access or employee permissions. Runtime role
+names do not select these defaults. Later customer/node overrides remain valid
 through nConfig. Missing connection/authority stays unavailable, not a local-call
 fallback. `test/copilotTargetConfigurationOwnership.test.js` covers default,
-unrelated-role and explicit target customization without dispatching a write.
+arbitrary runtime names and explicit target customization without dispatching a write.
 
 Collection-centre plans use canonical Location/Profile references, current
 enterprise and complete nested field review. Waste retains validation and create
@@ -118,3 +118,15 @@ retry queue, compensation service, or replacement for the domain APIs.
 See [the operator guide](../examples/governed-actions.md) for business steps,
 migration, investigation and extension boundaries. Tests are in
 `../../test/copilotActionExecution.test.js`.
+
+
+## Operational action destinations
+
+Owner-configured action targets identify the canonical implementing module and
+explicit `OPERATIONAL` publication, never a physical Commerce or Process role.
+Copilot coupon/notification actions target `digitalCore`; CMS approval and
+Editorial action claims target `workflow`. Preserve existing owner grants,
+original employee or scoped runtime credentials, execution handles, actor/receipt
+bindings and uncertain-operation recovery. CMS/Editorial callbacks additionally
+require local domain ownership in Staged context. Deployment overrides select
+connections; framework-owned publication defaults are inherited.

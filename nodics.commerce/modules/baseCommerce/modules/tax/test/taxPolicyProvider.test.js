@@ -494,7 +494,7 @@ test('disabled capture API delegates through owner facade with authenticated sco
 });
 
 test('fixed callback delegates Process authority and null registrations stay disabled', async () => {
-    const config = require('../config/properties');
+    const config = publicationDefaults('ONLINE');
     assert.equal(config.publish.providers.versionProviders.tax, null);
     assert.equal(config.publish.providers.domainAdapters.tax, null);
     assert.equal(config.publish.providers.workflowProviders.tax, null);
@@ -592,16 +592,19 @@ test('target transport routes require runtime internal identity and distinct Onl
         assert.equal(route.permissionConfig, 'authSecurity.internalToken.routePermission');
     }
     const calls = [];
-    global.CONFIG = { get: () => ({ publication: { runtimeRole: 'STAGED', target: {
-        moduleName: 'tax', connectionName: 'policyOnline', runtimeRole: 'COMMERCE_ONLINE' } } }) };
+    global.CONFIG = { get: name => name === 'runtimeRole' ? { code: 'any-host', publication: 'STAGED' } : ({ publication: { runtimeRole: 'STAGED', target: {
+        moduleName: 'tax', connectionName: 'policyOnline', publication: 'OPERATIONAL' } } }) };
     global.NODICS = { getInternalAuthToken: () => 'runtime-token' };
-    global.SERVICE = { DefaultModuleService: { invokeModule: async input => { calls.push(input); return {}; } } };
+    global.SERVICE = { DefaultModuleService: { isLocalModuleActive: name => name === 'tax', invokeModule: async input => { calls.push(input); return {}; } } };
     await transport.getTargetStatus({ rootType: 'root', rootCode: 'code' }, request);
     assert.equal(calls[0].apiName, '/publication/policy/status');
     assert.equal(calls[0].local, false);
     assert.equal(calls[0].tenant, request.tenant);
     assert.equal(calls[0].header.Authorization, 'Bearer runtime-token');
-    assert.equal(calls[0].targetAuthority.runtimeRole, 'COMMERCE_ONLINE');
+    assert.equal(calls[0].targetAuthority.publication, 'OPERATIONAL');
+    SERVICE.DefaultModuleService.isLocalModuleActive = () => false;
+    assert.throws(() => transport.getTargetStatus({}, request), /Distinct Online/);
+    SERVICE.DefaultModuleService.isLocalModuleActive = () => true;
     global.CONFIG = { get: () => ({ publication: { runtimeRole: 'STAGED', target: { connectionName: 'default' } } }) };
     assert.throws(() => transport.getTargetStatus({}, request), /Distinct Online/);
 });
@@ -883,7 +886,8 @@ test('capture and activation remain deployment-qualified with no registration fa
 
 test('capture requires the effective tenant CURRENT versioned model, not qualification flag alone', async () => {
     const f = setup();
-    assert.equal(require('../config/properties').schemaPolicies.tax.publicationVersioned.isVersionedEnabled, false);
+    assert.equal(publicationDefaults('ONLINE').schemaPolicies.tax.publicationVersioned.isVersionedEnabled, false);
+    assert.equal(publicationDefaults('STAGED').schemaPolicies.tax.publicationVersioned.isVersionedEnabled, true);
     const expected = Object.keys(f.sources).sort();
     assert.deepEqual(Object.entries(schemas).filter(([, schema]) =>
         schema.schemaPolicies?.includes('publicationVersioned')).map(([name]) => name).sort(), expected);
@@ -896,3 +900,14 @@ test('capture requires the effective tenant CURRENT versioned model, not qualifi
         assert.equal(f.sourceStore.release.rows.size, 0);
     }
 });
+
+/** Resolve real owner bindings for the explicitly selected publication context. */
+function publicationDefaults(publication) {
+    const bindings = require('../../../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService');
+    return bindings.resolve(require('../config/properties'), {}, {
+        readRuntimeProperty: (_server, path) => {
+            if (path.join('.') !== 'runtimeRole.publication') throw new Error('Unexpected fixture context read');
+            return publication;
+        },
+    });
+}

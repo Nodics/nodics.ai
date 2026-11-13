@@ -39,6 +39,7 @@ test("reports provider capability from the canonical data release service", () =
   const previousService = global.SERVICE;
   global.SERVICE = {
     DefaultDataReleaseService: {
+      clientActions: () => ["validate", "install"],
       preflight: async () => ({}),
       execute: async () => ({}),
     },
@@ -57,6 +58,7 @@ test("dry-run delegates to nImport preflight and maps the business result", asyn
   let captured;
   global.SERVICE = {
     DefaultDataReleaseService: {
+      clientActions: () => ["validate", "install"],
       preflight: async (operationRequest) => {
         captured = operationRequest;
         return {
@@ -95,6 +97,7 @@ test("execution delegates to nImport execute and returns receipt-friendly eviden
   let called = false;
   global.SERVICE = {
     DefaultDataReleaseService: {
+      clientActions: () => ["validate", "install"],
       preflight: async () => {
         throw new Error("preflight should not be called for execution");
       },
@@ -106,6 +109,7 @@ test("execution delegates to nImport execute and returns receipt-friendly eviden
             dataType: "core",
             releases: [{ releaseCode: "profile:core-v001" }],
             importRun: "run-100",
+            execution: { code: "releaseExecution_" + "a".repeat(64), status: "COMPLETED", steps: [{ status: "COMPLETED" }] },
           },
         };
       },
@@ -115,7 +119,8 @@ test("execution delegates to nImport execute and returns receipt-friendly eviden
   assert.equal(called, true);
   assert.equal(result.state, "COMPLETED");
   assert.equal(result.changedCount, 1);
-  assert.equal(result.evidenceReference, "run-100");
+  assert.equal(result.evidenceReference, "releaseExecution_" + "a".repeat(64));
+  assert.equal(result.completionVerified, true);
   assert.equal(result.retryPolicy.safeToRetry, false);
   global.SERVICE = previousService;
 });
@@ -125,6 +130,7 @@ test("status refresh remains validation-only even when the caller is not in dry-
   let preflightCalls = 0;
   global.SERVICE = {
     DefaultDataReleaseService: {
+      clientActions: () => ["validate", "install"],
       preflight: async () => {
         preflightCalls += 1;
         return {
@@ -154,6 +160,7 @@ test("infers release data type from discovered releases when context omits it", 
   let captured;
   global.SERVICE = {
     DefaultDataReleaseService: {
+      clientActions: () => ["validate", "install"],
       discoverReleases: (dataType) =>
         dataType === "sample"
           ? [{ releaseCode: "circa.ewaste:sample-v001", dataType: "sample" }]
@@ -180,6 +187,7 @@ test("returns governed guidance when target identity or source repair is missing
   const previousService = global.SERVICE;
   global.SERVICE = {
     DefaultDataReleaseService: {
+      clientActions: () => ["validate", "install"],
       discoverReleases: () => [],
       preflight: async () => {
         const error = new Error("Requested data release manifest is invalid; repair manifest before installation");
@@ -201,4 +209,45 @@ test("returns governed guidance when target identity or source repair is missing
   assert.equal(sourceRepair.retryPolicy.safeToRetry, false);
   assert.match(sourceRepair.nextAction, /release validation pipeline/);
   global.SERVICE = previousService;
+});
+
+test("unconfirmed or queued execution never becomes a completed repair", () => {
+  for (const execution of [undefined, { status: "RUNNING", steps: [] }, { status: "UNCERTAIN", steps: [] }]) {
+    const result = provider.toRepairResult(repair({ dryRun: false }), { releaseCode: "profile:core-v001" },
+      { data: { releases: [{ releaseCode: "profile:core-v001" }], execution } }, false);
+    assert.equal(result.state, "RECONCILIATION_REQUIRED");
+    assert.equal(result.completionVerified, false);
+    assert.equal(result.retryPolicy.safeToRetry, false);
+  }
+});
+test("permission is rechecked before any owner execution", async t => {
+  const previousService = global.SERVICE, previousClasses = global.CLASSES;
+  t.after(() => { global.SERVICE = previousService; global.CLASSES = previousClasses; });
+  global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
+  let calls = 0;
+  global.SERVICE = { DefaultDataReleaseService: { clientActions: () => [], execute: async () => { calls++; } } };
+  await assert.rejects(provider.executeRepair(repair({ dryRun: false }), request()), { code: "ERR_AUTH_00003" });
+  assert.equal(calls, 0);
+});
+test("reconciliation acknowledges only the original immutable owner plan without execution", async t => {
+  const previousService = global.SERVICE;
+  t.after(() => { global.SERVICE = previousService; });
+  let calls = 0;
+  const plan = { identity: "reviewed" }, row = { status: "COMPLETED", planHash: "plan-hash",
+    steps: [{ status: "COMPLETED" }], code: "releaseExecution_" + "b".repeat(64) };
+  global.SERVICE = {
+    DefaultDataReleaseService: { clientActions: () => ["install"], preparePlan: async () => plan,
+      execute: async () => { calls++; } },
+    DefaultDataReleaseExecutionService: {
+      find: async () => ({ code: row.code }), scope: () => ({}), load: async () => row,
+      identity: value => { assert.equal(value, plan); return value; }, hash: () => "plan-hash",
+      reconcile: async (_, original) => original,
+      response: async original => ({ data: { execution: original } })
+    }
+  };
+  const result = await provider.reconcileRepair(repair({ dryRun: false }), request());
+  assert.equal(result.completionVerified, true); assert.equal(result.evidenceReference, row.code);
+  assert.equal(calls, 0);
+  row.planHash = "changed-plan";
+  assert.equal(await provider.reconcileRepair(repair({ dryRun: false }), request()), undefined);
 });

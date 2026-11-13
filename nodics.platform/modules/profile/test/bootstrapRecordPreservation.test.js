@@ -11,17 +11,47 @@
 
 /** @module profile/test/bootstrapRecordPreservation @description Tests private Init admission, exact retained identities and generated insert-only persistence for forward Profile records. @owner profile @layer test */
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
 const { test, beforeEach, afterEach } = require("node:test");
 const bootstrap = require("../src/service/identity/defaultMandatoryIdentityBootstrapService");
 const executeBootstrapRelease = require("./helpers/bootstrapReleaseExecution");
 const writer = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/procs/save/defaultModelSaveInitializerService");
 const kinds = ["employee", "customer", "address", "contact", "enterprise", "tenant"];
-const serviceBaselineScopes = ["auth.internal.token.read", "auth.internal.token.read.anyTenant",
-  "location.location.read", "profile.address.reference.read", "profile.enterprise.reference.read"];
+const serviceBaselineScopes = [
+  "profile.commerce.notification.recipient.resolve",
+  "commerce.digital.notification.read",
+  "commerce.promotion.analytics",
+  "auth.internal.token.read",
+  "auth.internal.token.read.anyTenant",
+  "location.location.read",
+  "profile.address.reference.read",
+  "profile.enterprise.reference.read",
+  "commerce.digital.bundle.publish",
+  "commerce.digital.own.read",
+  "commerce.pricing.merchant.evidence",
+  "commerce.product.read",
+  "commerce.store.read",
+  "communication.verification.execute",
+  "profile.customer.reference.read",
+  "profile.enterprise.search",
+  "profile.tenant.namespace.bind",
+  "publish.lifecycle.create",
+  "publish.lifecycle.requestApproval",
+  "publish.lifecycle.validate",
+  "publish.lifecycle.view",
+  "publish.setup.observe",
+  "waste.asset.listing.intent.read",
+  "carbon.holdings.read",
+  "carbon.holdings.reserve",
+  "carbon.holdings.release",
+  "carbon.holdings.transfer",
+  "carbon.holdings.finalize"
+];
 
 /** Evaluates the real record source with fixture-only bootstrap credentials, never deployment secrets. */
 function serviceSeed(relative) {
-  const source = require("node:fs").readFileSync(require.resolve(relative), "utf8");
+  const source = fs.readFileSync(require.resolve(relative), "utf8");
   const context = { module: { exports: {} }, CONFIG: {}, require: name => {
     assert.equal(name, "nodics.foundation/modules/nAuth/src/service/security/defaultAuthSecurityService");
     return { validateBootstrapIdentity: config => {
@@ -33,13 +63,14 @@ function serviceSeed(relative) {
   return structuredClone(context.module.exports.record1);
 }
 
-test("forward service source restores exactly five fresh-install scopes without changing historical bytes or credential bindings", () => {
+test("fresh service seed pins the complete scope list and credential bindings without fictional contact details", () => {
   const historicalPath = "./fixtures/unreleasedPredecessor/init-v001/records/user/defaultServiceEmployeeData";
   const original = serviceSeed(historicalPath);
   const forward = serviceSeed("../data/init-v001/records/identityBootstrap/preservedServiceEmployeeData");
-  assert.deepEqual(original.apiKeyScopes, serviceBaselineScopes.slice(0, 2));
-  assert.deepEqual(forward, { ...original, apiKeyScopes: serviceBaselineScopes });
-  assert.equal(require("node:crypto").createHash("sha256").update(require("node:fs").readFileSync(require.resolve(historicalPath))).digest("hex"),
+  assert.deepEqual(original.apiKeyScopes, ["auth.internal.token.read", "auth.internal.token.read.anyTenant"]);
+  const { addresses, contacts, ...retainedFields } = original;
+  assert.deepEqual(forward, { ...retainedFields, apiKeyScopes: serviceBaselineScopes });
+  assert.equal(require("node:crypto").createHash("sha256").update(fs.readFileSync(require.resolve(historicalPath))).digest("hex"),
     "3b664f03fa305b2c96fd0e9e4a2ac5b08af82450cda7b6dffeed279e70fc4209");
   const header = require("../data/init-v001/headers/identityBootstrap/preservedUsersHeader").profile.defaultServiceEmployee;
   assert.equal(header.options.dataFilePrefix, "preservedServiceEmployeeData");
@@ -48,7 +79,7 @@ test("forward service source restores exactly five fresh-install scopes without 
   assert(files["init-v001/records/identityBootstrap/preservedServiceEmployeeData.js"]);
 });
 
-test("fresh apiAdmin receives five scopes while existing rotated credentials and narrowed scopes survive successor execution", async () => {
+test("fresh apiAdmin receives the declared scopes while existing rotated credentials and narrowed scopes survive successor execution", async () => {
   for (const tenant of ["default", "subject"]) {
     const f = fixture("employee");
     const model = serviceSeed("../data/init-v001/records/identityBootstrap/preservedServiceEmployeeData");
@@ -65,11 +96,12 @@ test("fresh apiAdmin receives five scopes while existing rotated credentials and
   }
 });
 
-test("all nine successor Init sections resolve to fixed-schema create-preserve owners", () => {
-  const sections = ["Addresses", "Contacts", "Enterprise", "Tenants", "Users"].flatMap(name =>
-    Object.values(require("../data/init-v001/headers/identityBootstrap/preserved" + name + "Header").profile));
-  assert.equal(sections.length, 9);
-  assert.deepEqual([...new Set(sections.map(header => header.options.schemaName))].sort(), [...kinds].sort());
+test("shipped bootstrap headers target only the five retained identity and tenant datasets", () => {
+  const directory = path.join(__dirname, "../data/init-v001/headers/identityBootstrap");
+  const sections = fs.readdirSync(directory).filter(file => file.endsWith("Header.js"))
+    .flatMap(file => Object.values(require(path.join(directory, file)).profile));
+  assert.equal(sections.length, 5);
+  assert.deepEqual([...new Set(sections.map(header => header.options.schemaName))].sort(), ["customer", "employee", "enterprise", "tenant"]);
   for (const header of sections) {
     assert.equal(header.options.operation, "ensureBootstrapAll");
     const schema = header.options.schemaName;

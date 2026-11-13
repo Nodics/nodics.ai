@@ -17,5 +17,5 @@ module.exports = require("../../../../nConfig/src/service/defaultDeploymentConfi
 if (require.main === module) {
   const options = JSON.parse(process.argv[2]);
   process.argv = process.argv.slice(0, 2);
-  process.stdout.write(JSON.stringify(module.exports.resolve(options)));
+  module.exports.runCli(options);
 }

@@ -93,6 +93,20 @@ test('an explicit schema operation restriction cannot be bypassed by generated w
     assert.equal(captured.length, 0);
 });
 
+test('every generated remove variant rejects a contradictory signed scope before invoking the facade', async () => {
+    for (const operation of ['remove', 'removeById', 'removeByCode']) {
+        const input = { ...request, authData: { ...request.authData, entCode: 'enterprise-one' },
+            httpRequest: { ...request.httpRequest, headers: { 'x-enterprise-code': 'foreign' }, body: hostileBody() } };
+        await assert.rejects(controller[operation](input), { code: 'ERR_AUTH_00003' });
+        await new Promise(resolve => controller[operation](input, error => {
+            assert.equal(error.code, 'ERR_AUTH_00003');
+            resolve();
+        }));
+        assert.equal(input.query, undefined);
+    }
+    assert.equal(captured.length, 0);
+});
+
 /** Exercises real generated service/facade templates, access/ownership guards and managed concurrency against an in-memory provider. */
 function persistenceFixture() {
     const fs = require('node:fs'), path = require('node:path'), Module = require('node:module');

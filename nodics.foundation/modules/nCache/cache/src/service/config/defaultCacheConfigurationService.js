@@ -193,11 +193,28 @@ module.exports = {
             UTILS.generateHash(hashString);
     },
 
-    /** Builds a tenant-scoped search-cache key from index query and search options. */
+    /** Hashes the complete query and current non-secret caller scope; structured source filters must never share cached results. */
     createSearchKey: function (request) {
-        let hashString = JSON.stringify(request.options) + JSON.stringify(request.searchOptions || {}) + JSON.stringify(request.query || {});
-        return request.searchModel.indexName + '_' +
-            request.tenant + '_' +
-            UTILS.generateHash(JSON.stringify(hashString));
+        const auth = request.authData || {};
+        const material = {
+            version: 2,
+            module: request.searchModel.moduleName || request.moduleName || null,
+            index: request.searchModel.indexName,
+            tenant: request.tenant,
+            enterprise: request.enterpriseCode || request.entCode || auth.enterpriseCode || auth.entCode || null,
+            principal: {
+                id: auth.serviceId || auth.loginId || auth.userId || auth.uid || auth.code || null,
+                isSystem: auth.isSystem === true,
+                groups: [].concat(auth.userGroups || auth.groups || []).sort(),
+                permissions: [].concat(auth.permissions || []).sort()
+            },
+            options: request.options || {},
+            searchOptions: request.searchOptions || {},
+            query: request.query || null,
+            q: request.q || null,
+            searchRequest: request.normalizedSearchRequest || request.searchRequest || null
+        };
+        return request.searchModel.indexName + '_' + request.tenant + '_' +
+            UTILS.generateHash(this.stableStringify(material));
     },
 };

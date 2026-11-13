@@ -24,7 +24,6 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const insecureBootstrapValues = new Set(['admin', 'adminpassword', 'password', 'changeme', 'change-me']);
-const localBootstrapAdminPassword = 'adminPassword';
 
 module.exports = {
     /** Generates a cryptographically random local secret. */
@@ -67,7 +66,7 @@ module.exports = {
             if (length !== stat.size || length > 65536) throw new Error();
             const values = JSON.parse(bytes.subarray(0, length).toString('utf8'));
             const required = ['NODICS_JWT_SECRET', 'NODICS_API_KEY_PEPPER', 'NODICS_BOOTSTRAP_ADMIN_PASSWORD',
-                'NODICS_BOOTSTRAP_SERVICE_PASSWORD', 'NODICS_BOOTSTRAP_SERVICE_API_KEY', 'NODICS_API_KEY'];
+                'NODICS_BOOTSTRAP_SERVICE_PASSWORD', 'NODICS_API_KEY'];
             if (!values || Object.getPrototypeOf(values) !== Object.prototype ||
                 required.some(key => typeof values[key] !== 'string' || !values[key]) ||
                 Object.keys(values).some(key => !/^NODICS_[A-Z0-9_]+$/.test(key) || typeof values[key] !== 'string') ||
@@ -102,7 +101,7 @@ module.exports = {
             if (before.length > 65536) throw new Error();
             const values = JSON.parse(before.toString('utf8'));
             const required = ['NODICS_JWT_SECRET', 'NODICS_API_KEY_PEPPER', 'NODICS_BOOTSTRAP_ADMIN_PASSWORD',
-                'NODICS_BOOTSTRAP_SERVICE_PASSWORD', 'NODICS_BOOTSTRAP_SERVICE_API_KEY', 'NODICS_API_KEY'];
+                'NODICS_BOOTSTRAP_SERVICE_PASSWORD', 'NODICS_API_KEY'];
             if (!values || Object.getPrototypeOf(values) !== Object.prototype ||
                 required.some(key => typeof values[key] !== 'string' || !values[key]) ||
                 Object.keys(values).some(key => !/^NODICS_[A-Z0-9_]+$/.test(key) || typeof values[key] !== 'string') ||
@@ -189,9 +188,8 @@ module.exports = {
             const values = {
                 NODICS_JWT_SECRET: this.randomSecret(64),
                 NODICS_API_KEY_PEPPER: this.randomSecret(64),
-                NODICS_BOOTSTRAP_ADMIN_PASSWORD: process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD || localBootstrapAdminPassword,
+                NODICS_BOOTSTRAP_ADMIN_PASSWORD: process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD || this.randomSecret(),
                 NODICS_BOOTSTRAP_SERVICE_PASSWORD: this.randomSecret(),
-                NODICS_BOOTSTRAP_SERVICE_API_KEY: this.randomSecret(),
                 NODICS_API_KEY: this.randomSecret(),
                 NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY: process.env.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY || this.randomSecret(32)
             };
@@ -208,7 +206,15 @@ module.exports = {
     /** Reads retained Local credentials, generating only absent storage; deployment inputs keep precedence. */
     mergeEnvironment: function (projectRoot, environmentCode, environment = process.env) {
         if (!environmentCode || !/Local$/u.test(String(environmentCode))) return Object.assign({}, environment);
+        if (!/^[A-Za-z0-9][A-Za-z0-9_-]*Local$/.test(environmentCode)) {
+            throw new Error('RESET_CREDENTIAL_RESOLUTION_REFUSED');
+        }
         projectRoot = fs.realpathSync(projectRoot);
+        const manifest = path.join(projectRoot, 'envs', environmentCode, 'package.json');
+        if (fs.existsSync(manifest) &&
+            JSON.parse(fs.readFileSync(manifest, 'utf8')).nodics?.deploymentClass === 'LOCAL_PRODUCTION_SIMULATION') {
+            return Object.assign({}, environment);
+        }
         try {
             fs.lstatSync(this.credentialPath(projectRoot, environmentCode));
         } catch (error) {

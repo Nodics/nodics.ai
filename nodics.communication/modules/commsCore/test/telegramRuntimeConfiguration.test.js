@@ -10,7 +10,7 @@
  */
 
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
-/** @module commsCore/test/telegramRuntimeConfiguration @description Exercises delivery schema ownership and customization through real nConfig contribution resolution and runtime-role projection. Synthetic in-memory fixtures only. @layer test @owner commsCore */
+/** @module commsCore/test/telegramRuntimeConfiguration @description Exercises delivery schema ownership and customization through real nConfig contribution resolution without runtime-role projection. Synthetic in-memory fixtures only. @layer test @owner commsCore */
 const assert = require("node:assert/strict");
 const test = require("node:test");
 const path = require("node:path");
@@ -22,8 +22,6 @@ const runtime = require("../src/service/defaultCommunicationRuntimeService");
 const file = path.resolve(__dirname, "../config/properties.js");
 const referencePath = [
   "communication",
-  "runtimeRoleProfiles",
-  "ENGAGEMENT",
   "providers",
   "TELEGRAM",
   "credentialReferences",
@@ -38,12 +36,10 @@ function compose(role, overlay = {}) {
     properties,
     bindings.resolve(overlay, properties, context),
   );
-  return initializer.deriveRuntimeRoleCapabilityProfiles(
-    bindings.merge(properties, { runtimeRole: { code: role } }),
-  );
+  return bindings.merge(properties, { runtimeRole: { code: role } });
 }
 
-test("Communication declares an inert delivery contract only for its selected role", () => {
+test("Communication declares an inert delivery contract independently of the hosting runtime role", () => {
   const engagement = compose("ENGAGEMENT");
   const schema = engagement.runtimeConfigurationSchemas.telegramDelivery;
   assert.equal(schema.ownerModule, "commsCore");
@@ -67,8 +63,8 @@ test("Communication declares an inert delivery contract only for its selected ro
   assert.equal(engagement.credentials, undefined);
   assert.equal(engagement.runtimeConfigurationSecurity, undefined);
   assert.equal(
-    compose("PLATFORM").runtimeConfigurationSchemas.telegramDelivery,
-    undefined,
+    compose("PLATFORM").runtimeConfigurationSchemas.telegramDelivery.ownerModule,
+    "commsCore",
   );
 });
 
@@ -80,28 +76,12 @@ test("application binding inherits owner validation and targets the selected del
   for (const reference of ["first.application.bot", "second.application.bot"]) {
     const selected = { type: "TELEGRAM", credentialReferences: [reference] };
     const overlay = {
-      communication: {
-        runtimeRoleProfiles: {
-          ENGAGEMENT: { providers: { TELEGRAM: selected } },
-        },
-      },
+      communication: { providers: { TELEGRAM: selected } },
       runtimeConfigurationSchemas: {
-        runtimeRoleProfiles: {
-          ENGAGEMENT: {
-            telegramDelivery: {
-              fields: [
-                {
-                  credentialReference: { $config: "ref", path: referencePath },
-                  path: [
-                    "credentials",
-                    { $config: "ref", path: referencePath },
-                    "value",
-                  ],
-                },
-              ],
-            },
-          },
-        },
+        telegramDelivery: { fields: [{
+          credentialReference: { $config: "ref", path: referencePath },
+          path: ["credentials", { $config: "ref", path: referencePath }, "value"],
+        }] },
       },
     };
     const effective = compose("ENGAGEMENT", overlay);
@@ -150,8 +130,8 @@ test("application binding inherits owner validation and targets the selected del
       false,
     );
     assert.equal(
-      compose("PLATFORM", overlay).runtimeConfigurationSchemas.telegramDelivery,
-      undefined,
+      compose("PROCESS", overlay).runtimeConfigurationSchemas.telegramDelivery.fields[0].credentialReference,
+      reference,
     );
   }
 });
@@ -161,20 +141,9 @@ test("a binding with no selected credential fails resolution rather than inventi
     () =>
       compose("ENGAGEMENT", {
         runtimeConfigurationSchemas: {
-          runtimeRoleProfiles: {
-            ENGAGEMENT: {
-              telegramDelivery: {
-                fields: [
-                  {
-                    credentialReference: {
-                      $config: "ref",
-                      path: referencePath,
-                    },
-                  },
-                ],
-              },
-            },
-          },
+          telegramDelivery: { fields: [{
+            credentialReference: { $config: "ref", path: referencePath },
+          }] },
         },
       }),
     /Configuration reference is unavailable/,

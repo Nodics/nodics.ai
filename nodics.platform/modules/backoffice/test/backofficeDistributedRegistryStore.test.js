@@ -21,7 +21,7 @@ let config = {
     store: { mode: 'distributed', moduleName: 'backoffice', engineName: 'redis', keyPrefix: 'registry:test:' }
 };
 let records = new Map();
-let now = 1000;
+let now = Date.now();
 let client = {
     set: async (key, value, options) => { records.set(key, { value: value, expiresAt: now + options.PX }); return 'OK'; },
     get: async key => {
@@ -31,6 +31,13 @@ let client = {
     },
     del: async key => records.delete(key) ? 1 : 0,
     eval: async (script, options) => {
+        if (script.includes('-- backoffice-registry-admission')) {
+            const [revision, value, ttl, next] = options.arguments;
+            if (revision !== '*' && (records.get(options.keys[1])?.value || '') !== revision) return 0;
+            records.set(options.keys[0], { value, expiresAt: now + Number(ttl) });
+            records.set(options.keys[1], { value: next, expiresAt: Infinity });
+            return 1;
+        }
         let record = records.get(options.keys[0]);
         if (!record) return 0;
         let lease = JSON.parse(record.value);
@@ -84,7 +91,7 @@ async function run() {
 
     let atomicEval = client.eval;
     client.eval = undefined;
-    await replicaOne.set('cms:unsupported', Object.assign({}, lease, { instanceId: 'unsupported' }), 5000);
+    await assert.rejects(replicaOne.set('cms:unsupported', Object.assign({}, lease, { instanceId: 'unsupported' }), 5000), /atomic admission support/);
     await assert.rejects(replicaOne.deleteIfExpiresAt('cms:unsupported', lease.expiresAt), /atomic conditional delete support/);
     client.eval = atomicEval;
     await replicaOne.delete('cms:unsupported');

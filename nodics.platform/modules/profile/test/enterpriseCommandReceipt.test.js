@@ -49,6 +49,7 @@ function fixture(t) {
     rolePolicy: (role) => {
       assert.equal(role, "employee");
     },
+    setupAdministratorPolicy: async () => ({}),
     createFromModelOriginal: async (request) => {
       state.calls++;
       return { code: request.payload.model.code };
@@ -137,6 +138,32 @@ function fixture(t) {
   };
   return { state, profile, request };
 }
+
+test("missing administrator catalogue refuses before recording or dispatch, and inspection stays read-only", async (t) => {
+  const f = fixture(t);
+  let prerequisiteReads = 0;
+  f.profile.setupAdministratorPolicy = async () => {
+    prerequisiteReads++;
+    throw new Error("private catalogue/provider evidence");
+  };
+  await assert.rejects(f.profile.createFromModel(f.request), /ERR_PROFILE_ENTERPRISE_SETUP_NOT_READY/);
+  assert.equal(f.state.rows.size, 0);
+  assert.equal(f.state.calls, 0);
+  assert.equal(prerequisiteReads, 1);
+  const receipt = await owner.inspectCreation({ ...f.request, body: {
+    model: f.request.payload.model, idempotencyKey: f.request.idempotencyKey,
+  } });
+  assert.equal(receipt.state, "OUTCOME_UNKNOWN");
+  assert.equal(f.state.rows.size, 0);
+  assert.equal(prerequisiteReads, 1);
+  f.state.grants = false;
+  await assert.rejects(f.profile.createFromModel(f.request));
+  assert.equal(prerequisiteReads, 1);
+  f.state.grants = true;
+  f.profile.setupAdministratorPolicy = async () => ({});
+  await f.profile.createFromModel(f.request);
+  assert.equal(f.state.calls, 1);
+});
 
 test("enterprise creation uses its original setup and inspection never invokes setup again", async (t) => {
   const f = fixture(t);

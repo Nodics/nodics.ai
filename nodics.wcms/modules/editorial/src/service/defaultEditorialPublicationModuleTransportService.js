@@ -33,7 +33,7 @@ module.exports = {
     invoke: function (operation, payload, request, internalToken, target) {
         return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
             connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
-            targetAuthority: { runtimeRole: target.runtimeRole || 'WCMS_ONLINE' },
+            targetAuthority: { publication: target.publication }, local: false,
             nodeId: target.nodeId, methodName: 'POST',
             apiName: '/publication/target/' + operation, requestBody: Object.assign({ tenant: request.tenant,
                 correlationId: request.correlationId || request.requestId }, payload),
@@ -47,10 +47,13 @@ module.exports = {
     send: async function (operation, payload, request) {
         let publication = (CONFIG.get('editorial') || {}).publication || {};
         let target = publication.target || {};
-        if (publication.runtimeRole !== 'STAGED') {
+        if (publication.runtimeRole !== 'STAGED' ||
+            !SERVICE.DefaultModuleService?.isLocalModuleActive('editorial') ||
+            !SERVICE.DefaultModuleService.isCurrentRuntimeAuthority({ publication: 'STAGED' })) {
             throw new CLASSES.NodicsError('ERR_EDT_00001', 'Editorial publication transport is available only on a Staged runtime');
         }
-        if (!target.moduleName || !target.connectionName || target.connectionName === 'default') {
+        if (target.moduleName !== 'editorial' || target.publication !== 'ONLINE' ||
+            !target.connectionName || target.connectionName === 'default') {
             throw new CLASSES.NodicsError('ERR_EDT_00001', 'A distinct Online Editorial target module connection is required');
         }
         let internalToken = NODICS.getInternalAuthToken(request.tenant);

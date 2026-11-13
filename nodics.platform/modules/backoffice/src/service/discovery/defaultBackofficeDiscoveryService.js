@@ -214,10 +214,16 @@ module.exports = {
         }
     },
 
+    /** Shares optional discovery admission between scheduled and explicit registry observations; URL validation remains in the transport. */
+    isDiscoveryEligible: function (registration) {
+        return this.getConfiguration().enabled !== false && registration.clientCallable === true &&
+            Boolean(registration.backoffice && registration.backoffice.discovery);
+    },
+
     /** Schedules deduplicated asynchronous discovery without delaying module registration or traffic readiness. */
     scheduleDiscovery: function (registration, authData) {
         let policy = this.getConfiguration();
-        if (policy.enabled === false || !registration.clientCallable || !registration.backoffice || !registration.backoffice.discovery) {
+        if (!this.isDiscoveryEligible(registration)) {
             return Promise.resolve(false);
         }
         let state = this._snapshots.get(registration.moduleName);

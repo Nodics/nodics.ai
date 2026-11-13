@@ -36,3 +36,19 @@ test('only explicitly selected modules use the shared context and higher-priorit
     settings = { modules: { stock: true } };
     assert.throws(() => agent.getAuthorityContext('stock', 'item', {}), /explicit default/);
 });
+
+test('nService supplies safe empty authority-context defaults before deployment selections', t => {
+    const defaults = require('../config/properties').runtimeAuthorityContexts;
+    assert.deepEqual(defaults, { default: null, modules: {}, schemas: {} });
+    const previous = global.CONFIG;
+    t.after(() => { if (previous === undefined) delete global.CONFIG; else global.CONFIG = previous; });
+    global.CONFIG = { get: () => defaults };
+    assert.equal(agent.getAuthorityContext('stock', 'item', {}), 'stock.item');
+    const bindings = require('../../nConfig/src/service/defaultConfigurationBindingService');
+    const later = bindings.merge(defaults, { modules: { stock: true } });
+    global.CONFIG = { get: () => later };
+    assert.throws(() => agent.getAuthorityContext('stock', 'item', {}), /explicit default/);
+    later.default = 'partner.operational';
+    assert.equal(agent.getAuthorityContext('stock', 'item', {}), 'partner.operational');
+    assert.deepEqual(defaults.modules, {}, 'deployment selection never mutates owner defaults');
+});

@@ -29,7 +29,7 @@
     "rulesPolicyApproval": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Rules Policy Approval Workflow",
       "description": "Rules-owned reusable maker-checker workflow contribution",
       "owningDomain": "rulesApi",
@@ -45,9 +45,9 @@
       "removalPolicy": "RETAIN",
       "installer": "PROCESS_DEFINITION",
       "files": {
-        "init-v001/records/process/rulesPolicyApprovalDefinitionData.js": "364058d5f33243619cb45fbb75ce56525726afed0c6b90842c5289c527f612f7"
+        "init-v002/records/process/rulesPolicyApprovalDefinitionData.js": "be85d91f9dc0b91a53d5126f317835808df74ee89b45481079f97c160d027f79"
       },
-      "sourceRoot": "init-v001"
+      "sourceRoot": "init-v002"
     },
     "backoffice-capability": {
       "kind": "SOURCE_CONTRIBUTION",

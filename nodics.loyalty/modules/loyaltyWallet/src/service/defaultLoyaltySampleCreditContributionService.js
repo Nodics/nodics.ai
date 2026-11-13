@@ -63,7 +63,7 @@ module.exports = {
     const actorCode = auth.principalId || auth.code || auth.loginId;
     const environment = NODICS.getSelectedEnvironmentName();
     if (policy?.enabled !== true ||
-        CONFIG.get("runtimeRole")?.code !== "LOYALTY" ||
+        (SERVICE.DefaultModuleService?.isLocalModuleActive?.("loyaltyWallet") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") ||
         !Array.isArray(policy.allowedEnvironments) || !policy.allowedEnvironments.includes(environment) ||
         auth.principalType !== "human" || auth.tokenType !== "access" || auth.isSystem ||
         !auth.tenant || auth.tenant !== request.tenant || !enterpriseCode ||

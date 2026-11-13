@@ -362,7 +362,7 @@ module.exports = {
     if (!p || !Number.isSafeInteger(p.maximumPages) || p.maximumPages < 1 ||
         !Number.isSafeInteger(p.maximumRounds) || p.maximumRounds < 1 ||
         !Number.isSafeInteger(p.timeoutMs) || p.timeoutMs < 1 ||
-        !this.bindingIdentifier(settings.storeCode) || target?.runtimeRole !== 'COMMERCE' ||
+        !this.bindingIdentifier(settings.storeCode) || (target?.publication !== 'OPERATIONAL' || Object.entries(target).some(([key,value]) => !['publication','server','environment'].includes(key) || typeof value !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
         !auth || auth.isSystem || auth.tokenType !== 'access' ||
         !['customer', 'human'].includes(auth.principalType) || !auth.loginId || !enterprise ||
         !auth.tenant || auth.tenant !== request.tenant || typeof request.authorization !== 'string' ||

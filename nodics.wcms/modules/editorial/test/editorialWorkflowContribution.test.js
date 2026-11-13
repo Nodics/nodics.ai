@@ -45,7 +45,8 @@ test('Editorial owns checksum-qualified neutral graphs without activating its ru
     assert.deepEqual(definitions.map(definition => definition.code), ['editorialApproval', 'editorialPublication']);
     for (const definition of definitions) {
         assert.equal(definition.ownerModule, 'editorial');
-        assert.equal(definition.policy, undefined);
+        assert.deepEqual(definition.policy,
+            definition.code === 'editorialApproval' ? { requireReasonOnReject: true } : undefined);
         for (const node of definition.graph.nodes) {
             assert.equal(node.assignee, undefined);
             if (node.action) assert.equal(node.action.moduleName, 'editorial');
@@ -55,14 +56,15 @@ test('Editorial owns checksum-qualified neutral graphs without activating its ru
 
 test('Process operator inspection qualifies the actual Editorial release through nImport without activation or writes', async () => {
     global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
-    let role = 'PROCESS';
     const owner = { name: 'editorial', path: path.resolve(__dirname, '..') };
     const data = { dataReleases: { destinationEnforced: true,
+        installers: { PROCESS_DEFINITION: 'DefaultProcessDefinitionContributionService' },
         contributions: [{ moduleName: 'editorial', sections: ['editorialWorkflows'] }] } };
-    global.CONFIG = { get: name => ({ data, runtimeRole: { code: role }, environment: { class: 'LOCAL' } })[name] };
+    global.CONFIG = { get: name => ({ data, runtimeRole: { publication: 'OPERATIONAL' }, environment: { class: 'LOCAL' } })[name] };
     global.NODICS = { getActiveModules: () => [], getRawModule: name => name === 'editorial' ? owner : undefined,
         getSelectedEnvironmentName: () => 'testLocal' };
     global.SERVICE = {
+        DefaultProcessDefinitionContributionService: contributionService,
         DefaultDataReleaseService: { ...releaseService, getInstallations: async () => [] },
         DefaultProcessDefinitionLifecycleService: lifecycle,
         DefaultProcessGraphValidationService: graphService,
@@ -79,9 +81,9 @@ test('Process operator inspection qualifies the actual Editorial release through
     assert.ok(inspected.definitions.every(item => item.equivalent === false && !item.installed &&
         /^[a-f0-9]{64}$/.test(item.target.checksum)));
     assert.deepEqual((await contributionService.planRelease(request)).definitions.map(item => item.action), ['CREATE', 'CREATE']);
-    role = 'WCMS_STAGED';
-    await assert.rejects(contributionService.inspectRelease(request), /runtime destination/);
-    role = 'PROCESS';
+    delete global.SERVICE.DefaultProcessDefinitionContributionService;
+    await assert.rejects(contributionService.inspectRelease(request), /installer is unavailable/);
+    global.SERVICE.DefaultProcessDefinitionContributionService = contributionService;
     data.dataReleases.contributions = [];
     await assert.rejects(contributionService.inspectRelease(request), /unavailable/);
 });

@@ -11,6 +11,7 @@
 
 const assert = require('assert');
 global.SERVICE = {
+        ...require('./helpers/editorialOwnerServices.js'),
     DefaultBackofficeCapabilityDefinitionService: {
         workbench: value => value,
         capability: value => value
@@ -48,3 +49,14 @@ assert.equal(capability.navigation.find(item => item.id === 'editorial-content')
 assert.equal(capability.navigation.find(item => item.id === 'editorial-content').lifecycleActions[1].ownerModule, 'editorial');
 assert.deepEqual(capability.navigation.find(item => item.id === 'editorial-content').lifecycleActions.map(action => action.id), ['validate', 'submit', 'approve', 'reject', 'publish', 'schedule', 'withdraw']);
 assert.deepEqual(capability.navigation.find(item => item.id === 'editorial-content').lifecycleActions.find(action => action.id === 'submit').targetStatuses, ['READY']);
+
+// The canonical all-types authoring route retains the same owner actions and independent permissions.
+const canonical = capability.navigation.find(item => item.id === 'editorial-articles');
+assert.deepEqual(canonical.lifecycleActions, capability.navigation.find(item => item.id === 'editorial-blogs').lifecycleActions);
+const registry = require('../../../../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService');
+const projected = permissions => registry.authorizeNavigation(capability.navigation, ['editorial.backoffice.read', ...permissions]).find(item => item.id === canonical.id);
+assert.deepEqual(projected([]).lifecycleActions, []);
+assert.deepEqual(projected(['editorial.workflow.submit']).lifecycleActions.map(action => action.id), ['submit', 'approve', 'reject']);
+assert.deepEqual(projected(['editorial.publish.execute']).lifecycleActions.map(action => action.id), ['publish']);
+assert.deepEqual(projected(['editorial.publish.withdraw']).lifecycleActions.map(action => action.id), ['withdraw']);
+assert.equal(projected(['editorial.publish.execute']).lifecycleActions[0].operationRoute, '/authoring/articles/:code/publish');

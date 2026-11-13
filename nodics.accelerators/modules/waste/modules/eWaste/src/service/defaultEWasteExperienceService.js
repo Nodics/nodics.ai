@@ -72,6 +72,16 @@ module.exports = {
     }
     return value;
   },
+  /** Selects the configured publication context without granting authority from a physical runtime label. */
+  targetAuthority: function (connectionName) {
+    const target = this.settings().targetAuthorities?.[connectionName];
+    const publication = { engagement: "OPERATIONAL", commerce: "OPERATIONAL", commerceStaged: "STAGED", wcms: "STAGED" }[connectionName];
+    if (publication && (target?.publication !== publication || Object.entries(target).some(([key, value]) =>
+        !["publication", "server", "environment"].includes(key) || typeof value !== "string" ||
+        !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))))
+      this.store().fail("ERR_WASTE_EVIDENCE_INVALID", "Owner publication target is unavailable");
+    return target === undefined ? undefined : structuredClone(target);
+  },
   /** Invokes a named owning API; a trusted explicit bearer preserves caller-owned Profile reads. */
   remote: async function (
     request,
@@ -84,9 +94,7 @@ module.exports = {
   ) {
     const result = await SERVICE.DefaultModuleService.invokeModule({
       local: false,
-      targetAuthority: (this.settings().targetAuthorities || {})[
-        connectionName
-      ],
+      targetAuthority: this.targetAuthority(connectionName),
       moduleName: moduleName,
       connectionName: connectionName,
       apiName: apiName,
@@ -301,6 +309,7 @@ module.exports = {
       local: false,
       moduleName: "media",
       connectionName: "wcms",
+      targetAuthority: this.targetAuthority("wcms"),
       apiName: "/customer/photos/" + encodeURIComponent(code),
       methodName: "GET",
       tenant: request.tenant,

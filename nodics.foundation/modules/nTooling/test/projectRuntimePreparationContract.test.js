@@ -35,11 +35,12 @@ test('preparation uses independent deployment metadata, isolates roles and rejec
         write(path.join(directory, 'config/properties.js'), 'module.exports = ' + JSON.stringify(properties));
     };
     boundary(root, 'independent.runtime', 'application', '1000.00', {});
+    boundary(path.join(root, 'envs'), 'independent.environments', 'group', '1000.10', {}, { runtimeModule: false });
     boundary(path.join(root, 'envs', 'quality'), 'quality', 'group', '1001.00', {});
     for (const [index, server] of ['author', 'reader'].entries()) {
         boundary(path.join(root, 'envs', 'quality', server), server, 'server', '1002.0' + index, {
             activeModules: { modules: ['nodics.foundation', 'independent.runtime', 'quality', server] },
-            runtimeRole: { code: server.toUpperCase() },
+            runtimeRole: { code: server.toUpperCase(), publication: server === "author" ? "STAGED" : "ONLINE" },
             servers: {
                 default: { endpoint: { httpHost: '127.0.0.1', httpPort: 5800 + index } },
                 profile: { remoteOnly: true, endpoint: { httpHost: 'identity.example.test', httpPort: 5802 } },
@@ -54,9 +55,9 @@ test('preparation uses independent deployment metadata, isolates roles and rejec
         'const options = JSON.parse(process.argv[2]); const sentinel = {}; ' +
         'if (options.preserveGlobal) global._ = sentinel; else delete global._; ' +
         'const descriptor = Object.getOwnPropertyDescriptor(global, "_"); ' +
-        'let result; try { result = prepare(options); } finally { ' +
+        '(async () => { let result; try { result = await prepare(options); } finally { ' +
         'assert.deepEqual(Object.getOwnPropertyDescriptor(global, "_"), descriptor); } ' +
-        'process.stdout.write(JSON.stringify(result));',
+        'process.stdout.write(JSON.stringify(result)); })().catch(error => { console.error(error); process.exitCode = 1; });',
         prepare, JSON.stringify({ projectRoot: root, environment: 'quality', server, ...options }),
     ], { encoding: 'utf8', timeout: 30000, env: { PATH: process.env.PATH, HOME: process.env.HOME } });
     for (const server of ['author', 'reader']) {

@@ -6,8 +6,7 @@
 - Read this README, contracts, examples, and generated context.
 
 Keep this group root composition-only and free of business or documentation data.
-The Store capability owns the governed Commerce core-reference records in its
-`data/core-v001` release; child capabilities own their schemas, services,
+Application samples own operational selling records. Child capabilities own their schemas, services,
 routers, tests, and feature-specific business behavior. Preserve Commerce
 domain ownership, exact money, tenant security, idempotency, audit, provider
 maturity, documentation, and generated-artifact discipline. Archived `gComm` is

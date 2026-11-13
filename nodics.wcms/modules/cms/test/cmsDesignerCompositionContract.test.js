@@ -48,6 +48,8 @@ assert(groups.adminGroup.permissions.includes('cms.publication.emergencyOverride
 
 [
     ['getAuthoringModel', 'GET', '/designer/composition/model', 'cms.backoffice.view'],
+    ['listDraftPages', 'GET', '/designer/composition/pages', 'cms.backoffice.view'],
+    ['getDraftComposition', 'GET', '/designer/composition/draft', 'cms.backoffice.view'],
     ['validateDraftComposition', 'POST', '/designer/composition/validate', 'cms.backoffice.manage'],
     ['saveDraftComposition', 'PUT', '/designer/composition/draft', 'cms.backoffice.manage'],
     ['addSection', 'POST', '/designer/composition/sections', 'cms.backoffice.manage'],
@@ -72,7 +74,7 @@ assert(groups.adminGroup.permissions.includes('cms.publication.emergencyOverride
     assert.strictEqual(routers[operation].key, key, operation + ' key is incorrect');
     assert.strictEqual(routers[operation].controller, 'DefaultCmsDesignerCompositionController');
     assert.strictEqual(routers[operation].operation, operation);
-    assert.strictEqual(routers[operation].permission, operation === 'getAuthoringModel' ? permission :
+    assert.strictEqual(routers[operation].permission, ['getAuthoringModel', 'listDraftPages', 'getDraftComposition'].includes(operation) ? permission :
         ['deleteSection', 'deleteComponent', 'detachMedia'].includes(operation) ? 'cms.authoring.delete' : 'cms.authoring.write');
 });
 
@@ -107,6 +109,10 @@ const records = {
         authoringScope: { enterpriseCode: 'enterprise-a', siteCode: 'nexusCorporateSite', catalogCode: 'nexusContentCatalog' } }],
     routes: []
 };
+// The real authoring metadata reader admits explicitly owned reusable references.
+for (const collection of [records.templates, records.slots, records.types, records.groups]) {
+    collection.forEach(item => { item.authoringScope = { enterpriseCode: 'enterprise-a', catalogCode: 'nexusContentCatalog' }; });
+}
 const saved = [];
 const removed = [];
 const publicationCalls = [];
@@ -122,14 +128,30 @@ const generatedService = list => ({
         const result = list.filter(item => matches(item, request.query || {})).map(item => Object.assign({ active: true }, item));
         return Promise.resolve({ code: 'SUC_FIND_00000', query: request.query, count: result.length, result });
     },
-    save: request => { saved.push(request.model); list.push(request.model); return Promise.resolve({ result: [request.model] }); },
+    save: request => { if (request.model.versionId === undefined) request.model.versionId = 0; saved.push(request.model); list.push(request.model); return Promise.resolve({ result: [request.model] }); },
     remove: request => { removed.push(request.query); return Promise.resolve({ result: request.query }); }
 });
 
 global.CLASSES = { NodicsError: class NodicsError extends Error { constructor(code, message) { super(message); this.code = code; } } };
 global.CONFIG = { get: key => key === 'cms' ? { designerAuthoring: { maximumReferenceLookupItems: 25 } } :
     key === 'runtimeRole' ? { publication: 'STAGED' } : undefined };
-global.SERVICE = {
+// Project form copy is inert and bounded; it cannot disclose unrelated configuration or create authority.
+const originalConfigurationGet = CONFIG.get;
+const presentationDefaults = cmsProperties.cms.designerAuthoring.presentation;
+CONFIG.get = key => key === 'cms' ? { designerAuthoring: { presentation: {
+    ...presentationDefaults, pageNameLabel: 'Business page name', secret: 'must-not-be-projected', operations: ['saveDraftComposition']
+} } } : originalConfigurationGet(key);
+assert.deepStrictEqual(service.authoringPresentation(), { ...presentationDefaults, pageNameLabel: 'Business page name' });
+for (const invalid of [null, [], { ...presentationDefaults, continueLabel: '' },
+    { ...presentationDefaults, pageNameHelp: 'x'.repeat(1025) },
+    { ...presentationDefaults, newPageTitle: 'Name\u0000hidden' }]) {
+    CONFIG.get = key => key === 'cms' ? { designerAuthoring: { presentation: invalid } } : originalConfigurationGet(key);
+    assert.throws(() => service.authoringPresentation(), error => error.code === 'ERR_CMS_00100');
+}
+CONFIG.get = originalConfigurationGet;
+assert.strictEqual(service.authoringPresentation(), undefined, 'older owner models remain compatible without form presentation');
+global.SERVICE = { DefaultCmsDesignerCompositionService: service,
+    DefaultCmsDesignerReadService: require('../src/service/designer/defaultCmsDesignerReadService'),
     DefaultCmsDesignerAccessService: require('../src/service/designer/defaultCmsDesignerAccessService'),
     DefaultSecuredRequestPipelineService: require('../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService'),
     DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ userGroups: ['serviceAccountUserGroup'], principalType: 'service' }) },
@@ -191,6 +213,22 @@ const context = { tenant: 'tenant-a', authorization: 'Bearer cms-author-token', 
 const scope = { enterpriseCode: 'enterprise-a', siteCode: draft.siteCode, catalogCode: draft.catalogCode };
 
 (async () => {
+    const mapping = 'nexus.component.page-hero';
+    SERVICE.DefaultCmsTypeCode2RendererService = generatedService([{
+        code: 'nexusPageHeroType', renderer: mapping, active: true,
+        authoringScope: { enterpriseCode: 'enterprise-a', catalogCode: draft.catalogCode }
+    }]);
+    const withRenderer = structuredClone(draft);
+    withRenderer.sections[0].components[0].renderer = 'unknown.renderer';
+    const beforeRendererCheck = saved.length;
+    await assert.rejects(service.validateDraftComposition({ ...context, cmsDesigner: withRenderer }), {
+        code: 'ERR_CMS_00100', message: 'Choose an active renderer mapped to the selected content type'
+    });
+    assert.strictEqual(saved.length, beforeRendererCheck);
+    withRenderer.sections[0].components[0].renderer = mapping;
+    assert.strictEqual((await service.validateDraftComposition({ ...context, cmsDesigner: withRenderer })).result.valid, true);
+    delete SERVICE.DefaultCmsTypeCode2RendererService;
+
     let model = await service.getAuthoringModel(context);
     assert.strictEqual(model.result.hierarchy[0], 'Content Catalog');
     assert.strictEqual(model.result.rules.arbitrarySlots, true);
@@ -223,6 +261,32 @@ const scope = { enterpriseCode: 'enterprise-a', siteCode: draft.siteCode, catalo
         ['catalogCode', 'siteCode', 'templateCode', 'page', 'sections', 'route'],
     'WCMS must expose publication readiness hints in the authoring model');
 
+    // The same owner must derive independent application selections from persisted references.
+    const originalSizes = Object.fromEntries(Object.entries(records).map(([key, rows]) => [key, rows.length]));
+    records.sites.push({ code: 'secondSite', catalog: 'secondCatalog', enterpriseCode: 'enterprise-a', active: true });
+    const secondScope = { enterpriseCode: 'enterprise-a', catalogCode: 'secondCatalog' };
+    records.templates.push({ code: 'secondTemplate', active: true, authoringScope: secondScope });
+    records.types.push({ code: 'secondPage', kind: 'PAGE', active: true, authoringScope: secondScope });
+    const configuredDefaults = { siteCode: 'nexusCorporateSite', catalogCode: 'nexusContentCatalog',
+        templateCode: 'nexusCorporatePageTemplate', pageTypeCode: 'nexusCorporateStandardPageType', slots: ['main'] };
+    CONFIG.get = key => key === 'cms' ? { designerAuthoring: { draftDefaults: configuredDefaults,
+        componentKinds: [{ typeCode: 'nexusPageHeroType', renderer: 'nexus.component.page-hero' }] } } : originalConfigurationGet(key);
+    const fresh = body => ({ ...JSON.parse(JSON.stringify(context)), body });
+    const firstModel = (await service.getAuthoringModel(fresh({ siteCode: 'nexusCorporateSite', catalogCode: 'nexusContentCatalog' }))).result;
+    assert.deepStrictEqual(firstModel.metadata.sites.map(item => item.code), ['nexusCorporateSite']);
+    assert.deepStrictEqual(firstModel.defaults.draftDefaults, configuredDefaults);
+    const secondModel = (await service.getAuthoringModel(fresh({ siteCode: 'secondSite', catalogCode: 'secondCatalog' }))).result;
+    assert.deepStrictEqual(secondModel.metadata.sites.map(item => item.code), ['secondSite']);
+    assert.deepStrictEqual(secondModel.metadata.pageTemplates.map(item => item.code), ['secondTemplate']);
+    assert.deepStrictEqual(secondModel.defaults.draftDefaults, {});
+    assert.deepStrictEqual(secondModel.defaults.componentKinds, []);
+    for (const selection of [{ siteCode: 'secondSite', catalogCode: 'nexusContentCatalog' },
+        { siteCode: 'foreignSite', catalogCode: 'secondCatalog' }, { siteCode: 'secondSite' }]) {
+        await assert.rejects(service.getAuthoringModel(fresh(selection)), { code: 'ERR_AUTH_00003' });
+    }
+    for (const [key, size] of Object.entries(originalSizes)) records[key].length = size;
+    CONFIG.get = originalConfigurationGet;
+
     const catalogService = global.SERVICE.DefaultCatalogService;
     global.SERVICE.DefaultCatalogService = {
         get: () => {
@@ -235,6 +299,22 @@ const scope = { enterpriseCode: 'enterprise-a', siteCode: draft.siteCode, catalo
     assert(model.result.metadata.contentCatalogs.some(catalog => catalog.code === 'nexusContentCatalog'),
         'WCMS Designer must derive catalog references from CMS sites when catalog metadata is remote');
     global.SERVICE.DefaultCatalogService = catalogService;
+
+    const missingMedia = structuredClone(draft);
+    missingMedia.sections[0].components[0].media[0].mediaCode = 'missingAsset';
+    const mediaOwner = global.SERVICE.DefaultMediaReferenceLookupService;
+    const missing = Object.assign(new Error('Media reference not found'), { code: 'ERR_MED_00008' });
+    global.SERVICE.DefaultMediaReferenceLookupService = {
+        validateInternal: request => request.body.referenceCode === 'missingAsset'
+            ? Promise.reject(missing) : mediaOwner.validateInternal(request)
+    };
+    const writesBeforeMissingMedia = saved.length;
+    for (const operation of ['validateDraftComposition', 'saveDraftComposition']) {
+        await assert.rejects(service[operation]({ ...context, body: missingMedia }),
+            error => error === missing);
+    }
+    assert.equal(saved.length, writesBeforeMissingMedia, 'An invalid media reference must fail before any draft write');
+    global.SERVICE.DefaultMediaReferenceLookupService = mediaOwner;
 
     let validation = await service.validateDraftComposition({ ...context, body: draft });
     assert.strictEqual(validation.result.status, 'VALID_DRAFT');
@@ -269,22 +349,62 @@ const scope = { enterpriseCode: 'enterprise-a', siteCode: draft.siteCode, catalo
     assert.equal(removed.length, 0, 'Delete retains historical versions instead of hard removal');
     assert.equal(saved.at(-1).active, false);
 
+    await assert.rejects(service.validatePublishReadiness({ ...context, body: draft }), error => error.code === 'ERR_CMS_00106' && /mark it ready/.test(error.message));
+    draft.sections[0].components[0].localizations[0].status = 'READY';
     let publishReady = await service.validatePublishReadiness({ ...context, body: draft });
     assert.strictEqual(publishReady.result.status, 'READY_TO_PUBLISH');
+    const reopened = (await service.getDraftComposition({ ...context, body: draft })).result;
+    draft.sourceVersion = reopened.sourceVersion;
+    await service.saveDraftComposition({ ...context, body: draft });
+    records.routes.length = 0;
     records.routes.push({ code: 'nexusCorporateSite-gettingStartedPage-route', site: 'nexusCorporateSite',
         path: '/docs/getting-started', locale: 'default', channel: 'web', active: true, page: 'gettingStartedPage',
         versionId: 7, authoringScope: scope });
-    let publication = await service.submitForPublication({ ...context, body: draft });
+    let submitted = (await service.getDraftComposition({ ...context, body: draft })).result.draft;
+    let publication = await service.submitForPublication({ ...context, body: submitted });
     assert.strictEqual(publication.result.status, 'PENDING_APPROVAL');
     assert.strictEqual(publicationCalls[0][1].rootType, 'pageRoute');
     assert.strictEqual(publicationCalls[0][1].rootCode, 'nexusCorporateSite-gettingStartedPage-route');
     assert.strictEqual(publicationCalls[0][1].sourceVersion, '7');
     assert.deepStrictEqual(publicationCalls.map(item => item[0]), ['create', 'validate', 'requestApproval']);
+    records.routes[0].versionId = 0;
+    submitted = (await service.getDraftComposition({ ...context, body: draft })).result.draft;
+    await service.submitForPublication({ ...context, body: submitted });
+    assert.strictEqual(publicationCalls[3][1].sourceVersion, '0');
+    assert(publicationCalls[3][1].code.endsWith('-0'), 'Initial immutable route version is part of the publication identity');
     records.routes.length = 0;
     let noRoute = JSON.parse(JSON.stringify(draft));
     delete noRoute.route;
     await assert.rejects(service.validatePublishReadiness({ ...context, body: noRoute }),
         error => error.code === 'ERR_CMS_00106');
+
+    const longDraft = structuredClone(draft);
+    delete longDraft.sourceVersion;
+    const longCode = 'a'.repeat(127) + 'b';
+    const longComponent = longDraft.sections[0].components[0];
+    longDraft.page.code = longCode;
+    longDraft.route.path = '/designer-long-identity';
+    longComponent.code = longCode + 'MainComponent';
+    delete longComponent.media[0].componentMediaCode;
+    const start = saved.length;
+    assert.equal((await service.validateDraftComposition({ ...context, body: longDraft })).result.status, 'VALID_DRAFT');
+    assert.equal(saved.length, start);
+    await service.saveDraftComposition({ ...context, body: longDraft });
+    const persisted = saved.slice(start);
+    assert(persisted.some(row => row.code === longCode));
+    assert(persisted.every(row => /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(row.code)));
+    const readback = (await service.getDraftComposition({ ...context, body: longDraft })).result;
+    assert.equal(readback.editable, true);
+    const component = readback.draft.sections[0].components[0];
+    assert.match(component.code, /^component-[a-f0-9]{64}$/);
+    assert.equal(component.media[0].mediaCode, longComponent.media[0].mediaCode);
+    assert.equal(component.localizations[0].locale, 'en');
+    await service.submitForPublication({ ...context, body: readback.draft });
+    assert.match(publicationCalls.at(-3)[1].code, /^cms-nexusCorporateSite-route-[a-f0-9]{64}-0$/);
+    const invalid = structuredClone(longDraft);
+    invalid.sections[0].components[0].code = 'b'.repeat(129);
+    await assert.rejects(service.validateDraftComposition({ ...context, body: invalid }),
+        error => error.code === 'ERR_CMS_00100');
 
     console.log('CMS designer composition contract validated');
 })().catch(error => {

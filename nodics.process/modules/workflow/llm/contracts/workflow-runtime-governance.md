@@ -264,6 +264,8 @@ published version, not edits to an in-flight task.
 
 ### Public task decision projection
 
+A claimed task can be completed only by its current assignee. Explicit assignment changes that identity through the existing scoped task operation. The completion write retains the inspected assignee in its conditional predicate.
+
 Tasks with a pinned `actorPolicy` additionally project
 `reviewerEligibility:{eligible,reasonCode,message}` from the exact existing
 completion actor check. Reasons are `ELIGIBLE`,
@@ -308,6 +310,12 @@ SourceVersion is not a data-release version. A consumer may enrich CMS review
 evidence from an authorized application status only on exact site, publication
 code and workflow-reference equality. A failed, ambiguous or mismatched read
 must not provide release evidence or relabel an unrelated website as documentation.
+
+`GET /instances/:instanceCode/tasks/:taskCode/cms-review` gives the Process
+task workspace access to CMS-owned frozen evidence. It forwards the original
+employee access token to the configured CMS Staged owner. CMS verifies review
+permission and current task scope before projecting evidence. This no-store read
+does not invoke the workflow action or expose the CMS operator workspace.
 
 `GET /tasks`, `GET /tasks/:taskCode` and the task array in instance detail
 project `task.decisionContract` through the exported
@@ -459,7 +467,7 @@ runtime enterprise; this selection does not mint another identity, grant target
 permissions or replace the target owner's independent enterprise authorization.
 Malformed, empty, duplicate or oversized selections fail closed. Framework
 defaults and validation remain in Workflow; deployments contribute only reviewed
-enterprise selections through the effective runtime-role profile.
+enterprise selections through ordinary effective configuration with explicit module/publication selectors.
 
 `POST /instances/:instanceCode/actions/claim` is an internal Workflow capability
 operation under `moduleInternal`, service-token authentication and the existing
@@ -528,3 +536,11 @@ selection. It also retains existing scoped claim and Editorial integration tests
 
 See [source-owned review retirement](source-owned-review-retirement.md) for signed
 closure admission, staged CAS/recovery and private persistence guards.
+
+## CMS decision callback qualification
+
+The separate fixed CMS callback completes its Process action only when CMS acknowledges the original publication code, the exact resulting revision and Online target (or rejection). Missing, contradictory or unrelated responses remain failures of the original action, eligible only for existing Process recovery; they do not create another task. The callback payload and legacy graph contract remain unchanged.
+
+Approval diagnostics bind the stored workflow context to the requested publication and revision. A completed task with a recorded boolean decision and an unfinished instance reports DECISION_CALLBACK_PENDING. A completed instance reports APPROVED or REJECTED from that task decision; instance completion alone reports DECISION_EVIDENCE_MISSING. Diagnosis is read-only and never installs, claims, completes or retries work.
+
+Transport failures retain the recorded decision and surface ERR_PROCESS_00030 with callback recovery guidance; mismatched completion receipts use ERR_PROCESS_00031. Native authorization failures retain their original denial code.

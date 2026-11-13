@@ -34,7 +34,7 @@ module.exports = {
         bounds.pageSize > bounds.maximumOperations ||
         typeof tenant !== "string" || !tenant || definition?.jobDetail?.startNode !== p.startNode ||
         p.target?.moduleName !== "digitalCore" || p.target.apiName !== "/internal/bundles/gifts/expire" ||
-        typeof p.target.connectionName !== "string" || !p.target.connectionName || p.target.targetAuthority?.runtimeRole !== "COMMERCE" ||
+        typeof p.target.connectionName !== "string" || !p.target.connectionName || (p.target.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(p.target.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
         p.target.apiVersion !== "v0" || !configuration.integer(p.target.timeoutMs, validation?.timeoutMs) || p.target.maxAttempts !== 1)
       throw new Error("Gift expiry scheduler binding is not admitted");
     const auth = structuredClone(await SERVICE.DefaultCronJobService.assertOperational(tenant));

@@ -105,6 +105,7 @@ module.exports = {
     const candidates = [];
     for (const item of items) {
       if (item.active !== true || item.status !== "ACTIVE" || item.purchasePolicy?.version !== 2 ||
+          item.purchasePolicy.couponOffer?.expiryReminderEnabled !== true ||
           !["UNCLAIMED", "CLAIMED"].includes(item.claimStatus)) continue;
       const window = lifecycle.couponWindow(item);
       if (window.mode === "NONE" || Date.parse(window.at) <= now || Date.parse(window.at) > now + p.leadTimeSeconds * 1000) continue;
@@ -176,7 +177,7 @@ module.exports = {
         g.serviceId === auth.serviceId && ["projectCode", "environmentCode", "serverCode", "instanceCode", "assignmentCode"]
           .every(k => typeof g[k] === "string" && g[k] && g[k] === auth.runtimeScope?.[k]) &&
         g.instanceCode === auth.runtimeInstanceId && g.environmentCode === NODICS.getSelectedEnvironmentName()) : [];
-      if (grants.length !== 1 || (CONFIG.get("runtimeRole")?.code || CONFIG.get("runtimeRole")) !== "COMMERCE") this.fail();
+      if (grants.length !== 1 || SERVICE.DefaultModuleService?.isLocalModuleActive?.("digitalCore") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") this.fail();
     };
     bound();
     const scope = { tenant, enterpriseCode: original.enterpriseCode }, now = Date.now();

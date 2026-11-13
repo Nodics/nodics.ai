@@ -30,7 +30,10 @@ module.exports = {
     /** Implements submitForApproval as an overrideable service operation. */
     submitForApproval: function (request) { return SERVICE.DefaultRuleApprovalService.submit(request); },
     /** Implements publishDraft as an overrideable service operation. */
-    publishDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.publishRuleSetDraft(request); },
+    publishDraft: function () {
+        // Only the verified Process action adapter may invoke the lifecycle publisher.
+        throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Policy publication requires a completed Process approval.');
+    },
     /** Implements listVersions as an overrideable service operation. */
     listVersions: function (request) { return SERVICE.DefaultRuleManagementService.listVersions(request); },
     /** Implements listAudit as an overrideable service operation. */

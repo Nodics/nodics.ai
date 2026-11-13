@@ -24,3 +24,7 @@ unavailable. The new contract is not live provider qualification. See the
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Payment provider selection is configuration-driven through the
+[owner contract](llm/contracts/README.md#provider-selection). Defaults select the
+existing offline adapter; deployment activation and real settlement remain separate.

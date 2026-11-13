@@ -51,8 +51,39 @@ module.exports = {
     };
   },
 
+  /** Rechecks the real owner route permission before preview, execution or receipt replay. */
+  authorizeRepair: async function (repair, request) {
+    const owner = this.releaseService();
+    const target = owner && this.resolveTarget(owner, repair);
+    const action = repair.dryRun || repair.operation === "dataRelease.status" ? "validate" : "install";
+    const kinds = target?.dataType ? [target.dataType] : ["init", "core", "sample"];
+    if (!owner || typeof owner.clientActions !== "function" || !kinds.some(kind => owner.clientActions(request, kind).includes(action)))
+      throw new CLASSES.NodicsError("ERR_AUTH_00003", "Current actor cannot perform the selected import repair");
+    return true;
+  },
+
+  /** Resolves only the original durable execution; it never dispatches another import. */
+  reconcileRepair: async function (repair, request) {
+    await this.authorizeRepair(repair, request);
+    const owner = this.releaseService(), target = this.resolveTarget(owner, repair);
+    const operation = this.operationRequest(repair, request, target);
+    const plan = await owner.preparePlan(operation);
+    const execution = SERVICE.DefaultDataReleaseExecutionService;
+    const found = await execution.find(operation, plan);
+    if (!found) return undefined;
+    const scope = execution.scope(operation, true);
+    let row = await execution.load(scope, found.code);
+    if (row.planHash !== execution.hash(execution.identity(plan))) return undefined;
+    row = await execution.reconcile(scope, row, plan);
+    if (!["COMPLETED", "READY"].includes(row.status)) return undefined;
+    // READY alone is not proof of a prior dispatch. At least one completed/skipped step is required.
+    if (!row.steps.some(step => ["COMPLETED", "SKIPPED"].includes(step.status))) return undefined;
+    return this.toRepairResult(repair, target, await execution.response(row, plan), false);
+  },
+
   /** Executes a governed repair by reusing the existing data-release authority. */
   executeRepair: async function (repair, request) {
+    await this.authorizeRepair(repair, request);
     const releaseService = this.releaseService();
     if (!releaseService) {
       return this.unavailable(repair);
@@ -135,6 +166,7 @@ module.exports = {
         dataType: target.dataType,
         releaseCodes: [target.releaseCode],
         expectedReleases: expectedReleases,
+        continuation: true,
       },
       repairContext: {
         idempotencyKey: repair.idempotencyKey,
@@ -163,16 +195,20 @@ module.exports = {
     const blockersRemaining = validateOnly
       ? Number(summary.blocked || 0) + Number(summary.wait || 0)
       : 0;
+    const execution = data.execution;
+    const confirmed = validateOnly || ["COMPLETED", "READY"].includes(execution?.status);
+    const completed = execution?.status === "COMPLETED";
     const publicationFollowUps = [].concat(dryRun.publicationFollowUps || []);
     const refreshScopes = ["imports", "operationalReadiness"].concat(
       publicationFollowUps.length > 0 ? ["publishing"] : [],
     );
     return {
-      state: validateOnly ? "DRY_RUN" : "COMPLETED",
+      completionVerified: confirmed,
+      state: validateOnly ? "DRY_RUN" : completed ? "COMPLETED" : confirmed ? "PARTIAL_SUCCESS" : "RECONCILIATION_REQUIRED",
       targetIdentifiers: { releaseCode: target.releaseCode },
-      changedCount: changedCount,
-      skippedCount: skippedCount,
-      blockersRemaining: blockersRemaining,
+      changedCount: validateOnly ? changedCount : (execution?.steps || []).filter(step => step.status === "COMPLETED").length,
+      skippedCount: validateOnly ? skippedCount : (execution?.steps || []).filter(step => step.status === "SKIPPED").length,
+      blockersRemaining: validateOnly ? blockersRemaining : completed ? 0 : 1,
       preview: {
         changedCount: changedCount,
         skippedCount: skippedCount,
@@ -188,14 +224,14 @@ module.exports = {
         approvalRequired: false,
       },
       retryPolicy: {
-        safeToRetry: validateOnly || blockersRemaining > 0,
+        safeToRetry: validateOnly || (confirmed && !completed),
         reuseIdempotencyKey: true,
       },
       plan: this.plan(repair, target, dryRun, validateOnly),
       refreshScopes: refreshScopes,
       evidenceReference: this.evidenceReference(target, data),
-      message: this.message(validateOnly, target, dryRun),
-      nextAction: this.nextAction(validateOnly, blockersRemaining, publicationFollowUps),
+      message: validateOnly || completed ? this.message(validateOnly, target, dryRun) : "Inspect the durable import execution before continuing any remaining release.",
+      nextAction: validateOnly || completed ? this.nextAction(validateOnly, blockersRemaining, publicationFollowUps) : "Open Data Releases and inspect " + (execution?.code || "the original execution") + ". Do not repeat an uncertain import.",
     };
   },
 
@@ -297,6 +333,7 @@ module.exports = {
   /** Returns compact execution evidence references without exposing filesystem paths. */
   evidenceReference: function (target, data) {
     return (
+      data.execution?.code ||
       data.importRun ||
       (Array.isArray(data.importRuns) && data.importRuns[data.importRuns.length - 1]) ||
       "dataRelease:" + target.releaseCode

@@ -26,6 +26,34 @@ module.exports = {
       !Number.isSafeInteger(p.maximumResults) || p.maximumResults < 1 || p.maximumResults > 100) this.fail("POLICY");
     return p;
   },
+  /** Projects a read-only customer lookup using this owner's existing private directory; no account CRUD or recipient authority is implied. */
+  buildCustomerWorkspace: function () {
+    if (CONFIG.get("profileParticipantDirectory")?.enabled !== true) return undefined;
+    const p = this.policy(), copy = p.customerWorkspacePresentation;
+    const labels = ["title", "description", "tabLabel", "sectionTitle", "searchLabel",
+      "searchButtonLabel", "referenceLabel", "nameLabel"];
+    if (!copy || labels.some(key => typeof copy[key] !== "string" || !copy[key].trim() ||
+      copy[key].length > (key === "description" ? 1000 : 128))) return undefined;
+    return {
+      contractVersion: 0, renderer: "axis.workspace.backend-operations",
+      ownerSelector: { publicationRole: "OPERATIONAL" },
+      title: copy.title,
+      description: copy.description.replaceAll("{minimumSearchLength}", String(p.minimumSearchLength))
+        .replaceAll("{maximumResults}", String(p.maximumResults)),
+      defaultTab: "customers",
+      tabs: [{ id: "customers", label: copy.tabLabel, sections: [{
+        id: "customer-directory", type: "listing", title: copy.sectionTitle,
+        submitLabel: copy.searchButtonLabel,
+        endpoint: { method: "POST", path: "/nodics/profile/v0/participants/search", resultPath: "items" },
+        filters: [
+          { name: "ownerType", label: "Customer type", type: "HIDDEN", required: true, defaultValue: "CUSTOMER" },
+          { name: "search", label: copy.searchLabel, type: "TEXT", required: true,
+            minimumLength: p.minimumSearchLength, maximumLength: p.maximumSearchLength },
+        ],
+        columns: [{ field: "displayName", label: copy.nameLabel }, { field: "ownerCode", label: copy.referenceLabel }],
+      }] }],
+    };
+  },
   /** Requires current original Customer/Employee authority before private owner reads. */
   context: async function (request) {
     SERVICE.DefaultLoggerService.assertSensitiveRequest(request);

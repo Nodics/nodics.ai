@@ -1,0 +1,4552 @@
+{
+  "formatVersion": 1,
+  "ownerModule": "axis",
+  "entries": [
+    {
+      "namespace": "common",
+      "key": "search-navigation",
+      "defaultMessage": "Search navigation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بحث التنقل"
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "change-language",
+      "defaultMessage": "Change language",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تغيير اللغة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.current-context",
+      "defaultMessage": "Current context",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "السياق الحالي"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.current-employee-business-context",
+      "defaultMessage": "Current employee business context.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سياق عمل الموظف الحالي."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.application-amp-technical-details",
+      "defaultMessage": "Application & technical details",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تفاصيل التطبيق والتفاصيل التقنية"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.composition-site-and-catalog-render-axis-they-do-not-select-business-rec",
+      "defaultMessage": "Composition Site and Catalog render Axis; they do not select business records.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يستخدم Axis موقع التكوين وكتالوجه للعرض؛ ولا يحددان سجلات الأعمال."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.switch-to-dark-mode",
+      "defaultMessage": "Switch to dark mode",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التبديل إلى الوضع الداكن"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.switch-to-light-mode",
+      "defaultMessage": "Switch to light mode",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التبديل إلى الوضع الفاتح"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.open-employee-menu",
+      "defaultMessage": "Open employee menu",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح قائمة الموظف"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.lock-screen",
+      "defaultMessage": "Lock screen",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قفل الشاشة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.sign-out",
+      "defaultMessage": "Sign out",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تسجيل الخروج"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.search-menu",
+      "defaultMessage": "Search menu",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بحث القائمة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.primary-navigation",
+      "defaultMessage": "Primary navigation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التنقل الرئيسي"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.no-matching-menu-items",
+      "defaultMessage": "No matching menu items",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد عناصر قائمة مطابقة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.section-expanded",
+      "defaultMessage": "Section expanded",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القسم موسّع"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.section-collapsed",
+      "defaultMessage": "Section collapsed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القسم مطوي"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.no-navigation-results",
+      "defaultMessage": "No navigation results",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد نتائج للتنقل"
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "skip-to-main-content",
+      "defaultMessage": "Skip to main content",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الانتقال إلى المحتوى الرئيسي"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.resize-navigation",
+      "defaultMessage": "Resize navigation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تغيير عرض التنقل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.recent-pages",
+      "defaultMessage": "Recent pages",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الصفحات الأخيرة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.shortcuts-recorded-from-authorized-navigation",
+      "defaultMessage": "Shortcuts recorded from authorized navigation.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختصارات من التنقل المسموح به."
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "http.400",
+      "defaultMessage": "The request needs attention. Check the entered values and try again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتاج الطلب إلى مراجعة. تحقّق من القيم المُدخلة ثم حاول مرة أخرى."
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "http.401",
+      "defaultMessage": "Your session has ended. Sign in again to continue.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "انتهت جلستك. سجّل الدخول مجددًا للمتابعة."
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "http.403",
+      "defaultMessage": "You do not have permission for this action in the selected enterprise.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ليس لديك إذن لتنفيذ هذا الإجراء في المؤسسة المحددة."
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "http.404",
+      "defaultMessage": "The requested record is unavailable. Refresh the list and choose a current record.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "السجل المطلوب غير متاح. حدّث القائمة واختر سجلًا حاليًا."
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "http.409",
+      "defaultMessage": "The record changed or the save could not be confirmed. Inspect the current state before another change.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تغيّر السجل أو تعذّر تأكيد الحفظ. راجع الحالة الحالية قبل إجراء تغيير آخر."
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "http.422",
+      "defaultMessage": "The request does not meet its prerequisites. Review the values and required steps.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الطلب لا يستوفي المتطلبات المسبقة. راجع القيم والخطوات المطلوبة."
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "http.429",
+      "defaultMessage": "Too many requests. Wait briefly, then refresh the current state before trying again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عدد الطلبات كبير. انتظر قليلًا ثم حدّث الحالة الحالية قبل المحاولة مجددًا."
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "http.500",
+      "defaultMessage": "The request could not be confirmed. Inspect the current state before another change.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر تأكيد الطلب. راجع الحالة الحالية قبل إجراء تغيير آخر."
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "http.503",
+      "defaultMessage": "The owning service is temporarily unavailable. Refresh its status before trying again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الخدمة المسؤولة غير متاحة مؤقتًا. حدّث حالتها قبل المحاولة مجددًا."
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "http.504",
+      "defaultMessage": "The request timed out. Inspect the current state before another change.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "انتهت مهلة الطلب. راجع الحالة الحالية قبل إجراء تغيير آخر."
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "request-unconfirmed",
+      "defaultMessage": "The request could not be confirmed. Inspect the current state before another change.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر تأكيد الطلب. راجع الحالة الحالية قبل إجراء تغيير آخر."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.title",
+      "defaultMessage": "Application snapshot",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لمحة عن التطبيقات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.title.source",
+      "defaultMessage": "Application snapshot",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Application snapshot"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.published",
+      "defaultMessage": "Published",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منشور"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.published.source",
+      "defaultMessage": "Published",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Published"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.approval",
+      "defaultMessage": "Awaiting approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بانتظار الموافقة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.approval.source",
+      "defaultMessage": "Awaiting approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Awaiting approval"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.preparing",
+      "defaultMessage": "Applications in preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تطبيقات قيد الإعداد"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.preparing.source",
+      "defaultMessage": "Applications in preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Applications in preparation"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.available",
+      "defaultMessage": "Available to set up",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متاح للإعداد"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.available.source",
+      "defaultMessage": "Available to set up",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Available to set up"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.unknown",
+      "defaultMessage": "Status unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحالة غير متاحة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.unknown.source",
+      "defaultMessage": "Status unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Status unavailable"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.configuration",
+      "defaultMessage": "Configuration notices",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تنبيهات الإعدادات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.configuration.source",
+      "defaultMessage": "Configuration notices",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Configuration notices"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.checked",
+      "defaultMessage": "application statuses verified",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حالات تطبيقات تم التحقق منها"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.checked.source",
+      "defaultMessage": "application statuses verified",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "application statuses verified"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.incomplete",
+      "defaultMessage": "Some statuses are unavailable or stale. Counts show verified responses only.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بعض الحالات غير متاحة أو قديمة. تعرض الأعداد الاستجابات التي تم التحقق منها فقط."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.incomplete.source",
+      "defaultMessage": "Some statuses are unavailable or stale. Counts show verified responses only.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Some statuses are unavailable or stale. Counts show verified responses only."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.blocked",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتاج إلى مراجعة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabmetrics.blocked.source",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Needs attention"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.title",
+      "defaultMessage": "Your applications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تطبيقاتك"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.title.source",
+      "defaultMessage": "Your applications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Your applications"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.published",
+      "defaultMessage": "Published",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منشور"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.published.source",
+      "defaultMessage": "Published",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Published"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.approval",
+      "defaultMessage": "Awaiting approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بانتظار الموافقة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.approval.source",
+      "defaultMessage": "Awaiting approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Awaiting approval"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.preparing",
+      "defaultMessage": "In preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قيد الإعداد"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.preparing.source",
+      "defaultMessage": "In preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "In preparation"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.available",
+      "defaultMessage": "Available to set up",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متاح للإعداد"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.available.source",
+      "defaultMessage": "Available to set up",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Available to set up"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.unknown",
+      "defaultMessage": "Status unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحالة غير متاحة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.unknown.source",
+      "defaultMessage": "Status unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Status unavailable"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.previous",
+      "defaultMessage": "Previous applications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التطبيقات السابقة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.previous.source",
+      "defaultMessage": "Previous applications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Previous applications"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.next",
+      "defaultMessage": "Next applications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التطبيقات التالية"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.next.source",
+      "defaultMessage": "Next applications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Next applications"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.steps",
+      "defaultMessage": "preparation steps verified",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "خطوات إعداد تم التحقق منها"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.steps.source",
+      "defaultMessage": "preparation steps verified",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "preparation steps verified"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.review",
+      "defaultMessage": "Review setup",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة الإعداد"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.review.source",
+      "defaultMessage": "Review setup",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Review setup"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.empty",
+      "defaultMessage": "No applications are available for your account.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد تطبيقات متاحة لحسابك."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.empty.source",
+      "defaultMessage": "No applications are available for your account.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "No applications are available for your account."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.blocked",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتاج إلى مراجعة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabapplications.blocked.source",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Needs attention"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.title",
+      "defaultMessage": "Publication progress",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تقدّم النشر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.title.source",
+      "defaultMessage": "Publication progress",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Publication progress"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.published",
+      "defaultMessage": "Published",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منشور"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.published.source",
+      "defaultMessage": "Published",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Published"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.approval",
+      "defaultMessage": "Awaiting approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بانتظار الموافقة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.approval.source",
+      "defaultMessage": "Awaiting approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Awaiting approval"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.preparing",
+      "defaultMessage": "In preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قيد الإعداد"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.preparing.source",
+      "defaultMessage": "In preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "In preparation"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.available",
+      "defaultMessage": "Available to set up",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متاح للإعداد"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.available.source",
+      "defaultMessage": "Available to set up",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Available to set up"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.unknown",
+      "defaultMessage": "Status unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحالة غير متاحة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.unknown.source",
+      "defaultMessage": "Status unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Status unavailable"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.description",
+      "defaultMessage": "Application publication only. Operational readiness and documentation are reported separately.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نشر التطبيقات فقط. تُعرض جاهزية التشغيل والوثائق بصورة منفصلة."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.description.source",
+      "defaultMessage": "Application publication only. Operational readiness and documentation are reported separately.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Application publication only. Operational readiness and documentation are reported separately."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.blocked",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتاج إلى مراجعة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabreadiness.blocked.source",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Needs attention"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabattention.title",
+      "defaultMessage": "Needs your attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتاج إلى مراجعتك"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabattention.title.source",
+      "defaultMessage": "Needs your attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Needs your attention"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabattention.unknown",
+      "defaultMessage": "Status could not be verified. Refresh or review the owning service.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر التحقق من الحالة. حدّث البيانات أو راجع الخدمة المسؤولة."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabattention.unknown.source",
+      "defaultMessage": "Status could not be verified. Refresh or review the owning service.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Status could not be verified. Refresh or review the owning service."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabattention.review",
+      "defaultMessage": "Review setup",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة الإعداد"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabattention.review.source",
+      "defaultMessage": "Review setup",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Review setup"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabattention.empty",
+      "defaultMessage": "No pending decisions reported by the current status checks.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تُظهر عمليات التحقق الحالية قرارات معلّقة."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabattention.empty.source",
+      "defaultMessage": "No pending decisions reported by the current status checks.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "No pending decisions reported by the current status checks."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabattention.blocked",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتاج إلى مراجعة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabattention.blocked.source",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Needs attention"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewtab.title",
+      "defaultMessage": "Overview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نظرة عامة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewtab.title.source",
+      "defaultMessage": "Overview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Overview"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewtab.description",
+      "defaultMessage": "Business records, domain workspaces and decisions across your project.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سجلات الأعمال ومساحات العمل والقرارات عبر مشروعك."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewtab.description.source",
+      "defaultMessage": "Business records, domain workspaces and decisions across your project.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Business records, domain workspaces and decisions across your project."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardapplicationstabsettings.title",
+      "defaultMessage": "Review environment settings",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة إعدادات البيئة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardapplicationstabsettings.title.source",
+      "defaultMessage": "Review environment settings",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Review environment settings"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardapplicationstabcatalogue.title",
+      "defaultMessage": "Applications & services",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التطبيقات والخدمات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardapplicationstabcatalogue.title.source",
+      "defaultMessage": "Applications & services",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Applications & services"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardapplicationstabdetails.title",
+      "defaultMessage": "Setup plan",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "خطة الإعداد"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardapplicationstabdetails.title.source",
+      "defaultMessage": "Setup plan",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Setup plan"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardapplicationstab.title",
+      "defaultMessage": "Applications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التطبيقات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardapplicationstab.title.source",
+      "defaultMessage": "Applications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Applications"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardapplicationstab.description",
+      "defaultMessage": "Application publication, readiness and guided setup in one place.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نشر التطبيقات وجاهزيتها وإعدادها الموجّه في مكان واحد."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardapplicationstab.description.source",
+      "defaultMessage": "Application publication, readiness and guided setup in one place.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Application publication, readiness and guided setup in one place."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabcontext.title",
+      "defaultMessage": "Runtime context",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سياق التشغيل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabcontext.title.source",
+      "defaultMessage": "Runtime context",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Runtime context"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabmetrics.title",
+      "defaultMessage": "Technical signals",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مؤشرات تقنية"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabmetrics.title.source",
+      "defaultMessage": "Technical signals",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Technical signals"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabmetrics.blocked",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتاج إلى مراجعة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabmetrics.blocked.source",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Needs attention"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabreceipts.title",
+      "defaultMessage": "Repair results",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نتائج الإصلاح"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabreceipts.title.source",
+      "defaultMessage": "Repair results",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Repair results"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabrecovery.title",
+      "defaultMessage": "Go-live recovery",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استعادة الجاهزية للنشر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabrecovery.title.source",
+      "defaultMessage": "Go-live recovery",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Go-live recovery"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabblockers.title",
+      "defaultMessage": "Fix these first",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عالج هذه أولًا"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabblockers.title.source",
+      "defaultMessage": "Fix these first",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Fix these first"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabworkspaces.title",
+      "defaultMessage": "Operational workspaces",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مساحات العمل التشغيلية"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabworkspaces.title.source",
+      "defaultMessage": "Operational workspaces",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Operational workspaces"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabtimeline.title",
+      "defaultMessage": "Readiness timeline",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التسلسل الزمني للجاهزية"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabtimeline.title.source",
+      "defaultMessage": "Readiness timeline",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Readiness timeline"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabfootnotes.title",
+      "defaultMessage": "Runtime inventory",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جرد التشغيل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltabfootnotes.title.source",
+      "defaultMessage": "Runtime inventory",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Runtime inventory"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltab.title",
+      "defaultMessage": "Technical overview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نظرة تقنية"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltab.title.source",
+      "defaultMessage": "Technical overview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Technical overview"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltab.description",
+      "defaultMessage": "Runtime health, readiness and operational workspaces.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سلامة التشغيل والجاهزية ومساحات العمل التشغيلية."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardtechnicaltab.description.source",
+      "defaultMessage": "Runtime health, readiness and operational workspaces.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Runtime health, readiness and operational workspaces."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkdashboardworkspacecomponent.title",
+      "defaultMessage": "Dashboard",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لوحة المعلومات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkdashboardworkspacecomponent.title.source",
+      "defaultMessage": "Dashboard",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Dashboard"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.ready",
+      "defaultMessage": "Ready",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جاهز"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.ready.source",
+      "defaultMessage": "Ready",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Ready"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.needsattention",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتاج إلى مراجعة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.needsattention.source",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Needs attention"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.unknown",
+      "defaultMessage": "Not verified",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم يتم التحقق"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.unknown.source",
+      "defaultMessage": "Not verified",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Not verified"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.runtimecommunication.title",
+      "defaultMessage": "Connected services",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الخدمات المتصلة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.runtimecommunication.title.source",
+      "defaultMessage": "Connected services",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Connected services"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.runtimecommunication.label",
+      "defaultMessage": "reported runtime servers",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "خوادم تشغيل تم الإبلاغ عنها"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.runtimecommunication.label.source",
+      "defaultMessage": "reported runtime servers",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "reported runtime servers"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.imports.title",
+      "defaultMessage": "Business data",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بيانات الأعمال"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.imports.title.source",
+      "defaultMessage": "Business data",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Business data"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.imports.label",
+      "defaultMessage": "available data releases",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إصدارات بيانات متاحة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.imports.label.source",
+      "defaultMessage": "available data releases",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "available data releases"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.approval.title",
+      "defaultMessage": "Approval workload",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مهام الموافقة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.approval.title.source",
+      "defaultMessage": "Approval workload",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Approval workload"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.approval.label",
+      "defaultMessage": "pending application approvals",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "موافقات تطبيقات معلّقة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.approval.label.source",
+      "defaultMessage": "pending application approvals",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "pending application approvals"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.media.title",
+      "defaultMessage": "Media library",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مكتبة الوسائط"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.media.title.source",
+      "defaultMessage": "Media library",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Media library"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.media.label",
+      "defaultMessage": "reported media objects",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عناصر وسائط تم الإبلاغ عنها"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.media.label.source",
+      "defaultMessage": "reported media objects",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "reported media objects"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.search.title",
+      "defaultMessage": "Search & discovery",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "البحث والاكتشاف"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.search.title.source",
+      "defaultMessage": "Search & discovery",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Search & discovery"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.search.label",
+      "defaultMessage": "initialized search engines",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "محركات بحث تمت تهيئتها"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.search.label.source",
+      "defaultMessage": "initialized search engines",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "initialized search engines"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.assistant.title",
+      "defaultMessage": "Knowledge & assistance",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المعرفة والمساعدة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.assistant.title.source",
+      "defaultMessage": "Knowledge & assistance",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Knowledge & assistance"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.assistant.label",
+      "defaultMessage": "indexed knowledge sources",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مصادر معرفة تمت فهرستها"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.areas.assistant.label.source",
+      "defaultMessage": "indexed knowledge sources",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "indexed knowledge sources"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.title",
+      "defaultMessage": "Operational pulse",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مؤشرات التشغيل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.title.source",
+      "defaultMessage": "Operational pulse",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Operational pulse"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.checked",
+      "defaultMessage": "Last assessed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "آخر تقييم"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.checked.source",
+      "defaultMessage": "Last assessed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Last assessed"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.details",
+      "defaultMessage": "reported issues",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مشكلات تم الإبلاغ عنها"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.details.source",
+      "defaultMessage": "reported issues",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "reported issues"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.review",
+      "defaultMessage": "Open workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح مساحة العمل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.review.source",
+      "defaultMessage": "Open workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Open workspace"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.empty",
+      "defaultMessage": "Operational evidence is not available. No healthy status has been assumed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أدلة التشغيل غير متاحة. لم تُفترض حالة سليمة."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtaboperations.empty.source",
+      "defaultMessage": "Operational evidence is not available. No healthy status has been assumed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Operational evidence is not available. No healthy status has been assumed."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.title",
+      "defaultMessage": "Documentation & guidance",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الوثائق والإرشادات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.title.source",
+      "defaultMessage": "Documentation & guidance",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Documentation & guidance"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.published",
+      "defaultMessage": "Published",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منشور"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.published.source",
+      "defaultMessage": "Published",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Published"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.approval",
+      "defaultMessage": "Awaiting approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بانتظار الموافقة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.approval.source",
+      "defaultMessage": "Awaiting approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Awaiting approval"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.preparing",
+      "defaultMessage": "In preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قيد الإعداد"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.preparing.source",
+      "defaultMessage": "In preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "In preparation"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.available",
+      "defaultMessage": "Available to install",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متاح للتثبيت"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.available.source",
+      "defaultMessage": "Available to install",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Available to install"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.blocked",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتاج إلى مراجعة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.blocked.source",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Needs attention"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.unknown",
+      "defaultMessage": "Status unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحالة غير متاحة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.unknown.source",
+      "defaultMessage": "Status unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Status unavailable"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.review",
+      "defaultMessage": "Review documentation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة الوثائق"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.review.source",
+      "defaultMessage": "Review documentation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Review documentation"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.empty",
+      "defaultMessage": "No documentation packs are available for your account.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد حزم وثائق متاحة لحسابك."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisdashboardoverviewtabdocumentation.empty.source",
+      "defaultMessage": "No documentation packs are available for your account.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "No documentation packs are available for your account."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.title",
+      "defaultMessage": "Your business at a glance",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أعمالك في لمحة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.title.source",
+      "defaultMessage": "Your business at a glance",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Your business at a glance"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.scope",
+      "defaultMessage": "Current enterprise scope · Authorised business data",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نطاق المؤسسة الحالي · بيانات الأعمال المصرّح بها"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.scope.source",
+      "defaultMessage": "Current enterprise scope · Authorised business data",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Current enterprise scope · Authorised business data"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.refresh",
+      "defaultMessage": "Refresh business overview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث نظرة الأعمال"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.refresh.source",
+      "defaultMessage": "Refresh business overview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Refresh business overview"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.search",
+      "defaultMessage": "Find a dashboard or workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "البحث عن لوحة معلومات أو مساحة عمل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.search.source",
+      "defaultMessage": "Find a dashboard or workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Find a dashboard or workspace"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.opendashboard",
+      "defaultMessage": "Open workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح مساحة العمل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.opendashboard.source",
+      "defaultMessage": "Open workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Open workspace"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.allviews",
+      "defaultMessage": "All views",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جميع العروض"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.allviews.source",
+      "defaultMessage": "All views",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "All views"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.close",
+      "defaultMessage": "Close workspace directory",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إغلاق دليل مساحات العمل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.close.source",
+      "defaultMessage": "Close workspace directory",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Close workspace directory"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.destinations",
+      "defaultMessage": "available views",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عروض متاحة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.destinations.source",
+      "defaultMessage": "available views",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "available views"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.records",
+      "defaultMessage": "accessible records",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سجلات متاحة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.records.source",
+      "defaultMessage": "accessible records",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "accessible records"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.unavailable",
+      "defaultMessage": "Data unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "البيانات غير متاحة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.unavailable.source",
+      "defaultMessage": "Data unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Data unavailable"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.updated",
+      "defaultMessage": "Updated",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تم التحديث"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.updated.source",
+      "defaultMessage": "Updated",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Updated"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.nometrics",
+      "defaultMessage": "No business record snapshots are available for your current access.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد لقطات لسجلات الأعمال متاحة لصلاحياتك الحالية."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.nometrics.source",
+      "defaultMessage": "No business record snapshots are available for your current access.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "No business record snapshots are available for your current access."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.nodomains",
+      "defaultMessage": "No business dashboards are available for your current access.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد لوحات أعمال متاحة لصلاحياتك الحالية."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.nodomains.source",
+      "defaultMessage": "No business dashboards are available for your current access.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "No business dashboards are available for your current access."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.noresults",
+      "defaultMessage": "No matching dashboards or workspaces.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد لوحات معلومات أو مساحات عمل مطابقة."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.noresults.source",
+      "defaultMessage": "No matching dashboards or workspaces.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "No matching dashboards or workspaces."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.workunavailable",
+      "defaultMessage": "Work summaries are unavailable for this scope. Open the authorised workspace or refresh to try again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ملخصات العمل غير متاحة لهذا النطاق. افتح مساحة العمل المصرّح بها أو حدّث للمحاولة مجددًا."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.workunavailable.source",
+      "defaultMessage": "Work summaries are unavailable for this scope. Open the authorised workspace or refresh to try again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Work summaries are unavailable for this scope. Open the authorised workspace or refresh to try again."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.openwork",
+      "defaultMessage": "Open work queue",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح قائمة العمل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.openwork.source",
+      "defaultMessage": "Open work queue",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Open work queue"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.escalated",
+      "defaultMessage": "escalated",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تم تصعيدها"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.escalated.source",
+      "defaultMessage": "escalated",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "escalated"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.overdue",
+      "defaultMessage": "overdue in this sample",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متأخرة في هذه العينة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.overdue.source",
+      "defaultMessage": "overdue in this sample",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "overdue in this sample"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.due",
+      "defaultMessage": "Due",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الاستحقاق"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.due.source",
+      "defaultMessage": "Due",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Due"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.notasks",
+      "defaultMessage": "No open tasks in the current sample.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد مهام مفتوحة في العينة الحالية."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.notasks.source",
+      "defaultMessage": "No open tasks in the current sample.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "No open tasks in the current sample."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.bounded",
+      "defaultMessage": "Recent authorised sample, not an organisation-wide total. Up to 25 records per owner query.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عينة حديثة مصرّح بها، وليست إجمالي المؤسسة. حتى 25 سجلًا لكل استعلام من الخدمة المسؤولة."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.bounded.source",
+      "defaultMessage": "Recent authorised sample, not an organisation-wide total. Up to 25 records per owner query.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Recent authorised sample, not an organisation-wide total. Up to 25 records per owner query."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.observedtasks",
+      "defaultMessage": "tasks observed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مهام تم رصدها"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.observedtasks.source",
+      "defaultMessage": "tasks observed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "tasks observed"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.observedprocesses",
+      "defaultMessage": "processes observed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عمليات تم رصدها"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.observedprocesses.source",
+      "defaultMessage": "processes observed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "processes observed"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.noactivity",
+      "defaultMessage": "No task activity was returned for this scope.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم يُرجع هذا النطاق نشاطًا للمهام."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.noactivity.source",
+      "defaultMessage": "No task activity was returned for this scope.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "No task activity was returned for this scope."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.noexceptions",
+      "defaultMessage": "No process exceptions in the current sample.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد استثناءات عمليات في العينة الحالية."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewcontext.noexceptions.source",
+      "defaultMessage": "No process exceptions in the current sample.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "No process exceptions in the current sample."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewpulse.title",
+      "defaultMessage": "Business record snapshot",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لمحة عن سجلات الأعمال"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewpulse.title.source",
+      "defaultMessage": "Business record snapshot",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Business record snapshot"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewpulse.description",
+      "defaultMessage": "Current accessible records from the owning workspaces. Authoring content is not a count of published content.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "السجلات المتاحة حاليًا من مساحات العمل المسؤولة. محتوى التأليف ليس عددًا للمحتوى المنشور."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewpulse.description.source",
+      "defaultMessage": "Current accessible records from the owning workspaces. Authoring content is not a count of published content.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Current accessible records from the owning workspaces. Authoring content is not a count of published content."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewdomains.title",
+      "defaultMessage": "Your business dashboards",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لوحات أعمالك"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewdomains.title.source",
+      "defaultMessage": "Your business dashboards",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Your business dashboards"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewdomains.description",
+      "defaultMessage": "Open a domain workspace or go straight to its business views.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "افتح مساحة عمل متخصصة أو انتقل مباشرة إلى عروض الأعمال."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewdomains.description.source",
+      "defaultMessage": "Open a domain workspace or go straight to its business views.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Open a domain workspace or go straight to its business views."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewwork.title",
+      "defaultMessage": "Decisions & work",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القرارات والعمل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewwork.title.source",
+      "defaultMessage": "Decisions & work",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Decisions & work"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewwork.description",
+      "defaultMessage": "Open and escalated tasks in your authorised queue, with overdue work first.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المهام المفتوحة والمصعّدة في قائمتك المصرّح بها، مع عرض المتأخرة أولًا."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewwork.description.source",
+      "defaultMessage": "Open and escalated tasks in your authorised queue, with overdue work first.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Open and escalated tasks in your authorised queue, with overdue work first."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewactivity.title",
+      "defaultMessage": "Work activity",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نشاط العمل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewactivity.title.source",
+      "defaultMessage": "Work activity",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Work activity"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewactivity.description",
+      "defaultMessage": "Status distribution of the most recently retrieved Process tasks.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "توزيع حالات أحدث مهام العمليات التي تم استرجاعها."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewactivity.description.source",
+      "defaultMessage": "Status distribution of the most recently retrieved Process tasks.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Status distribution of the most recently retrieved Process tasks."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewexceptions.title",
+      "defaultMessage": "Business process exceptions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استثناءات عمليات الأعمال"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewexceptions.title.source",
+      "defaultMessage": "Business process exceptions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Business process exceptions"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewexceptions.description",
+      "defaultMessage": "Recent owner-reported exceptions. Review their status and evidence in the work queue.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استثناءات حديثة أبلغت عنها الخدمات المسؤولة. راجع حالتها وأدلتها في قائمة العمل."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "dashboard.axisframeworkoverviewexceptions.description.source",
+      "defaultMessage": "Recent owner-reported exceptions. Review their status and evidence in the work queue.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Recent owner-reported exceptions. Review their status and evidence in the work queue."
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.backoffice.setup-accelerators",
+      "defaultMessage": "Setup & Accelerators",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإعداد والمسرّعات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.backoffice.setup-accelerators.source",
+      "defaultMessage": "Setup & Accelerators",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Setup & Accelerators"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.backoffice.navigation-composition",
+      "defaultMessage": "Navigation Composition",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تكوين التنقل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.backoffice.navigation-composition.source",
+      "defaultMessage": "Navigation Composition",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Navigation Composition"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.backoffice.dashboard",
+      "defaultMessage": "Dashboard",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لوحة المعلومات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.backoffice.dashboard.source",
+      "defaultMessage": "Dashboard",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Dashboard"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.content-designer",
+      "defaultMessage": "Page Designer",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مصمم الصفحات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.content-designer.source",
+      "defaultMessage": "Page Designer",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Page Designer"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-content-operations",
+      "defaultMessage": "Pages & Routes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الصفحات والمسارات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-content-operations.source",
+      "defaultMessage": "Pages & Routes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Pages & Routes"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-content-types-rendering",
+      "defaultMessage": "Content Types & Rendering",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أنواع المحتوى وعرضه"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-content-types-rendering.source",
+      "defaultMessage": "Content Types & Rendering",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Content Types & Rendering"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing",
+      "defaultMessage": "Publishing Workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مساحة النشر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing.source",
+      "defaultMessage": "Publishing Workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Publishing Workspace"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing-requests",
+      "defaultMessage": "Publication Requests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طلبات النشر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing-requests.source",
+      "defaultMessage": "Publication Requests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Publication Requests"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing-approval-tasks",
+      "defaultMessage": "Approval Queue",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قائمة الموافقات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing-approval-tasks.source",
+      "defaultMessage": "Approval Queue",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Approval Queue"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing-audit",
+      "defaultMessage": "Publishing Audit",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تدقيق النشر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing-audit.source",
+      "defaultMessage": "Publishing Audit",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Publishing Audit"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.scheduled-publications",
+      "defaultMessage": "Scheduled Publications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المنشورات المجدولة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.scheduled-publications.source",
+      "defaultMessage": "Scheduled Publications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Scheduled Publications"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.online-publications",
+      "defaultMessage": "Online Publications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المنشورات المباشرة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.online-publications.source",
+      "defaultMessage": "Online Publications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Online Publications"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publication-dependencies",
+      "defaultMessage": "Publication Dependencies",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متطلبات النشر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publication-dependencies.source",
+      "defaultMessage": "Publication Dependencies",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Publication Dependencies"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing-failures-recovery",
+      "defaultMessage": "Failures & Recovery",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإخفاقات والاستعادة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing-failures-recovery.source",
+      "defaultMessage": "Failures & Recovery",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Failures & Recovery"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.withdrawals-rollbacks",
+      "defaultMessage": "Withdrawals & Rollbacks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "السحب واستعادة النسخ"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.withdrawals-rollbacks.source",
+      "defaultMessage": "Withdrawals & Rollbacks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Withdrawals & Rollbacks"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing-configuration",
+      "defaultMessage": "Publishing Configuration",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعدادات النشر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.publish.publishing-configuration.source",
+      "defaultMessage": "Publishing Configuration",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Publishing Configuration"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.rulesapi.business-rules",
+      "defaultMessage": "Business Rules",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قواعد الأعمال"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.rulesapi.business-rules.source",
+      "defaultMessage": "Business Rules",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Business Rules"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.rulesapi.business-rule-definitions",
+      "defaultMessage": "Rule Definitions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعريفات القواعد"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.rulesapi.business-rule-definitions.source",
+      "defaultMessage": "Rule Definitions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Rule Definitions"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.wcmsexperience.wcms-experience-studio",
+      "defaultMessage": "Experience Studio",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استوديو التجارب"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.wcmsexperience.wcms-experience-studio.source",
+      "defaultMessage": "Experience Studio",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Experience Studio"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.wcmsexperience.wcms-experience-placements",
+      "defaultMessage": "Placements",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مواضع العرض"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.wcmsexperience.wcms-experience-placements.source",
+      "defaultMessage": "Placements",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Placements"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.wcmsexperience.wcms-experience-preview",
+      "defaultMessage": "Preview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المعاينة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.wcmsexperience.wcms-experience-preview.source",
+      "defaultMessage": "Preview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Preview"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.wcmsexperience.wcms-experience-index-status",
+      "defaultMessage": "Index Status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حالة الفهرس"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.wcmsexperience.wcms-experience-index-status.source",
+      "defaultMessage": "Index Status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Index Status"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.process-workflows",
+      "defaultMessage": "Operations Workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مساحة العمليات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.process-workflows.source",
+      "defaultMessage": "Operations Workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Operations Workspace"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.workflow-management",
+      "defaultMessage": "Workflow Management",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة سير العمل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.workflow-management.source",
+      "defaultMessage": "Workflow Management",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Workflow Management"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.pipeline-management",
+      "defaultMessage": "Pipeline Management",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة مسارات التنفيذ"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.pipeline-management.source",
+      "defaultMessage": "Pipeline Management",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Pipeline Management"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.triggers-relationships",
+      "defaultMessage": "Triggers & Relationships",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المشغّلات والعلاقات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.triggers-relationships.source",
+      "defaultMessage": "Triggers & Relationships",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Triggers & Relationships"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.automation-monitoring",
+      "defaultMessage": "Automation Monitoring",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراقبة الأتمتة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.automation-monitoring.source",
+      "defaultMessage": "Automation Monitoring",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Automation Monitoring"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.automation-advanced-configuration",
+      "defaultMessage": "Advanced Configuration",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإعدادات المتقدمة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.automation-advanced-configuration.source",
+      "defaultMessage": "Advanced Configuration",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Advanced Configuration"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.process-definitions",
+      "defaultMessage": "Process Definitions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعريفات العمليات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.process-definitions.source",
+      "defaultMessage": "Process Definitions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Process Definitions"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.process-tasks",
+      "defaultMessage": "My Tasks & Approvals",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مهامي وموافقاتي"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.process-tasks.source",
+      "defaultMessage": "My Tasks & Approvals",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "My Tasks & Approvals"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.process-triggers",
+      "defaultMessage": "Manual, Event, & Scheduled Triggers",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المشغّلات اليدوية ومشغّلات الأحداث والجدولة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.process-triggers.source",
+      "defaultMessage": "Manual, Event, & Scheduled Triggers",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Manual, Event, & Scheduled Triggers"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.process-designer",
+      "defaultMessage": "Process Designer",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مصمّم العمليات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.workflow.process-designer.source",
+      "defaultMessage": "Process Designer",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Process Designer"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.system-configuration",
+      "defaultMessage": "System Configuration",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعدادات النظام"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.system-configuration.source",
+      "defaultMessage": "System Configuration",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "System Configuration"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.system-integrations",
+      "defaultMessage": "System & Integrations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النظام والتكاملات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.system-integrations.source",
+      "defaultMessage": "System & Integrations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "System & Integrations"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.content",
+      "defaultMessage": "Content & Experience",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المحتوى والتجارب"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.content.source",
+      "defaultMessage": "Content & Experience",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Content & Experience"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.media-management",
+      "defaultMessage": "Media Management",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة الوسائط"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.media-management.source",
+      "defaultMessage": "Media Management",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Media Management"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.organization",
+      "defaultMessage": "Customers & Organisation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "العملاء والمؤسسة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.organization.source",
+      "defaultMessage": "Customers & Organisation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Customers & Organisation"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.products-merchandising",
+      "defaultMessage": "Products & Merchandising",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المنتجات والتسويق"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.products-merchandising.source",
+      "defaultMessage": "Products & Merchandising",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Products & Merchandising"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.search-discovery",
+      "defaultMessage": "Search & Discovery",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "البحث والاكتشاف"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.search-discovery.source",
+      "defaultMessage": "Search & Discovery",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Search & Discovery"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.inventory-operations",
+      "defaultMessage": "Inventory Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عمليات المخزون"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.inventory-operations.source",
+      "defaultMessage": "Inventory Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Inventory Operations"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.orders-checkouts",
+      "defaultMessage": "Orders & Checkouts",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الطلبات وإتمام الشراء"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.orders-checkouts.source",
+      "defaultMessage": "Orders & Checkouts",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Orders & Checkouts"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.order-lifecycle-operations",
+      "defaultMessage": "Order Lifecycle Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "دورة حياة الطلبات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.order-lifecycle-operations.source",
+      "defaultMessage": "Order Lifecycle Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Order Lifecycle Operations"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.fulfillment-operations",
+      "defaultMessage": "Fulfillment Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عمليات التنفيذ"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.fulfillment-operations.source",
+      "defaultMessage": "Fulfillment Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Fulfillment Operations"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.shipping-operations",
+      "defaultMessage": "Shipping Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عمليات الشحن"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.shipping-operations.source",
+      "defaultMessage": "Shipping Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Shipping Operations"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.payment-operations",
+      "defaultMessage": "Payment Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عمليات الدفع"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.payment-operations.source",
+      "defaultMessage": "Payment Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Payment Operations"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.promotions-discounts",
+      "defaultMessage": "Promotions & Discounts",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "العروض والخصومات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.promotions-discounts.source",
+      "defaultMessage": "Promotions & Discounts",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Promotions & Discounts"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.editorial-space",
+      "defaultMessage": "Editorial Space",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مساحة التحرير"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.editorial-space.source",
+      "defaultMessage": "Editorial Space",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Editorial Space"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.process-and-automations",
+      "defaultMessage": "Process & Automations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "العمليات والأتمتة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.process-and-automations.source",
+      "defaultMessage": "Process & Automations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Process & Automations"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.sustainability-operations",
+      "defaultMessage": "Sustainability Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عمليات الاستدامة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.sustainability-operations.source",
+      "defaultMessage": "Sustainability Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Sustainability Operations"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.documentation",
+      "defaultMessage": "Documentation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الوثائق"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.documentation.source",
+      "defaultMessage": "Documentation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Documentation"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.publishing",
+      "defaultMessage": "Publishing",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النشر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.publishing.source",
+      "defaultMessage": "Publishing",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Publishing"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.other-backlogs",
+      "defaultMessage": "Other Backlogs",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قوائم عمل أخرى"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation-group.other-backlogs.source",
+      "defaultMessage": "Other Backlogs",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Other Backlogs"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.expand-group",
+      "defaultMessage": "Expand {label}",
+      "parameters": [
+        "label"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "توسيع {label}"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.collapse-group",
+      "defaultMessage": "Collapse {label}",
+      "parameters": [
+        "label"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طي {label}"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.expand-submenu",
+      "defaultMessage": "Expand {label} submenu",
+      "parameters": [
+        "label"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "توسيع القائمة الفرعية لـ {label}"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.collapse-submenu",
+      "defaultMessage": "Collapse {label} submenu",
+      "parameters": [
+        "label"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طي القائمة الفرعية لـ {label}"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.add-favourite",
+      "defaultMessage": "Add {label} to favourites",
+      "parameters": [
+        "label"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة {label} إلى المفضلة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.remove-favourite",
+      "defaultMessage": "Remove {label} from favourites",
+      "parameters": [
+        "label"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إزالة {label} من المفضلة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.expand-navigation",
+      "defaultMessage": "Expand navigation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "توسيع التنقل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.collapse-navigation",
+      "defaultMessage": "Collapse navigation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طي التنقل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.open-navigation",
+      "defaultMessage": "Open navigation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح التنقل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "availability.up",
+      "defaultMessage": "Available",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متاح"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "availability.degraded",
+      "defaultMessage": "Degraded",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متاح جزئياً"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "availability.unavailable",
+      "defaultMessage": "Unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "غير متاح"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "availability.unknown",
+      "defaultMessage": "Unknown",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "غير معروف"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "ui.preview",
+      "defaultMessage": "Preview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معاينة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms",
+      "defaultMessage": "Content Workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مساحة المحتوى"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms.source",
+      "defaultMessage": "Content Workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Content Workspace"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.sites",
+      "defaultMessage": "Websites",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المواقع"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.sites.source",
+      "defaultMessage": "Websites",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Websites"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.component-type-groups",
+      "defaultMessage": "Component Type Groups",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مجموعات أنواع المكونات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.component-type-groups.source",
+      "defaultMessage": "Component Type Groups",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Component Type Groups"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.renderer-mappings",
+      "defaultMessage": "Renderer Mappings",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ربط أدوات العرض"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.renderer-mappings.source",
+      "defaultMessage": "Renderer Mappings",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Renderer Mappings"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.page-templates",
+      "defaultMessage": "Page Templates",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قوالب الصفحات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.page-templates.source",
+      "defaultMessage": "Page Templates",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Page Templates"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.slot-definitions",
+      "defaultMessage": "Slot Definitions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعريفات المواضع"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.slot-definitions.source",
+      "defaultMessage": "Slot Definitions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Slot Definitions"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.pages",
+      "defaultMessage": "Pages",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الصفحات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.pages.source",
+      "defaultMessage": "Pages",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Pages"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.components",
+      "defaultMessage": "Components",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المكونات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.components.source",
+      "defaultMessage": "Components",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Components"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.component-media",
+      "defaultMessage": "Component Media",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "وسائط المكونات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.component-media.source",
+      "defaultMessage": "Component Media",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Component Media"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.routes",
+      "defaultMessage": "Page Routes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسارات الصفحات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.routes.source",
+      "defaultMessage": "Page Routes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Page Routes"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.navigation",
+      "defaultMessage": "Navigation Nodes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عناصر التنقل"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.navigation.source",
+      "defaultMessage": "Navigation Nodes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Navigation Nodes"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.restriction-types",
+      "defaultMessage": "Restriction Types",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أنواع القيود"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.restriction-types.source",
+      "defaultMessage": "Restriction Types",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Restriction Types"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.restrictions",
+      "defaultMessage": "Restrictions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القيود"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.restrictions.source",
+      "defaultMessage": "Restrictions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Restrictions"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.publishing-status",
+      "defaultMessage": "Staged-to-Online Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الانتقال من الإعداد إلى النشر المباشر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.publishing-status.source",
+      "defaultMessage": "Staged-to-Online Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Staged-to-Online Operations"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.publishing-manifests",
+      "defaultMessage": "Publication Manifests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بيانات النشر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.publishing-manifests.source",
+      "defaultMessage": "Publication Manifests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Publication Manifests"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.publishing-history",
+      "defaultMessage": "Publishing History",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سجل النشر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.publishing-history.source",
+      "defaultMessage": "Publishing History",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Publishing History"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.installer.application-builder",
+      "defaultMessage": "Application Builder",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منشئ التطبيقات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.installer.application-builder.source",
+      "defaultMessage": "Application Builder",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Application Builder"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.catalog.content-catalogs",
+      "defaultMessage": "Content Catalogs",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتالوجات المحتوى"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.catalog.content-catalogs.source",
+      "defaultMessage": "Content Catalogs",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Content Catalogs"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-sites-catalogs",
+      "defaultMessage": "Websites and Content Catalogs",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المواقع وكتالوجات المحتوى"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-sites-catalogs.source",
+      "defaultMessage": "Websites and Content Catalogs",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Websites and Content Catalogs"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-page-composition",
+      "defaultMessage": "Templates and Layout",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القوالب والتخطيط"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-page-composition.source",
+      "defaultMessage": "Templates and Layout",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Templates and Layout"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-components-blocks",
+      "defaultMessage": "Components and Content Blocks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المكونات وكتل المحتوى"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-components-blocks.source",
+      "defaultMessage": "Components and Content Blocks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Components and Content Blocks"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-navigation-menus",
+      "defaultMessage": "Navigation and Menus",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التنقل والقوائم"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-navigation-menus.source",
+      "defaultMessage": "Navigation and Menus",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Navigation and Menus"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-visibility-rules",
+      "defaultMessage": "Visibility and Experience Rules",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قواعد الظهور والتجارب"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.cms-visibility-rules.source",
+      "defaultMessage": "Visibility and Experience Rules",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Visibility and Experience Rules"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.type-codes",
+      "defaultMessage": "Page and Component Types",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أنواع الصفحات والمكونات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cms.type-codes.source",
+      "defaultMessage": "Page and Component Types",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Page and Component Types"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "context.environment",
+      "defaultMessage": "Environment",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "البيئة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "context.enterprise",
+      "defaultMessage": "Enterprise",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المؤسسة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "context.tenant-code",
+      "defaultMessage": "Tenant code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز المستأجر"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "context.enterprise-code",
+      "defaultMessage": "Enterprise code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز المؤسسة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "context.composition-site",
+      "defaultMessage": "Composition Site",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "موقع واجهة التطبيق"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "context.composition-catalog",
+      "defaultMessage": "Composition Catalog",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتالوج واجهة التطبيق"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "context.context",
+      "defaultMessage": "Context",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "السياق"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "context.environments",
+      "defaultMessage": "Environments",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "البيئات"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cronjob.cronjob",
+      "defaultMessage": "Cron jobs",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المهام المجدولة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cronjob.cronjob.source",
+      "defaultMessage": "Cron jobs",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Cron jobs"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cronjob.job-triggers",
+      "defaultMessage": "Scheduled triggers",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المشغّلات المجدولة"
+      }
+    },
+    {
+      "namespace": "axis",
+      "key": "navigation.cronjob.job-triggers.source",
+      "defaultMessage": "Scheduled triggers",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Scheduled triggers"
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "authentication.show-field",
+      "defaultMessage": "Show {label}",
+      "parameters": [
+        "label"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إظهار {label}"
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "authentication.hide-field",
+      "defaultMessage": "Hide {label}",
+      "parameters": [
+        "label"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إخفاء {label}"
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "authentication.join-enterprise.source",
+      "defaultMessage": "Join your enterprise",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Join your enterprise"
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "authentication.join-enterprise",
+      "defaultMessage": "Join your enterprise",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الانضمام إلى مؤسستك"
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "loading-workspace",
+      "defaultMessage": "Loading workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل مساحة العمل"
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "reload-workspace",
+      "defaultMessage": "Reload workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعادة تحميل مساحة العمل"
+      }
+    },
+    {
+      "namespace": "common",
+      "key": "workspace-load-failed",
+      "defaultMessage": "The workspace could not be loaded. Reload to try again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر تحميل مساحة العمل. أعد التحميل للمحاولة مرة أخرى."
+      }
+    }
+  ]
+}

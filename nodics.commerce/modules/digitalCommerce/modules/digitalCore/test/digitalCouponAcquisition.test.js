@@ -46,7 +46,7 @@ function fixture(type = "REWARDS", enterprise = false) {
   global.CONFIG = { get: name => name === "digitalCore" ? settings : undefined };
   global.FACADE = { DefaultCartCustomerFacade: { resolveContext: async input => ({ ...input, ownerRef: canonical, ownerId }) } };
   global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
-  global.SERVICE = { DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
+  global.SERVICE = { DefaultModuleService: { isLocalModuleActive: moduleName => ["digitalCore"].includes(moduleName), }, DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
     DefaultCouponOfferService: { validate: value => structuredClone(value) },
     DefaultPromotionOperationService: { readLifecycleCoupon: async () => structuredClone(coupon) },
     DefaultCouponAcquisitionPersistenceService: { read: async () => structuredClone(allocation) },

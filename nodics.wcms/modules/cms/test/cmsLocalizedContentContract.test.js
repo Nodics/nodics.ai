@@ -105,3 +105,15 @@ test('representative sample persists one site, page, and banner identity for Eng
     assert.deepEqual(routes.map(item => item.locale).sort(), ['ar', 'en']);
     assert(routes.every(item => item.site === site.code && item.accessMode === 'PUBLIC' && item.deliveryState === 'ONLINE'));
 });
+
+test('retained version history validates variants against the newest persisted type contract', async () => {
+ const contract = require('../src/service/validation/defaultCmsContractValidationService');
+ const previous = global.SERVICE;
+ const component = {code:'homeBanner',typeCode:'banner',versionId:4};
+ const types = [0,1,2,3].map(versionId => ({code:'banner',versionId,propertySchema:versionId===3?{caption:{localized:true}}:{title:{localized:true}}}));
+ const calls=[];
+ const get = rows => async request => {calls.push(request);const ordered=request.searchOptions.sort?.versionId===-1?[...rows].sort((a,b)=>b.versionId-a.versionId):rows;return {result:ordered.slice(0,request.searchOptions.limit)};};
+ global.SERVICE={DefaultCmsComponentService:{get:get([{...component,versionId:0},component])},DefaultCmsTypeCodeService:{get:get(types)},DefaultCmsContentLocalizationService:service()};
+ try { assert.equal(await contract.validateComponentLocalization({tenant:'tenantA',authData:{user:'reviewed'},model:{componentCode:'homeBanner',locale:'ar',properties:{caption:'عنوان'}}}),true);assert(calls.every(r=>r.tenant==='tenantA'&&r.authData.user==='reviewed')); }
+ finally {global.SERVICE=previous;}
+});

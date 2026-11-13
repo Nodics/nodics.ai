@@ -15,6 +15,7 @@ const platformProperties = require('../../../config/properties');
 const backofficeCapability = require('../src/service/defaultBackofficeBackofficeCapabilityService').getCapability();
 const axisCapability = require('../../axis/src/service/defaultAxisBackofficeCapabilityService').getCapability();
 const apiContracts = require('../src/schemas/apiContracts');
+const registry = require('../src/service/registry/defaultBackofficeRegistryService');
 
 const backofficeNavigation = backofficeCapability.navigation;
 const axisNavigation = axisCapability.navigation;
@@ -47,10 +48,7 @@ assert.deepStrictEqual(documentationLinks.map(item => item.id), [
     'documentation-publication-queue',
     'documentation-search-preview',
     'documentation-governance-readiness',
-    'documentation-source-evidence',
-    'documentation-framework',
-    'documentation-swaggers',
-    'documentation-nodics-axis'
+    'documentation-source-evidence'
 ]);
 assert.deepStrictEqual(documentationLinks.map(item => item.label), [
     'Dashboard',
@@ -61,10 +59,7 @@ assert.deepStrictEqual(documentationLinks.map(item => item.label), [
     'Review and Publication Queue',
     'Search Metadata Preview',
     'Governance and Readiness',
-    'Source Evidence Review',
-    'Framework',
-    'Swaggers',
-    'Nodics Axis'
+    'Source Evidence Review'
 ]);
 assert.deepStrictEqual(documentationLinks.map(item => item.route), [
     '/docs',
@@ -75,10 +70,7 @@ assert.deepStrictEqual(documentationLinks.map(item => item.route), [
     '/docs/designer/publication',
     '/docs/designer/search',
     '/docs/designer/governance',
-    '/docs/designer/source-evidence',
-    '/docs/framework',
-    '/docs/swaggers',
-    '/docs/nodics-axis'
+    '/docs/designer/source-evidence'
 ]);
 assert.deepStrictEqual(
     documentationLinks.find(item => item.id === 'documentation-management').requiredPermissions,
@@ -122,11 +114,8 @@ assert.deepStrictEqual(
     ['documentation.review', 'documentation.approve', 'documentation.publish'],
     'Documentation publication queue must require explicit documentation review, approval, and publish permissions'
 );
-assert.strictEqual(
-    axisNavigation.find(item => item.id === 'documentation-nodics-axis').group.id,
-    'documentation',
-    'Axis documentation navigation must remain grouped under BackOffice documentation'
-);
+assert(!navigation.some(item => sources.some(source => source.route === item.route)),
+    'registered setup sources must not create reader menu links before Online publication');
 assert(documentationLinks.every(item => item.group.id === 'documentation'),
     'documentation child links must remain grouped under the documentation navigation area');
 assert(documentationLinks.every(item => item.group.order === 1600),
@@ -135,6 +124,15 @@ assert(documentationLinks.every(item => item.contexts.join('|') === 'environment
     'documentation child links must keep the same context boundary as the documentation landing');
 assert(documentationLinks.every(item => item.featureState === 'ACTIVE'),
     'documentation child links must be active direct destinations');
+for (const view of documentationLinks.filter(item => item.parentId === 'documentation-management')) {
+    const ownerView = { ...view, moduleName: 'backoffice' };
+    assert.strictEqual(registry.applyDocumentationPublicationState(ownerView, { byRoute: {} }), ownerView,
+        'unpublished content must not disable its authoring views or replace their permissions');
+    const disabled = { ...ownerView, featureState: 'DISABLED' };
+    assert.strictEqual(registry.applyDocumentationPublicationState(disabled, { byRoute: {} }), disabled);
+}
+const unpublishedReader = { id: 'documentation-fixture', group: documentation.group, route: '/docs/fixture', featureState: 'ACTIVE' };
+assert.strictEqual(registry.applyDocumentationPublicationState(unpublishedReader, { byRoute: {} }).featureState, 'DISABLED');
 assert.deepStrictEqual(sources.map(source => source.id), ['framework', 'swaggers', 'nodics-axis']);
 assert.deepStrictEqual(
     backofficeCapability.documentation.map(source => source.id),

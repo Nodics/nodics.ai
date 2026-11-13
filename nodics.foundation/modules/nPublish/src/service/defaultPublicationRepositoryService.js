@@ -61,21 +61,28 @@ module.exports = {
         return new Set(this.getItems(response).map(item => item.code ||
             (item.publicationCode + '_' + item.revision + '_' + item.toState)));
     },
+    /** A repeated request can omit optional scope but cannot replace an explicitly selected target. */
+    sameCreateIdentity: function (existing, requested) {
+        const required = ['domain', 'rootType', 'rootCode', 'sourceVersion'];
+        const target = ['siteCode', 'catalogCode', 'profileCode', 'environmentCode', 'tenantCode', 'enterpriseCode'];
+        return existing && required.every(field => existing[field] === requested[field]) &&
+            target.every(field => requested[field] === undefined || requested[field] === existing[field]);
+    },
     /** Creates a publication request idempotently for the same immutable identity. */
     create: async function (model, request) {
         let existing = await this.get(model.code, request);
         if (existing) {
-            if (existing.domain === model.domain && existing.rootType === model.rootType &&
-                existing.rootCode === model.rootCode && existing.sourceVersion === model.sourceVersion) return existing;
-            throw new CLASSES.NodicsError('ERR_PUB_00003', 'Publication code already belongs to another request');
+            if (this.sameCreateIdentity(existing, model)) return existing;
+            throw new CLASSES.NodicsError('ERR_PUB_00004', 'Publication code already belongs to a different source or target. Inspect the existing request or create a new one.');
         }
         try {
             let response = await this.getServices().publication.save({ tenant: this.getTenant(request), authData: request && request.authData, model: model });
             return this.getItems(response)[0] || response.result || model;
         } catch (error) {
             existing = await this.get(model.code, request);
-            if (existing && existing.domain === model.domain && existing.rootType === model.rootType &&
-                existing.rootCode === model.rootCode && existing.sourceVersion === model.sourceVersion) return existing;
+            if (this.sameCreateIdentity(existing, model)) return existing;
+            if (existing)
+                throw new CLASSES.NodicsError('ERR_PUB_00004', 'Publication code already belongs to a different source or target. Inspect the existing request or create a new one.');
             throw error;
         }
     },

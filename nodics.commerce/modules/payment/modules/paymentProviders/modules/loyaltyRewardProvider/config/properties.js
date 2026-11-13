@@ -31,13 +31,13 @@ module.exports = {
         maturity: 'INTERNAL_CONFORMANCE',
         programCode: 'default',
         rewardTypeCode: 'points',
-        profileTarget: { moduleName: 'profile', connectionName: 'profile', apiVersion: 'v0', targetAuthority: { runtimeRole: 'PLATFORM' }, timeoutMs: 3000, maxAttempts: 1 },
+        profileTarget: { moduleName: 'profile', connectionName: 'profile', apiVersion: 'v0', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMs: 3000, maxAttempts: 1 },
         loyaltyTarget: {
             moduleName: 'loyaltyApi',
             connectionName: 'loyaltyServer',
             connectionType: 'abstract',
             apiVersion: 'v0',
-            targetAuthority: { runtimeRole: 'LOYALTY' },
+            targetAuthority: { publication: 'OPERATIONAL' },
             timeoutMs: 3000,
             maxAttempts: 2
         }

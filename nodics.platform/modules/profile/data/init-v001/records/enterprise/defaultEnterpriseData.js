@@ -28,8 +28,6 @@ module.exports = {
             moduleName: 'profile',
             roleCode: 'PLATFORM_OWNER',
             scopeCode: 'GLOBAL'
-        }],
-        addresses: ['defaultEntAddress'],
-        contacts: ['defaultEntContact']
+        }]
     }
 };

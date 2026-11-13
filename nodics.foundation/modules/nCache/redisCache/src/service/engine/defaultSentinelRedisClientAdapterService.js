@@ -25,11 +25,18 @@ module.exports = {
 
     /** Creates the provider-neutral facade consumed by Nodics cache services. */
     adaptClient: function (client) {
+        let explicitlyClosed = false;
         return {
+            // Central readiness must observe Sentinel reconnects rather than treating an absent flag as healthy.
+            get isReady() { return !explicitlyClosed && client.status === 'ready'; },
+            get isOpen() { return !explicitlyClosed && !['wait', 'end'].includes(client.status); },
             on: this.registerListener.bind(this, client),
-            connect: this.connect.bind(this, client),
-            disconnect: this.disconnect.bind(this, client),
-            quit: this.quit.bind(this, client),
+            connect: () => { explicitlyClosed = false; return this.connect(client); },
+            disconnect: () => { explicitlyClosed = true; return this.disconnect(client); },
+            quit: async () => {
+                explicitlyClosed = true;
+                return this.quit(client);
+            },
             get: this.get.bind(this, client),
             set: this.set.bind(this, client),
             getDel: this.getDel.bind(this, client),
@@ -59,8 +66,11 @@ module.exports = {
     },
 
     /** Gracefully closes the client connection. */
-    quit: function (client) {
-        return client.quit();
+    quit: async function (client) {
+        if (client.status === 'end') return 'OK';
+        const ended = new Promise(resolve => client.once('end', resolve));
+        try { return await client.quit(); }
+        finally { client.disconnect(); await ended; }
     },
 
     /** Reads a cache value. */

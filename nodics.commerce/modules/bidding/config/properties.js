@@ -45,7 +45,6 @@ module.exports = {
 
   bidding: {
     enabled: false,
-    runtimeRoles: { COMMERCE: true },
     policyVersion: "bid-v2",
     holdTiming: "CHECKOUT_AFTER_ACCEPTANCE",
     validitySeconds: 86400,
@@ -56,7 +55,7 @@ module.exports = {
     offerService: "DefaultBiddingOfferService",
     locale: "en",
     orderCodePrefix: "BID_ORDER_",
-    profileTransport: { moduleName: "profile", connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" },
+    profileTransport: { moduleName: "profile", connectionName: "profile", targetAuthority: { publication: "OPERATIONAL" },
       apiVersion: "v0", timeoutMs: 10000, maxAttempts: 1, followRedirects: false, rejectUnauthorized: true },
     acceptance: { requestTimeoutMs: 30000, maximumDuePages: 100, deadlineSafetyMs: 25 },
     auction: {
@@ -66,7 +65,7 @@ module.exports = {
       maximumCommands: 10000,
       duePageSize: 100,
       scheduler: { enabled: false, startNode: "DefaultBiddingCloseService.sweep", maximumPages: 10,
-        target: { moduleName: "bidding", connectionName: "commerce", targetAuthority: { runtimeRole: "COMMERCE" },
+        target: { moduleName: "bidding", connectionName: "commerce", targetAuthority: { publication: "OPERATIONAL" },
           apiVersion: "v0", timeoutMs: 60000, maxAttempts: 1 } },
       notifications: {
         enabled: false, qualified: false, maximumRecipients: 100, maximumEventsPerRun: 50, timeoutMs: 15000,
@@ -83,7 +82,7 @@ module.exports = {
       loyaltyTarget: {
         moduleName: "loyaltyApi",
         connectionName: "loyaltyServer",
-        targetAuthority: { runtimeRole: "LOYALTY" },
+        targetAuthority: { publication: "OPERATIONAL" },
         apiVersion: "v0",
         timeoutMs: 10000,
         maxAttempts: 1,

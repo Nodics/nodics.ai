@@ -38,3 +38,11 @@ See [publication qualification](llm/contracts/README.md#publication-qualificatio
 policy capture is a projection, not immutable storage proof. Mutable restoration
 is disabled; provider registration and activation require owner migration,
 retained target policy, durable receipts, pointer CAS and no-source-fallback reads.
+
+
+Merchant-bound Customer stock reservation and release re-admit the original
+participant through the existing Cart/Checkout facade and reread its retained
+merchant binding. Preserve the signed Customer namespace, typed owner and actor;
+never substitute merchant identity into the bearer. Changed owner, merchant,
+headers or in-flight context refuse before stock access. Same-enterprise legacy
+admission and atomic balance/hold/movement requirements remain unchanged.

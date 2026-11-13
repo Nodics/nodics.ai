@@ -38,3 +38,5 @@ Live provider qualification verifies the same central owner closes each client;
 a provider-specific test cleanup cannot stand in for runtime lifecycle coverage.
 
 Cross-node invalidation defaults to automatic selection from enabled remote event publishing. Explicit true/false remains supported. Shared distributed adapters skip duplicate broadcasts; single-node deployments do not emit unnecessary peer events. Strict authentication channels never gain local fallback.
+
+Structured search cache keys include the complete normalized query (text/vector, fields, source-policy filters, mode and bounds), raw DSL/query-string inputs, read options and current non-secret caller scope. Canonical object ordering preserves equivalent requests; credentials never enter key material. A source or permission change cannot reuse another query result. The derived digest is versioned; existing storage namespaces and TTLs remain unchanged and no retained-key migration is performed. Run `test/searchCacheKeyIsolation.test.js` with cache isolation and search pipeline coverage.

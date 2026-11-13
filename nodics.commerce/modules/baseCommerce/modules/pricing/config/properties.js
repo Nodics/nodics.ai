@@ -12,43 +12,69 @@
 /** @module pricing/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner pricing */
 module.exports = {
   publish: {
-    setup: { permissions: { pricing: "publish.lifecycle.create" } },
-    providers: {
-      domainAdapters: { pricing: null },
-      versionProviders: { pricing: null },
-      workflowProviders: { pricing: null },
-    },
-    approvalWorkflow: {
-      domains: {
-        pricing: {
-          definitionCode: "pricingPublicationApproval",
-          ownerModule: "pricing",
-          actionKey: "pricing.applyPublicationDecision",
-          sourceRuntimeRole: "COMMERCE_STAGED",
-        },
+    "setup": {
+      "permissions": {
+        "pricing": "publish.lifecycle.create"
       },
+      "observation": {
+        "targetObservers": {
+          "pricing": {
+            "$config": "context",
+            "name": "publication",
+            "cases": {
+              "STAGED": undefined,
+              "ONLINE": "DefaultPricingPublicationService",
+              "OPERATIONAL": "DefaultPricingPublicationService"
+            }
+          }
+        }
+      }
     },
-
-    runtimeRoleProfiles: {
-      COMMERCE_STAGED: {
-        providers: {
-          domainAdapters: { pricing: "DefaultPricingPublicationService" },
-          versionProviders: { pricing: "DefaultPricingPublicationService" },
-          workflowProviders: {
-            pricing: "DefaultPublicationApprovalWorkflowService",
-          },
-        },
+    "providers": {
+      "domainAdapters": {
+        "pricing": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "DefaultPricingPublicationService",
+            "ONLINE": null,
+            "OPERATIONAL": null
+          }
+        }
       },
-      COMMERCE: {
-        setup: {
-          observation: {
-            targetObservers: {
-              pricing: "DefaultPricingPublicationService",
-            },
-          },
-        },
+      "versionProviders": {
+        "pricing": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "DefaultPricingPublicationService",
+            "ONLINE": null,
+            "OPERATIONAL": null
+          }
+        }
       },
+      "workflowProviders": {
+        "pricing": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "DefaultPublicationApprovalWorkflowService",
+            "ONLINE": null,
+            "OPERATIONAL": null
+          }
+        }
+      }
     },
+    "approvalWorkflow": {
+      "domains": {
+        "pricing": {
+          "definitionCode": "pricingPublicationApproval",
+          "ownerModule": "pricing",
+          "actionKey": "pricing.applyPublicationDecision",
+          "sourcePublication": "STAGED"
+        }
+      }
+    }
   },
   process: {
     actionAdapters: {
@@ -59,7 +85,7 @@ module.exports = {
           remote: {
             target: "pricing",
             moduleName: "pricing",
-            runtimeRole: "COMMERCE_STAGED",
+            targetAuthority: { publication: "STAGED" },
             apiName: "/workflow/actions/applyPublicationDecision",
             requiresCompletedTask: true,
           },
@@ -82,118 +108,143 @@ module.exports = {
   },
 
   pricing: {
-    enabled: true,
-    administrativeAuthoring: {
-      readPermission: "commerce.pricing.read",
-      writePermission: "commerce.pricing.write",
-      publishPermission: "commerce.pricing.publish",
-      evidencePath: "/identity/platform-administrator/evidence",
-      recipientPath: "/participants/resolve",
-      identityTarget: { moduleName: "profile", connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, apiVersion: "v0" },
-      timeoutMs: 10000,
-      maximumDecimalLength: 64,
-    },
-    bundleListings: { enabled: false, qualified: false, maximumRecords: 1000, maximumConfiguredBound: 10000 },
-    merchantEvidence: {
-      qualified: false,
-      businessCallers: { enabled: false, runtimeRole: "COMMERCE", callers: [] },
-    },
-    customerSummary: {
-      enabled: true,
-      defaultCurrency: "USD",
-      defaultQuantity: "1",
-      maximumProductsPerRequest: 100,
-      includeEvidence: false,
-      missingPriceBehavior: "omit",
-    },
-
-    // Registration remains separate from availability; installed qualification is an operator gate.
-    publication: {
-      runtimeRole: null,
-      sourceVersioningQualified: false,
-      delivery: { enabled: false, rootCodes: [], rowReleases: false },
-      legacyCasRecovery: { enabled: false, operations: [] },
-      targetTransportProvider: null,
-      // Mutations require exact signed deployments on the existing transport bindings.
-      sourceAuthority: {
-        callers: [],
-        moduleName: "pricing",
-        connectionName: null,
-        connectionType: "abstract",
-        runtimeRole: "COMMERCE_STAGED",
-      },
-      target: {
-        callers: [],
-        moduleName: "pricing",
-        connectionName: null,
-        connectionType: "abstract",
-        runtimeRole: "COMMERCE",
-      },
-      maxDependencies: 1000,
-    },
-    runtimeRoleProfiles: {
-      COMMERCE_STAGED: {
-        publication: {
-          runtimeRole: "STAGED",
-          targetTransportProvider: "DefaultPricingPublicationTransportService",
+    "enabled": true,
+    "administrativeAuthoring": {
+      "readPermission": "commerce.pricing.read",
+      "writePermission": "commerce.pricing.write",
+      "publishPermission": "commerce.pricing.publish",
+      "evidencePath": "/identity/platform-administrator/evidence",
+      "recipientPath": "/participants/resolve",
+      "identityTarget": {
+        "moduleName": "profile",
+        "connectionName": "profile",
+        "targetAuthority": {
+          "publication": "OPERATIONAL"
         },
+        "apiVersion": "v0"
       },
-      COMMERCE: {
-        publication: {
-          runtimeRole: "ONLINE",
-          targetTransportProvider: "DefaultPricingPublicationTransportService",
-        },
-      },
+      "timeoutMs": 10000,
+      "maximumDecimalLength": 64
     },
+    "bundleListings": {
+      "enabled": false,
+      "qualified": false,
+      "maximumRecords": 1000,
+      "maximumConfiguredBound": 10000
+    },
+    "merchantEvidence": {
+      "qualified": false,
+      "businessCallers": {
+        "enabled": false,
+        "callers": []
+      }
+    },
+    "customerSummary": {
+      "enabled": true,
+      "defaultCurrency": "USD",
+      "defaultQuantity": "1",
+      "maximumProductsPerRequest": 100,
+      "includeEvidence": false,
+      "missingPriceBehavior": "omit"
+    },
+    "publication": {
+      "runtimeRole": {
+        "$config": "context",
+        "name": "publication",
+        "cases": {
+          "STAGED": "STAGED",
+          "ONLINE": "ONLINE",
+          "OPERATIONAL": "ONLINE"
+        }
+      },
+      "sourceVersioningQualified": false,
+      "delivery": {
+        "enabled": false,
+        "rootCodes": [],
+        "rowReleases": false
+      },
+      "legacyCasRecovery": {
+        "enabled": false,
+        "operations": []
+      },
+      "targetTransportProvider": "DefaultPricingPublicationTransportService",
+      "sourceAuthority": {
+        "callers": [],
+        "moduleName": "pricing",
+        "connectionName": null,
+        "connectionType": "abstract",
+        "publication": "STAGED"
+      },
+      "target": {
+        "callers": [],
+        "moduleName": "pricing",
+        "connectionName": null,
+        "connectionType": "abstract",
+        "publication": "OPERATIONAL"
+      },
+      "maxDependencies": 1000
+    }
   },
   schemaPolicies: {
-    pricing: {
-      publicationVersioned: { isVersionedEnabled: false },
-      operational: {
-        accessGroups: {
-          adminGroup: 10,
-          commerceOperatorUserGroup: 10,
-          serviceAccountUserGroup: 10,
+    "pricing": {
+      "publicationVersioned": {
+        "isVersionedEnabled": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": true,
+            "ONLINE": false,
+            "OPERATIONAL": false
+          }
         },
+        "versionedReadMode": {
+          "$config": "context",
+          "name": "publication",
+          "cases": {
+            "STAGED": "CURRENT",
+            "ONLINE": undefined,
+            "OPERATIONAL": undefined
+          }
+        }
       },
-      tenantOwned: {
-        accessGroups: {
-          adminGroup: 10,
-          commerceOperatorUserGroup: 10,
-          serviceAccountUserGroup: 10,
-        },
+      "operational": {
+        "accessGroups": {
+          "adminGroup": 10,
+          "commerceOperatorUserGroup": 10,
+          "serviceAccountUserGroup": 10
+        }
       },
-      customerOwned: {
-        accessGroups: {
-          adminGroup: 10,
-          commerceOperatorUserGroup: 10,
-          serviceAccountUserGroup: 10,
-          customerUserGroup: 10,
+      "tenantOwned": {
+        "accessGroups": {
+          "adminGroup": 10,
+          "commerceOperatorUserGroup": 10,
+          "serviceAccountUserGroup": 10
+        }
+      },
+      "customerOwned": {
+        "accessGroups": {
+          "adminGroup": 10,
+          "commerceOperatorUserGroup": 10,
+          "serviceAccountUserGroup": 10,
+          "customerUserGroup": 10
         },
-        ownership: {
-          enabled: true,
-          ownerProperty: "ownerId",
-          bypassGroups: {
-            adminGroup: true,
-            commerceOperatorUserGroup: true,
-            serviceAccountUserGroup: true,
+        "ownership": {
+          "enabled": true,
+          "ownerProperty": "ownerId",
+          "bypassGroups": {
+            "adminGroup": true,
+            "commerceOperatorUserGroup": true,
+            "serviceAccountUserGroup": true
           },
-          subjectGroups: { customerUserGroup: true },
-          principalTypes: { customer: true },
-        },
-      },
-    },
-
-    runtimeRoleProfiles: {
-      COMMERCE_STAGED: {
-        pricing: {
-          publicationVersioned: {
-            isVersionedEnabled: true,
-            versionedReadMode: "CURRENT",
+          "subjectGroups": {
+            "customerUserGroup": true
           },
-        },
-      },
-    },
+          "principalTypes": {
+            "customer": true
+          }
+        }
+      }
+    }
   },
   apiExposure: {
     categories: {

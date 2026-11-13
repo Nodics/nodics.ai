@@ -128,6 +128,11 @@ module.exports = {
             checkAccess: {
                 type: 'function',
                 handler: 'DefaultSecuredRequestPipelineService.checkAccess',
+                success: 'prepareEnterpriseRuntime'
+            },
+            prepareEnterpriseRuntime: {
+                type: 'function',
+                handler: 'DefaultSecuredRequestPipelineService.prepareEnterpriseRuntime',
                 success: 'successEnd'
             }
         }

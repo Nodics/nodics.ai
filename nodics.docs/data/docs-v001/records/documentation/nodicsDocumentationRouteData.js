@@ -21,7 +21,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsAgoraIndustryTemplates",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -33,7 +33,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecommerceOverview",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -45,7 +45,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecommerceBaseFoundations",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -57,7 +57,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecommerceDataAuthoringFulfillment",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -69,7 +69,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagedocsGateway",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -81,7 +81,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkOverview",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -93,7 +93,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkWhyNodicsExists",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -105,7 +105,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkHowNodicsWorks",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -117,7 +117,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkAdoptionAndFirstJourney",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -129,7 +129,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagedocsDocumentationRoadmap",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -141,7 +141,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagedocsDocumentationPrinciples",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -153,7 +153,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagedocsReaderJourneyAndCoverage",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -165,7 +165,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagedocsDocumentationPublishingModel",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -177,7 +177,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageapplicationsSuite",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -189,7 +189,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagesolutionsTaskExecutionEngine",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -201,7 +201,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagesolutionsDataEngineeringAnalyticsPlatform",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -213,7 +213,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkCapabilityDocumentationMaturityPattern",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -225,7 +225,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagedocsOverview",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -237,7 +237,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagedocsDocumentationPublishingRunbook",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -249,7 +249,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagereferenceInternalSourceBoundaryRegister",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -261,7 +261,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagereferenceSourceMapGlossary",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -273,7 +273,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagereferenceSourceBackedDocumentationCoverageAudit",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -285,7 +285,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagereferenceDocumentationGapBacklog",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -297,7 +297,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkModularArchitecture",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -309,7 +309,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkArchitectureDecisionGuide",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -321,7 +321,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagefoundationOverview",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -333,7 +333,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkCustomizationGuide",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -345,7 +345,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkBackendExtensionPatterns",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -357,7 +357,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageframeworkAxisContentCustomization",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   }

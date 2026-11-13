@@ -1,0 +1,53 @@
+{
+  "purpose": "Historical cross-owner documentation regression fixtures only; not shipping source, installable content or runtime authority. Original frozen evidence remains unchanged. Current v001 records are independently validated.",
+  "revision": "00ad4b6b9375f40873079be97f5afcc030cc9ce5",
+  "owners": [
+    {
+      "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "files": 16,
+      "manifestSha256": "b5874e6d7a9604939d4980f2f0aa36c69993c91a3822583e44bc611942aeeefb",
+      "successor": {
+        "version": "0.0.2",
+        "checksum": "18c6150b622561da65367c707494a88b9213eebff895cd6b24b874cf2a0c58ba",
+        "sourcePath": "docs-v001"
+      }
+    },
+    {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/shoppingList",
+      "files": 16,
+      "manifestSha256": "6cb28ed720162d82f34b0948732e0c072561eba118ae173b4047ee85ee73bd79",
+      "successor": {
+        "version": "0.0.2",
+        "checksum": "589113633042a0baa6b338db319927769b0531fb1a16df799f237c570629d51a",
+        "sourcePath": "docs-v002"
+      }
+    },
+    {
+      "owner": "nodics.platform/modules/installer",
+      "files": 16,
+      "manifestSha256": "1b292de25bf76554bd95f9d46515e91f3dd68515285e43c90a55d189b07a7838",
+      "successor": {
+        "version": "0.0.2",
+        "checksum": "7cfd1136dfde08f26533deb4453361126b5ae3218b4e35e2d6aadfb6987abd0a",
+        "sourcePath": "docs-v002"
+      }
+    },
+    {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/promotion",
+      "files": 16,
+      "manifestSha256": "59f0773372d46368f7fec56a4e38d950021e0d23a6346814d45f9b2bad3007ce",
+      "successor": {
+        "version": "0.0.3",
+        "checksum": "94c3bbc8624973b1ac1a2330dbe209d8e2613ea837e12f058b7e580617600ff5",
+        "sourcePath": "docs-v002"
+      },
+      "supplementalRecovery": {
+        "expectedFile": "docs-v002/records/documentation/promotionDocumentationPageData.js",
+        "gitPath": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v001/records/documentation/promotionDocumentationPageData.js",
+        "revision": "00ad4b6b9375f40873079be97f5afcc030cc9ce5",
+        "sha256": "bad8ea9fb6aa86a39da8c18974ea489a11cb4985aa3e8591eb8f8ffccd3a99cd",
+        "scope": "Exact bytes matching the unchanged frozen hash, recovered from the earlier source path; no runtime alias."
+      }
+    }
+  ]
+}

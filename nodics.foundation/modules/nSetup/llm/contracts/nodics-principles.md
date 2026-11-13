@@ -161,6 +161,65 @@ not own reusable adapters, policy engines or access mechanics. Extract those int
 their actual owners; do not move the demo application wholesale into the framework
 or introduce a catch-all module. Apply the customer-project-mode contract.
 
+### Deployment independence of functional owners
+
+Supported customer deployment changes, including moving or cohosting modules,
+must require zero framework source edits. Customers select entry modules and
+intentional deployment overrides; the framework derives required dependencies
+from canonical module metadata. Do not require redundant role lists, profiles
+or copied dependency inventories merely to describe the same selection. Optional
+business activation, permissions and publication approvals remain explicit.
+A supported relocation that requires domain code changes exposes a framework
+contract defect; correct that defect in maintainer scope, not customer wiring.
+
+Functional ownership follows the module's canonical code and capability, not its
+server name, port or primary runtime role. Domain admission must retain independent
+permissions, tenant/Enterprise scope, authority and lifecycle checks without
+using a physical deployment label as business authority. Each module has one
+logical owning runtime for each `(module, publication context)` pair, including
+Staged, Online and Operational. A module may have a Staged owner and an Online
+owner, but never two competing Staged owners, two Online owners or two Operational
+owners. Different runtime-role labels do not create new publication contexts or
+permit duplicate owners. Neither context authorizes access to another. Replicas of
+the same logical owning runtime are not second competing owners. Reject competing
+runtime owners for the same module and publication context; relocation does not
+authorize duplicate ownership. Loading shared infrastructure implementation is
+distinct from functional service ownership and grants no additional owner.
+Runtime-local health, effective configuration, token mechanics and import history
+remain scoped to the runtime they describe or serve. This is not a blanket
+Foundation exemption: classify each capability by its state and authority,
+not its package group. Product, Wallet and Discovery functional state retains
+one owner per module/publication context, even when infrastructure code loads
+in multiple runtimes. Local token mechanics do not duplicate identity or grant
+authority; local import history does not duplicate the imported module's state.
+Use existing module and runtime context, not an extra role/profile registry.
+A stateful functional module without HTTP routes declares
+`nodics.runtime.ownership: "functional"` in its own package metadata so source-only
+planning can recognize its ownership without enabling a router. Verify actual
+owner schema declarations before adding this classification; a `nodics.owns`
+entry naming `schema`, or an empty schema scaffold, is not evidence of state.
+Existing explicit runtime-local scopes remain separate. Materialized registration
+and schema authority evidence remains the final ownership gate; metadata does
+not replace it or introduce another owner inventory.
+
+Use `DefaultModuleService` as the canonical intermodule communication boundary.
+It resolves the selected owner and local/remote dispatch while preserving the
+operation's authentication, authorization and publication contracts. Domain
+callers must not infer ownership from cohosting, bypass those contracts with
+raw cross-module calls, or implement their own routing/fallback mechanism.
+A missing, ambiguous or failing explicitly selected destination must fail;
+never silently substitute another owner or a local implementation.
+
+Module schema ownership survives relocation. Database configuration uses
+module-aware deep inheritance from framework-owned defaults, so a deployment
+can override only the required destination leaves while inheriting provider
+mechanics. Co-hosting neither merges schemas nor moves data. Configuration
+changes do not migrate, copy, reset or reconcile existing data; any such operation
+requires its own explicit scope and migration/import process.
+
+See [deployment and database configuration](customer-config-classification-contract.md#deployment-and-database-configuration)
+for the customer override boundary.
+
 ### Lightweight customer modules and runtimes
 
 Classify individual behavior and configuration, not whole files or application

@@ -52,7 +52,7 @@ test('every authored literal API category is declared by the route capability', 
             if (!value || typeof value.value !== 'string') return;
             count++;
             const policy = properties.apiExposure?.categories?.[value.value];
-            if (!policy || (Object.prototype.hasOwnProperty.call(policy, 'enabled') && typeof policy.enabled !== 'boolean'))
+            if (!policy || typeof policy !== 'object' || Array.isArray(policy) || (Object.prototype.hasOwnProperty.call(policy, 'enabled') && typeof policy.enabled !== 'boolean') || (Object.prototype.hasOwnProperty.call(policy, 'inheritUnknown') && typeof policy.inheritUnknown !== 'boolean'))
                 violations.push(path.relative(root, file) + ': ' + value.value);
         });
     }
@@ -103,5 +103,67 @@ test('owner declarations inherit actual router defaults without granting public 
         exposure.default = value;
         assert.equal(pipeline.isApiExposureEnabled('dataImport'), false);
         assert.equal(pipeline.isApiExposureEnabled('unregistered'), false);
+    }
+});
+
+
+test('neutral internal declarations preserve unknown policy and explicit category overrides', (t) => {
+    const previous = global.CONFIG;
+    t.after(() => { if (previous === undefined) delete global.CONFIG; else global.CONFIG = previous; });
+    const capabilityPaths = [
+        'nodics.copilot/modules/copilotKnowledge',
+        'nodics.discovery/modules/discoveryConfig',
+        'nodics.discovery/modules/discoveryProjection',
+        'nodics.discovery/modules/discoveryPublication',
+    ];
+    for (const capability of capabilityPaths) {
+        const declaration = require(path.join(root, capability, 'config/properties')).apiExposure?.categories?.moduleInternal;
+        assert.deepEqual(declaration, { inheritUnknown: true }, capability);
+        const exposure = { default: { enabled: true }, categories: { moduleInternal: { ...declaration } } };
+        global.CONFIG = { get: () => exposure };
+        assert.equal(pipeline.isApiExposureEnabled('moduleInternal'), true);
+        exposure.unknown = { enabled: false };
+        assert.equal(pipeline.isApiExposureEnabled('moduleInternal'), false, 'registration never bypasses unknown-category denial');
+        exposure.unknown.enabled = 'true';
+        assert.equal(pipeline.isApiExposureEnabled('moduleInternal'), false, 'nonboolean inherited authority fails closed');
+        exposure.unknown.enabled = true;
+        assert.equal(pipeline.isApiExposureEnabled('moduleInternal'), true);
+        exposure.categories.moduleInternal.enabled = false;
+        assert.equal(pipeline.isApiExposureEnabled('moduleInternal'), false, 'later category denial remains authoritative');
+        exposure.unknown.enabled = false;
+        exposure.categories.moduleInternal.enabled = true;
+        assert.equal(pipeline.isApiExposureEnabled('moduleInternal'), true, 'an explicit reviewed category override remains supported');
+        exposure.categories.moduleInternal.enabled = undefined;
+        assert.equal(pipeline.isApiExposureEnabled('moduleInternal'), false, 'invalid explicit enablement never falls through');
+    }
+});
+
+test('neutral category inheritance validates metadata and preserves ordinary declared-category behavior', (t) => {
+    const previous = global.CONFIG;
+    t.after(() => { if (previous === undefined) delete global.CONFIG; else global.CONFIG = previous; });
+    const exposure = { default: { enabled: true }, unknown: { enabled: false }, categories: { normal: {}, neutral: { inheritUnknown: true } } };
+    global.CONFIG = { get: () => exposure };
+    assert.equal(pipeline.isApiExposureEnabled('normal'), true, 'existing declared categories still inherit the common default');
+    assert.equal(pipeline.isApiExposureEnabled('neutral'), false);
+    for (const value of ['true', 1, null, {}]) {
+        exposure.categories.neutral.inheritUnknown = value;
+        assert.equal(pipeline.isApiExposureEnabled('neutral'), false, 'invalid inheritance declaration is denied');
+    }
+    exposure.categories.neutral.inheritUnknown = true;
+    for (const defaultValue of [undefined, {}, { enabled: false }, { enabled: 'true' }]) {
+        exposure.default = defaultValue;
+        delete exposure.unknown;
+        assert.equal(pipeline.isApiExposureEnabled('neutral'), false);
+    }
+});
+
+test('malformed explicit category policies cannot fall through to enabled defaults', t => {
+    const previous = global.CONFIG;
+    t.after(() => { if (previous === undefined) delete global.CONFIG; else global.CONFIG = previous; });
+    const exposure = { default: { enabled: true }, categories: { sample: {} } };
+    global.CONFIG = { get: () => exposure };
+    for (const invalid of [null, false, true, 0, 'enabled', []]) {
+        exposure.categories.sample = invalid;
+        assert.equal(pipeline.isApiExposureEnabled('sample'), false, 'invalid category is a denial, not an omitted default');
     }
 });

@@ -31,6 +31,29 @@
  */
 module.exports = {
     /**
+     * Awaits selected live tenant preparation only after secured route admission.
+     * nService retains inventory, namespace, resource and credential ownership.
+     * @param {Object} request Authenticated and authorized request.
+     * @param {Object} response Existing response.
+     * @param {Object} process Pipeline continuation.
+     * @returns {Promise<void>} Advance only after preparation acknowledgement.
+     */
+    prepareEnterpriseRuntime: async function (request, response, process) {
+        try {
+            if (CONFIG.get('profileTenantProvisioning')?.enabled === true) {
+                if (typeof SERVICE.DefaultEnterpriseHandlerService?.ensureAuthenticatedEnterprise !== 'function') {
+                    throw new CLASSES.NodicsError('ERR_TNT_PROVISIONING_HELD');
+                }
+                if (await SERVICE.DefaultEnterpriseHandlerService.ensureAuthenticatedEnterprise(request) !== true) {
+                    throw new CLASSES.NodicsError('ERR_TNT_PROVISIONING_HELD');
+                }
+            }
+            process.nextSuccess(request, response);
+        } catch (error) {
+            process.error(request, response, error);
+        }
+    },
+    /**
      * Initializes the secured request pipeline service during service loading.
      *
      * @param {Object} options Nodics initialization options for the active module hierarchy.

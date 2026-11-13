@@ -137,3 +137,44 @@ test('token rotation admits one refresh at a time and drain waits for it after c
         assert.equal(service._refreshPromise, null);
     } finally { global.setTimeout = set; global.clearTimeout = clear; }
 });
+
+/** Composes the real database registry validator with in-memory runtime handles; no provider or application storage is used. */
+function tenantCleanupFixture() {
+    const tenants = new Set(['tenant-a']), modules = { one:{models:{'tenant-a':{}},searchModels:{'tenant-a':{}}},two:{models:{'tenant-a':{}},searchModels:{'tenant-a':{}}} },calls=[];
+    global.NODICS={getModules:()=>modules,getModule:name=>modules[name],isModuleActive:name=>name==='search'||!!modules[name],getActiveTenants:()=>[...tenants],removeActiveTenant:tenant=>{calls.push('inactive');tenants.delete(tenant);}};
+    global.CONFIG={get:name=>name==='defaultTenant'?'default':undefined};
+    global.CLASSES={NodicsError:class extends Error {constructor(code,message){super(message);this.code=code;}}};
+    const database={...require('../../nDatabase/database/src/service/config/defaultDatabaseConfigurationService'),dbs:{one:{'tenant-a':{}},two:{'tenant-a':{}}}};
+    const connections={...require('../../nDatabase/database/src/service/connection/defaultDatabaseConnectionHandlerService')};
+    const models={...require('../../nDatabase/database/src/service/model/defaultDatabaseModelHandlerService'),LOG:{debug(){}}};
+    global.SERVICE={DefaultDatabaseConfigurationService:database,DefaultDatabaseConnectionHandlerService:connections,DefaultDatabaseModelHandlerService:models,DefaultCronJobService:{getCronJobRuntimeService:()=>({removeAllJobs:async()=>{calls.push('jobs');}})},DefaultSearchConfigurationService:{removeTenantSearchEngine:()=>calls.push('search'),removeTenantRawSearchSchema:()=>calls.push('schema')}};
+    return {owner:{...require('../src/service/tenant/defaultTenantHandlerService'),LOG:{info(){},error(){}}},tenants,modules,calls,database,models};
+}
+test('tenant cleanup composes actual database guard before inactive marker and awaits every resource', async()=>{
+    const f=tenantCleanupFixture();const response=await f.owner.removeTenants(['tenant-a']);
+    assert.equal(response.code,'SUC_SYS_00000');assert.equal(f.tenants.size,0);assert.deepEqual(f.database.dbs,{one:{},two:{}});
+    assert.equal(f.modules.one.models['tenant-a'],undefined);assert.equal(f.modules.two.models['tenant-a'],undefined);assert.equal(f.calls.at(-1),'inactive');assert.equal(f.calls.filter(x=>x==='schema').length,2);
+});
+test('tenant cleanup cannot acknowledge before a later module finishes',async()=>{
+    const f=tenantCleanupFixture();let release,settled=false;const original=f.models.removeModelsForTenant;
+    f.models.removeModelsForTenant=async function(name,tenant){if(name==='two')await new Promise(resolve=>{release=resolve;});return original.call(this,name,tenant);};
+    const pending=f.owner.removeTenants(['tenant-a']).finally(()=>{settled=true;});
+    while(!release)await new Promise(resolve=>setImmediate(resolve));assert.equal(settled,false);assert(f.tenants.has('tenant-a'));release();await pending;assert.equal(f.tenants.size,0);
+});
+test('tenant cleanup failure retains active marker and does not claim completion',async()=>{
+    const f=tenantCleanupFixture(),failure=new Error('fixture cleanup held');f.models.removeModelsForTenant=async()=>{throw failure;};
+    await assert.rejects(f.owner.removeTenants(['tenant-a']),error=>error===failure);assert(f.tenants.has('tenant-a'));assert(!f.calls.includes('inactive'));
+});
+test('empty tenant cleanup resolves without resource changes',async()=>{
+    const f=tenantCleanupFixture();assert.equal((await f.owner.removeTenants([])).code,'SUC_SYS_00000');assert.deepEqual(f.calls,[]);assert(f.tenants.has('tenant-a'));
+});
+
+test('tenant cleanup awaits all selected tenants and tolerates absent search registries',async()=>{
+    const f=tenantCleanupFixture();f.tenants.add('tenant-b');
+    for(const name of Object.keys(f.modules)){f.database.dbs[name]['tenant-b']={};f.modules[name].models['tenant-b']={};delete f.modules[name].searchModels;}
+    await f.owner.removeTenants(['tenant-a','tenant-b']);assert.equal(f.tenants.size,0);assert.equal(f.calls.filter(x=>x==='inactive').length,2);assert.deepEqual(f.database.dbs,{one:{},two:{}});
+});
+test('Cron cleanup failure is awaited and holds resource retirement',async()=>{
+    const f=tenantCleanupFixture(),failure=new Error('fixture jobs held');SERVICE.DefaultCronJobService.getCronJobRuntimeService=()=>({removeAllJobs:async()=>{throw failure;}});
+    await assert.rejects(f.owner.removeTenants(['tenant-a']),error=>error===failure);assert(f.tenants.has('tenant-a'));assert(f.database.dbs.one['tenant-a']);assert.deepEqual(f.calls,[]);
+});

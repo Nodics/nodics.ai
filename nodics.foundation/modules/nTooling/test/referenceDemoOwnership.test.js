@@ -45,7 +45,7 @@ test('marked demos retain literal composition, sample JSON and catalog access re
     f.write('config/properties.js', `
         const visual = { mediaCode: 'fictional-hero' };
         module.exports = {
-            backofficeApplicationVisual: visual,
+            backofficeApplicationInitialization: { profiles: { sample: { presentation: { visual } } } },
             tooling: { acceptance: { scenario: { items: require('../data/sample-v001/records/products.json') } } }
         };`);
     f.write('nodics.js', 'module.exports = { init: function () { return Promise.resolve(true); } };');
@@ -204,12 +204,12 @@ test('runtime policy remains outside every marked demo even as scalar values or 
 test('named setup and publication composition can reference owner releases without owning them', t => {
     const f = fixture(t);
     f.write('config/properties.js', `module.exports = {
-        data: { dataReleases: { runtimeRoleProfiles: { PLATFORM: { initializationProfiles: {
-            unrelatedProfile: { enabled: true, steps: { $config: 'replace', value: [
+        data: { dataReleases: { initializationProfiles: { unrelatedProfile: { template: 'unrelated' } }, initializationProfileDefaults: {
+            unrelated: { enabled: true, steps: { $config: 'replace', value: [
                 { dataType: 'init', releaseCodes: ['owner:accessGroups'] },
                 { dataType: 'sample', releaseCodes: ['unrelated.example:sample'] }
             ] } }
-        } } } } },
+        } } },
         cms: { publication: { baselines: { unrelated: { releaseCode: 'unrelated.example:sample', dataType: 'sample' } } } },
         backofficeApplicationInitialization: { profiles: { unrelated: { dataPackages: [
             { code: 'owner:accessGroups', dataType: 'init', trigger: 'USER' }
@@ -345,4 +345,11 @@ test('framework audit always invokes reference ownership', () => {
     isolated.auditReferenceDemoModules = failures => { calls.push('reference'); failures.push('rejected'); };
     assert.deepEqual(isolated.audit(), ['rejected']);
     assert.deepEqual(calls, ['reference']);
+});
+
+
+test('unused top-level application visual aliases are not a reference configuration contract', t => {
+    const f = fixture(t);
+    f.write('config/properties.js', "module.exports = { backofficeApplicationVisual: { mediaCode: 'fictional-hero' } };");
+    assert.ok(f.inspect().length > 0, 'brand selection belongs to the consumed application profile');
 });

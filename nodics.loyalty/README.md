@@ -71,3 +71,10 @@ a digital coupon product; places checkout with `paymentMethod: "LOYALTY_REWARD"`
 verifies Loyalty wallet, reservation, redemption, ledger, Commerce payment,
 order, entitlement, and delivery evidence; and writes a browser-readable report
 under the project `.nodics/tmp` directory.
+
+
+Release source selectors now live in ordinary `data.dataReleases.contributions`,
+merged by source `moduleName` with explicitly replaced section lists. Role-profile
+selection is retired. Discovery remains inert; actual destination owners and
+explicit publication context govern admission. See
+[release composition](llm/contracts/README.md#explicit-release-contribution-composition).

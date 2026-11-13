@@ -9,13 +9,13 @@
 
  */
 
-'use strict';
+"use strict";
 
-const fs = require('node:fs');
-const os = require('node:os');
-const path = require('node:path');
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
 
-const configurationService = require('./defaultInstallerConfigurationService');
+const configurationService = require("./defaultInstallerConfigurationService");
 
 /**
  * @module installer/service/DefaultInstallerWorkspaceBoundaryService
@@ -25,137 +25,194 @@ const configurationService = require('./defaultInstallerConfigurationService');
  * @override Do not relax allowlist or vendor-root protections without explicit security review.
  */
 module.exports = {
-    /** Initializes the workspace boundary service lifecycle. */
-    init: function () { return Promise.resolve(true); },
-    /** Completes post-initialization for the workspace boundary service lifecycle. */
-    postInit: function () { return Promise.resolve(true); },
+  /** Initializes the workspace boundary service lifecycle. */
+  init: function () {
+    return Promise.resolve(true);
+  },
+  /** Completes post-initialization for the workspace boundary service lifecycle. */
+  postInit: function () {
+    return Promise.resolve(true);
+  },
 
-    /** Builds a workspace boundary error with a stable installer code. */
-    installerError: function (code, message, statusCode) {
-        const error = new Error(message);
-        error.code = code;
-        error.statusCode = statusCode || 400;
-        return error;
-    },
+  /** Builds a workspace boundary error with a stable installer code. */
+  installerError: function (code, message, statusCode) {
+    const error = new Error(message);
+    error.code = code;
+    error.statusCode = statusCode || 400;
+    return error;
+  },
 
-    /** Extracts workspace input from direct, body, payload, or router envelopes. */
-    requestPayload: function (request) {
-        return request && (
-            request.payload ||
-            request.body ||
-            request.httpRequest && request.httpRequest.body
-        ) || {};
-    },
+  /** Extracts workspace input from direct, body, payload, or router envelopes. */
+  requestPayload: function (request) {
+    return (
+      (request &&
+        (request.payload ||
+          request.body ||
+          (request.httpRequest && request.httpRequest.body))) ||
+      {}
+    );
+  },
 
-    /** Resolves configured allowed roots into absolute filesystem paths. */
-    configuredAllowedRoots: function (config) {
-        return (config.workspace && config.workspace.allowedRoots || [])
-            .map(root => path.resolve(String(root)))
-            .filter(Boolean);
-    },
+  /** Resolves configured allowed roots into absolute filesystem paths. */
+  configuredAllowedRoots: function (config) {
+    return ((config.workspace && config.workspace.allowedRoots) || [])
+      .map((root) => this.canonicalPath(String(root)))
+      .filter(Boolean);
+  },
 
-    /** Checks whether a child path is exactly the parent path or safely inside it. */
-    isSameOrInside: function (child, parent) {
-        const relative = path.relative(parent, child);
-        return relative === '' || Boolean(relative) && !relative.startsWith('..') && !path.isAbsolute(relative);
-    },
-
-    /** Rejects unsafe workspace roots before allowlist matching. */
-    assertNotUnsafePath: function (workspaceRoot) {
-        const home = path.resolve(os.homedir());
-        const filesystemRoot = path.parse(workspaceRoot).root;
-        if (workspaceRoot === filesystemRoot) {
-            throw this.installerError('INSTALLER_WORKSPACE_ROOT_REJECTED',
-                'Filesystem root is not a valid installer workspace');
-        }
-        if (workspaceRoot === home) {
-            throw this.installerError('INSTALLER_WORKSPACE_HOME_REJECTED',
-                'Home directory is not a valid installer workspace');
-        }
-        if (workspaceRoot.includes(`${path.sep}..${path.sep}`)) {
-            throw this.installerError('INSTALLER_WORKSPACE_TRAVERSAL_REJECTED',
-                'Workspace path traversal is not allowed');
-        }
-    },
-
-    /** Enforces configured workspace allowlists. */
-    assertAllowed: function (workspaceRoot, allowedRoots) {
-        if (allowedRoots.length === 0) {
-            throw this.installerError('INSTALLER_WORKSPACE_ALLOWLIST_REQUIRED',
-                'Installer workspace roots must be configured before workspace APIs are used');
-        }
-        if (!allowedRoots.some(allowedRoot => this.isSameOrInside(workspaceRoot, allowedRoot))) {
-            throw this.installerError('INSTALLER_WORKSPACE_NOT_ALLOWED',
-                'Workspace path is outside configured installer allowed roots');
-        }
-    },
-
-    /**
-     * Classifies workspace markers and protected-vendor state.
-     * @param {string} workspaceRoot Validated workspace root.
-     * @param {Object} config Effective installer configuration.
-     * @returns {Object} Workspace classification.
-     */
-    classifyWorkspace: function (workspaceRoot, config) {
-        const basename = path.basename(workspaceRoot);
-        const exists = fs.existsSync(workspaceRoot);
-        const stat = exists ? fs.statSync(workspaceRoot) : null;
-        const vendorRepositories = config.protectVendorRepositories || [];
-        const protectedVendorRoot = vendorRepositories.includes(basename);
-        return {
-            workspaceName: basename,
-            exists,
-            directory: Boolean(stat && stat.isDirectory()),
-            protectedVendorRoot,
-            markers: {
-                workspaceManifest: fs.existsSync(path.join(workspaceRoot, config.workspaceManifestName)),
-                installerIdentity: fs.existsSync(path.join(workspaceRoot, config.workspaceIdentityName)),
-                installerLock: fs.existsSync(path.join(workspaceRoot, config.workspaceLockName)),
-                evidenceDirectory: fs.existsSync(path.join(workspaceRoot, config.evidenceDirectoryName))
-            }
-        };
-    },
-
-    /**
-     * Resolves and validates the requested customer workspace root.
-     * @param {Object} request Installer request envelope.
-     * @param {Object} options Optional configuration overrides.
-     * @returns {Object} Validated workspace projection with configuration and classification.
-     */
-    resolveWorkspace: function (request, options) {
-        const config = configurationService.getApplicationBuilderConfig(options || {});
-        const payload = this.requestPayload(request);
-        const suppliedRoot = payload.workspaceRoot || request && request.workspaceRoot;
-
-        if (!config.workspace.allowRequestWorkspaceRoot) {
-            throw this.installerError('INSTALLER_WORKSPACE_REQUEST_ROOT_DISABLED',
-                'Request supplied workspace roots are disabled by configuration');
-        }
-        if (!suppliedRoot || typeof suppliedRoot !== 'string') {
-            throw this.installerError('INSTALLER_WORKSPACE_REQUIRED',
-                'workspaceRoot is required for this installer operation');
-        }
-        if (suppliedRoot.includes('..')) {
-            throw this.installerError('INSTALLER_WORKSPACE_TRAVERSAL_REJECTED',
-                'Workspace path traversal is not allowed');
-        }
-
-        const workspaceRoot = path.resolve(suppliedRoot);
-        this.assertNotUnsafePath(workspaceRoot);
-        const allowedRoots = this.configuredAllowedRoots(config);
-        this.assertAllowed(workspaceRoot, allowedRoots);
-
-        const classification = this.classifyWorkspace(workspaceRoot, config);
-        if (classification.protectedVendorRoot) {
-            throw this.installerError('INSTALLER_VENDOR_ROOT_PROTECTED',
-                'Vendor-owned Nodics repositories are not customer workspaces');
-        }
-
-        return {
-            workspaceRoot,
-            allowedRoots,
-            config,
-            classification
-        };
+  /** Resolves existing symlinks before containment, retaining a non-existing planned suffix. */
+  canonicalPath: function (value) {
+    let current = path.resolve(value);
+    const suffix = [];
+    while (!fs.existsSync(current)) {
+      const parent = path.dirname(current);
+      if (parent === current) break;
+      suffix.unshift(path.basename(current));
+      current = parent;
     }
+    return path.resolve(fs.realpathSync(current), ...suffix);
+  },
+
+  /** Checks whether a child path is exactly the parent path or safely inside it. */
+  isSameOrInside: function (child, parent) {
+    const relative = path.relative(parent, child);
+    return (
+      relative === "" ||
+      (Boolean(relative) &&
+        !relative.startsWith("..") &&
+        !path.isAbsolute(relative))
+    );
+  },
+
+  /** Rejects unsafe workspace roots before allowlist matching. */
+  assertNotUnsafePath: function (workspaceRoot) {
+    const home = this.canonicalPath(os.homedir());
+    const filesystemRoot = path.parse(workspaceRoot).root;
+    if (workspaceRoot === filesystemRoot) {
+      throw this.installerError(
+        "INSTALLER_WORKSPACE_ROOT_REJECTED",
+        "Filesystem root is not a valid installer workspace",
+      );
+    }
+    if (workspaceRoot === home) {
+      throw this.installerError(
+        "INSTALLER_WORKSPACE_HOME_REJECTED",
+        "Home directory is not a valid installer workspace",
+      );
+    }
+    if (workspaceRoot.includes(`${path.sep}..${path.sep}`)) {
+      throw this.installerError(
+        "INSTALLER_WORKSPACE_TRAVERSAL_REJECTED",
+        "Workspace path traversal is not allowed",
+      );
+    }
+  },
+
+  /** Enforces configured workspace allowlists. */
+  assertAllowed: function (workspaceRoot, allowedRoots) {
+    if (allowedRoots.length === 0) {
+      throw this.installerError(
+        "INSTALLER_WORKSPACE_ALLOWLIST_REQUIRED",
+        "Installer workspace roots must be configured before workspace APIs are used",
+      );
+    }
+    if (
+      !allowedRoots.some((allowedRoot) =>
+        this.isSameOrInside(workspaceRoot, allowedRoot),
+      )
+    ) {
+      throw this.installerError(
+        "INSTALLER_WORKSPACE_NOT_ALLOWED",
+        "Workspace path is outside configured installer allowed roots",
+      );
+    }
+  },
+
+  /**
+   * Classifies workspace markers and protected-vendor state.
+   * @param {string} workspaceRoot Validated workspace root.
+   * @param {Object} config Effective installer configuration.
+   * @returns {Object} Workspace classification.
+   */
+  classifyWorkspace: function (workspaceRoot, config) {
+    const basename = path.basename(workspaceRoot);
+    const exists = fs.existsSync(workspaceRoot);
+    const stat = exists ? fs.statSync(workspaceRoot) : null;
+    const vendorRepositories = config.protectVendorRepositories || [];
+    const protectedVendorRoot = vendorRepositories.includes(basename);
+    return {
+      workspaceName: basename,
+      exists,
+      directory: Boolean(stat && stat.isDirectory()),
+      protectedVendorRoot,
+      markers: {
+        workspaceManifest: fs.existsSync(
+          path.join(workspaceRoot, config.workspaceManifestName),
+        ),
+        installerIdentity: fs.existsSync(
+          path.join(workspaceRoot, config.workspaceIdentityName),
+        ),
+        installerLock: fs.existsSync(
+          path.join(workspaceRoot, config.workspaceLockName),
+        ),
+        evidenceDirectory: fs.existsSync(
+          path.join(workspaceRoot, config.evidenceDirectoryName),
+        ),
+      },
+    };
+  },
+
+  /**
+   * Resolves and validates the requested customer workspace root.
+   * @param {Object} request Installer request envelope.
+   * @param {Object} options Optional configuration overrides.
+   * @returns {Object} Validated workspace projection with configuration and classification.
+   */
+  resolveWorkspace: function (request, options) {
+    const config = configurationService.getApplicationBuilderConfig(
+      options || {},
+    );
+    const payload = this.requestPayload(request);
+    const suppliedRoot =
+      payload.workspaceRoot || (request && request.workspaceRoot);
+
+    if (!config.workspace.allowRequestWorkspaceRoot) {
+      throw this.installerError(
+        "INSTALLER_WORKSPACE_REQUEST_ROOT_DISABLED",
+        "Request supplied workspace roots are disabled by configuration",
+      );
+    }
+    if (!suppliedRoot || typeof suppliedRoot !== "string") {
+      throw this.installerError(
+        "INSTALLER_WORKSPACE_REQUIRED",
+        "workspaceRoot is required for this installer operation",
+      );
+    }
+    if (suppliedRoot.includes("..")) {
+      throw this.installerError(
+        "INSTALLER_WORKSPACE_TRAVERSAL_REJECTED",
+        "Workspace path traversal is not allowed",
+      );
+    }
+
+    const workspaceRoot = this.canonicalPath(suppliedRoot);
+    this.assertNotUnsafePath(workspaceRoot);
+    const allowedRoots = this.configuredAllowedRoots(config);
+    this.assertAllowed(workspaceRoot, allowedRoots);
+
+    const classification = this.classifyWorkspace(workspaceRoot, config);
+    if (classification.protectedVendorRoot) {
+      throw this.installerError(
+        "INSTALLER_VENDOR_ROOT_PROTECTED",
+        "Vendor-owned Nodics repositories are not customer workspaces",
+      );
+    }
+
+    return {
+      workspaceRoot,
+      allowedRoots,
+      config,
+      classification,
+    };
+  },
 };

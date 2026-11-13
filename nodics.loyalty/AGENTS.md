@@ -20,3 +20,10 @@ The group root is composition-only. Put runtime source, schema, services, tests,
 ## Validation
 
 Run `npm test` from this directory after changing Loyalty contracts.
+
+
+Keep release discovery in the existing ordinary `data.dataReleases.contributions`
+list using keyed module identities and explicit section replacement. Do not
+restore role profiles, duplicate source owners, alter manifest activation policy,
+or install definitions from configuration. Qualify actual owner/publication
+admission and preserve unselected sources. See the local release composition contract.

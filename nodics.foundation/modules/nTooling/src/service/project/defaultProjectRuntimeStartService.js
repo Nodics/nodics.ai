@@ -368,7 +368,8 @@ module.exports = {
                 NODICS_HOME: foundationRoot, CUSTOM_HOME: projectRoot,
                 MODULE_ROOTS: this.resolveModuleRoots(projectRoot, frameworkRoot, server),
                 defaultEnvironment: server.environment || environment.E || environment.ENV,
-                defaultServer: server.server
+                defaultServer: server.server,
+                ...(options.sourceOnly === true ? { sourceOnly: true } : {})
             });
         } finally {
             for (const key of Object.keys(previous)) {
@@ -391,10 +392,12 @@ module.exports = {
             environmentArg ? { E: environmentArg.slice('--environment='.length), ENV: environmentArg.slice('--environment='.length) } : {},
             nodeArg ? { NODICS_NODE: nodeArg.slice('--node='.length) } : {});
         const lifecycle = args.find(value => value.startsWith('--lifecycle='));
+        const sourceOnly = args.includes('--source-only');
+        if (sourceOnly && lifecycle !== '--lifecycle=buildAll') throw new Error('--source-only requires a selected-server build');
         const serverCode = selected ? selected.slice('--server='.length) : args.find(value => !value.startsWith('-')) || environment.S || environment.SERVER;
         if (lifecycle) return this.lifecycle({
             projectRoot: environment.NODICS_PROJECT_ROOT || process.cwd(),
-            method: lifecycle.slice('--lifecycle='.length), serverCode, environment: effectiveEnvironment
+            method: lifecycle.slice('--lifecycle='.length), serverCode, environment: effectiveEnvironment, sourceOnly
         });
         if (!serverCode) throw new Error('Select a server with --server=<code> or SERVER');
         return this.start({ projectRoot: environment.NODICS_PROJECT_ROOT || process.cwd(), serverCode, environment: effectiveEnvironment });

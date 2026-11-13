@@ -75,11 +75,13 @@ function fixture(level = 'Edit') {
         DefaultCmsPageTemplateService: [{ code: 'template', active: true }],
         DefaultCmsTypeCodeService: [{ code: 'page-type', kind: 'PAGE', active: true }, { code: 'component-type', kind: 'COMPONENT', active: true }],
         DefaultCmsSlotDefinitionService: [], DefaultCmsComponentTypeGroupService: [],
+        DefaultCmsDocumentationProductService: [],
         DefaultCmsPageService: [], DefaultCmsComponentService: [], DefaultCmsComponentDetailService: [],
         DefaultCmsComponentLocalizationService: [], DefaultCmsComponentMediaService: [],
         DefaultCmsPageRouteService: [], DefaultCmsNavigationNodeService: [],
     };
     const writes = [];
+    let realPlacementValidation = false;
     global.UTILS = { isBlank: _.isEmpty };
     global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message || code); this.code = code; } } };
     global.CONFIG = { get: key => ({ runtimeRole: { publication: stage },
@@ -89,11 +91,12 @@ function fixture(level = 'Edit') {
         cms: { designerAuthoring: { maximumReferenceLookupItems: 100 } },
     })[key] };
     global.NODICS = { getModule: () => ({ rawSchema: schemas }) };
-    global.SERVICE = { DefaultCmsDesignerAccessService: access, DefaultSecuredRequestPipelineService: router,
+    global.SERVICE = { DefaultCmsDesignerCompositionService: designer, DefaultCmsDesignerAccessService: access, DefaultSecuredRequestPipelineService: router,
+        DefaultCmsDesignerReadService: require('../src/service/designer/defaultCmsDesignerReadService'),
         DefaultSchemaAccessHandlerService: schemaAccess, DefaultRecordOwnershipPolicyService: { enforce: async () => {} },
         DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ principalType: 'service', userGroups: ['serviceAccountUserGroup'] }) },
-        DefaultCmsContractValidationService: { validateRenderer: async () => {}, validateRoute: async () => {},
-            validateNavigationNode: async () => {}, validateAssociation: async () => {} },
+        DefaultCmsContractValidationService: { validateRenderer: async () => {}, validateRoute: async () => {}, validateComponentMedia: async () => {},
+            validateDraftComponentMediaReference: async () => {}, validateNavigationNode: async () => {}, validateAssociation: async () => {} },
         DefaultCmsDeliveryCacheInvalidationService: { invalidate: async () => {} },
     };
     for (const [serviceName, list] of Object.entries(rows)) {
@@ -110,6 +113,8 @@ function fixture(level = 'Edit') {
             },
             save: async request => {
                 await generatedSaveAllowed(request.authData, schemaName);
+                if (realPlacementValidation && serviceName === 'DefaultCmsComponentDetailService')
+                    await require('../src/service/validation/defaultCmsContractValidationService').validateAssociation(request);
                 const candidate = structuredClone(request.model);
                 if (candidate.versionId === undefined) candidate.versionId = 0;
                 const model = Object.assign({}, versionedModel, {
@@ -126,7 +131,7 @@ function fixture(level = 'Edit') {
         siteCode: 'site-a', catalogCode: 'catalog-a', templateCode: 'template',
         page: { code: 'page-a', name: 'Page', typeCode: 'page-type' }, sections: [],
     } };
-    return { rows, writes, scope, request, stage: value => { stage = value; } };
+    return { rows, writes, scope, request, stage: value => { stage = value; }, useRealPlacementValidation: () => { realPlacementValidation = true; } };
 }
 
 test('real group/route/generated guards distinguish View, Edit and Full control without generic grants', async () => {
@@ -193,6 +198,12 @@ test('Edit saves a scoped draft through generated persistence; View and Online n
     const result = await designer.saveDraftComposition(f.request);
     assert.equal(result.result.status, 'DRAFT_SAVED');
     assert.deepEqual(f.writes[0].model.authoringScope, f.scope);
+    for (const [field, definition] of Object.entries(schemas.cmsPage.definition).filter(([, definition]) => definition.required)) {
+        assert.notEqual(f.writes[0].model[field], undefined, `new page must satisfy the owning schema's required ${field}`);
+        if (definition.type === 'array') assert(Array.isArray(f.writes[0].model[field]));
+    }
+    const reopened = (await designer.getDraftComposition(f.request)).result;
+    f.request.body.sourceVersion = reopened.sourceVersion;
     await designer.saveDraftComposition(f.request);
     assert.deepEqual(f.writes.map(write => write.model.versionId), [0, 1]);
     const count = f.writes.length;
@@ -212,6 +223,33 @@ test('foreign/unbound Sites, shared catalogs and scope overrides fail before any
     }
     f.rows.DefaultCmsSiteService.push({ code: 'foreign-shared', catalog: 'catalog-a', enterpriseCode: 'enterprise-b', active: true });
     await assert.rejects(designer.saveDraftComposition(f.request), { code: 'ERR_AUTH_00003' });
+    assert.equal(f.writes.length, 0);
+});
+
+test('a scoped documentation author can use a shared catalog with a verified read-only product peer', async () => {
+    const f = fixture();
+    f.rows.DefaultCmsSiteService.push({ code: 'published-docs', catalog: 'catalog-a', active: true });
+    const products = f.rows.DefaultCmsDocumentationProductService;
+    await assert.rejects(access.scope(f.request, 'cms.authoring.write'), { code: 'ERR_AUTH_00003' });
+    products.push({ site: 'site-a', contentCatalog: 'catalog-a', publicRootPath: '/docs/project',
+        defaultLocale: 'en', active: true });
+    products.push({ site: 'published-docs', contentCatalog: 'catalog-a', active: true });
+    f.rows.DefaultCmsPageRouteService.push({ site: 'site-a', path: '/docs/project', channel: 'web',
+        page: 'root', accessMode: 'PUBLIC', active: true });
+    f.rows.DefaultCmsPageService.push({ code: 'root', cmsSite: ['site-a'], template: 'template',
+        typeCode: 'page-type', renderer: 'documentation.page.article', active: true });
+    f.rows.DefaultCmsSlotDefinitionService.push(
+        { template: 'template', name: 'article', allowedComponentTypes: ['article-type'], active: true },
+        { template: 'template', name: 'navigation', allowedComponentTypes: ['navigation-type'], active: true });
+    const { result } = await designer.getDocumentationDraftModel(f.request);
+    assert.deepEqual(result, {
+        siteCode: 'site-a', catalogCode: 'catalog-a', rootPath: '/docs/project', templateCode: 'template',
+        typeCode: 'page-type', renderer: 'documentation.page.article', articleTypeCode: 'article-type',
+        navigationTypeCode: 'navigation-type', accessMode: 'PUBLIC', locale: 'en',
+    });
+    const peer = { ...f.request, body: { siteCode: 'published-docs', catalogCode: 'catalog-a' } };
+    delete peer[Object.getOwnPropertySymbols(peer)[0]];
+    await assert.rejects(access.scope(peer, 'cms.authoring.write'), { code: 'ERR_AUTH_00003' });
     assert.equal(f.writes.length, 0);
 });
 
@@ -409,7 +447,7 @@ test('business navigation admits the real Designer but does not advertise unauth
         item.requiredPermissions.every(permission => router.isPermissionGranted(permission, f.request.authData.permissions, {})));
     assert(visible.some(item => item.route === '/content/designer'));
     assert(!visible.some(item => item.workbenchTarget));
-    assert.deepEqual((await designer.getAuthoringModel(f.request)).result.operations, []);
+    assert.deepEqual((await designer.getAuthoringModel(f.request)).result.operations, ['listDraftPages', 'getDraftComposition']);
 });
 
 test('real generated service selects the exact tenant model without requiring a tenant property on CMS rows', async () => {
@@ -465,4 +503,457 @@ test('component-owned nested placements retain catalog sharing and cannot adopt 
     f.rows.DefaultCmsPageService.push({ code: 'page-a', authoringScope: f.scope });
     await assert.rejects(designer.updateSection({ ...f.request, body: { siteCode: 'site-a', catalogCode: 'catalog-a',
         code: 'nested', source: 'page-a', target: 'child', slot: 'main' } }), { code: 'ERR_AUTH_00003' });
+});
+
+test('HTTP Designer entry carries only the original authenticated bearer into the existing owner checks', async () => {
+    const controller = require('../src/controller/defaultCmsDesignerCompositionController');
+    const facade = require('../src/facade/defaultCmsDesignerCompositionFacade');
+    const f = fixture('Edit');
+    SERVICE.DefaultCmsDesignerCompositionService = designer;
+    global.FACADE = { DefaultCmsDesignerCompositionFacade: facade };
+    delete f.request.authorization;
+    f.request.httpRequest = { headers: { authorization: 'Bearer original-http-employee' }, body: {} };
+    const original = structuredClone(f.request.authData);
+    const result = await controller.getAuthoringModel(f.request);
+    assert.deepEqual(result.result.metadata.sites.map(site => site.code), ['site-a']);
+    assert.equal(f.request.authorization, 'Bearer original-http-employee');
+    assert.deepEqual(f.request.authData, original);
+    assert.equal(f.writes.length, 0);
+    for (const headers of [{}, { authorization: '' }]) {
+        const denied = fixture('Edit');
+        SERVICE.DefaultCmsDesignerCompositionService = designer;
+        denied.request.httpRequest = { headers, body: { authorization: 'Bearer body-supplied', authData: f.request.authData } };
+        denied.request.authorization = 'Bearer unbound-wrapper-value';
+        await assert.rejects(controller.getAuthoringModel(denied.request), { code: 'ERR_AUTH_00003' });
+        assert.equal(denied.writes.length, 0);
+    }
+});
+
+test('authoring metadata bounds queries to owned Catalog references before historical documentation volume', async () => {
+    const f = fixture('Edit');
+    const shared = { enterpriseCode: 'enterprise-a', catalogCode: 'catalog-a' };
+    f.rows.DefaultCmsSlotDefinitionService.push(...Array.from({ length: 120 }, (_, index) =>
+        ({ code: 'historical-slot-' + index, active: true })));
+    f.rows.DefaultCmsSlotDefinitionService.push({ code: 'owned-slot', active: true, authoringScope: shared });
+    f.rows.DefaultCmsPageTemplateService.push({ code: 'owned-template', active: true, authoringScope: shared });
+    f.rows.DefaultCmsTypeCodeService.push(
+        { code: 'owned-component-type', kind: 'COMPONENT', active: true, authoringScope: shared },
+        { code: 'foreign-type', kind: 'COMPONENT', active: true,
+            authoringScope: { enterpriseCode: 'enterprise-b', catalogCode: 'catalog-b' } });
+    const { result } = await designer.getAuthoringModel(f.request);
+    assert.deepEqual(result.metadata.slotDefinitions.map(row => row.code), ['owned-slot']);
+    assert.deepEqual(result.metadata.pageTemplates.map(row => row.code), ['owned-template']);
+    assert.deepEqual(result.metadata.componentTypes.map(row => row.code), ['owned-component-type']);
+    assert.equal(f.writes.length, 0);
+});
+
+test('metadata lookup survives actual generated paging normalization beyond the default page', async () => {
+    const f = fixture('Edit');
+    const originalConfig = CONFIG.get;
+    CONFIG.get = key => key === 'defaultPageSize' ? 20 : key === 'defaultPageNumber' ? 1 : originalConfig(key);
+    f.rows.DefaultCmsSlotDefinitionService.push(...Array.from({ length: 24 }, (_, index) => ({
+        code: 'owned-slot-' + index, active: true,
+        authoringScope: { enterpriseCode: 'enterprise-a', catalogCode: 'catalog-a' }
+    })));
+    const originalGet = SERVICE.DefaultCmsSlotDefinitionService.get;
+    SERVICE.DefaultCmsSlotDefinitionService.get = async read => {
+        await new Promise((resolve, reject) => getGate.buildOptions.call({ LOG: { debug() {} } }, read, {}, {
+            nextSuccess: resolve, error: (_request, _response, error) => reject(error)
+        }));
+        return originalGet(read);
+    };
+    const { result } = await designer.getAuthoringModel(f.request);
+    assert.equal(result.metadata.slotDefinitions.length, 24);
+    assert.equal(f.writes.length, 0);
+});
+
+test('configured business content fields reject incomplete or malformed component writes', async () => {
+    const f = fixture();
+    f.rows.DefaultCmsSlotDefinitionService.push({ code: 'main-slot', name: 'main', template: 'template', active: true, authoringScope: { enterpriseCode: 'enterprise-a', catalogCode: 'catalog-a' } });
+    const configured = CONFIG.get;
+    CONFIG.get = key => key === 'cms' ? { designerAuthoring: { componentKinds: [{
+        typeCode: 'component-type', fields: [
+            { property: 'title', label: 'Heading', control: 'text', required: true, maxLength: 40 },
+            { property: 'items', label: 'Cards', control: 'items', required: true, maximumItems: 3,
+                itemFields: [{ property: 'title', label: 'Card heading', control: 'text', required: true }] }
+        ]
+    }] } } : configured(key);
+    const input = { siteCode: 'site-a', catalogCode: 'catalog-a', code: 'business-component', typeCode: 'component-type' };
+    for (const properties of [{}, { title: 'Business heading', items: [] }, { title: 'Business heading', items: [{}] },
+        { title: 'Business heading', items: 'wrong' }, { title: 'x'.repeat(41), items: [{ title: 'One' }] }]) {
+        await assert.rejects(designer.addComponent({ ...f.request, body: { ...input, properties } }), { code: 'ERR_CMS_00100' });
+        assert.equal(f.writes.length, 0);
+        await assert.rejects(designer.saveDraftComposition({ ...f.request, body: { ...f.request.body,
+            sections: [{ slot: 'main', components: [{ ...input, properties }] }] } }), { code: 'ERR_CMS_00100' });
+        assert.equal(f.writes.length, 0, 'whole draft validates content before the first Page write');
+    }
+    await assert.rejects(designer.saveDraftComposition({ ...f.request, body: { ...f.request.body,
+        sections: [{ slot: 'main', components: [{ ...input,
+            properties: { title: 'Business heading', items: [{ title: 'One' }] },
+            localizations: [{ locale: 'ar', properties: { title: { invalid: 'not text' } } }] }] }] } }), { code: 'ERR_CMS_00100' });
+    assert.equal(f.writes.length, 0);
+    const properties = { title: 'Business heading', items: [{ title: 'One' }, { title: 'Two' }] };
+    const result = await designer.addComponent({ ...f.request, body: { ...input, properties } });
+    assert.deepEqual(result.result.properties, properties);
+    assert.deepEqual(result.result.authoringScope, { enterpriseCode: 'enterprise-a', catalogCode: 'catalog-a' });
+});
+
+test('publication readiness names unreviewed translations before creating any publication', async () => {
+    const f = fixture();
+    f.rows.DefaultCmsSlotDefinitionService.push({ code: 'main-slot', name: 'main', template: 'template', active: true, authoringScope: { enterpriseCode: 'enterprise-a', catalogCode: 'catalog-a' } });
+    const body = { ...f.request.body, route: { path: '/new-page', locale: 'en' }, sections: [{ slot: 'main', components: [{ code: 'bilingual', typeCode: 'component-type', properties: { title: 'Hello' }, localizations: [{ locale: 'en', properties: { title: 'Hello' }, status: 'DRAFT' }] }] }] };
+    await assert.rejects(designer.validatePublishReadiness({ ...f.request, body }), error => error.code === 'ERR_CMS_00106' && /mark it ready/.test(error.message));
+    assert.equal(f.writes.length, 0);
+    body.sections[0].components[0].localizations[0].status = 'READY';
+    assert.equal((await designer.validatePublishReadiness({ ...f.request, body })).result.status, 'READY_TO_PUBLISH');
+});
+
+test('route locale comes from the configured shared delivery policy independently of editing language', () => {
+    fixture(); const configured = CONFIG.get;
+    CONFIG.get = key => key === 'cms' ? { localization: { defaultLocale: 'en', supportedLocales: ['en', 'ar'], legacyRouteLocale: 'default' } } : configured(key);
+    assert.deepEqual(designer.clientLocalizationPolicy(), { defaultLocale: 'en', supportedLocales: ['en', 'ar'], fallbackLocales: [], routeLocale: 'default' });
+});
+
+/** Seeds in-memory owner doubles only; live acceptance creates records through the normal APIs. */
+function savedPageFixture(level = 'Edit') {
+    const f = fixture(level), shared = { enterpriseCode: 'enterprise-a', catalogCode: 'catalog-a' };
+    f.request.body.pageCode = 'page-a';
+    f.rows.DefaultCmsPageService.push({ code: 'page-a', name: 'Business page', template: 'template', typeCode: 'page-type',
+        cmsSite: ['site-a'], active: true, versionId: 0, authoringScope: f.scope, seo: { title: 'Retained page SEO' } });
+    f.rows.DefaultCmsSlotDefinitionService.push({ code: 'main-slot', name: 'main', template: 'template', active: true, authoringScope: shared });
+    f.rows.DefaultCmsComponentService.push({ code: 'block-a', typeCode: 'component-type', renderer: 'renderer',
+        accessMode: 'PUBLIC', properties: { title: 'Original', extension: { retained: true } }, active: true, versionId: 0,
+        authoringScope: shared, customExtension: { retained: true } });
+    f.rows.DefaultCmsComponentDetailService.push({ code: 'stable-placement', source: 'page-a', target: 'block-a', slot: 'main', index: 7,
+        active: true, versionId: 0, authoringScope: f.scope, layout: { retained: true } });
+    f.rows.DefaultCmsComponentLocalizationService.push({ code: 'original-translation-identity', componentCode: 'block-a', locale: 'en',
+        properties: { title: 'Original' }, seo: { title: 'Translation SEO' }, status: 'READY', active: true, versionId: 0, authoringScope: shared });
+    f.rows.DefaultCmsComponentMediaService.push({ code: 'original-media-identity', componentMediaCode: 'original-media-identity', componentCode: 'block-a',
+        mediaCode: 'image-a', role: 'primary', mediaType: 'IMAGE', position: 0, active: true, versionId: 0, authoringScope: shared });
+    return f;
+}
+
+test('View reopens exact saved identities without writes or authoring permission', async () => {
+    const f = savedPageFixture('View');
+    assert.deepEqual((await designer.listDraftPages(f.request)).result.pages, [{ code: 'page-a', name: 'Business page' }]);
+    const value = (await designer.getDraftComposition(f.request)).result;
+    assert(value.editable);
+    assert.match(value.sourceVersion, /^[a-f0-9]{64}$/);
+    assert.equal(value.draft.sections[0].code, 'stable-placement');
+    assert.equal(value.draft.sections[0].index, 7);
+    assert.equal(value.draft.sections[0].components[0].localizations[0].code, 'original-translation-identity');
+    assert.equal(value.draft.sections[0].components[0].media[0].code, 'original-media-identity');
+    assert.equal(f.writes.length, 0);
+    await assert.rejects(designer.saveDraftComposition({ ...f.request, body: value.draft }), { code: 'ERR_AUTH_00003' });
+});
+
+test('reopened save preserves unexposed owner attributes, translation identity, SEO and sibling Media', async () => {
+    const f = savedPageFixture();
+    const value = (await designer.getDraftComposition(f.request)).result;
+    value.draft.sections[0].components[0].properties.title = 'Updated';
+    await designer.saveDraftComposition({ ...f.request, body: value.draft });
+    const saved = name => f.writes.find(write => write.serviceName === name).model;
+    assert.deepEqual(saved('DefaultCmsPageService').seo, { title: 'Retained page SEO' });
+    assert.deepEqual(saved('DefaultCmsComponentService').customExtension, { retained: true });
+    assert.deepEqual(saved('DefaultCmsComponentService').properties.extension, { retained: true });
+    assert.deepEqual(saved('DefaultCmsComponentDetailService').layout, { retained: true });
+    assert.equal(saved('DefaultCmsComponentLocalizationService').code, 'original-translation-identity');
+    assert.deepEqual(saved('DefaultCmsComponentLocalizationService').seo, { title: 'Translation SEO' });
+    assert.equal(saved('DefaultCmsComponentMediaService').code, 'original-media-identity');
+});
+
+test('stale or absent saved-source evidence rejects before the first write', async () => {
+    const f = savedPageFixture();
+    const value = (await designer.getDraftComposition(f.request)).result;
+    const latest = { ...f.rows.DefaultCmsComponentService[0], versionId: 1, properties: { title: 'Another author' } };
+    f.rows.DefaultCmsComponentService.push(latest);
+    await assert.rejects(designer.saveDraftComposition({ ...f.request, body: value.draft }), { code: 'ERR_CMS_00111' });
+    delete value.draft.sourceVersion;
+    await assert.rejects(designer.saveDraftComposition({ ...f.request, body: value.draft }), { code: 'ERR_CMS_00111' });
+    assert.equal(f.writes.length, 0);
+});
+
+test('unsupported embedded references and multiple routes cannot be flattened by saved editing', async () => {
+    for (const change of [
+        f => { f.rows.DefaultCmsPageService[0].cmsComponents = ['embedded']; },
+        f => { f.rows.DefaultCmsComponentService[0].subComponents = ['nested']; },
+        f => { f.rows.DefaultCmsPageRouteService.push(...['route-a', 'route-b'].map(code => ({ code, page: 'page-a', site: 'site-a', path: `/${code}`, active: true, versionId: 0, authoringScope: f.scope }))); }
+    ]) {
+        const f = savedPageFixture(); change(f);
+        const value = (await designer.getDraftComposition(f.request)).result;
+        assert.equal(value.editable, false); assert(value.issues.length);
+        // A caller cannot turn a read-only owner projection into an editable one.
+        await assert.rejects(designer.saveDraftComposition({ ...f.request, body: value.draft }), error => ['ERR_CMS_00111', 'ERR_CMS_00105'].includes(error.code));
+        assert.equal(f.writes.length, 0);
+    }
+});
+
+test('retired heads are not resurrected and tied version history is rejected', async () => {
+    const f = savedPageFixture();
+    f.rows.DefaultCmsComponentDetailService.push({ ...f.rows.DefaultCmsComponentDetailService[0], versionId: 1, active: false });
+    assert.equal((await designer.getDraftComposition(f.request)).result.draft.sections.length, 0);
+    f.rows.DefaultCmsPageService.push({ ...f.rows.DefaultCmsPageService[0], versionId: 1, active: false });
+    assert.deepEqual((await designer.listDraftPages(f.request)).result.pages, []);
+    await assert.rejects(designer.getDraftComposition(f.request), { code: 'ERR_CMS_00100' });
+    const ambiguous = savedPageFixture();
+    ambiguous.rows.DefaultCmsComponentService.push({ ...ambiguous.rows.DefaultCmsComponentService[0] });
+    await assert.rejects(designer.getDraftComposition(ambiguous.request), { code: 'ERR_AUTH_00003' });
+});
+
+test('saved reads reject foreign relationships, oversized history and Online without writes', async () => {
+    for (const change of [
+        f => { f.rows.DefaultCmsComponentService[0].authoringScope.catalogCode = 'foreign'; },
+        f => { f.rows.DefaultCmsComponentLocalizationService[0].authoringScope.enterpriseCode = 'foreign'; },
+        f => { f.rows.DefaultCmsComponentMediaService[0].authoringScope.catalogCode = 'foreign'; },
+        f => { f.rows.DefaultCmsComponentDetailService[0].authoringScope.siteCode = 'foreign'; },
+        f => { f.rows.DefaultCmsPageService.push(...Array.from({ length: 101 }, (_, index) => ({ ...f.rows.DefaultCmsPageService[0], versionId: index + 1 }))); },
+        f => f.stage('ONLINE')
+    ]) {
+        const f = savedPageFixture(); change(f);
+        await assert.rejects(designer.getDraftComposition(f.request), { code: 'ERR_AUTH_00003' });
+        assert.equal(f.writes.length, 0);
+    }
+});
+
+test('saved read HTTP entry uses query selection and original authenticated bearer', async () => {
+    const f = savedPageFixture('View');
+    global.FACADE = { DefaultCmsDesignerCompositionFacade: require('../src/facade/defaultCmsDesignerCompositionFacade') };
+    SERVICE.DefaultCmsDesignerCompositionService = designer;
+    const request = { tenant: f.request.tenant, authData: f.request.authData,
+        httpRequest: { headers: { authorization: f.request.authorization }, query: { siteCode: 'site-a', catalogCode: 'catalog-a', pageCode: 'page-a' },
+            body: { siteCode: 'site-b', catalogCode: 'catalog-b' } } };
+    const result = await require('../src/controller/defaultCmsDesignerCompositionController').getDraftComposition(request);
+    assert.equal(result.result.draft.page.code, 'page-a');
+    assert.equal(f.writes.length, 0);
+});
+
+test('saved inspection rejects conflicting page identities and malformed content without writes', async () => {
+    const alias = savedPageFixture();
+    alias.request.body.pageCode = 'another-page';
+    await assert.rejects(designer.getDraftComposition(alias.request), { code: 'ERR_AUTH_00003' });
+    for (const change of [f => { f.rows.DefaultCmsComponentService[0].properties = ['invalid']; },
+        f => { f.rows.DefaultCmsComponentLocalizationService[0].seo = ['invalid']; }]) {
+        const f = savedPageFixture(); change(f);
+        await assert.rejects(designer.getDraftComposition(f.request), { code: 'ERR_CMS_00100' });
+        assert.equal(f.writes.length, 0);
+    }
+});
+
+test('an authorized complete missing-page read reports typed not-found; foreign ownership remains denied', async () => {
+    const missing = fixture('View');
+    await assert.rejects(designer.getDraftComposition(missing.request), { code: 'ERR_CMS_00088' });
+    assert.equal(missing.writes.length, 0);
+    const foreign = savedPageFixture('View');
+    foreign.rows.DefaultCmsPageService[0].authoringScope.siteCode = 'foreign';
+    await assert.rejects(designer.getDraftComposition(foreign.request), { code: 'ERR_AUTH_00003' });
+    assert.equal(foreign.writes.length, 0);
+});
+
+test('reopened publication validates saved translations, not omitted or forged caller readiness', async () => {
+    const f = savedPageFixture();
+    f.rows.DefaultCmsPageRouteService.push({ code: 'route-a', page: 'page-a', site: 'site-a', path: '/page', locale: 'default', channel: 'web', active: true, versionId: 0, authoringScope: f.scope });
+    f.rows.DefaultCmsComponentLocalizationService[0].status = 'DRAFT';
+    const value = (await designer.getDraftComposition(f.request)).result;
+    value.draft.sections[0].components[0].localizations = [];
+    await assert.rejects(designer.submitForPublication({ ...f.request, body: value.draft }), { code: 'ERR_CMS_00106' });
+    delete value.draft.sourceVersion;
+    await assert.rejects(designer.submitForPublication({ ...f.request, body: value.draft }), { code: 'ERR_CMS_00106' });
+    value.draft.sourceVersion = value.sourceVersion;
+    f.rows.DefaultCmsComponentLocalizationService.push({ ...f.rows.DefaultCmsComponentLocalizationService[0], versionId: 1, status: 'READY' });
+    await assert.rejects(designer.submitForPublication({ ...f.request, body: value.draft }), { code: 'ERR_CMS_00111' });
+    assert.equal(f.writes.length, 0);
+});
+
+test('a composed add-before-existing save frees the old position and preserves actual historical collision checks', async () => {
+    const f = savedPageFixture(); f.useRealPlacementValidation();
+    f.rows.DefaultCmsComponentDetailService[0].index = 0;
+    const value = (await designer.getDraftComposition(f.request)).result;
+    value.draft.sections[0].index = 1;
+    value.draft.sections.unshift({ slot: 'main', index: 0, components: [{ code: 'new-block', typeCode: 'component-type', renderer: 'renderer', properties: { title: 'New section' }, localizations: [], media: [] }] });
+    await designer.saveDraftComposition({ ...f.request, body: value.draft });
+    const after = (await designer.getDraftComposition(f.request)).result;
+    assert.deepEqual(after.draft.sections.map(section => [section.components[0].code, section.index]), [['new-block', 0], ['block-a', 1]]);
+    const writes = f.writes.filter(write => write.serviceName === 'DefaultCmsComponentDetailService');
+    assert.deepEqual(writes.map(write => [write.model.code, write.model.index]), [['stable-placement', 2], ['page-a-main-new-block', 0], ['stable-placement', 1]]);
+    assert(writes.every(write => write.model.active === true));
+    assert.equal(f.rows.DefaultCmsComponentDetailService.filter(row => row.code === 'stable-placement').length, 3);
+    assert.equal(after.draft.sections[1].components[0].localizations[0].code, 'original-translation-identity');
+});
+
+test('a composed swap preserves both identities and never treats their old active positions as current occupants', async () => {
+    const f = savedPageFixture(); f.useRealPlacementValidation();
+    f.rows.DefaultCmsComponentDetailService[0].index = 0;
+    f.rows.DefaultCmsComponentService.push({ ...f.rows.DefaultCmsComponentService[0], code: 'block-b', properties: { title: 'Second' } });
+    f.rows.DefaultCmsComponentDetailService.push({ ...f.rows.DefaultCmsComponentDetailService[0], code: 'second-placement', target: 'block-b', index: 1 });
+    const value = (await designer.getDraftComposition(f.request)).result;
+    value.draft.sections.reverse(); value.draft.sections.forEach((section, index) => { section.index = index; });
+    await designer.saveDraftComposition({ ...f.request, body: value.draft });
+    const after = (await designer.getDraftComposition(f.request)).result;
+    assert.deepEqual(after.draft.sections.map(section => [section.code, section.index]), [['second-placement', 0], ['stable-placement', 1]]);
+    assert.equal(f.rows.DefaultCmsComponentDetailService.length, 6);
+    assert(f.rows.DefaultCmsComponentDetailService.every(row => row.active === true));
+});
+
+test('omitted occupants, duplicate desired positions and cross-page placement reuse reject before any write', async () => {
+    for (const change of [
+        value => { value.draft.sections = [{ slot: 'main', index: 7, components: [{ code: 'new-block', typeCode: 'component-type', properties: { title: 'New' } }] }]; },
+        value => { value.draft.sections.push({ slot: 'main', index: 7, components: [{ code: 'new-block', typeCode: 'component-type', properties: { title: 'New' } }] }); }
+    ]) {
+        const f = savedPageFixture(); f.useRealPlacementValidation();
+        const value = (await designer.getDraftComposition(f.request)).result; change(value);
+        await assert.rejects(designer.saveDraftComposition({ ...f.request, body: value.draft }), { code: 'ERR_CMS_00104' });
+        assert.equal(f.writes.length, 0);
+    }
+    const f = savedPageFixture();
+    f.rows.DefaultCmsComponentDetailService.push({ ...f.rows.DefaultCmsComponentDetailService[0], code: 'other-page-placement', source: 'other-page' });
+    const value = (await designer.getDraftComposition(f.request)).result;
+    value.draft.sections[0].code = 'other-page-placement';
+    await assert.rejects(designer.saveDraftComposition({ ...f.request, body: value.draft }), { code: 'ERR_CMS_00104' });
+    assert.equal(f.writes.length, 0);
+});
+
+test('a failed final placement is not replayed or reported as rollback; old source evidence cannot repeat it', async () => {
+    const f = savedPageFixture(); f.useRealPlacementValidation();
+    f.rows.DefaultCmsComponentDetailService[0].index = 0;
+    const value = (await designer.getDraftComposition(f.request)).result;
+    value.draft.sections[0].index = 1;
+    value.draft.sections.unshift({ slot: 'main', index: 0, components: [{ code: 'new-block', typeCode: 'component-type', properties: { title: 'New' } }] });
+    const save = SERVICE.DefaultCmsComponentDetailService.save; let failed = 0;
+    SERVICE.DefaultCmsComponentDetailService.save = async request => {
+        if (request.model.code === 'page-a-main-new-block') { failed++; throw new Error('Simulated final placement unavailable'); }
+        return save(request);
+    };
+    await assert.rejects(designer.saveDraftComposition({ ...f.request, body: value.draft }), /Simulated final placement unavailable/);
+    assert.equal(failed, 1);
+    const partial = (await designer.getDraftComposition(f.request)).result;
+    assert.notEqual(partial.sourceVersion, value.sourceVersion);
+    assert.deepEqual(partial.draft.sections.map(section => section.index), [2]);
+    const count = f.writes.length;
+    await assert.rejects(designer.saveDraftComposition({ ...f.request, body: value.draft }), { code: 'ERR_CMS_00111' });
+    assert.equal(f.writes.length, count); assert.equal(failed, 1);
+});
+
+test('saved graph reads resolve current bindings before filtering out moved placement, translation and route history', async () => {
+    const f = savedPageFixture();
+    f.rows.DefaultCmsComponentDetailService.push({ ...f.rows.DefaultCmsComponentDetailService[0], versionId: 1, source: 'another-page' });
+    assert.equal((await designer.getDraftComposition(f.request)).result.draft.sections.length, 0);
+    const g = savedPageFixture();
+    g.rows.DefaultCmsComponentLocalizationService.push({ ...g.rows.DefaultCmsComponentLocalizationService[0], versionId: 1, componentCode: 'another-component' });
+    g.rows.DefaultCmsPageRouteService.push(...[0, 1].map(versionId => ({ code: 'route-a', page: versionId ? 'another-page' : 'page-a', site: 'site-a', path: '/page', active: true, versionId, authoringScope: g.scope })));
+    const result = (await designer.getDraftComposition(g.request)).result;
+    assert.equal(result.draft.sections[0].components[0].localizations.length, 0);
+    assert.equal(result.draft.route, undefined);
+});
+
+test('position validation rejects incomplete, changed-tenant and contradictory generated evidence', async () => {
+    const validation = require('../src/service/validation/defaultCmsContractValidationService');
+    for (const corrupt of [
+        (_read, response) => { response.count++; },
+        (_read, response) => { response.code = 'ERR_FIND_00003'; },
+        (_read, response) => { response.acknowledged = false; },
+        (read) => { read.schemaModel.tenant = 'foreign'; },
+        (read) => { read.authData.permissions = []; },
+        (read, response) => { if (read.query.code) { response.result.push({ ...response.result[0] }); response.count++; } }
+    ]) {
+        const f = savedPageFixture(); const get = SERVICE.DefaultCmsComponentDetailService.get;
+        SERVICE.DefaultCmsComponentDetailService.get = async read => { const response = await get(read); corrupt(read, response); return response; };
+        await assert.rejects(validation.validateAssociation({ tenant: f.request.tenant, authData: structuredClone(f.request.authData),
+            model: { code: 'new-placement', source: 'page-a', target: 'new-block', slot: 'main', index: 7 } }), { code: 'ERR_CMS_00104' });
+        assert.equal(f.writes.length, 0);
+    }
+});
+
+test('grouped component intents receive distinct ordered placements and invalid order cannot silently default', async () => {
+    const f = fixture(); f.useRealPlacementValidation();
+    f.rows.DefaultCmsSlotDefinitionService.push({ code: 'main-slot', name: 'main', template: 'template', active: true });
+    const components = ['first', 'second'].map(code => ({ code, typeCode: 'component-type', properties: { title: code } }));
+    const body = { ...f.request.body, sections: [{ slot: 'main', components }, { slot: 'main', components: [{ code: 'third', typeCode: 'component-type', properties: { title: 'Third' } }] }] };
+    await designer.saveDraftComposition({ ...f.request, body });
+    assert.deepEqual(f.writes.filter(write => write.serviceName === 'DefaultCmsComponentDetailService').map(write => write.model.index), [0, 1, 2]);
+    for (const index of [-1, Number.MAX_SAFE_INTEGER + 1, 'invalid', null, '', false]) {
+        assert.throws(() => designer.normalizeDraft({ ...body, sections: [{ slot: 'main', index, components }] }), { code: 'ERR_CMS_00104' });
+    }
+});
+
+
+test('nested composition saves canonical parent placements and faithfully reopens translated child content', async () => {
+    const f = savedPageFixture(); f.useRealPlacementValidation();
+    const opened = (await designer.getDraftComposition(f.request)).result;
+    opened.draft.sections[0].components[0].sections = [{ slot: 'body', index: 0, components: [{
+        code: 'nested-child', typeCode: 'component-type', renderer: 'renderer', accessMode: 'PUBLIC',
+        properties: { title: 'Child content', retained: { enabled: true } },
+        localizations: [{ locale: 'ar', status: 'READY', properties: { title: 'محتوى فرعي' } }], media: []
+    }] }];
+    const saved = await designer.saveDraftComposition({ ...f.request, body: opened.draft });
+    assert.equal(saved.result.evidence.componentCount, 2);
+    const childPlacement = f.writes.find(write => write.serviceName === 'DefaultCmsComponentDetailService' && write.model.target === 'nested-child').model;
+    assert.equal(childPlacement.source, 'block-a'); assert.equal(childPlacement.authoringScope.siteCode, undefined);
+    const reopened = (await designer.getDraftComposition(f.request)).result;
+    const child = reopened.draft.sections[0].components[0].sections[0].components[0];
+    assert.equal(child.code, 'nested-child'); assert.equal(child.localizations[0].properties.title, 'محتوى فرعي');
+    assert.deepEqual(child.properties.retained, { enabled: true });
+    assert.notEqual(reopened.sourceVersion, opened.sourceVersion);
+    f.writes.length = 0;
+    const next = { ...f.rows.DefaultCmsComponentService.find(row => row.code === 'nested-child'), versionId: 1, properties: { title: 'Changed by another author' } };
+    f.rows.DefaultCmsComponentService.push(next);
+    await assert.rejects(designer.saveDraftComposition({ ...f.request, body: reopened.draft }), { code: 'ERR_CMS_00111' });
+    assert.equal(f.writes.length, 0);
+});
+
+test('nested cycles, shared identities and foreign children reject before any write', async () => {
+    for (const code of ['block-a', 'page-a', 'foreign-child']) {
+        const f = savedPageFixture();
+        const opened = (await designer.getDraftComposition(f.request)).result;
+        if (code === 'foreign-child') f.rows.DefaultCmsComponentService.push({ ...f.rows.DefaultCmsComponentService[0], code, authoringScope: { enterpriseCode:'enterprise-b',catalogCode:'catalog-b' } });
+        opened.draft.sections[0].components[0].sections = [{slot:'body',components:[{code,typeCode:'component-type',renderer:'renderer',properties:{title:'Unsafe'}}]}];
+        await assert.rejects(designer.saveDraftComposition({ ...f.request, body: opened.draft }), error => ['ERR_AUTH_00003','ERR_CMS_00104'].includes(error.code));
+        assert.equal(f.writes.length,0);
+    }
+    const f = savedPageFixture();
+    f.rows.DefaultCmsComponentDetailService.push({ ...f.rows.DefaultCmsComponentDetailService[0],code:'cycle',source:'block-a',authoringScope:{enterpriseCode:'enterprise-a',catalogCode:'catalog-a'} });
+    await assert.rejects(designer.getDraftComposition(f.request),{code:'ERR_CMS_00100'});
+});
+
+test('Framework nesting limits reject deep or oversized graphs and nested translations remain a publication gate', async () => {
+    const f = savedPageFixture(), opened = (await designer.getDraftComposition(f.request)).result;
+    let block=opened.draft.sections[0].components[0];
+    for(let index=0;index<8;index++){const child={code:'child-'+index,typeCode:'component-type',properties:{title:'Child'}};block.sections=[{slot:'body',components:[child]}];block=child;}
+    assert.throws(()=>designer.normalizeDraft(opened.draft),{code:'ERR_CMS_00104'});
+    const simple=(await designer.getDraftComposition(f.request)).result.draft;
+    simple.route={path:'/nested'};
+    simple.sections[0].components[0].sections=[{slot:'body',components:[{code:'unreviewed',typeCode:'component-type',localizations:[{locale:'ar',status:'DRAFT',properties:{title:'Unreviewed'}}]}]}];
+    await assert.rejects(designer.validatePublishReadiness.call({...designer,validateDraftGraph:async()=>({})},{...f.request,body:simple}),{code:'ERR_CMS_00106'});
+    assert.equal(f.writes.length,0);
+});
+
+
+test('Designer references select current versions and never revive retired heads', async () => {
+    const f = fixture();
+    f.rows.DefaultCmsTypeCodeService.splice(0, 2,
+        { code: 'page-type', kind: 'PAGE', active: true, versionId: 0, authoringScope: f.scope },
+        { code: 'page-type', kind: 'PAGE', active: true, versionId: 1, authoringScope: f.scope },
+        { code: 'component-type', kind: 'COMPONENT', active: true, versionId: 0, authoringScope: f.scope },
+        { code: 'component-type', kind: 'COMPONENT', active: true, versionId: 1, authoringScope: f.scope });
+    assert.equal((await designer.getSingle('DefaultCmsTypeCodeService', f.request,
+        { code: 'page-type', kind: 'PAGE', active: true }, 'ERR_CMS_00100')).versionId, 1);
+    assert.equal((await designer.authoringMetadata(f.request)).componentTypes.filter(row => row.code === 'component-type').length, 1);
+    f.rows.DefaultCmsTypeCodeService.push({ code: 'component-type', kind: 'COMPONENT', active: false, versionId: 2, authoringScope: f.scope });
+    await assert.rejects(designer.validateComponentForSlot(f.request, { code: 'child', typeCode: 'component-type', localizations: [] }, {}), { code: 'ERR_CMS_00100' });
+    assert.equal((await designer.authoringMetadata(f.request)).componentTypes.length, 0);
+    assert.equal(f.writes.length, 0);
+});
+
+test('Designer admits declared renderer aliases and active canonical mappings only', async () => {
+    const f = fixture();
+    const original = CONFIG.get;
+    CONFIG.get = key => key === 'cms' ? { designerAuthoring: { componentKinds: [
+        { typeCode: 'component-type', renderer: 'example.alias', label: 'Content', fields: [] }
+    ] } } : original(key);
+    const mappings = [{ code: 'component-type', renderer: 'example.canonical', active: true, versionId: 0, authoringScope: f.scope }];
+    SERVICE.DefaultCmsTypeCode2RendererService = { get: async request => { request.schemaModel = { tenant: request.tenant }; const result = mappings.filter(row => access.queryMatches(row, request.query)); return { code: 'SUC_FIND_00000', query: request.query, count: result.length, result }; } };
+    for (const renderer of ['example.alias', 'example.canonical'])
+        await designer.validateComponentForSlot(f.request, { code: 'child', typeCode: 'component-type', renderer, localizations: [] }, {});
+    await assert.rejects(designer.validateComponentForSlot(f.request,
+        { code: 'child', typeCode: 'component-type', renderer: 'unregistered.renderer', localizations: [] }, {}), { code: 'ERR_CMS_00100' });
+    assert.equal(f.writes.length, 0);
 });

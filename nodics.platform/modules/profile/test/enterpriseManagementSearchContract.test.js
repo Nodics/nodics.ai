@@ -14,7 +14,7 @@
  * @description Verifies the bounded, human-only, projected Profile enterprise-search contract and Assistant allowlist identity.
  * @layer test
  * @owner profile
- * Fixture maintenance is authored only; behavioral execution and installed qualification remain deferred.
+ * Uses declared source-only deployment placements; no installed qualification or browser acceptance.
  */
 const assert = require("assert");
 const properties = require("./helpers/identityCatalogueFixture").properties();
@@ -308,6 +308,10 @@ async function run() {
   const tenantGuard = require("../src/service/enterprise/defaultTenantProvisioningGuardService");
   global.SERVICE.DefaultTenantProvisioningGuardService = tenantGuard;
   global.SERVICE.DefaultEnterpriseTenantProvisioningService = require("../src/service/enterprise/defaultEnterpriseTenantProvisioningService");
+  global.SERVICE.DefaultDeploymentModuleOwnershipService = {
+    runtimePlacements: () => [{ projectCode: "testProject", environmentCode: "testLocal",
+      serverCode: "platform", modules: ["profile"] }],
+  };
   global.SERVICE.DefaultDatabaseConfigurationService = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/config/defaultDatabaseConfigurationService");
   global.SERVICE.DefaultRuntimeAuthorizationService = require("../src/service/identity/defaultRuntimeAuthorizationService");
   global.SERVICE.DefaultLoggerService = { runSensitiveOperation: async (_request, work) => work() };
@@ -374,6 +378,10 @@ async function run() {
     [{ code: "availableTenant" }],
   );
   assert.strictEqual(savedTenantRequest.tenant, "default");
+  assert.deepStrictEqual(Object.values(savedTenantRequest.model.properties.enterpriseProvisioning.deploymentScopes), [{
+    scope: { projectCode: "testProject", environmentCode: "testLocal", serverCode: "platform" },
+    modules: ["profile"],
+  }]);
   const creation = {
     enterpriseCode: "acme-new",
     setupRequestKey: service.commandDigest(["admin", "create-acme-new"]),
@@ -636,7 +644,43 @@ async function run() {
     (item) => item.id === "enterprises",
   );
   assert.equal(enterpriseItem.featureState, "ACTIVE");
-  assert.deepEqual(enterpriseItem.backendWorkspace, service.buildAccessWorkspace({ publicOnly: false }));
+  assert.equal(enterpriseItem.backendWorkspace.renderer, "axis.workspace.native");
+  assert.equal(enterpriseItem.backendWorkspace.workspaceCode, "profile.enterpriseManagement");
+  assert.equal(enterpriseItem.backendWorkspace.viewCode, "administration");
+  assert.equal(enterpriseItem.backendWorkspace.contractVersion, 1);
+  assert.equal(enterpriseItem.backendWorkspace.tabs, undefined);
+  const navigationRegistry = require("../../backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService");
+  const createPermission = routes.createEnterprise.permission;
+  const withoutCreate = enterpriseItem.requiredPermissions.filter(permission => permission !== createPermission);
+  assert(!navigationRegistry.authorizeNavigation(projected.navigation, withoutCreate)
+    .some(item => item.id === "enterprises"),
+  "the administration workspace must not advertise its creation form without the route-owned create permission");
+  assert(navigationRegistry.authorizeNavigation(projected.navigation, [...withoutCreate, createPermission])
+    .some(item => item.id === "enterprises"));
+
+  const definitions = require("./helpers/identityCatalogueFixture");
+  const sourceGroups = new Map(definitions.records("UserGroup").map(group => [group.code, group]));
+  const roleDefinitions = definitions.records("EnterpriseRole");
+  /** Resolves only shipped group ancestry for this offline presentation regression; creates no grants. */
+  const sourceRolePermissions = code => {
+    const role = roleDefinitions.find(item => item.code === code), visited = new Set(), permissions = new Set();
+    assert(role, code);
+    const visit = groupCode => {
+      if (visited.has(groupCode)) return;
+      visited.add(groupCode);
+      const group = sourceGroups.get(groupCode);
+      assert(group, groupCode);
+      (group.permissions || []).forEach(permission => permissions.add(permission));
+      (group.parentGroups || []).forEach(visit);
+    };
+    role.groupCodes.forEach(visit);
+    return [...permissions];
+  };
+  for (const role of ["OPERATOR", "VIEWER"])
+    assert(!navigationRegistry.authorizeNavigation(projected.navigation, sourceRolePermissions(role))
+      .some(item => item.id === "enterprises"), role);
+  assert(navigationRegistry.authorizeNavigation(projected.navigation, sourceRolePermissions("ENTERPRISE_ADMIN"))
+    .some(item => item.id === "enterprises"));
   assert(!workspace.tabs.some((tab) => tab.id === "registration"));
   const unrelatedIds = [
     "organisations-business-accounts",
@@ -684,9 +728,7 @@ async function run() {
   const priorGet = CONFIG.get;
   CONFIG.get = (key) =>
     key === "enterpriseManagement" ? configured : priorGet(key);
-  const layered = provider
-    .getCapability()
-    .navigation.find((item) => item.id === "enterprises").backendWorkspace;
+  const layered = await service.getAccessWorkspace(request);
   assert(!layered.tabs.some((tab) => tab.id === "public-only"));
   assert(
     !layered.tabs.some((tab) =>
@@ -712,6 +754,7 @@ async function run() {
     canonicalIdentity: "nodics.platform/modules/profile",
   };
   NODICS.getRawModule = () => rawModule;
+  NODICS.getModule = () => rawModule;
   NODICS.getServerName = () => "platformServer";
   SERVICE.DefaultRouterService = {
     prepareUrl: () => "http://localhost:4300/nodics/profile/v0",
@@ -757,7 +800,7 @@ async function run() {
   const bootstrapEnterprise = bootstrap.data.catalogue.profile.navigation.find(
     (item) => item.id === "enterprises",
   );
-  assert.deepEqual(bootstrapEnterprise.backendWorkspace, service.buildAccessWorkspace({ publicOnly: false }));
+  assert.deepEqual(bootstrapEnterprise.backendWorkspace, enterpriseItem.backendWorkspace);
 
   const assertPolicy = (policy) => {
     const tool = policy.record0.approvedOperations.find(

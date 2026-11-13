@@ -122,3 +122,9 @@ customer participant ancestry out of employees and retain current Profile
 Enterprise scope/DENY checks in each read owner. No Carbon mutation or settlement
 grant follows from this composition; installed changes use governed Profile
 catalogue updates and fresh authentication, never Init replay.
+
+Capability transport selects logical module plus explicit OPERATIONAL publication,
+with optional exact server/environment pins. Reject physical-role selectors.
+Preserve original bearer for participant reads and internal authentication for
+settlement/evidence. See the relocatable transport contract; do not infer grants
+from cohosting or rewrite persisted transaction evidence.

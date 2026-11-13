@@ -9,7 +9,10 @@ queue. Process installs it through `PROCESS_DEFINITION`; nImport may explicitly
 select this inactive domain contribution without activating Editorial in the
 Process runtime. The WCMS Staged content-type release stays independent.
 
-The future workflow release declares `selectionPolicy: "EXPLICIT"`. nService
+The approval definition requires a rejection reason before Process completes the
+task. Older pinned workflow versions keep their original policy and history.
+
+The workflow release declares `selectionPolicy: "EXPLICIT"`. nService
 projects it as optional USER-triggered data, and nImport excludes it from startup,
 implicit profiles and module-wide selections even if Editorial is active
 transitively. Select its exact release code on the PROCESS destination after
@@ -25,7 +28,7 @@ source release checksums and effective published graph checksums remain distinct
 Changed graphs or effective customer policy require a new release version.
 
 Existing deployment-owned releases remain historical installation evidence.
-Keep their files, manifests, identities and checksums intact. Future authoring
+Preserve installed receipts and version history. Release 0 ships only the Editorial-owned graphs. Changing authoring
 authority does not itself change installed ownership. Use Workflow's exact
 provenance adoption contract: equal graphs retain original provenance without
 writes, while explicitly selected forward migration creates a new immutable
@@ -94,7 +97,7 @@ the target nImport receipt even though Process retains its source history.
 The capability-owned live journey requires literal `execute: true` and
 `approvePublications: true` (CLI: `--execute --approve-publications`).
 Imports and `--help` perform no operations. Customer layers retain the site and
-runtime-relative Process contribution fixtures. Reject path traversal and symlink
+optional runtime-relative partner fixtures. Kickoff reads the Editorial module’s own Init manifest and workflow graphs. Reject path traversal and symlink
 escapes; verify installed contribution code, release version, graph, checksum
 and current published version before authoring. Never install definitions or
 repair permissions from acceptance.
@@ -110,7 +113,7 @@ from the framework root for isolated evidence; this does not qualify a deploymen
 
 - News and Blog are initial `editorialContentType` records, not runtime modules.
 - `editorialArticle` is the aggregate root; localized copy lives in `editorialArticleLocalization`.
-- Validation and readiness are side-effect free.
+- Readiness inspection is read-only; successful validation marks eligible authoring input READY through Editorial.
 - Process executes workflow and task state; Editorial contributes one allow-listed revision-correlated action adapter.
 - Cron remains scheduler authority through Process trigger metadata.
 - nPublish owns validation, activation, rollback, and withdrawal transitions; Editorial supplies domain and version adapters.
@@ -152,3 +155,346 @@ isolated stores; this evidence does not claim live deployment acceptance.
 After the Process claim succeeds and its source context is valid, the callback uses nAuth's existing internal system auth data for the bounded domain persistence request. Preserve the original principal metadata and keep this request local; never grant those groups to the incoming runtime token or acquire persistence authority before a successful claim. The existing schema policy, exact revision/instance checks and nPublish owner still apply.
 
 The existing Online publication target likewise requires a scoped Editorial runtime principal and the Online role before using internal auth data for its target-local persistence. Incoming runtime claims remain unchanged.
+
+## Publication context configuration
+
+Ordinary module properties select publication defaults using the existing nConfig
+context binding (`name: publication`). Runtime display labels never select source
+providers or versioned schema policy. Staged selects source transport; Online and
+Operational do not. Missing/unknown context rejects configuration. This selection
+does not supply a target connection, installed qualification, actor grant or
+publication approval. Later deployment overrides retain normal inheritance.
+
+
+## Publication transport placement
+
+Publication transport uses the logical owning module and explicit destination
+`publication` (Online for deployment/status/rollback; Staged for Media source
+proof). The calling module must be locally active in the matching source
+publication context. Physical runtime role names do not select or authorize
+these calls. Preserve explicit connection selection, scoped internal tokens,
+original actor/tenant evidence, operation keys and exact receipt readback;
+configuration alone grants no publication or mutation authority.
+
+
+## Operational action destinations
+
+Owner-configured action targets identify the canonical implementing module and
+explicit `OPERATIONAL` publication, never a physical Commerce or Process role.
+Copilot coupon/notification actions target `digitalCore`; CMS approval and
+Editorial action claims target `workflow`. Preserve existing owner grants,
+original employee or scoped runtime credentials, execution handles, actor/receipt
+bindings and uncertain-operation recovery. CMS/Editorial callbacks additionally
+require local domain ownership in Staged context. Deployment overrides select
+connections; framework-owned publication defaults are inherited.
+
+## Saved authoring evidence
+
+`editorial:init-v001` installs News/Blog content-type reference policies through
+nImport. Its REFERENCE/NONE lifecycle is deliberate. The effective content-type
+schema restricts authoring to Staged using the existing shared authoring policy's
+`allowedStages: ['STAGED']` declaration, independently of publishable content.
+Never mark this reference policy as a public article merely to admit import, nor
+permit Online reference edits to bypass source policy. Normal permissions and
+governed import evidence remain required. `editorialFoundationAdmission.test.js`
+qualifies actual manifest discovery and destination admission with no installation
+writes and confirms unchanged article/projection restrictions.
+
+The secured validation, readiness and submission operations accept article identity
+and an exact positive safe-integer business revision. A route article identity must
+match the body. They load the actual tenant-scoped article, bounded localizations
+for that revision and one active content-type policy through generated services
+with the original actor. Missing, denied, malformed, stale, duplicate or foreign
+source evidence fails closed. The current owner policy supplies required locales
+and the review workflow; caller policy/copy/status/workflow fields are not authority.
+These operations require the Staged publication context.
+
+Validation changes DRAFT or CHANGES_REQUESTED to READY using a code/revision/status
+predicate and exactly one acknowledged update. READY validation can inspect the
+same saved copy without another transition. Review and publication states cannot
+be reset by validation. Readiness is read-only and reports the inspected revision
+and current article status separately from content readiness.
+
+Submission requires the actual saved READY state. Process receives the exact
+deterministic instance identity, saved name and current owner workflow. Only a
+matching Process instance receipt permits the conditional READY to IN_REVIEW
+update. A wrong or uncertain receipt is not success. If the article CAS fails
+after Process accepts, report inspection of the exact instance; do not replay,
+cancel Process or overwrite the newer article. Existing Process callbacks retain
+their own claim and revision checks.
+
+`editorialStoredAuthoringEvidence.test.js` composes the actual authoring,
+validation, readiness and submission services with scoped stores and exercises
+forged inputs, required-locale policy, malformed/denied/stale reads, write conflicts
+and exact Process receipts. It does not by itself establish atomic draft saving or published editing; the
+separate draft-command contract and composed tests below cover those boundaries.
+
+The existing secured article workflow GET authorizes `editorial.workflow.read`
+through the original human Staged scope, then reads the route-selected article
+through the existing draft owner's unambiguous root read. Request-body workflow
+or article fields cannot select another instance. Its exact saved review pointer
+must match the current article's deterministic revision identity; an absent source
+pointer permits inquiry of that identity for uncertain submission recovery.
+Process detail must match the instance, Editorial owner, article and revision.
+The source revision, status and pointer are rechecked before returning detail.
+This history read does not depend on current content-type policy. Typed Process
+instance absence maps to review-specific `ERR_EDT_00013` (404); authorization,
+transport uncertainty and malformed or changed evidence never become absence.
+No submission, claim, decision, persistence or automatic retry occurs. Preserve
+these boundaries in service overrides and keep route authorization independent.
+
+## Exact article withdrawal
+
+The existing secured `POST /authoring/articles/:articleCode/withdraw` requires
+`publicationCode` and the inspected nPublish `expectedRevision`. The article
+revision and publication concurrency revision are different values, and zero
+is a valid publication revision. Axis prepares a fresh exact-source inspection,
+shows identity/state/revisions and requires explicit confirmation. No mutation
+is sent while preparing.
+
+Editorial reads the actual tenant-scoped article and requires its retained
+publication pointer or separately verified current deployment, exact source
+revision and Editorial article root to match the owning publication. A body-supplied model cannot select another route root
+or replace lifecycle evidence. nPublish retains concurrency, state transitions,
+target withdrawal and audit authority. Only confirmed WITHDRAWN evidence allows
+a conditional article status update; the publication reference remains recorded.
+If withdrawal completed but article readback failed, inspect again and explicitly
+reconcile the same withdrawn publication. There is no automatic replay.
+
+Partners may customize labels/theme through the existing Axis presentation seam
+and tighten owner policy in a later-layer Editorial service. Preserve exact
+article/publication correlation, original actor/tenant context, publication CAS,
+retained history and failure evidence. Do not substitute the article revision for
+the nPublish revision or grant persistence authority in the browser.
+`editorialWithdrawalContract.test.js` covers valid/zero/stale revisions, denied
+reads, wrong roots/pointers, exact retry reconciliation and article CAS failure.
+Live acceptance additionally requires public detail HTTP 404, not a denied or
+failed delivery request.
+
+
+## Owner draft command boundary
+
+The module README specifies the versioned draft create/workspace/save/inspect/archive
+APIs. Their static secured routes and schema `aggregateOperations` are the frontend
+transport authority. Article creation uses the existing Workbench create-operation
+seam. Generic HTTP article update/delete and localization mutations are unavailable;
+the governed localization Staged `saveAll` source-import exception remains explicit.
+Neither that import seam nor generated internal writes relax human API authorization.
+
+Save uses the existing `DefaultDatabaseTransactionService` for the Editorial root
+and locales with the same opaque transaction context, original employee and tenant.
+Policy and foreign Site/Author reads remain outside that copy transaction. Every
+stored translation moves to the same new business revision; only changed selected
+copy is patched. Failed writes, zero acknowledgements and invalid readback abort the
+transaction. Existing database transactions must be enabled and qualified; no
+non-atomic fallback exists. READY locales alone enter dependency/projection building.
+
+The bounded `lastAuthoringCommand` field is private editor recovery evidence, not a
+second history store. Inspection returns only evidence bound to the same original
+actor, command key and starting revision. Missing evidence remains UNKNOWN.
+`publicationSourceRevision` records which earlier revision the retained nPublish
+pointer describes; an ordinary save cannot change publication state. Source publication
+loads the actual APPROVED revision and requires a matching ONLINE receipt before its
+conditional PUBLISHED update. Uncertainty after publishing requires owner inspection.
+The atomic Online target and its isolated qualification are described below; native deployment acceptance remains separate.
+
+The canonical live acceptance tool now creates and saves via owner commands, carries
+the acknowledged business revision through validation/review/publication, and never
+uses generic article/localization writes. Its explicit mutation/publication flags,
+Process provenance checks, denied-stage stop behavior and exact delivery-404 gate
+remain unchanged.
+
+
+## Atomic Online publication and source ownership
+
+Editorial's existing Online target uses the database transaction owner for the
+complete site/language projection set, target-local article head, URL claims and
+operation receipts. Both projection and receipt schemas opt into the existing
+side-effect-free transaction contract. Receipt revisions are database-managed CAS
+tokens; source revisions remain Editorial business revisions. There is no local
+Staged fallback, new generic target store, new lifecycle journal or database index.
+Staged must select its distinct Online transport. Existing scoped runtime admission
+and target-local persistence authority remain unchanged.
+
+The version provider declares nPublish's qualified `targetReceiptContract: 'v1'`.
+Activation carries the original retained operation key, previous Online version and
+previous pointer revision; revision zero represents a qualified absent pointer.
+The target returns a correlated durable operation receipt, not submitted models or
+update counts. Exact receipt replay is read-only and retains historical completion
+independently of current visibility. UNKNOWN inspection does not prove failure.
+Failures abort the whole local transaction. Concurrent first publication and URL
+claims are fenced by existing unique record identity and managed pointer CAS.
+Unqualified legacy CURRENT rows require explicit owner review; they are not adopted.
+
+Rollback reaches the same Online owner and restores only the complete retained
+predecessor of that exact activation. It supersedes the replacement, respects
+intervening article/URL claims and refuses explicitly withdrawn predecessors.
+Withdrawal affects only its exact retained activation; withdrawing an older request
+cannot remove a newer Online set. Both operations retain original command receipts
+in the same transaction. No automatic compensation or new approval authority exists.
+
+Before nPublish effects, the Staged article claims a bounded `publicationIntent`
+containing only contract version, exact request code and source revision. This
+source-row CAS competes with draft save/archive; copy cannot change beneath a
+publication request. An older publication reference remains intact. Confirmed
+ONLINE plus exact source completion clears the intent and records the new reference.
+Unknown outcomes retain the original intent for inspection. Explicit resume uses
+that same request; nPublish FAILED recovery remains with its owning lifecycle APIs.
+Never clear intent fields or force article status through database edits.
+
+Public delivery requires active CURRENT rows under trusted tenant/site/language,
+publication windows and embargo. Allowlisted inert component filters cannot replace
+those predicates. Malformed/denied owner reads are unavailable evidence; ambiguous
+slugs fail explicitly rather than selecting an arbitrary article.
+
+`editorialAtomicOnlineTarget.test.js`, `editorialOnlineProjectionService.test.js`,
+`editorialPublicationService.test.js` and `editorialPublicVisibility.test.js` cover
+transaction failure, uncertainty, original receipt recovery, concurrent ownership,
+rollback/withdrawal, source fencing and public scope using isolated model ports.
+Native deployment and final fresh-start acceptance remain separate requirements.
+
+
+Managed receipt creation uses the existing managed-save owner with an absent revision
+selector (`revision: 0`); it must not pass ordinary `insertOnly`, which nDatabase
+correctly rejects for managed schemas. Managed updates request `returnModified`
+and require both one affected row and the actual canonical modified model/revision.
+Projection creation retains its ordinary insert-only path. The target fixture composes
+`DefaultModelConcurrencyService` and the generated save initializer before its
+isolated provider primitives, preserving the distinct admission/acknowledgement
+shapes rather than simulating them as identical saves.
+
+
+Submitting a newer READY revision for review changes only its review status and
+workflow correlation. It preserves any older `publicationCode` and
+`publicationSourceRevision` in both persistence and the returned article. Review
+submission neither withdraws that copy nor removes the user's route to inspect it.
+The saved owner reference, not a body-supplied pointer, remains authoritative.
+
+
+## Command recovery and current deployment evidence
+
+Editorial separately opts into nPublish's `targetCommandReceiptContract: 'v1'`.
+Rollback and withdrawal require the journal-derived original proof and actual
+lifecycle revision. Source transport and Online target independently correlate
+its key, operation, publication/root/source, activation and target hash. Original
+command receipts retain exact projection codes; replay is read-only even after a
+newer deployment. Qualified completion is not proof of current visibility.
+
+Target status additionally returns `deployment: null` for verified absence or
+`{ publicationCode, sourceRevision, activationKey }` correlated with its current
+head, complete projections and deployment receipt. Source `getDeployment` returns
+NONE, DEPLOYED (including exact version and target revision), or raises an owner
+error. The authorized workspace converts unavailable/contradictory observations
+to UNKNOWN without hiding saved working copy. It does not add persisted active
+state or rewrite the article's latest `publicationCode`/source revision. Axis
+shows deployment separately from history, including a restored earlier request.
+Deployment is not public access: dates, embargo and access rules remain delivery
+owner concerns. A configured optional search projection hook reads the current
+qualified complete set, rather than indexing/removing a historical command result;
+this does not claim a search provider is installed or externally atomic.
+
+Withdrawal accepts the exact retained request or a separately owner-proven current
+deployment of the same article. A restored selection must match actual nPublish
+root/source, target version and activation key before lifecycle effects. A terminal
+WITHDRAWN read can reconcile the same article without rewriting its newer draft,
+review or latest publication reference. Only withdrawal of the retained request
+for the current PUBLISHED source may change that source status. Stale publication
+revisions fail before mutation. Archive is held while any copy is deployed or a
+retained publication's deployment absence cannot be verified.
+
+The existing read/manage permissions, human access tokens, scoped target runtime
+credentials, Source/Online separation, transaction owner and Process approval
+remain required. No direct database CRUD, generic model mutation, new target
+store, automatic compensation or browser lifecycle authority is introduced.
+
+
+Verified NONE deployment on a newer non-PUBLISHED working source removes the
+irrelevant withdrawal action from Axis. PUBLISHED sources may still inspect a
+retained WITHDRAWN request for exact source reconciliation. A retained ROLLED_BACK
+request with no deployment is readable history, not a withdrawal command. The
+source/target API and permission checks remain authoritative; presentation does
+not rewrite source status or publication pointers.
+
+
+## Unchanged route claims during a renewed activation
+
+A renewed activation of the same current immutable copy may retain identical
+PUBLISHED route claims for the same publication. After qualifying current head
+and full route/source/projection/digest identity, Editorial skips those unchanged
+claim writes. The existing transaction and managed article-head CAS still fence
+same-article transitions, and foreign/ambiguous route admission remains unchanged.
+A new original activation retains a distinct deployment receipt and switches its
+head normally. Do not manufacture claim changes with publication timestamps or
+accept a zero-modified acknowledgement as a revision advance. Actual receipt
+updates continue to require exact positive modified-model/revision evidence.
+The same-instant composed test freezes Date and uses the actual managed
+concurrency owner: valid renewal succeeds, changed immutable content rejects and
+all committed state remains unchanged on rejection. No native source status or
+receipt is edited to create this test condition.
+
+
+The canonical Editorial Content authoring workspace declares the same existing
+lifecycle actions as News and Blogs. BackOffice independently filters each action
+by its existing permission; the route and backend enforcement remain unchanged.
+A publication handoff opens this admitted all-types workspace filtered to the
+current working article only when one qualified Staged source matches its origin.
+Historical publication copy can differ from that current article. Ambiguous or
+unavailable origins offer no guessed link. Customize navigation labels or owner
+presentation without adding a browser registry, grants or direct persistence.
+`editorialBackofficeCapability.test.js` protects canonical action parity and
+permission-filtered projections; native journeys must separately qualify handoffs.
+
+
+## Configured article image intake
+
+The draft workspace optionally projects `mediaIntake` contract version 1 from
+`editorial.authoring.mediaIntake`: a source-context code and bounded inert
+English/Arabic copy. It contains no folder, provider, URL, credential or upload
+permission. Layer the purpose/copy in module configuration; Media owns current
+safe contexts, folder/format selection and file-specific policy. A missing or
+incompatible purpose disables inline intake while preserving article inspection.
+
+Axis reviews the actual image against Media APIs under the current employee and
+one admitted Staged owner. One original generated media reference and SHA-256
+bind the upload and subsequent read-only inspection. Only an exact positive
+persisted receipt or Media's verified unchanged versioned bytes offers explicit
+association with the open draft. Uncertain outcomes retain the original reference
+and never resend or overwrite. A nonversioned inspection cannot prove unchanged
+bytes. Selecting another actor/source retires callbacks; an upload blocks article
+commands while pending. Uploading is separate from using the image, saving the
+article, review and normal Media/Editorial publication. No direct database repair,
+generated Media CRUD write or new storage/permission authority is introduced.
+
+Review setup and content readiness are separate. A saved READY article still
+requires its selected published Process definition. On a fresh deployment, review
+the explicit `editorial:editorialWorkflows` selection in Data Exchange →
+Initialization data on the Process runtime, validate its contribution plan, then
+install through the ordinary nImport operation. Do not make this release implicit
+or install it from an acceptance harness. Existing provenance still requires the
+separate reviewed adoption/migration contract.
+
+A typed missing Process definition returns `ERR_EDT_00009` (409), with setup
+guidance; it never claims that the saved article is missing. Remote authorization
+denials retain 401/403 through `ERR_EDT_00012`/`ERR_EDT_00011`. Unconfirmed transport,
+malformed response and other remote failures return `ERR_EDT_00010` (502), without
+echoing upstream diagnostics or replaying the command. Refresh the saved article
+and inspect its deterministic review instance before another explicit submission.
+Colocated Process errors retain their original authority, except the same typed
+missing-definition setup projection. No open review task requires revision
+inspection (409), rather than reporting an absent article. Partners may customize
+these owner status messages through the ordinary later-layer status registry;
+clients must not infer error kind from English wording.
+
+Archived article inspection is independent of the current content-type policy.
+The workspace reads only an actually saved ARCHIVED root and its bounded exact
+revision translations under the original employee scope, then rechecks that root.
+An inactive or removed policy therefore does not erase retained history. This
+read-only history response has no current required-locale readiness claim and
+exposes only the existing INSPECT operation. Forged caller status/history flags
+cannot select it. Other article states, copy saves, validation, review and
+publication retain the active saved-policy requirement. Denied, ambiguous,
+foreign-revision or oversized reads remain errors; no record, policy or receipt is
+created or repaired during inquiry. Customize the existing private archivedSource
+projection while retaining its owner state, scope, bound and recheck guards.
+
+Featured images use workspace `featuredMedia` contract version 1: exact saved mediaCode, readiness/status, bounded Framework presentation and optional Media-owned dependency/handoff. Readiness is checked at validation, submit and publication before the article intent claim. Unknown, retired, inactive, private, wrong-enterprise, stale-version and missing-byte evidence blocks readiness. An independent browser preview is not qualification. Domain source selection stays Editorial-owned; physical qualification stays Media-owned.

@@ -48,3 +48,11 @@ required completed task, or a claimant from another tenant/environment. If the
 domain commits and the response is lost, use the governed incident retry: it
 receives a fresh handle and the domain reuses its existing committed receipt.
 Do not copy the transport into a customer module or create another token issuer.
+
+Inspect `/triggers?limit=25&definitionCode=reviewProcess` using an ordinary authorized
+request. Operations sends `{definitionCode: "reviewProcess"}` as the record query
+and `{pageNumber: 1, pageSize: 25, sort: {code: 1}}` as generated read options.
+An existing relationship therefore remains visible after creation. Do not resend
+creation because a list failed or assume this metadata activates a Cron timer.
+
+A completed CMS review task with an unfinished callback reports DECISION_CALLBACK_PENDING. Inspect the original failed action and use its existing retry command after the CMS owner recovers; do not submit the reviewer decision again. A completed rejection remains REJECTED even though the workflow instance is COMPLETED.

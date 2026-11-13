@@ -54,6 +54,21 @@ const documentationSource = {
   additionalProperties: false,
   required: ["id", "label", "type", "route", "order", "connectionModule"],
   properties: {
+    guide: { enum: ["framework", "axis", "project"] },
+    projectId: moduleName,
+    projectLabel: { type: "string", minLength: 1, maxLength: 256 },
+    channelId: moduleName,
+    channelLabel: { type: "string", minLength: 1, maxLength: 256 },
+    channelReferences: {
+      type: "array", maxItems: 128, uniqueItems: true,
+      items: {
+        type: "object", additionalProperties: false, required: ["sourceId", "channelId", "channelLabel"],
+        properties: { sourceId: { type: "string", minLength: 1, maxLength: 128 }, channelId: moduleName,
+          channelLabel: { type: "string", minLength: 1, maxLength: 256 } }
+      }
+    },
+    articleRoutes: { type: "array", maxItems: 128, uniqueItems: true,
+      items: { type: "string", pattern: "^/docs(/[A-Za-z0-9_-]+)+$", maxLength: 512 } },
     id: { type: "string", minLength: 1, maxLength: 128 },
     label: { type: "string", minLength: 1, maxLength: 256 },
     labelKey: { type: "string", minLength: 1, maxLength: 256 },
@@ -254,8 +269,17 @@ const axisPolicy = {
     "source",
   ],
   properties: {
-    contractVersion: { type: "integer", minimum: 1 },
+    contractVersion: { type: "integer", minimum: 0 },
     screenLockEnabled: { type: "boolean" },
+    sessionRecoveryPresentation: {
+      type: "object",
+      additionalProperties: false,
+      required: ["lockedMessage", "expiredMessage"],
+      properties: {
+        lockedMessage: { type: "string", minLength: 1, maxLength: 1024 },
+        expiredMessage: { type: "string", minLength: 1, maxLength: 1024 },
+      },
+    },
     idleTimeoutSeconds: { type: "integer", minimum: 60, maximum: 86400 },
     recentNavigationLimit: { type: "integer", minimum: 1, maximum: 24 },
     revision: { type: "integer", minimum: 0 },
@@ -680,6 +704,7 @@ const backendWorkspaceField = {
     },
     required: { type: "boolean" },
     maximumLength: { type: "integer", minimum: 1, maximum: 4000 },
+    minimumLength: { type: "integer", minimum: 1, maximum: 4000 },
     defaultValue: {},
     bindToPath: { type: "boolean" },
     defaultFromParameter: {
@@ -822,6 +847,13 @@ const backendWorkspaceSection = {
     public: { type: "boolean" },
     endpoint: backendWorkspaceEndpoint,
     rowNavigation: backendWorkspaceRowNavigation,
+    resultNavigation: backendWorkspaceRowNavigation,
+    resultSummary: { type: "array", minItems: 1, maxItems: 8, uniqueItems: true, items: {
+      type: "object", additionalProperties: false, required: ["field", "label"], properties: {
+        field: { type: "string", pattern: "^[A-Za-z][A-Za-z0-9_]{0,63}$", maxLength: 64 },
+        label: { type: "string", minLength: 1, maxLength: 128 }
+      }
+    } },
     readSource: backendWorkspaceReadSource,
     columns: {
       type: "array",
@@ -843,6 +875,7 @@ const backendWorkspaceSection = {
     },
   },
   allOf: [
+    { if: { anyOf: [{ required: ["resultNavigation"] }, { required: ["resultSummary"] }] }, then: { properties: { type: { const: "form" } } } },
     {
       if: { required: ["rowNavigation"] },
       then: { properties: { type: { const: "listing" } } },
@@ -1276,6 +1309,7 @@ const functionalModuleRegistration = {
     "catalogueRevision",
   ],
   properties: {
+    allowedActions: { type: "array", uniqueItems: true, items: { enum: ["register", "activate", "rollback", "deactivate", "deregister", "installSampleData"] } },
     project: moduleName,
     functionalModule: moduleName,
     displayName: { type: "string", minLength: 1, maxLength: 160 },
@@ -1408,6 +1442,8 @@ const startupFindingAcknowledgement = {
   required: ["acknowledged", "acknowledgedAt", "acknowledgedBy"],
   properties: {
     acknowledged: { type: "boolean" },
+    evidenceCode: { type: "string", maxLength: 128 },
+    expiresAt: { type: "string", format: "date-time" },
     acknowledgedAt: { type: "string", format: "date-time" },
     acknowledgedBy: { type: "string", minLength: 1, maxLength: 160 },
     reasonCode: { type: "string", minLength: 1, maxLength: 160 },
@@ -1967,7 +2003,7 @@ module.exports = {
         required: ["code", "publication"],
         properties: {
           code: { type: "string", minLength: 1, maxLength: 64 },
-          publication: { type: "string", minLength: 1, maxLength: 64 },
+          publication: { type: "string", enum: ["STAGED", "ONLINE", "OPERATIONAL"] },
         },
       },
       registrations: { type: "array", minItems: 1, items: registration },
@@ -2071,14 +2107,17 @@ module.exports = {
     required: [
       "compatibility",
       "modules",
-      "catalogue",
       "availability",
       "uiComposition",
       "documentationSources",
       "axisPolicy",
       "startupValidation",
-      "operationalReadiness",
       "tenantCode",
+    ],
+    anyOf: [{ required: ["catalogue"] }, { required: ["projection", "effectiveNavigationComposition"] }],
+    oneOf: [
+      { required: ["operationalReadiness"] },
+      { required: ["operationalReadinessObservation"] },
     ],
     properties: {
       axisInitializationAdmission: {
@@ -2087,6 +2126,8 @@ module.exports = {
       compatibility: { type: "object" },
       modules: { type: "object" },
       catalogue: { type: "object" },
+      projection: { enum: ["axis-client-v1"] },
+      effectiveNavigationComposition: { type: "object", required: ["navigation"], properties: { navigation: { type: "array", items: { type: "object" } } } },
       availability: {
         type: "object",
         additionalProperties: moduleAvailability,
@@ -2096,6 +2137,14 @@ module.exports = {
       axisPolicy: axisPolicy,
       startupValidation: startupValidationReport,
       operationalReadiness: operationalReadinessReport,
+      operationalReadinessObservation: {
+        type: "object", additionalProperties: false, required: ["contractVersion", "mode"],
+        properties: { contractVersion: { enum: [1] }, mode: { enum: ["ON_DEMAND"] },
+          presentation: { type: "object", additionalProperties: false,
+            required: ["openLabel","title","description","refreshLabel","closeLabel","loadingMessage","errorMessage","checkedAtLabel","receiptLabel","buildLabel","stateLabel","nextActionLabel","historicalMessage"],
+            properties: Object.fromEntries(["openLabel","title","description","refreshLabel","closeLabel","loadingMessage","errorMessage","checkedAtLabel","receiptLabel","buildLabel","stateLabel","nextActionLabel","historicalMessage"].map(key => [key, { type: "string", minLength: 1, maxLength: 1024 }])) }
+        },
+      },
       tenantCode: { type: "string" },
     },
   },

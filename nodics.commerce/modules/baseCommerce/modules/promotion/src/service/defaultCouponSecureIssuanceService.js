@@ -269,8 +269,7 @@ module.exports = {
     prepare: async function (request, intent, campaign) {
         const admission = SERVICE.DefaultPromotionBudgetAdmissionService, setup = SERVICE.DefaultPromotionSetupContributionService;
         const r = admission.context(setup.campaignRequest(request, campaign));
-        const role = CONFIG.get('runtimeRole');
-        if ((typeof role === 'string' ? role : role?.code) !== 'COMMERCE' ||
+        if (SERVICE.DefaultModuleService?.isLocalModuleActive?.('promotion') !== true || CONFIG.get('runtimeRole')?.publication !== 'OPERATIONAL' ||
             !intent || Object.keys(intent).sort().join(',') !== 'batchCode,commandReference,promotionCode,quantity' ||
             !['batchCode', 'commandReference', 'promotionCode'].every(key => /^[A-Za-z0-9_.:-]{1,128}$/.test(intent[key] || '')) ||
             intent.promotionCode !== r.promotionCode || !Number.isSafeInteger(intent.quantity) || intent.quantity < 1 || intent.quantity > 1000) this.fail();

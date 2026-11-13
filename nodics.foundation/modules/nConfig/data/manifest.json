@@ -29,7 +29,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "config accessGroups",
       "description": "Explicit config identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "config",
@@ -74,7 +74,7 @@
         {
           "moduleName": "cms",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
           "partition": "DEFAULT"
         },
@@ -158,20 +158,20 @@
         {
           "moduleName": "product",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
@@ -216,7 +216,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "config",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -238,16 +238,16 @@
       "pages": 5,
       "components": 5,
       "routes": 5,
-      "releaseChecksum": "7c573b61bb63fbc051170d42d8629d226bead8bf4ade9b88b859a3ed11f607c9",
+      "releaseChecksum": "03f602fb9573b3a41daddcb366dd457113bcb02c1eb8db7aac8b0f21b94016ca",
       "generatedHashes": {
         "docs-v001/records/documentation/configDocumentationNodeData.js": "9a319d8cadc2a318b9d58f76978ecafbd38e671d2381e37ae1ad2a893fa97013",
-        "docs-v001/records/documentation/configDocumentationPageMetadataData.js": "5b30d0aba2202de688c969a47a5dac0a290c740d5f68f7221fa711fa5135e525",
-        "docs-v001/records/documentation/configDocumentationPublicationStateData.js": "512c11444e86766a34722aa88d3f7b8e0a9095578b36d7733fbdb8264010cd4e",
-        "docs-v001/records/documentation/configDocumentationSearchMetadataData.js": "ff6aeb2c78be64978c565649cb47955c0c0b4c7c69f89118b16c3058c2f21235",
-        "docs-v001/records/documentation/configDocumentationComponentData.js": "137a77ba2b40d7f5867c49dca09a7af31b4c14ee953b8cd918d8b1bcbf77d566",
+        "docs-v001/records/documentation/configDocumentationRelease003PageMetadataData.js": "2cca029ae1e48449870ae663c983fa2ddf57e5d4b37d13650dedf018b86a509f",
+        "docs-v001/records/documentation/configDocumentationRelease003PublicationStateData.js": "19123f672a284ee1a1ff5e15dba4e2f9fb187b2ea9ec0dd233998db6a241d77c",
+        "docs-v001/records/documentation/configDocumentationRelease003SearchMetadataData.js": "4a294a8be459865ad9b3f28f4c2617aaf9d508cf950befd0d4c419da8587e010",
+        "docs-v001/records/documentation/configDocumentationRelease003ComponentData.js": "1211ce0efab3993e3d60748c60b749998bfef72f8e5456afc10a53dceabfe56a",
         "docs-v001/records/documentation/configDocumentationPageData.js": "be5c9f2074639a07d158e20a1d5f12108bb89b18c6983c2c54f73343c8058827",
         "docs-v001/records/documentation/configDocumentationRouteData.js": "3dfa3d3938b9d7030029a51ec9fa460f3afb335ad1b4da3f47ddb4094125826b",
-        "docs-v001/headers/100_configDocumentationContentPackHeader.js": "d74a609bb5d4125ca035bef56158f4ae5f767c1d928db05a4b23ce4a56dc0882"
+        "docs-v001/headers/100_configDocumentationRelease003ContentPackHeader.js": "ec4ef3291e02577d926361d0fc7571984b02a6a0c45a09747039162bca37d4b4"
       },
       "includes": [
         {

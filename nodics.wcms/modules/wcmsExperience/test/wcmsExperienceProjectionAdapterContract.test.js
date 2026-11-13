@@ -14,7 +14,7 @@
 const assert = require('node:assert/strict');
 const projection = require('../src/service/defaultWcmsExperienceProjectionService');
 
-/** @module wcmsExperience/test/wcmsExperienceProjectionAdapterContract @description Verifies WCMS Experience uses targeted Discovery lookup before fixture fallback. @layer test @owner wcmsExperience */
+/** @module wcmsExperience/test/wcmsExperienceProjectionAdapterContract @description Verifies WCMS Experience requires targeted Discovery lookup and never substitutes fixtures. @layer test @owner wcmsExperience */
 
 (async () => {
     let searchCalls = [];
@@ -38,6 +38,7 @@ const projection = require('../src/service/defaultWcmsExperienceProjectionServic
     global.SERVICE = {
         DefaultDiscoveryRuntimeService: {
             search: async request => {
+                assert.deepEqual(request.targetAuthority, {publication: 'ONLINE'});
                 searchCalls.push(request);
                 return [{
                     code: 'indexed-placement',
@@ -52,6 +53,7 @@ const projection = require('../src/service/defaultWcmsExperienceProjectionServic
                 }];
             }
         },
+        DefaultWcmsExperienceResolverService: require('../src/service/defaultWcmsExperienceResolverService'),
         DefaultCmsComponentService: {
             find: () => { throw new Error('Resolver must not scan CMS components for placement resolution.'); }
         }
@@ -89,7 +91,11 @@ const projection = require('../src/service/defaultWcmsExperienceProjectionServic
         targetType: 'COLLECTION',
         targetCode: 'unknown'
     });
-    assert.equal(result[0].code, 'fixture-default');
+    assert.deepEqual(result, [], 'empty Discovery results must not resolve fixtures');
+    global.SERVICE.DefaultDiscoveryRuntimeService.search = async () => { throw new Error('private provider detail'); };
+    await assert.rejects(projection.findPlacements({}), error => error.code === 'ERR_WCMS_EXPERIENCE_INDEX_SERVICE_UNAVAILABLE');
+    delete global.SERVICE.DefaultDiscoveryRuntimeService;
+    await assert.rejects(projection.findPlacements({}), error => error.code === 'ERR_WCMS_EXPERIENCE_INDEX_SERVICE_UNAVAILABLE');
 
     console.log('WCMS Experience projection adapter contract validated');
 })().catch(error => { console.error(error); process.exit(1); });

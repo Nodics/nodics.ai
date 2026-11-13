@@ -19,7 +19,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const service = require('../src/service/defaultDiscoveryDocumentProjectionService');
+const service = require('../src/service/defaultDiscoveryProjectionOwnerService');
 
 test('Discovery save resolves the logical schema identity without a physical registry alias', async (t) => {
     const saved = { NODICS: global.NODICS, SERVICE: global.SERVICE, CLASSES: global.CLASSES };
@@ -44,6 +44,8 @@ test('Discovery save resolves the logical schema identity without a physical reg
         assert.equal(request.searchModel.indexName, 'fixture_discovery_projection');
         return { acknowledged: true };
     } } };
+global.SERVICE.DefaultModuleService = {isLocalModuleActive: () => true, isCurrentRuntimeAuthority: () => true};
+global.SERVICE.DefaultDiscoveryDocumentProjectionService = {targetAuthority: () => ({publication: 'OPERATIONAL'})};
     assert.deepEqual(await service.doSave({ tenant: 'fixtureTenant' }), { acknowledged: true });
     const pipelines = [];
     SERVICE.DefaultPipelineService.start = async (name, request) => {

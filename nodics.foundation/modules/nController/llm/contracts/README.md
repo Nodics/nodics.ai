@@ -15,3 +15,18 @@ existing `DefaultSchemaUtilityService`, including original counter preservation.
 Keep request/header idempotency separate from model data and from durable domain
 replay logic. Test promise/callback success and rejection, missing services,
 forged authority, owner/tenant isolation and actual generated template dispatch.
+
+## Preserve placement during generated updates
+
+`DefaultSchemaUtilityService.buildGeneratedMutationModel` receives a trusted
+create/update operation from the controller. Creation may inject authenticated
+`tenant` and `enterpriseCode` defaults. Update normalization excludes these
+placement fields and does not inject current-actor placement or fixed scope values.
+The existing record retains its placement; authenticated request scope still
+controls access, provider routing and attribution. This is not a migration API.
+Body fields cannot select the normalization operation. Preserve original domain
+counters and verify `schemaMutationScopePreservation.test.js` plus generated
+mutation parity and Workbench contracts.
+
+Call the shared signed enterprise guard before any generated mutation dispatch,
+including query, ID and code removal paths that do not normalize a model.

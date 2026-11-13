@@ -55,6 +55,14 @@ module.exports = {
     errorCode: function (error) { return error && (error.code || error.name) || 'MEDIA_CLEANUP_FAILED'; },
     /** Returns a redacted cleanup error message. */
     errorMessage: function (error) { return String(error && error.message || error || 'Media cleanup failed').slice(0, 500); },
+    /** Accepts an optional exact owner identity for a bounded cleanup operation. */
+    exactCleanupScope: function (code) {
+        if (code === undefined) return {};
+        if (typeof code !== 'string' || !code.trim() || code.length > 256) {
+            throw new CLASSES.NodicsError('ERR_MED_00025', 'Cleanup requires an exact Media or candidate code');
+        }
+        return { code };
+    },
     /** Classifies a cleanup candidate from media ownership metadata. */
     artifactClass: function (media) {
         let text = [media && media.folderCode, media && media.ownerType, media && media.businessPurpose].map(value => String(value || '')).join(' ').toLowerCase();
@@ -103,7 +111,8 @@ module.exports = {
         let now = request.now ? new Date(request.now) : new Date();
         let batchSize = Math.min(Number(request.batchSize || policy.scanBatchSize), 500);
         let mediaResponse = await SERVICE.DefaultMediaService.get({ tenant: request.tenant, authData: request.authData,
-            query: { active: true, legalHold: { $ne: true }, $or: [{ status: { $in: policy.removableStatuses } }, { retentionUntil: { $lte: now } }] }, searchOptions: { limit: batchSize } });
+            query: { ...this.exactCleanupScope(request.mediaCode), active: true, legalHold: { $ne: true },
+                $or: [{ status: { $in: policy.removableStatuses } }, { retentionUntil: { $lte: now } }] }, searchOptions: { limit: batchSize } });
         let mediaItems = this.items(mediaResponse);
         let result = { scanned: mediaItems.length, candidates: 0, skippedReferenced: 0, blockedByHold: 0, saved: 0,
             previewOnly: request.previewOnly === true, records: [], status: request.previewOnly === true ? 'MEDIA_CLEANUP_PREVIEW_COMPLETE' : 'MEDIA_CLEANUP_SCAN_COMPLETE' };
@@ -151,6 +160,38 @@ module.exports = {
         }
         return this.items(response)[0] || model;
     },
+    /** Rechecks live eligibility and resolves exact physical locations before a purge. */
+    cleanupLocations: async function (candidate, request) {
+        const scope = { tenant: request.tenant, authData: request.authData, skipcache: true };
+        const mediaResponse = await SERVICE.DefaultMediaService.get({
+            ...scope, query: { code: candidate.mediaCode, active: true }, searchOptions: { limit: 2 }
+        });
+        const current = this.items(mediaResponse);
+        const media = current[0];
+        if (current.length !== 1 || !candidate.mediaChecksum || media.checksum !== candidate.mediaChecksum ||
+            media.status !== 'RETIRED' || media.legalHold === true) {
+            throw new CLASSES.NodicsError('ERR_MED_00019', 'Cleanup requires the same retired, unheld Media revision');
+        }
+        const references = await SERVICE.DefaultMediaReferenceService.get({
+            ...scope, query: { active: true, mediaCode: media.code, status: 'ACTIVE' }, searchOptions: { limit: 1 }
+        });
+        if (!Array.isArray(references?.result) || references.result.length) {
+            throw new CLASSES.NodicsError('ERR_MED_00019', 'Media references are active or unverified');
+        }
+        const placements = await SERVICE.DefaultMediaPlacementService.get({
+            ...scope, query: { active: true, mediaCode: media.code, mediaChecksum: media.checksum },
+            searchOptions: { limit: 101 }
+        });
+        if (!Array.isArray(placements?.result) || placements.result.length > 100) {
+            throw new CLASSES.NodicsError('ERR_MED_00019', 'Media placements are unverified or exceed the cleanup limit');
+        }
+        const locations = media.providerCode && media.storageKey ? [media, ...placements.result] : placements.result;
+        if (!locations.length || locations.some(location => !location.providerCode || !location.storageKey)) {
+            throw new CLASSES.NodicsError('ERR_MED_00019', 'No verified Media storage location is available for cleanup');
+        }
+        return [...new Map(locations.map(({ providerCode, storageKey }) =>
+            [JSON.stringify([providerCode, storageKey]), { providerCode, storageKey }])).values()];
+    },
     /** Runs approval-gated passive retention cleanup through provider APIs. */
     runRetentionCleanup: async function (request) {
         if (SERVICE.DefaultMediaLifecycleCoordinationService) SERVICE.DefaultMediaLifecycleCoordinationService.assertPhysicalCleanup(request);
@@ -159,27 +200,27 @@ module.exports = {
         let now = request.now ? new Date(request.now) : new Date();
         let statuses = request.statuses || ['PASSIVE', 'CLEANUP_APPROVED'];
         let response = await SERVICE.DefaultMediaCleanupCandidateService.get({ tenant: request.tenant, authData: request.authData,
-            query: { active: true, status: { $in: statuses }, legalHold: { $ne: true }, purgeEligibleAt: { $lte: now } }, searchOptions: { limit: Math.min(Number(request.batchSize || 100), 500) } });
+            query: { ...this.exactCleanupScope(request.candidateCode), active: true, status: { $in: statuses },
+                legalHold: { $ne: true }, purgeEligibleAt: { $lte: now } }, searchOptions: { limit: Math.min(Number(request.batchSize || 100), 500) } });
         let candidates = this.items(response);
         let result = { scanned: candidates.length, cleaned: 0, skippedApproval: 0, failed: 0, status: 'MEDIA_RETENTION_CLEANUP_COMPLETE', records: [] };
         for (let candidate of candidates) {
             if (policy.cleanupApprovalRequired && !candidate.approvedAt && candidate.status !== 'CLEANUP_APPROVED') { result.skippedApproval += 1; continue; }
             try {
+                const locations = await this.cleanupLocations(candidate, request);
                 await SERVICE.DefaultMediaCleanupCandidateService.save({ tenant: request.tenant, authData: request.authData,
                     transactionContext: request.transactionContext, query: { code: candidate.code }, model: Object.assign({}, candidate, { status: 'CLEANUP_IN_PROGRESS' }) });
                 let removedPlacements = 0;
-                if (SERVICE.DefaultMediaPlacementService && typeof SERVICE.DefaultMediaPlacementService.get === 'function') {
-                    let placements = this.items(await SERVICE.DefaultMediaPlacementService.get({ tenant: request.tenant, authData: request.authData,
-                        query: { active: true, mediaCode: candidate.mediaCode }, searchOptions: { limit: 100 } }));
-                    for (let placement of placements) {
-                        if (placement.providerCode && placement.storageKey) {
-                            await SERVICE.DefaultMediaStorageProviderRegistryService.remove({ providerCode: placement.providerCode, storageKey: placement.storageKey });
-                            removedPlacements += 1;
-                        }
-                    }
+                let absentPlacements = 0;
+                for (const location of locations) {
+                    const result = await SERVICE.DefaultMediaStorageProviderRegistryService.remove(location);
+                    if (result?.removed === true) removedPlacements += 1;
+                    else if (result?.removed === false) absentPlacements += 1;
+                    else throw new CLASSES.NodicsError('ERR_MED_00006', 'Media removal was not acknowledged');
                 }
                 let cleaned = Object.assign({}, candidate, { status: 'CLEANED', evidence: Object.assign({}, candidate.evidence || {}, {
-                    cleanedAt: now.toISOString(), removedPlacements: removedPlacements, cleanupSource: request.source || 'media-retention-cleanup' }) });
+                    cleanedAt: now.toISOString(), removedPlacements, absentPlacements,
+                    cleanupSource: request.source || 'media-retention-cleanup' }) });
                 let saved = await SERVICE.DefaultMediaCleanupCandidateService.save({ tenant: request.tenant, authData: request.authData,
                     transactionContext: request.transactionContext, query: { code: candidate.code }, model: cleaned });
                 if (SERVICE.DefaultMediaService && typeof SERVICE.DefaultMediaService.save === 'function') {

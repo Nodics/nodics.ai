@@ -11,7 +11,7 @@
 
 /** @module discoveryProjection/src/schemas/schemas @description Defines generic Discovery document projection schema. @layer schema @owner discoveryProjection */
 module.exports = { discoveryProjection: {
-    discoveryDocumentProjection: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { search: { enabled: true, idPropertyName: 'code' }, definition: {
+    discoveryDocumentProjection: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: false }, enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { search: { enabled: true, idPropertyName: 'code' }, definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
         ownerType: { type: 'string', required: true , description: 'Classifies the type of owner responsible for this record.'},
@@ -39,3 +39,6 @@ module.exports = { discoveryProjection: {
         projectedAt: { type: 'date', required: true , description: 'Records when the projected event or value applies.'}
     } })
 } };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.discoveryProjection.discoveryDocumentProjection.backoffice = Object.assign({ description: "Derived search documents supplied by authorised source owners. Refresh and retirement use Discovery commands; generic record operations are unavailable." }, module.exports.discoveryProjection.discoveryDocumentProjection.backoffice);

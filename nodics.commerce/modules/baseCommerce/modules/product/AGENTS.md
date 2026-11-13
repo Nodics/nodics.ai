@@ -211,8 +211,8 @@ Route-category defaults belong to this capability; deployments supply only inten
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
 
 This capability owns its publication providers, standard transport and source
-schema role profile. COMMERCE contributes its read-only target observer;
-COMMERCE_STAGED contributes approval/version wiring. Keep installed qualification,
+schema publication policy. ONLINE and OPERATIONAL select delivery observers;
+STAGED selects approval/version wiring through nConfig publication-context bindings. Keep installed qualification,
 connections, signed caller scopes and explicit deployment differences separate.
 Use publicationConfigurationOwnership.test.js in the Commerce group for the
 shared role-isolation matrix, alongside this owner's behavioral regressions.
@@ -229,3 +229,34 @@ emit only a registered-format error code (or UNCLASSIFIED) through the runtime
 logger. Never log provider messages, request payloads or commercial/customer data.
 Cover this boundary with the focused optional-ranking observability regression in
 `test/productDiscoveryApiContract.test.js`.
+
+Search participation defaults belong to this module in `config/properties.js`.
+Do not move them to a role-keyed nSearch catalogue when relocating the module.
+Later deployment layers may override `search.product.options.enabled`;
+nSearch retains provider mechanics and effective readiness resolution.
+
+Product serving admission requires DMS local `product` ownership with explicit
+ONLINE or OPERATIONAL publication. A loaded remote-only Product source is not a
+serving owner. Role labels and configured remote target role selectors do not
+replace local ownership; STAGED remains forbidden for target serving operations.
+
+Listing intent transport selects the logical source module with explicit
+OPERATIONAL target publication and optional exact server/environment, never a
+physical role label. Preserve the Staged receiver, private proof admission, runtime
+credential and fixed proof API; old intentSource.runtimeRole selectors refuse.
+
+Publication transport addresses the logical owner with an explicit publication
+context: STAGED for source authorization, OPERATIONAL or ONLINE for delivery.
+Physical server labels do not grant ownership. Require local module ownership and
+explicit source context before dispatch; retain the runtime token, fixed API,
+operation key, tenant binding and independent target authorization. Legacy
+transport `runtimeRole` selectors reject rather than providing a fallback.
+
+Identity and cross-owner commands route through existing DMS with explicit logical
+module and `targetAuthority.publication`, never physical role codes. Operational
+identity, Store, scheduler, payment and notification owners use OPERATIONAL;
+Product/Pricing authoring references use STAGED. Optional server/environment pins
+remain exact. Reject missing publication and obsolete role selectors. Preserve
+original actor or internal credentials as specified by each API, signed caller
+grants, tenant/business binding, enablement and qualification. Routing descriptors
+do not activate owners or providers. Tests must express these boundaries explicitly.

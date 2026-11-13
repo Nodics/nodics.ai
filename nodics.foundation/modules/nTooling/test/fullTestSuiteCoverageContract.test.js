@@ -114,6 +114,8 @@ defaultOwnershipContracts.forEach(requireFile);
 ['basic', 'full'].forEach(suite => requireSuiteIncludes(suite, defaultOwnershipContracts));
 
 const businessAccessContracts = [
+    'nodics.platform/modules/profile/test/publicIdentityLifecycleContract.test.js',
+    'nodics.foundation/modules/nDatabase/database/test/schemaMutationScopePreservation.test.js',
     'nodics.foundation/modules/nRouter/test/platformAdministratorAccess.test.js',
     'nodics.foundation/modules/nDatabase/database/test/platformAdministratorSchemaAccess.test.js',
     'nodics.platform/modules/profile/test/platformAdministratorFullAccess.test.js',

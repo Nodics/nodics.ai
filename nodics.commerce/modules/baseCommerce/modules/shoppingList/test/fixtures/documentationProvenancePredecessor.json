@@ -1,0 +1,67 @@
+{
+  "reason": "Immutable pre-provenance correction selection; not installed-runtime proof",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "shoppingList",
+      "version": "0.0.2",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "cf57a1deba69e5eeeaa171fefd187819351873cd2fee02b4e929adbe69a526f6",
+      "generatedHashes": {
+        "docs-v001/records/documentation/shoppingListDocumentationNodeData.js": "7183c2cfe3b2dce9bcf2c222f48972a5c320a3cdf0c496cba96b28c81e15f060",
+        "docs-v001/records/documentation/shoppingListDocumentationPageMetadataData.js": "79d7d98aed9854440931a8fcab3883267c6eb00eabc2c25dee09154404db8dc6",
+        "docs-v001/records/documentation/shoppingListDocumentationPublicationStateData.js": "680296c7e590b2f962b11768f347d0eedc28b5df453128a92f2e2acfd1db325b",
+        "docs-v001/records/documentation/shoppingListDocumentationSearchMetadataData.js": "dd45982600d8c022cc662b5db46fc899d8d2af9f6418ca85a1e1a1cc41986c68",
+        "docs-v001/records/documentation/shoppingListDocumentationComponentData.js": "6ba9a8b2fd859c43f4df231bb46ae11a7ec1602f857a4c28c5ab25e1ac850813",
+        "docs-v001/records/documentation/shoppingListDocumentationPageData.js": "af55d9beb45a3ee1755fec86f060e3e4d0d27bba9cad72fd1bf5d0c1b26f1e68",
+        "docs-v001/records/documentation/shoppingListDocumentationRouteData.js": "13b332bc542c3e979f0321756f2163d6cc672272fd5557c1cb792837b96baf73",
+        "docs-v001/headers/100_shoppingListDocumentationContentPackHeader.js": "673d88e5039bd7e54273b8f50c565e0b34785255ca148ca740c252b268a943c8"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  },
+  "successorVersion": "0.0.3",
+  "articles": [
+    {
+      "id": "commerce.shopping-list-commerce-boundary",
+      "componentCode": "nodicsDocsComponentcommerceShoppingListCommerceBoundary",
+      "previousFile": "docs-v001/records/documentation/shoppingListDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/shoppingListDocumentationRelease003ComponentData.js",
+      "blocksSha256": "2bed7aeaf1cfbfc07e0bb0d523fdc1d2490936006b3dbcdcf7d0439cb7ace129",
+      "digestMode": "titled",
+      "sourceChecksum": "db8a5a6393f87caf28f2dd75949a5dd74b9ebe0f89e362b7c5c340f94d99a5b9",
+      "sourceWordCount": 1210
+    }
+  ]
+}

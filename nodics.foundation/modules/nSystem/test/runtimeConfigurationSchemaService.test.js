@@ -153,6 +153,11 @@ const service = require('../src/service/config/defaultRuntimeConfigurationSchema
         }
     });
     assert.strictEqual(invalid.data.valid, false);
+    assert.strictEqual(invalid.code, 'SUC_SYS_00000', 'completed validation must retain its structured field errors instead of reporting an owner outage');
+    const unknownField = await service.validateUpdate({ schemaCode: 'telegramExternalIdentity', httpRequest: { body: { values: { unknownField: true } } } });
+    assert.strictEqual(unknownField.code, 'SUC_SYS_00000');
+    assert.strictEqual(unknownField.data.valid, false);
+    assert(unknownField.data.errors.some(error => error.includes('Unknown runtime configuration field')));
     assert(invalid.data.errors.some(error => error.includes('Sensitive runtime configuration field')));
 
     let saved = await service.saveUpdate({

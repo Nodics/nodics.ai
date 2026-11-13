@@ -39,7 +39,7 @@ test.beforeEach(() => {
   };
   revocations = [];
   failComplete = false;
-  global.SERVICE = {
+  global.SERVICE = { DefaultModuleService: { isLocalModuleActive: moduleName => ["digitalCore"].includes(moduleName), },
     DefaultDigitalCommerceEntitlementService: {
       revocationPolicy:
         require("../src/service/defaultDigitalCommerceEntitlementService")

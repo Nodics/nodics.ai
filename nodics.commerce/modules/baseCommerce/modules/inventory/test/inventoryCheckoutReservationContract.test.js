@@ -25,13 +25,13 @@ function fixture(){
     const state={failInsert:false,loseCas:false,unknownCommit:false,atomic:true};
     const request={tenant:'t',enterpriseCode:'e',ownerId:'buyer',idempotencyKey:'checkout',correlationId:'trace',payload:{orderCode:'order'},
         authData:{tenant:'t',enterpriseCode:'e',principalId:'buyer',principalType:'customer',tokenType:'access'}};
-    global.CONFIG={get:key=>key==='runtimeRole'?'COMMERCE':key==='databaseTransactions'?{enabled:true,failClosed:true,maximumCommitTimeMs:5000}:{}};
+    global.CONFIG={get:key=>key==='runtimeRole'?{code:'REGROUPED',publication:'OPERATIONAL'}:key==='inventory'?{publication:{runtimeRole:'ONLINE'}}:key==='databaseTransactions'?{enabled:true,failClosed:true,maximumCommitTimeMs:5000}:{}};
     global.CLASSES={NodicsError:class extends Error{constructor(code){super(code);this.code=code;}}};
     global.UTILS={createModelName:x=>x};
     const schema={transaction:{enabled:true,sideEffects:'none'},cache:{enabled:false},event:{enabled:false}};
     global.NODICS={getModels:()=>Object.fromEntries(Object.keys(rows).map(name=>[name,{name,versioned:false,compareAndSetItem(){},rawSchema:schema}]))};
     const matches=(row,query)=>Object.entries(query).every(([k,v])=>row[k]===v);
-    global.SERVICE={DefaultInventoryReservationOperationService:owner,DefaultInventoryOperationService:operations,
+    global.SERVICE={DefaultModuleService:{isLocalModuleActive:name=>name==='inventory'},DefaultInventoryReservationOperationService:owner,DefaultInventoryOperationService:operations,
         DefaultInventoryReservationPolicyService:policy,DefaultExactAmountService:exact,
         DefaultSecuredRequestPipelineService:{getGrantedPermissions:()=>['commerce.checkout.place'],isPermissionGranted:()=>true},
         DefaultDatabaseModelHandlerService:{inspectIndexes:async model=>({versioned:false,indexes:[{key:{code:1},unique:true},
@@ -109,4 +109,19 @@ test('malformed scope, foreign command, changed replay and failed owner reads ne
         await assert.rejects(f.ports.reserveInventory(f.request,f.calculation));
         assert.equal(f.rows().inventoryBalance[0].available,kind==='replay'?'1':'3');
     }
+});
+
+
+test('Inventory reservations require local OPERATIONAL ownership plus ONLINE policy without relaxing buyer permission',()=>{
+ const f=fixture(), get=CONFIG.get;
+ for(const local of [false,true]) for(const publication of [undefined,'STAGED','ONLINE','OPERATIONAL'])
+  for(const serving of [undefined,'STAGED','ONLINE']) {
+   SERVICE.DefaultModuleService.isLocalModuleActive=name=>name==='inventory'&&local;
+   CONFIG.get=key=>key==='runtimeRole'?{code:'REGROUPED',publication}:key==='inventory'?{publication:{runtimeRole:serving}}:get(key);
+   if(local&&publication==='OPERATIONAL'&&serving==='ONLINE') assert.equal(owner.context(f.request).ownerId,'buyer');
+   else assert.throws(()=>owner.context(f.request),{code:'ERR_INVENTORY_RESERVATION_UNCONFIRMED'});
+  }
+ SERVICE.DefaultSecuredRequestPipelineService.isPermissionGranted=()=>false;
+ assert.throws(()=>owner.context(f.request),{code:'ERR_INVENTORY_RESERVATION_UNCONFIRMED'});
+ assert.equal(f.rows().inventoryReservation.length,0);
 });

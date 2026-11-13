@@ -11,46 +11,94 @@
 
 /** @module backoffice/controller/DefaultBackofficeApplicationInitializationController @description Exposes reusable, profile-qualified application initialization. */
 module.exports = {
-    /** Executes the documented bounded module operation. */
-    prepare: function (request) {
-        let params = request.httpRequest && request.httpRequest.params || {};
-        let body = request.httpRequest && request.httpRequest.body || {};
-        if (body.afterPublicationStepCode !== undefined && (typeof body.afterPublicationStepCode !== 'string' ||
-            !/^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(body.afterPublicationStepCode))) {
-            throw new CLASSES.NodicsError('ERR_BOF_00081', 'Application after-publication selection is invalid');
-        }
-        request.profileCode = params.profileCode;
-        request.applicationInitialization = { reason: body.reason, correlationId: body.correlationId,
-            forceRefresh: body.forceRefresh === true ? true : undefined,
-            afterPublicationStepCode: body.afterPublicationStepCode };
-        request.correlationId = body.correlationId || request.correlationId || request.requestId;
-        return request;
-    },
-    /** Executes the documented bounded module operation. */
-    invoke: function (operation, request, callback) {
-        this.prepare(request);
-        if (request.applicationInitialization.afterPublicationStepCode !== undefined && !['status', 'initiate'].includes(operation)) {
-            throw new CLASSES.NodicsError('ERR_BOF_00081', 'After-publication selection is only valid for initialization');
-        }
-        let promise = FACADE.DefaultBackofficeApplicationInitializationFacade[operation](request.profileCode, request)
-            .then(data => ({ code: operation === 'initiate' ? 'SUC_BOF_00022' : 'SUC_BOF_00021', data: data }));
-        if (!callback) return promise;
-        promise.then(result => callback(null, result)).catch(callback);
-    },
-    /** Executes the documented bounded module operation. */
-    status: function (request, callback) { return this.invoke('status', request, callback); },
-    /** Returns the profile-owned documentation content-pack installation status. */
-    contentPackStatus: function (request, callback) { return this.invoke('contentPackStatus', request, callback); },
-    /** Installs the profile-owned documentation content pack through its Staged authority. */
-    installContentPack: function (request, callback) { return this.invoke('installContentPack', request, callback); },
-    /** Executes the documented bounded module operation. */
-    initiate: function (request, callback) { return this.invoke('initiate', request, callback); },
-    /** Prepares capability setup data and media without submitting publication approval. */
-    prepareCapability: function (request, callback) { return this.invoke('prepare', request, callback); },
-    /** Reconciles a pending approval workflow through the owning backend operation. */
-    reconcileApproval: function (request, callback) { return this.invoke('reconcileApproval', request, callback); },
-    /** Executes the documented bounded module operation. */
-    rollback: function (request, callback) { return this.invoke('rollback', request, callback); },
-    /** Executes the documented bounded module operation. */
-    retire: function (request, callback) { return this.invoke('retire', request, callback); }
+  /** Executes the documented bounded module operation. */
+  prepare: function (request) {
+    let params = (request.httpRequest && request.httpRequest.params) || {};
+    let body = (request.httpRequest && request.httpRequest.body) || {};
+    if (
+      body.afterPublicationStepCode !== undefined &&
+      (typeof body.afterPublicationStepCode !== "string" ||
+        !/^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(
+          body.afterPublicationStepCode,
+        ))
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application after-publication selection is invalid",
+      );
+    }
+    request.profileCode = params.profileCode;
+    request.applicationInitialization = {
+      reason: body.reason,
+      correlationId: body.correlationId,
+      forceRefresh: body.forceRefresh === true ? true : undefined,
+      continuation: body.continuation === true ? true : undefined,
+      afterPublicationStepCode: body.afterPublicationStepCode,
+    };
+    request.correlationId =
+      body.correlationId || request.correlationId || request.requestId;
+    return request;
+  },
+  /** Executes the documented bounded module operation. */
+  invoke: function (operation, request, callback) {
+    this.prepare(request);
+    if (
+      request.applicationInitialization.continuation &&
+      operation !== "prepare"
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Checkpointed preparation is a separate setup stage",
+      );
+    if (
+      request.applicationInitialization.afterPublicationStepCode !==
+        undefined &&
+      !["status", "initiate"].includes(operation)
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "After-publication selection is only valid for initialization",
+      );
+    }
+    let promise = FACADE.DefaultBackofficeApplicationInitializationFacade[
+      operation
+    ](request.profileCode, request).then((data) => ({
+      code: operation === "initiate" ? "SUC_BOF_00022" : "SUC_BOF_00021",
+      data: data,
+    }));
+    if (!callback) return promise;
+    promise.then((result) => callback(null, result)).catch(callback);
+  },
+  /** Executes the documented bounded module operation. */
+  status: function (request, callback) {
+    return this.invoke("status", request, callback);
+  },
+  /** Returns the profile-owned documentation content-pack installation status. */
+  contentPackStatus: function (request, callback) {
+    return this.invoke("contentPackStatus", request, callback);
+  },
+  /** Installs the profile-owned documentation content pack through its Staged authority. */
+  installContentPack: function (request, callback) {
+    return this.invoke("installContentPack", request, callback);
+  },
+  /** Executes the documented bounded module operation. */
+  initiate: function (request, callback) {
+    return this.invoke("initiate", request, callback);
+  },
+  /** Prepares capability setup data and media without submitting publication approval. */
+  prepareCapability: function (request, callback) {
+    return this.invoke("prepare", request, callback);
+  },
+  /** Reconciles a pending approval workflow through the owning backend operation. */
+  reconcileApproval: function (request, callback) {
+    return this.invoke("reconcileApproval", request, callback);
+  },
+  /** Executes the documented bounded module operation. */
+  rollback: function (request, callback) {
+    return this.invoke("rollback", request, callback);
+  },
+  /** Executes the documented bounded module operation. */
+  retire: function (request, callback) {
+    return this.invoke("retire", request, callback);
+  },
 };

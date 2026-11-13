@@ -44,7 +44,7 @@ for (const kind of ['customer', 'human']) test(kind + ' refuses incomplete or un
     ...[0, -1, NaN, Infinity, 0.5, 2147483648].map(timeoutMs => ({ ...valid, timeoutMs })),
     ...[0, -1, NaN, Infinity, 1.1].map(maxAttempts => ({ ...valid, maxAttempts })),
     { ...valid, moduleName: 'checkout' }, { ...valid, connectionName: '' }, { ...valid, apiVersion: 'v0/other' },
-    { ...valid, targetAuthority: { runtimeRole: 'COMMERCE' } }, { ...valid, targetAuthority: { runtimeRole: 'PLATFORM', address: 'foreign' } },
+    { ...valid, targetAuthority: { publication: 'STAGED' } }, { ...valid, targetAuthority: { runtimeRole: 'PLATFORM' } }, { ...valid, targetAuthority: { runtimeRole: 'PLATFORM', address: 'foreign' } },
     { ...valid, followRedirects: true }, { ...valid, rejectUnauthorized: false }, { ...valid, header: { Authorization: 'Bearer forged' } }];
   for (const p of invalid) { f.config.profileTransport = p; await assert.rejects(identity.resolve(f.request), /transport configuration/); }
   assert.equal(f.calls.length, 0);
@@ -76,4 +76,23 @@ test('bidder and seller scope matchers honor wildcard denies and Enterprise qual
   assert.equal((await identity.resolve(f.request)).buyerRef, undefined);
   evidence.scopes = [{ scopeType: 'ENTERPRISE', scopeCode: 'owner' }];
   assert.equal((await ({ ...identity, matchesEnterpriseScope: () => false }).resolve(f.request)).buyerRef, undefined);
+});
+
+
+for (const kind of ['customer', 'human']) test(kind + ' identity binds exact publication and optional deployment without physical role authority', async t => {
+  const f = fixture(t, kind);
+  for (const targetAuthority of [undefined, {}, { publication: 'ONLINE' }, { publication: 'STAGED' },
+    { runtimeRole: 'PLATFORM' }, { publication: 'OPERATIONAL', runtimeRole: 'PLATFORM' },
+    { publication: 'OPERATIONAL', server: '' }, { publication: 'OPERATIONAL', environment: ' bad' }]) {
+    f.config.profileTransport.targetAuthority = targetAuthority;
+    await assert.rejects(identity.resolve(f.request), /transport configuration/);
+  }
+  assert.equal(f.calls.length, 0);
+  const target = { publication: 'OPERATIONAL', server: 'regrouped-profile', environment: 'unit' };
+  f.config.profileTransport.targetAuthority = target;
+  const signed = structuredClone(f.request.authData);
+  await identity.resolve(f.request);
+  assert.deepEqual(f.calls[0].targetAuthority, target);
+  assert.deepEqual(f.request.authData, signed);
+  assert.equal(f.calls[0].header.Authorization, 'Bearer original');
 });

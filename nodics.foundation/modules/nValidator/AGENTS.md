@@ -20,3 +20,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 This capability declares an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+## Runtime ownership
+
+The canonical package declares `nodics.runtime.ownership: "runtimeLocal"`.
+Validation execution, locally loaded validators and their change listeners belong to the selected runtime; business schemas retain their own functional owners.
+Registration retains callable endpoints and schema/service claims. The shared
+nService ownership key includes the logical server for this explicit scope; no
+Foundation-wide exemption or caller-supplied classification is permitted.

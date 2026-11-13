@@ -29,7 +29,7 @@ module.exports = {
         !a.modules?.includes(selection === 'sweepCallers' ? 'workflow' : 'commsApi') ||
         [r.enterpriseCode, r.entCode, a.enterpriseCode, a.entCode, r.httpRequest?.headers?.['x-enterprise-code']]
           .some(v => v !== undefined && v !== principal) ||
-        (CONFIG.get('runtimeRole')?.code || CONFIG.get('runtimeRole')) !== 'COMMERCE') this.fail();
+        SERVICE.DefaultModuleService?.isLocalModuleActive?.('digitalCore') !== true || CONFIG.get('runtimeRole')?.publication !== 'OPERATIONAL') this.fail();
     const grants = Array.isArray(p[selection]) ? p[selection].filter(g =>
       g.tenant === r.tenant && g.principalEnterpriseCode === principal &&
       typeof g.enterpriseCode === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,191}$/.test(g.enterpriseCode) &&
@@ -68,7 +68,8 @@ module.exports = {
       stage = 'POLICY';
       const target = policy.actionAuthority;
       const bytes = policy.validation?.claimResponseBytes;
-      if (!target?.connectionName || target.connectionName === 'default' || target.runtimeRole !== 'PROCESS' ||
+      if (!target?.connectionName || target.connectionName === 'default' || Object.hasOwn(target, 'runtimeRole') ||
+          (target.targetAuthority?.publication !== 'OPERATIONAL' || Object.entries(target.targetAuthority).some(([key, value]) => !['publication', 'server', 'environment'].includes(key) || typeof value !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
           !Number.isSafeInteger(bytes?.minimum) || !Number.isSafeInteger(bytes?.maximum) ||
           bytes.minimum < 1 || bytes.minimum > bytes.maximum ||
           !Number.isSafeInteger(target.maxResponseBytes) || target.maxResponseBytes < bytes.minimum || target.maxResponseBytes > bytes.maximum ||
@@ -76,7 +77,7 @@ module.exports = {
       // The opaque handle is the only caller payload. Process supplies the retained context.
       stage = 'CLAIM_TRANSPORT';
       let result = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: 'workflow',
-        connectionName: target.connectionName, targetAuthority: { runtimeRole: target.runtimeRole }, tenant: r.tenant,
+        connectionName: target.connectionName, targetAuthority: structuredClone(target.targetAuthority), tenant: r.tenant,
         requireInternalAuth: true, methodName: 'POST', apiName: '/instances/' + encodeURIComponent(input.instanceCode) + '/actions/claim',
         requestBody: { executionCode: input.executionCode, actionKey: 'digitalCore.couponExpirySweep', sourceRuntimeInstanceId: auth.runtimeInstanceId },
         timeoutMs: target.timeoutMs, maxAttempts: 1, followRedirects: false, maxResponseBytes: target.maxResponseBytes });
@@ -89,7 +90,7 @@ module.exports = {
       if (result?.instance?.code !== input.instanceCode || result.executionCode !== input.executionCode ||
           !context || !same(input, this.input(r)) || !same(snapshot, r.authData) ||
           !same(policy, CONFIG.get('digitalCore')?.couponReminders)) this.fail();
-      this.assertCaller(r, 'sweepCallers', context.enterpriseCode);
+      this.assertCaller(r, 'sweepCallers', context.enterpriseCode ?? auth.entCode);
       const execution = { instance: { ...result.instance, tenant: r.tenant }, context,
         node: { action: { moduleName: 'digitalCore', operation: 'couponExpirySweep' } }, payload: {} };
       stage = 'SOURCE';

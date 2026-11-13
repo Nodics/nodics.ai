@@ -43,7 +43,7 @@ module.exports = {
     const p = structuredClone(CONFIG.get('bidding')?.auction?.scheduler), tenant = input.definition?.tenant;
     if (p?.enabled !== true || p.startNode !== 'DefaultBiddingCloseService.sweep' ||
         !Number.isSafeInteger(p.maximumPages) || p.maximumPages < 1 || !tenant ||
-        p.target?.moduleName !== 'bidding' || !p.target.connectionName || p.target.targetAuthority?.runtimeRole !== 'COMMERCE' ||
+        p.target?.moduleName !== 'bidding' || !p.target.connectionName || (p.target.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(p.target.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
         !Number.isSafeInteger(p.target.timeoutMs) || p.target.timeoutMs < 1 || p.target.maxAttempts !== 1 ||
         input.definition?.jobDetail?.startNode !== p.startNode) throw new Error('Auction scheduler callable is not admitted');
     const auth = structuredClone(await SERVICE.DefaultCronJobService.assertOperational(tenant));

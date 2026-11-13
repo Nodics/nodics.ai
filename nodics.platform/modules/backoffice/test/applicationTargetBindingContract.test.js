@@ -24,8 +24,9 @@ const owner = require("../src/service/defaultBackofficeApplicationInitialization
 const resolver = require("../../../../nodics.foundation/modules/nService/src/service/module/defaultRuntimeRegistryResolverService");
 const router = require("../../../../nodics.foundation/modules/nRouter/src/service/router/defaultRouterService");
 let root;
+let projectRoot;
 let previous;
-function server(code, aliases = [], retired = false) {
+function server(code, aliases = [], retired = false, publication = "STAGED") {
   const directory = path.join(root, code);
   fs.mkdirSync(path.join(directory, "config"), { recursive: true });
   fs.writeFileSync(
@@ -41,17 +42,23 @@ function server(code, aliases = [], retired = false) {
   );
   fs.writeFileSync(
     path.join(directory, "config/properties.js"),
-    "module.exports = {activeModules:{modules:[]}};",
+    "module.exports = " + JSON.stringify({ activeModules: { modules: [] }, runtimeRole: { code: "RENAMED_AUTHORING", publication } }) + ";",
   );
 }
 beforeEach(() => {
   previous = Object.fromEntries(
     ["NODICS", "SERVICE", "CLASSES"].map((key) => [key, global[key]]),
   );
-  root = fs.mkdtempSync(path.join(os.tmpdir(), "bo-target-binding-"));
+  projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), "bo-target-binding-"));
+  root = path.join(projectRoot, "envs", "fixtureLocal");
+  fs.mkdirSync(root, { recursive: true });
+  fs.writeFileSync(path.join(projectRoot, "package.json"), JSON.stringify({ name: "binding-fixture" }));
+  fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ nodics: { kind: "group", runtimeModule: true } }));
   server("wcmsStagedServer", ["authoring"]);
   global.NODICS = {
     getServerRootPath: () => root,
+    getEnvironmentPath: () => projectRoot,
+    getSelectedEnvironmentName: () => "fixtureLocal",
     getRawModule: () => ({ metaData: { prefix: "import" } }),
   };
   const urls = {
@@ -81,20 +88,20 @@ beforeEach(() => {
   };
 });
 afterEach(() => {
-  fs.rmSync(root, { recursive: true, force: true });
+  fs.rmSync(projectRoot, { recursive: true, force: true });
   for (const [key, value] of Object.entries(previous)) {
     if (value === undefined) delete global[key];
     else global[key] = value;
   }
 });
 const bind = (name) =>
-  owner.applicationTargetBinding(name, "WCMS_STAGED", "import");
+  owner.applicationTargetBinding(name, "import");
 const lease = {
   moduleName: "import",
   server: "wcmsStagedServer",
   endpoint: "https://staged.example.test/nodics/import",
   state: "UP",
-  runtimeRole: { code: "WCMS_STAGED", publication: "STAGED" },
+  runtimeRole: { code: "WCMS_STAGED", roles: ["WCMS_STAGED"], publication: "STAGED" },
 };
 test("canonical binding qualifies both exact live leases and connection-bearing snapshots", () => {
   const wrong = {
@@ -102,12 +109,13 @@ test("canonical binding qualifies both exact live leases and connection-bearing 
     connectionName: "wcmsStaged",
     targetAuthority: {
       server: "wcmsStaged",
-      runtimeRole: { code: "WCMS_STAGED" },
+      publication: "STAGED",
     },
   };
   assert.equal(resolver.ownerMatches(wrong, lease), false);
   const options = { moduleName: "import", ...bind("wcmsStaged") };
   assert.equal(options.connectionName, "wcmsStagedServer");
+  assert.deepEqual(options.targetAuthority, { server: "wcmsStagedServer", publication: "STAGED" });
   assert.equal(resolver.ownerMatches(options, lease), true);
   assert.equal(
     resolver.ownerMatches(options, {
@@ -119,7 +127,7 @@ test("canonical binding qualifies both exact live leases and connection-bearing 
   assert.equal(
     resolver.ownerMatches(options, {
       ...lease,
-      runtimeRole: { code: "WCMS_ONLINE", publication: "ONLINE" },
+      runtimeRole: { code: "WCMS_ONLINE", roles: ["WCMS_ONLINE"], publication: "ONLINE" },
     }),
     false,
   );
@@ -131,7 +139,7 @@ test("explicit metadata aliases use the same declared owner, not guessed suffix 
 
 test("runtime dependency uses actual canonical alias binding independently of another runtime's held batch", () => {
   const profile = {
-    target: { moduleName: "cms", connectionName: "wcmsStaged", runtimeRole: "WCMS_STAGED" },
+    target: { moduleName: "cms", connectionName: "wcmsStaged", publication: "STAGED" },
   };
   const dependency = owner.capabilityDependencies(profile, {
     readiness: "BLOCKED",
@@ -166,4 +174,26 @@ test("different configured alias endpoints cannot be silently canonicalized", ()
 test("two failed router URL resolutions are not equivalent endpoint evidence", () => {
   global.SERVICE.DefaultRouterService = { prepareUrl: () => "" };
   assert.throws(() => bind("authoring"), /differs/);
+});
+
+test("missing publication context refuses exact server routing", () => {
+  server("missingContextServer", [], false, null);
+  assert.throws(() => bind("missingContextServer"), /declared publication context/);
+});
+
+test("application profile rejects physical role selectors and wrong publication", () => {
+  const previousConfig = global.CONFIG;
+  global.CONFIG = { get: () => require("../config/properties").backofficeApplicationInitialization };
+  try {
+    assert.equal(owner.resolveProfile({ target: { connectionName: "authoring" } }).target.publication, "STAGED");
+    for (const target of [{ runtimeRole: "WCMS_STAGED" }, { publication: "ONLINE" }]) {
+      assert.throws(() => owner.resolveProfile({ target }), /requires STAGED publication/);
+    }
+  } finally { if (previousConfig === undefined) delete global.CONFIG; else global.CONFIG = previousConfig; }
+});
+
+test("baseline binding rejects a selected physical server in the wrong publication context", () => {
+  server("onlineContentServer", [], false, "ONLINE");
+  assert.throws(() => owner.applicationPublicationTargetBinding({ connectionName: "onlineContentServer", publication: "STAGED" }, "cms"), /context differs/);
+  assert.equal(owner.applicationPublicationTargetBinding({ connectionName: "authoring", publication: "STAGED" }, "cms").targetAuthority.publication, "STAGED");
 });

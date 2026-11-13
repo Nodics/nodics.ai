@@ -9,9 +9,8 @@
 
  */
 
-/** @module profile/acceptance/defaultRuntimeDeploymentGrantAcceptanceService @description Verifies governed runtime assignments without minting credentials or granting authority. @owner profile @layer tooling */
+/** @module profile/acceptance/defaultRuntimeDeploymentGrantAcceptanceService @description Observes the shared service Employee and selected deployment topology. @owner profile @layer tooling */
 import { pathToFileURL } from 'node:url';
-import bootstrap from '../identity/defaultMandatoryIdentityBootstrapService.js';
 import probe from '../../../../../../nodics.foundation/modules/nTooling/src/service/project/defaultProjectConfigurationProbeService.js';
 import { createAcceptanceContext } from '../../../../../../nodics.foundation/modules/nTooling/src/service/project/defaultProjectAcceptanceService.mjs';
 
@@ -26,39 +25,19 @@ export async function runRuntimeDeploymentGrantAcceptance(options = {}) {
   const runtimes = projections.filter(item => item.properties?.runtimeIdentity?.instanceCode);
   if (!runtimes.length) throw new Error('No effective runtime identities are configured');
   const headers = { ...await authenticate(), tenant: environment.AXIS_TENANT || 'default' };
-  const evidence = [];
-  for (const runtime of runtimes) {
-    const code = bootstrap.runtimeDeploymentGrantCode(configuration.environment, runtime.server);
-    const result = await request('PLATFORM', '/nodics/profile/v0/principalscopeassignment/code/' + encodeURIComponent(code), { headers });
-    const matches = Array.isArray(result) ? result : result ? [result] : [];
-    if (matches.length !== 1) throw new Error('Missing or ambiguous governed runtime grant: ' + code);
-    const grant = matches[0];
-    const scope = grant.runtimeScope;
-    const validCodes = values => Array.isArray(values) && values.length > 0 && values.length <= 512 &&
-      new Set(values).size === values.length && Array.from(values).every(value =>
-        typeof value === 'string' && /^[A-Za-z][A-Za-z0-9_.:-]{0,191}$/.test(value));
-    if (grant.code !== code || grant.scopeType !== 'RUNTIME_DEPLOYMENT' || grant.principalType !== 'service' ||
-        !validCodes([grant.principalCode]) || grant.active !== true || grant.effect !== 'ALLOW' || grant.status !== 'ACTIVE' ||
-        grant.inheritanceMode !== 'DIRECT' || grant.groupCode || grant.scopeCode !== code ||
-        grant.tenantCode !== headers.tenant || grant.enterpriseCode !== (environment.NODICS_ENTERPRISE_CODE || environment.AXIS_ENTERPRISE || 'default') ||
-        scope?.projectCode !== configuration.projectCode || scope?.environmentCode !== configuration.environment ||
-        scope?.serverCode !== runtime.server || scope?.instanceCode !== runtime.properties.runtimeIdentity.instanceCode ||
-        !validCodes(scope.modules)) throw new Error('Governed runtime grant does not match its effective deployment: ' + code);
-    if (!validCodes(scope.permissions))
-      throw new Error('Governed runtime grant permissions are malformed: ' + code);
-    const now = Date.now();
-    for (const key of ['effectiveFrom', 'effectiveTo']) {
-      if (grant[key] === undefined || grant[key] === null) continue;
-      const instant = new Date(grant[key]).getTime();
-      if (!Number.isFinite(instant) || (key === 'effectiveFrom' ? instant > now : instant <= now))
-        throw new Error('Governed runtime grant is outside its effective period: ' + code);
-    }
-    evidence.push({ code, server: runtime.server, state: 'VERIFIED' });
-  }
-  return evidence;
+  const result = await request('PLATFORM', '/nodics/profile/v0/employee/code/apiAdmin', { headers });
+  const rows = Array.isArray(result) ? result : [result];
+  const account = rows[0];
+  if (rows.length !== 1 || account?.code !== 'apiAdmin' || account.loginId !== 'apiAdmin' ||
+      account.principalType !== 'service' || account.active !== true || account.disabled === true ||
+      account.apiKeyStatus !== 'active' || !account.apiKeyScopes?.includes('auth.internal.token.read'))
+    throw new Error('Shared service Employee is unavailable or disabled');
+  return runtimes.map(runtime => ({ server: runtime.server, instanceCode: runtime.properties.runtimeIdentity.instanceCode,
+    state: 'ACCOUNT_AND_SOURCE_OBSERVED' }));
+
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] || '').href) {
-  if (process.argv.includes('--help')) console.log('Read-only Profile runtime-grant acceptance. Provision through governed Profile startup/admin APIs first; this command never rotates keys or writes assignments.');
+  if (process.argv.includes('--help')) console.log('Read-only Profile shared service account and topology inspection. Token issuance is verified by startup.');
   else console.log(JSON.stringify(await runRuntimeDeploymentGrantAcceptance()));
 }

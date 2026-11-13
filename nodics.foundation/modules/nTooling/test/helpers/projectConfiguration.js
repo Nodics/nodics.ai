@@ -117,20 +117,6 @@ function createProjectConfigurationTestHarness({ projectRoot, frameworkRoot = pa
         "nodics.foundation/modules/nSearch/search/src/service/config/defaultSearchConfigurationService",
         (service) => service.getSearchConfiguration(name, "default"),
       ),
-    /** Apply the actual nImport destination validator, including the runtime-role default. */
-    validateDestination: (properties, role) =>
-      consume(
-        properties,
-        "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService",
-        (service) =>
-          ({
-            ...service,
-            error: (code, message) => Object.assign(new Error(message), { code }),
-          }).validateDestination({
-            destinationRole: role,
-            environmentScope: [properties.environment.class],
-          }),
-      ),
     /** Resolve the existing nService authority contract for a selected module. */
     authorityContext: (properties, name) =>
       consume(

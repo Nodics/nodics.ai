@@ -138,6 +138,10 @@ module.exports = {
               label: "Additional details",
               fields: ["code", "active", "description"],
             },
+            location: {
+              label: "Location and verification",
+              fields: ["latitude", "longitude", "verificationStatus"],
+            },
           },
           hiddenFields: [
             "geocodingProvider",
@@ -155,6 +159,7 @@ module.exports = {
         relationships: {
           contacts: {
             targetModule: "profile",
+            description: "Contacts associated with this address. Select an existing contact or add a new one.",
             actions: [
               "SELECT_EXISTING",
               "CREATE_RELATED",
@@ -218,11 +223,13 @@ module.exports = {
           description: "Street name of the address",
         },
         addressLine1: {
+          label: "Address line 1",
           type: "string",
           required: false,
           description: "Can be used for landmark or optional properties",
         },
         addressLine2: {
+          label: "Address line 2",
           type: "string",
           required: false,
           description: "Can be used for landmark or optional properties",
@@ -255,7 +262,7 @@ module.exports = {
         postalCode: {
           type: "string",
           required: true,
-          description: "PastalCode of the address",
+          description: "Postal code for this address",
         },
         countryCode: {
           type: "string",
@@ -661,6 +668,15 @@ module.exports = {
 
     userState: {
       super: "super",
+      backoffice: {
+        label: "Account lockout status",
+        displayProperty: "loginId",
+        displayProperties: ["loginId", "personId"],
+        searchableFields: ["loginId", "description"],
+        fields: { loginId: { label: "Login ID" } },
+        mutationMode: "READ_ONLY",
+        operations: ["search", "read"],
+      },
       schemaPolicies: ["administrative"],
       model: true,
       service: {
@@ -746,7 +762,16 @@ module.exports = {
         enabled: true,
       },
       router: { groups: { schemaOperations: true }, enabled: true },
-      backoffice: { concurrency: { managed: false, field: "revision" } },
+      backoffice: {
+        label: "Credential metadata",
+        displayProperty: "loginId",
+        displayProperties: ["loginId", "active"],
+        searchableFields: ["loginId", "description"],
+        fields: { loginId: { label: "Login ID" } },
+        mutationMode: "READ_ONLY",
+        operations: ["search", "read"],
+        concurrency: { managed: false, field: "revision" },
+      },
       credentialRetirement: {
         enabled: false,
         writerCoverageQualified: false,
@@ -837,21 +862,25 @@ module.exports = {
             "Stores the business display name shown to administrators and related user journeys.",
         },
         "name.title": {
+          label: "Title",
           type: "string",
           required: false,
           description: "Title for the user",
         },
         "name.firstName": {
+          label: "First name",
           type: "string",
           required: true,
           description: "First name for the user",
         },
         "name.middleName": {
+          label: "Middle name",
           type: "string",
           required: false,
           description: "Middle name for the user if any",
         },
         "name.lastName": {
+          label: "Last name",
           type: "string",
           required: true,
           description: "Last name for the user",
@@ -1842,3 +1871,46 @@ module.exports.profile.enterprise.definition.transferNotificationRecipients = {
   type: 'array', required: false,
   description: 'Explicit same-tenant Employee selections {employeeCode}; current identity, permission, Enterprise scope and independent opt-in required. No Customer, actor or contact fallback.',
 };
+
+// Public lifecycle editing compares existing domain-owned change tokens; generated owners still own their writes.
+module.exports.profile.user.definition.authVersion.readOnly = true;
+module.exports.profile.user.definition.identityMigrationVersion.readOnly = true;
+module.exports.profile.employee.backoffice.concurrency = { field: "authVersion", required: true, managed: false };
+module.exports.profile.enterprise.backoffice.concurrency = { field: "updated", required: true, managed: false };
+for (const schema of ["employee", "enterprise"]) {
+  module.exports.profile[schema].commandReceipt = { journalSchema: "profileCommandReceipt" };
+}
+
+// Existing employees use ordinary record edits plus owner-defined access/lifecycle tasks, never credential/group form fields.
+module.exports.profile.employee.backoffice.operations = ["search", "read", "update"];
+for (const [field, type] of [["code", "string"], ["loginId", "string"], ["principalType", "string"], ["userGroups", "array"]]) {
+  module.exports.profile.employee.definition[field] = {
+    ...(module.exports.profile.user.definition[field] || {}),
+    ...(module.exports.profile.employee.definition[field] || {}),
+    type,
+    readOnly: true,
+  };
+}
+module.exports.profile.employee.definition.registrationSuspended.readOnly = true;
+
+// Enterprise creation remains in its declared aggregate owner; retain installed history instead of generic removal.
+module.exports.profile.enterprise.backoffice.operations = ["search", "read", "create", "update"];
+
+// One existing Framework lifecycle policy supplies update-only field metadata; aggregate creation inputs remain available.
+module.exports.profile.employee.backoffice.updateFields = { configurationPath: "enterpriseManagement.lifecycle.employeeFields" };
+module.exports.profile.enterprise.backoffice.updateFields = { configurationPath: "enterpriseManagement.lifecycle.enterpriseFields" };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.profile.permission.backoffice = Object.assign({ description: "Registered permission vocabulary. Defining a permission does not assign it to an employee." }, module.exports.profile.permission.backoffice);
+module.exports.profile.enterpriseRole.backoffice = Object.assign({ description: "Assignable enterprise responsibilities and their presentation. Actual permissions remain mapped by user groups." }, module.exports.profile.enterpriseRole.backoffice);
+module.exports.profile.tenant.backoffice = Object.assign({ description: "Tenant placement and provisioning records. Use the governed enterprise setup flow for provisioning; a record is not runtime readiness." }, module.exports.profile.tenant.backoffice);
+module.exports.profile.address.backoffice = Object.assign({ description: "Reusable business addresses and associated contacts. Linking an address does not change identity or access." }, module.exports.profile.address.backoffice);
+module.exports.profile.contact.backoffice = Object.assign({ description: "Reusable contact values such as email addresses and telephone numbers." }, module.exports.profile.contact.backoffice);
+module.exports.profile.enterprise.backoffice = Object.assign({ description: "Registered organisations and their business details. Identity, tenant placement and lifecycle changes remain Profile-governed." }, module.exports.profile.enterprise.backoffice);
+module.exports.profile.userState.backoffice = Object.assign({ description: "Account lockout and failed-attempt metadata owned by Profile authentication. Inspect only; use the governed account recovery and unlock journeys." }, module.exports.profile.userState.backoffice);
+module.exports.profile.userGroup.backoffice = Object.assign({ description: "User groups and their permission mappings. Membership and protected administrative changes require Profile authority." }, module.exports.profile.userGroup.backoffice);
+module.exports.profile.password.backoffice = Object.assign({ description: "Protected credential lifecycle metadata. Use the account recovery or credential owner; ordinary record editing is not a password reset." }, module.exports.profile.password.backoffice);
+module.exports.profile.employee.backoffice = Object.assign({ description: "Employee business identity and permitted profile details. Credentials, access assignments and registration use their governed Profile journeys." }, module.exports.profile.employee.backoffice);
+module.exports.profile.customer.backoffice = Object.assign({ description: "Customer identity records. Customer registration, consent and eligibility remain with their Profile owners." }, module.exports.profile.customer.backoffice);
+module.exports.profile.principalScopeAssignment.backoffice = Object.assign({ description: "Explicit principal access scopes. A scope narrows existing permission; it never grants a missing permission." }, module.exports.profile.principalScopeAssignment.backoffice);
+module.exports.profile.identityMigrationAudit.backoffice = Object.assign({ description: "Retained identity assessment and migration evidence. Inspect through the governed owner; evidence does not authorize replay." }, module.exports.profile.identityMigrationAudit.backoffice);

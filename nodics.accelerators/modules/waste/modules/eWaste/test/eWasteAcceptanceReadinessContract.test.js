@@ -31,6 +31,7 @@ function configuredServices() {
     DefaultEWasteRewardAssessmentOperationService: {},
     DefaultWasteImpactAssessmentService: {},
     DefaultEWasteOutcomeCommunicationService: {},
+    DefaultCopilotSecretResolverService: require("../../../../../../nodics.copilot/modules/copilotProviders/modules/copilotProvider/src/service/defaultCopilotSecretResolverService"),
   };
 }
 
@@ -96,6 +97,44 @@ beforeEach(() => {
   process.env.OPENAI_API_KEY = "test-openai-key";
   global.CONFIG = { get: key => configs[key] };
   global.SERVICE = configuredServices();
+});
+
+test("provider readiness uses Copilot's actual credentials reference contract without disclosing secrets", () => {
+  const adapter = configs.copilot.providers.adapters.openai;
+  adapter.credential.secretRef = "credentials:vision.test";
+  configs.credentials = { "vision.test": { value: "private-provider-value", status: "CONFIGURED" } };
+  let report = service.readiness();
+  assert.equal(report.summary.openAiCredentialReadinessStatus, "CONFIGURED");
+  assert(!report.blockers.some(item => item.code === "EWASTE_OPENAI_CREDENTIAL_MISSING"));
+  assert(!JSON.stringify(report).includes("private-provider-value"));
+  configs.credentials["vision.test"].status = "DISABLED";
+  report = service.readiness();
+  assert.equal(report.summary.openAiCredentialReadinessStatus, "UNCONFIGURED");
+  assert(report.blockers.some(item => item.code === "EWASTE_OPENAI_CREDENTIAL_MISSING"));
+  delete configs.credentials["vision.test"];
+  assert.equal(service.readiness().summary.openAiCredentialReadinessStatus, "UNCONFIGURED");
+  delete adapter.credential.secretRef;
+  assert(service.readiness().blockers.some(item => item.code === "EWASTE_OPENAI_CREDENTIAL_MISSING"));
+});
+
+test("provider readiness preserves inspection failure and later resolver ownership without transport calls", () => {
+  for (const resolver of [undefined, {}, { resolveReference() { throw new Error("private-resolver-details"); } }]) {
+    SERVICE.DefaultCopilotSecretResolverService = resolver;
+    const report = service.readiness();
+    assert.equal(report.summary.openAiCredentialReadinessStatus, "INSPECTION_UNAVAILABLE");
+    assert(report.blockers.some(item => item.code === "EWASTE_OPENAI_CREDENTIAL_INSPECTION_UNAVAILABLE"));
+    assert(!report.blockers.some(item => item.code === "EWASTE_OPENAI_CREDENTIAL_MISSING"));
+    assert(!JSON.stringify(report).includes("private-resolver-details"));
+  }
+  const calls = [];
+  SERVICE.DefaultCopilotSecretResolverService = {
+    resolveReference(reference) { calls.push(reference); return "private-later-value"; },
+    resolve() { throw new Error("asynchronous provider entry must not be called"); },
+  };
+  const report = service.readiness();
+  assert.equal(report.summary.openAiCredentialReadinessStatus, "CONFIGURED");
+  assert.deepEqual(calls, ["env:OPENAI_API_KEY"]);
+  assert(!JSON.stringify(report).includes("private-later-value"));
 });
 
 test("reports Circa/eWaste readiness without exposing configured secrets", () => {

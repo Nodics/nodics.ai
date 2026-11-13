@@ -68,11 +68,15 @@ module.exports = {
       if (!request.authorization || !/^Bearer /i.test(request.authorization))
         await this.deny(request, "PROFILE_SCOPE_TOKEN_REQUIRED");
       const target = this.settings().profileTarget || {};
+      if (Object.hasOwn(target, 'runtimeRole') || !target.connectionName || !target.targetAuthority || target.targetAuthority.publication !== 'OPERATIONAL' ||
+            Object.keys(target.targetAuthority).some(key => !['publication', 'server', 'environment'].includes(key)) ||
+            Object.values(target.targetAuthority).some(value => typeof value !== 'string' || !value.trim() || value !== value.trim()))
+        await this.deny(request, "PROFILE_SCOPE_TARGET_INVALID");
       const response = await SERVICE.DefaultModuleService.invokeModule({
         local: false,
         moduleName: "profile",
-        connectionName: target.connectionName || "profile",
-        targetAuthority: { runtimeRole: target.runtimeRole || "PLATFORM" },
+        connectionName: target.connectionName,
+        targetAuthority: { ...target.targetAuthority },
         apiName: "/identity/scopes/me",
         methodName: "GET",
         tenant: request.tenant,

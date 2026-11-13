@@ -113,6 +113,25 @@ class NodicsError extends Error {
     assert.strictEqual(publicDelivery.responseHeaders['Cross-Origin-Resource-Policy'], 'cross-origin');
     assert.strictEqual(mediaLookupRequests[0].tenant, 'default');
 
+    const originalPublicationRole = properties.media.publication.runtimeRole;
+    properties.media.publication.runtimeRole = 'STAGED';
+    const readsBeforeStagedDenial = mediaLookupRequests.length;
+    await assert.rejects(
+        () => deliveryService.deliver({ params: { mediaCode: 'home-banner' } }),
+        error => error.code === 'ERR_MED_00012' && /authenticated preview/.test(error.message)
+    );
+    assert.strictEqual(mediaLookupRequests.length, readsBeforeStagedDenial);
+    assert.strictEqual((await deliveryService.deliver({
+        authData: { loginId: 'editor', tokenType: 'access' },
+        params: { mediaCode: 'home-banner' }
+    })).mediaCode, 'home-banner');
+    properties.media.publication.runtimeRole = originalPublicationRole;
+    assert.strictEqual(policyService.getFolderPolicy().code, 'default');
+    for (const folder of ['../cmsAssets', 'missing-folder', 'constructor']) {
+        assert.throws(() => policyService.getFolderPolicy(folder), { code: 'ERR_MED_00003' });
+    }
+
+
     const originalDeliveryEnabled = properties.media.delivery.enabled;
     properties.media.delivery.enabled = false;
     await assert.rejects(
@@ -193,24 +212,41 @@ class NodicsError extends Error {
 
     let transferErrorStatus;
     let transferErrorPayload;
-    contentResponseHandler.handleSuccess({}, {
-        type: function () { },
-        set: function () { },
+    let recoveredBytes;
+    const fileResponse = {
+        type() {},
+        set() {},
         headersSent: false,
-        sendFile: function (filePath, callback) {
-            callback(new NodicsError('ERR_MED_00012', 'Media file is not readable'));
+        sendFile(filePath, callback) {
+            try {
+                recoveredBytes = fs.readFileSync(filePath);
+                callback();
+            } catch (error) {
+                assert.strictEqual(error.code, 'ENOENT');
+                callback(new NodicsError('ERR_MED_00012', 'Media file is not readable'));
+            }
         },
-        status: function (status) {
+        status(status) {
             transferErrorStatus = status;
             return this;
         },
-        json: function (payload) {
+        json(payload) {
             transferErrorPayload = payload;
         }
-    }, publicDelivery);
-    assert.strictEqual(transferErrorStatus, 500);
-    assert.strictEqual(transferErrorPayload.code, 'ERR_MED_00012');
-    assert.strictEqual(transferErrorPayload.message, 'Media file is not readable');
+    };
+    const unavailablePath = mediaPath + '.unavailable';
+    fs.renameSync(mediaPath, unavailablePath);
+    try {
+        contentResponseHandler.handleSuccess({}, fileResponse, publicDelivery);
+        assert.strictEqual(recoveredBytes, undefined);
+        assert.strictEqual(transferErrorStatus, 500);
+        assert.strictEqual(transferErrorPayload.code, 'ERR_MED_00012');
+    } finally {
+        fs.renameSync(unavailablePath, mediaPath);
+    }
+    const recovered = await deliveryService.deliver({ params: { mediaCode: 'home-banner' } });
+    contentResponseHandler.handleSuccess({}, fileResponse, recovered);
+    assert.deepStrictEqual(recoveredBytes, Buffer.from('png'));
 
     fs.rmSync(workspace, { recursive: true, force: true });
     console.log('media delivery contract validated');

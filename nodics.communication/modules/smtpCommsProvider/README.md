@@ -12,8 +12,8 @@ owns verification, identity and business access. No SMTP code belongs in Axis.
 
 `test/localSmtpCapture.mjs` is an explicitly operated test harness, not another
 runtime provider. Supply an empty canonical directory owned by the operator with
-mode `0700`, an explicit port, one reserved `.test` sender and approved `.test`
-recipients:
+mode `0700`, an explicit port and exact approved `.test` or `.local` test/demo
+mailboxes. The fixture never relays or resolves recipient destinations:
 
 ```sh
 node nodics.communication/modules/smtpCommsProvider/test/localSmtpCapture.mjs \

@@ -185,3 +185,5 @@ REWARDS, CERTIFICATES and BOTH with canonical certificate criteria. Unknown or
 malformed requirements become explicit null and unavailable; no reward fallback
 or fake payment is allowed. See the Product owner CMS guide and
 [Promotion's DTO](../../../../../nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/coupon-offers-and-acquisition.md#public-acquisition-requirements).
+
+The Circa enterprise/staff reference labels its retained sample scenario separately from current Kickoff demo selection. Profile membership documentation supports access mechanics, not historical sample counts. Article-derived checksums, word counts, search/navigation metadata and Staged target seals are refreshed with nTooling helpers; no installed publication or approval is inferred.

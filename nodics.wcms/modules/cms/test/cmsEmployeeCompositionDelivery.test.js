@@ -49,6 +49,7 @@ beforeEach(() => {
         constructor(code, message) { super(message); this.code = code; }
     } };
     global.SERVICE = {
+        DefaultCmsPublicationAdapterService: require('../src/service/publication/defaultCmsPublicationAdapterService'),
         DefaultSecuredRequestPipelineService: Object.assign({}, security),
         DefaultIdentityGovernanceService: { getSystemAuthData: () => system },
         DefaultCmsOnlinePublicationPointerService: { get: async input => {
@@ -71,7 +72,7 @@ test('canonical nAuth employee access payload needs no issuance-only Employee ty
     assert.equal(reads.length, 2);
 });
 
-for (const path of ['/dashboard', '/lock-screen']) {
+for (const path of ['/dashboard', '/lock-screen', '/schema-workbench']) {
     test(`shared ${path} reads only project pointer and pinned snapshot with employee context intact`, async () => {
         request.delivery.path = pointer.path = manifest.snapshot.path = path;
         const before = structuredClone(request);
@@ -131,7 +132,7 @@ test('real immutable publication composer Site bundle and route snapshots retain
     assert.deepEqual(bundle, original, 'delivery must not mutate the immutable stored bundle');
     manifest.snapshot = { ...bundle, site: 'other-site' };
     await assert.rejects(() => service.resolvePage(request), /shared composition Site is invalid/);
-    manifest.snapshot = await composer.buildSnapshot({ rootType: 'pageRoute', rootCode: 'dashboard', dependencies }, request);
+    manifest.snapshot = await composer.buildSnapshot({ rootType: 'pageRoute', rootCode: 'dashboard', sourceVersion: '1', dependencies }, request);
     assert.deepEqual((await service.resolvePage(request)).result, result);
 });
 

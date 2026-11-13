@@ -293,7 +293,7 @@ module.exports = {
     };
     bound();
     const response = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: "profile", connectionName: p.profileConnectionName,
-      targetAuthority: { runtimeRole: "PLATFORM" }, apiName: "/employee/inbox-identity", methodName: "GET",
+      targetAuthority: { publication: "OPERATIONAL" }, apiName: "/employee/inbox-identity", methodName: "GET",
       tenant: request.tenant, request: { tenant: request.tenant }, header: { Authorization: request.authorization, "X-Enterprise-Code": auth.entCode },
       maxAttempts: 1, timeoutMs: p.timeoutMs, maxResponseBytes: p.maxResponseBytes, followRedirects: false });
     bound();

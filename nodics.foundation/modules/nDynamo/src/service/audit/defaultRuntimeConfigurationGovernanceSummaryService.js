@@ -52,14 +52,15 @@ module.exports = {
         return new Promise((resolve, reject) => {
             Promise.all([
                 this.getActivationRequests(request),
-                this.getActivationLogs(request)
+                this.getActivationLogs(request),
+                SERVICE.DefaultRuntimePropertyPersistenceService.acknowledgement(request)
             ]).then(results => {
                 let activationRequests = results[0] || [];
                 let activationLogs = results[1] || [];
                 resolve({
                     code: 'SUC_SYS_00000',
                     message: 'Runtime configuration governance summary fetched successfully',
-                    data: this.createSummary(request, activationRequests, activationLogs),
+                    data: { ...this.createSummary(request, activationRequests, activationLogs), propertyAcknowledgement: results[2] },
                     metadata: {
                         tenant: this.getTenant(request),
                         requestQuery: this.prepareActivationRequestQuery(request),
@@ -158,7 +159,8 @@ module.exports = {
             rejected: this.countWhere(activationRequests, request => this.normalize(request.approvalStatus) === 'REJECTED'),
             activated: this.countWhere(activationRequests, request => this.normalize(request.status) === 'ACTIVATED'),
             approvedNotActivated: this.countWhere(activationRequests, request => {
-                return this.normalize(request.approvalStatus) === 'APPROVED' && this.normalize(request.status) !== 'ACTIVATED';
+                return this.normalize(request.approvalStatus) === 'APPROVED' &&
+                    !['ACTIVATED', 'STALE'].includes(this.normalize(request.status));
             }),
             highRisk: this.countWhere(activationRequests, request => this.isHighRisk(request)),
             destructive: this.countWhere(activationRequests, request => this.isDestructive(request)),

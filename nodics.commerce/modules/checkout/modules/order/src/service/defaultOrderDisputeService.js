@@ -262,7 +262,7 @@ module.exports = {
       local: false,
       moduleName: "profile",
       connectionName: "profile",
-      targetAuthority: { runtimeRole: "PLATFORM" },
+      targetAuthority: { publication: "OPERATIONAL" },
       apiName: "/identity/scopes/me",
       methodName: "GET",
       tenant: request.tenant,

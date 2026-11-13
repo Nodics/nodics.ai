@@ -44,22 +44,8 @@ module.exports = {
         if (!event || event.eventType !== 'CMS_ONLINE_CHANGED') return { skipped: true, reason: 'UNSUPPORTED_EVENT' };
         if (!['DEPLOY', 'ROLLBACK', 'WITHDRAW'].includes(event.operation)) return { skipped: true, reason: 'UNSUPPORTED_OPERATION' };
         let context = await this.loadPublicationContext(event, request || {});
-        let placements = await this.loadPlacements(context, request || {});
-        let documents = this.buildProjectionDocuments(placements, context, request || {});
-        let plan = this.planPublication(context, documents, request || {});
-        let saved = await this.indexProjectionDocuments(documents, plan, context, request || {});
-        let alias = await this.switchAlias(plan, context, request || {});
-        return {
-            skipped: false,
-            eventCode: event.code,
-            publicationCode: event.publicationCode,
-            manifestCode: event.manifestCode,
-            operation: event.operation,
-            documentCount: documents.length,
-            savedCount: saved.length,
-            alias: alias,
-            plan: plan
-        };
+        const result = await SERVICE.DefaultWcmsExperienceOnlinePublicationService.publish(context.site, request || {}, {inspectOnly:Number(event.attempts || 0)>0});
+        return {...result, skipped:false, eventCode:event.code, publicationCode:event.publicationCode,manifestCode:event.manifestCode,operation:event.operation};
     },
 
     /** Loads target publication context from manifest service when available. @param {Object} event Outbox event. @param {Object} request Nodics request. @returns {Promise<Object>} Context. */
@@ -93,15 +79,8 @@ module.exports = {
 
     /** Loads experience placement records touched by the publication. @param {Object} context Publication context. @param {Object} request Nodics request. @returns {Promise<Array<Object>>} Placements. */
     loadPlacements: async function (context, request) {
-        if (request && request.cmsExperiencePlacements) return [].concat(request.cmsExperiencePlacements);
-        if (context.manifest && Array.isArray(context.manifest.cmsExperiencePlacements)) return context.manifest.cmsExperiencePlacements.slice();
-        let service = SERVICE.DefaultCmsExperiencePlacementService;
-        if (!service || typeof service.get !== 'function') return [];
-        let query = { active: true };
-        if (context.site) query.site = context.site;
-        let response = await service.get({ tenant: context.tenant || request.tenant, authData: request.authData,
-            query: query, searchOptions: { limit: Number((this.config().resolver || {}).maxComponents || 200) } });
-        return response && Array.isArray(response.result) ? response.result : [];
+        if (!context.manifest) throw this.error('ERR_WCMS_EXPERIENCE_INDEX_SERVICE_UNAVAILABLE');
+        return Array.isArray(context.manifest.cmsExperiencePlacements) ? context.manifest.cmsExperiencePlacements.slice() : [];
     },
 
     /** Builds deterministic Discovery document projections. @param {Array<Object>} placements Placements. @param {Object} context Context. @param {Object} request Request. @returns {Array<Object>} Documents. */
@@ -159,9 +138,11 @@ module.exports = {
             component: placement.component,
             componentCode: placement.componentCode || placement.component,
             rendererKey: placement.rendererKey,
-            contractVersion: Number(placement.contractVersion || 1),
+            contractVersion: Number(placement.contractVersion ?? 1),
             properties: Object.assign({}, placement.properties || {}),
             media: Array.isArray(placement.media) ? placement.media.slice() : [],
+            components: Array.isArray(placement.components) ? placement.components : [],
+            customerSegments: Array.isArray(placement.customerSegments) ? placement.customerSegments : [],
             priority: Number(placement.priority || 0),
             specificity: Number(placement.specificity || 0),
             locale: placement.locale || context.locale,
@@ -231,7 +212,7 @@ module.exports = {
         let saved = [];
         for (let document of documents) {
             let response = await service.doSave({ tenant: context.tenant || request.tenant, authData: request.authData,
-                moduleName: 'discoveryProjection', indexName: plan.indexName, model: document });
+                moduleName: 'discoveryProjection', targetAuthority: {publication: 'ONLINE'}, indexName: plan.indexName, model: document });
             if (response && Array.isArray(response.errors) && response.errors.length > 0) {
                 throw this.error('ERR_WCMS_EXPERIENCE_INDEX_SERVICE_UNAVAILABLE',
                     'Discovery projection save failed for WCMS Experience placement: ' +

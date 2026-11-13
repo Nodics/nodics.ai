@@ -19,6 +19,22 @@
 module.exports = {
     export: {
         dataExport: {
+            exportWorkspaceGet: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'export.run',
+                apiExposure: 'dataExportStatus',
+                key: '/workspace',
+                method: 'GET',
+                controller: 'DataExportController',
+                operation: 'workspace',
+                help: {
+                    requestType: 'secured',
+                    message: 'Reads configured export availability and supported formats without reading source records or generating a file.',
+                    method: 'GET',
+                    url: 'http://host:port/nodics/export/v0/workspace'
+                }
+            },
             exportPost: {
                 secured: true,
                 accessGroups: ['userGroup'],

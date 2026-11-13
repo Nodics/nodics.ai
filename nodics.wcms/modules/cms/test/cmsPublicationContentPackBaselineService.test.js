@@ -22,6 +22,7 @@ global.CONFIG = { get: key => key === 'cms' ? { publication: publication } : und
 let installed = false;
 let lifecycle;
 let imported = 0;
+let importContext;
 global.SERVICE = {
     DefaultCmsPublicationWorkflowService: {
         reference: value => 'workflow-' + value.code + '-' + value.revision
@@ -33,7 +34,7 @@ global.SERVICE = {
             initialPublicationPolicy: 'ADMIN_INITIATED', sites: ['nodicsDocumentationSite']
         } }),
         getStatus: async () => ({ data: { state: installed ? 'CURRENT' : 'NOT_INSTALLED' } }),
-        importPack: async () => { imported += 1; installed = true; return {}; }
+        importPack: async request => { imported += 1; importContext = request; installed = true; return { data: { state: 'CURRENT' } }; }
     },
     DefaultPublicationLifecycleService: {
         get: async () => { if (!lifecycle) throw new NodicsError('ERR_PUB_00000', 'not found'); return lifecycle; },
@@ -50,6 +51,18 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     baseline: { requestedBy: 'admin', correlationId: 'documentation-1' } };
 
 (async () => {
+    assert.strictEqual((await service.installContentPack('documentation', { ...request, packCode: 'foreignPack' })).state, 'CURRENT');
+    assert.strictEqual(lifecycle, undefined, 'install-only must not create publication or approval');
+    assert.strictEqual(importContext.packCode, 'nodicsDocumentation');
+    assert.strictEqual(importContext.authData.principalId, 'admin');
+    assert.strictEqual(importContext.authData.delegatedBy, 'platform-service');
+    assert.ok(importContext.authData.userGroups.includes('adminGroup'));
+    assert.strictEqual(request.authData.tokenType, 'service', 'caller authority must not be mutated');
+    await service.installContentPack('documentation', request);
+    assert.strictEqual(imported, 1, 'current pack must not dispatch another import');
+    await assert.rejects(service.installContentPack('documentation', { ...request, baseline: {} }), error => error.code === 'CMS_BASELINE_HUMAN_REQUIRED');
+    publication.baselines.nonPack = { ...publication.baselines.documentation, contentPackCode: undefined, releaseCode: 'example:init' };
+    await assert.rejects(service.installContentPack('nonPack', request), error => error.code === 'CMS_BASELINE_INVALID');
     const initiated = await service.initiate('documentation', request);
     assert.strictEqual(initiated.releaseCode, 'contentPack:nodicsDocumentation');
     assert.strictEqual(initiated.publication.state, 'PENDING_APPROVAL');
@@ -62,8 +75,11 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     assert.strictEqual(invalidRelease.publicationDiagnostic.status, 'STAGED_SOURCE_INVALID_RELEASE');
     await assert.rejects(service.initiate('documentation', request),
         error => error.code === 'CMS_BASELINE_RELEASE_INVALID');
+    await assert.rejects(service.installContentPack('documentation', request),
+        error => error.code === 'CMS_BASELINE_RELEASE_INVALID');
     assert.strictEqual(imported, 1, 'invalid baseline must not import content');
     publication.runtimeRole = 'ONLINE';
+    await assert.rejects(service.installContentPack('documentation', request), error => error.code === 'CMS_BASELINE_SOURCE_ROLE_INVALID');
     await assert.rejects(service.status('documentation', request),
         error => error.code === 'CMS_BASELINE_SOURCE_ROLE_INVALID');
     console.log('CMS content-pack publication baseline service validated');

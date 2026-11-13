@@ -30,6 +30,12 @@ Capability builders may project the bounded native `backendWorkspace` variant th
 
 ## Tenant startup completion
 
+For selected provisioning, admitted secured subject requests await
+`ensureAuthenticatedEnterprise` before dispatch. Reuse fresh private inventory
+and the existing tenant preparation lock; never infer readiness from an active
+marker, trust header placement, enable remote events or retry a business command.
+See the live preparation section of `llm/contracts/README.md`.
+
 Public business-enterprise placement may opt into `enterpriseResolution.runtimeLookup.enabled`.
 Use the retained, independently verified runtime token through the fixed Profile
 resolver, preserving its signed enterprise/header and sending only the selected
@@ -60,21 +66,10 @@ timer and awaits active refresh work before transport/resource shutdown.
 
 Runtime instances require configured retained proof and explicit identity. Keep renewal and registration in their existing bounded loops. Protected-work owners use the agent operational snapshot plus current credential validation; stale state cannot authorize new work.
 
-Initial startup, tenant startup and renewal must use the same configured proof and Profile deployment-grant check. A local Profile host must never issue its own unscoped credential through a bootstrap shortcut. Profile owns tenant Init/identity preparation; no literal bootstrap employee or group belongs in the generic enterprise handler.
-
 Revocation lookup returns unrevoked only for the canonical `ERR_CACHE_00001`
 cache miss. Provider outage, disabled channel and malformed cached data must
 reject authorization even if a subsequent principal-stamp read could succeed.
 Do not turn arbitrary authentication-state errors into absent revocation markers.
-
-A separate runtime can request protected remote APIs through explicit
-`runtimeIdentity.remoteModules` (for example `['profile', 'inventory']`).
-The provider adds these bounded codes to its active-module request. This does
-not activate source modules or establish local ownership. Every requested code
-still requires the same Profile deployment grant and route permission. Configure
-remote endpoints through the existing server topology, including its abstract
-endpoint; an endpoint alone never grants capability access. Missing remote scope
-fails during protected calls rather than silently broadening the credential.
 
 `authSecurity.securityStamp.cacheModuleName` selects the shared authentication
 state namespace for both principal stamps and token revocation. Authority and
@@ -98,3 +93,45 @@ proof; preserve strict shared auth state and Profile grants. See the local contr
 
 nService owns defaultContentType for module transport; nConfig only loads it.
 Do not restore HTTP content defaults in the configuration loader.
+
+Registry fallback resolution rejects unrelated logical runtime owners for the same
+module/publication context. Replicas of one logical server remain eligible. When
+more than one publication context matches, require an explicit target context;
+lease freshness must not choose between authoring and delivery authorities. The
+BackOffice registry remains responsible for admission and its delegated resolver.
+
+
+Resolve runtime-local ownership only from canonical installed package metadata
+`nodics.runtime.ownership`. Keep callable and schema/service evidence. Use the
+shared scope/key helpers for admission; never trust payload ownershipScope or
+exempt Foundation as a group. Remote local-mechanics resolution requires an exact
+logical server. See the module-topology-and-transport contract.
+
+Runtime Enterprise resolution selects the Profile module in OPERATIONAL
+publication context through DefaultModuleService. Physical server labels do not
+identify Profile ownership. Preserve the verified runtime principal, its exact
+enterprise scope, `profile.enterprise.search`, fixed resolve API and original
+caller separation; relocation never broadens identity grants.
+
+Supplied DMS targetAuthority uses explicit publication plus optional environment,
+server and node only. Reject role strings, code/nested runtimeRole and unknown
+fields before any local/remote choice; use the same validator in registry resolution.
+
+Non-callable modules with materialized schema/service authority must declare
+trusted `nodics.runtime.ownership` explicitly. The shared registration helper
+rejects missing metadata at outgoing construction and final admission. Generic
+`owns: ['schema']`, wire ownership scope and empty schema files are not evidence.
+Do not execute foreign schema configuration just to classify a candidate.
+
+Registration admission must reuse one lazy canonical installed-source resolver
+across the complete validated batch and its atomic retries, then discard it.
+Keep the binding private, preserve exact ownership checks and read fresh source
+metadata next operation; never introduce a process-wide authority cache.
+
+Profile issues short-lived internal service tokens only after native apiAdmin API-key
+proof in the requested tenant and enterprise. nConfig derives exact placement
+and active/remote module scope from installed topology. Keep named permissions,
+empty JWT groups, security stamps, namespace pins and domain caller checks.
+The signed assignmentCode is a stable placement identifier for existing caller
+pins. Startup and renewal do not consult per-runtime assignment rows. Profile
+Init includes admin, apiAdmin and the existing authority-tenant guest Customer.

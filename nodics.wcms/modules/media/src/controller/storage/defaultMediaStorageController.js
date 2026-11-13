@@ -572,6 +572,26 @@ module.exports = {
             return FACADE.DefaultMediaStorageFacade.runPassiveRetentionCleanup(input);
         }
     },
+    /** Returns path-free choices for the Staged content author. */
+    listDraftImages: function (request, callback) {
+        if (request.httpResponse?.setHeader) request.httpResponse.setHeader('Cache-Control', 'no-store');
+        const result = FACADE.DefaultMediaStorageFacade.listDraftImages({
+            tenant: request.tenant,
+            authData: request.authData,
+            query: request.httpRequest?.query || request.query
+        }).then(data => ({ code: 'SUC_MED_00032', data }));
+        return callback ? result.then(value => callback(null, value), callback) : result;
+    },
+    /** Serves a scoped Staged raster to an authorized author. */
+    previewDraftImage: function (request, callback) {
+        const input = {
+            tenant: request.tenant,
+            authData: request.authData,
+            params: request.httpRequest?.params || request.params
+        };
+        const result = FACADE.DefaultMediaStorageFacade.previewDraftImage(input);
+        return callback ? result.then(value => callback(null, value), callback) : result;
+    },
     /**
      * Delivers authorized media content by media code.
      *

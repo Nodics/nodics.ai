@@ -12,8 +12,43 @@
 /** @module localizationCore/service/DefaultLocalizationRepositoryService @description Implements the localization repository port over generated schema services with tenant filters, immutable releases, collision checks, and CAS pointers. @layer service @owner localizationCore @override Database variants may replace this provider while preserving its isolation and concurrency contracts. */
 module.exports = {
     /** Extracts a service result consistently. */ unwrap: function (response) { return response && response.result !== undefined ? response.result : response; },
-    /** Returns the first record from a generated-service query. */ first: async function (service, request, query) { let result = this.unwrap(await service.get({ tenant: request.tenant, authData: request.authData, query: Object.assign({ tenant: request.tenant }, query), searchOptions: { limit: 1 } })); return Array.isArray(result) ? result[0] : result; },
-    /** Returns bounded records from a generated-service query. */ list: async function (service, request, query) { let result = this.unwrap(await service.get({ tenant: request.tenant, authData: request.authData, query: Object.assign({ tenant: request.tenant }, query || {}), searchOptions: { limit: Number(((CONFIG.get('localization') || {}).authority || {}).maximumKeysPerRelease || 10000) } })); return Array.isArray(result) ? result : (result ? [result] : []); },
+    /** Returns the first record from a generated-service query. */ first: async function (service, request, query) { let result = this.unwrap(await service.get({ tenant: request.tenant, authData: request.authData, query: Object.assign({ tenant: request.tenant }, query), searchOptions: { pageSize: 1, pageNumber: 1 } })); return Array.isArray(result) ? result[0] : result; },
+    /** Reads complete bounded pages in stable tenant-local code order. */
+    list: async function (service, request, query) {
+        const maximum = Number(((CONFIG.get('localization') || {}).authority || {}).maximumKeysPerRelease || 10000);
+        if (!Number.isSafeInteger(maximum) || maximum < 1) {
+            throw this.error('ERR_LOC_00005', 'Localization record limit is invalid');
+        }
+        const records = [];
+        const pageSize = Math.min(maximum + 1, 1000);
+        let after;
+        while (true) {
+            const scope = { ...query, tenant: request.tenant };
+            if (after !== undefined) scope.code = { $gt: after };
+            const page = this.unwrap(await service.get({
+                tenant: request.tenant,
+                authData: request.authData,
+                query: scope,
+                options: { skipItemCache: true },
+                searchOptions: { pageSize, pageNumber: 1, sort: { code: 1 } }
+            }));
+            if (!Array.isArray(page)) {
+                throw this.error('ERR_LOC_00003', 'Localization record query returned an invalid page');
+            }
+            for (const record of page) {
+                if (typeof record?.code !== 'string' || !record.code ||
+                    (after !== undefined && record.code <= after)) {
+                    throw this.error('ERR_LOC_00003', 'Localization record order is invalid');
+                }
+                after = record.code;
+                records.push(record);
+                if (records.length > maximum) {
+                    throw this.error('ERR_LOC_00005', 'Localization query exceeds the release record limit');
+                }
+            }
+            if (page.length < pageSize) return records;
+        }
+    },
     /** Creates stable schema identities without accepting user-selected database keys. */ code: function (...parts) { return parts.map(value => String(value).replace(/[^A-Za-z0-9._-]/g, '_')).join('.'); },
     /** Imports new keys and permits only same-owner compatible updates. */ upsertKeys: async function (entries, request) { let output = []; for (let entry of entries) { let current = await this.getKey(entry.namespace, entry.key, request); if (current && (current.ownerModule !== entry.ownerModule || JSON.stringify(current.parameters || []) !== JSON.stringify(entry.parameters || []) || current.exposure !== entry.exposure || current.protected !== entry.protected || JSON.stringify(current.overrideScopes || []) !== JSON.stringify(entry.overrideScopes || []))) throw this.error('ERR_LOC_00004', 'Localization key ownership or contract collision'); let model = Object.assign({}, entry, { tenant: request.tenant, code: this.code(entry.namespace, entry.key) }); if (current) await SERVICE.DefaultLocalizationKeyService.update({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: current.code, ownerModule: entry.ownerModule }, model: { $set: { defaultMessage: entry.defaultMessage } } }); else await SERVICE.DefaultLocalizationKeyService.save({ tenant: request.tenant, authData: request.authData, model: model }); output.push(model); } return output; },
     /** Gets one key definition. */ getKey: function (namespace, key, request) { return this.first(SERVICE.DefaultLocalizationKeyService, request, { namespace: namespace, key: key }); },
@@ -25,6 +60,14 @@ module.exports = {
     /** CAS-transitions a value and appends content-free audit evidence. */ transitionValue: async function (current, state, revision, audit, request) { let response = this.unwrap(await SERVICE.DefaultLocalizationValueService.update({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: current.code || this.code(current.locale, current.namespace, current.key), revision: current.revision, state: current.state }, model: { $set: { state: state, revision: revision }, $push: { auditTrail: audit } } })); this.assertAffected(response); return Object.assign({}, current, { state: state, revision: revision, auditTrail: (current.auditTrail || []).concat(audit) }); },
     /** Stores an immutable release idempotently. */ createRelease: async function (release, request) { let current = await this.getRelease(release.version, request); if (current) { if (current.checksum !== release.checksum) throw this.error('ERR_LOC_00004', 'Release version checksum collision'); return current; } let model = Object.assign({}, release, { code: release.version }); return this.unwrap(await SERVICE.DefaultLocalizationReleaseService.save({ tenant: request.tenant, authData: request.authData, model: model })); },
     /** Gets one tenant-owned immutable release. */ getRelease: function (version, request) { return this.first(SERVICE.DefaultLocalizationReleaseService, request, { version: version }); },
+    /** Lists immutable release records within the requested site, channel and locale scope. */
+    listReleases: function (request) {
+        return this.list(SERVICE.DefaultLocalizationReleaseService, request, {
+            scopeCode: request.scopeCode,
+            channel: request.channel,
+            locale: { $in: request.locales }
+        });
+    },
     /** Gets a tenant/scope/channel/locale Online pointer. */ getOnline: async function (scope, request) { let value = await this.first(SERVICE.DefaultLocalizationOnlinePointerService, request, { scopeCode: scope, channel: request.channel, locale: request.locale }); return value && Object.assign({}, value, { version: value.releaseVersion }); },
     /** Activates one release with create-or-CAS Online pointer semantics. */ activateRelease: async function (release, publication, request) { let current = await this.getOnline(publication.rootCode, request); let code = this.code(publication.rootCode, release.channel, release.locale); if (!current) { let model = { tenant: request.tenant, code: code, scopeCode: publication.rootCode, channel: release.channel, locale: release.locale, releaseVersion: release.version, revision: 0 }; await SERVICE.DefaultLocalizationOnlinePointerService.save({ tenant: request.tenant, authData: request.authData, model: model }); return { version: release.version }; } let response = this.unwrap(await SERVICE.DefaultLocalizationOnlinePointerService.update({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: current.code, revision: current.revision }, model: { $set: { previousReleaseVersion: current.releaseVersion, releaseVersion: release.version, revision: Number(current.revision) + 1 } } })); this.assertAffected(response); return { version: release.version, previousVersion: current.releaseVersion }; },
     /** Restores a prior immutable release through pointer CAS. */ rollbackRelease: async function (scope, target, publication, request) { let release = await this.getRelease(target, request); if (!release) throw this.error('ERR_LOC_00003', 'Rollback release is unavailable'); let current = await this.getOnline(scope, request); if (!current) throw this.error('ERR_LOC_00004', 'Online pointer is unavailable'); let response = this.unwrap(await SERVICE.DefaultLocalizationOnlinePointerService.update({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: current.code, revision: current.revision }, model: { $set: { previousReleaseVersion: current.releaseVersion, releaseVersion: target, revision: Number(current.revision) + 1 } } })); this.assertAffected(response); return { version: target }; },

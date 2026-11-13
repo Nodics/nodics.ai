@@ -57,6 +57,7 @@ test("real registration builder admits configured Profile metadata without raisi
     };
     global.NODICS = {
       getRawModule: () => rawModule,
+      getModule: () => rawModule,
       getServerName: () => "platformServer",
       getRouters: () => ({}),
     };
@@ -77,15 +78,17 @@ test("real registration builder admits configured Profile metadata without raisi
     const workspace = registration.backoffice.navigation.find(
       (row) => row.id === "enterprises",
     ).backendWorkspace;
-    assert.deepEqual(
-      workspace.setupContinuation,
-      clone(setupContinuation.workspaceDescriptor()),
-    );
-    assert.equal(workspace.setupContinuation.available, false);
-    assert.equal(
-      contract.validateEnterpriseSetupContinuation(workspace.setupContinuation),
-      true,
-    );
+    const ownerWorkspace = enterpriseManagement.buildAccessWorkspace({ publicOnly: false });
+    assert.deepEqual(workspace, {
+      contractVersion: 1,
+      renderer: "axis.workspace.native",
+      workspaceCode: "profile.enterpriseManagement",
+      viewCode: "administration",
+      title: ownerWorkspace.title,
+      description: ownerWorkspace.description,
+    });
+    assert.equal(workspace.setupContinuation, undefined,
+      "Registration carries an inert native descriptor; fresh task reads supply current setup metadata");
     assert.equal(registration.authorityClaims.length, 32);
     for (const claimName of ["permission", "enterpriseRole"]) {
       assert.deepEqual(registration.authorityClaims.filter(claim => claim.claimName === claimName)
@@ -108,8 +111,8 @@ test("real registration builder admits configured Profile metadata without raisi
     );
     const malformed = clone(registration);
     malformed.backoffice.navigation.find(
-      (row) => row.backendWorkspace,
-    ).backendWorkspace.tabs[0].sections[1].endpoint.bodyShape = "EXECUTE";
+      (row) => row.id === "enterprises",
+    ).backendWorkspace.renderer = "axis.workspace.execute";
     assert.equal(
       contract.validateRegistrationBatch(
         { instanceId: "fixture-instance", registrations: [malformed] },

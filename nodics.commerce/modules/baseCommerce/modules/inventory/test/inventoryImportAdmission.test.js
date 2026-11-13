@@ -18,8 +18,9 @@ const service = require("../src/service/defaultInventoryOperationService");
 const hooks = require("../src/interceptors/interceptors");
 
 test("Staged rejects every stock mutation hook while warehouse policy remains authorable", () => {
+  global.SERVICE = { DefaultModuleService: { isLocalModuleActive: name => name === "inventory" } };
   global.CONFIG = {
-    get: (key) => (key === "runtimeRole" ? { code: "COMMERCE_STAGED" } : {}),
+    get: (key) => (key === "runtimeRole" ? { code: "arbitrary", publication: "STAGED" } : {}),
   };
   for (const schemaName of [
     "inventoryBalance",
@@ -28,7 +29,7 @@ test("Staged rejects every stock mutation hook while warehouse policy remains au
   ]) {
     assert.throws(
       () => service.validateImportTarget({ schemaName }),
-      /forbidden on Staged/,
+      /local ownership, OPERATIONAL runtime and ONLINE serving policy/,
     );
     const entries = Object.values(hooks).filter((h) => h.item === schemaName);
     assert.deepEqual(entries.map((h) => h.trigger).sort(), [
@@ -39,14 +40,15 @@ test("Staged rejects every stock mutation hook while warehouse policy remains au
     for (const hook of entries)
       assert.throws(
         () => service[hook.handler.split(".")[1]]({}),
-        /forbidden on Staged/,
+        /local ownership, OPERATIONAL runtime and ONLINE serving policy/,
       );
   }
   assert.equal(service.validateImportTarget({ schemaName: "warehouse" }), true);
 });
 
 test("Online rejects versioned snapshot stock import without rejecting existing owner writes", () => {
-  global.CONFIG = { get: () => ({}) };
+  global.SERVICE = { DefaultModuleService: { isLocalModuleActive: name => name === "inventory" } };
+  global.CONFIG = { get: key => key === "runtimeRole" ? { code: "arbitrary", publication: "OPERATIONAL" } : key === "inventory" ? { publication: { runtimeRole: "ONLINE" } } : {} };
   assert.equal(service.requireOperationalRuntime(), true);
   assert.equal(
     service.validateImportTarget({
@@ -67,6 +69,7 @@ test("Online rejects versioned snapshot stock import without rejecting existing 
 
 test("flags cannot manufacture coupon issuance approval for operational snapshots", () => {
   const promotion = require("../../promotion/src/service/defaultPromotionOperationService");
+  global.SERVICE = { DefaultModuleService: { isLocalModuleActive: name => name === "inventory" } };
   global.CONFIG = {
     get: (key) =>
       key === "promotion"
@@ -87,6 +90,7 @@ test("flags cannot manufacture coupon issuance approval for operational snapshot
 });
 
 test("Staged balance and movement owner writes reject before persistence", async () => {
+  global.SERVICE = { DefaultModuleService: { isLocalModuleActive: name => name === "inventory" } };
   global.CONFIG = {
     get: (key) =>
       key === "inventory" ? { publication: { runtimeRole: "STAGED" } } : {},
@@ -104,7 +108,22 @@ test("Staged balance and movement owner writes reject before persistence", async
       },
     },
   };
-  await assert.rejects(service.saveBalance({}, {}), /forbidden on Staged/);
-  await assert.rejects(service.saveMovement({}, {}), /forbidden on Staged/);
+  await assert.rejects(service.saveBalance({}, {}), /local ownership, OPERATIONAL runtime and ONLINE serving policy/);
+  await assert.rejects(service.saveMovement({}, {}), /local ownership, OPERATIONAL runtime and ONLINE serving policy/);
   assert.equal(calls, 0);
+});
+
+
+test("Inventory requires positive local ownership and OPERATIONAL runtime independently of ONLINE serving policy", () => {
+  const before = { CONFIG: global.CONFIG, SERVICE: global.SERVICE };
+  try {
+    for (const local of [true, false, undefined]) for (const runtime of ['OPERATIONAL', 'STAGED', 'ONLINE', undefined])
+      for (const serving of ['ONLINE', 'STAGED', undefined]) {
+        global.SERVICE = { DefaultModuleService: { isLocalModuleActive: name => name === 'inventory' ? local : false } };
+        global.CONFIG = { get: key => key === 'runtimeRole' ? { code: 'REGROUPED', publication: runtime }
+          : key === 'inventory' ? { publication: { runtimeRole: serving } } : undefined };
+        if (local === true && runtime === 'OPERATIONAL' && serving === 'ONLINE') assert.equal(service.requireOperationalRuntime(), true);
+        else assert.throws(() => service.requireOperationalRuntime(), /local ownership, OPERATIONAL runtime and ONLINE serving policy/);
+      }
+  } finally { Object.assign(global, before); }
 });

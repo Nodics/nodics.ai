@@ -12,8 +12,14 @@
 /** @module editorial/service/DefaultEditorialReadinessService @description Produces deterministic pre-workflow Editorial readiness evidence. @layer service @owner editorial @override Projects may decorate readiness without acquiring workflow authority. */
 module.exports = {
     /** Evaluates whether supplied authoring data is ready to be submitted to Process. */
-    evaluate: function (article, localizations, policy) {
+    evaluate: function (article, localizations, policy, featuredMedia) {
         let validation = SERVICE.DefaultEditorialValidationService.validate(article, localizations, policy);
+        if (article && article.featuredMediaCode && featuredMedia?.ready !== true) {
+            validation = { ...validation, valid: false, errors: [...validation.errors, {
+                code: 'FEATURED_MEDIA_NOT_READY', field: 'featuredMediaCode',
+                message: featuredMedia?.presentation?.pending || 'The featured image requires confirmed Media publication before review or article publication.'
+            }] };
+        }
         return { articleCode: article && article.code || null, status: validation.valid ? 'READY' : 'BLOCKED', ready: validation.valid, validation: validation, workflowStarted: false };
     }
 };

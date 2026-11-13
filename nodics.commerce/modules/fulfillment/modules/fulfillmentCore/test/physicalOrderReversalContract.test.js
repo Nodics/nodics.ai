@@ -39,7 +39,7 @@ async function fixture(resolution = 'CANCELLATION') {
     const request = {tenant:'t',code:'case',authorization:'Bearer isolated-test',authData:{tenant:'t',enterpriseCode:'e',principalType:'human',loginId:'reviewer',tokenType:'access'},
         idempotencyKey:'refund-command',payload:{confirmed:true,reason:'Reviewed original physical purchase',expectedRevision:0}};
     const clone = value=>structuredClone(value), matches = (row,query)=>Object.entries(query || {}).every(([key,value])=>row[key]===value);
-    global.CONFIG = {get:key=>key==='runtimeRole'?'COMMERCE':key==='databaseTransactions'?{enabled:true,failClosed:true,maximumCommitTimeMs:1000}:policies[key] || {}};
+    global.CONFIG = {get:key=>key==='runtimeRole'?{ code: "COMMERCE", publication: "OPERATIONAL" }:key==='databaseTransactions'?{enabled:true,failClosed:true,maximumCommitTimeMs:1000}:policies[key] || {}};
     global.CLASSES = {NodicsError:class extends Error {constructor(code,message){super(message || code);this.code=code;}}};
     global.UTILS = {createModelName:value=>value};
     global.ENUMS = {PhysicalFulfillmentStatus:Object.fromEntries(require('../src/utils/enums').PhysicalFulfillmentStatus.definition.map(key=>[key,{key}]))};
@@ -55,7 +55,7 @@ async function fixture(resolution = 'CANCELLATION') {
         DefaultOrderOperationService:require('../../../../checkout/modules/order/src/service/defaultOrderOperationService'),
         DefaultSecuredRequestPipelineService:{getGrantedPermissions:()=>state.permission?['commerce.checkout.place','commerce.dispute.review','commerce.fulfillment.return','commerce.refund.execute']:[],
             isPermissionGranted:(permission,granted)=>granted.includes(permission)},
-        DefaultModuleService:{invokeModule:async()=>({data:{principalCode:'reviewer',scopes:state.scope?[{scopeType:'ENTERPRISE',scopeCode:'e',tenantCode:'t',capabilityCode:'commerce'}]:[],deniedScopes:[]}})},
+        DefaultModuleService:{isLocalModuleActive: moduleName => ["fulfillmentCore", "order"].includes(moduleName), invokeModule:async()=>({data:{principalCode:'reviewer',scopes:state.scope?[{scopeType:'ENTERPRISE',scopeCode:'e',tenantCode:'t',capabilityCode:'commerce'}]:[],deniedScopes:[]}})},
         DefaultDatabaseModelHandlerService:{inspectIndexes:async model=>({versioned:state.versioned,indexes:[{key:{code:1},unique:state.unique},
             ...(model.name==='inventoryBalance'?[{key:{tenant:1,enterpriseCode:1,warehouseCode:1,sku:1},unique:state.unique}]:[])]})},
         DefaultDatabaseTransactionService:{capabilities:()=>({multiRecordAtomic:state.atomic}),assertSchemaEligible:model=>assert.equal(model.rawSchema.transaction.enabled,true),

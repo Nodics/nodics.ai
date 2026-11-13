@@ -318,7 +318,7 @@ module.exports = {
                 );
             if (
                 !target ||
-                target.runtimeRole !== 'PROCESS' ||
+                target.targetAuthority?.publication !== 'OPERATIONAL' || Object.hasOwn(target, 'runtimeRole') ||
                 !target.connectionName ||
                 target.connectionName === 'default' ||
                 !SERVICE.DefaultModuleService ||
@@ -334,7 +334,7 @@ module.exports = {
                     moduleName: 'workflow',
                     connectionName: target.connectionName,
                     connectionType: target.connectionType,
-                    targetAuthority: { runtimeRole: 'PROCESS' },
+                    targetAuthority: { ...target.targetAuthority },
                     local: false,
                     tenant: request.tenant,
                     header: {
@@ -429,12 +429,14 @@ module.exports = {
             delete evidence.blocker;
             delete evidence.blockerCode;
         } catch (error) {
-            if (
-                processReadStarted &&
-                error &&
-                error.code === 'ERR_PROCESS_00002' &&
-                String(error.status || error.responseCode) === '404'
-            ) {
+            // nService preserves response-owned evidence because local status
+            // normalization may not know another runtime's error catalogue.
+            const remote = error && error.metadata && error.metadata.remoteHttpFailure;
+            const missing = remote
+                ? remote.code === 'ERR_PROCESS_00002' && remote.httpStatus === 404
+                : error && error.code === 'ERR_PROCESS_00002' &&
+                    String(error.status || error.responseCode) === '404';
+            if (processReadStarted && missing) {
                 evidence.availability = 'BLOCKED';
                 return block(
                     'PROCESS_MEDIA_DEFINITION_MISSING',

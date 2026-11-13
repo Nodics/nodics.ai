@@ -74,12 +74,12 @@ loyalty: {
     maximumCommands: 10000,
     biddingEvidence: {
       moduleName: "bidding", connectionName: "commerce",
-      targetAuthority: { runtimeRole: "COMMERCE" }, apiVersion: "v0",
+      targetAuthority: { publication: "OPERATIONAL" }, apiVersion: "v0",
       apiName: "/auctions/funds-evidence", timeoutMs: 10000, maxAttempts: 1
     },
     checkoutEvidence: {
       moduleName: "checkoutCore", connectionName: "commerce",
-      targetAuthority: { runtimeRole: "COMMERCE" }, apiVersion: "v0",
+      targetAuthority: { publication: "OPERATIONAL" }, apiVersion: "v0",
       apiName: "/checkout/auction-funds/evidence", timeoutMs: 10000, maxAttempts: 1
     }
   }

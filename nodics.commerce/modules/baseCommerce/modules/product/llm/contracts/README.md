@@ -67,3 +67,22 @@ Read the [complete contract section](product-lifecycle-and-publication.md#curren
 ## Source authoring APIs
 
 Read the [complete contract section](product-lifecycle-and-publication.md#source-authoring-apis).
+
+### Local publication target ownership
+
+The Product target's `assertOnline` requires DMS local Product ownership and
+explicit ONLINE or OPERATIONAL runtime publication. The configured transport
+target role remains a remote selector, not evidence that this process owns
+Product. STAGED, missing publication and remoteOnly Product sources refuse;
+physical cohosting labels do not change admission. Graph, tenant, approval,
+receipt and pointer checks remain unchanged. See the governed-publication test.
+
+## Publication context defaults
+
+Standard publication providers and schema policies live in ordinary module
+properties. nConfig selects context-conditioned values from explicit STAGED,
+ONLINE or OPERATIONAL metadata, never a host role name. Missing or unknown context
+rejects configuration. Source/target credentials, connections, installed storage
+qualification, grants and approvals remain independent. Runtime overrides contain
+only intentional differences. The Commerce publication configuration test covers
+these boundaries and later overrides without starting providers.

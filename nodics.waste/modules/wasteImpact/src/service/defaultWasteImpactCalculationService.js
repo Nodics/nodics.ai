@@ -101,8 +101,22 @@ module.exports = {
         }
         const effective = typeof CONFIG !== 'undefined' && CONFIG && typeof CONFIG.get === 'function' ?
             CONFIG.get('wasteImpact', tenant) : tenant === undefined ? DEFAULTS.wasteImpact : undefined;
-        const settings = effective && effective.calculation;
-        if (!settings || typeof settings.providerService !== 'string' || !settings.providerService.trim() ||
+        const { providerProfile, ...settings } = effective?.calculation || {};
+        if (providerProfile !== undefined && providerProfile !== null) {
+            const profiles = effective.providerProfiles || {};
+            const profile = typeof providerProfile === 'string' && Object.hasOwn(profiles, providerProfile)
+                ? profiles[providerProfile] : undefined;
+            if (!profile || !Array.isArray(profile.fallbackProviderServices) ||
+                profile.fallbackProviderServices.length > 4 ||
+                profile.fallbackProviderServices.some(name => typeof name !== 'string' || !name.trim())) {
+                this.fail('ERR_WASTE_IMPACT_CONFIGURATION_INVALID', 'Selected impact provider profile is unavailable or invalid');
+            }
+            settings.providerService = profile.providerService;
+            settings.fallbackProviderServices = profile.fallbackProviderServices;
+            settings.timeoutMs = profile.timeoutMs;
+            settings.failureMode = profile.failureMode;
+        }
+        if (typeof settings.providerService !== 'string' || !settings.providerService.trim() ||
             !Number.isInteger(settings.timeoutMs) || settings.timeoutMs < 1 || settings.timeoutMs > 2147483647 ||
             !VOCABULARY.failureModes.includes(settings.failureMode)) {
             this.fail('ERR_WASTE_IMPACT_CONFIGURATION_INVALID', 'Provider service, timeout and failure mode must be configured');

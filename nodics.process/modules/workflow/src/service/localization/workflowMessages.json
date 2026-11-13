@@ -1,0 +1,2273 @@
+{
+  "formatVersion": 1,
+  "ownerModule": "workflow",
+  "entries": [
+    {
+      "namespace": "process",
+      "key": "ui.current-focus",
+      "defaultMessage": "Current focus",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التركيز الحالي"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.open",
+      "defaultMessage": "Open",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.visual-graph-preview",
+      "defaultMessage": "Visual graph preview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معاينة الرسم المرئي"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.select-or-create-a-draft-definition-to-preview-the-backend-owned-graph",
+      "defaultMessage": "Select or create a draft definition to preview the backend-owned graph.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر مسودة تعريف أو أنشئها لمعاينة الرسم الذي تديره خدمة العمليات."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.nodes",
+      "defaultMessage": "nodes ·",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عُقد ·"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.transitions-axis-stores-layout-intent-only-validation-and-runtime-truth-",
+      "defaultMessage": "transitions. Axis stores layout intent only; validation and runtime truth stay in nodics.process.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "انتقالات. يحفظ Axis تخطيط العرض فقط؛ تبقى صحة التحقق والتنفيذ لدى خدمة العمليات."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.version-history",
+      "defaultMessage": "Version history",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سجل النسخ"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.loading",
+      "defaultMessage": "Loading",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التحميل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.no-immutable-versions-exist-yet-validate-and-publish-a-draft-to-create-t",
+      "defaultMessage": "No immutable versions exist yet. Validate and publish a draft to create the first auditable process version.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد نسخ ثابتة بعد. تحقّق من المسودة وانشرها لإنشاء أول نسخة قابلة للتدقيق."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.version",
+      "defaultMessage": "Version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النسخة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.published-by",
+      "defaultMessage": "Published by",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نشرها"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.checksum",
+      "defaultMessage": "checksum",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بصمة التحقق"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.process-instances",
+      "defaultMessage": "Process instances",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حالات سير العمل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.find-an-instance",
+      "defaultMessage": "Find an instance",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "البحث عن حالة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.search-the-recently-retrieved-workflow-instances",
+      "defaultMessage": "Search the recently retrieved workflow instances.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ابحث في حالات سير العمل التي جُلبت مؤخراً."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.no-workflow-instances-were-returned-start-a-published-workflow-from-defi",
+      "defaultMessage": "No workflow instances were returned. Start a published workflow from Definitions to create one.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تُرجع الخدمة حالات سير عمل. ابدأ سير عمل منشوراً من التعريفات لإنشاء حالة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.clear-search",
+      "defaultMessage": "Clear search",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسح البحث"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.no-matching-instances-in-these-results",
+      "defaultMessage": "No matching instances in these results.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد حالات مطابقة في هذه النتائج."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.node",
+      "defaultMessage": "· node",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· العقدة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.view-timeline",
+      "defaultMessage": "View timeline",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عرض التسلسل الزمني"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.cancel-instance",
+      "defaultMessage": "Cancel instance",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إلغاء الحالة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.recovery-incidents",
+      "defaultMessage": "Recovery incidents",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حوادث الاستعادة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.retry-failed-workflow-actions-or-invoke-their-registered-domain-compensa",
+      "defaultMessage": "Retry failed workflow actions or invoke their registered domain compensation. Process records the recovery; the business module owns state reversal.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أعد محاولة إجراءات سير العمل الفاشلة أو نفّذ التعويض المسجّل الخاص بها. تسجّل خدمة العمليات الاستعادة؛ وتدير وحدة الأعمال عكس الحالة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.no-workflow-recovery-incidents-need-action",
+      "defaultMessage": "No workflow recovery incidents need action.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد حوادث استعادة تتطلب إجراءً."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.attempt",
+      "defaultMessage": "· attempt",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· المحاولة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.of",
+      "defaultMessage": "of",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "من"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.retry-action",
+      "defaultMessage": "Retry action",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعادة محاولة الإجراء"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.run-compensation",
+      "defaultMessage": "Run compensation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تنفيذ التعويض"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.refresh-task-evidence",
+      "defaultMessage": "Refresh task evidence",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث أدلة المهام"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.previous-task-page",
+      "defaultMessage": "Previous task page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صفحة المهام السابقة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.next-task-page",
+      "defaultMessage": "Next task page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صفحة المهام التالية"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.no-tasks-on-this-page",
+      "defaultMessage": "No tasks on this page.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد مهام في هذه الصفحة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.cms-publication-approvals",
+      "defaultMessage": "CMS publication approvals",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "موافقات نشر المحتوى"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.requested-by",
+      "defaultMessage": "Requested by",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طلبها"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.assigned-to",
+      "defaultMessage": "· assigned to",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· مسندة إلى"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.hide-review",
+      "defaultMessage": "Hide review",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إخفاء المراجعة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.review-evidence",
+      "defaultMessage": "Review evidence",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة الأدلة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.approve",
+      "defaultMessage": "Approve",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "موافقة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.reject",
+      "defaultMessage": "Reject",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رفض"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.review-before-decision",
+      "defaultMessage": "Review before decision",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع قبل اتخاذ القرار"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.this-is-the-staged-cms-publication-evidence-for-the-selected-approval-ta",
+      "defaultMessage": "This is the staged CMS publication evidence for the selected approval task.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "هذه أدلة نشر المحتوى المجهّز لمهمة الموافقة المحددة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.decision-available",
+      "defaultMessage": "Decision available",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القرار متاح"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.task-is-not-actionable",
+      "defaultMessage": "Task is not actionable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا يمكن اتخاذ إجراء على المهمة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.reason-for-rejection",
+      "defaultMessage": "Reason for rejection",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سبب الرفض"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.tell-the-author-what-needs-to-change-before-resubmitting",
+      "defaultMessage": "Tell the author what needs to change before resubmitting.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أوضح للمؤلف ما يلزم تغييره قبل إعادة الإرسال."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.approve-submits-the-publication-decision-to-its-owner-reject-records-the",
+      "defaultMessage": "Approve submits the publication decision to its owner. Reject records the decision in Process without publishing this change.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ترسل الموافقة قرار النشر إلى الخدمة المختصة. يسجّل الرفض القرار في سير العمل دون نشر هذا التغيير."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.this-task-is-no-longer-waiting-for-a-decision-refresh-the-queue-to-load-",
+      "defaultMessage": "This task is no longer waiting for a decision. Refresh the queue to load the latest Process state.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تعد هذه المهمة تنتظر قراراً. حدّث القائمة لتحميل الحالة الحالية من خدمة العمليات."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.assign-selected-task-to",
+      "defaultMessage": "Assign selected task to",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إسناد المهمة المحددة إلى"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.user-group-or-queue-code",
+      "defaultMessage": "user, group, or queue code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز مستخدم أو مجموعة أو قائمة انتظار"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.assignee",
+      "defaultMessage": "· assignee",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· المكلّف"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.publication",
+      "defaultMessage": "Publication:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النشر:"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.retained-source-version",
+      "defaultMessage": "Retained source version:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نسخة المصدر المحتفظ بها:"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.assign",
+      "defaultMessage": "Assign",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إسناد"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.claim",
+      "defaultMessage": "Claim",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تولّي المهمة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.complete",
+      "defaultMessage": "Complete",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إكمال"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.cancel-task",
+      "defaultMessage": "Cancel task",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إلغاء المهمة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.scheduled-triggers",
+      "defaultMessage": "Scheduled triggers",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المشغّلات المجدولة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.refresh-relationships",
+      "defaultMessage": "Refresh relationships",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث العلاقات"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.command-availability-could-not-be-verified-refresh-to-check-again",
+      "defaultMessage": "Command availability could not be verified. Refresh to check again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر التحقق من توفر الأمر. حدّث البيانات للتحقق مجدداً."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.checking-command-availability",
+      "defaultMessage": "Checking command availability.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التحقق من توفر الأوامر."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.some-actions-are-unavailable-for-this-session",
+      "defaultMessage": "Some actions are unavailable for this session.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بعض الإجراءات غير متاحة لهذه الجلسة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.the-version-update-is-unconfirmed-refresh-to-inspect-current-relationshi",
+      "defaultMessage": "The version update is unconfirmed. Refresh to inspect current relationship evidence without repeating the command.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث النسخة غير مؤكد. حدّث البيانات لفحص العلاقة الحالية دون إعادة الأمر."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.choose-the-published-workflow-and-version-this-schedule-should-run-activ",
+      "defaultMessage": "Choose the published workflow and version this schedule should run. Activate the relationship here, then review and activate its schedule in Cron.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر سير العمل المنشور والنسخة التي يجب أن يشغّلها هذا الجدول. فعّل العلاقة هنا، ثم راجع الجدول وفعّله في المجدول."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.published-workflow",
+      "defaultMessage": "Published workflow",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سير العمل المنشور"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.published-workflow-version",
+      "defaultMessage": "Published workflow version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نسخة سير العمل المنشورة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.published-versions-are-unavailable-refresh-the-relationship-evidence-bef",
+      "defaultMessage": "Published versions are unavailable. Refresh the relationship evidence before continuing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النسخ المنشورة غير متاحة. حدّث أدلة العلاقة قبل المتابعة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.choose-an-immutable-published-version-it-will-remain-pinned-until-explic",
+      "defaultMessage": "Choose an immutable published version. It will remain pinned until explicitly changed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر نسخة منشورة ثابتة. ستظل مثبتة حتى تغيّرها صراحةً."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.cron-job-code",
+      "defaultMessage": "Cron job code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز الوظيفة المجدولة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.schedule-expression",
+      "defaultMessage": "Schedule expression",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعبير الجدولة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.use-the-timing-approved-for-this-job-in-cron",
+      "defaultMessage": "Use the timing approved for this job in Cron.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدم التوقيت المعتمد لهذه الوظيفة في المجدول."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.add-trigger",
+      "defaultMessage": "Add trigger",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة مشغّل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.this-relationship-is-already-listed-below-select-its-published-version-h",
+      "defaultMessage": "This relationship is already listed below. Select its published version here to update the existing relationship.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "هذه العلاقة مدرجة أدناه بالفعل. اختر النسخة المنشورة هنا لتحديث العلاقة الحالية."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.set-published-version",
+      "defaultMessage": "Set published version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعيين النسخة المنشورة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.no-trigger-metadata-has-been-registered-yet",
+      "defaultMessage": "No trigger metadata has been registered yet.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تُسجّل بيانات مشغّلات بعد."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.choose-a-published-workflow-version-before-using-this-relationship-for-a",
+      "defaultMessage": "Choose a published workflow version before using this relationship for a schedule.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر نسخة منشورة من سير العمل قبل استخدام هذه العلاقة في الجدولة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.execute-now",
+      "defaultMessage": "Execute now",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تنفيذ الآن"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.activate",
+      "defaultMessage": "Activate",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تفعيل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.choose-workflow-version",
+      "defaultMessage": "Choose workflow version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختيار نسخة سير العمل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.archive-trigger",
+      "defaultMessage": "Archive trigger",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أرشفة المشغّل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.workflow-designer",
+      "defaultMessage": "Workflow designer",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مصمم سير العمل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.add-and-connect-steps-save-the-draft-then-validate-before-publishing-pub",
+      "defaultMessage": "Add and connect steps, save the draft, then validate before publishing. Published versions are read-only; prepare a new draft to make changes.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أضف الخطوات ووصل بينها واحفظ المسودة، ثم تحقّق منها قبل النشر. النسخ المنشورة للقراءة فقط؛ جهّز مسودة جديدة لإجراء التغييرات."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.steps",
+      "defaultMessage": "Steps",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الخطوات"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.connections",
+      "defaultMessage": "Connections",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الروابط"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.editing",
+      "defaultMessage": "Editing",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التحرير"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.workflow-designer-canvas",
+      "defaultMessage": "Workflow designer canvas",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لوحة مصمم سير العمل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.create-or-select-a-draft-to-see-the-canvas",
+      "defaultMessage": "Create or select a draft to see the canvas",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أنشئ مسودة أو اخترها لعرض اللوحة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.choose-an-existing-workflow-or-create-a-draft-then-add-and-connect-its-s",
+      "defaultMessage": "Choose an existing workflow or create a draft, then add and connect its steps.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر سير عمل حالياً أو أنشئ مسودة، ثم أضف خطواته ووصل بينها."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.node-code",
+      "defaultMessage": "Node code:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز العقدة:"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.add-workflow-step",
+      "defaultMessage": "Add workflow step",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة خطوة لسير العمل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.step-code",
+      "defaultMessage": "Step code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز الخطوة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.approvaldecision",
+      "defaultMessage": "approvalDecision",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "approvalDecision"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.step-name",
+      "defaultMessage": "Step name",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اسم الخطوة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.approval-decision",
+      "defaultMessage": "Approval decision",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قرار الموافقة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.step-type",
+      "defaultMessage": "Step type",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نوع الخطوة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.add-step",
+      "defaultMessage": "Add step",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة خطوة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.connect-workflow-steps",
+      "defaultMessage": "Connect workflow steps",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ربط خطوات سير العمل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.from-step",
+      "defaultMessage": "From step",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "من الخطوة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.to-step",
+      "defaultMessage": "To step",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إلى الخطوة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.connect-steps",
+      "defaultMessage": "Connect steps",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ربط الخطوات"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.step-controls",
+      "defaultMessage": "Step controls",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عناصر تحكم الخطوة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.delete",
+      "defaultMessage": "Delete",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حذف"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.save-the-draft-then-validate-its-connections-and-step-settings-before-pu",
+      "defaultMessage": "Save the draft, then validate its connections and step settings before publishing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "احفظ المسودة، ثم تحقّق من الروابط وإعدادات الخطوات قبل النشر."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.save-designer-draft",
+      "defaultMessage": "Save designer draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حفظ مسودة المصمم"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.axis-edits-graph-json-only-nodics-process-remains-validation-and-runtime",
+      "defaultMessage": "Axis edits graph JSON only; nodics.process remains validation and runtime authority.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحرّر Axis بيانات الرسم فقط؛ وتبقى خدمة العمليات مسؤولة عن التحقق والتنفيذ."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.draft",
+      "defaultMessage": "· draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· المسودة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.preview",
+      "defaultMessage": "Preview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معاينة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.edit-draft",
+      "defaultMessage": "Edit draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحرير المسودة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.validate-draft",
+      "defaultMessage": "Validate draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التحقق من المسودة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.publish",
+      "defaultMessage": "Publish",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نشر"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.prepare-next-draft",
+      "defaultMessage": "Prepare next draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تجهيز المسودة التالية"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.start-process",
+      "defaultMessage": "Start process",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بدء العملية"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.delete-draft",
+      "defaultMessage": "Delete draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حذف المسودة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.archive",
+      "defaultMessage": "Archive",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أرشفة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.instance-timeline",
+      "defaultMessage": "Instance timeline",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التسلسل الزمني للحالة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.selected",
+      "defaultMessage": "Selected",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "محدد"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.select-instance",
+      "defaultMessage": "Select instance",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختيار حالة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.select-a-process-instance-to-inspect-its-current-state-human-tasks-and-a",
+      "defaultMessage": "Select a process instance to inspect its current state, human tasks, and audit events in one operator-friendly view.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر حالة سير عمل لفحص حالتها الحالية والمهام البشرية وأحداث التدقيق في عرض واحد."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.status",
+      "defaultMessage": "· status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· الحالة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.tasks",
+      "defaultMessage": "Tasks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المهام"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.no-tasks-recorded",
+      "defaultMessage": "No tasks recorded.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد مهام مسجّلة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.at",
+      "defaultMessage": "at",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "في"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.audit-timeline",
+      "defaultMessage": "Audit timeline",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التسلسل الزمني للتدقيق"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.no-audit-events-recorded",
+      "defaultMessage": "No audit events recorded.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد أحداث تدقيق مسجّلة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.loading-timeline",
+      "defaultMessage": "Loading timeline...",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل التسلسل الزمني…"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.review-workflow-tasks-that-are-waiting-for-a-business-decision-with-avai",
+      "defaultMessage": "Review workflow tasks that are waiting for a business decision, with available owner-provided publication evidence.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع مهام سير العمل التي تنتظر قراراً تجارياً، مع أدلة النشر التي توفرها الخدمات المختصة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.approval-tasks",
+      "defaultMessage": "Approval tasks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مهام الموافقة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.the-work-queue-is-unavailable-in-the-current-workspace",
+      "defaultMessage": "The work queue is unavailable in the current workspace.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قائمة العمل غير متاحة في مساحة العمل الحالية."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.refresh-task-evidence-to-verify-whether-process-recorded-the-decision",
+      "defaultMessage": "Refresh task evidence to verify whether Process recorded the decision.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حدّث أدلة المهام للتحقق مما إذا كانت خدمة العمليات قد سجّلت القرار."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.first-page",
+      "defaultMessage": "First page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الصفحة الأولى"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.loading-approval-tasks-from-process",
+      "defaultMessage": "Loading approval tasks from Process.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل مهام الموافقة من خدمة العمليات."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.refreshing-task-evidence-showing-the-last-retrieved-records",
+      "defaultMessage": "Refreshing task evidence. Showing the last retrieved records.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحديث أدلة المهام. تُعرض آخر السجلات التي جُلبت."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.no-approval-decisions-on-this-page",
+      "defaultMessage": "No approval decisions on this page.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد قرارات موافقة في هذه الصفحة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.approval-task-queue",
+      "defaultMessage": "Approval task queue",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قائمة مهام الموافقة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.model",
+      "defaultMessage": "Model",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نمذجة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.validate",
+      "defaultMessage": "Validate",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقق"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.automate",
+      "defaultMessage": "Automate",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أتمتة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.axis-is-connected-to-nodics-process-this-workspace-is-intentionally-guid",
+      "defaultMessage": "Axis is connected to nodics.process. This workspace is intentionally guided: business users can model and review; backend services validate, version, audit, and execute.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Axis متصل بخدمة العمليات. تتيح هذه المساحة للمستخدمين نمذجة العمليات ومراجعتها، بينما تتولى خدمات الخادم التحقق والنسخ والتدقيق والتنفيذ."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.inspect-original-start",
+      "defaultMessage": "Inspect original start",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص طلب البدء الأصلي"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.process-could-not-confirm-the-original-start-starting-another-workflow-i",
+      "defaultMessage": "Process could not confirm the original start. Starting another workflow is on hold.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر تأكيد طلب البدء الأصلي. بدء سير عمل آخر معلّق."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.the-start-outcome-is-uncertain-inspect-the-original-workflow-before-star",
+      "defaultMessage": "The start outcome is uncertain. Inspect the original workflow before starting another.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نتيجة البدء غير مؤكدة. افحص سير العمل الأصلي قبل بدء آخر."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.reference",
+      "defaultMessage": "Reference",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المرجع"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.open-started-workflow",
+      "defaultMessage": "Open started workflow",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح سير العمل الذي بدأ"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.workflow-started-reference",
+      "defaultMessage": "Workflow started. Reference:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بدأ سير العمل. المرجع:"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.process-workspaces",
+      "defaultMessage": "Process workspaces",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مساحات عمل العمليات"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.process-workspace-focus",
+      "defaultMessage": "Process workspace focus",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تركيز مساحة عمل العمليات"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.business-users-can-move-through-the-process-console-by-intent-definition",
+      "defaultMessage": "Business users can move through the Process console by intent: definitions, operations, scheduled triggers, or designer. Each card opens the same backend-owned capability family without creating a second workflow authority in Axis.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "انتقل حسب الغرض: التعريفات أو التشغيل أو المشغّلات المجدولة أو المصمم. تفتح كل بطاقة الإمكانية التي تديرها خدمة العمليات."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.definitions",
+      "defaultMessage": "Definitions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التعريفات"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.drafts",
+      "defaultMessage": "Drafts",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المسودات"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.published",
+      "defaultMessage": "Published",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المنشور"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.selected-issues",
+      "defaultMessage": "Selected issues",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المشكلات المحددة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.runtime-operations-overview",
+      "defaultMessage": "Runtime operations overview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نظرة عامة على التشغيل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.operations-teams-need-to-see-whether-published-processes-are-producing-r",
+      "defaultMessage": "Operations teams need to see whether published processes are producing running instances, human work, and audit evidence. These numbers come from nodics.process read APIs, not from frontend-only assumptions.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راقب الحالات الجارية والمهام البشرية وأدلة التدقيق للعمليات المنشورة. تأتي هذه الأرقام من واجهات قراءة خدمة العمليات."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.inspection-limited",
+      "defaultMessage": "Inspection limited",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الفحص محدود"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.inspection-ready",
+      "defaultMessage": "Inspection ready",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الفحص جاهز"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.running-instances",
+      "defaultMessage": "Running instances",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحالات الجارية"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.open-tasks",
+      "defaultMessage": "Open tasks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المهام المفتوحة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.triggers",
+      "defaultMessage": "Triggers",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المشغّلات"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.start-a-published-definition-to-create-an-instance-and-first-task-claim-",
+      "defaultMessage": "Start a published definition to create an instance and first task. Claim, complete, cancel, and timeline views call nodics.process APIs; Axis does not calculate runtime state locally.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ابدأ تعريفاً منشوراً لإنشاء حالة ومهمتها الأولى. تستدعي إجراءات تولّي المهمة وإكمالها وإلغائها وعرض تسلسلها واجهات خدمة العمليات."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.create-a-workflow-draft",
+      "defaultMessage": "Create a workflow draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إنشاء مسودة سير عمل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.start-with-a-request-a-review-task-and-an-end-step-edit-the-steps-valida",
+      "defaultMessage": "Start with a request, a review task, and an end step. Edit the steps, validate the flow, and publish when it is ready.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ابدأ بطلب ومهمة مراجعة وخطوة نهاية. حرّر الخطوات وتحقّق من المسار، ثم انشره عندما يصبح جاهزاً."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.draft-name",
+      "defaultMessage": "Draft name",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اسم المسودة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.create-workflow-draft",
+      "defaultMessage": "Create workflow draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إنشاء مسودة سير العمل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.edit-selected-draft",
+      "defaultMessage": "Edit selected draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحرير المسودة المحددة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.update-the-name-category-and-business-description-save-changes-then-vali",
+      "defaultMessage": "Update the name, category, and business description. Save changes, then validate the draft before publishing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حدّث الاسم والفئة والوصف التجاري. احفظ التغييرات، ثم تحقّق من المسودة قبل نشرها."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.draft-editable",
+      "defaultMessage": "Draft editable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المسودة قابلة للتحرير"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.published-read-only",
+      "defaultMessage": "Published read-only",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المنشور للقراءة فقط"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.no-selection",
+      "defaultMessage": "No selection",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا يوجد اختيار"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.process-name",
+      "defaultMessage": "Process name",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اسم العملية"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.category",
+      "defaultMessage": "Category",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الفئة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.business-description",
+      "defaultMessage": "Business description",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الوصف التجاري"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.save-draft-changes",
+      "defaultMessage": "Save draft changes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حفظ تغييرات المسودة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.reset-fields",
+      "defaultMessage": "Reset fields",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعادة ضبط الحقول"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.process-definitions",
+      "defaultMessage": "Process definitions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعريفات العمليات"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.no-process-definitions-are-available-yet-create-the-sample-draft-above-t",
+      "defaultMessage": "No process definitions are available yet. Create the sample draft above to see the complete model → validate → publish flow without connecting any domain action or scheduler.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد تعريفات عمليات بعد. أنشئ المسودة النموذجية أعلاه لتجربة النمذجة والتحقق والنشر دون ربط إجراء تجاري أو مجدول."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.open-workflow-designer",
+      "defaultMessage": "Open workflow designer",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح مصمم سير العمل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.submitting-the-trigger-request",
+      "defaultMessage": "Submitting the trigger request.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ إرسال طلب المشغّل."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.open-triggered-workflow",
+      "defaultMessage": "Open triggered workflow",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح سير العمل المشغّل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.published-version-update-acknowledged-by-process",
+      "defaultMessage": "Published version update acknowledged by Process.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أقرت خدمة العمليات تحديث النسخة المنشورة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.trigger-request-acknowledged-by-process",
+      "defaultMessage": "Trigger request acknowledged by Process.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أقرت خدمة العمليات طلب المشغّل."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.workflow-completion-is-shown-in-its-timeline",
+      "defaultMessage": " Workflow completion is shown in its timeline.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يظهر اكتمال سير العمل في تسلسله الزمني."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.the-version-update-is-unconfirmed",
+      "defaultMessage": "The version update is unconfirmed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث النسخة غير مؤكد."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.the-trigger-request-is-unconfirmed",
+      "defaultMessage": "The trigger request is unconfirmed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طلب المشغّل غير مؤكد."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.further-trigger-commands-are-held-refresh-relationships-inspects-current",
+      "defaultMessage": "Further trigger commands are held. Refresh relationships inspects current evidence and does not repeat the request or confirm its original acknowledgement.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أوامر المشغّل الأخرى معلّقة. يفحص تحديث العلاقات الأدلة الحالية دون إعادة الطلب أو تأكيد إقراره الأصلي."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.inspect-requested-workflow",
+      "defaultMessage": "Inspect requested workflow",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص سير العمل المطلوب"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.inspecting-original-receipt",
+      "defaultMessage": "Inspecting original receipt",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ فحص الإيصال الأصلي"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.inspect-original-receipt",
+      "defaultMessage": "Inspect original receipt",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص الإيصال الأصلي"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.an-original-receipt-is-unavailable-for-this-request-its-outcome-remains-",
+      "defaultMessage": "An original receipt is unavailable for this request. Its outcome remains unconfirmed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا يتوفر إيصال أصلي لهذا الطلب. تظل نتيجته غير مؤكدة."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.the-original-receipt-does-not-confirm-completion-the-request-remains-hel",
+      "defaultMessage": "The original receipt does not confirm completion. The request remains held.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا يؤكد الإيصال الأصلي الاكتمال. يظل الطلب معلّقاً."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.process-and-automation",
+      "defaultMessage": "Process & Automation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "العمليات والأتمتة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.retrieved-count",
+      "defaultMessage": "{count, number} retrieved",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تم جلب {count, number}"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.actionable-count",
+      "defaultMessage": "{count, number} actionable",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عدد الحالات التي تتطلب إجراءً: {count, number}"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.approval-decisions-count",
+      "defaultMessage": "{count, number} approval decisions",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عدد قرارات الاعتماد: {count, number}"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.other-tasks-count",
+      "defaultMessage": "{count, number} other tasks",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عدد المهام الأخرى: {count, number}"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.task-page-count",
+      "defaultMessage": "Page {page, number} · {total, number} matching tasks",
+      "parameters": [
+        "page",
+        "total"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الصفحة {page, number} · عدد المهام المطابقة: {total, number}"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.awaiting-review-count",
+      "defaultMessage": "{count, number} awaiting review",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عدد المهام بانتظار المراجعة: {count, number}"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.approval-review-count",
+      "defaultMessage": "{count, plural, one {# approval task awaiting review.} other {# approval tasks awaiting review.}}",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عدد مهام الاعتماد بانتظار المراجعة: {count, number}."
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.approval-decisions-title",
+      "defaultMessage": "Approval decisions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قرارات الاعتماد"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.other-workflow-tasks",
+      "defaultMessage": "Other workflow tasks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مهام سير العمل الأخرى"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "ui.relationships-retrieved",
+      "defaultMessage": "{count, plural, one {# relationship retrieved} other {# relationships retrieved}}",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عدد العلاقات المسترجعة: {count, number}"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.created",
+      "defaultMessage": "CREATED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تم الإنشاء"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.running",
+      "defaultMessage": "RUNNING",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قيد التشغيل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.waiting",
+      "defaultMessage": "WAITING",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قيد الانتظار"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.completed",
+      "defaultMessage": "COMPLETED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مكتمل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.cancelled",
+      "defaultMessage": "CANCELLED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ملغى"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.failed",
+      "defaultMessage": "FAILED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فشل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.open",
+      "defaultMessage": "OPEN",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مفتوح"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.claimed",
+      "defaultMessage": "CLAIMED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تم تولّي المهمة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.escalated",
+      "defaultMessage": "ESCALATED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تم التصعيد"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.dead_letter",
+      "defaultMessage": "DEAD_LETTER",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "توقفت المحاولات"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.resolved",
+      "defaultMessage": "RESOLVED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تم الحل"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.draft",
+      "defaultMessage": "DRAFT",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسودة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.published",
+      "defaultMessage": "PUBLISHED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منشور"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.active",
+      "defaultMessage": "ACTIVE",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نشط"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.archived",
+      "defaultMessage": "ARCHIVED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مؤرشف"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.paused",
+      "defaultMessage": "PAUSED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متوقف مؤقتًا"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.up",
+      "defaultMessage": "UP",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متاح"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.degraded",
+      "defaultMessage": "DEGRADED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متاح جزئيًا"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.unavailable",
+      "defaultMessage": "UNAVAILABLE",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "غير متاح"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.preview",
+      "defaultMessage": "preview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معاينة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.live",
+      "defaultMessage": "LIVE",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مباشر"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.available",
+      "defaultMessage": "available",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متاح"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.planned",
+      "defaultMessage": "planned",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مخطط"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.api-unavailable",
+      "defaultMessage": "API unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الخدمة غير متاحة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.checking-api",
+      "defaultMessage": "Checking API",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التحقق من الخدمة"
+      }
+    },
+    {
+      "namespace": "process",
+      "key": "state.api-unconfirmed",
+      "defaultMessage": "API unconfirmed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم يتم التحقق من الخدمة"
+      }
+    }
+  ]
+}

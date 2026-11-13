@@ -154,7 +154,7 @@ module.exports = {
         ["projectCode", "environmentCode", "serverCode", "instanceCode", "assignmentCode"].every(k =>
           typeof g[k] === "string" && g[k] && g[k] === auth.runtimeScope?.[k]) &&
         g.instanceCode === auth.runtimeInstanceId && g.environmentCode === NODICS.getSelectedEnvironmentName());
-      if (grants.length !== 1 || (CONFIG.get("runtimeRole")?.code || CONFIG.get("runtimeRole")) !== "COMMERCE") this.fail();
+      if (grants.length !== 1 || SERVICE.DefaultModuleService?.isLocalModuleActive?.("digitalCore") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") this.fail();
     };
     bound();
     const projection = async () => {

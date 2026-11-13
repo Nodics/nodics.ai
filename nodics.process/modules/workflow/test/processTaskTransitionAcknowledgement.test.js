@@ -74,6 +74,31 @@ test('assignment requires exact unchanged task CAS and verified readback before 
     assert.equal(audited, 1);
 });
 
+test('another eligible employee cannot complete an already claimed task', async () => {
+    global.CLASSES = {
+        NodicsError: class extends Error {
+            constructor(code) { super(code); this.code = code; }
+        },
+    };
+    let writes = 0;
+    const task = { code: 'task', instanceCode: 'instance', nodeCode: 'review', status: 'CLAIMED', assignee: 'reviewer-one' };
+    const owner = {
+        ...source,
+        getActor: (request) => request.authData.loginId,
+        requireTask: async () => task,
+        requireInstance: async () => ({ code: 'instance', definitionCode: 'definition', version: 1, status: 'WAITING' }),
+        requireVersion: async () => ({ graph: { nodes: [{ code: 'review', type: 'TASK' }] } }),
+        taskService: () => ({ update: async () => { writes++; } }),
+    };
+    await assert.rejects(() => owner.completeTask({
+        tenant: 'tenant',
+        taskCode: 'task',
+        authData: { loginId: 'reviewer-two', tokenType: 'access', principalType: 'human', permissions: ['process.task.complete'] },
+        body: { decision: { approved: true } },
+    }), { code: 'ERR_PROCESS_00029' });
+    assert.strictEqual(writes, 0);
+});
+
 test('failed envelopes cannot be converted into task success by an affected count', () => {
     global.CLASSES = { NodicsError: class extends Error {} };
     global.SERVICE = {

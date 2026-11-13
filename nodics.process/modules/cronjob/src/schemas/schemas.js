@@ -36,6 +36,9 @@ module.exports = {
                     required: false
                 ,
                     description: 'Indicates whether this record is active and available for normal use.'},
+                startTime: { type: 'date', required: false, description: 'Execution start time.' },
+                endTime: { type: 'date', required: false, description: 'Execution end time.' },
+                result: { type: 'object', required: false, description: 'Bounded execution outcome; no target payloads or credentials.' },
                 jobCode: {
                     type: 'string',
                     required: true
@@ -110,6 +113,12 @@ module.exports = {
                     default: 'NEW',
                     description: 'Current state of JOB [NEW, RUNNING, ACTIVE, PAUSED, STOPED, CREATED, REMOVED]'
                 },
+                startTime: { type: 'date', required: false, readOnly: true, description: 'Last admitted execution start, owned by Cron.' },
+                endTime: { type: 'date', required: false, readOnly: true, description: 'Last terminal execution time, owned by Cron.' },
+                lastEndTime: { type: 'date', required: false, readOnly: true, description: 'Previous execution end time, owned by Cron.' },
+                activeTime: { type: 'date', required: false, readOnly: true, description: 'Last scheduler activation time.' },
+                stopTime: { type: 'date', required: false, readOnly: true, description: 'Last scheduler stop time.' },
+                lastSkippedAt: { type: 'date', required: false, readOnly: true, description: 'Last natural tick skipped because this job was already executing. Skipped ticks are never replayed.' },
                 log: {
                     type: 'array',
                     required: false,
@@ -124,3 +133,7 @@ module.exports = {
         }
     }
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.cronjob.cronJobLog.backoffice = Object.assign({ description: "Recorded Cron execution outcomes. Inspect the original run before repeating uncertain work." }, module.exports.cronjob.cronJobLog.backoffice);
+module.exports.cronjob.cronJob.backoffice = Object.assign({ description: "Scheduled job definitions and owner-approved targets. Saving a definition does not activate its schedule." }, module.exports.cronjob.cronJob.backoffice);

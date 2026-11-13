@@ -45,6 +45,7 @@ global.ENUMS = {
 };
 
 global.SERVICE = {
+    DefaultModuleService: { isLocalModuleActive: () => true, isCurrentRuntimeAuthority: () => true },
     DefaultCronJobService: {
         assertOperational: async () => ({ serviceId: "approved-cron-instance", tokenType: "service" }),
         update: function () {
@@ -147,6 +148,46 @@ function processStub() {
     const lastTransition = pipelineTransitions[pipelineTransitions.length - 1];
     assert.strictEqual(lastTransition.type, 'error', 'Cron should fail closed when Process runtime executor is missing');
     assert.strictEqual(lastTransition.error.code, 'ERR_JOB_00008', 'Missing Process runtime should use Cron status definition');
+
+    const lifecycle = require('../../workflow/src/service/operation/defaultProcessRuntimeLifecycleService');
+    const verify = require('../../../../nodics.foundation/modules/nAuth/src/service/identity/defaultServiceTokenService');
+    const graph = { code: 'dailyContentApproval', definitionCode: 'contentApproval', cronJobCode: definition.code,
+        active: true, triggerType: 'CRON', status: 'ACTIVE' };
+    const written = [];
+    const owner = { ...lifecycle, requireTrigger: async () => graph, audit: async () => {},
+        startInstance: async request => { written.push(request.runtimeOperation); return { data: {} }; } };
+    const auth = { ...principal, tenant: definition.tenant, entCode: 'merchant', principalType: 'service',
+        modules: ['cronjob', 'workflow'], permissions: ['process.trigger.execute'], runtimeInstanceId: 'scheduler',
+        runtimeScope: { instanceCode: 'scheduler', projectCode: 'p', environmentCode: 'e', serverCode: 's', assignmentCode: 'a' } };
+    const selected = { dailyContentApproval: true };
+    global.CONFIG = { get: key => ({ cronjob: { processTriggerConnection: 'workflow' },
+        process: { remoteCronTriggers: selected } })[key] };
+    SERVICE.DefaultServiceTokenService = verify;
+    SERVICE.DefaultModuleService.isLocalModuleActive = () => false;
+    SERVICE.DefaultModuleService.invokeModule = async call => {
+        assert.equal(call.tenant, definition.tenant);
+        assert.equal(call.requireInternalAuth, true);
+        assert.equal(call.local, false);
+        assert.equal(call.maxAttempts, 1);
+        assert.deepEqual(call.targetAuthority, { publication: 'OPERATIONAL' });
+        assert.equal(call.apiName, '/internal/triggers/dailyContentApproval/fire');
+        return owner.fireScheduledTrigger({ tenant: call.tenant, authData: auth,
+            triggerCode: graph.code, runtimeOperation: call.requestBody });
+    };
+    const fire = () => triggerHandler.executeProcessTriggerJob(definition, {}, auth);
+    assert.equal((await fire()).code, 'SUC_PROCESS_00011');
+    assert.equal(written[0].definitionCode, graph.definitionCode);
+    assert.equal(written[0].context.cronJobTenant, definition.tenant);
+    assert.equal(written[0].context.cronJobCode, definition.code);
+    selected.dailyContentApproval = false;
+    await assert.rejects(fire(), /caller/);
+    selected.dailyContentApproval = true;
+    graph.cronJobCode = 'other';
+    await assert.rejects(fire(), /binding/);
+    graph.cronJobCode = definition.code;
+    graph.status = 'DRAFT';
+    await assert.rejects(fire(), /not active/);
+    assert.equal(written.length, 1);
 
     console.log('CronJob Process trigger contract validated: scheduled handoff preserves module ownership');
 })().catch((error) => {

@@ -145,7 +145,7 @@ function phasedFixture(t) {
     required: true, phase: "AFTER_PUBLICATION" }));
   const application = { code: "partnerApp", owner: "partner.storefront", type: "STOREFRONT_DOMAIN_BUNDLE",
     applicationCode: "partnerApp", siteCode: "partnerSite", baselineCode: "partnerBaseline",
-    target: { moduleName: "cms", connectionName: "contentStaged", runtimeRole: "WCMS_STAGED", timeoutMs: 120000 },
+    target: { moduleName: "cms", connectionName: "contentStaged", publication: "STAGED", timeoutMs: 120000 },
     dataPackages: [before, media, ...after] };
   const request = { tenant: "partnerTenant", requestId: "partner-setup-1", authData: { principalId: "partner-admin" },
     httpRequest: { headers: { authorization: "Bearer original-partner-human" } } };
@@ -191,7 +191,12 @@ function phasedFixture(t) {
   const service = Object.assign(Object.create(base), {
     profile: () => application,
     functionalModulePreparationStatus: async () => [],
-    applicationTargetBinding: (connectionName) => ({ connectionName }),
+    applicationTargetBinding: (connectionName) => {
+      // Synthetic deployment declarations remain separate from observation diagnostic role evidence.
+      const publications = { contentStaged: "STAGED", staged: "STAGED", commerce: "OPERATIONAL", online: "ONLINE" };
+      assert(Object.hasOwn(publications, connectionName), "Fixture target must have declared publication authority");
+      return { connectionName, targetAuthority: { server: connectionName, publication: publications[connectionName] } };
+    },
     mediaManifestCodes: () => ["partnerMedia"],
     mediaPreparationStatus: async (step) => ({ ...step, status: "SOURCE_READY" }),
     prepareMediaAssets: async () => { calls.push({ owner: "media", operation: "prepare" }); },
@@ -257,7 +262,7 @@ function observationFixture(t) {
     baselineCode: f.application.baselineCode, profileDigest: observer.digest(f.application),
     stages: steps.map(step => ({ code: step.code, server: step.targetServer, descriptor: observer.stepIdentity(step),
       enterpriseCode: step.operatorEnterpriseCode || "SHARED", online: { server: "online", runtimeRole: "COMMERCE" } })),
-    baseline: { server: f.application.target.connectionName, runtimeRole: f.application.target.runtimeRole, enterpriseCode: "SHARED" } };
+    baseline: { server: f.application.target.connectionName, runtimeRole: "WCMS_STAGED", enterpriseCode: "SHARED" } };
   const checksum = "a".repeat(64), oldGet = global.CONFIG.get, invoke = global.SERVICE.DefaultModuleService.invokeModule;
   global.CONFIG.get = key => key === "publish" ? { setup: { observation: { enabled: true,
     profilePlans: { [f.application.code]: plan.code } } } } : oldGet(key);
@@ -942,7 +947,7 @@ test("controller preserves only the bounded stage selector and never accepts cal
   } } };
   controller.prepare(request);
   assert.deepEqual(request.applicationInitialization, { reason: undefined, correlationId: undefined,
-    forceRefresh: undefined, afterPublicationStepCode: f.publication.code });
+    forceRefresh: undefined, continuation: undefined, afterPublicationStepCode: f.publication.code });
 });
 
 test("scoped publication 403 preserves owner refusal without operational preflight, retries or private details", async t => {

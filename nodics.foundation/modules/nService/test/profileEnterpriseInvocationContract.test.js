@@ -179,6 +179,21 @@ const handler = Object.assign({}, require('../src/service/enterprise/defaultEnte
     });
     assert.strictEqual(issuedTokenRequest.tenant, 'tenant-b');
 
+    global.NODICS.getInternalAuthToken = () => 'signed-runtime-token';
+    global.SERVICE.DefaultServiceTokenService = { requireRuntimePrincipal: () => {} };
+    global.SERVICE.DefaultAuthorizationProviderService.authorizeToken = async () => ({
+        code: 'SUC_AUTH_00000',
+        result: { tenant: 'default', entCode: 'default', principalType: 'service',
+            permissions: ['profile.enterprise.search'] }
+    });
+    global.SERVICE.DefaultModuleService.invokeModule = async () => {
+        throw Object.assign(new Error('owner detail'), { code: 'ERR_AUTH_00003', status: 500 });
+    };
+    await assert.rejects(provider.loadRuntimeEnterprise({ entCode: 'foreign-enterprise' }),
+        error => error instanceof NodicsError && error.code === 'ERR_AUTH_00003' && error.message !== 'owner detail');
+    await assert.rejects(provider.loadEnterprise({ entCode: 'foreign-enterprise' }),
+        error => error instanceof NodicsError && error.code === 'ERR_AUTH_00003' && error.message !== 'owner detail');
+
     console.log('Profile enterprise module invocation contract validated');
 })().catch(error => {
     console.error(error);

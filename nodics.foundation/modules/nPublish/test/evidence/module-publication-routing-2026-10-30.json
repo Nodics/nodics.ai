@@ -1,0 +1,402 @@
+{
+  "createdAt": "2026-10-30T10:18:59.985800+00:00",
+  "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+  "nodeVersion": "v24.18.0",
+  "tests": {
+    "argv": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "nodics.foundation/modules/nPublish/test/publicationApprovalBridge.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationAtomicAuditContract.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationAuditReconciliationService.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationAuthorityContract.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationLifecycleService.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationOperationsRouteContract.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationOperationsService.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationSetup.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationSetupObservation.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationSetupObservationProject.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationSetupOwners.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationWithdrawalContract.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationWorkflowProvider.test.js",
+      "nodics.process/modules/workflow/test/processRemoteActionAdapter.test.js",
+      "nodics.process/modules/workflow/test/processPublicationDecisionCallback.test.js",
+      "nodics.process/modules/workflow/test/processPublicationApprovalService.test.js",
+      "nodics.process/modules/workflow/test/processTaskClaimConcurrency.test.js",
+      "nodics.process/modules/workflow/test/processTaskDecisionContract.test.js",
+      "nodics.process/modules/workflow/test/processCompletedDecisionRetry.test.js",
+      "nodics.process/modules/workflow/test/processRemoteActionInspection.test.js",
+      "nodics.process/modules/workflow/test/processActionDiagnosticAudit.test.js"
+    ],
+    "command": "node --test --test-reporter=tap nodics.foundation/modules/nPublish/test/publicationApprovalBridge.test.js nodics.foundation/modules/nPublish/test/publicationAtomicAuditContract.test.js nodics.foundation/modules/nPublish/test/publicationAuditReconciliationService.test.js nodics.foundation/modules/nPublish/test/publicationAuthorityContract.test.js nodics.foundation/modules/nPublish/test/publicationLifecycleService.test.js nodics.foundation/modules/nPublish/test/publicationOperationsRouteContract.test.js nodics.foundation/modules/nPublish/test/publicationOperationsService.test.js nodics.foundation/modules/nPublish/test/publicationSetup.test.js nodics.foundation/modules/nPublish/test/publicationSetupObservation.test.js nodics.foundation/modules/nPublish/test/publicationSetupObservationProject.test.js nodics.foundation/modules/nPublish/test/publicationSetupOwners.test.js nodics.foundation/modules/nPublish/test/publicationWithdrawalContract.test.js nodics.foundation/modules/nPublish/test/publicationWorkflowProvider.test.js nodics.process/modules/workflow/test/processRemoteActionAdapter.test.js nodics.process/modules/workflow/test/processPublicationDecisionCallback.test.js nodics.process/modules/workflow/test/processPublicationApprovalService.test.js nodics.process/modules/workflow/test/processTaskClaimConcurrency.test.js nodics.process/modules/workflow/test/processTaskDecisionContract.test.js nodics.process/modules/workflow/test/processCompletedDecisionRetry.test.js nodics.process/modules/workflow/test/processRemoteActionInspection.test.js nodics.process/modules/workflow/test/processActionDiagnosticAudit.test.js",
+    "exitCode": 0,
+    "stdout": "TAP version 13\n# Subtest: neutral bridge defaults require an explicit Process connection and do not select a provider\nok 1 - neutral bridge defaults require an explicit Process connection and do not select a provider\n  ---\n  duration_ms: 10.461666\n  type: 'test'\n  ...\n# Subtest: inherited bridge mechanics preserve explicit connection and original caller transport\nok 2 - inherited bridge mechanics preserve explicit connection and original caller transport\n  ---\n  duration_ms: 0.435459\n  type: 'test'\n  ...\n# Subtest: approval uses configured domain and original caller on the existing Process start API\nok 3 - approval uses configured domain and original caller on the existing Process start API\n  ---\n  duration_ms: 0.305833\n  type: 'test'\n  ...\n# Subtest: approval preserves native Process identity without implicitly enrolling in optional command receipts\nok 4 - approval preserves native Process identity without implicitly enrolling in optional command receipts\n  ---\n  duration_ms: 1.377666\n  type: 'test'\n  ...\n# Subtest: native requester uses stored publisher actor and authenticated login namespace, never body identity\nok 5 - native requester uses stored publisher actor and authenticated login namespace, never body identity\n  ---\n  duration_ms: 3.074458\n  type: 'test'\n  ...\n# Subtest: requester binding rejects wrong native actor, service/system callers and absent native login\nok 6 - requester binding rejects wrong native actor, service/system callers and absent native login\n  ---\n  duration_ms: 1.172\n  type: 'test'\n  ...\n# Subtest: real pending transition journals requester evidence atomically before Process transport\nok 7 - real pending transition journals requester evidence atomically before Process transport\n  ---\n  duration_ms: 0.319375\n  type: 'test'\n  ...\n# Subtest: claimed foreign requester and corrupted exact-revision journal cannot mutate publication\nok 8 - claimed foreign requester and corrupted exact-revision journal cannot mutate publication\n  ---\n  duration_ms: 1.386916\n  type: 'test'\n  ...\n# Subtest: qualified start refuses an older pre-existing Process instance despite matching context\nok 9 - qualified start refuses an older pre-existing Process instance despite matching context\n  ---\n  duration_ms: 0.180875\n  type: 'test'\n  ...\n# Subtest: candidate denial, duplicate versions and pointer races stop before a pending write\nok 10 - candidate denial, duplicate versions and pointer races stop before a pending write\n  ---\n  duration_ms: 0.400375\n  type: 'test'\n  ...\n# Subtest: legacy pending instances keep their old callback context but cannot silently start a new bound cycle\nok 11 - legacy pending instances keep their old callback context but cannot silently start a new bound cycle\n  ---\n  duration_ms: 0.2635\n  type: 'test'\n  ...\n# Subtest: source start fails closed for missing caller, wrong role, missing policy and invalid Process response\nok 12 - source start fails closed for missing caller, wrong role, missing policy and invalid Process response\n  ---\n  duration_ms: 0.263083\n  type: 'test'\n  ...\n# Subtest: claimed approval reaches Online through real lifecycle and preserves the incoming principal\nok 13 - claimed approval reaches Online through real lifecycle and preserves the incoming principal\n  ---\n  duration_ms: 0.415959\n  type: 'test'\n  ...\n# Subtest: selected multi-enterprise deployment uses claimed business scope without rewriting signed identity\nok 14 - selected multi-enterprise deployment uses claimed business scope without rewriting signed identity\n  ---\n  duration_ms: 0.364875\n  type: 'test'\n  ...\n# Subtest: unselected or malformed multi-enterprise authority refuses before private persistence\nok 15 - unselected or malformed multi-enterprise authority refuses before private persistence\n  ---\n  duration_ms: 0.421458\n  type: 'test'\n  ...\n# Subtest: legacy cross-enterprise journals require an independently qualified sealed source owner\nok 16 - legacy cross-enterprise journals require an independently qualified sealed source owner\n  ---\n  duration_ms: 0.624708\n  type: 'test'\n  ...\n# Subtest: claimed rejection never activates and its committed replay is idempotent\nok 17 - claimed rejection never activates and its committed replay is idempotent\n  ---\n  duration_ms: 0.259292\n  type: 'test'\n  ...\n# Subtest: lost response retry with a fresh Process handle does not publish a second time\nok 18 - lost response retry with a fresh Process handle does not publish a second time\n  ---\n  duration_ms: 0.212875\n  type: 'test'\n  ...\n# Subtest: callback rejects decision injection and scope injection before claiming or elevating\nok 19 - callback rejects decision injection and scope injection before claiming or elevating\n  ---\n  duration_ms: 0.237416\n  type: 'test'\n  ...\n# Subtest: failed, expired or already consumed Process claim never grants local persistence authority\nok 20 - failed, expired or already consumed Process claim never grants local persistence authority\n  ---\n  duration_ms: 0.0895\n  type: 'test'\n  ...\n# Subtest: runtime principal denial stops before transport and local persistence\nok 21 - runtime principal denial stops before transport and local persistence\n  ---\n  duration_ms: 0.47025\n  type: 'test'\n  ...\n# Subtest: claim response must bind source, definition, scope, completed task and execution handle\nok 22 - claim response must bind source, definition, scope, completed task and execution handle\n  ---\n  duration_ms: 2.327833\n  type: 'test'\n  ...\n# Subtest: persisted source/version/workflow/revision/scope changes reject without lifecycle mutations\nok 23 - persisted source/version/workflow/revision/scope changes reject without lifecycle mutations\n  ---\n  duration_ms: 4.090917\n  type: 'test'\n  ...\n# Subtest: replay requires exact journal evidence, not merely an Online or Approved status\nok 24 - replay requires exact journal evidence, not merely an Online or Approved status\n  ---\n  duration_ms: 0.782875\n  type: 'test'\n  ...\n# Subtest: activation failure remains failed and requires a new approval cycle\nok 25 - activation failure remains failed and requires a new approval cycle\n  ---\n  duration_ms: 0.221625\n  type: 'test'\n  ...\n# Subtest: concurrent decisions use publication revision CAS; at most one activation commits\nok 26 - concurrent decisions use publication revision CAS; at most one activation commits\n  ---\n  duration_ms: 0.231875\n  type: 'test'\n  ...\n# Subtest: physical role renames preserve local domain ownership and explicit publication routing\nok 27 - physical role renames preserve local domain ownership and explicit publication routing\n  ---\n  duration_ms: 1.061167\n  type: 'test'\n  ...\n# Subtest: missing local owner, source-only capability, malformed authority and retired role selectors fail before transport\nok 28 - missing local owner, source-only capability, malformed authority and retired role selectors fail before transport\n  ---\n  duration_ms: 0.48525\n  type: 'test'\n  ...\n# nPublish atomic audit contract validated\n# Subtest: nodics.foundation/modules/nPublish/test/publicationAtomicAuditContract.test.js\nok 2 - nodics.foundation/modules/nPublish/test/publicationAtomicAuditContract.test.js\n  ---\n  duration_ms: 88.407875\n  type: 'test'\n  ...\n# nPublish audit projection reconciliation validated\n# Subtest: nodics.foundation/modules/nPublish/test/publicationAuditReconciliationService.test.js\nok 3 - nodics.foundation/modules/nPublish/test/publicationAuditReconciliationService.test.js\n  ---\n  duration_ms: 85.7375\n  type: 'test'\n  ...\n# nPublish authority contract validated\n# Subtest: nodics.foundation/modules/nPublish/test/publicationAuthorityContract.test.js\nok 4 - nodics.foundation/modules/nPublish/test/publicationAuthorityContract.test.js\n  ---\n  duration_ms: 68.5225\n  type: 'test'\n  ...\n# nPublish lifecycle orchestration validated\n# Subtest: nodics.foundation/modules/nPublish/test/publicationLifecycleService.test.js\nok 5 - nodics.foundation/modules/nPublish/test/publicationLifecycleService.test.js\n  ---\n  duration_ms: 69.608292\n  type: 'test'\n  ...\n# Subtest: registered Staged domains retain scoped administration while disabled global and legacy CMS paths stay closed\nok 33 - registered Staged domains retain scoped administration while disabled global and legacy CMS paths stay closed\n  ---\n  duration_ms: 2.456\n  type: 'test'\n  ...\n# Subtest: publication operation diagnostics retains its explicit authorization contract\nok 34 - publication operation diagnostics retains its explicit authorization contract\n  ---\n  duration_ms: 0.073333\n  type: 'test'\n  ...\n# Subtest: publication operation correlation retains its explicit authorization contract\nok 35 - publication operation correlation retains its explicit authorization contract\n  ---\n  duration_ms: 0.041958\n  type: 'test'\n  ...\n# Subtest: publication operation reconcile retains its explicit authorization contract\nok 36 - publication operation reconcile retains its explicit authorization contract\n  ---\n  duration_ms: 0.036333\n  type: 'test'\n  ...\n# Subtest: publication operation recover retains its explicit authorization contract\nok 37 - publication operation recover retains its explicit authorization contract\n  ---\n  duration_ms: 0.055583\n  type: 'test'\n  ...\n# publication operations service validated\n# Subtest: nodics.foundation/modules/nPublish/test/publicationOperationsService.test.js\nok 7 - nodics.foundation/modules/nPublish/test/publicationOperationsService.test.js\n  ---\n  duration_ms: 84.66225\n  type: 'test'\n  ...\n# Subtest: status inspects every required root without writes and one Online root does not qualify the set\nok 39 - status inspects every required root without writes and one Online root does not qualify the set\n  ---\n  duration_ms: 2.078958\n  type: 'test'\n  ...\n# Subtest: submit captures only missing roots and requests existing approvals without approving or activating\nok 40 - submit captures only missing roots and requests existing approvals without approving or activating\n  ---\n  duration_ms: 0.507875\n  type: 'test'\n  ...\n# Subtest: source capture response loss resumes original STAGED and VALIDATED requests rather than recapturing\nok 41 - source capture response loss resumes original STAGED and VALIDATED requests rather than recapturing\n  ---\n  duration_ms: 1.715208\n  type: 'test'\n  ...\n# Subtest: ready requires exact approved activation receipt and current owner target for every root\nok 42 - ready requires exact approved activation receipt and current owner target for every root\n  ---\n  duration_ms: 3.115125\n  type: 'test'\n  ...\n# Subtest: failed reads and ambiguous Online roots reject without treating them as absence\nok 43 - failed reads and ambiguous Online roots reject without treating them as absence\n  ---\n  duration_ms: 0.961875\n  type: 'test'\n  ...\n# Subtest: scope, role, complete-domain permissions and bounded unique input reject before mutation\nok 44 - scope, role, complete-domain permissions and bounded unique input reject before mutation\n  ---\n  duration_ms: 0.255708\n  type: 'test'\n  ...\n# Subtest: failed/rejected and uncertain activation requests are not implicitly retried or reapproved\nok 45 - failed/rejected and uncertain activation requests are not implicitly retried or reapproved\n  ---\n  duration_ms: 0.194416\n  type: 'test'\n  ...\n# Subtest: later-layer inspection override is honored and input is detached across an awaited read\nok 46 - later-layer inspection override is honored and input is detached across an awaited read\n  ---\n  duration_ms: 0.113958\n  type: 'test'\n  ...\n# Subtest: setup status and submit refuse service principals and inconsistent signed scope before owner reads\nok 47 - setup status and submit refuse service principals and inconsistent signed scope before owner reads\n  ---\n  duration_ms: 0.300875\n  type: 'test'\n  ...\n# Subtest: setup status freshly reads every publication, retained source and target rather than reusing prior CURRENT claims\nok 48 - setup status freshly reads every publication, retained source and target rather than reusing prior CURRENT claims\n  ---\n  duration_ms: 0.369\n  type: 'test'\n  ...\n# Subtest: foreign or mismatched publication source evidence refuses even when a provider would report CURRENT\nok 49 - foreign or mismatched publication source evidence refuses even when a provider would report CURRENT\n  ---\n  duration_ms: 0.289958\n  type: 'test'\n  ...\n# Subtest: existing setup routes keep access-token authority even for read-only status\nok 50 - existing setup routes keep access-token authority even for read-only status\n  ---\n  duration_ms: 0.675458\n  type: 'test'\n  ...\n# Subtest: Commerce publisher admission retains granular human permissions and excludes service decisions and recovery\nok 51 - Commerce publisher admission retains granular human permissions and excludes service decisions and recovery\n  ---\n  duration_ms: 0.381292\n  type: 'test'\n  ...\n# Subtest: Commerce publisher setup still requires the domain grant and original signed enterprise\nok 52 - Commerce publisher setup still requires the domain grant and original signed enterprise\n  ---\n  duration_ms: 2.39625\n  type: 'test'\n  ...\n# Subtest: installation observes the exact release twice without full catalogue discovery\nok 53 - installation observes the exact release twice without full catalogue discovery\n  ---\n  duration_ms: 4.422791\n  type: 'test'\n  ...\n# Subtest: disabled policy and missing explicit permission refuse before owner reads\nok 54 - disabled policy and missing explicit permission refuse before owner reads\n  ---\n  duration_ms: 1.898208\n  type: 'test'\n  ...\n# Subtest: a configuration catalogue is neither a grant nor a prerequisite for an exact signed grant\nok 55 - a configuration catalogue is neither a grant nor a prerequisite for an exact signed grant\n  ---\n  duration_ms: 1.304625\n  type: 'test'\n  ...\n# Subtest: exact original signed deployment observes foreign publication source without financial or submit grants\nok 56 - exact original signed deployment observes foreign publication source without financial or submit grants\n  ---\n  duration_ms: 3.711292\n  type: 'test'\n  ...\n# Subtest: target proof reads actual owner target and never infers CURRENT from source receipt alone\nok 57 - target proof reads actual owner target and never infers CURRENT from source receipt alone\n  ---\n  duration_ms: 1.319917\n  type: 'test'\n  ...\n# Subtest: TARGET admits only exact complete operation selectors and rejects extra authority before reads\nok 58 - TARGET admits only exact complete operation selectors and rejects extra authority before reads\n  ---\n  duration_ms: 1.4515\n  type: 'test'\n  ...\n# Subtest: wrong signed principal field serviceId refuses before owner reads\nok 59 - wrong signed principal field serviceId refuses before owner reads\n  ---\n  duration_ms: 0.462041\n  type: 'test'\n  ...\n# Subtest: wrong signed principal field principalType refuses before owner reads\nok 60 - wrong signed principal field principalType refuses before owner reads\n  ---\n  duration_ms: 0.42075\n  type: 'test'\n  ...\n# Subtest: wrong signed principal field tenant refuses before owner reads\nok 61 - wrong signed principal field tenant refuses before owner reads\n  ---\n  duration_ms: 0.395083\n  type: 'test'\n  ...\n# Subtest: wrong signed principal field entCode refuses before owner reads\nok 62 - wrong signed principal field entCode refuses before owner reads\n  ---\n  duration_ms: 0.5145\n  type: 'test'\n  ...\n# Subtest: wrong signed principal field runtimeInstanceId refuses before owner reads\nok 63 - wrong signed principal field runtimeInstanceId refuses before owner reads\n  ---\n  duration_ms: 0.375042\n  type: 'test'\n  ...\n# Subtest: wrong deployment coordinate projectCode refuses before owner reads\nok 64 - wrong deployment coordinate projectCode refuses before owner reads\n  ---\n  duration_ms: 0.37775\n  type: 'test'\n  ...\n# Subtest: wrong deployment coordinate environmentCode refuses before owner reads\nok 65 - wrong deployment coordinate environmentCode refuses before owner reads\n  ---\n  duration_ms: 0.382\n  type: 'test'\n  ...\n# Subtest: wrong deployment coordinate serverCode refuses before owner reads\nok 66 - wrong deployment coordinate serverCode refuses before owner reads\n  ---\n  duration_ms: 0.314167\n  type: 'test'\n  ...\n# Subtest: wrong deployment coordinate instanceCode refuses before owner reads\nok 67 - wrong deployment coordinate instanceCode refuses before owner reads\n  ---\n  duration_ms: 0.347583\n  type: 'test'\n  ...\n# Subtest: wrong deployment coordinate assignmentCode refuses before owner reads\nok 68 - wrong deployment coordinate assignmentCode refuses before owner reads\n  ---\n  duration_ms: 0.332875\n  type: 'test'\n  ...\n# Subtest: human, system, wrong module, aliases, duplicate callers and foreign server are refused\nok 69 - human, system, wrong module, aliases, duplicate callers and foreign server are refused\n  ---\n  duration_ms: 0.794708\n  type: 'test'\n  ...\n# Subtest: unknown plan, checksum, revision and stage selectors refuse before reads\nok 70 - unknown plan, checksum, revision and stage selectors refuse before reads\n  ---\n  duration_ms: 0.724791\n  type: 'test'\n  ...\n# Subtest: target plan authority is independent of globally discovered partial or absent BackOffice profiles\nok 71 - target plan authority is independent of globally discovered partial or absent BackOffice profiles\n  ---\n  duration_ms: 1.12425\n  type: 'test'\n  ...\n# Subtest: a connection alias is not receiving server authority; the reviewed canonical server pin is exact\nok 72 - a connection alias is not receiving server authority; the reviewed canonical server pin is exact\n  ---\n  duration_ms: 0.80725\n  type: 'test'\n  ...\n# Subtest: confined plan rejects traversal, absolute paths, symlinks and changed bytes\nok 73 - confined plan rejects traversal, absolute paths, symlinks and changed bytes\n  ---\n  duration_ms: 3.185791\n  type: 'test'\n  ...\n# Subtest: foreign publication tenant, enterprise, root, source and revision refuse even with a CURRENT target\nok 74 - foreign publication tenant, enterprise, root, source and revision refuse even with a CURRENT target\n  ---\n  duration_ms: 1.157208\n  type: 'test'\n  ...\n# Subtest: fresh reads detect mid-observation revision drift and policy revocation, never reuse old READY\nok 75 - fresh reads detect mid-observation revision drift and policy revocation, never reuse old READY\n  ---\n  duration_ms: 6.019292\n  type: 'test'\n  ...\n# Subtest: installed proof rechecks source bytes and exact uncached nImport receipt without preflight or preparation\nok 76 - installed proof rechecks source bytes and exact uncached nImport receipt without preflight or preparation\n  ---\n  duration_ms: 3.937583\n  type: 'test'\n  ...\n# Subtest: changed actual release bytes refuse even when discovery and installation still claim the old checksum\nok 77 - changed actual release bytes refuse even when discovery and installation still claim the old checksum\n  ---\n  duration_ms: 2.517458\n  type: 'test'\n  ...\n# Subtest: observation source budgets are bounded and private; global nImport installer limits remain unchanged\nok 78 - observation source budgets are bounded and private; global nImport installer limits remain unchanged\n  ---\n  duration_ms: 0.625542\n  type: 'test'\n  ...\n# Subtest: real group-free principal uses canonical private read authority through generated checkAccess, never external groups\nok 79 - real group-free principal uses canonical private read authority through generated checkAccess, never external groups\n  ---\n  duration_ms: 7.178667\n  type: 'test'\n  ...\n# Subtest: target-only observer selection needs no source version, domain adapter or workflow registration\nok 80 - target-only observer selection needs no source version, domain adapter or workflow registration\n  ---\n  duration_ms: 0.934209\n  type: 'test'\n  ...\n# Subtest: missing canonical private persistence authority refuses without adding groups or mutating external claims\nok 81 - missing canonical private persistence authority refuses without adding groups or mutating external claims\n  ---\n  duration_ms: 0.540208\n  type: 'test'\n  ...\n# Subtest: service-only observer has its own permission; human submission and all decision routes remain distinct\nok 82 - service-only observer has its own permission; human submission and all decision routes remain distinct\n  ---\n  duration_ms: 0.800334\n  type: 'test'\n  ...\n# Subtest: actual secured route admits group-free scoped service only with its explicit module and permission\nok 83 - actual secured route admits group-free scoped service only with its explicit module and permission\n  ---\n  duration_ms: 2.481583\n  type: 'test'\n  ...\n# Subtest: bootstrap plan needs no final operation pins; shared BEFORE qualifies before any AFTER publication exists\nok 84 - bootstrap plan needs no final operation pins; shared BEFORE qualifies before any AFTER publication exists\n  ---\n  duration_ms: 1.683\n  type: 'test'\n  ...\n# Subtest: read-only plan review material derives current prerequisites and sources, never lifecycle receipts or grants\nok 85 - read-only plan review material derives current prerequisites and sources, never lifecycle receipts or grants\n  ---\n  duration_ms: 0.603542\n  type: 'test'\n  ...\n# Subtest: CMS baseline reuses exact owner status, current target pointer and Media qualification without final publication pins\nok 86 - CMS baseline reuses exact owner status, current target pointer and Media qualification without final publication pins\n  ---\n  duration_ms: 1.472667\n  type: 'test'\n  ...\n# Subtest: CMS pending approval preserves safe owner workflow, diagnostic and release metadata\nok 87 - CMS pending approval preserves safe owner workflow, diagnostic and release metadata\n  ---\n  duration_ms: 101.358667\n  type: 'test'\n  ...\n# Subtest: CMS owner READY remains BLOCKED without every independent readiness proof\nok 88 - CMS owner READY remains BLOCKED without every independent readiness proof\n  ---\n  duration_ms: 2.488958\n  type: 'test'\n  ...\n# Subtest: pricing actual retained-source and target descendants pass generated access with group-free external claims\nok 89 - pricing actual retained-source and target descendants pass generated access with group-free external claims\n  ---\n  duration_ms: 3.452959\n  type: 'test'\n  ...\n# Subtest: inventory actual retained-source and target descendants pass generated access with group-free external claims\nok 90 - inventory actual retained-source and target descendants pass generated access with group-free external claims\n  ---\n  duration_ms: 2.290042\n  type: 'test'\n  ...\n# Subtest: tax actual retained-source and target descendants pass generated access with group-free external claims\nok 91 - tax actual retained-source and target descendants pass generated access with group-free external claims\n  ---\n  duration_ms: 2.155417\n  type: 'test'\n  ...\n# Subtest: promotion actual retained-source and target descendants pass generated access with group-free external claims\nok 92 - promotion actual retained-source and target descendants pass generated access with group-free external claims\n  ---\n  duration_ms: 2.573625\n  type: 'test'\n  ...\n# Subtest: Product actual sealed graph and target pointer descendants use generated private reads, not external group grants\nok 93 - Product actual sealed graph and target pointer descendants use generated private reads, not external group grants\n  ---\n  duration_ms: 5.015416\n  type: 'test'\n  ...\n# Subtest: installation binds distinct plan and release hashes and permits canonical receipts without an import run\nok 94 - installation binds distinct plan and release hashes and permits canonical receipts without an import run\n  ---\n  duration_ms: 1.298125\n  type: 'test'\n  ...\n# Subtest: owner result cannot overwrite sealed plan or deployment response bindings\nok 95 - owner result cannot overwrite sealed plan or deployment response bindings\n  ---\n  duration_ms: 0.617584\n  type: 'test'\n  ...\n# Subtest: missing non-Product enterprise never delegates to a provider and final journal changes refuse\nok 96 - missing non-Product enterprise never delegates to a provider and final journal changes refuse\n  ---\n  duration_ms: 0.654208\n  type: 'test'\n  ...\n# Subtest: absent predecessor from an unqualified target owner is never inferred as no predecessor\nok 97 - absent predecessor from an unqualified target owner is never inferred as no predecessor\n  ---\n  duration_ms: 0.533875\n  type: 'test'\n  ...\n# Subtest: actual native graphs keep full profile validation on Platform and target-only registration independent of source authority\nok 98 - actual native graphs keep full profile validation on Platform and target-only registration independent of source authority # SKIP\n  ---\n  duration_ms: 0.538459\n  type: 'test'\n  ...\n# Subtest: pricing setup uses existing capture grant and exact retained partner source membership\nok 99 - pricing setup uses existing capture grant and exact retained partner source membership\n  ---\n  duration_ms: 5.589584\n  type: 'test'\n  ...\n# Subtest: inventory setup uses existing capture grant and exact retained partner source membership\nok 100 - inventory setup uses existing capture grant and exact retained partner source membership\n  ---\n  duration_ms: 3.293958\n  type: 'test'\n  ...\n# Subtest: tax setup uses existing capture grant and exact retained partner source membership\nok 101 - tax setup uses existing capture grant and exact retained partner source membership\n  ---\n  duration_ms: 1.237292\n  type: 'test'\n  ...\n# Subtest: promotion setup uses existing capture grant and exact retained partner source membership\nok 102 - promotion setup uses existing capture grant and exact retained partner source membership\n  ---\n  duration_ms: 1.402208\n  type: 'test'\n  ...\n# Subtest: nodics.foundation/modules/nPublish/test/publicationWithdrawalContract.test.js\nok 12 - nodics.foundation/modules/nPublish/test/publicationWithdrawalContract.test.js\n  ---\n  duration_ms: 70.532917\n  type: 'test'\n  ...\n# Subtest: domain selection takes precedence while unrelated and legacy-only domains preserve fallback\nok 104 - domain selection takes precedence while unrelated and legacy-only domains preserve fallback\n  ---\n  duration_ms: 0.676584\n  type: 'test'\n  ...\n# Subtest: explicit missing, null and malformed workflow overrides reject before changing state\nok 105 - explicit missing, null and malformed workflow overrides reject before changing state\n  ---\n  duration_ms: 0.879542\n  type: 'test'\n  ...\n# Subtest: approval and pending replay use the same owning workflow without another transition\nok 106 - approval and pending replay use the same owning workflow without another transition\n  ---\n  duration_ms: 0.935833\n  type: 'test'\n  ...\n# Subtest: action audit accepts only bounded static codes and never reads private result fields\nok 107 - action audit accepts only bounded static codes and never reads private result fields\n  ---\n  duration_ms: 1.672959\n  type: 'test'\n  ...\n# Completed decision retry: 34 scenarios passed\n# Subtest: nodics.process/modules/workflow/test/processCompletedDecisionRetry.test.js\nok 15 - nodics.process/modules/workflow/test/processCompletedDecisionRetry.test.js\n  ---\n  duration_ms: 95.050625\n  type: 'test'\n  ...\n# Process publication approval startup validated\n# Subtest: nodics.process/modules/workflow/test/processPublicationApprovalService.test.js\nok 16 - nodics.process/modules/workflow/test/processPublicationApprovalService.test.js\n  ---\n  duration_ms: 83.091375\n  type: 'test'\n  ...\n# Process publication decision callback validated\n# Subtest: nodics.process/modules/workflow/test/processPublicationDecisionCallback.test.js\nok 17 - nodics.process/modules/workflow/test/processPublicationDecisionCallback.test.js\n  ---\n  duration_ms: 80.804708\n  type: 'test'\n  ...\n# Subtest: explicit remote actions consume inactive owner declarations without activation or copied defaults\nok 111 - explicit remote actions consume inactive owner declarations without activation or copied defaults\n  ---\n  duration_ms: 3.656958\n  type: 'test'\n  ...\n# Subtest: pending Editorial decisions finish against their immutable version after contribution forward migration\nok 112 - pending Editorial decisions finish against their immutable version after contribution forward migration\n  ---\n  duration_ms: 11.319541\n  type: 'test'\n  ...\n# Subtest: native human decision keeps separate seller context and original actor through authoritative remote claim\nok 113 - native human decision keeps separate seller context and original actor through authoritative remote claim\n  ---\n  duration_ms: 0.587334\n  type: 'test'\n  ...\n# Subtest: actual task policy governs the remote callback and stored decision wins over caller input\nok 114 - actual task policy governs the remote callback and stored decision wins over caller input\n  ---\n  duration_ms: 0.756708\n  type: 'test'\n  ...\n# Subtest: callback rejects human, wrong-module, unbound and wrong-tenant principals before mutation\nok 115 - callback rejects human, wrong-module, unbound and wrong-tenant principals before mutation\n  ---\n  duration_ms: 0.376042\n  type: 'test'\n  ...\n# Subtest: premature task, unpublished action, disabled selection and unknown action fail closed\nok 116 - premature task, unpublished action, disabled selection and unknown action fail closed\n  ---\n  duration_ms: 0.898583\n  type: 'test'\n  ...\n# Subtest: forged handle, extra task/decision payload, wrong source runtime, expired and foreign-scope claims fail closed\nok 117 - forged handle, extra task/decision payload, wrong source runtime, expired and foreign-scope claims fail closed\n  ---\n  duration_ms: 1.257334\n  type: 'test'\n  ...\n# Subtest: one concurrent claimant wins and a failed response can retry without a second domain mutation\nok 118 - one concurrent claimant wins and a failed response can retry without a second domain mutation\n  ---\n  duration_ms: 0.408583\n  type: 'test'\n  ...\n# Subtest: domain rejects wrong revision/workflow and publication without stored approval; successful retry reuses publication\nok 119 - domain rejects wrong revision/workflow and publication without stored approval; successful retry reuses publication\n  ---\n  duration_ms: 0.6775\n  type: 'test'\n  ...\n# Subtest: completed task and immutable version cannot be forged through generic authoring; concurrent completion advances once\nok 120 - completed task and immutable version cannot be forged through generic authoring; concurrent completion advances once\n  ---\n  duration_ms: 1.034333\n  type: 'test'\n  ...\n# Subtest: outbound credential cannot authorize a different local deployment or caller enterprise\nok 121 - outbound credential cannot authorize a different local deployment or caller enterprise\n  ---\n  duration_ms: 0.256542\n  type: 'test'\n  ...\n# Subtest: selected cross-enterprise runtime scope preserves the Process service principal\nok 122 - selected cross-enterprise runtime scope preserves the Process service principal\n  ---\n  duration_ms: 0.058208\n  type: 'test'\n  ...\n# Subtest: cross-enterprise runtime scope fails closed for unbound or malformed selections\nok 123 - cross-enterprise runtime scope fails closed for unbound or malformed selections\n  ---\n  duration_ms: 0.130666\n  type: 'test'\n  ...\n# Subtest: recorded attempts survive subsequent actions; an expired or uncertain handle never authorizes replay\nok 124 - recorded attempts survive subsequent actions; an expired or uncertain handle never authorizes replay\n  ---\n  duration_ms: 1.774834\n  type: 'test'\n  ...\n# Subtest: missing attempt persistence prevents callback dispatch and lost claim evidence prevents domain mutation\nok 125 - missing attempt persistence prevents callback dispatch and lost claim evidence prevents domain mutation\n  ---\n  duration_ms: 0.380625\n  type: 'test'\n  ...\n# Subtest: lost terminal history acknowledgement never permits the completed command to be resent\nok 126 - lost terminal history acknowledgement never permits the completed command to be resent\n  ---\n  duration_ms: 0.486625\n  type: 'test'\n  ...\n# Subtest: a failed authoritative update envelope cannot dispatch even with a positive affected count\nok 127 - a failed authoritative update envelope cannot dispatch even with a positive affected count\n  ---\n  duration_ms: 0.426\n  type: 'test'\n  ...\n# Subtest: remote actions preserve publication and deployment pins and reject retired or malformed routing before minting a handle\nok 128 - remote actions preserve publication and deployment pins and reject retired or malformed routing before minting a handle\n  ---\n  duration_ms: 0.683541\n  type: 'test'\n  ...\n# Subtest: an execution cannot swap its allowlisted destination publication before handle creation\nok 129 - an execution cannot swap its allowlisted destination publication before handle creation\n  ---\n  duration_ms: 0.098417\n  type: 'test'\n  ...\n# Subtest: history binds every persisted filter and strips decisions, actors and claims\nok 130 - history binds every persisted filter and strips decisions, actors and claims\n  ---\n  duration_ms: 1.057083\n  type: 'test'\n  ...\n# Subtest: foreign principal, requested scope and injected filters never read persistence\nok 131 - foreign principal, requested scope and injected filters never read persistence\n  ---\n  duration_ms: 0.467958\n  type: 'test'\n  ...\n# Subtest: unexpected owner results cannot leak foreign rows or invent empty history\nok 132 - unexpected owner results cannot leak foreign rows or invent empty history\n  ---\n  duration_ms: 0.268334\n  type: 'test'\n  ...\n# Subtest: page size uses generated-service pagination and owner count without an extra record\nok 133 - page size uses generated-service pagination and owner count without an extra record\n  ---\n  duration_ms: 4.208125\n  type: 'test'\n  ...\n# Subtest: attempt inspection preserves multiple actions per instance and historical versions with exact scoped queries\nok 134 - attempt inspection preserves multiple actions per instance and historical versions with exact scoped queries\n  ---\n  duration_ms: 0.77175\n  type: 'test'\n  ...\n# Subtest: zero-match task claim cannot audit or return fabricated success\nok 135 - zero-match task claim cannot audit or return fabricated success\n  ---\n  duration_ms: 0.937041\n  type: 'test'\n  ...\n# Subtest: real Media contribution published through the definition owner projects existing immutable review identity\nok 136 - real Media contribution published through the definition owner projects existing immutable review identity\n  ---\n  duration_ms: 6.928125\n  type: 'test'\n  ...\n# Subtest: fixed CMS approval projects recorded site/source/requester without changing pinned decisions\nok 137 - fixed CMS approval projects recorded site/source/requester without changing pinned decisions\n  ---\n  duration_ms: 0.630542\n  type: 'test'\n  ...\n# Subtest: requester eligibility follows the same permissions as completion without a distinct reviewer requirement\nok 138 - requester eligibility follows the same permissions as completion without a distinct reviewer requirement\n  ---\n  duration_ms: 0.504792\n  type: 'test'\n  ...\n# Subtest: review identity is bounded to the pinned owner action and never copies private context or guesses numeric Media version\nok 139 - review identity is bounded to the pinned owner action and never copies private context or guesses numeric Media version\n  ---\n  duration_ms: 0.229625\n  type: 'test'\n  ...\n# Subtest: an owner-declared pinned task decision projects without manufacturing actor policy\nok 140 - an owner-declared pinned task decision projects without manufacturing actor policy\n  ---\n  duration_ms: 0.202625\n  type: 'test'\n  ...\n# Subtest: malformed pinned declaration fails closed and cannot weaken actor-policy bounds\nok 141 - malformed pinned declaration fails closed and cannot weaken actor-policy bounds\n  ---\n  duration_ms: 0.277625\n  type: 'test'\n  ...\n# Subtest: a waiting legacy version is not upgraded by successor policy or forged task metadata\nok 142 - a waiting legacy version is not upgraded by successor policy or forged task metadata\n  ---\n  duration_ms: 0.722125\n  type: 'test'\n  ...\n# Subtest: projection rejects malformed or oversized task lists before owner reads\nok 143 - projection rejects malformed or oversized task lists before owner reads\n  ---\n  duration_ms: 0.220459\n  type: 'test'\n  ...\n# Subtest: task detail declares the exact generic contract from pinned actor policy\nok 144 - task detail declares the exact generic contract from pinned actor policy\n  ---\n  duration_ms: 0.193959\n  type: 'test'\n  ...\n# Subtest: legacy task names and forged task policy cannot manufacture approval\nok 145 - legacy task names and forged task policy cannot manufacture approval\n  ---\n  duration_ms: 0.103583\n  type: 'test'\n  ...\n# Subtest: pinned task-node policy overrides version policy\nok 146 - pinned task-node policy overrides version policy\n  ---\n  duration_ms: 0.108\n  type: 'test'\n  ...\n# Subtest: malformed actor policy rejects projection rather than advertising a decision\nok 147 - malformed actor policy rejects projection rather than advertising a decision\n  ---\n  duration_ms: 0.141083\n  type: 'test'\n  ...\n# Subtest: missing, failed and ambiguous owner evidence cannot declare approval\nok 148 - missing, failed and ambiguous owner evidence cannot declare approval\n  ---\n  duration_ms: 0.147\n  type: 'test'\n  ...\n# Subtest: wrong version identity, unpublished version and missing or ambiguous task node reject\nok 149 - wrong version identity, unpublished version and missing or ambiguous task node reject\n  ---\n  duration_ms: 0.227417\n  type: 'test'\n  ...\n# Subtest: list projection reuses owner reads only within the same bounded request\nok 150 - list projection reuses owner reads only within the same bounded request\n  ---\n  duration_ms: 0.4785\n  type: 'test'\n  ...\n# Subtest: instance detail and later-layer projection use the same exported owner helper\nok 151 - instance detail and later-layer projection use the same exported owner helper\n  ---\n  duration_ms: 0.127583\n  type: 'test'\n  ...\n1..151\n# tests 151\n# suites 0\n# pass 150\n# fail 0\n# cancelled 0\n# skipped 1\n# todo 0\n# duration_ms 299.758625\n",
+    "stderr": ""
+  },
+  "syntax": [
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalWorkflowService.js"
+      ],
+      "command": "node --check nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalWorkflowService.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalCallbackService.js"
+      ],
+      "command": "node --check nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalCallbackService.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.foundation/modules/nPublish/config/properties.js"
+      ],
+      "command": "node --check nodics.foundation/modules/nPublish/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.foundation/modules/nPublish/test/publicationApprovalBridge.test.js"
+      ],
+      "command": "node --check nodics.foundation/modules/nPublish/test/publicationApprovalBridge.test.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.foundation/modules/nPublish/test/publicationSetupObservation.test.js"
+      ],
+      "command": "node --check nodics.foundation/modules/nPublish/test/publicationSetupObservation.test.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js"
+      ],
+      "command": "node --check nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.process/modules/workflow/src/service/operation/defaultProcessRemoteActionAdapterService.js"
+      ],
+      "command": "node --check nodics.process/modules/workflow/src/service/operation/defaultProcessRemoteActionAdapterService.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js"
+      ],
+      "command": "node --check nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.process/modules/workflow/config/properties.js"
+      ],
+      "command": "node --check nodics.process/modules/workflow/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.process/modules/workflow/test/processRemoteActionAdapter.test.js"
+      ],
+      "command": "node --check nodics.process/modules/workflow/test/processRemoteActionAdapter.test.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.process/modules/workflow/test/processPublicationDecisionCallback.test.js"
+      ],
+      "command": "node --check nodics.process/modules/workflow/test/processPublicationDecisionCallback.test.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.process/modules/workflow/test/processCompletedDecisionRetry.test.js"
+      ],
+      "command": "node --check nodics.process/modules/workflow/test/processCompletedDecisionRetry.test.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.wcms/modules/media/config/properties.js"
+      ],
+      "command": "node --check nodics.wcms/modules/media/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/config/properties.js"
+      ],
+      "command": "node --check nodics.commerce/modules/digitalCommerce/modules/digitalCore/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.commerce/modules/baseCommerce/modules/product/config/properties.js"
+      ],
+      "command": "node --check nodics.commerce/modules/baseCommerce/modules/product/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.commerce/modules/baseCommerce/modules/pricing/config/properties.js"
+      ],
+      "command": "node --check nodics.commerce/modules/baseCommerce/modules/pricing/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.commerce/modules/baseCommerce/modules/promotion/config/properties.js"
+      ],
+      "command": "node --check nodics.commerce/modules/baseCommerce/modules/promotion/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.commerce/modules/baseCommerce/modules/inventory/config/properties.js"
+      ],
+      "command": "node --check nodics.commerce/modules/baseCommerce/modules/inventory/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "nodics.commerce/modules/baseCommerce/modules/tax/config/properties.js"
+      ],
+      "command": "node --check nodics.commerce/modules/baseCommerce/modules/tax/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "diffCheck": {
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalWorkflowService.js",
+      "nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalCallbackService.js",
+      "nodics.foundation/modules/nPublish/config/properties.js",
+      "nodics.foundation/modules/nPublish/AGENTS.md",
+      "nodics.foundation/modules/nPublish/README.md",
+      "nodics.foundation/modules/nPublish/llm/contracts/process-approval-bridge.md",
+      "nodics.foundation/modules/nPublish/test/publicationApprovalBridge.test.js",
+      "nodics.foundation/modules/nPublish/test/publicationSetupObservation.test.js",
+      "nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js",
+      "nodics.process/modules/workflow/src/service/operation/defaultProcessRemoteActionAdapterService.js",
+      "nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js",
+      "nodics.process/modules/workflow/config/properties.js",
+      "nodics.process/modules/workflow/test/processRemoteActionAdapter.test.js",
+      "nodics.process/modules/workflow/test/processPublicationDecisionCallback.test.js",
+      "nodics.process/modules/workflow/test/processCompletedDecisionRetry.test.js",
+      "nodics.process/modules/workflow/AGENTS.md",
+      "nodics.process/modules/workflow/README.md",
+      "nodics.process/modules/workflow/llm/contracts/README.md",
+      "nodics.process/llm/contracts/process-module-contract.md",
+      "nodics.wcms/modules/media/config/properties.js",
+      "nodics.commerce/modules/digitalCommerce/modules/digitalCore/config/properties.js",
+      "nodics.commerce/modules/baseCommerce/modules/product/config/properties.js",
+      "nodics.commerce/modules/baseCommerce/modules/pricing/config/properties.js",
+      "nodics.commerce/modules/baseCommerce/modules/promotion/config/properties.js",
+      "nodics.commerce/modules/baseCommerce/modules/inventory/config/properties.js",
+      "nodics.commerce/modules/baseCommerce/modules/tax/config/properties.js"
+    ],
+    "command": "git diff --check -- nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalWorkflowService.js nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalCallbackService.js nodics.foundation/modules/nPublish/config/properties.js nodics.foundation/modules/nPublish/AGENTS.md nodics.foundation/modules/nPublish/README.md nodics.foundation/modules/nPublish/llm/contracts/process-approval-bridge.md nodics.foundation/modules/nPublish/test/publicationApprovalBridge.test.js nodics.foundation/modules/nPublish/test/publicationSetupObservation.test.js nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js nodics.process/modules/workflow/src/service/operation/defaultProcessRemoteActionAdapterService.js nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js nodics.process/modules/workflow/config/properties.js nodics.process/modules/workflow/test/processRemoteActionAdapter.test.js nodics.process/modules/workflow/test/processPublicationDecisionCallback.test.js nodics.process/modules/workflow/test/processCompletedDecisionRetry.test.js nodics.process/modules/workflow/AGENTS.md nodics.process/modules/workflow/README.md nodics.process/modules/workflow/llm/contracts/README.md nodics.process/llm/contracts/process-module-contract.md nodics.wcms/modules/media/config/properties.js nodics.commerce/modules/digitalCommerce/modules/digitalCore/config/properties.js nodics.commerce/modules/baseCommerce/modules/product/config/properties.js nodics.commerce/modules/baseCommerce/modules/pricing/config/properties.js nodics.commerce/modules/baseCommerce/modules/promotion/config/properties.js nodics.commerce/modules/baseCommerce/modules/inventory/config/properties.js nodics.commerce/modules/baseCommerce/modules/tax/config/properties.js",
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "files": [
+    {
+      "path": "nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalWorkflowService.js",
+      "sha256": "21575523ebc960af92bd4a84acf90321fecc0c11faa2f7fc7a0a5163a38836ed"
+    },
+    {
+      "path": "nodics.foundation/modules/nPublish/src/service/defaultPublicationApprovalCallbackService.js",
+      "sha256": "77af934f044a44c88f9e7271dbf0246db860ed570b4f91876d1fc5eabf15d2ba"
+    },
+    {
+      "path": "nodics.foundation/modules/nPublish/config/properties.js",
+      "sha256": "4331f874ce2e2dcf670dfcfa4d67ac062dda780bd6033e6e95f3a27988690a59"
+    },
+    {
+      "path": "nodics.foundation/modules/nPublish/AGENTS.md",
+      "sha256": "7cf0041832745226b02168506cc668cebee4c2e457049355fea298ef3cce487e"
+    },
+    {
+      "path": "nodics.foundation/modules/nPublish/README.md",
+      "sha256": "0aaaa1ec824884ee625074a513a3e9a74727f7cdc24579a218ad37346a4d845a"
+    },
+    {
+      "path": "nodics.foundation/modules/nPublish/llm/contracts/process-approval-bridge.md",
+      "sha256": "1251eaed51b36366ee23795f3057e807b00b8ceb204c9954a1dd9e71c8bb79a8"
+    },
+    {
+      "path": "nodics.foundation/modules/nPublish/test/publicationApprovalBridge.test.js",
+      "sha256": "7a0ea3aa1cf2b1235e237adb12d72096068cff075527068dc345bb7ed0f70df4"
+    },
+    {
+      "path": "nodics.foundation/modules/nPublish/test/publicationSetupObservation.test.js",
+      "sha256": "d449e6cce63668cbd89a09f784eddfc41d0786d4fe5d6f9740d1fd966d56fa67"
+    },
+    {
+      "path": "nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js",
+      "sha256": "589c198d7d9448bacfbf40a959270cec8434c2ff08b4e131d0556b692c61f064"
+    },
+    {
+      "path": "nodics.process/modules/workflow/src/service/operation/defaultProcessRemoteActionAdapterService.js",
+      "sha256": "1e822499dc89ba6e0f7aaad549a46138ef791ea308ff23441b9df81795a50f0e"
+    },
+    {
+      "path": "nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js",
+      "sha256": "7f288c207c9bf83eb70c320e76abbc99a7088e88f6bb5506c31b229d08236c0a"
+    },
+    {
+      "path": "nodics.process/modules/workflow/config/properties.js",
+      "sha256": "30d00ed1c56368f0b66e84380531c16e010e77e0b329779e0d78608a58b98542"
+    },
+    {
+      "path": "nodics.process/modules/workflow/test/processRemoteActionAdapter.test.js",
+      "sha256": "f8702cbdcc23a64bd6de2521f27b31410186d2152cef3d56024e49a6163fe25c"
+    },
+    {
+      "path": "nodics.process/modules/workflow/test/processPublicationDecisionCallback.test.js",
+      "sha256": "7c22c0e583cf09b1901eb5d3ef2d4a134bd049ba8105540d87ec708400b402ea"
+    },
+    {
+      "path": "nodics.process/modules/workflow/test/processCompletedDecisionRetry.test.js",
+      "sha256": "c827489e7980b6bc0b27bc02dfea8250f7b334963b9bd3f942e166645690503d"
+    },
+    {
+      "path": "nodics.process/modules/workflow/AGENTS.md",
+      "sha256": "97afb5b257aa0923148bb70090addd42af083d6b79952aa0edb4c09eaa47b0cb"
+    },
+    {
+      "path": "nodics.process/modules/workflow/README.md",
+      "sha256": "4829e404fcc0e9bfe9010796159a82823873f148595fc34b7db15a03ebe1a0e5"
+    },
+    {
+      "path": "nodics.process/modules/workflow/llm/contracts/README.md",
+      "sha256": "3ee37250e0b97407d0d537ec37b2aa0162124b97e7a21e8a300de83a361826fe"
+    },
+    {
+      "path": "nodics.process/llm/contracts/process-module-contract.md",
+      "sha256": "f496a1afc73f001140bb5813c39ab2727bcd4a4cff253ecb7c11c5dd90a58c1b"
+    },
+    {
+      "path": "nodics.wcms/modules/media/config/properties.js",
+      "sha256": "d065bbea78504a41c0ef976867a21d0fb5a53cc283c330f604c24e9907948a9a"
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/config/properties.js",
+      "sha256": "3ad1300911ce9a0c8e9420ba18b74e791c2dad97800b27d465559857dad2c34a"
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/product/config/properties.js",
+      "sha256": "79229987ac8c74fcf69fc0ac311b92eb6d40014c78cd16edaa366bfb4919aa3a"
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/pricing/config/properties.js",
+      "sha256": "fd3b3955c24ff2d1af4a7c05f988438ab653fe7f6671e28c5db274935422ac2d"
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/config/properties.js",
+      "sha256": "6b7c97c6e64a02d428a0de24915dbbd16996c3f37e3855bbdc4abbb9c8f34288"
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/inventory/config/properties.js",
+      "sha256": "621cb5dd0431f5329b18c9ac8a6d7937f9d50f05e3996d6556aa4ae7fad211de"
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/tax/config/properties.js",
+      "sha256": "dee0d254697877ef211f5acc84cd415ad4192717d6e09bc24d74d0103836432b"
+    }
+  ],
+  "ownershipReview": {
+    "status": "PASS",
+    "scope": "nPublish and Workflow source/tests/docs; field-only sourcePublication and remote targetAuthority declaration changes in six domain publication configs plus DigitalCore action config. Existing concurrent changes retained. Product observation owner fixture adapted; no Commerce source edits.",
+    "limits": [
+      "Isolated ports and in-memory stores; no servers, real DB, imports, registration writes or live acceptance.",
+      "One existing conditional native graph test skipped; see TAP.",
+      "Commerce reminder actionAuthority source/consumer migration remains with Commerce owner; exact handoff /tmp/runtime-role-approval-handoff.md.",
+      "Shared files contain pre-existing concurrent edits: recorded hashes cover current effective file, not exclusive authorship."
+    ]
+  }
+}

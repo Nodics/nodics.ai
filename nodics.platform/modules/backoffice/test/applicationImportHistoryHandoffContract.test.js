@@ -69,7 +69,7 @@ function fixture({
       instanceId: "staged-import-1",
       environment,
       server: target.targetServer,
-      runtimeRole: { code: target.targetRuntimeRole, publication: "STAGED" },
+      runtimeRole: { code: "CUSTOM_CONTENT_HOST", publication: "STAGED" },
       state: "UP",
       clientCallable: true,
       endpoint: "http://localhost:9000/nodics/import",

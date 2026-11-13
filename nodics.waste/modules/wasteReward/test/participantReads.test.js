@@ -45,7 +45,7 @@ test('browser controller resolves canonical self, strips body authority and does
     assert.equal(cache, 'no-store'); assert.deepEqual(result.ownerRef, owner('customer')); assert.equal(result.items.length, 1);
     assert.equal(calls[0].apiName, '/customer/identity'); assert.equal(calls[0].tenant, 'T');
     assert.equal(calls[0].header.Authorization, 'Bearer original'); assert.equal(calls[0].header['X-Enterprise-Code'], 'represented');
-    assert.deepEqual(calls[0].targetAuthority, { runtimeRole: 'PLATFORM' });
+    assert.deepEqual(calls[0].targetAuthority, { publication: 'OPERATIONAL' });
     assert.equal(JSON.stringify(result).includes('private'), false);
     assert.equal(JSON.stringify(result).includes('payerRef'), false);
 });
@@ -99,7 +99,7 @@ test('missing permission, failed Profile envelopes, stale scope and context drif
     await assert.rejects(run(), { code: 'ERR_MATERIAL_VALUE_FORBIDDEN' }); assert.equal(reads, 0);
 });
 test('Profile transport overrides are owner-defined, failures are sanitized and zero pages reject', async () => {
-    settings.profile = { connectionName: 'selected-platform', targetAuthority: { runtimeRole: 'PLATFORM' }, timeoutMs: 75 };
+    settings.profile = { connectionName: 'selected-platform', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMs: 75 };
     await run(); assert.equal(calls[0].connectionName, 'selected-platform'); assert.equal(calls[0].timeoutMs, 75);
     settings.profile.timeoutMs = 0; await assert.rejects(run(), { code: 'ERR_MATERIAL_VALUE_CONFIGURATION' });
     settings.profile.timeoutMs = 75; onProfile = () => { throw Error('secret token'); };
@@ -131,3 +131,15 @@ test('read routes declare access tokens, employee/customer groups, privacy and i
     for (const item of all.filter(row => !['holdings', 'getOperation', 'allocations'].includes(row.operation)))
         assert.deepEqual(item.authTokenTypes, ['service', 'access']);
 });
+
+ test('Profile publication selector rejects retired roles and malformed pins before forwarding credentials', async () => {
+    for (const authority of [{runtimeRole:'PLATFORM'},{publication:'STAGED'},{publication:'OPERATIONAL',server:''},{publication:'OPERATIONAL',unknown:'x'}]) {
+        settings.profile={targetAuthority:authority};
+        await assert.rejects(run(), {code:'ERR_MATERIAL_VALUE_CONFIGURATION'});
+        assert.equal(calls.length,0);
+    }
+    settings.profile={targetAuthority:{publication:'OPERATIONAL',server:'relocated',environment:'selected'}};
+    await run();
+    assert.deepEqual(calls[0].targetAuthority,settings.profile.targetAuthority);
+    assert.equal(calls[0].header.Authorization,'Bearer original');
+ });

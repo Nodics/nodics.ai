@@ -29,7 +29,7 @@ test('independent topology selection, dependency failures and supervisor ownersh
   try {
     fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify({ name: 'independent.topology' }));
     writeEnvironment(path.join(root, 'envs', 'qa'), { topology: { groups: { backends: [
-      { code: 'authority', port: 5810 }, { code: 'worker', port: 5811, dependsOn: ['authority'] },
+      { code: 'authority', port: 5810 }, { code: 'worker', port: 5811, dependsOn: ['authority'], readinessTimeoutMs: 180000 },
     ] } } });
     writeEnvironment(path.join(root, 'envs', 'empty'), {});
     process.chdir(root);
@@ -39,6 +39,8 @@ test('independent topology selection, dependency failures and supervisor ownersh
     const selected = topology.selectRuntimes();
     assert.deepEqual(selected.map(runtime => runtime.code), ['authority', 'worker']);
     assert.equal(selected[0].readyPath, '/nodics/system/v0/health/ready');
+    assert.equal(selected[0].readinessTimeoutMs, 90000);
+    assert.equal(selected[1].readinessTimeoutMs, 180000);
     assert.deepEqual(topology.selectRuntimes(true), selected);
     const outage = { runtimes: selected, probePort: async () => false, readProcesses: () => '1 /sbin/launchd' };
     assert.deepEqual((await topology.verifyMaintenanceOutage(outage)).runtimeCodes, ['authority', 'worker']);
@@ -124,6 +126,27 @@ test('independent topology selection, dependency failures and supervisor ownersh
     });
     assert.equal(recoverProbes, 3);
     assert.equal(pauses, 2);
+    // A deployment budget admits slow healthy startup; the default remains bounded.
+    const realNow = Date.now;
+    let clock = 0, slowProbes = 0;
+    Date.now = () => clock;
+    try {
+      const slow = { probe: async () => { if (++slowProbes < 3) throw new Error('preparing'); },
+        pause: async () => { clock += 60000; } };
+      await topology.waitUntilReady(selected[1], undefined, undefined, slow);
+      assert.equal(slowProbes, 3);
+      clock = 0; slowProbes = 0;
+      await assert.rejects(topology.waitUntilReady(selected[0], undefined, undefined, slow), /readiness timed out/);
+      assert.equal(slowProbes, 2);
+    } finally { Date.now = realNow; }
+    for (const value of [null, 0, -1, 1.5, '180000', Number.MAX_SAFE_INTEGER + 1]) {
+      writeEnvironment(path.join(root, 'envs', 'invalid'), { topology: { groups: { backends: [
+        { code: 'invalid', port: 5812, readinessTimeoutMs: value },
+      ] } } });
+      process.env.ENV = 'invalid';
+      assert.throws(() => topology.selectRuntimes(), /readiness timeout/);
+    }
+    process.env.ENV = 'qa';
     // An empty declaration exercises preflight without touching any live port.
     process.env.ENV = 'empty';
     const result = await topology.preflight();

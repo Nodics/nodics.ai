@@ -34,3 +34,18 @@ module.exports = {
 This intentionally disables MongoDB pattern projection; use it only when the
 application supplies the required validation through its governed schema policy.
 Other keyword selections remain inherited.
+
+
+For an existing unique deployment alias, project target facts without copying a
+second target catalogue:
+
+```js
+{ $config: 'runtime', name: 'inventoryPeer', path: 'runtimeIdentity.serverCode' }
+{ $config: 'runtime', name: 'inventoryPeer', path: 'runtimeRole.code' }
+```
+
+The selected project declares its actual alias in the existing runtime metadata.
+Ambiguity, missing/retired peers and identity contradictions reject; neither this
+projection nor a role label grants API access or installs a release.
+
+For a selected replica, put only its `nodeId`, `runtimeIdentity.instanceCode` and endpoint/node coordinates in the node module. The identity projection retains those overrides and does not authorize them: Profile still requires the exact deployment assignment. All reusable behavior stays with Framework owners.

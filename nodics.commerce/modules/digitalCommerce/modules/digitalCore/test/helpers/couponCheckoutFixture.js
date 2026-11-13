@@ -63,7 +63,7 @@ function setup(t, type = "CERTIFICATES", enterprise = false, buyerEnterprise = "
   const state = { reserved: false, consumed: false, phases: [], denied: false, failReserve: false };
   const permissions = ["commerce.checkout.place", "commerce.digital.own.read", "commerce.digital.own.reveal"];
   SERVICE.DefaultSecuredRequestPipelineService = { getGrantedPermissions: () => permissions, isPermissionGranted: (p, grants) => grants.includes(p) };
-  SERVICE.DefaultModuleService = { invokeModule: async () => enterprise ? { principalCode: "actor",
+  SERVICE.DefaultModuleService = { isLocalModuleActive: name => ["promotion", "digitalCore"].includes(name), invokeModule: async () => enterprise ? { principalCode: "actor",
     scopes: [{ scopeType: "ENTERPRISE", scopeCode: buyerEnterprise }], deniedScopes: state.denied ? [{ scopeType: "ENTERPRISE", scopeCode: buyerEnterprise }] : [] }
     : { contractVersion: 1, tenant: "t", enterpriseCode: "issuer", customer: { code: "buyer", loginId: "actor" } } };
   global.FACADE = { DefaultCartCustomerFacade: cart };
@@ -84,7 +84,7 @@ function setup(t, type = "CERTIFICATES", enterprise = false, buyerEnterprise = "
   const runtimeScope = { projectCode: "project", environmentCode: "local", serverCode: "waste", instanceCode: "instance", assignmentCode: "assignment" };
   const runtime = { tenant: "t", principalType: "service", entCode: "runtime", serviceId: "waste-service", runtimeInstanceId: "instance",
     runtimeScope, permissions: ["commerce.digital.own.read"] };
-  config.couponAcquisition.sourceProof = { enabled: true, runtimeRole: "COMMERCE", callers: [{ ...runtimeScope, tenant: "t",
+  config.couponAcquisition.sourceProof = { enabled: true, callers: [{ ...runtimeScope, tenant: "t",
     principalEnterpriseCode: "runtime", enterpriseCode: "issuer", serviceId: "waste-service", phases: ["reserve", "consume", "release"] }] };
   NODICS.getSelectedEnvironmentName = () => "local";
   SERVICE.DefaultServiceTokenService = { requireRuntimePrincipal: input => input.authData };

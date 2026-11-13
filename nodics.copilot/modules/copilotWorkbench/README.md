@@ -1,5 +1,9 @@
 # copilotWorkbench
 
+Logical Product and Pricing target names are module-owned defaults. Relocating
+Workbench does not require a role profile; connections, target authority and
+command enablement still require explicit deployment selections.
+
 [Workflow trigger commands](llm/examples/process-triggers.md) provide reviewed
 create/update/archive and explicit execution through native Workflow. They do
 not create Cron schedules. Original receipts preserve restart and uncertainty

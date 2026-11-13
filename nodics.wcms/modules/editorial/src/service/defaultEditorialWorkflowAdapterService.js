@@ -40,64 +40,90 @@ module.exports = {
         return forwarded;
     },
 
-    /** Calls the Process-owned HTTP API for split-runtime deployments. */
+    /** Calls Process once, preserving denial/setup semantics and holding unconfirmed outcomes. */
     callProcess: async function (request, path, body, method) {
         let baseUrl = this.processBaseUrl();
-        if (!baseUrl)
-            throw new CLASSES.NodicsError(
-                'ERR_EDT_00003',
-                'Editorial Process runtime endpoint is not configured',
-            );
-        let response = await fetch(baseUrl + path, {
-            method: method || 'POST',
-            headers: this.delegatedHeaders(request),
-            body: body === undefined ? undefined : JSON.stringify(body),
-        });
-        let text = await response.text();
-        let payload = {};
+        if (!baseUrl) throw new CLASSES.NodicsError('ERR_EDT_00010');
+        let response;
+        let payload;
         try {
-            payload = text ? JSON.parse(text) : {};
+            response = await fetch(baseUrl + path, {
+                method: method || 'POST',
+                headers: this.delegatedHeaders(request),
+                body: body === undefined ? undefined : JSON.stringify(body),
+            });
         } catch (error) {
-            throw new CLASSES.NodicsError('ERR_EDT_00003', 'Process runtime returned a non-JSON response');
+            // The request may have reached Process. Never replay it or expose transport diagnostics.
+            throw new CLASSES.NodicsError('ERR_EDT_00010');
+        }
+        if (response.status === 401) throw new CLASSES.NodicsError('ERR_EDT_00012');
+        if (response.status === 403) throw new CLASSES.NodicsError('ERR_EDT_00011');
+        try {
+            let text = await response.text();
+            payload = text ? JSON.parse(text) : {};
+            if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+                throw new Error('Invalid Process response envelope');
+            }
+        } catch (error) {
+            // The request may have reached Process. Never replay it or expose transport diagnostics.
+            throw new CLASSES.NodicsError('ERR_EDT_00010');
         }
         if (!response.ok) {
-            let message =
-                (payload && (payload.message || payload.code)) ||
-                'Process runtime returned HTTP ' + response.status;
-            throw new CLASSES.NodicsError('ERR_EDT_00003', message);
+            if (response.status === 404 && payload.code === 'ERR_PROCESS_00002') {
+                throw new CLASSES.NodicsError('ERR_EDT_00009');
+            }
+            if (response.status === 404 && payload.code === 'ERR_PROCESS_00007' && method === 'GET' &&
+                /^\/nodics\/process\/v0\/instances\/[^/]+\/detail$/.test(path)) {
+                throw new CLASSES.NodicsError('ERR_EDT_00013');
+            }
+            throw new CLASSES.NodicsError('ERR_EDT_00010');
         }
         return payload.result || payload.data || payload;
     },
 
-    /** Starts a Process instance through either same-runtime services or the configured remote Process API. */
-    startProcessInstance: function (request, runtimeOperation) {
-        if (
-            SERVICE.DefaultProcessRuntimeLifecycleService &&
-            SERVICE.DefaultProcessRuntimeLifecycleService.startInstance
-        ) {
-            return SERVICE.DefaultProcessRuntimeLifecycleService.startInstance(
-                Object.assign({}, request, { runtimeOperation: runtimeOperation }),
-            );
+    /** Starts a published definition; missing setup never becomes an article-not-found claim. */
+    startProcessInstance: async function (request, runtimeOperation) {
+        try {
+            if (
+                SERVICE.DefaultProcessRuntimeLifecycleService &&
+                SERVICE.DefaultProcessRuntimeLifecycleService.startInstance
+            ) {
+                return await SERVICE.DefaultProcessRuntimeLifecycleService.startInstance(
+                    Object.assign({}, request, { runtimeOperation: runtimeOperation }),
+                );
+            }
+            return await this.callProcess(request, '/nodics/process/v0/instances', runtimeOperation, 'POST');
+        } catch (error) {
+            if (error && error.code === 'ERR_PROCESS_00002') {
+                throw new CLASSES.NodicsError('ERR_EDT_00009');
+            }
+            throw error;
         }
-        return this.callProcess(request, '/nodics/process/v0/instances', runtimeOperation, 'POST');
     },
 
     /** Reads Process instance detail through either same-runtime services or the configured remote Process API. */
-    getProcessInstanceDetail: function (request, instanceCode) {
-        if (
-            SERVICE.DefaultProcessRuntimeLifecycleService &&
-            SERVICE.DefaultProcessRuntimeLifecycleService.getInstanceDetail
-        ) {
-            return SERVICE.DefaultProcessRuntimeLifecycleService.getInstanceDetail(
-                Object.assign({}, request, { instanceCode: instanceCode }),
+    getProcessInstanceDetail: async function (request, instanceCode) {
+        try {
+            if (
+                SERVICE.DefaultProcessRuntimeLifecycleService &&
+                SERVICE.DefaultProcessRuntimeLifecycleService.getInstanceDetail
+            ) {
+                return await SERVICE.DefaultProcessRuntimeLifecycleService.getInstanceDetail(
+                    Object.assign({}, request, { instanceCode: instanceCode }),
+                );
+            }
+            return await this.callProcess(
+                request,
+                '/nodics/process/v0/instances/' + encodeURIComponent(instanceCode) + '/detail',
+                undefined,
+                'GET',
             );
+        } catch (error) {
+            if (error && error.code === 'ERR_PROCESS_00007') {
+                throw new CLASSES.NodicsError('ERR_EDT_00013');
+            }
+            throw error;
         }
-        return this.callProcess(
-            request,
-            '/nodics/process/v0/instances/' + encodeURIComponent(instanceCode) + '/detail',
-            undefined,
-            'GET',
-        );
     },
 
     /** Lists open review tasks through same-runtime Process services or the configured remote Process API. */
@@ -141,8 +167,8 @@ module.exports = {
     },
 
     /** Completes a review task through same-runtime Process services or the configured remote Process API. */
-    completeReviewTask: function (request, taskCode, action) {
-        let body = { decision: { approved: action === 'APPROVE', action: action } };
+    completeReviewTask: function (request, taskCode, action, reason) {
+        const body = { decision: { approved: action === 'APPROVE', action: action, ...(reason ? { reason } : {}) } };
         if (
             SERVICE.DefaultProcessRuntimeLifecycleService &&
             SERVICE.DefaultProcessRuntimeLifecycleService.completeTask
@@ -165,15 +191,7 @@ module.exports = {
 
     /** Starts the configured published Process definition with exact article revision correlation. */
     submit: async function (request) {
-        let input = request.editorial || {};
-        if (!input.article && input.model) input.article = input.model;
-        if (typeof input.localizations === 'string') {
-            try {
-                input.localizations = JSON.parse(input.localizations);
-            } catch (error) {
-                input.localizations = [];
-            }
-        }
+        const input = await SERVICE.DefaultEditorialArticleAuthoringService.storedInput(request);
         if (!input.article || input.article.status !== 'READY')
             throw new CLASSES.NodicsError(
                 'ERR_EDT_00002',
@@ -183,6 +201,7 @@ module.exports = {
             input.article,
             input.localizations,
             input.policy,
+            await SERVICE.DefaultEditorialFeaturedMediaService.evaluate(request, input.article),
         );
         if (!readiness.ready)
             throw new CLASSES.NodicsError(
@@ -194,7 +213,7 @@ module.exports = {
         if (!Number.isInteger(revision) || revision < 1)
             throw new CLASSES.NodicsError('ERR_EDT_00001', 'Editorial revision is required');
         let result = await this.startProcessInstance(request, {
-            definitionCode: input.workflowDefinitionCode || settings.definitionCode,
+            definitionCode: input.contentType.workflowDefinitionCode || settings.definitionCode,
             instanceCode: 'editorial-' + input.article.code + '-r' + revision,
             name: 'Editorial review: ' + input.article.internalName,
             context: {
@@ -207,6 +226,10 @@ module.exports = {
         });
         let data = (result && result.data) || result;
         let workflowInstanceCode = (data && data.instance && data.instance.code) || (data && data.code);
+        if (workflowInstanceCode !== 'editorial-' + input.article.code + '-r' + revision) {
+            throw new CLASSES.NodicsError('ERR_EDT_00002',
+                'Process submission could not be confirmed for this exact article revision; inspect Process before continuing');
+        }
         if (input.notification && SERVICE.DefaultCommunicationRequestService && request.communicationPorts) {
             await SERVICE.DefaultCommunicationRequestService.request(
                 {
@@ -232,15 +255,19 @@ module.exports = {
                 CONFIG.get('communication') || {},
             );
         }
-        await SERVICE.DefaultEditorialArticleService.update({
+        const updated = await SERVICE.DefaultEditorialArticleService.update({
             tenant: request.tenant,
             authData: request.authData,
-            query: { code: input.article.code, revision: revision },
+            query: { code: input.article.code, revision: revision, status: 'READY' },
             model: {
                 $set: { status: 'IN_REVIEW', workflowInstanceCode: workflowInstanceCode },
-                $unset: { publicationCode: '' },
             },
+            options: { recursive: false },
         });
+        if (SERVICE.DefaultModelsUpdateInitializerService.getAffectedCount(updated) !== 1) {
+            throw new CLASSES.NodicsError('ERR_EDT_00002',
+                'Process accepted the review, but the article changed before its status was confirmed; inspect the exact Process instance before continuing');
+        }
         return {
             articleCode: input.article.code,
             articleRevision: revision,
@@ -248,15 +275,47 @@ module.exports = {
             article: Object.assign({}, input.article, {
                 status: 'IN_REVIEW',
                 workflowInstanceCode: workflowInstanceCode,
-                publicationCode: undefined,
             }),
             processResult: data,
         };
     },
-    /** Reads workflow detail from Process without copying Process-owned state. */
-    inspect: function (request) {
-        let input = request.editorial || {};
-        return this.getProcessInstanceDetail(request, input.workflowInstanceCode);
+    /** Resolves the saved article's review under original employee authority, including uncertain submission recovery. */
+    inspect: async function (request) {
+        const owner = SERVICE.DefaultEditorialDraftCommandService;
+        owner.authorize(request, 'editorial.workflow.read');
+        const params = request.httpRequest && request.httpRequest.params || request.params || {};
+        const code = params.articleCode;
+        if (typeof code !== 'string' || !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(code)) {
+            throw new CLASSES.NodicsError('ERR_EDT_00001', 'Select the saved article before inspecting its review');
+        }
+        const article = await owner.root(request, code);
+        if (!Number.isSafeInteger(article.revision) || article.revision < 1) {
+            throw new CLASSES.NodicsError('ERR_EDT_00008');
+        }
+        const expected = 'editorial-' + code + '-r' + article.revision;
+        if (article.workflowInstanceCode !== undefined && article.workflowInstanceCode !== expected) {
+            throw new CLASSES.NodicsError('ERR_EDT_00008');
+        }
+        // Process may have accepted submission before the source transition was confirmed.
+        // Only the source-derived deterministic identity is eligible for that inquiry.
+        const result = await this.getProcessInstanceDetail(request, expected);
+        const detail = result && (result.data || result.result || result);
+        const instance = detail && detail.instance;
+        const context = instance && instance.context;
+        if (!instance || instance.code !== expected || !context || context.ownerModule !== 'editorial' ||
+            context.articleCode !== code || context.articleRevision !== article.revision) {
+            throw new CLASSES.NodicsError('ERR_EDT_00008');
+        }
+        const current = await owner.root(request, code);
+        if (current.revision !== article.revision || current.status !== article.status ||
+            current.workflowInstanceCode !== article.workflowInstanceCode) {
+            throw new CLASSES.NodicsError('ERR_EDT_00008');
+        }
+        return result;
+    },
+    /** Keeps reviewer feedback bounded before copying it into an Editorial receipt. */
+    rejectionReason: function (action, reason) {
+        return action === 'REJECT' && typeof reason === 'string' ? reason.trim().slice(0, 1000) : '';
     },
     /** Converts a completed Process decision into bounded Editorial status evidence. */
     applyDecision: function (article, decision) {
@@ -265,6 +324,7 @@ module.exports = {
         let statuses = { APPROVE: 'APPROVED', REJECT: 'CHANGES_REQUESTED', CANCEL: 'DRAFT' };
         let status = statuses[decision.action];
         if (!status) throw new CLASSES.NodicsError('ERR_EDT_00001', 'Editorial workflow decision is invalid');
+        const reason = this.rejectionReason(decision.action, decision.reason);
         return {
             code: article.code,
             revision: article.revision,
@@ -274,6 +334,7 @@ module.exports = {
                 action: decision.action,
                 actor: decision.actor,
                 completedAt: decision.completedAt,
+                ...(reason ? { reason } : {}),
             },
         };
     },
@@ -322,6 +383,7 @@ module.exports = {
             articleRevision: context.articleRevision,
             workflowInstanceCode: instance.code,
             action: action,
+            reason: decision.reason,
             actor:
                 execution.actor ||
                 (request.authData && (request.authData.loginId || request.authData.serviceId)),
@@ -361,8 +423,7 @@ module.exports = {
     },
     /** Applies a bounded Axis review decision through Process-owned task APIs when Process is colocated. */
     decideReview: async function (request, action) {
-        let input = request.editorial || {};
-        if (!input.article && input.model) input.article = input.model;
+        const input = await SERVICE.DefaultEditorialArticleAuthoringService.storedInput(request);
         if (!input.article || input.article.status !== 'IN_REVIEW' || !input.article.workflowInstanceCode)
             throw new CLASSES.NodicsError(
                 'ERR_EDT_00002',
@@ -380,11 +441,12 @@ module.exports = {
                 item.instanceCode === input.article.workflowInstanceCode &&
                 ['OPEN', 'CLAIMED', 'ESCALATED'].includes(item.status),
         );
-        if (!task) throw new CLASSES.NodicsError('ERR_EDT_00003', 'No open Editorial review task was found');
+        if (!task) throw new CLASSES.NodicsError('ERR_EDT_00008', 'No open Editorial review task was found');
         if (task.status === 'OPEN') {
             await this.claimReviewTask(request, task.code);
         }
-        let completed = await this.completeReviewTask(request, task.code, action);
+        const reason = this.rejectionReason(action, input.reason);
+        let completed = await this.completeReviewTask(request, task.code, action, reason);
         let articleStatus = action === 'APPROVE' ? 'APPROVED' : 'CHANGES_REQUESTED';
         return {
             articleCode: input.article.code,

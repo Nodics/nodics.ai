@@ -99,7 +99,7 @@ module.exports = {
         if (configured?.enabled !== true || ['providerCode', 'programCode', 'rewardTypeCode'].some(key => typeof configured[key] !== 'string' || !configured[key])) this.fail('Reward provider configuration is unavailable');
         for (const target of [configured.loyaltyTarget, configured.profileTarget])
             if (!target || ['moduleName', 'connectionName', 'apiVersion'].some(key => typeof target[key] !== 'string' || !target[key]) ||
-                !target.targetAuthority || !Number.isSafeInteger(target.timeoutMs) || target.timeoutMs < 1 ||
+                (target.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(target.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) || !Number.isSafeInteger(target.timeoutMs) || target.timeoutMs < 1 ||
                 !Number.isSafeInteger(target.maxAttempts) || target.maxAttempts < 1) this.fail('Reward provider target is unavailable');
         if (typeof configured.loyaltyTarget.connectionType !== 'string' || !configured.loyaltyTarget.connectionType) this.fail('Reward provider connection is unavailable');
         return configured;

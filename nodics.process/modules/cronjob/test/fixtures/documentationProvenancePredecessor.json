@@ -1,0 +1,116 @@
+{
+  "reason": "Immutable pre-provenance correction selection; not installed-runtime proof",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "cronjob",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 5,
+      "components": 5,
+      "routes": 5,
+      "releaseChecksum": "b3f2bb0828649221b272ec4ec04aab47c477e549190cac017c04efe9aefaf458",
+      "generatedHashes": {
+        "docs-v001/records/documentation/cronjobDocumentationNodeData.js": "48b850ac153858b3639f0ffaf1bb4d7e9bb1a596ff5a55b964f9c4ac3aa8521c",
+        "docs-v001/records/documentation/cronjobDocumentationPageMetadataData.js": "673d07e071ff927a7746f6e655d6d0914de15fd9c2cd10ea7087e9bc1f8a3940",
+        "docs-v001/records/documentation/cronjobDocumentationPublicationStateData.js": "f313ef697a5589fc8bd79f08149f8d1b62601e26e1c3122712b04bdd1db6f171",
+        "docs-v001/records/documentation/cronjobDocumentationSearchMetadataData.js": "e9743f6cd96e45b3ecd3fbd96e735a429a4f07285dd432ba79afcd944e6f08f5",
+        "docs-v001/records/documentation/cronjobDocumentationComponentData.js": "f7f777a7cd698912df3ab7bfe271695a17118b8eacc3d2fbbef292a1e4700a1e",
+        "docs-v001/records/documentation/cronjobDocumentationPageData.js": "77158b4f4e6667e926e6eb799fe457f312006ab6eae3056ce07ab941157ef3cc",
+        "docs-v001/records/documentation/cronjobDocumentationRouteData.js": "4023f8c5101ea012ed91428abe555694ddfa54b908878a71c629266faf2768bf",
+        "docs-v001/records/documentation/cronjobDocumentationMediaData.js": "730100ef316aa56201d0f033204ed4c4a20844bd982b9adc208d243745129a3d",
+        "docs-v001/headers/100_cronjobDocumentationContentPackHeader.js": "00bc29a8607d8473ab9a665824495c7dd9ade9f95ca57578e513b80b5e8f5105",
+        "docs-v001/assets/documentation/files/images/cron-schedule-draft-desktop.png": "ba547872c5630a22cf7e8386303a7459a155fd42c428162bdf81b2ba002876ea",
+        "docs-v001/assets/documentation/files/images/cron-schedule-draft-mobile.png": "4fd4bebb49ed19a5864a47a7ae31790d0655ec02d98b158a052d7c660898cc2f",
+        "docs-v001/assets/documentation/files/images/knowledge-source-schedules-desktop.png": "b88e17127740d6bf0e29b75fc7732049a7e6bf8c7fa88752d54ae2808de7de35",
+        "docs-v001/assets/documentation/files/images/knowledge-source-schedules-mobile.png": "509a3199e04f165b83b02db8ddd338819c9f25c4b0314c1bed686541e641da47",
+        "docs-v001/assets/documentation/files/images/schedule-lifecycle-desktop.png": "184c785bf4691137f89888b7694f03491e0872e6c7d7c826b45e31b3cc7378d8",
+        "docs-v001/assets/documentation/files/images/schedule-lifecycle-mobile.png": "17dee05ed20cf8f05b7e6da6fda1ac40017cb1b961f1eb158582154eebfe8d1e",
+        "docs-v001/assets/documentation/cronjobDocumentationAssetManifest.js": "7cfb4bf53b5d02eff9b9406c84ee18e61fdf671a91d64b0c4b969585ca80899a"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  },
+  "successorVersion": "0.0.2",
+  "articles": [
+    {
+      "id": "cron.inactive-schedule-drafts",
+      "componentCode": "nodicsDocsComponentcronInactiveScheduleDrafts",
+      "previousFile": "docs-v001/records/documentation/cronjobDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/cronjobDocumentationRelease002ComponentData.js",
+      "blocksSha256": "0d17bc63473d738710125d819cc5703e32fb762ba9d8374cff102c5006a5c6ca",
+      "digestMode": "titled",
+      "sourceChecksum": "7b353021203399b403c7216ee70e64ae2da21e300927537729bdd4387af7e785",
+      "sourceWordCount": 2557
+    },
+    {
+      "id": "cron.operations",
+      "componentCode": "nodicsDocsComponentcronOperations",
+      "previousFile": "docs-v001/records/documentation/cronjobDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/cronjobDocumentationRelease002ComponentData.js",
+      "blocksSha256": "e210cc8d309a47e42c1d2a264444bd460072f06efa35f9cd39f93be1e1a69478",
+      "digestMode": "titled",
+      "sourceChecksum": "a5467ec3371f98a645b8bdfee14a7ec210b14e42cf48bdf37ea22c0e4a24e7f0",
+      "sourceWordCount": 675
+    },
+    {
+      "id": "cron.node-responsibility-tee",
+      "componentCode": "nodicsDocsComponentcronNodeResponsibilityTee",
+      "previousFile": "docs-v001/records/documentation/cronjobDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/cronjobDocumentationRelease002ComponentData.js",
+      "blocksSha256": "edaa22bdfe13a33869297ed73378533ff162f3b79c4b19e6f62665c08f5acd98",
+      "digestMode": "titled",
+      "sourceChecksum": "3635ef9a0813975b17339e0544120fdf2ff6a2a2d53bfd45b5170718d842df00",
+      "sourceWordCount": 566
+    },
+    {
+      "id": "cron.project-customization",
+      "componentCode": "nodicsDocsComponentcronProjectCustomization",
+      "previousFile": "docs-v001/records/documentation/cronjobDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/cronjobDocumentationRelease002ComponentData.js",
+      "blocksSha256": "c87e9f1b42e151d0ed641ff445d345c8a5f2a71c948704f4ebc6e79694694395",
+      "digestMode": "titled",
+      "sourceChecksum": "afd997df573e0f3a45efeb4a089c0afc86dc680e4d333dd4494a880c187cd086",
+      "sourceWordCount": 570
+    },
+    {
+      "id": "process.cronjob-data-authoring",
+      "componentCode": "nodicsDocsComponentprocessCronjobDataAuthoring",
+      "previousFile": "docs-v001/records/documentation/cronjobDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/cronjobDocumentationRelease002ComponentData.js",
+      "blocksSha256": "f19e77ee4127bfff751eb05409129401d9e5a3dbde4fca113b9dbcb8fbefdf2d",
+      "digestMode": "titled",
+      "sourceChecksum": "ee22bf99194431423eacf4d1b7c70a6d94395786001ba8ce94938e63acb68522",
+      "sourceWordCount": 1246
+    }
+  ],
+  "successorSnapshot": "test/fixtures/documentationProvenanceSuccessor"
+}

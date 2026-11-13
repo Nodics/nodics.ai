@@ -9,10 +9,10 @@ authority. Preserve `test/biddingIdentityTransport.test.js`.
 `bidding` owns `DefaultBiddingService`, its controller and participant API:
 `/nodics/bidding/v0/bids` (GET/POST), `/bids/:code` (GET), and
 `/bids/:code/decisions` (POST). Require `commerce.bid.participate` and service
-participant checks. `bidding.runtimeRoles` defaults to COMMERCE only; Staged
-and unspecified runtimes fail before identity lookup or persistence, even if a
-shared project configuration enables bidding. A later topology may explicitly
-configure its operational role. Enterprise representatives also require `commerce.bid.manage`
+participant checks. `DefaultModuleService.isLocalModuleActive("bidding")` and explicit
+`runtimeRole.publication: "OPERATIONAL"` are required before identity lookup or
+persistence. STAGED, ONLINE and missing publication refuse even when bidding is
+enabled. Runtime display code grants no authority; there is no local role allowlist. Enterprise representatives also require `commerce.bid.manage`
 and effective Profile scopes for the offer enterprise; explicit denial wins.
 
 Acceptance follows OPEN -> ACCEPTING -> ACCEPTED. An OPEN bid may instead become

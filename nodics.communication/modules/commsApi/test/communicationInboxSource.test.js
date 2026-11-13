@@ -230,6 +230,7 @@ test('Employee inbox composes real Profile self identity and isolates the existi
  SERVICE.DefaultEnterpriseRegistrationService={read:async()=>undefined};
  SERVICE.DefaultEmployeeService={findByLoginId:async r=>{assert.equal(r.tenant,input.tenant);return employee;}};
  SERVICE.DefaultModuleService.invokeModule=async call=>{
+  assert.deepEqual(call.targetAuthority,{publication:'OPERATIONAL'});
   assert.equal(call.apiName,'/employee/inbox-identity');assert.equal(call.methodName,'GET');
   assert.equal(call.header.Authorization,input.authorization);assert.equal(call.requireInternalAuth,undefined);
   return {code:'SUC_PRFL_00000',data:await profile.inboxIdentity({tenant:input.tenant,authData:input.authData})};

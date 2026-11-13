@@ -29,7 +29,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "axis accessGroups",
       "description": "Explicit axis identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "axis",
@@ -81,7 +81,7 @@
         {
           "moduleName": "cms",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
           "partition": "DEFAULT"
         },
@@ -207,27 +207,27 @@
         {
           "moduleName": "product",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "402b7ebffc05ac529f465c228700437b830cfb0f873a15ac92d5b7b5b9a3a9c8",
           "partition": "DEFAULT"
         },
@@ -292,7 +292,7 @@
     "axisBaseline": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "description": "Platform-owned Axis baseline experience with the current dashboard composition for Staged installation and controlled publication",
       "owningDomain": "axis",
       "lifecycle": "PUBLISHABLE",
@@ -432,7 +432,8 @@
         "init-v001/records/axis/axisContentCatalogData.js": "ad09b3030816cc6c355aeccb20f59ea643da47ce91ab7eaaaf5b2b12ca12fe90",
         "init-v001/headers/axis/axisContentCatalogHeader.js": "6793eb87ab4d54963a98c045e958bce598b4df05f0080bf690ed161043bae5d0"
       },
-      "sourceRoot": "init-v001"
+      "sourceRoot": "init-v001",
+      "selectionPolicy": "EXPLICIT"
     },
     "core-v001": {
       "kind": "DATA_RELEASE",
@@ -523,7 +524,7 @@
       "pages": 18,
       "components": 19,
       "routes": 18,
-      "releaseChecksum": "cc724c4cc91a476d43c2bac240d9e53a2158a35570c500b37abb9ff2e36446aa",
+      "releaseChecksum": "6d4d73a1d598b832850afa0f40a1a88b361a8bc39d333615eacf25ed6c97bfc4",
       "generatedHashes": {
         "docs-v001/records/documentation/axisDocumentationAccessPolicyData.js": "dd948efe165365adedfbd8102647d6cb2bd837f0ce5c75bd0f6120fb586b7f1b",
         "docs-v001/records/documentation/axisDocumentationDashboardData.js": "b83bb43fe8ec1bc1f5cce0b36991ace0c2053a7e2efe7a00336d8df61a57ff54",
@@ -534,10 +535,10 @@
         "docs-v001/records/documentation/axisDocumentationProductData.js": "8e2f5bcca7771bdb7f6b4a29f414762980bce2c16d2da362e96036cc49d9504c",
         "docs-v001/records/documentation/axisDocumentationPublicationStateData.js": "8c78785d1e3db8c9740817d4e31d8fc8e39d713873e82cc64bd9ea719027883d",
         "docs-v001/records/documentation/axisDocumentationSearchMetadataData.js": "a9b1c10424cd62ebb359690923d6a6fdaaf4fbde3b29e79993ccdb561c4dd7fb",
-        "docs-v001/records/documentation/axisDocumentationComponentData.js": "90bd7cab454d80d9252ef2902cc6ab12f3464b682c5de448b32a093f1c31ef5e",
+        "docs-v001/records/documentation/axisDocumentationComponentData.js": "ef3c58c3c98ba6e7826d72ef5884b7f3cb71fc2946a88507bdd1e18aed7e0229",
         "docs-v001/records/documentation/axisDocumentationPageData.js": "de4033d92d5faca60b9709acbc7662fae370cd1e2b09d336d09206ce0d3a8de7",
         "docs-v001/records/documentation/axisDocumentationRendererData.js": "e65bdc1a34aa1ac60ef98f9ab6bd2a7f684095ce2db01f7483d675d7efd34a71",
-        "docs-v001/records/documentation/axisDocumentationRouteData.js": "ec0db397b35163917437852b06b30b4d248dac6370b6ac93714f7783153ea8a5",
+        "docs-v001/records/documentation/axisDocumentationRouteData.js": "102bf41cd0b9b0950998bbae6bcfba313d11d55168468f62ce4d362c427ba549",
         "docs-v001/records/documentation/axisDocumentationSiteData.js": "5c230ba36d9fb06a62e547b3ddd77846794d044dcd3f8c66af4307b3fd507b96",
         "docs-v001/records/documentation/axisDocumentationSlotData.js": "69f8b32f526a18e5a43ef990e9c416dfdec9f163550eee1d2ef269da2de41458",
         "docs-v001/records/documentation/axisDocumentationTemplateData.js": "ecbb59623f1d164262b956834d0b3481d6fbfe124c0e9c522b84aa652e457121",

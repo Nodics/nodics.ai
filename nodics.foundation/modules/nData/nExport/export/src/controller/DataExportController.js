@@ -19,6 +19,18 @@
 module.exports = {
 
     /**
+     * Reads export availability without normalizing caller input as an export.
+     * @param {Object} request Secured runtime request.
+     * @param {Function} callback Optional router callback.
+     * @returns {Promise<Object>|void} Owner availability envelope.
+     */
+    workspace: function (request, callback) {
+        const result = FACADE.DataExportFacade.workspace(request);
+        if (callback) result.then(value => callback(null, value)).catch(callback);
+        else return result;
+    },
+
+    /**
 
      * Executes export behavior.
 

@@ -1,5 +1,15 @@
 # Stripe Provider contracts
 
+## Explicit deployment selection
+
+The owning module defaults to `enabled: false`, `maturity: "OFFLINE_CONFORMANCE"`,
+`sandboxOnly: true`, and `liveQualified: false`. A Commerce role or module
+relocation never enables the provider. An intended isolated local/test runtime
+may override only `stripeProvider.enabled: true` through ordinary configuration
+layering. Inherit the sandbox and maturity defaults; selection neither grants
+payment authority nor qualifies a live integration. Staged catalogue runtimes
+remain disabled without a redundant override or role-specific maturity label.
+
 ## Offline Original Capture
 
 No method in this adapter contacts Stripe or moves funds. Provider properties

@@ -168,7 +168,7 @@ SERVICE.DefaultScoreBandSetVersionService = {
 };
 SERVICE.DefaultWasteRewardAssessmentService = {
     get: async request => ({ result:saved.filter(row => row.code === request.query.code) }),
-    save: async request => { saved.push(request.model); return { result:request.model.assessmentType === 'CONFIRMED' ? [request.model] : request.model }; }
+    save: async request => { const definition = require('../../../../../../nodics.waste/modules/wasteReward/src/schemas/schemas').wasteReward.wasteRewardAssessment.definition; for (const field of ['calculatedScore', 'finalScore']) assert.strictEqual(typeof request.model[field], definition[field].type, field + ' must satisfy its persisted schema'); saved.push(request.model); return { result:request.model.assessmentType === 'CONFIRMED' ? [request.model] : request.model }; }
 };
 SERVICE.DefaultWastePersistenceService = require('../../../../../../nodics.waste/modules/wasteCore/src/service/defaultWastePersistenceService');
 
@@ -181,7 +181,7 @@ SERVICE.DefaultWastePersistenceService = require('../../../../../../nodics.waste
         correlationId:'corr-estimated'
     });
     assert.strictEqual(estimated.assessmentType, 'ESTIMATED');
-    assert.strictEqual(estimated.finalScore, 60);
+    assert.strictEqual(estimated.finalScore, '60');
     assert.strictEqual(estimated.scoreBandCode, 'HIGH');
     assert.strictEqual(saved.length, 1);
 
@@ -194,7 +194,7 @@ SERVICE.DefaultWastePersistenceService = require('../../../../../../nodics.waste
         correlationId:'corr-1'
     });
     assert.strictEqual(assessment.assessmentType, 'CONFIRMED');
-    assert.strictEqual(assessment.finalScore, 60);
+    assert.strictEqual(assessment.finalScore, '60');
     assert.strictEqual(assessment.scoreBandCode, 'HIGH');
     assert.strictEqual(assessment.rewardAmount, '200');
     assert.strictEqual(assessment.policyVersion, 1);

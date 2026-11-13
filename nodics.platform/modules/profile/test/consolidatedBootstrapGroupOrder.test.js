@@ -30,7 +30,7 @@ test('successor Init orders module-owned group datasets after their permission a
     const authSecurity = require('../../../../nodics.foundation/modules/nAuth/config/properties').authSecurity;
     CONFIG.get = key => key === 'bootstrapIdentity' ? { source: 'test', adminPassword: 'test-admin-password-12345',
         servicePassword: 'test-service-password-12345', serviceApiKey: 'test-service-api-key-value-12345678901234567890' }
-        : key === 'authSecurity' ? { ...authSecurity, compatibility: { ...authSecurity.compatibility, allowLocalBootstrapIdentity: true } } : get(key);
+        : key === 'authSecurity' ? { ...authSecurity, bootstrapIdentity: require('../config/properties').authSecurity.bootstrapIdentity, compatibility: { ...authSecurity.compatibility, allowLocalBootstrapIdentity: true } } : get(key);
     global.NODICS.isModuleActive = () => true;
     global.CLASSES = { NodicsError: Error };
     global.UTILS = { isObject: value => value !== null && typeof value === 'object' };
@@ -55,10 +55,25 @@ test('successor Init orders module-owned group datasets after their permission a
             records.forEach(record => { assert(!installed.has(record.code), 'One source owner per group'); installed.set(record.code, record); });
         }
     }
-    assert.equal(installed.size, require('./helpers/identityCatalogueFixture').records('UserGroup').length);
+    assert.deepEqual(new Set(ordered.filter(row => row.sectionCode === 'accessGroups').map(row => row.moduleName)),
+        new Set(['profile', 'config']));
+    const permissionCodes = new Set();
+    for (const release of ordered.filter(row => /permission/i.test(row.sectionCode))) {
+        for (const file of release.declaredFiles.filter(file => file.includes('/records/'))) {
+            const records = require(path.join(modules[release.moduleName].path, 'data', file));
+            Object.values(records).forEach(record => permissionCodes.add(record.code));
+        }
+    }
+    const serviceAccount = Object.values(require('../data/init-v001/records/identityBootstrap/preservedServiceEmployeeData'))[0];
+    for (const scope of serviceAccount.apiKeyScopes) assert(permissionCodes.has(scope), scope);
+    for (const group of installed.values()) {
+        for (const permission of group.permissions || []) {
+            assert(permission === '*' || permissionCodes.has(permission), group.code + ' requires ' + permission);
+        }
+    }
     assert(installed.get('runtimeConfigAdminUserGroup').permissions.includes('copilot.configuration.admin'));
     assert(!installed.get('employeeUserGroup').permissions.includes('copilot.configuration.admin'));
-    assert.equal(initial.version, '0.0.8');
+    assert.equal(initial.version, '0.0.1');
     assert.equal(initial.sourceRoot, 'init-v001');
     assert(!initial.declaredFiles.some(file => file.includes('/records/groups/')));
 });

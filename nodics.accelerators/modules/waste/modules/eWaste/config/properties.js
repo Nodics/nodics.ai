@@ -153,6 +153,14 @@ module.exports = {
     },
   },
   wasteImpact: {
+    providerProfiles: {
+      eWasteEnvironmentalAssessment: {
+        providerService: "DefaultEWasteOpenAiImpactProviderService",
+        fallbackProviderServices: ["DefaultEWasteWarmImpactProviderService"],
+        timeoutMs: 90000,
+        failureMode: "RESULT",
+      },
+    },
     calculation: {
       openAiEnvironmental: {
         adapter: "openai",
@@ -592,16 +600,16 @@ module.exports = {
     presentation: {},
     targetAuthorities: {
       engagement: {
-        runtimeRole: "ENGAGEMENT",
+        publication: "OPERATIONAL",
       },
       commerce: {
-        runtimeRole: "COMMERCE",
+        publication: "OPERATIONAL",
       },
       commerceStaged: {
-        runtimeRole: "COMMERCE_STAGED",
+        publication: "STAGED",
       },
       wcms: {
-        runtimeRole: "WCMS_STAGED",
+        publication: "STAGED",
       },
     },
     marketplace: {
@@ -667,29 +675,23 @@ module.exports = {
   },
 
   product: {
-    runtimeRoleProfiles: {
-      COMMERCE_STAGED: {
-        marketplaceAuthoring: {
-          intentSource: { moduleName: "eWaste", runtimeRole: "WASTE" },
-        },
-      },
+    marketplaceAuthoring: {
+      intentSource: { moduleName: "eWaste", targetAuthority: { publication: "OPERATIONAL" } },
     },
   },
   digitalCore: {
-    runtimeRoleProfiles: {
-      COMMERCE: {
-        digitalOwnership: {
-          owner: {
-            moduleName: "eWaste",
-            apiPrefix: "/internal/digital-sales",
-          },
-        },
-        ownershipEvidence: {
-          bindingAdmission: {
-            moduleName: "eWaste",
-            apiName: "/internal/digital-listings/plan",
-          },
-        },
+    digitalOwnership: {
+      owner: {
+        moduleName: "eWaste",
+        apiPrefix: "/internal/digital-sales",
+        targetAuthority: { publication: "OPERATIONAL" },
+      },
+    },
+    ownershipEvidence: {
+      bindingAdmission: {
+        moduleName: "eWaste",
+        apiName: "/internal/digital-listings/plan",
+        targetAuthority: { publication: "OPERATIONAL" },
       },
     },
   },

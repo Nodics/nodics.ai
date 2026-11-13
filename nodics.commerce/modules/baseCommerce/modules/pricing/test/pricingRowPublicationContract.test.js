@@ -480,10 +480,10 @@ function publicationRuntimeFixture(t) {
         runtimeScope: { projectCode: 'project', environmentCode: 'projectLocal', serverCode: name,
             instanceCode: name + '-instance', assignmentCode: name + '-assignment' } });
     const publisher = principal('publisher'), callback = principal('target'), reader = principal('readonly');
-    const binding = (auth, connectionName) => ({ moduleName: 'pricing', connectionName, runtimeRole: 'PUBLICATION_PEER',
+    const binding = (auth, connectionName, publication) => ({ moduleName: 'pricing', connectionName, publication,
         callers: [{ tenant: auth.tenant, principalEnterpriseCode: auth.entCode, serviceId: auth.serviceId, ...auth.runtimeScope }] });
-    f.settings.sourceAuthority = binding(publisher, 'reviewed-source');
-    f.settings.target = binding(callback, 'reviewed-target');
+    f.settings.sourceAuthority = binding(publisher, 'reviewed-source', 'STAGED');
+    f.settings.target = binding(callback, 'reviewed-target', 'OPERATIONAL');
     const get = CONFIG.get;
     CONFIG.get = key => key === 'authSecurity' ? { internalToken: { routePermission: 'internal.policy.read', runtimeAccessGroups: ['userGroup'] } } : get(key);
     SERVICE.DefaultServiceTokenService = require(foundation + 'nAuth/src/service/identity/defaultServiceTokenService');

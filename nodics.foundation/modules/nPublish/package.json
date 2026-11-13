@@ -36,7 +36,8 @@
     "runtime": {
       "router": true,
       "publish": true,
-      "web": false
+      "web": false,
+      "ownership": "runtimeLocal"
     },
     "displayName": "Publishing"
   }

@@ -19,6 +19,10 @@
  * @override Customer process overlays may add authorization, redaction, or domain enrichment before delegating to operation services.
  */
 module.exports = {
+  /** Delegates advisory command metadata to Workflow; never starts or claims work. @param {Object} request Trusted scope. @returns {Promise<Object>} Metadata. */
+  getCommandCapabilities: function (request) {
+    return SERVICE.DefaultProcessCommandCapabilityService.get(request);
+  },
   /** Delegates target-scoped inspection to the Process owner. @param {Object} request Verified request. @returns {Promise<Object>} History. */
   inspectRemoteActions: function (request) {
     return SERVICE.DefaultProcessRemoteActionInspectionService.history(request);
@@ -173,6 +177,10 @@ module.exports = {
       request,
       "archive",
     );
+  },
+  /** Executes a Cron firing through the Workflow owner. */
+  fireScheduledTrigger: function (request) {
+    return SERVICE.DefaultProcessRuntimeLifecycleService.fireScheduledTrigger(request);
   },
   /** Delegates active trigger execution into Process-owned runtime start. */
   executeTrigger: function (request) {

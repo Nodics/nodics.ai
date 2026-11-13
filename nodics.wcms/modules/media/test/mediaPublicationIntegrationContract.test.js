@@ -25,13 +25,13 @@ const tokenService = require('../../../../nodics.foundation/modules/nAuth/src/se
 /** Creates isolated configuration and scoped authenticated runtime fixtures. */
 function fixture() {
     const policy = { versionProviderEnabled: true, runtimeRole: 'STAGED',
-        target: { connectionName: 'onlineMedia', connectionType: 'abstract', timeoutMs: 1000, maxAttempts: 1 } };
+        target: { publication: 'ONLINE', connectionName: 'onlineMedia', connectionType: 'abstract', timeoutMs: 1000, maxAttempts: 1 } };
     const auth = { tokenType: 'service', serviceId: 'runtime', entCode: 'enterprise', tenant: 'one',
         runtimeInstanceId: 'source', modules: ['media'], runtimeScope: { instanceCode: 'source',
             projectCode: 'partner', environmentCode: 'local', serverCode: 'staged', assignmentCode: 'media' } };
     global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
-    global.CONFIG = { get: key => key === 'media' ? { publication: policy } : undefined };
-    global.NODICS = { getInternalAuthToken: () => 'scoped-internal-token' };
+    global.CONFIG = { get: key => key === 'media' ? { publication: policy } : key === 'runtimeRole' ? { code: 'RENAMED_MEDIA', publication: policy.runtimeRole } : undefined };
+    global.NODICS = { isModuleActive: name => name === 'media', getInternalAuthToken: () => 'scoped-internal-token' };
     global.SERVICE = { DefaultMediaRetainedPublicationService: retained, DefaultServiceTokenService: tokenService };
     global.FACADE = { DefaultMediaStorageFacade: facade };
     return { policy, context: { tenant: 'one', authData: auth } };
@@ -43,7 +43,7 @@ test('transport uses explicit remote Media authority and internal token; missing
     const version = 'a'.repeat(64);
     const input = { operationKey: 'stable-op', publicationCode: 'pub', expectedVersion: null,
         manifest: { code: version }, manifestCode: version, mediaCode: 'hero' };
-    SERVICE.DefaultModuleService = { invokeModule: async request => { calls.push(request);
+    SERVICE.DefaultModuleService = { ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'), invokeModule: async request => { calls.push(request);
         const result = request.apiName.endsWith('/status') ? null : request.apiName.endsWith('/reconcile') ?
             { manifestCode: version, mediaCode: 'hero', status: 'ACTIVE', repaired: false, version,
                 operationKey: input.operationKey, publicationCode: 'pub',
@@ -57,7 +57,7 @@ test('transport uses explicit remote Media authority and internal token; missing
     assert.deepEqual(calls.map(item => item.apiName), ['/publication/target/deploy', '/publication/target/status', '/publication/target/rollback', '/publication/target/reconcile']);
     for (const call of calls) {
         assert.equal(call.moduleName, 'media'); assert.equal(call.local, false);
-        assert.deepEqual(call.targetAuthority, { runtimeRole: 'WCMS_ONLINE' });
+        assert.deepEqual(call.targetAuthority, { publication: 'ONLINE' });
         assert.equal(call.header.Authorization, 'Bearer scoped-internal-token'); assert.equal(call.header.tenant, 'one');
         assert.equal(call.idempotencyKey, 'stable-op');
     }
@@ -78,7 +78,7 @@ test('pointer batches reuse authenticated target status and reject incomplete or
     const valid = { statuses: [{ mediaCode: 'hero', status: { version: 'a'.repeat(64), revision: 1 } },
         { mediaCode: 'absent', status: null }] };
     let calls = 0;
-    SERVICE.DefaultModuleService = { invokeModule: async request => {
+    SERVICE.DefaultModuleService = { ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'), invokeModule: async request => {
         calls++;
         assert.equal(request.apiName, '/publication/target/status');
         assert.equal(request.header.Authorization, 'Bearer scoped-internal-token');
@@ -98,7 +98,7 @@ test('integrity batches reuse scoped reconciliation and require complete ordered
     const f = fixture();
     const input = { assets: [{ mediaCode: 'hero', manifestCode: 'a'.repeat(64) }, { mediaCode: 'two', manifestCode: 'b'.repeat(64) }] };
     const valid = { results: input.assets.map(asset => ({ ...asset, intact: true, active: true, protected: true, repaired: false, deleted: false })) };
-    SERVICE.DefaultModuleService = { invokeModule: async request => {
+    SERVICE.DefaultModuleService = { ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'), invokeModule: async request => {
         assert.equal(request.apiName, '/publication/target/reconcile');
         assert.equal(request.header.Authorization, 'Bearer scoped-internal-token');
         assert.equal(request.header.tenant, 'one');
@@ -153,9 +153,10 @@ test('target and callback routes require service tokens; Media Process release i
         assert.equal(routes[key].permissionConfig, 'authSecurity.internalToken.routePermission');
         assert.equal(routes[key].apiExposure, 'moduleInternal'); assert.equal(routes[key].method, 'POST');
     }
-    const props = require('../config/properties');
+    const props = require('../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService').resolve(
+        require('../config/properties'), {}, { readRuntimeProperty: () => 'ONLINE' });
     assert.equal(props.media.publication.versionProviderEnabled, false);
-    assert.equal(props.publish.providers, undefined);
+    assert.deepEqual(props.publish.providers, { domainAdapters: { media: null }, versionProviders: { media: null }, workflowProviders: { media: null } });
     const release = require('../data/manifest.json').sections.mediaPublicationWorkflow;
     assert.equal(release.selectionPolicy, 'EXPLICIT'); assert.equal(release.destinationRole, 'PROCESS');
     assert.equal(release.installer, 'PROCESS_DEFINITION');
@@ -169,7 +170,8 @@ test('target and callback routes require service tokens; Media Process release i
     const action = props.process.actionAdapters.definitions['media.applyPublicationDecision'];
     assert.equal(action.remote.requiresCompletedTask, true);
     assert.equal(action.remote.apiName, routes.applyPublicationDecision.key);
-    assert.equal(action.remote.runtimeRole, 'WCMS_STAGED');
+    assert.equal(action.remote.runtimeRole, undefined);
+    assert.deepEqual(action.remote.targetAuthority, { publication: 'STAGED' });
 });
 
 test('same-code forward Media release uses existing installer upgrade and preserves immutable v1 source', async () => {
@@ -251,10 +253,10 @@ test('source authorization binds stored nPublish intent and rejects invented ope
     assert.equal((await provider.authorizeTarget(rollback, f.context)).authorized, true);
     await assert.rejects(provider.authorizeTarget({ ...rollback, manifestCode: version }, f.context));
     f.policy.runtimeRole = 'ONLINE';
-    f.policy.source = { connectionName: 'stagedMedia', connectionType: 'abstract' };
-    SERVICE.DefaultModuleService = { invokeModule: async request => {
+    f.policy.source = { publication: 'STAGED', connectionName: 'stagedMedia', connectionType: 'abstract' };
+    SERVICE.DefaultModuleService = { ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'), invokeModule: async request => {
         assert.equal(request.apiName, '/publication/authorize-target');
-        assert.deepEqual(request.targetAuthority, { runtimeRole: 'WCMS_STAGED' });
+        assert.deepEqual(request.targetAuthority, { publication: 'STAGED' });
         assert.equal(request.header.Authorization, 'Bearer scoped-internal-token');
         return { authorized: true, fingerprint: retained.digest(command) };
     } };
@@ -294,7 +296,7 @@ test('governed operator entry captures once and delegates fixed-domain publicati
     SERVICE.DefaultMediaPublicationVersionProviderService = provider;
     SERVICE.DefaultPublicationLifecycleService = {
         getWorkflowProvider: () => ({ policy: () => ({ definitionCode: 'mediaPublicationApproval', ownerModule: 'media', requesterBinding: 'NATIVE_ACTOR', reviewNodeCode: 'mediaReview', reviewPermission: 'publish.lifecycle.approve' }),
-            assertSource: () => true, target: () => ({ runtimeRole: 'PROCESS', connectionName: 'processServer', connectionType: 'abstract' }) }), getDomainAdapter: () => provider, getVersionProvider: () => provider,
+            assertSource: () => true, target: () => ({ targetAuthority: { publication: 'OPERATIONAL' }, connectionName: 'processServer', connectionType: 'abstract' }) }), getDomainAdapter: () => provider, getVersionProvider: () => provider,
         getRepository: () => ({ get: async code => publications.get(code) }),
         create: async request => { calls.push('create'); assert.equal(request.publication.domain, 'media');
             assert.equal(request.publication.rootType, 'media'); assert.equal(request.publication.sourceVersion, manifest.code);
@@ -312,7 +314,7 @@ test('governed operator entry captures once and delegates fixed-domain publicati
             return result; }
     };
     SERVICE.DefaultMediaLibraryService = require('../src/service/defaultMediaLibraryService');
-    SERVICE.DefaultModuleService = { invokeModule: async request => request.responseSelector({ data:
+    SERVICE.DefaultModuleService = { ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'), invokeModule: async request => request.responseSelector({ data:
         request.apiName.endsWith('/versions') ? [{ ...require('../data/init-v001/records/process/mediaPublicationWorkflowDefinitionData').definitions[0], definitionCode: 'mediaPublicationApproval', active: true, status: 'PUBLISHED', version: 1 }] :
             { code: 'mediaPublicationApproval', active: true, status: 'PUBLISHED', ownerModule: 'media', currentVersion: 1 } }) };
     FACADE.DefaultMediaLibraryFacade = require('../src/facade/defaultMediaLibraryFacade');
@@ -395,4 +397,22 @@ test('manifest reconciliation protects retained versions and reports corruption 
     assert.equal(result.intact, false); assert.equal(result.repaired, false); assert.equal(result.deleted, false);
     assert.equal(JSON.stringify(result).includes('secret'), false);
     await assert.rejects(cleanup.reconcileRetainedPublication({ ...input, mediaCode: 'other' }, f.context));
+});
+
+
+test('Media transport rejects nonlocal owners and incompatible source or target publication before dispatch', async () => {
+    for (const fault of ['remote', 'unknown-context', 'wrong-target']) {
+        const f = fixture();
+        if (fault === 'remote') NODICS.isModuleActive = () => false;
+        if (fault === 'unknown-context') {
+            const originalGet = CONFIG.get;
+            CONFIG.get = key => key === 'runtimeRole' ? { code: 'RENAMED_MEDIA' } : originalGet(key);
+        }
+        if (fault === 'wrong-target') f.policy.target.publication = 'STAGED';
+        SERVICE.DefaultModuleService = {
+            ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'),
+            invokeModule: async () => { assert.fail('Rejected ownership must not dispatch'); },
+        };
+        await assert.rejects(transport.getStatus({}, f.context));
+    }
 });

@@ -2,11 +2,11 @@
 
 ## Runtime Context Defaults
 
-Core's PLATFORM role derives `core.environment` through nConfig's trusted
+The active Core module derives `core.environment` through nConfig's trusted
 `environmentCode` context binding. Customer project identity remains an explicit
 customer choice; no reference application or environment name belongs here.
 This metadata does not enable API/provider access or supply actor authority.
-Missing context stays missing, unrelated roles are unchanged, and later customer
+Missing context stays missing, runtime role names do not select defaults, and later customer
 overrides use normal layering. See `test/copilotEnvironmentConfigurationOwnership.test.js`.
 
 Deterministic module inventory routes apply to counts, lists and exports.

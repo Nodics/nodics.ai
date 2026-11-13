@@ -14,11 +14,18 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const bindings = require('../../nConfig/src/service/defaultConfigurationBindingService');
 const defaults = require('../config/properties');
+const profile = require('../../../../nodics.platform/modules/profile/config/properties');
+function deployment(variables) {
+  const peers = bindings.resolve(defaults, {}, {environmentVariables:variables});
+  assert.equal(peers.bootstrapIdentity, undefined);
+  return bindings.merge(peers, bindings.resolve({bootstrapIdentity:profile.bootstrapIdentity,authSecurity:{bootstrapIdentity:profile.authSecurity.bootstrapIdentity}},
+    peers, {environmentVariables:variables}));
+}
 const security = require('../src/service/security/defaultAuthSecurityService');
 const facade = values => ({get:key => values[key]});
 
 test('missing deployment credentials fail without a local or administrator fallback', () => {
-  const values = bindings.resolve(defaults, {}, {environmentVariables:{}});
+  const values = deployment({});
   assert.equal(values.defaultAuthDetail.apiKey, null);
   assert.throws(() => security.getJwtSecret(facade(values)), /strong JWT secret/);
   assert.throws(() => security.validateBootstrapIdentity(facade(values)), /adminPassword/);
@@ -28,7 +35,7 @@ test('missing deployment credentials fail without a local or administrator fallb
   assert.equal(values.cache.auth.channels.auth.fallback, false);
 });
 
-test('bootstrap proof and current runtime proof remain independently supplied across restarts and overrides', () => {
+test('Profile seeds the shared connection proof on first install and permits independent credential rotation', () => {
   const variables = {
     NODICS_JWT_SECRET:'A1-opaque-signing-material-for-an-isolated-contract-check',
     NODICS_API_KEY_PEPPER:'B2-opaque-digest-material-for-an-isolated-contract-check',
@@ -37,14 +44,14 @@ test('bootstrap proof and current runtime proof remain independently supplied ac
     NODICS_BOOTSTRAP_SERVICE_API_KEY:'E5-opaque-initial-service-proof-for-contract-check',
     NODICS_API_KEY:'F6-opaque-current-runtime-proof-for-contract-check',
   };
-  const first = bindings.resolve(defaults, {}, {environmentVariables:variables});
-  const restart = bindings.resolve(defaults, {}, {environmentVariables:variables});
+  const first = deployment(variables);
+  const restart = deployment(variables);
   assert.equal(security.getJwtSecret(facade(first)), variables.NODICS_JWT_SECRET);
-  assert.equal(security.validateBootstrapIdentity(facade(first)).serviceApiKey, variables.NODICS_BOOTSTRAP_SERVICE_API_KEY);
-  assert.notEqual(first.defaultAuthDetail.apiKey, first.bootstrapIdentity.serviceApiKey);
+  assert.equal(security.validateBootstrapIdentity(facade(first)).serviceApiKey, variables.NODICS_API_KEY);
+  assert.equal(first.defaultAuthDetail.apiKey, first.bootstrapIdentity.serviceApiKey);
   assert.deepEqual(first, restart);
   delete variables.NODICS_API_KEY;
-  assert.equal(bindings.resolve(defaults, {}, {environmentVariables:variables}).defaultAuthDetail.apiKey, null);
+  assert.equal(deployment(variables).defaultAuthDetail.apiKey, null);
   const changed = bindings.merge(first, {defaultAuthDetail:{apiKey:'selected-node-retained-proof'}});
   assert.equal(changed.defaultAuthDetail.apiKey, 'selected-node-retained-proof');
   assert.equal(changed.bootstrapIdentity.serviceApiKey, first.bootstrapIdentity.serviceApiKey);

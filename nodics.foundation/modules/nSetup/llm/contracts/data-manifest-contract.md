@@ -104,9 +104,10 @@ retain compatibility packs, aliases or forward-patch sections that duplicate
 the same record identities. Ambiguous conflicting writes require owner review,
 not blind folder renaming. Keep historical test/evidence outside shipping data.
 
-Folder sequence is independent of semantic section versions. Preserve semantic
-versions during consolidation unless separately authorized; package versions,
-SOURCE_CONTRIBUTION versions and business record revisions are separate contracts.
+Release 0 Init, Core and Sample DATA_RELEASE sections use manifest version
+`0.0.1` with their respective `v001` folders. Resolve prerequisite checksums
+after normalizing referenced versions. Package versions, documentation packs,
+source contributions and business record revisions have independent lifecycles.
 There is no backwards compatibility obligation for this unreleased baseline.
 Generic multi-version discovery, immutable-release checks, upgrade/downgrade
 policy and retained-root support remain intact for released deployments and

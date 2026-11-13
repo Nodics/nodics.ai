@@ -18,7 +18,7 @@ network capture path or financial provider. No existing `qualified` flag changes
 Select only after reviewing actual signed deployment evidence:
 
 - `apiExposure.categories.commerceOwnershipEvidence.enabled: true` on Commerce.
-- `digitalCore.ownershipEvidence.enabled: true` and the actual `runtimeRole` (default `COMMERCE`).
+- `digitalCore.ownershipEvidence.enabled: true`, DMS local `digitalCore` ownership, and explicit `runtimeRole.publication: OPERATIONAL`. Physical role labels/membership do not grant authority; the obsolete local `ownershipEvidence.runtimeRole` selection is removed. Revalidate local ownership before/after generated reads. Product pointer reads independently require local Product serving ownership with ONLINE or OPERATIONAL publication.
 - Qualified Logger private request capture with capture disabled, as required by all private owner APIs.
 - One exact `ownershipEvidence.callers` entry for each approved tenant/business
   enterprise and service deployment. Required fields are `tenant`,
@@ -33,6 +33,10 @@ Select only after reviewing actual signed deployment evidence:
   append service groups to real claims or broaden generated schema ACLs.
 - For admission only, explicitly select `ownershipEvidence.bindingAdmission`:
   `enabled`, `moduleName`, `connectionName`, `targetAuthority`, `apiName`.
+  targetAuthority is `{server, publication:"OPERATIONAL", environment?}`. Preserve
+  the exact server/environment selection; role strings and runtimeRole objects
+  are rejected. The inactive eWaste namespace supplies only the logical module,
+  fixed API and publication; it does not select a server or enable admission.
   The existing eWaste plan path is `/internal/digital-listings/plan`; its current
   permission is `waste.asset.marketplace.project`. The outgoing Commerce runtime
   must independently hold the actual approved eWaste capability/permission.

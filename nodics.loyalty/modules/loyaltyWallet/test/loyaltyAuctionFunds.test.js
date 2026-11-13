@@ -400,3 +400,17 @@ for(const operation of ['capture','release']) test('inspect proof cannot authori
  const before=clone(f.rows);await assert.rejects(auctions[operation](f.command('original:'+operation,{orderCode:'order'})),{code:'ERR_LOYALTY_AUCTION_FORBIDDEN'});
  assert.deepEqual(f.rows,before);
 });
+
+test('auction owner routing rejects physical-role selectors and malformed publication before any ledger writes', async t => {
+  const f = fixture(t);
+  for (const authority of [{runtimeRole:'COMMERCE'}, {publication:'STAGED'}, {publication:'OPERATIONAL',server:''}, {publication:'OPERATIONAL',runtimeRole:'COMMERCE'}]) {
+    f.configuration.loyalty.auctions.biddingEvidence.targetAuthority=authority;
+    await assert.rejects(f.reserve(),{code:'ERR_LOYALTY_AUCTION_CONFIGURATION'});
+    assert.equal(f.state.writes,0);
+  }
+  const pins={publication:'OPERATIONAL',server:'combined',environment:'selected'};
+  f.configuration.loyalty.auctions.biddingEvidence.targetAuthority=pins;
+  const invoke=SERVICE.DefaultModuleService.invokeModule;
+  SERVICE.DefaultModuleService.invokeModule=async input=>{assert.deepEqual(input.targetAuthority,pins);return invoke(input);};
+  await f.reserve();
+});

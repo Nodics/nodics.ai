@@ -36,19 +36,20 @@ async function fixture(t) {
   t.after(() => prior.forEach(([key, value]) => value ? Object.defineProperty(global, key, value) : delete global[key]));
   global.CLASSES = { NodicsError: class extends Error { constructor(input) { super(typeof input === "object" ? input.message : input); this.code = typeof input === "object" ? input.code : input; } } };
   global.UTILS = { isBlank: object => !Object.keys(object).length };
-  const policy = { enabled: true, runtimeRole: "COMMERCE", callers: [], bindingAdmission: {
-    enabled: true, moduleName: "eWaste", connectionName: "waste", targetAuthority: "WASTE", apiName: "/internal/digital-listings/plan",
+  const policy = { enabled: true, callers: [], bindingAdmission: {
+    enabled: true, moduleName: "eWaste", connectionName: "waste", targetAuthority: { server: "wasteServer", publication: "OPERATIONAL" }, apiName: "/internal/digital-listings/plan",
   } };
-  const config = { digitalCore: { ownershipEvidence: policy }, runtimeRole: { code: "COMMERCE", publication: "OPERATIONAL" },
+  const config = { digitalCore: { ownershipEvidence: policy }, runtimeRole: { code: "COHOST", publication: "OPERATIONAL" },
     product: { publication: { target: { runtimeRole: "COMMERCE" } } },
     log: { requestPrivacy: { qualified: true, captureMode: "disabled" } },
-    identityGovernance: authDefaults.identityGovernance, authSecurity: authDefaults.authSecurity };
+    identityGovernance: authDefaults.identityGovernance, authSecurity: authDefaults.authSecurity, defaultAuthDetail: { entCode: "default" } };
   global.CONFIG = { get: key => config[key] };
-  global.NODICS = { getSelectedEnvironmentName: () => "circaLocal", getServerState: () => "started" };
-  const assignment = { code: "waste-assignment", principalType: "service", principalCode: "waste-runtime", scopeType: "RUNTIME_DEPLOYMENT",
-    tenantCode: "default", enterpriseCode: "default", status: "ACTIVE", effect: "ALLOW", inheritanceMode: "DIRECT",
-    runtimeScope: { projectCode: "circa", environmentCode: "circaLocal", serverCode: "wasteCoreServer", instanceCode: "waste-instance",
-      modules: ["digitalCore"], permissions: ["commerce.digital.own.read", "commerce.product.publish"] } };
+  global.NODICS = { isModuleActive: name => ["digitalCore", "product"].includes(name), getSelectedEnvironmentName: () => "circaLocal", getServerState: () => "started" };
+  const placement = { projectCode: "circa", environmentCode: "circaLocal", serverCode: "wasteCoreServer",
+    instanceCode: "waste-instance", modules: ["digitalCore"] };
+  const permissions = [config.authSecurity.internalToken.routePermission, "commerce.digital.own.read", "commerce.product.publish"];
+  const principal = { code: "apiAdmin", loginId: "apiAdmin", principalType: "service", active: true,
+    apiKeyStatus: "active", apiKeyScopes: permissions, authVersion: 1 };
   const groups = require("../config/properties").schemaPolicies.digitalCore.tenantOwned.accessGroups;
   const scope = { tenant: "default", enterpriseCode: "GREENPERKS_ONLINE" };
   const purchaseScope = { ...scope, ownerId: "circa-customer" };
@@ -102,8 +103,10 @@ async function fixture(t) {
     records.DefaultDigitalProductBindingService.push(copy(request.model));
     return { code: "SUC_TEST", result: copy(request.model) };
   };
-  const claims = await runtime.authorize({ tenant: "default", authData: { tenant: "default", entCode: "default", principalType: "service", serviceId: "waste-runtime",
-    permissions: assignment.runtimeScope.permissions }, headers: { "x-nodics-project": "circa", "x-nodics-environment": "circaLocal",
+  SERVICE.DefaultDeploymentModuleOwnershipService = { runtimePlacements: () => [placement] };
+  SERVICE.DefaultMandatoryIdentityBootstrapService = require(path.join(root, "nodics.platform/modules/profile/src/service/identity/defaultMandatoryIdentityBootstrapService"));
+  const claims = await runtime.authorize({ tenant: "default", authData: { tenant: "default", entCode: "default", person: principal,
+    permissions }, headers: { "x-nodics-project": "circa", "x-nodics-environment": "circaLocal",
     "x-nodics-server": "wasteCoreServer", "x-nodics-runtime-instance": "waste-instance", "x-nodics-modules": "digitalCore" } });
   claims.tokenType = "service"; // ServiceToken.issue adds this field after Profile resolves the assignment.
   policy.callers.push({ tenant: claims.tenant, principalEnterpriseCode: claims.entCode, enterpriseCode: scope.enterpriseCode, serviceId: claims.serviceId,
@@ -115,7 +118,7 @@ async function fixture(t) {
     rewardSettlementPolicyCode: "reward-policy", carbonSettlementPolicyCode: "carbon-policy", idempotencyKey: "listing", locales: ["en"], expectedAssetRevision: 2 };
   const plan = { state: "READ_ONLY_DOMAIN_LISTING_PLAN", planDigest: digest, productCode: "product", variantCode: "variant", sku: "sku", expectedAssetRevision: 2,
     providerOwner: "wasteCore", digitalDeliveryType: "DIGITAL_OWNERSHIP", inventoryStrategy: "DIGITAL_COMMERCE", providerReference: copy(providerReference), evidence: { retainedProducts: copy(pins) } };
-  SERVICE.DefaultModuleService = { invokeModule: async options => {
+  SERVICE.DefaultModuleService = { ...require(path.join(root, "nodics.foundation/modules/nService/src/service/module/defaultModuleService")), invokeModule: async options => {
     remote.push(options); assert.deepEqual(options.targetAuthority, policy.bindingAdmission.targetAuthority); assert.equal(options.moduleName, "eWaste");
     assert.equal(options.apiName, "/internal/digital-listings/plan"); assert.equal(options.maxAttempts, 1);
     assert.equal(options.request.authData, undefined); assert.equal(options.header?.Authorization, undefined);
@@ -157,7 +160,7 @@ test("real nAuth service issuance and signature verification preserve Profile's 
   SERVICE.DefaultPrincipalSecurityStampService = { register: async (...args) => stamps.push(args) };
   const credential = await token.issue(f.claims);
   const verified = jwt.verify(credential, security.getJwtSecret(CONFIG), security.getVerifyOptions(CONFIG));
-  assert.deepEqual(stamps, [["default", "waste-runtime", 1]]);
+  assert.deepEqual(stamps, [["default", "apiAdmin", 1]]);
   assert.deepEqual(verified.userGroups || [], []); assert.deepEqual(verified.runtimeScope, f.claims.runtimeScope);
   const request = f.request(); request.authData = verified;
   assert.equal((await f.run(f.purchaseInput, request)).orders[0].ownerId, "circa-customer");
@@ -168,7 +171,7 @@ test("real nAuth service issuance and signature verification preserve Profile's 
 
 for (const [label, change] of Object.entries({
   disabled: f => f.policy.enabled = false,
-  role: f => f.config.runtimeRole.code = "WASTE",
+  publication: f => f.config.runtimeRole.publication = "STAGED",
   grant: f => f.policy.callers = [],
   duplicateGrant: f => f.policy.callers.push(copy(f.policy.callers[0])),
   permission: (f, r) => r.authData.permissions = [],
@@ -313,11 +316,12 @@ test("outgoing listing and all sale/refund phases retain default runtime authori
   const listingController = require(path.join(root, "nodics.accelerators/modules/waste/modules/eWaste/src/controller/defaultEWasteDigitalListingController"));
   const runtimeScope = { projectCode: "circa", environmentCode: "circaLocal", serverCode: "commerceServer", instanceCode: "commerce-instance",
     modules: ["eWaste"], permissions: ["waste.asset.sale.transfer", "waste.asset.marketplace.project"] };
-  SERVICE.DefaultPrincipalScopeAssignmentService.get = async () => ({ code: "SUC_TEST", result: [{ code: "commerce-assignment",
-    principalType: "service", principalCode: "commerce-runtime", scopeType: "RUNTIME_DEPLOYMENT", tenantCode: "default", enterpriseCode: "default",
-    status: "ACTIVE", effect: "ALLOW", inheritanceMode: "DIRECT", runtimeScope }] });
-  const claims = await runtime.authorize({ tenant: "default", authData: { tenant: "default", entCode: "default", principalType: "service",
-    serviceId: "commerce-runtime", permissions: runtimeScope.permissions }, headers: { "x-nodics-project": "circa", "x-nodics-environment": "circaLocal",
+  SERVICE.DefaultDeploymentModuleOwnershipService.runtimePlacements = () => [runtimeScope];
+  const permissions = [f.config.authSecurity.internalToken.routePermission, ...runtimeScope.permissions];
+  const person = { code: "apiAdmin", loginId: "apiAdmin", principalType: "service", active: true,
+    apiKeyStatus: "active", apiKeyScopes: permissions, authVersion: 1 };
+  const claims = await runtime.authorize({ tenant: "default", authData: { tenant: "default", entCode: "default", person,
+    permissions }, headers: { "x-nodics-project": "circa", "x-nodics-environment": "circaLocal",
     "x-nodics-server": "commerceServer", "x-nodics-runtime-instance": "commerce-instance", "x-nodics-modules": "eWaste" } });
   claims.tokenType = "service";
   const before = copy(claims), calls = [];
@@ -327,7 +331,7 @@ test("outgoing listing and all sale/refund phases retain default runtime authori
   }] } } };
   f.config.digitalCore.digitalOwnership = { ...require("../config/properties").digitalCore.digitalOwnership,
     enabled: true, qualified: true, owner: { moduleName: "eWaste", connectionName: "waste",
-    targetAuthority: "WASTE", apiPrefix: "/internal/digital-sales" } };
+    targetAuthority: { server: "wasteServer", publication: "OPERATIONAL" }, apiPrefix: "/internal/digital-sales" } };
   SERVICE.DefaultSecuredRequestPipelineService = pipeline;
   // Transport and domain dispatch are isolated; actual Profile claims, private provenance and eWaste admission execute.
   SERVICE.DefaultEWasteDigitalSaleService = { invoke: async (input, phase) => {
@@ -422,12 +426,12 @@ test("independent binding admissions race without updating an existing binding",
   assert(f.writes.every(write => write.options.insertOnly === true));
 });
 
-test("binding admission preserves canonical exact target server/role selection and refuses incomplete authority", async t => {
+test("binding admission preserves canonical exact target server/publication selection and refuses incomplete authority", async t => {
   const f = await fixture(t); f.records.DefaultDigitalProductBindingService = [];
-  f.policy.bindingAdmission.targetAuthority = { server: "wasteServer", runtimeRole: { code: "WASTE", publication: "OPERATIONAL" } };
+  f.policy.bindingAdmission.targetAuthority = { server: "wasteServer", publication: "OPERATIONAL" };
   assert.equal((await f.run(f.admission, f.request(), "admitBinding")).state, "BINDING_ADMITTED");
   assert.deepEqual(f.remote[0].targetAuthority, f.policy.bindingAdmission.targetAuthority);
-  for (const authority of [{}, { server: "wasteServer" }, { server: "wasteServer", runtimeRole: { code: "WASTE", publication: "STAGED" } }]) {
+  for (const authority of [{}, { server: "wasteServer" }, { server: "wasteServer", publication: "STAGED" }, { server: "wasteServer", publication: "ONLINE" }, "WASTE", { server: "wasteServer", runtimeRole: { code: "WASTE", publication: "OPERATIONAL" } }]) {
     f.policy.bindingAdmission.targetAuthority = authority;
     const before = f.remote.length; await assert.rejects(f.run(f.admission, f.request(), "admitBinding"));
     assert.equal(f.remote.length, before);
@@ -465,4 +469,29 @@ test("actual generated insert-only initializer accepts admitted binding with cre
   };
   assert.equal((await f.run(f.admission, f.request(), "admitBinding")).state, "BINDING_ADMITTED");
   assert.equal(operations.length, 1); assert.equal(operations[0].insertOnly, true); assert.equal(operations[0].operation, "create");
+});
+
+
+test("local ownership and explicit publication override physical role labels without bypassing admission", async t => {
+  const f = await fixture(t);
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly: true }) }) };
+  await assert.rejects(f.run());
+  assert.equal(f.calls.length, 0);
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly: false }) }) };
+  for (const publication of [undefined, "STAGED", "ONLINE"]) {
+    f.config.runtimeRole.publication = publication;
+    await assert.rejects(f.run());
+  }
+  f.config.runtimeRole = { code: "UNRELATED_PHYSICAL_NAME", publication: "OPERATIONAL" };
+  await f.run();
+});
+
+
+test("Digital ownership evidence refuses loss of local authority during its generated read", async t => {
+  const f = await fixture(t), read = SERVICE.DefaultDigitalProductBindingService.get;
+  let remoteOnly = false;
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly }) }) };
+  SERVICE.DefaultDigitalProductBindingService.get = async input => { const result = await read(input); remoteOnly = true; return result; };
+  await assert.rejects(f.run());
+  assert.equal(f.writes.length, 0);
 });

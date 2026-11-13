@@ -27,6 +27,9 @@ assert.equal(pack.name, 'nexus.web');
 assert.deepEqual(pack.nodics.extends, ['nexus']);
 assert.equal(properties.cms.publication.baselines.nexus.releaseCode, 'nexus.web:nexusCorporateSite');
 assert.equal(properties.cms.designerAuthoring.draftDefaults.siteCode, 'nexusCorporateSite');
+// Typed authoring fields must write the content consumed by the canonical renderer and locale schema.
+for (const code of ['nexusContentSectionType', 'nexusCardGridType'])
+  assert.equal(properties.cms.designerAuthoring.componentKinds.find(kind => kind.typeCode === code).fields[0].property, 'heading');
 assert.equal(initialization.dataPackages.$config, 'replace');
 const mediaManifest = initialization.dataPackages.value
   .find(step => step.type === 'MEDIA_ASSET_MANIFEST');
@@ -630,10 +633,13 @@ assert.deepEqual(
   "Every Nexus Editorial authoring article must have a taxonomy link for filterable Axis data",
 );
 editorialArticleValues.forEach((article) => {
+  assert.equal(article.publicationCode, undefined, `${article.code} must not invent a publication reference`);
+  assert.equal(article.workflowInstanceCode, undefined, `${article.code} must not invent workflow evidence`);
+  assert.equal(article.decisionEvidence, undefined, `${article.code} must not invent approval evidence`);
   assert.equal(
     article.status,
-    "APPROVED",
-    `${article.code} must be Axis-editable authoring data approved for local preview`,
+    "DRAFT",
+    `${article.code} must enter the normal Editorial validation and approval journey`,
   );
   assert.equal(
     article.siteCodes.includes("nexusCorporateSite"),
@@ -807,6 +813,9 @@ assert.equal(
   "Reference data must declare the nine standard Editorial renderer contracts",
 );
 editorialArticleValues.forEach((article) => {
+  assert.equal(article.publicationCode, undefined, `${article.code} must not invent a publication reference`);
+  assert.equal(article.workflowInstanceCode, undefined, `${article.code} must not invent workflow evidence`);
+  assert.equal(article.decisionEvidence, undefined, `${article.code} must not invent approval evidence`);
   assert(
     article.featuredMediaCode,
     `Editorial authoring article ${article.code} must expose a featured media code for Axis and Nexus previews`,

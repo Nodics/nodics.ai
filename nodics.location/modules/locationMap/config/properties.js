@@ -34,6 +34,23 @@ module.exports = {
   },
 
   locationMapConfiguration: {
+    defaultSelection: {
+      providerCode: "OSM",
+      fallbackPolicy: "NONE",
+      defaultCenterLatitude: 0,
+      defaultCenterLongitude: 0,
+      defaultZoom: 2,
+      minimumZoom: 0,
+      maximumZoom: 18,
+      enabledControls: ["FILTERS", "ZOOM", "SCALE", "GEOLOCATE", "DIRECTIONS"],
+    },
+    providerDefaults: {
+      OSM: { stylePresetCode: "OSM_HOT", styleUrl: "https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" },
+      MAPBOX: { stylePresetCode: "MAPBOX_STREETS", styleUrl: "mapbox://styles/mapbox/streets-v12" },
+    },
+    projectOverrides: {},
+    applicationOverrides: {},
+    publicSurfaceCodes: ["SHARED", "CIRCA"],
     refreshIntervalMs: 15000,
     providerAttributions: {
       MAPBOX: "© Mapbox · © OpenStreetMap contributors",

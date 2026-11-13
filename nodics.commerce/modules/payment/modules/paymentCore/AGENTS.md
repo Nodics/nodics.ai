@@ -38,3 +38,6 @@ that original tuple; cancel/inspect remain conservative. Missing retained intent
 blocks historical cancellation cleanup. Never reconstruct it from current Cart,
 caller fields or balances; never relabel cancellation as DENIED or release seller
 listing content holds. Preserve original checkpoint/claim and monotonic CAS.
+
+Provider selection belongs to Payment Core. Preserve original provider identity for
+capture/recovery, fail closed on unbound selections, and retain offline maturity labels.

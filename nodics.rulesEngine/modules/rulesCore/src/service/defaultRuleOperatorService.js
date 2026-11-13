@@ -16,23 +16,23 @@ module.exports = {
     /** Implements definitions as an overrideable service operation. */
     definitions: function () {
         return Object.freeze({
-            EQUALS: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'] },
-            NOT_EQUALS: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'] },
-            IN: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'] },
-            NOT_IN: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'] },
-            GREATER_THAN: { dataTypes: ['NUMBER','DATE'] },
-            GREATER_THAN_OR_EQUAL: { dataTypes: ['NUMBER','DATE'] },
-            LESS_THAN: { dataTypes: ['NUMBER','DATE'] },
-            LESS_THAN_OR_EQUAL: { dataTypes: ['NUMBER','DATE'] },
-            BETWEEN: { dataTypes: ['NUMBER','DATE'] },
-            IS_AVAILABLE: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE','COLLECTION','OBJECT'] },
-            IS_NOT_AVAILABLE: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE','COLLECTION','OBJECT'] },
-            IS_TRUE: { dataTypes: ['BOOLEAN'] },
-            IS_FALSE: { dataTypes: ['BOOLEAN'] },
-            CONTAINS: { dataTypes: ['COLLECTION'] },
-            DOES_NOT_CONTAIN: { dataTypes: ['COLLECTION'] },
-            CONTAINS_ANY: { dataTypes: ['COLLECTION'] },
-            CONTAINS_ALL: { dataTypes: ['COLLECTION'] }
+            EQUALS: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'], valueShape: 'ONE' },
+            NOT_EQUALS: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'], valueShape: 'ONE' },
+            IN: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'], valueShape: 'LIST' },
+            NOT_IN: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'], valueShape: 'LIST' },
+            GREATER_THAN: { dataTypes: ['NUMBER','DATE'], valueShape: 'ONE' },
+            GREATER_THAN_OR_EQUAL: { dataTypes: ['NUMBER','DATE'], valueShape: 'ONE' },
+            LESS_THAN: { dataTypes: ['NUMBER','DATE'], valueShape: 'ONE' },
+            LESS_THAN_OR_EQUAL: { dataTypes: ['NUMBER','DATE'], valueShape: 'ONE' },
+            BETWEEN: { dataTypes: ['NUMBER','DATE'], valueShape: 'RANGE' },
+            IS_AVAILABLE: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE','COLLECTION','OBJECT'], valueShape: 'NONE' },
+            IS_NOT_AVAILABLE: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE','COLLECTION','OBJECT'], valueShape: 'NONE' },
+            IS_TRUE: { dataTypes: ['BOOLEAN'], valueShape: 'NONE' },
+            IS_FALSE: { dataTypes: ['BOOLEAN'], valueShape: 'NONE' },
+            CONTAINS: { dataTypes: ['COLLECTION'], valueShape: 'ONE' },
+            DOES_NOT_CONTAIN: { dataTypes: ['COLLECTION'], valueShape: 'ONE' },
+            CONTAINS_ANY: { dataTypes: ['COLLECTION'], valueShape: 'LIST' },
+            CONTAINS_ALL: { dataTypes: ['COLLECTION'], valueShape: 'LIST' }
         });
     },
 

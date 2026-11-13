@@ -35,12 +35,12 @@ module.exports = {
    * transport.
    * @remarks Effects: Reads effective Digital config only; no activation.
    * Failure behavior: Throws when listings disabled, Pricing missing or Product target/timeout invalid.
-   * @override Keep COMMERCE_STAGED Product placement and explicit qualification separate from source wiring.
+   * @override Keep STAGED Product ownership and explicit qualification separate from source wiring.
    */
   settings: function () {
     const p = CONFIG.get("digitalCore")?.bundleListings;
     if (p?.enabled !== true || typeof p.pricingService !== "string" || !p.productTarget?.connectionName ||
-        p.productTarget.moduleName !== "product" || p.productTarget.targetAuthority?.runtimeRole !== "COMMERCE_STAGED" ||
+        p.productTarget.moduleName !== "product" || (p.productTarget.targetAuthority?.publication !== "STAGED" || Object.entries(p.productTarget.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
         !Number.isSafeInteger(p.productTarget.timeoutMs) || p.productTarget.timeoutMs < 1 || p.productTarget.maxAttempts !== 1)
       throw new Error("Bundle listing owners are not configured");
     return structuredClone(p);

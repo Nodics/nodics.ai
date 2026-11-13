@@ -60,6 +60,7 @@ This module manages media metadata and storage policy. Product, CMS, engagement,
 
 - Store physical artifacts through provider contracts and generated storage keys.
 - Keep folder, format, source context, delivery policy, and access decisions explicit.
+- An explicit unknown folder fails policy validation. Omitting the folder uses the configured default. Staged content requires authenticated preview. Anonymous published delivery resolves through the Online owner.
 - Do not expose local storage roots or private provider paths through public documentation or APIs.
 - Use project-layer provider configuration for local, NAS, S3, Azure, or Google Cloud style deployments.
 - Customer photo orchestration may use bounded encoded intake after its own
@@ -91,9 +92,9 @@ for composition, connection and API prerequisites.
 
 Deep documentation lives in:
 
-- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js`
-- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js`
-- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js`
+- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationRelease002ComponentData.js`
+- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationRelease002ComponentData.js`
+- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationRelease002ComponentData.js`
 
 ## Verification
 
@@ -114,3 +115,68 @@ Customer photo operations preserve the authenticated customer bearer header when
 resolving the canonical owner through Profile. Missing credentials or a tenant
 mismatch are rejected; request-body credentials are never trusted. Runtime
 service credentials must not substitute for the customer session in this lookup.
+
+Process prerequisite diagnostics consume nService’s preserved response-owned code and HTTP status. A confirmed missing Media definition names its explicit workflow release; transport or authorization uncertainty stays blocked.
+
+Media Publication opens at the existing governed library picker. Choosing Inspect publication supplies the asset identity and opens the request tab for a fresh exact-version read; direct inspection handoffs use the same form. A tab choice never initiates publication.
+
+Media reference lookup declares nImport's bounded pre-write dependency retry only for an affirmative generated empty eligible-record read with the exact code/status query. Later phases may hydrate the Media row before CMS bindings run again. Ambiguous records, denied/provider reads, contradictory counts and malformed envelopes remain terminal; lookup never authorizes or applies the caller's write.
+
+After Request Approval succeeds, Axis retains the approval reference, request state, asset and exact version. Review this approval opens the returned Process instance when that destination is authorized. Background metadata refresh keeps the submitted command held; use explicit fresh inspection for another intent. Approval and Online activation still follow Process and nPublish.
+
+Physical artifacts, placements, transfer manifests, publication receipts, replication queue and cleanup candidates are operational evidence. Their effective schemas permit only search/read through generic administration and reject generated HTTP create/update/delete in every runtime. Existing Media provider, publication, replication and cleanup operations retain their own secured service writes. Schema metadata never supplies a manual way to invent checksum, approval or audit evidence.
+
+
+## Exact retained review evidence
+
+Media exposes two read-only Staged endpoints for a publication's captured source:
+`GET /library/publications/:publicationCode/review?localeCode=en|ar` and
+`GET /library/publications/:publicationCode/review/image`. Both require human
+access tokens, the existing nPublish read access groups, `media.storage.policy.view`
+and `publish.lifecycle.view`; image bytes additionally require `media.content.read`.
+These are intersections of existing rights, not new grants or public delivery.
+The module retains `mediaManagement` exposure and independent API authorization.
+Unselected retained publication or Online source roles reject before inspection.
+
+The owner reads the exact nPublish Media root/source and uncached retained manifest,
+checks its full digest, tenant and existing library enterprise scope before provider
+IO, and projects only captured name, actual metadata version, MIME, byte count and
+SHA-256. It never reads current Media to stand in for an older reviewed source.
+Provider locators, filenames, URLs, private context and credentials do not enter
+this DTO. Metadata reads perform no provider IO and do not prove byte availability.
+`previewAvailable` reflects only configured bounds/type and the current permission;
+opening the image independently verifies exact retained bytes and checksum.
+
+Preview accepts only bounded PNG/JPEG/WebP/GIF, with no-store, nosniff, restrictive
+CSP and no public fallback. Unsupported types, excessive sizes or denied rights
+retain useful metadata without enabling inline preview. Storage reads preserve the
+original tenant/authentication context and narrow the provider read to that asset's
+exact byte count. Review does not create or update assets, approve a task, activate
+Online content or make a historical request current.
+
+Customize `media.library.review` inert EN/AR presentation, a narrower raster type
+subset and `maximumPreviewBytes` within the publication maximum. Media's provider,
+retained manifest and scope checks remain authoritative. Optional working-asset
+handoffs reuse the existing Media capability and frontend catalogue admission;
+opening them performs fresh current inspection and sends no publication command.
+The frontend correlates task publication/root/source identity, hashes preview bytes,
+retires old actor/source responses and revokes image URLs. Process's existing pinned
+review context and decision policy remain unchanged. Completed detail tasks already
+carry that bounded context; no workflow history or actor policy is rewritten.
+
+`mediaPublicationReviewContract.test.js` composes actual owner inspection, controller,
+facade and content handler with isolated generated-service/provider ports. It covers
+positive/negative acknowledgements, no current-row fallback, scope and permission
+denial before bytes, malformed identities, corrupt bytes, preview bounds and safe
+customization. Native roles, private-provider storage and deployment readiness remain
+separate acceptance gates; isolated checks do not certify a customer environment.
+
+Documentation provenance release 0.0.2 preserves article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](data/manifest.json) selects it; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.
+
+## Cross-owner retained image qualification
+
+`DefaultMediaDependencyReadinessService.inspectAssets` is the read-only owner contract for exact retained image metadata, physical byte integrity and an unchanged activated publication pointer. CMS retains responsibility for selecting assets from its sealed bundle; Editorial retains responsibility for its saved featured-image reference. Both reuse this Media service and the existing inert Media review handoff. Inspection never approves, repairs, activates or releases legal hold. Missing or contradictory evidence remains unqualified.
+
+Folder allowedExtensions and allowedMimeTypes are native arrays, matching the storage-policy owner normalization and upload eligibility checks. They remain optional, owner-validated upload policy; saving them grants no public delivery or publication. Existing non-array installed values require explicit owner review before adoption; the Local acceptance baseline contained no folder rows before its disposable fixture.
+New retained uploads record the authenticated creator in the existing audit
+field. Re-uploads preserve the original creator and the existing version check.

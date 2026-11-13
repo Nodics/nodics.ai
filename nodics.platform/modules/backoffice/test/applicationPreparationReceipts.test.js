@@ -150,3 +150,91 @@ test("failed import history review precedes unstarted imports and never offers a
   assert.equal(result[0].repair.available, false);
   assert.equal(result[0].releaseReceipt.lastRunId, "prior-run");
 });
+
+test("recorded preparation retains completed plan members and returns after one owner group", async () => {
+  const owner = Object.create(service),
+    calls = [];
+  const steps = [
+    step("example:first", "a"),
+    step("example:second", "a"),
+    step("example:third", "b"),
+  ].map((item, index) => ({
+    ...item,
+    continuationSupported: true,
+    status: index === 0 ? "CURRENT" : "NOT_INSTALLED",
+  }));
+  owner.prepareMediaAssets = async () => {};
+  owner.preparationGroups = () => [
+    { ...steps[0], steps: steps.slice(0, 2) },
+    { ...steps[2], steps: steps.slice(2) },
+  ];
+  owner.invokeDataReleaseOperation = async (_, group) => {
+    calls.push(group.steps.map((item) => item.code));
+    assert.equal(group.executionCode, "recorded-a");
+    return {
+      execution: {
+        code: "recorded-a",
+        status: "COMPLETED",
+        dataType: "core",
+        completed: 2,
+        total: 2,
+      },
+      releases: group.steps.map((item) => ({
+        releaseCode: item.code,
+        status: "CURRENT",
+      })),
+    };
+  };
+  owner.preparationStatus = async () => ({ status: "ACTION_REQUIRED", steps });
+  const result = await owner.prepareApplication(
+    { code: "site" },
+    { applicationInitialization: { continuation: true } },
+    {
+      status: "ACTION_REQUIRED",
+      steps,
+      executions: [
+        {
+          code: "recorded-a",
+          targetServer: "a",
+          dataType: "core",
+          steps: steps.slice(0, 2).map((item) => ({ releaseCode: item.code })),
+        },
+      ],
+    },
+  );
+  assert.deepEqual(calls, [["example:first", "example:second"]]);
+  assert.equal(result.executions[0].code, "recorded-a");
+  assert.equal(result.executions[0].completed, 2);
+});
+test("unsupported continuation refuses before Media or import writes", async () => {
+  const previous = global.CLASSES;
+  global.CLASSES = {
+    NodicsError: class extends Error {
+      constructor(code, message) {
+        super(message);
+        this.code = code;
+      }
+    },
+  };
+  try {
+    const owner = Object.create(service),
+      steps = [step("example:first", "a")];
+    owner.prepareMediaAssets = async () => {
+      throw Error("Unexpected Media write");
+    };
+    owner.preparationGroups = () => [{ ...steps[0], steps }];
+    owner.invokeDataReleaseOperation = async () => {
+      throw Error("Unexpected import");
+    };
+    await assert.rejects(
+      owner.prepareApplication(
+        { code: "site" },
+        { applicationInitialization: { continuation: true } },
+        { status: "ACTION_REQUIRED", steps },
+      ),
+      /must support recorded preparation/,
+    );
+  } finally {
+    global.CLASSES = previous;
+  }
+});

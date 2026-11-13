@@ -41,4 +41,9 @@ configuration, activate domain services for files or add a second template/modul
 registry. Keep legacy text compatibility and override evidence.
 
 
-Remote dispatch eligibility is an explicitly selected inert domain endpoint, not a fallback from missing local services. Keep frozen metadata, internal authentication, secure defaults, response binding and existing suppression/retry handling; never transmit content or caller credentials.
+Module dispatch eligibility uses an ordinary domain descriptor and existing DMS
+local/remote ownership routing. Keep the original actor on local calls; remote
+calls carry only frozen metadata with the runtime internal credential. Never
+catch local refusal and retry remotely, infer ownership from a loaded service,
+or select physical roles/hosts in domain defaults. Preserve fresh proof, secure
+transport, response binding and existing suppression/retry handling.

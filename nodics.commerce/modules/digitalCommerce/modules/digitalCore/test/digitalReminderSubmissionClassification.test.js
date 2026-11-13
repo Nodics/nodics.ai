@@ -63,7 +63,7 @@ test('submission reasons use only fixed transport evidence and exclude remote er
                 DefaultDigitalCouponReminderDeliveryService: owner,
                 DefaultDigitalCommerceCouponAcquisitionService: { identifier() {} },
                 DefaultLoggerService: { runSensitiveOperation: async (_request, callback) => callback() },
-                DefaultModuleService: { invokeModule: async call => {
+                DefaultModuleService: {isLocalModuleActive: moduleName => ["digitalCore"].includes(moduleName),  invokeModule: async call => {
                     if (call.moduleName === 'profile') return { data: { contractVersion: 1, tenant: 't',
                         source: call.requestBody.source, channel: 'IN_APP', eligible: true, recipients: [recipient],
                         ownerRef: candidate.ownerRef, expiresAt: candidate.expiresAt } };

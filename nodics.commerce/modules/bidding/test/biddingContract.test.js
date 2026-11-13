@@ -142,7 +142,7 @@ test.beforeEach(() => {
       key === "bidding"
         ? policy
         : key === "runtimeRole"
-          ? { code: "COMMERCE" }
+          ? { code: "COMMERCE", publication: "OPERATIONAL" }
           : undefined,
   };
   global.CLASSES = {
@@ -154,7 +154,7 @@ test.beforeEach(() => {
     },
   };
   global.SERVICE = {
-    DefaultModuleService: {
+    DefaultModuleService: {isLocalModuleActive: moduleName => ["bidding"].includes(moduleName),
       invokeModule: async (r) => {
         assert.equal(r.apiName, "/customer/identity");
         assert.equal(r.methodName, "GET");

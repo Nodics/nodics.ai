@@ -156,6 +156,16 @@ cover ready/missing-key DTOs, configured-but-not-writable secrets, stale/forged
 readiness, refusal before persistence, ordinary-field compatibility and customization.
 Live deployment/key provisioning and frontend acceptance remain separate gates.
 
+## Empty registry defaults
+
+nSystem defines empty `runtimeConfigurationSchemas`, `runtimeConfiguration`,
+`secureConfiguration` and `credentials` maps in its own properties. A deployment
+must not define these standard registries merely to use the control plane.
+Active capability owners contribute complete schemas; later governed layers
+supply intentional values and logical credential selections. Empty registries
+create no credentials, provider activation, permissions or encryption readiness.
+Existing schema validation, masking and first-present-source semantics still apply.
+
 ## Effective Credential Status
 
 Effective configuration must satisfy its declared scalar type as well as presence,
@@ -184,3 +194,30 @@ is one key, including dots. Authored path may be omitted; a conflicting path is
 rejected, not silently written. Invalid/prototype selectors reject without
 including values. This does not copy credentials, merge identity and delivery
 authority, change encryption, authorize updates or enable a provider.
+
+## Complete runtime schema admission
+
+Runtime configuration discovery and value access require a complete module-owned
+schema: stable schema/owner identities, unique field codes, supported scalar
+types and declared target paths. Partial deployment overrides do not create
+contracts for an inactive owner. Explicit credential references and credential
+paths must remain sensitive; missing sensitivity rejects before value lookup,
+masking, readiness or persistence. Startup validates declared schemas before
+persisted-value inspection. Invalid contracts use the existing ERR_SYS_00002
+without including credential values.
+
+Declare reusable schemas with their implementing module. Apply only intentional
+credential selectors in runtimes that actually load that owner. Preserve normal
+configuration inheritance, original permissions, encryption prerequisites,
+first-present value precedence and tenant scope. Do not copy field defaults into
+an unrelated runtime or label an incomplete credential schema NOT_REQUIRED.
+
+Axis rejects malformed transport metadata without rendering fields or requesting
+effective values, retains the runtime selector for recovery, and drops sensitive
+value material before presentation. This is defensive parsing, not an encryption
+or configuration authority. Ordinary false/zero values remain visible.
+`runtimeConfigurationSchemaAdmission.test.js` proves refusal before secret reads
+and persistence; existing configuration, path, encryption and restore contracts
+remain required.
+
+A completed runtime-update validation returns `SUC_SYS_00000` with `valid:false` and structured field errors for invalid input. That observation is not a save. Unavailable secret-persistence prerequisites retain `ERR_SYS_00002`; public plaintext-sensitive validation remains invalid and save independently revalidates. This keeps field mistakes distinct from owner unavailability without weakening encryption, permissions or persistence guards. Run `test/runtimeConfigurationSchemaService.test.js`.

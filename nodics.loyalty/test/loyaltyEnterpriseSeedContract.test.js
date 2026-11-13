@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @module nodics.loyalty/test/loyaltyEnterpriseSeedContract @description Verifies Loyalty contributes its rewards marketplace enterprise from Loyalty Core data into Profile. @layer test @owner nodics.loyalty */
+/** @module nodics.loyalty/test/loyaltyEnterpriseSeedContract @description Verifies Loyalty contributes its rewards marketplace enterprise from optional Loyalty Sample data into Profile. @layer test @owner nodics.loyalty */
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -19,14 +19,17 @@ const path = require('node:path');
 const loyaltyCoreRoot = path.resolve(__dirname, '../modules/loyaltyCore');
 const packageJson = JSON.parse(fs.readFileSync(path.join(loyaltyCoreRoot, 'package.json'), 'utf8'));
 const manifest = JSON.parse(fs.readFileSync(path.join(loyaltyCoreRoot, 'data/manifest.json'), 'utf8'));
-const header = require('../modules/loyaltyCore/data/core-v001/headers/profile/loyaltyCoreEnterpriseCoreHeader');
-const records = require('../modules/loyaltyCore/data/core-v001/records/profile/loyaltyCoreEnterpriseCoreData');
+const header = require('../modules/loyaltyCore/data/sample-v001/headers/profile/loyaltyEnterpriseSampleHeader');
+const records = require('../modules/loyaltyCore/data/sample-v001/records/profile/loyaltyEnterpriseSampleData');
 
 assert(packageJson.nodics.owns.includes('data'), 'loyaltyCore must own Loyalty enterprise contribution data');
-assert.equal(manifest.sections['core-enterprise-reference'].destinationRole, 'PLATFORM');
-assert.equal(manifest.sections['core-enterprise-reference'].owningDomain, 'loyalty');
-assert.equal(header.profile.loyaltyCoreEnterpriseCoreData.options.moduleName, 'profile');
-assert.equal(header.profile.loyaltyCoreEnterpriseCoreData.options.schemaName, 'enterprise');
+assert.equal(manifest.sections['sample-enterprises'].destinationRole, 'PLATFORM');
+assert.equal(manifest.sections['sample-enterprises'].owningDomain, 'loyalty');
+assert.equal(manifest.sections['sample-enterprises'].dataType, 'sample');
+assert.equal(manifest.sections['sample-enterprises'].selectionPolicy, 'EXPLICIT');
+assert.equal(manifest.sections['core-enterprise-reference'], undefined);
+assert.equal(header.profile.loyaltyEnterpriseSampleData.options.moduleName, 'profile');
+assert.equal(header.profile.loyaltyEnterpriseSampleData.options.schemaName, 'enterprise');
 assert.equal(Object.keys(records).length, 2);
 assert.equal(records.record0.code, 'NODICS_REWARDS_MARKETPLACE_CO');
 assert.equal(records.record0.tenant, 'default:true');

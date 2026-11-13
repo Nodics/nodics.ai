@@ -1,0 +1,89 @@
+{
+  "reason": "Immutable pre-provenance correction selection; not installed-runtime proof",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "profile",
+      "version": "0.0.2",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 3,
+      "components": 3,
+      "routes": 3,
+      "releaseChecksum": "323e88e922b809301ade147e22c3f4817f76923d643aaf749fbb4f5f42e100db",
+      "generatedHashes": {
+        "docs-v001/assets/documentation/files/images/authentication-flow.jpg": "c3589b67dcdfbef11b44a85df5589988c873021909e38954b479470e25954032",
+        "docs-v001/assets/documentation/files/images/authorization-flow.jpg": "5748f710a8dca2fcb2d23b0197cd656d0b54df87896786c7708ebdc8c8f1bd5d",
+        "docs-v001/assets/documentation/profileDocumentationAssetManifest.js": "24a48cf4bd080c2931216038b1018dc0abc2cf9da464b840cc507451eece41f0",
+        "docs-v001/headers/100_profileDocumentationContentPackHeader.js": "0c18b22e0eefc5f89d6b1891742039ab419e77c72017c2f6caf177cf4868b66b",
+        "docs-v001/headers/110_profileNotificationRecipientsDocumentationContentPackHeader.js": "920d79dcb6064fbbd7142c02e8e15b430fe53da1448a0ac823359d9c80d9ce1b",
+        "docs-v001/records/documentation/profileDocumentationComponentData.js": "08300d9c23618868b7664d31ae7b7d5c6a54b1eda1b05d130f7197c4c2caac90",
+        "docs-v001/records/documentation/profileDocumentationMediaData.js": "333fe847dd5ed0e7f2c715f0893f2dd88074d1abfae5a1c4d6075ae922c43007",
+        "docs-v001/records/documentation/profileDocumentationNodeData.js": "d39fa8125fbfbffa76572ddddab7fbca7f59512188bd748b8783212603409365",
+        "docs-v001/records/documentation/profileDocumentationPageData.js": "c2369d7d0fe06006e2f11bffe4b1113234e392c82672570f4131cd52ddc369d3",
+        "docs-v001/records/documentation/profileDocumentationPageMetadataData.js": "048b5875ab2ba39a4c6ab735c5943feb87adf1092847b87235f5f81e3d198198",
+        "docs-v001/records/documentation/profileDocumentationPublicationStateData.js": "57fd21b732cd371234bbefdd125a836791fadf3122328bcc0fd8c1a546d237d2",
+        "docs-v001/records/documentation/profileDocumentationRouteData.js": "05ce11c19403fe4d038e8d10249b2ea0077b5a382453eb2c390e81ddce389fbb",
+        "docs-v001/records/documentation/profileDocumentationSearchMetadataData.js": "7877d10a200e571de32357aa960ec35c1050679827d9b1d9994e933824d353a8",
+        "docs-v001/records/documentation/profileNotificationRecipientsDocumentationComponentData.js": "f3a2b73f4dfca9c73cfe8e9423add20351944211f4cdeb14140793b1326b2f75",
+        "docs-v001/records/documentation/profileNotificationRecipientsDocumentationNodeData.js": "2fe16afa868624c75faedecc8d650943a6e2b3e59fc3814fb9b1fec66b93ea66",
+        "docs-v001/records/documentation/profileNotificationRecipientsDocumentationPageData.js": "dfd7930c3c80196571290456367e7ad3790e22dad7850dcc084f858e5c575f1e",
+        "docs-v001/records/documentation/profileNotificationRecipientsDocumentationPageMetadataData.js": "3b7079ab67366fbab65191b822c6da7e03b55916f80f5a145b22fca2f09e2639",
+        "docs-v001/records/documentation/profileNotificationRecipientsDocumentationPublicationStateData.js": "98887fb95663fc9338bb0b90fbb0b7260562c47a83c0eb2af29e0de7b9b595d6",
+        "docs-v001/records/documentation/profileNotificationRecipientsDocumentationRouteData.js": "9073caa98020477e71fb450b8fddbf26fdbb7f5adf2cd956e428eef2e0a4696f",
+        "docs-v001/records/documentation/profileNotificationRecipientsDocumentationSearchMetadataData.js": "2821e5ca9b724ed0d14f20d7fd678f9e78e685958eab27082173a8826d3a3c20"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  },
+  "successorVersion": "0.0.3",
+  "articles": [
+    {
+      "id": "platform.overview",
+      "componentCode": "nodicsDocsComponentplatformOverview",
+      "previousFile": "docs-v001/records/documentation/profileDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/profileDocumentationRelease003ComponentData.js",
+      "blocksSha256": "c3f9a827cc4b6700e42b00046d196bcff4d018fa3b9c18b19b03baaa54f11864",
+      "digestMode": "titled",
+      "sourceChecksum": "c73877695c74960c802b13b393f0814eb6f2f8d08304bd0aed209f700578fc83",
+      "sourceWordCount": 1272
+    },
+    {
+      "id": "security.identity-access-governance",
+      "componentCode": "nodicsDocsComponentsecurityIdentityAccessGovernance",
+      "previousFile": "docs-v001/records/documentation/profileDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/profileDocumentationRelease003ComponentData.js",
+      "blocksSha256": "e9023dc9d549f16b4d7a338199159d95c32a18764a2028f7cc195ca32e36989e",
+      "digestMode": "titled",
+      "sourceChecksum": "242695c0c83aed34c6fbd34afaa31ddf811350b05dfdf221627b9badad194d30",
+      "sourceWordCount": 9077
+    }
+  ]
+}

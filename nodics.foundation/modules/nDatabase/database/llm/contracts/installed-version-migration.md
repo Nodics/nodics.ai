@@ -31,7 +31,10 @@ Planning/apply/recovery require the selected effective schemas to remain ordinar
 maintenance operation. Planning composes a cloned target using `vDatabase`'s
 `default.versioned` and `isVersionedEnabled: true`; it does not change source or
 start ordinary model reconciliation. The CLI loads maintenance services and
-effective schemas, without startup imports, listeners or automatic index DDL.
+effective schemas, without startup imports, listeners or automatic index DDL. It
+awaits the canonical asynchronous deployment projection before observing
+configuration or initializing the maintenance context. This sequencing neither
+waives outage verification nor authorizes provider writes.
 
 After terminal forward verification, prepare the owning schema's explicit
 `isVersionedEnabled: true` and, where qualified for current authoring reads,

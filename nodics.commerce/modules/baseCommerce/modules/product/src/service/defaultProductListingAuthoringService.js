@@ -267,9 +267,9 @@ module.exports = {
         throw new Error('Product Store placement authority changed');
     };
     const identifier = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value);
-    if (!source || Object.keys(source).sort().join(',') !== 'allowInsecureLoopback,connectionName,connectionType,moduleName,runtimeRole,timeoutMs' ||
+    if (!source || Object.keys(source).sort().join(',') !== 'allowInsecureLoopback,connectionName,connectionType,moduleName,targetAuthority,timeoutMs' ||
         source.moduleName !== 'store' || !identifier(source.connectionName) || source.connectionName === 'default' ||
-        source.connectionType !== 'abstract' || !/^[A-Z][A-Z0-9_]{0,63}$/.test(source.runtimeRole || '') ||
+        source.connectionType !== 'abstract' || (source.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(source.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
         !Number.isInteger(source.timeoutMs) || source.timeoutMs < 1 || source.timeoutMs > 15000 ||
         typeof source.allowInsecureLoopback !== 'boolean' || !SERVICE.DefaultModuleService?.invokeModule)
       throw new Error('Product Store placement transport is not qualified');
@@ -280,7 +280,7 @@ module.exports = {
     try {
       response = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: 'store',
         connectionName: source.connectionName, connectionType: source.connectionType,
-        targetAuthority: { runtimeRole: source.runtimeRole }, tenant: request.tenant, methodName: 'POST',
+        targetAuthority: structuredClone(source.targetAuthority), tenant: request.tenant, methodName: 'POST',
         apiName: '/internal/stores/placement', requestBody: { contractVersion: 1, storeCode }, maxAttempts: 1, timeoutMs: source.timeoutMs,
         secureTransport: { required: true, allowInsecureLoopback: source.allowInsecureLoopback },
         followRedirects: false, rejectUnauthorized: true, header: { Authorization: 'Bearer ' + token, tenant: request.tenant } });
@@ -318,8 +318,13 @@ module.exports = {
     admitted.check();
     const source = CONFIG.get('product')?.marketplaceAuthoring?.intentSource;
     const identifier = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value);
-    if (!source || !identifier(source.moduleName) || !identifier(source.connectionName) || source.connectionName === 'default' ||
-        source.connectionType !== 'abstract' || !/^[A-Z][A-Z0-9_]{0,63}$/.test(source.runtimeRole || '') ||
+    const authority = source?.targetAuthority;
+    const exactAuthority = authority && typeof authority === 'object' && !Array.isArray(authority) &&
+      authority.publication === 'OPERATIONAL' &&
+      Object.keys(authority).every(key => ['publication', 'server', 'environment'].includes(key)) &&
+      ['server', 'environment'].every(key => authority[key] === undefined || identifier(authority[key]));
+    if (!source || Object.hasOwn(source, 'runtimeRole') || !exactAuthority || !identifier(source.moduleName) || !identifier(source.connectionName) || source.connectionName === 'default' ||
+        source.connectionType !== 'abstract' ||
         !Number.isInteger(source.timeoutMs) || source.timeoutMs < 1 || source.timeoutMs > 15000 ||
         typeof source.allowInsecureLoopback !== 'boolean' || !SERVICE.DefaultModuleService?.invokeModule)
       throw new Error('Listing intent read transport is not qualified');
@@ -327,7 +332,7 @@ module.exports = {
     if (typeof token !== 'string' || !token) throw new Error('Listing intent runtime authentication is unavailable');
     let response = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: source.moduleName,
       connectionName: source.connectionName, connectionType: source.connectionType,
-      targetAuthority: { runtimeRole: source.runtimeRole }, tenant: request.tenant, methodName: 'POST',
+      targetAuthority: structuredClone(authority), tenant: request.tenant, methodName: 'POST',
       apiName: '/internal/listing-requests/proof', requestBody: selectors, maxAttempts: 1, timeoutMs: source.timeoutMs,
       secureTransport: { required: true, allowInsecureLoopback: source.allowInsecureLoopback },
       followRedirects: false, rejectUnauthorized: true,

@@ -19,18 +19,31 @@
 const path = require('node:path');
 const { registerSourceOwnershipTests } = require('./helpers/freshSourceOwnership');
 const repoRoot = path.resolve(__dirname, '../../../..');
-require('node:test').test('fresh framework CMS ownership uses explicit successor metadata within v001', () => {
+require('node:test').test('fresh framework CMS ownership uses the Release 0 baseline', () => {
     const assert = require('node:assert/strict');
-    for (const [owner, code, version] of [
-        ['nodics.wcms/modules/cms', 'init-v001', '0.0.3'],
-        ['nodics.platform/modules/axis', 'axisBaseline', '0.0.2']
+    for (const [owner, code] of [
+        ['nodics.wcms/modules/cms', 'init-v001'],
+        ['nodics.platform/modules/axis', 'axisBaseline']
     ]) {
         const section = require(path.join(repoRoot, owner, 'data/manifest.json')).sections[code];
-        assert.equal(section.version, version, owner);
+        assert.equal(section.version, '0.0.1', owner);
         assert(Object.keys(section.files).every(file => file.startsWith('init-v001/')), owner);
     }
 });
 registerSourceOwnershipTests(repoRoot, [
+    {
+        header: 'nodics.accelerators/modules/nexus/modules/nexus.web/data/sample-v001/content/headers/media/nexusMediaReferenceHeader.js',
+        dir: 'nodics.accelerators/modules/nexus/modules/nexus.web/data/sample-v001/content/records/media',
+        site: 'nexusCorporateSite', catalog: 'nexusContentCatalog',
+        prefixes: ['nexusComponentMediaData'],
+    },
+    {
+        header: 'nodics.accelerators/modules/nexus/modules/nexus.web/data/sample-v001/content/headers/wcms/nexusCorporateContentHeader.js',
+        dir: 'nodics.accelerators/modules/nexus/modules/nexus.web/data/sample-v001/content/records/wcms/corporate',
+        site: 'nexusCorporateSite', catalog: 'nexusContentCatalog',
+        prefixes: ['nexusSiteData', 'nexusTypeCodeData', 'nexusRendererData', 'nexusComponentTypeGroupData',
+            'nexusSlotData', 'nexusTemplateData', 'nexusComponentData', 'nexusPageData', 'nexusRouteData', 'nexusNavigationData'],
+    },
     {
         "header": "nodics.wcms/modules/cms/data/init-v001/headers/content/defaultCmsSiteDataHeader.js",
         "dir": "nodics.wcms/modules/cms/data/init-v001/records/content",

@@ -94,12 +94,11 @@ Those fixtures do not qualify an installed shared-cache deployment.
 
 ## Scoped runtime credentials and monotonic invalidation
 
-Profile supplies one validated `runtimeScope` with assignment, project,
-environment, server and instance identity. Only service JWTs carry this scope.
-The current default lifetime is 300 seconds; renewal policy is bounded to
-30–900 seconds and expiry cannot outlive the approved assignment. Runtime-bound
-credentials always require a current matching security stamp, even if legacy
-unbound-token policy permits missing stamps.
+Profile authenticates the installation apiAdmin by API key, binds its tenant and enterprise,
+and checks advertised modules against the selected runtime's installed graph.
+The signed placement label preserves domain caller pins. The service JWT has a
+bounded lifetime, security stamp, named service permissions and empty groups.
+
 
 `DefaultCacheService.putVersioned` atomically rejects a lower principal version.
 A stale issuer cannot roll back a revocation. `reserveVersion` allocates a unique

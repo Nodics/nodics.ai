@@ -38,6 +38,14 @@
 - Define every delivery failure in the module-owned `ERR_CMS_*` status
   catalogue. Do not use unregistered symbolic codes outside Nodics' `ERR_`
   convention because they fall back to the generic system error.
+- Route authoring returns `ERR_CMS_00112`/400 for an invalid website path and
+  `ERR_CMS_00113`/400 for an invalid redirect. Redirects must stay on the same
+  website: network paths (`//`), backslashes and ASCII whitespace or control
+  characters cannot form a redirect target.
+- Designer validates Media item and Media Set references through the Media owner
+  before the first draft write, including when the owning CMS component is new.
+  This is a preflight read; persisted association validation still checks the
+  saved component, the current Media reference and ordering.
 - Consumer-specific sites, catalogs, routes, templates, and content belong in
   later project modules.
 - Extend through layered properties and later schema, route, service, facade,
@@ -50,7 +58,7 @@ A configured `cms.publication.baselines` Site descriptor may explicitly declare
 characters, without wildcards, query strings or traversal. An empty list disables
 sharing. The descriptor's existing `rootType: site` and `rootCode` bind the Site;
 do not introduce another Site registry. Later layers control this explicit policy.
-Axis contributes only `/dashboard` and `/lock-screen` on its baseline descriptor.
+Axis contributes `/dashboard`, `/lock-screen` and `/schema-workbench` on its baseline descriptor. Schema Workbench shares only its published static UI composition; schema discovery, record reads and mutations retain the original signed employee context and owning API permissions.
 
 This policy shares static project UI composition, never employee/business data.
 The normal authenticated delivery route and permission remain mandatory. The

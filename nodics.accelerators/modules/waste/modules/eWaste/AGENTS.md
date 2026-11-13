@@ -73,6 +73,8 @@ adapters. Historical refund evidence is not current activation authority.
 OpenAI environmental assessment is separate from photo metadata. Preserve source
 evidence, mass boundaries and estimate semantics; failed validation uses the configured
 Waste fallback chain. See the optional provider section in the domain contract.
+Keep the OpenAI/WARM chain in the eWaste-owned provider profile. Only runtimes
+that execute Waste Impact select it, and credentials and qualification remain independent.
 Customer submission photos forward the customer bearer to Media's owner-checked
 photo route after Waste ownership validation. Staff review retains its scoped internal route.
 
@@ -305,9 +307,12 @@ never append another resolution or send during recovery. Run the real
 controller/facade partial-commit tests in `eWasteOutcomeRecovery.test.js`.
 
 Optional Product listing-intent and DigitalCore ownership descriptors are eWaste
-role contributions. Select them through server package runtimeConfigurationContributions;
+ordinary product/digitalCore namespace contributions. Select them through server
+package runtimeConfigurationContributions with exactly moduleName and namespace;
 do not activate eWaste in Commerce merely to obtain its metadata. Keep connection
-names, enablement, qualification and exact caller identities deployment-owned.
+names, exact target server, enablement, qualification and caller identities
+deployment-owned. Source targets use explicit OPERATIONAL publication, never a
+WASTE role label. See listing-handoff for the two independent inactive selectors.
 Review-outcome presentation belongs in src/templates/telegram and src/templates/in_app.
 Communication resolves selected resources from this discovered owner without
 activating its services. Preserve frozen intent retries and recipient admission.
@@ -317,3 +322,42 @@ Coupon source-proof diagnostics use the append-only digitalSaleDiagnostics regis
 Preserve exact Digital coupon source-stage mappings from Waste Core’s static wire
 allowlist. Never prefix-match or forward upstream messages/causes. Keep existing
 diagnostic identities stable and source refusal ahead of every mutation.
+
+Auction history uses the logical Bidding owner with explicit OPERATIONAL
+publication in targetAuthorities.commerce; optional server/environment pins stay
+exact. Physical role selectors or missing publication refuse. Preserve the
+original participant bearer, tenant/enterprise and governed Store filters,
+bounded pagination, and revalidation across every awaited page.
+
+
+### Explicit owner publication routing
+
+The ordinary eWaste.targetAuthorities selectors route by publication, not physical
+runtime roles: engagement uses OPERATIONAL; commerceStaged uses STAGED Product
+authoring; wcms uses STAGED Media source/evidence. Commerce remains OPERATIONAL.
+These existing Media APIs read original private source evidence, not ONLINE
+published delivery; do not substitute ONLINE to make a route resolve.
+Replace legacy runtimeRole selector objects rather than retaining aliases.
+Optional server/environment pins remain exact identifiers. Missing publication,
+wrong context, role selectors and unknown fields refuse before dispatch.
+
+Experience remote calls and customer photo analysis use the reviewed selector.
+Photo analysis retains the original customer bearer; internal source-proof calls
+retain runtime credentials and fixed Product APIs. Listing handoff rechecks target
+configuration and original admission after awaits. No context migration enables
+owners/providers, changes signed scopes, bypasses tenant or permission checks,
+or authorizes customer adoption. See eWasteOwnerPublicationRouting.test.js and
+eWasteListingHandoff.test.js for positive, refusal and in-flight drift coverage.
+
+OpenAI readiness reuses Copilot's pure `resolveReference` credential resolver.
+Never duplicate credential stores or invoke a provider during inspection.
+Report unavailable inspection separately from missing credentials, retain later
+resolver overrides and never project secret values or resolver diagnostics.
+
+Photo-access and privacy questions precede capture-help matching. Preserve safe
+retention/deletion wording and test overlapping photo/privacy questions in
+`eWasteGuidanceHistory.test.js`. Guidance never changes submission state.
+
+Persist reward-assessment top-level calculatedScore/finalScore as canonical string
+fields matching wasteReward schema. Keep numeric Rules breakdown and its source
+hash unchanged; schema conversion must not re-evaluate or rewrite evidence.

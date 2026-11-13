@@ -17,6 +17,12 @@
  * @override Project modules may override orchestration without bypassing resolver safety.
  */
 module.exports = {
+    /** Reads only the existing private preparation manifest. */
+    inspectPreparation: function (request) { return SERVICE.DefaultWcmsExperiencePreviewPreparationService.inspect(request); },
+    /** Delegates explicit private Staged preparation to its existing owner. */
+    preparePreview: function (request) { return SERVICE.DefaultWcmsExperiencePreviewPreparationService.prepare(request); },
+    /** Delegates exact pending-writer retirement, without publication or cleanup. */
+    abandonPreparation: function (request) { return SERVICE.DefaultWcmsExperiencePreviewPreparationService.abandon(request); },
     /** Resolves a WCMS Experience through the service layer. @param {Object} request Nodics request. @returns {Promise<Object>} Resolved experience. */
     resolve: function (request) {
         return SERVICE.DefaultWcmsExperienceResolverService.resolve(request);

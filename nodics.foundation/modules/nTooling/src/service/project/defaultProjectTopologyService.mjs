@@ -51,8 +51,14 @@ function normalizeRuntime(runtime) {
     readyPath: runtime.readyPath || '/nodics/system/v0/health/ready',
     dependsOn: normalizeRuntimeDependencies(runtime.dependsOn),
     readinessChecks: normalizeReadinessChecks(runtime.readinessChecks),
+    readinessTimeoutMs: normalizeReadinessTimeout(runtime.readinessTimeoutMs),
     env: normalizeRuntimeEnvironment(runtime.env)
   };
+}
+
+function normalizeReadinessTimeout(value = 90000) {
+  if (!Number.isSafeInteger(value) || value <= 0) throw new Error('Runtime readiness timeout must be a positive safe integer');
+  return value;
 }
 
 function normalizeRuntimeEnvironment(environment) {
@@ -282,7 +288,7 @@ export async function assertTopologyReadiness(codes, {
 }
 
 /** Waits through transient readiness failures; only the exact required registration repair outcome is terminal. */
-export async function waitUntilReady(runtime, timeoutMs = 90000, child, { probe = checkRuntimeReadiness, pause = sleep } = {}) {
+export async function waitUntilReady(runtime, timeoutMs = normalizeReadinessTimeout(runtime.readinessTimeoutMs), child, { probe = checkRuntimeReadiness, pause = sleep } = {}) {
   const startedAt = Date.now();
   let lastError = 'not reachable';
   while (Date.now() - startedAt < timeoutMs) {
@@ -385,7 +391,7 @@ async function start() {
           process.stderr.write(`[topology] ${runtime.label} exited with code ${String(code)}; other runtimes remain running; log: ${logPath}\n`);
         }
       });
-      await waitUntilReady(runtime, 90000, child);
+      await waitUntilReady(runtime, undefined, child);
       process.stdout.write(`[topology] READY ${runtime.label} http://127.0.0.1:${String(runtime.port)}\n`);
     }
     started = true;

@@ -166,3 +166,8 @@ Its direct CMS blocks, source metadata, search and publication records are Stage
 the manifest pins normalized final bytes. Installation, review and publication
 remain explicit. Do not recreate prose through the retired documentation generator
 or label source/unit evidence as deployed delivery.
+
+The auction recipient composition test supplies the native Profile locator,
+canonical anchor and exact assignment-read ports. A native Employee without an
+assignment still requires fresh persisted permission and scope evidence. Linked
+resolution/inventory doubles do not stand in for native identity proof.

@@ -36,7 +36,7 @@ function loadProperties(relativePath) {
 }
 
 function configuration(values) {
-    const effective = _.merge({ authSecurity: _.merge({}, authDefaults) }, values || {});
+    const effective = _.merge({ authSecurity: _.merge({}, authDefaults, {bootstrapIdentity: require("../../../../nodics.platform/modules/profile/config/properties").authSecurity.bootstrapIdentity}) }, values || {});
     return {
         /**
          * Resolves one fixture-backed configuration value.

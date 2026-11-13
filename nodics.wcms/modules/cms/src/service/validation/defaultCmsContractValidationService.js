@@ -16,6 +16,8 @@
  * @owner cms
  * @override Later modules may strengthen validation through service overrides or additional interceptors.
  */
+const _ = require('lodash');
+const currentRecordHeads = require('../../utils/currentRecordHeads');
 module.exports = {
     /** Initializes the contract-validation lifecycle. */
     init: function () { return Promise.resolve(true); },
@@ -44,12 +46,12 @@ module.exports = {
     validateComponentLocalization: async function (request) {
         let model = request.model || {};
         let components = this.items(await SERVICE.DefaultCmsComponentService.get({ tenant: request.tenant, authData: request.authData,
-            query: { code: model.componentCode, active: true }, searchOptions: { limit: 2 } }));
+            query: { code: model.componentCode, active: true }, searchOptions: { limit: 1, sort: { versionId: -1 } } }));
         if (components.length < 1) throw this.error('ERR_CMS_00109', 'CMS localization component is unavailable');
         let component = components.sort((left, right) => (right.versionId || 0) - (left.versionId || 0))[0];
         let typeCode = component.typeCode && component.typeCode.code || component.typeCode;
         let types = this.items(await SERVICE.DefaultCmsTypeCodeService.get({ tenant: request.tenant, authData: request.authData,
-            query: { code: typeCode, kind: 'COMPONENT', active: true }, searchOptions: { limit: 2 } }));
+            query: { code: typeCode, kind: 'COMPONENT', active: true }, searchOptions: { limit: 1, sort: { versionId: -1 } } }));
         if (types.length < 1) throw this.error('ERR_CMS_00109', 'CMS localization type contract is unavailable');
         let typeContract = types.sort((left, right) => (right.versionId || 0) - (left.versionId || 0))[0];
         SERVICE.DefaultCmsContentLocalizationService.validateTypeContract(typeContract);
@@ -61,11 +63,13 @@ module.exports = {
     validateRoute: function (request) {
         let model = request.model || {};
         if (typeof model.path !== 'string' || model.path.charAt(0) !== '/' || model.path.includes('://')) {
-            return Promise.reject(this.error('CMS_ROUTE_PATH_INVALID', 'route path must be an absolute application path'));
+            return Promise.reject(this.error('ERR_CMS_00112', 'Enter a website path beginning with /, for example /contact.'));
         }
         model.path = model.path.replace(/\/+/g, '/');
-        if (model.routeType === 'REDIRECT' && (typeof model.redirectPath !== 'string' || model.redirectPath.charAt(0) !== '/' || model.redirectPath.includes('://'))) {
-            return Promise.reject(this.error('CMS_REDIRECT_PATH_INVALID', 'redirectPath must be a safe relative application path'));
+        if (model.routeType === 'REDIRECT' && (typeof model.redirectPath !== 'string' ||
+            !model.redirectPath.startsWith('/') || model.redirectPath.startsWith('//') ||
+            model.redirectPath.includes('://') || /[\\\u0000-\u0020\u007f]/.test(model.redirectPath))) {
+            return Promise.reject(this.error('ERR_CMS_00113', 'Enter a redirect path on this website, for example /contact.'));
         }
         return Promise.resolve(true);
     },
@@ -77,16 +81,28 @@ module.exports = {
         if (!model.source || !model.target || !Number.isInteger(model.index) || model.index < 0) {
             throw this.error('CMS_ASSOCIATION_INVALID', 'source, target, slot, and a non-negative integer index are required');
         }
-        let response = await SERVICE.DefaultCmsComponentDetailService.get({
-            tenant: request.tenant,
-            authData: request.authData,
-            options: Object.assign({}, request.options || {}, { recursive: false }),
-            query: { source: model.source, slot: model.slot, index: model.index, active: true }
-        });
-        let conflicts = response && Array.isArray(response.result) ? response.result.filter(item => item.code !== model.code) : [];
         let allowReplacement = model.allowCmsAssociationReplacement === true ||
             request.options && request.options.allowCmsAssociationReplacement === true;
         delete model.allowCmsAssociationReplacement;
+        if (model.active === false) return true;
+        const intent = _.cloneDeep(_.pick(model, ['code', 'source', 'target', 'slot', 'index', 'active']));
+        const query = { source: model.source, slot: model.slot, index: model.index, active: true };
+        const candidates = await this.associationRecords(request, query);
+        const codes = [...new Set(candidates.map(row => row.code))].sort();
+        if (codes.some(code => typeof code !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(code)))
+            throw this.error('ERR_CMS_00104', 'Slot position evidence has invalid identities');
+        let heads = [];
+        if (codes.length) {
+            const rows = await this.associationRecords(request, { code: { $in: codes } });
+            try { heads = currentRecordHeads(rows); } catch (_) {
+                throw this.error('ERR_CMS_00104', 'Current slot positions have invalid or ambiguous history');
+            }
+            if (heads.length !== codes.length) throw this.error('ERR_CMS_00104', 'Current slot position evidence is incomplete');
+        }
+        if (!_.isEqual(intent, _.pick(model, ['code', 'source', 'target', 'slot', 'index', 'active'])))
+            throw this.error('ERR_CMS_00104', 'The placement changed while its slot position was checked');
+        let conflicts = heads.filter(item => item.code !== model.code &&
+            Object.entries(query).every(([key, value]) => _.isEqual(item[key], value)));
         if (conflicts.length && allowReplacement &&
             SERVICE.DefaultCmsComponentDetailService &&
             (typeof SERVICE.DefaultCmsComponentDetailService.remove === 'function' ||
@@ -102,6 +118,28 @@ module.exports = {
         }
         if (conflicts.length) throw this.error('CMS_ASSOCIATION_POSITION_CONFLICT', 'slot position is already occupied for this source');
         return true;
+    },
+
+    /** Reads complete bounded position evidence with the original generated-service authority and tenant. */
+    associationRecords: async function (request, query) {
+        const tenant = request.tenant, auth = _.cloneDeep(request.authData), expected = _.cloneDeep(query);
+        const read = { tenant, authData: _.cloneDeep(auth), query: _.cloneDeep(query),
+            options: { recursive: false, skipItemCache: true },
+            searchOptions: { limit: 101, pageSize: 101, pageNumber: 1, sort: { versionId: -1 } } };
+        const response = await SERVICE.DefaultCmsComponentDetailService.get(read);
+        const matches = row => _.isPlainObject(row) && Object.entries(expected).every(([key, value]) =>
+            _.isPlainObject(value) && Object.keys(value).length === 1 && Array.isArray(value.$in)
+                ? value.$in.includes(row[key]) : _.isEqual(row[key], value));
+        if (request.tenant !== tenant || !_.isEqual(request.authData, auth) || read.tenant !== tenant ||
+            read.schemaModel?.tenant !== tenant || !_.isEqual(read.authData, auth) || !_.isEqual(read.query, expected) ||
+            !_.isPlainObject(response) || response.code !== 'SUC_FIND_00000' || response.error ||
+            response.success !== undefined && response.success !== true || response.acknowledged !== undefined && response.acknowledged !== true ||
+            response.errors !== undefined && response.errors !== null && (!Array.isArray(response.errors) || response.errors.length) ||
+            !_.isEqual(response.query, expected) || !Number.isSafeInteger(response.count) || response.count < 0 || response.count > 100 ||
+            !Array.isArray(response.result) || response.result.length !== response.count || response.total !== undefined && response.total !== response.count ||
+            [response, ...(response.result || [])].some(row => row && ['tenant', 'tenantCode'].some(key => row[key] !== undefined && row[key] !== tenant)) ||
+            response.result.some(row => !matches(row))) throw this.error('ERR_CMS_00104', 'Current slot position evidence is unavailable or incomplete');
+        return response.result;
     },
 
     /** Validates template slot authoring rules without duplicating component type authority. */
@@ -192,10 +230,8 @@ module.exports = {
         return true;
     },
 
-    /** Validates one CMS-owned association to an media-owned Media item or Media Set. */
-    validateComponentMedia: async function (request) {
-        let model = request.model || {};
-        let policy = this.mediaReferencePolicy();
+    /** Validates association fields and identifies the owner reference independently of persistence. */
+    componentMediaReference: function (model, policy) {
         model.slot = model.slot || 'default';
         model.mediaType = model.mediaType || 'IMAGE';
         let hasMedia = !!model.mediaCode;
@@ -209,8 +245,23 @@ module.exports = {
         if (model.localeCode && !new RegExp(policy.localePattern).test(model.localeCode)) {
             throw this.error('ERR_CMS_00094', 'CMS component media locale is invalid');
         }
+        return hasMediaSet ? ['MEDIA_SET', model.mediaSetCode] : ['MEDIA', model.mediaCode];
+    },
+
+    /** Checks a Designer draft reference before its planned component has been saved. */
+    validateDraftComponentMediaReference: async function (request) {
+        const reference = this.componentMediaReference(request.model || {}, this.mediaReferencePolicy());
+        await this.validateNMediaReference(request, ...reference);
+        return true;
+    },
+
+    /** Validates one persisted component association to a Media item or Media Set. */
+    validateComponentMedia: async function (request) {
+        let model = request.model || {};
+        let policy = this.mediaReferencePolicy();
+        const reference = this.componentMediaReference(model, policy);
         await this.validateComponent(model, request);
-        await this.validateNMediaReference(request, hasMediaSet ? 'MEDIA_SET' : 'MEDIA', hasMediaSet ? model.mediaSetCode : model.mediaCode);
+        await this.validateNMediaReference(request, ...reference);
         let response = await SERVICE.DefaultCmsComponentMediaService.get({
             tenant: request.tenant,
             authData: request.authData,

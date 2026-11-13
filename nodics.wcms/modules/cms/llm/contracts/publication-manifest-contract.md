@@ -1,5 +1,11 @@
 # CMS Publication Manifest AI Contract
 
+Page-route requests select the exact saved version, including revision zero.
+Site-baseline requests retain their existing default source selection. When a
+request declares a destination Site or a Catalog with a saved authoring scope,
+the frozen root must agree with that declaration during validation and manifest
+construction.
+
 - Never implement CMS lifecycle state outside `nPublish`.
 - Never treat `versionId` alone as the Online publication pointer.
 - Staged and Online must be separate systems or database/schema authorities;
@@ -77,6 +83,33 @@ asset reimport merely to renew the snapshot. Fresh Media readiness must still
 qualify every exact manifest pin. `test/cmsDocumentationNavigationProjection.test.js`
 covers reachability, scope exclusion, ambiguity, localization and non-mutation.
 
+## Operator Rollback Scope
+
+Staged qualifies the current Online manifest before offering or starting an
+operator rollback. Online then verifies the exact current pointers inside the
+restore transaction. A page release can restore a predecessor covering the same
+route scopes. Restoring a site bundle requires ownership of its active site
+pointers. A stale or differently scoped predecessor cannot replace newer
+content. Keep historical manifests and existing receipts available for inquiry.
+
+## Restricted Task Review
+
+`GET /publication/reviews/:instanceCode/tasks/:taskCode` on CMS Staged requires
+the original human access token and `cms.publication.approve`. CMS reads the
+native Process detail with the same token and enterprise. It admits only the
+exact active CMS approval task, checks claimed assignment, and binds the
+tenant, enterprise, deterministic workflow reference and pending nPublish
+revision before any private CMS reads. Both bindings are rechecked before
+returning evidence. Authoring and generic Publishing routes retain their own
+permissions.
+
+The no-store projection includes only frozen route/page identities, allowlisted
+plain component text, exact validated dependency pins, Media references and
+changes. CMS compares against the exact same-scope Online pointer and retained
+manifest. Absent proof yields an unavailable comparison. Media references remain
+subject to Media's publication controls. CMS does not assemble an activation
+package, export asset bytes, change a task or write a lifecycle record.
+
 ## Retained Media Dependency Readiness
 
 `DefaultCmsMediaDependencyReadinessService` reads the exact persisted CMS target
@@ -152,3 +185,89 @@ one site. Missing version, ambiguity, conflicting partial roots or release drift
 reject; status reports INVALID_RELEASE without importing or publishing. Multi-site
 packs and ordinary data-release baselines retain explicit roots. Stored approval
 and coordinated Media dependencies still bind the original immutable release.
+
+### Baseline relocation and retained release metadata
+
+`destinationRole: WCMS_STAGED` in the governed baseline release/pack is retained
+metadata, not a physical host selector. Changing a server's descriptive role code
+or cohosting CMS does not require changing that metadata. Keep the exact release
+version, PUBLISHABLE lifecycle, ADMIN_INITIATED policy and unambiguous root checks.
+The source's effective CMS publication context remains STAGED. Renaming manifest
+labels would change the governed source contract and is not configuration-only
+relocation; do not rewrite installed receipts or silently adopt new release data.
+`test/cmsBaselineRelocationContract.test.js` exercises renamed hosts and rejects
+changed destination metadata, versions, lifecycle, policy and ambiguous roots
+with isolated catalogue/pack ports; it does not install or publish anything.
+
+## Shared-route locale snapshots
+
+The configured `localization.legacyRouteLocale` is a routing sentinel, never a
+BCP47 content language. At publication, expand that frozen route into the bounded
+canonical `supportedLocales` (or configured default language), retaining its exact
+Page/component/localization dependency versions. One Page publication may therefore
+use the existing SITE snapshot container for its locale routes. It remains scoped
+to that Page's frozen route; this never publishes other pages in the Site.
+
+For a Site publication, an explicit frozen locale route takes precedence over the
+shared-route projection at the same Site/path/locale/channel/access identity.
+Duplicate identities at equal priority or ambiguous canonical locale declarations
+reject before persisting a manifest. The configured bundle route ceiling applies
+to the complete expanded set. Documentation navigation derives metadata only from
+these projected exact locale scopes and the frozen reachable article graph.
+
+Deploy all locale pointers through the existing target transaction, content hashes,
+CAS, receipts and outbox. Site publications retain the existing prepared-route/index chunking path.
+Page locale bundles retain the existing target manifest/payload boundary; they
+do not introduce a second chunk-index lookup or a guessed previous manifest. Source route records and locale variants remain untouched. Current
+Online inspection must confirm every projected locale agrees on the same immutable
+manifest; missing or mixed pointers fail closed. No live delivery fallback, latest
+content lookup, implicit publication or approval bypass is introduced.
+
+Retained Media readiness delegates to `DefaultMediaDependencyReadinessService.inspectAssets` after CMS selects assets from this exact sealed bundle. Preserve the response contract and existing `cmsMedia_` identity. The delegate is read-only and cannot approve, activate or repair dependencies.
+
+
+## Page Designer menu entries and scoped operators
+
+The Designer projects an active top-level page menu entry only when its
+site, target, locale and channel match the saved route and no extra navigation
+restriction needs evaluation. The exact route version carries the projection.
+The Online manifest returns the menu link through the same route audience as
+the page. A changed menu must be saved with the route before approval.
+
+A tenant administrator with the corresponding publication action permission
+can inspect or roll back a CMS page-route publication after the CMS owner
+verifies the exact source version in the administrator's Site and Catalog.
+Process review and its approval permission remain separate. Rollback uses the
+inspected revision and the retained Online predecessor.
+
+## Public knowledge proof
+
+The uncached public `GET /delivery/knowledge` endpoint reads only Online publication
+pointers and immutable snapshots. It ignores authenticated access overrides, validates
+exact Site/path/locale/channel and PUBLIC scope, and rereads to detect changes.
+`cms.delivery.maximumKnowledgePageBytes` bounds the output; its reusable default
+belongs to CMS. The returned digest pins visible snapshot content without exposing
+private manifest identifiers. Disabled publication, Staged delivery, withdrawal,
+ambiguous or changed snapshots fail closed. This read neither publishes nor grants
+Copilot source access. Run `test/cmsPublishedKnowledge.test.js`.
+
+## Exact callback and receipt recovery
+
+The existing CMS Process callback keeps its fixed API and payload. The admitted Workflow runtime must name the exact stored workflow, pending revision and correlation. A replay succeeds only against the uninterrupted committed decision journal, including the original decision reason and definition/version. It returns the original Online or rejection result without another lifecycle transition; an approved or activating interruption resumes that same activation. A failed, resubmitted or otherwise changed attempt requires its normal owner recovery and review.
+
+Online deployment receipts require a fresh exact owner readback after save, including after a lost acknowledgement or competing write. An absent, ambiguous or conflicting receipt is not success. Reconciliation reports RECEIPT_MISMATCH without overwriting it. Missing evidence is repaired only after a transaction-local pointer recheck and revision CAS fence on every covered scope. The fence advances only technical revisions; it does not change delivery ownership. Pointer drift refuses repair. Recovery retains the original activation operation key and manifest revision and qualifies its matching target receipt before reporting completion.
+
+See cmsPublicationWorkflowCallback.test.js and cmsPublicationManifestContract.test.js for exact replay, intermediate recovery, conflicting evidence, unacknowledged persistence, pointer races and lost-response recovery. Deployment connection and application release selections remain project-owned; these safeguards are Framework behavior.
+
+Frozen documentation approval reviews include bounded plain-text article blocks and before/after content from the immutable snapshots. Unknown blocks and truncation are explicit; arbitrary source fields and provider URLs are excluded. Existing current-task, tenant, enterprise, reviewer and publication revision checks remain mandatory. The source correction is documented in CMS documentation release 0.0.3; installation and Online approval remain separate.
+
+
+A selected page can restore its exact predecessor even when that predecessor was published as part of a larger Site release. The Online owner verifies the current pointer and its previous-manifest lineage inside the transaction, restores only the selected delivery scope and preserves sibling routes. It rejects a stale pointer, missing route, different Site or unrelated predecessor. Review of older Site releases without a catalog field uses the exact frozen Site dependency to prove catalog ownership; a latest authoring read cannot supply that proof.
+
+
+A provider may admit retry of a failed legacy rollback only through canRetryRejectedRollback returning exactly true after fresh owner checks. CMS admits only its transaction-scoped ERR_CMS_00116 rejection, a contiguous Online to Rolling Back to Failed journal, unchanged activation/predecessor identities and the same current Online pointer. Retry appends audit evidence and uses current pointer fencing; it never rewrites the old journal or activates a new revision. Timeouts, response loss, incomplete history and other failures remain blocked unless the existing qualified command receipt contract proves recovery.
+
+
+## Reviewed Online experience generations
+
+Placements are frozen as hashed values in the existing publication dependency journal before review. CMS manifests retain these values, including chunked Site releases. The reviewer sees their exact targeting. Online Experience reads only active public pointers and frozen component graphs. Discovery guarded generations own current-alias publication, acknowledged visibility and exact-count proof. Pending generations never replace the previous complete public projection. Explicit Site-authorized inspection, exact-revision retirement and rebuild provide recovery; unknown writes are never replayed or deleted. Public generation reads enter the existing service-token transport when actorless. Defaults and bounds remain in Framework.

@@ -174,7 +174,11 @@ module.exports = {
             const patch = { ...media }; delete patch.code;
             return lifecycle.updateMetadata(request, previous, patch);
         }
-        if (versioned) media.versionId = 0;
+        if (versioned) {
+            media.versionId = 0;
+            const actor = SERVICE.DefaultRecordOwnershipPolicyService?.getActor(request.authData);
+            if (typeof actor === 'string' && actor.trim()) media.createdBy = actor;
+        }
         let response = await service.save({
             tenant: request.tenant,
             authData: request.authData,

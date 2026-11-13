@@ -54,6 +54,9 @@ test('container acceptance selects published server endpoints and preserves lite
   const first = readContainerEnvironmentConfiguration(root, 'containers');
   assert.equal(first.acceptance.urls.selected, 'http://published.test:6123');
   assert.equal(first.acceptance.urls.overridden, 'https://explicit.test/base');
+  assert.equal(first.acceptance.platformCommand, 'acceptance:local');
+  assert.equal(first.composePath, path.join(environment, 'docker/compose.yaml'));
+  assert.equal(first.environmentPath, path.join(environment, 'generated/docker.env'));
   update({ httpHost: '::1', httpPort: 7123 });
   const changed = readContainerEnvironmentConfiguration(root, 'containers');
   assert.equal(changed.acceptance.urls.selected, 'http://[::1]:7123');
@@ -73,18 +76,19 @@ test('container profile resolves from environment-owned config/properties.js', (
     contractVersion: 1,
     profileCode: 'dockerLocal',
     environment: 'startioDockerLocal',
-    composeFile: 'envs/startioDockerLocal/docker/compose.yaml',
-    generatedDirectory: 'envs/startioDockerLocal/generated',
-    environmentFile: 'docker.env',
-    acceptance: { urls: { platform: 'http://127.0.0.1:5300' } },
+    composeFile: 'deploy/acme.yaml',
+    generatedDirectory: 'artifacts',
+    environmentFile: 'acme.env',
+    acceptance: { platformCommand: 'acceptance:acme', urls: { platform: 'http://127.0.0.1:5300' } },
   });
 
   const profile = readContainerEnvironmentConfiguration(projectRoot, 'dockerLocal');
 
   assert.equal(profile.code, 'dockerLocal');
   assert.equal(profile.environment, 'startioDockerLocal');
-  assert.equal(profile.composePath, path.join(projectRoot, 'envs/startioDockerLocal/docker/compose.yaml'));
-  assert.equal(profile.environmentPath, path.join(projectRoot, 'envs/startioDockerLocal/generated/docker.env'));
+  assert.equal(profile.composePath, path.join(projectRoot, 'deploy/acme.yaml'));
+  assert.equal(profile.environmentPath, path.join(projectRoot, 'artifacts/acme.env'));
+  assert.equal(profile.acceptance.platformCommand, 'acceptance:acme');
   assert.equal(profile.acceptance.urls.platform, 'http://127.0.0.1:5300');
 });
 

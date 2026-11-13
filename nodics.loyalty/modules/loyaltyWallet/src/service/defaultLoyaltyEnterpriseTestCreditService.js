@@ -77,7 +77,7 @@ module.exports = {
   policy: function () {
     const policy = CONFIG.get("loyalty")?.enterpriseTestCredits;
     const environmentCode = NODICS.getSelectedEnvironmentName();
-    if (policy?.enabled !== true || CONFIG.get("runtimeRole")?.code !== "LOYALTY" ||
+    if (policy?.enabled !== true || (SERVICE.DefaultModuleService?.isLocalModuleActive?.("loyaltyWallet") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") ||
         !this.identifier(environmentCode) || !Array.isArray(policy.allowedEnvironments) ||
         policy.allowedEnvironments.some(value => !this.identifier(value)) ||
         new Set(policy.allowedEnvironments).size !== policy.allowedEnvironments.length ||

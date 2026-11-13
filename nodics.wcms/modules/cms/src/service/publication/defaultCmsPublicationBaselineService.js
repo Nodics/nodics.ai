@@ -439,6 +439,19 @@ module.exports = {
         }
         return this.status(code, request);
     },
+    /** Installs only the configured content pack under the verified CMS baseline context; publication remains a separate explicit operation. */
+    installContentPack: async function (code, request) {
+        this.assertStaged();
+        const descriptor = this.descriptor(code);
+        if (!descriptor.contentPackCode) throw new CLASSES.NodicsError('CMS_BASELINE_INVALID', 'This baseline does not select a content pack');
+        const actor = this.actorRequest(request, 'Install the configured baseline content pack');
+        const release = await this.release(descriptor, actor);
+        const input = Object.assign({}, actor, { packCode: descriptor.contentPackCode });
+        const result = release.status === 'CURRENT'
+            ? await SERVICE.DefaultContentPackService.getStatus(input)
+            : await SERVICE.DefaultContentPackService.importPack(input);
+        return result.data;
+    },
     /** Installs and submits one baseline without approving or deploying it. */
     initiate: async function (code, request) {
         this.assertStaged();

@@ -107,7 +107,8 @@ module.exports = {
                 request.authData,
                 rawSchema.accessGroups,
                 request,
-            ) >= CONFIG.get('accessPoints').writeAccessPoint
+            ) >= CONFIG.get('accessPoints').writeAccessPoint ||
+            SERVICE.DefaultDataReleaseService?.hasStagedSourceWriteAccess?.(request) === true
         ) {
             SERVICE.DefaultRecordOwnershipPolicyService.enforce(
                 request,

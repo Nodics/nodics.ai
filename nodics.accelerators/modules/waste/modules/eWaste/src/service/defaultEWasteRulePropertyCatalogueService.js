@@ -51,6 +51,7 @@ module.exports = {
         const collection = ['CONTAINS','DOES_NOT_CONTAIN','CONTAINS_ANY','CONTAINS_ALL','IS_AVAILABLE','IS_NOT_AVAILABLE'];
         return {
             code: 'EWASTE_REWARD_PROPERTIES',
+            simulationInputPath: ['properties'],
             version: '1',
             providerCode: this.providerCode,
             consumerModule: 'eWaste',

@@ -111,9 +111,14 @@ evidence later, but provider selection never changes retrieval authorization.
 `DefaultCopilotKnowledgeRuntimeService.ingestOnStart()` owns reusable startup
 orchestration. It accepts no caller overrides and has no API route. Both
 `copilot.knowledge.ingestion.enabled` and `ingestOnStart` must be explicitly true;
-disabled execution performs no registry or provider work. A deployment may call
-it from its late server `postInit` hook to preserve dependency readiness. The
-knowledge module lifecycle only registers providers; it does not start ingestion.
+disabled execution performs no registry or provider work. The knowledge module postInit
+registers providers and prepares its central runtime ready contributor (order 800).
+The ready phase follows internal authentication and listener startup; authenticated
+Discovery writes never opt out of service identity. Customer/server hooks must not
+duplicate this operation. A required health contributor remains DOWN until the
+original indexing acknowledgement. Failure or the Framework-default 120000 ms
+startup timeout remains DOWN; a late completion cannot promote readiness and no
+automatic replay is scheduled. Deployments may override the bounded timeout.
 
 The existing `ingestion.startup` configuration controls source selection and
 operational policy: `sourceProject: null` selects all enabled registered sources;
@@ -154,3 +159,29 @@ A registered `**/*` repository pattern covers all supported authored files at
 root and nested paths. Apply extension and generated-output exclusions before
 counting files against the source budget. Unsupported binary files must never be
 decoded as text or counted as successfully ingested knowledge.
+
+## Published customer guidance
+
+`PUBLISHED_DOCUMENTATION` uses the CMS Online owner, never repository content.
+An operator-governed source pins one tenant, Site, locale, channel, explicit routes
+and SHA-256 content digests in `publishedContent`. Source policy, required secret
+inspection, bounds and Discovery generation publication remain mandatory. The
+provider reads `/delivery/knowledge` through the Online module authority using
+the existing optional-internal-auth transport mode for this public proof endpoint.
+Startup must not depend on an internal token that has not yet been issued; the
+CMS owner still enforces public Online content independently of credentials. The CMS
+owner permits only stable public Online snapshots. Retrieval rechecks all selected
+publication pins before and after Discovery search. Withdrawal, scope mismatch,
+changed content or unavailable proof refuses evidence instead of using stale chunks.
+New publications require an explicitly reviewed source revision and refresh.
+Keep source defaults empty; application code and Kickoff must not supply catalogs.
+
+Run `test/copilotPublishedKnowledge.test.js` with the registry, startup and
+ingestion/retrieval regressions.
+
+Published content uses the Framework `knowledge.publishedContent.connectionName`
+default `cmsOnline` through nService. Deployment aliases retain their own host and
+port mapping; source records and caller input cannot choose an arbitrary endpoint.
+The public proof endpoint and explicit Online authority remain fixed.
+
+Legacy source refresh must await the existing Discovery/nSearch visibility acknowledgement before reporting PROJECTED. A rejected, missing or failed-shard refresh remains unconfirmed; never retry writes automatically. Governed Discovery projections default to uncached reads so a cached empty or prior result cannot override refreshed source or generation evidence. Source policy and published Online digest checks still run before and after retrieval.

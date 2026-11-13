@@ -166,7 +166,10 @@ module.exports = {
   ) {
     const config = structuredClone(CONFIG.get("eWaste")),
       target = config?.targetAuthorities?.[connectionName];
-    if (!target) this.fail("OWNER_UNAVAILABLE");
+    if (connectionName !== "commerceStaged" || moduleName !== "product" ||
+        target?.publication !== "STAGED" || Object.entries(target).some(([key, value]) =>
+          !["publication", "server", "environment"].includes(key) || typeof value !== "string" ||
+          !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) this.fail("OWNER_UNAVAILABLE");
     check();
     let value;
     try {

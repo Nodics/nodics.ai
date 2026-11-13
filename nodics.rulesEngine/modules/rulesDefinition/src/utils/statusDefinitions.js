@@ -10,4 +10,7 @@
  */
 
 /** @module rulesDefinition/src/utils/statusDefinitions @description Status and error definitions owned by rulesDefinition. @layer utility @owner rulesDefinition */
-module.exports = {};
+module.exports = {
+    ERR_RULE_DEF_00001: { code: '422', message: 'Correct the saved draft before continuing', publicMessage: true },
+    ERR_RULE_DEF_00002: { code: '409', message: 'The draft changed or its write could not be confirmed. Reload and review its current revision', publicMessage: true }
+};

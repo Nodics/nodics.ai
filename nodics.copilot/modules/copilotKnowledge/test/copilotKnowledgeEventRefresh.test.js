@@ -58,7 +58,7 @@ beforeEach(() => {
     enabled: true,
     actionAuthority: {
       connectionName: "process-owner",
-      runtimeRole: "PROCESS",
+      publication: "OPERATIONAL",
       timeoutMs: 1000,
     },
     assignments: [assignment],
@@ -197,6 +197,7 @@ beforeEach(() => {
   const runtimeAuth = structuredClone(request.authData);
   SERVICE.DefaultModuleService = {
     invokeModule: async (input) => {
+                assert.deepEqual(input.targetAuthority, { publication: "OPERATIONAL" });
       calls.push(input);
       assert.equal(input.requestBody.sourceModule, "copilotApi");
       return lifecycle.startOwnedInstance({
@@ -513,4 +514,17 @@ test("source event route is independent, service-only, internal and uncached", (
     require("../config/properties").copilot.knowledge.eventRefresh.enabled,
     false,
   );
+});
+
+
+test('Process start refuses non-operational and legacy role-only targets before dispatch', async () => {
+  const start = require('../src/service/defaultCopilotKnowledgeProcessStartService');
+  for (const publication of [undefined, 'STAGED', 'ONLINE', 'PROCESS']) {
+    const target = configuration.knowledge.workflowRefresh.actionAuthority;
+    target.publication = publication;
+    target.runtimeRole = 'PROCESS';
+    await assert.rejects(events.notify(request));
+    await assert.rejects(start.start(request, { target }));
+  }
+  assert.equal(calls.length, 0);
 });

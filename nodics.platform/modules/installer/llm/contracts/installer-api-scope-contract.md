@@ -1,7 +1,7 @@
 # Installer API Scope Contract
 
 Date: 2026-08-26
-Status: Frozen for current read-only implementation
+Status: Read-only baseline with a separately scoped Local build
 Owner: `nodics.platform/modules/installer`
 
 ## Purpose
@@ -89,8 +89,9 @@ tests, permissions, idempotency model, audit model, and rollback strategy exist:
 - `HIDDEN`: withheld from normal UI/navigation discovery.
 
 Read-only operations are `AVAILABLE` only when controller, permission,
-redaction, and contract tests exist. Mutating operations must be `RESERVED`,
-`DISABLED`, or `HIDDEN`.
+redaction, and contract tests exist. Generic mutating operations stay
+`RESERVED`, `DISABLED`, or `HIDDEN`; the separate Local generation workflow is
+governed by the scoped contract below.
 
 ## Operation Model
 
@@ -272,3 +273,35 @@ Before any read-only route is considered complete, tests must prove:
 - secrets are redacted from evidence and diagnostics;
 - BackOffice metadata keeps navigation hidden until routes are ready;
 - no npm, NPX, or standalone installer bootstrap contract changes occur.
+
+## Current qualification corrections
+
+Read-only qualification: nRouter owns the module/API prefix; installer route keys are relative, while the public operation catalogue retains canonical API routes. Runtime permissions use the existing secured-request authority and verified human Profile claims, including its restricted Platform full-access semantics. Never restore a parallel exact-permission or request-body grant authority. Installer failures have stable client-safe HTTP/error outcomes, never HTTP200 SUC with FAILED status or raw filesystem messages. Defaults and planning presentation belong to installer/config/properties.js. Workspace selections come only from layered configuration; do not read process environment in services or allow a request to authorize its own roots. Resolve symlinks before containment and bound evidence before reading; redact incomplete private-key prefixes. Preflight observes loopback TCP reachability without binding or shell commands; REFUSED is an observation, not a future availability certificate. Axis consumes the owner-qualified native planning descriptor and copy. Form, actor, scope and owner changes retire results. A dry-run plan is not execution, deployment qualification or a rollback receipt. Build/repair/lifecycle writers remain reserved until their separate governance contract exists.
+
+Native read-only navigation uses READ/VERIFY intents. The operation catalogue has a separate PLAN intent; never copy that value into Axis navigation metadata. Protect this distinction with the Installer native-navigation regression and the typed Axis action fixture.
+
+## Qualified Local generation and reversal (K04)
+
+The read-only contract above remains the default. The separate build API is
+available only for an explicitly configured Local runtime with trusted source
+coordinates and a private, runtime-owned receipt directory. The dedicated
+`installer.workspace.build` permission and original human authority are
+required for preparation, generation, receipt reads and reversal. The selected
+workspace must resolve to the configured customer source; clients never supply
+an output path or arbitrary source roots.
+
+Preparation derives the exact Local plan using the existing nTooling catalogue,
+guided request and planner. A caller-supplied UUID identifies preparation;
+repeating it with the same actor and normalized inputs returns the receipt.
+Generation requires explicit confirmation of the recorded digest, rechecks
+source provenance and calls only the existing deterministic nTooling generator.
+A run has one generation attempt. A durable receipt records its owner, state,
+plan and output digests, artifact count and timestamps. Started but unconfirmed
+commands remain visible and are never automatically replayed.
+
+Reversal checks the original actor, reviewed digest, generated receipt and
+the complete exact output tree. Modified, foreign, unexpected or symlinked
+content refuses removal. Only the run-owned generated project is removed;
+the receipt and audit transitions remain. Repeated successful commands return
+their recorded outcome. No shell, dependency installation, runtime startup,
+vendor checkout change, schema write or publishing is admitted.

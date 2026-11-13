@@ -37,7 +37,7 @@ module.exports = {
   /** Independently reads exact persisted event proof through Bidding's runtime-token callback, never forwarding human credentials. */
   source: async function (tenant, input, p) {
     const call = { local: false, moduleName: "bidding", connectionName: p.sourceConnectionName,
-      targetAuthority: { runtimeRole: "COMMERCE" }, apiName: "/internal/auctions/notification-source", methodName: "POST",
+      targetAuthority: { publication: "OPERATIONAL" }, apiName: "/internal/auctions/notification-source", methodName: "POST",
       tenant, request: { tenant }, requestBody: { ...input.source, channel: input.channel }, requireInternalAuth: true,
       timeoutMs: p.timeoutMs, maxAttempts: 1, maxResponseBytes: p.maxResponseBytes, followRedirects: false,
       secureTransport: { required: true, allowInsecureLoopback: p.allowInsecureLoopback } };

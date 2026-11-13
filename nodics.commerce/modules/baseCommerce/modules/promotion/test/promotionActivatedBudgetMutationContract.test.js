@@ -306,7 +306,7 @@ test('foreign, conflicting and unsigned enterprise contexts refuse before any pe
     assert.equal(f.state.inserts || 0, 0); assert.equal(f.state.counterWrites || 0, 0);
 });
 
-test('selected atomic budget owner requires explicit COMMERCE role before persistence', async t => {
+test('selected atomic budget owner requires explicit operational publication before persistence', async t => {
     const f = fixture(t); let inspections = 0;
     const inspect = SERVICE.DefaultDatabaseModelHandlerService.inspectIndexes;
     SERVICE.DefaultDatabaseModelHandlerService.inspectIndexes = async model => { inspections++; return inspect(model); };
@@ -315,7 +315,7 @@ test('selected atomic budget owner requires explicit COMMERCE role before persis
         await assert.rejects(f.consume()); await assert.rejects(f.release());
     }
     assert.equal(inspections, 0); assert.equal(f.rows.promotionBudgetLedger.length, 0);
-    f.settings.runtimeRole = { code: 'COMMERCE' };
+    f.settings.runtimeRole = { code: "COMMERCE", publication: "OPERATIONAL" };
     await f.consume(); assert.equal(f.current().budget.spent, '10');
 });
 

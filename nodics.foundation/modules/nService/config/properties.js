@@ -18,6 +18,7 @@
  */
 module.exports = {
     defaultContentType: 'application/json',
+    runtimeAuthorityContexts: { default: null, modules: {}, schemas: {} },
     enterpriseResolution: { runtimeLookup: { enabled: false } },
     serviceCommunication: {
         timeoutMs: 5000,
@@ -51,7 +52,7 @@ module.exports = {
         operationalStateTtlMs: 30000,
         heartbeatIntervalMs: 10000,
         retryIntervalMs: 5000,
-        requestTimeoutMs: 2000,
+        requestTimeoutMs: 5000,
         maxModulesPerRegistration: 512,
         healthPath: '/nodics/system/v0/health/ready'
     }

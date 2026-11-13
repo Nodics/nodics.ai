@@ -26,8 +26,8 @@ assert(schemas.discoveryConfig.discoveryRankingProfile);
 assert(schemas.discoveryConfig.discoveryPublicationPolicy);
 assert.deepEqual(schemas.discoveryConfig.discoveryIndexConfiguration.definition.ownerType.enum, ['PRODUCT', 'CONTENT', 'PAGE', 'MEDIA', 'DOCUMENTATION', 'WCMS_EXPERIENCE']);
 
-global.CONFIG = { get: key => key === 'discovery' ? { runtime: { profiles: { PRODUCT: { indexConfiguration: { code: 'productIndex', indexName: 'productlocalized' } } } } } : undefined };
-global.SERVICE = {};
+global.CONFIG = { get: key => key === 'discovery' ? { config: {targetAuthority:{publication:'OPERATIONAL'}}, runtime: { profiles: { PRODUCT: { indexConfiguration: { code: 'productIndex', indexName: 'productlocalized' } } } } } : undefined };
+global.SERVICE = {DefaultModuleService:{invokeModule:async()=>[]}};
 
 resolver.resolveIndexConfiguration({ tenant: 'default', ownerType: 'PRODUCT' }).then(result => {
     assert.equal(result.code, 'productIndex');

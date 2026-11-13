@@ -55,3 +55,10 @@ Also run `npm run verify` in `nodics.axis`. Deployment acceptance must exercise
 draft preparation, deterministic simulation, Process approval, confirmed eWaste
 assessment, idempotent Loyalty settlement, and exact replay without a second
 ledger entry.
+
+
+Release source selectors now live in ordinary `data.dataReleases.contributions`,
+merged by source `moduleName` with explicitly replaced section lists. Role-profile
+selection is retired. Discovery remains inert; actual destination owners and
+explicit publication context govern admission. See
+[release composition](llm/contracts/README.md#explicit-release-contribution-composition).

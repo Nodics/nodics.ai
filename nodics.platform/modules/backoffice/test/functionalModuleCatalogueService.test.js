@@ -123,6 +123,7 @@ async function run() {
         await assert.rejects(() => projection.applySelection(request), /Composition-only groups/);
         let retired;
         const remote = Object.assign({}, definition, {
+            getAllRecords: async () => [{ code: 'example.project::remote.group', catalogueRevision: 2 }],
             getRecord: async () => ({ code: 'example.project::remote.group', catalogueRevision: 2 }),
             updateRecord: async change => { retired = change; return { result: { modifiedCount: 1 } }; },
             getTenant: () => 'default',
@@ -355,21 +356,30 @@ async function run() {
             return Object.assign({ built: true }, options);
         },
         fetch: async request => ({ code: 'SUC_IMP_00000', data: { requestUri: request.uri, releases: [
-            { releaseCode: 'store:core-reference', status: 'CURRENT' }
+            { releaseCode: 'store:testActivationFixture', status: 'CURRENT' }
         ] } })
     };
+    const initializer = require("../../../../nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService");
+    const binding = require("node:test").mock.method(initializer, "getPropertyBindingContext", () => ({
+        readRuntimeProperty: (server, property) => {
+            assert.strictEqual(server, "commerceServer");
+            assert.deepStrictEqual(property, ["runtimeRole", "publication"]);
+            return "OPERATIONAL";
+        },
+    }));
     let remotePreflight = await service.runActivationDataReleaseOperation('preflight',
-        { dataType: 'core', releaseCodes: ['store:core-reference'] },
+        { dataType: 'core', releaseCodes: ['store:testActivationFixture'] },
         { targetServer: 'commerceServer', targetModule: 'commerce' },
         { tenant: 'default', body: { correlationId: 'activation-1' } });
     assert.strictEqual(resolvedOptions.moduleName, 'system');
     assert.strictEqual(resolvedOptions.connectionName, 'commerceServer');
+    assert.deepStrictEqual(resolvedOptions.targetAuthority, { server: 'commerceServer', publication: 'OPERATIONAL' });
     assert.strictEqual(transportOptions.uri, 'http://localhost:4350/nodics/import/v0/core/validate');
     assert.deepStrictEqual(refreshedTenants, ['default']);
     assert.strictEqual(transportOptions.header.Authorization, 'Bearer refreshed-internal-token');
-    assert.strictEqual(transportOptions.requestBody.releaseCodes[0], 'store:core-reference');
+    assert.deepStrictEqual(transportOptions.requestBody, { releaseCodes: ['store:testActivationFixture'] });
     assert.strictEqual(remotePreflight.data.releases[0].status, 'CURRENT');
-    const release = { dataType: 'core', releaseCodes: ['store:core-reference'] };
+    const release = { dataType: 'core', releaseCodes: ['store:testActivationFixture'] };
     const target = { targetServer: 'commerceServer', targetModule: 'commerce' };
     const operator = { tenant: 'default', authData: { principalId: 'admin' }, httpRequest: { headers: { authorization: 'Bearer operator-token' } } };
     refreshedTenants = [];
@@ -386,6 +396,7 @@ async function run() {
     assert.strictEqual(transportOptions.header.Authorization, 'Bearer operator-token');
     await assert.rejects(service.runActivationDataReleaseOperation('execute', release, target, { tenant: 'default' }),
         error => error.code === 'ERR_AUTH_00003');
+    binding.mock.restore();
     delete SERVICE.DefaultInternalAuthenticationProviderService;
     CONFIG.get = originalConfigGet;
     NODICS = originalNodics;

@@ -28,10 +28,10 @@ module.exports = {
   cart: {
     enabled: true,
     participation: {
-      profile: { connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, timeoutMilliseconds: 15000 },
+      profile: { connectionName: "profile", targetAuthority: { publication: "OPERATIONAL" }, timeoutMilliseconds: 15000 },
     },
     merchantScope: {
-      storeTarget: { connectionName: "commerce", targetAuthority: { runtimeRole: "COMMERCE" }, timeoutMs: 15000 },
+      storeTarget: { connectionName: "commerce", targetAuthority: { publication: "OPERATIONAL" }, timeoutMs: 15000 },
     },
     customerApi: {
       defaultChannelCode: "web",

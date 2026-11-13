@@ -33,7 +33,7 @@ module.exports = {
   /** Digital alone proves original participants, manifest and complete component receipts in the selected business partition. */
   source: async function (tenant, input, p) {
     const call = { local: false, moduleName: "digitalCore", connectionName: p.sourceConnectionName,
-      targetAuthority: { runtimeRole: "COMMERCE" }, apiName: "/internal/bundles/gifts/notification-source", methodName: "POST",
+      targetAuthority: { publication: "OPERATIONAL" }, apiName: "/internal/bundles/gifts/notification-source", methodName: "POST",
       tenant, request: { tenant }, requestBody: { ...input.source, channel: input.channel }, requireInternalAuth: true,
       timeoutMs: p.timeoutMs, maxAttempts: 1, maxResponseBytes: p.maxResponseBytes, followRedirects: false,
       secureTransport: { required: true, allowInsecureLoopback: p.allowInsecureLoopback } };

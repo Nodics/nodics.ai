@@ -35,6 +35,10 @@ module.exports = async function executeBootstrapRelease(schemaName, tenant, work
         const config = global.CONFIG;
         global.CONFIG = { get: key => config.get(key) ?? prior.CONFIG?.get(key) };
         global.NODICS = { ...prior.NODICS, ...global.NODICS };
+        NODICS.getActiveModules = () => ["seedOwner", "profile"];
+        const resolveModule = NODICS.getModule;
+        NODICS.getModule = name => name === 'profile'
+            ? { name, rawSchema: { [schemaName]: {model:true} } } : resolveModule(name);
         global.SERVICE = { ...prior.SERVICE, ...global.SERVICE, DefaultDataReleaseService: state.service };
         const ownerName = 'Default' + schemaName[0].toUpperCase() + schemaName.slice(1) + 'Service';
         let result;
@@ -51,7 +55,7 @@ module.exports = async function executeBootstrapRelease(schemaName, tenant, work
             }
             return { code: 'SUC_IMP_00000' };
         };
-        if (startup) await state.service.installStartupReleases({ tenant });
+        if (startup) await state.service.installStartupReleases({ tenant, modules: ['seedOwner'] });
         else await state.service.execute({ tenant, authData: { isSystem: true }, releaseRequest: { dataType: 'init', releaseCodes: ['seedOwner:seed'] } });
         return result;
     } finally {

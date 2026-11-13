@@ -24,7 +24,7 @@ const schemaService = require("../src/service/config/defaultRuntimeConfiguration
 const source = require("../config/properties");
 const file = path.resolve(__dirname, "../config/properties.js");
 const variable = "NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY";
-const schema = { fields: [{ code: "credential", sensitive: true }] };
+const schema = { ownerModule: "testOwner", fields: [{ code: "credential", type: "string", sensitive: true, path: ["credentials", "example.key", "value"] }] };
 
 test("optional encryption input resolves through the existing load boundary and retains disabled defaults", (t) => {
   const previousConfig = global.CONFIG;

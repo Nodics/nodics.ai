@@ -39,3 +39,25 @@ assert(!discovery.requiredModules.includes('productSearch'));
 assert(!discovery.requiredModules.includes('wcmsSearch'));
 
 console.log('Discovery module structure contract validated');
+
+// Source dependencies must precede consumers; required-module admission must not
+// rely on the group's list order or a runtime bypass.
+for (const name of ['discoveryProjection', 'discoveryRuntime', 'discoveryPublication']) {
+    const consumer = require('../modules/' + name + '/package.json');
+    for (const dependency of consumer.requiredModules || []) {
+        if (!dependency.startsWith('discovery')) continue;
+        const source = require('../modules/' + dependency + '/package.json');
+        assert(Number(source.index) < Number(consumer.index), dependency + ' must precede ' + name);
+    }
+}
+
+// Actual persisted schema owners declare authority even with HTTP disabled.
+for (const name of ['discoveryMapping', 'discoveryProjection', 'discoveryPublication', 'discoveryRanking', 'discoverySource']) {
+    const metadata = require('../modules/' + name + '/package.json');
+    const schemas = require('../modules/' + name + '/src/schemas/schemas')[name];
+    assert.equal(metadata.nodics.runtime.ownership, 'functional');
+    assert(Object.values(schemas).some(schema => schema.model === true));
+}
+for (const name of ['discoveryQuery', 'discoveryRuntime']) {
+    assert.equal(require('../modules/' + name + '/package.json').nodics.runtime.ownership, 'sourceOnly');
+}

@@ -34,7 +34,7 @@ test('forward source roots retain their logical initialization position', () => 
     assert.equal(releases.releaseSequence({ sourceRoot: 'init' }), 0);
 });
 
-test('actual Profile forward baseline is discovered before dependent group deltas on a fresh installation', () => {
+test('Profile baseline discovery retains the exact bootstrap group owners', () => {
     const previous = { NODICS: global.NODICS, CONFIG: global.CONFIG, CLASSES: global.CLASSES };
     const owner = { name: 'profile', index: '10', path: path.resolve(__dirname, '../../../../../../nodics.platform/modules/profile') };
     try {
@@ -44,7 +44,9 @@ test('actual Profile forward baseline is discovered before dependent group delta
         global.CONFIG = { get: key => key === 'bootstrapIdentity' ? {
             source: 'test', adminPassword: 'test-admin-password-12345',
             servicePassword: 'test-service-password-12345', serviceApiKey: 'test-service-api-key-value-12345678901234567890'
-        } : key === 'authSecurity' ? { ...require('../../../../nAuth/config/properties').authSecurity, compatibility: { ...require('../../../../nAuth/config/properties').authSecurity.compatibility, allowLocalBootstrapIdentity: true } } : undefined };
+        } : key === 'authSecurity' ? { ...require('../../../../nAuth/config/properties').authSecurity,
+            bootstrapIdentity: require(path.join(owner.path, 'config/properties')).authSecurity.bootstrapIdentity,
+            compatibility: { ...require('../../../../nAuth/config/properties').authSecurity.compatibility, allowLocalBootstrapIdentity: true } } : undefined };
         global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
         const found = releases.discoverReleases('init');
         assert.deepEqual(found.filter(release => release.selectionPolicy !== 'EXPLICIT').map(release => release.releaseCode), [
@@ -53,11 +55,13 @@ test('actual Profile forward baseline is discovered before dependent group delta
         ]);
         const manifest = JSON.parse(fs.readFileSync(path.join(owner.path, 'data/manifest.json'), 'utf8'));
         const baseline = found.find(release => release.releaseCode === 'profile:init-v001');
+        assert(!baseline.invalidManifest, baseline.invalidReason);
         assert.equal(baseline.sourceRoot, manifest.sections['init-v001'].sourceRoot);
         assert.equal(baseline.sourceRoot, 'init-v001', 'the successor keeps its source root without rewriting historical files');
         assert.equal(baseline.version, manifest.sections['init-v001'].version,
             'discovery must preserve the current owner-governed baseline version');
-        assert(baseline.prerequisites.length > 0, 'authority data is pinned through owner packs');
+        assert.deepEqual(baseline.prerequisites.filter(ref => ref.sectionCode === 'accessGroups')
+            .map(ref => ref.moduleName).sort(), ['config', 'profile']);
         assert(!baseline.declaredFiles.some(file => file.endsWith('runtimeConfigurationUpdateUserGroupsData.js')));
         assert(!baseline.declaredFiles.some(file => file.endsWith('backofficeCircaUserGroupsData.js')));
         assert(baseline.declaredFiles.some(file => file.includes('/identityBootstrap/')));
@@ -86,7 +90,9 @@ test('project release inherits matching current source fields without replaying 
         fs.writeFileSync(path.join(releaseRoot, 'records', 'stockData.js'), 'module.exports = ' + JSON.stringify(records));
         const manifestFile = path.join(owner.path, 'data', 'manifest.json');
         const manifest = fs.existsSync(manifestFile) ? JSON.parse(fs.readFileSync(manifestFile)) : { contractVersion: 2, module: owner.name, sections: {} };
-        manifest.sections[sourceRoot] = { kind: 'DATA_RELEASE', dataType: 'core', sourceRoot, version: wave + '.0.0' };
+        manifest.sections[sourceRoot] = { kind: 'DATA_RELEASE', dataType: 'core', sourceRoot, version: wave + '.0.0',
+            owningDomain: owner.name, lifecycle: 'REFERENCE', environmentScope: ['ALL'], sensitivity: 'INTERNAL',
+            versioningPolicy: 'NONE', publicationPolicy: 'NONE', initialPublicationPolicy: 'NONE', removalPolicy: 'RETAIN' };
         fs.writeFileSync(manifestFile, JSON.stringify(manifest));
     };
     const invoke = (object, method, request) => new Promise((resolve, reject) => object[method](request, {}, {
@@ -95,14 +101,19 @@ test('project release inherits matching current source fields without replaying 
     try {
         writeRelease(owners[0], 1, { record0: { code: 'first', name: 'Base', flags: ['a', 'b'] }, untouched: { code: 'untouched', name: 'Baseline' } });
         writeRelease(owners[1], 1, { record0: { name: 'Partner', flags: ['c'] } });
-        global.NODICS = { getActiveModules: () => owners.map(owner => owner.name), getRawModule: name => owners.find(owner => owner.name === name),
+        global.NODICS = { getActiveModules: () => [...owners.map(owner => owner.name), 'inventory'],
+            getModule: name => name === 'inventory' ? { rawSchema: { stock: { model: true } } } : undefined, getRawModule: name => owners.find(owner => owner.name === name),
             getIndexedModules: () => new Map(owners.map(owner => [owner.index, owner])), isModuleActive: () => true,
             getSelectedEnvironmentName: () => 'test' };
-        global.CONFIG = { get: name => name === 'data' ? { dataReleases: { types: { core: { enabled: true, operatorExecution: true } } } } : undefined };
+        global.CONFIG = { get: name => ({
+            data: { dataReleases: { types: { core: { enabled: true, operatorExecution: true } } } },
+            runtimeRole: { publication: 'OPERATIONAL' }, environment: { class: 'LOCAL' }
+        })[name] };
         global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } },
             DataImportError: class extends Error { constructor(code, message) { super(message || String(code)); this.code = code; } } };
         global.UTILS = Object.assign({}, common, { isBlank: value => value === undefined || value === null || value === '' });
         global.SERVICE = {
+            DefaultSchemaAuthoringPolicyService: require('../../../../nDatabase/database/src/service/schema/defaultSchemaAuthoringPolicyService'),
             DefaultImportUtilityService: utility,
             DefaultDataInstallationService: {
                 get: async request => ({ code: 'SUC_DBS_00000', result: [...installations.values()].filter(value => !request.query.code || value.code === request.query.code) }),

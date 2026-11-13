@@ -23,5 +23,5 @@ const contribution = { formatVersion: 1, ownerModule: 'workflow', entries: [
 ] };
 module.exports = {
     /** @returns {object} Defensive copy of the Process localization contribution. */
-    getLocalizationContribution: function () { return JSON.parse(JSON.stringify(contribution)); }
+    getLocalizationContribution: function () { return JSON.parse(JSON.stringify({ ...contribution, entries: contribution.entries.concat(require('./localization/workflowMessages.json').entries.map(({ translations, ...entry }) => entry)) })); }
 };

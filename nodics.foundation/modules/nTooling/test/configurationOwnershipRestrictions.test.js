@@ -133,12 +133,15 @@ test('runtime placement rules cover arbitrary customer server names without eval
     return failures;
   };
   for (const key of ['copilot', 'localResetProvider', 'profileBrowserSession', 'apiExposure', 'product', 'publishEnabled']) {
-    assert(inspect({ [key]: { enabled: true } }).some(message => message.includes('module-owned')));
+    assert.deepEqual(inspect({ [key]: { enabled: true } }), []);
   }
   assert(inspect({ servers: { peer: { endpoint: { $config: 'runtime', name: 'other', path: 'servers.default.endpoint' } } } })
     .some(message => message.includes('derive peer endpoints')));
   assert(inspect({ servers: { peer: { remoteOnly: true } } }).some(message => message.includes('derive peer remoteness')));
-  assert(inspect({ data: { dataReleases: { contributions: [] } } }).some(message => message.includes('owning module')));
+  assert.deepEqual(inspect({data:{dataReleases:{contributions:[{moduleName:'owner',sections:['selected']}]}}}), []);
+  assert(inspect({data:{dataReleases:{installers:{DOMAIN:'CustomerInstaller'}}}}).some(message=>message.includes('implementing module')));
+  assert(inspect({feature:{runtimeRoleProfiles:{CUSTOM:{enabled:true}}}}).some(message=>message.includes('retired role')));
+  assert(inspect({runtimeRole:{roles:['CUSTOM']}}).some(message=>message.includes('retired role')));
   assert.deepEqual(inspect({
     activeModules: { modules: ['partnerApp'] }, runtimeRole: { code: 'WCMS_STAGED', publication: 'STAGED' },
     servers: { default: { endpoint: { httpPort: 4400 } } },
@@ -151,4 +154,27 @@ test('runtime placement rules cover arbitrary customer server names without eval
   const failures = [];
   audit.auditConfigurationSources(failures, root, { customerProject: true });
   assert.deepEqual(failures, []);
+});
+
+test('credential map values use private deployment input rather than authored secrets', t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-credential-map-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  fs.mkdirSync(path.join(root, 'config'));
+  const file = path.join(root, 'config/properties.js');
+  const secret = 'synthetic-credential-never-print-this';
+  for (const field of ['value', 'token']) {
+    for (const value of [secret, { $config: 'env', name: 'PROVIDER_TOKEN', fallback: secret }]) {
+      fs.writeFileSync(file, 'throw new Error("must not execute"); module.exports = ' + JSON.stringify({ credentials: { 'partner.provider': { [field]: value } } }));
+      const failures = [];
+      audit.auditConfigurationSources(failures, root, { customerProject: true });
+      assert.equal(failures.length, 1, 'authored credential and fallback must be rejected');
+      assert(!failures.join(' ').includes(secret));
+    }
+  }
+  for (const value of [null, { $config: 'env', name: 'PROVIDER_TOKEN', fallback: null }]) {
+    fs.writeFileSync(file, 'module.exports = ' + JSON.stringify({ credentials: { 'partner.provider': { value, secret: true } } }));
+    const failures = [];
+    audit.auditConfigurationSources(failures, root, { customerProject: true });
+    assert.deepEqual(failures, []);
+  }
 });

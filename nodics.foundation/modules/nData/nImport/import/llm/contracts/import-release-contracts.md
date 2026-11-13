@@ -11,6 +11,39 @@ This model availability neither grants import permission nor broadens header
 tenant selection. Enterprise preparation must await model construction before
 Init planning and retain existing receipts on partial preparation failures.
 
+## Sample Import Operator setup
+
+The secured Platform commands `POST /init/sample-operator/validate` and
+`POST /init/sample-operator/install` accept only `enterpriseCode` and
+`expectedVersion`. Require the normal validate or Init install permission and
+fresh Profile catalogue administrator authority in the original authority
+partition. Resolve the selected active business enterprise through Profile and
+require its live runtime readiness. The validated tenant becomes the release
+destination while the initiating principal and signed context remain intact.
+
+The only selectable root is the owner-defined `import:specialAccessGroups`
+Init release. The normal release owner resolves and checks its pinned dependency
+graph and receipts. The command does not install authority-partition role or
+permission definitions, assign any employee, accept a tenant override, replay a
+CURRENT release, or activate sample import itself. Existing tenant-bound release
+commands continue to use the signed caller tenant.
+
+The sibling Platform commands `POST /init/tenant-groups/validate` and
+`POST /init/tenant-groups/install` also accept the exact `releaseCode`. The same
+Profile authority resolves the active enterprise. The explicit Init plan may
+write only insert-only `profile.userGroup` reference records in that tenant.
+Default prerequisites must already have matching receipts. Profile separately
+governs employee assignments, and unavailable tenant groups are excluded from
+the employee's business access choices.
+
+For a read-only Staged source schema, its owner may select
+`dataRelease.stagedSourceWriterGroups` alongside `stagedSourceOperation: "saveAll"`.
+Admission requires the complete source seal, a claimed installation, exact
+in-memory run and header, the canonical generated service, and the group in
+both the authorized operator and the finalized model request. Generated write
+checks may use that authority only for the matching tenant and schema while
+the selected operation is awaited. It grants no generic schema access.
+
 ## Custom installer preflight
 
 The existing secured `/init/validate` controller/facade path calls
@@ -133,14 +166,14 @@ in the catalogue. It is excluded from ordinary startup root selection, implicit
 initialization profile steps, unqualified plans and legacy module-wide selection.
 Operators must name its exact `releaseCodes` entry, directly or in a selected
 initialization profile, unless a selected release pins it as a prerequisite below.
-That selection still requires the existing role, environment, tenant,
+That selection still requires the existing destination-owner, environment, tenant,
 permission, checksum, version and lifecycle checks. Discovery or selection does
 not confer contribution migration authority.
 
 The implementing nImport module defines an inert
 `data.dataReleases.types.init.startupProfileSelections` default. A project module
 may contribute bounded selections containing an exact `environmentCode`,
-`runtimeRole` and non-empty `profileCodes` list when a reviewed Init-only authority
+`serverCode` and non-empty `profileCodes` list when a reviewed Init-only authority
 pack must exist before that runtime can obtain its first internal credential on
 an empty schema. Coordinates must be unique. nImport resolves only the exact
 selected deployment through the same profile validator, admits only `init` steps,
@@ -150,6 +183,15 @@ This is a deployment selection, not a reusable default, permission grant,
 configuration-synthesized record or license for mixed Core/Sample startup.
 Existing narrowed, inactive or revoked records remain governed by the selected
 release's owner operation.
+
+Exact startup-profile selection also admits an already-discovered inactive data
+contribution; it does not require that capability's executable code to be active
+on the destination. Its declared headers must still resolve admitted active
+module/schema owners through the normal destination and planning checks. Only
+the exact selected release is eligible: neighboring inactive releases are not
+automatic roots, and source discovery allowlists remain authoritative. This
+supports tenant-local reference definitions owned by another capability without
+runtime activation, caller tenant selectors or a separate initializer.
 
 An Init header may invoke Profile's `adoptRuntimeServiceScopesAll` only for the
 authority-partition Employee schema and only while the privately bound release
@@ -167,6 +209,22 @@ plan, startup and profile builders, including explicit runtime startup selection
 It performs no installed-data mutation.
 
 ## Exact release prerequisites
+
+Operation responses include a content-free `selection` contract (version 1)
+from the validated prepared plan: canonical `requestedReleaseCodes` plus
+same-tenant prerequisite identities (`releaseCode`, `moduleName`, `dataType`,
+`version`, `checksum`). Caller-supplied membership is never echoed or trusted.
+The snapshot survives executable-plan filtering: validation returns the complete
+plan, while installation may return only completed releases after CURRENT skips.
+This metadata changes neither response release status nor execution scope; it
+is correlation evidence, not an execution grant or installed qualification.
+Foreign-partition receipt-only references remain outside executable membership.
+Clients match the exact original selected roots and their immutable identities,
+accept additional returned releases only against these owner-defined identities,
+and refuse duplicates, changed scope, missing roots or undeclared extras. They
+must not discover or order prerequisites. Without this versioned metadata,
+legacy responses still require the exact selected release set.
+
 
 The existing `DefaultDataReleaseService` owns dependency planning and execution;
 there is no identity loader, startup script, direct persistence adapter or second
@@ -229,8 +287,12 @@ dependencies by resolved partition plus release identity. Preflight validates th
 source composition without calling row import operations. In particular, Profile
 permission/group/role reference validation belongs to its row operations, after
 the prerequisite rows have persisted, not to a preflight fallback that permits
-unknown permissions. An identity graph should encode catalogue dependencies,
-then base/parent groups, then domain groups and enterprise roles explicitly.
+unknown permissions. The Profile bootstrap graph pins all 57 current bootstrap
+permission catalogues and five additional permission-definition releases in the
+default partition. Only `profile:accessGroups` and `config:accessGroups` are
+bootstrap group prerequisites. Select additional owner groups and enterprise
+roles explicitly in the capability setup plan. Their exact prerequisites order
+permission and parent-group installation before dependent definitions.
 
 An omitted partition inherits the dependent node's partition. `DEFAULT` resolves
 only through the effective framework `defaultTenant`. When this is the requested
@@ -356,7 +418,7 @@ destination and size policies, not environment-name branches. Axis receives
 `prerequisites` in release projections and the expanded ordered plan from the
 existing validation endpoint. Administrators review and select successor releases
 through that same governed workflow. Tests in `dataReleasePrerequisites.test.js`
-cover 54 inactive permission owners, multi-level groups/roles, failure isolation,
+exercise a synthetic 54-owner graph, multi-level groups/roles, failure isolation,
 immutable pins, tenant/environment separation, current receipts and migration
 holds using offline ports. These checks are not live bootstrap acceptance.
 
@@ -423,6 +485,23 @@ reset, direct persistence, Online publication or permission changes.
 This folder contains module-specific AI/developer contracts for `nodics.foundation/modules/nData/nImport/import`.
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
+
+## Empty conventional source folders
+
+An undeclared conventional `init`, `core`, `sample` or versioned equivalent is
+only a discovery candidate. Inspect its complete contained source tree through
+the existing symlink-rejecting file collector. If it contains no files, omit the
+candidate: directory scaffolding left by a refactor supplies no release identity
+or business data. This does not hide an explicitly declared section or suppress
+malformed aggregate manifests. A descriptor-only tree is nonempty and must retain
+the normal invalid-release outcome when executable files are absent. Missing
+declared files, symlink sources and other validation failures remain visible.
+Do not weaken file-count checks, install empty releases, fabricate CURRENT state,
+rewrite receipts, or infer this policy in Axis. Projects use ordinary owner
+headers/records and generated manifests; no opt-out flag or parallel registry is
+needed. The independent `emptyConventionalReleaseDiscovery.test.js` covers legacy
+and versioned empty roots, unrelated aggregate metadata, ordinary file discovery,
+declared empty releases, descriptor-only sources, malformed manifests and symlinks.
 
 ## Managed technical counters in module data
 
@@ -684,3 +763,89 @@ it remains a bounded configured repository, not an arbitrary filesystem root.
 Inherit nImport defaults and derive content paths from the selected manifest. Preserve per-pack overrides, disabled import gates and validation. See [the detailed contract](inherited-governance.md#content-pack-defaults-and-manifest-paths).
 
 Sample releases are available to authorized manual operators by default, with optional deployment restriction. Only Init can auto-run at startup. Environment scope reads the effective `environment.class` projected by nConfig from the selected environment module metadata; never author it in environment properties or derive it from the selected environment name or another capability policy. Permissions, roles, tenant isolation, release checksums and durable receipts remain mandatory.
+
+## Selected destination ownership and startup selection
+
+`DefaultDataReleaseService.validateDestination` and `isDestinationCompatible`
+share one fail-closed admission. nConfig rejects `runtimeRole.roles` and
+`runtimeRoleProfiles`; nImport does not consume them or infer destination from
+`runtimeRole.code`. `allowedDestinationRoles` is retired and rejects even when
+empty. Existing manifest `destinationRole` values may remain as audit/display
+metadata; they do not route, grant access or imply a publication stage.
+
+The existing immutable headers select `options.moduleName` (or their module key)
+and exactly one schema/index destination. Standard schema targets require an active
+effective module and its materialized `rawSchema` model definition. The existing
+Schema Authoring Policy owner supplies publication/read-only admission; no new
+schema registry or role-to-module map exists. Missing owners, schemas or authority
+fail before installation claims. Enabled index targets require the existing
+explicit target validator, which must admit the operation before dispatch.
+Custom installers require the explicitly configured available owner with both
+preflight and install exports. Their read-only preflight and domain validation
+remain mandatory; registration itself is not an import authorization.
+
+`runtimeRole.publication` must explicitly be STAGED, ONLINE or OPERATIONAL.
+PUBLISHABLE releases require STAGED, immutable versions and administrator-initiated
+publication. Effective publishable schemas also require publishable release
+metadata. READ_ONLY schemas refuse generic imports. An effective schema can
+declare `dataRelease.stagedSourceOperation: "saveAll"` for a publishable
+source. nImport requires the explicit aggregate section, its selected header
+operation and exact file seals on STAGED, and checks the source and destination
+again before claiming installation. The section retains its declared selection
+policy. Default Init participates in startup, Core uses the Core execution path,
+and a sample targeting a read-only Staged source schema must be explicit.
+This setting grants no HTTP mutation,
+publication, or access to runtime-generated records. No `_STAGED` suffix,
+server name or destination label supplies these facts. Conventional folder
+fallback is REFERENCE only; it cannot synthesize publishable lifecycle metadata.
+Publishable folders require their owning explicit manifest lifecycle. A release
+with no enabled target headers may be discovered only for an available source
+module; existing zero-work import safeguards still prevent a false installation.
+
+Startup `data.dataReleases.types.init.startupProfileSelections` uses exact
+`{ environmentCode, serverCode, profileCodes }` entries. A retired `runtimeRole`
+selector rejects; it is never ignored or converted. Named profiles, exact release
+codes, manifest sections, prerequisite pins and permissions remain authoritative.
+Existing DEFAULT Init behavior is preserved; EXPLICIT releases never become
+implicit selections. Core/Sample cannot enter startup via a profile. This change
+neither executes an import nor enables additional contributions or modules.
+
+Runtime-local `dataInstallation` and `importRun` remain on the selected runtime's
+existing services and original tenant. No shared history aggregator, remote
+rerouting or default-tenant fallback is introduced. Existing receipt checks,
+checksum/version guards, partition-qualified prerequisites and owner validators
+remain unchanged.
+
+Deployment contributors outside nImport must remove retired allowances and use
+explicit server selection and publication context before adoption. This bounded
+change does not rewrite their configuration, manifests, installed receipts or data.
+No nImport-owned role-profile property declarations required migration: the
+existing ordinary `data.dataReleases` defaults and inert profile templates stay
+with nImport. Later modules can customize the owner methods and explicit target
+validator/installer contributions while preserving these guards.
+
+Offline evidence: `startupDestinationOwnership.test.js`,
+`dataReleaseSelectionPolicy.test.js`, `dataReleasePrerequisites.test.js`,
+`dataReleaseTargetAdmission.test.js`, the contribution payload/preflight tests and
+`dataReleaseService.test.js`. These use temporary source and inert/in-memory ports;
+no server, actual importer or database acceptance is claimed.
+
+### Terminal model stage diagnostics
+
+The model pipeline privately records its current fixed execution boundary against
+the exact request object. File dispatch consumes that stage on success or failure.
+An original `ERR_AUTH_00003` denial may be retained beneath a registered
+`ERR_IMP_MODEL_<STAGE>` error; caller fields cannot choose the stage. Allowed
+boundaries are request, schema, media, access, schema references, search references
+and persistence, with an unavailable fallback. No record, actor, tenant, provider
+or source-path values are copied. Diagnostic enrichment failure preserves the
+original outcome. These terminal diagnostics neither prove that no write happened
+nor admit retry; declared pre-write dependency retry classification is unchanged.
+
+### Actor-bound catalogue action eligibility
+
+Release catalogue rows and guided initialization profiles project `allowedActions` (`validate`, `install`) from the original human access actor through the actual nRouter command routes. Profile installation also preserves its existing complete type-specific permission check. Missing actor/evaluator yields an empty list. This is transient presentation metadata, not a grant or persisted release identity; direct routes and owner execution checks remain authoritative. Axis defaults missing actions to read-only, disables unavailable commands and rechecks original command snapshots before dispatch. Partners extend the existing route/owner policy rather than create a customer role map or flag.
+
+## Durable readiness repairs
+
+`DefaultDataReleaseReadinessRepairService` rechecks `clientActions` on every request. Mutations opt into the existing release-plan continuation; they never use a separate import executor. Only COMPLETED or a confirmed partial READY checkpoint can acknowledge a repair. RUNNING, UNCERTAIN and missing execution receipts remain unconfirmed. `reconcileRepair` reads the same actor-bound immutable plan and reconciles an exact installation receipt, without importing another release. Source repair and reviewed corrective releases remain distinct from rollback.

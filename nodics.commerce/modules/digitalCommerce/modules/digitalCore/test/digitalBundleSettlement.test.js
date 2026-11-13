@@ -105,7 +105,7 @@ test("seller manifest namespace remains distinct from Store namespace through av
   assert.equal(f.rows.DigitalBundleOperation.find(row => row.code === unit.code).enterpriseCode, "market");
   assert.equal(f.loyalty.rows.RewardLedgerEntry.filter(row => row.entryType === "EARN").length, 1);
   for (const call of f.loyalty.state.calls.filter(call => call.moduleName === "loyaltyApi"))
-    assert.deepEqual(call.targetAuthority, { runtimeRole: "LOYALTY" });
+    assert.deepEqual(call.targetAuthority, { publication: "OPERATIONAL" });
   assert.equal(f.loyalty.state.calls.some(call => call.apiName === "/reward-earnings"), true);
 });
 

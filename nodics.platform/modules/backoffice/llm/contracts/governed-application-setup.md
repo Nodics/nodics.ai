@@ -2,12 +2,13 @@
 
 ## Project Context Ownership
 
-BackOffice supplies PLATFORM-scoped project-context mechanics through its
-`backofficeApplicationInitialization.runtimeRoleProfiles.PLATFORM` defaults:
+BackOffice supplies project-context mechanics through its ordinary module-owned
+`backofficeApplicationInitialization` defaults, independent of hosting role:
 `projectCode` resolves the explicit `NODICS_PROJECT_CODE` override or nConfig's
 trusted project-code context, and `projectRoot` resolves nConfig's trusted project
 root. No sample identity, local directory or environment name is embedded.
-Unrelated roles receive neither binding. Missing trusted path context fails
+Loading these bindings confers no functional ownership or caller permission.
+Missing trusted path context fails
 configuration resolution; do not invent a customer path to bypass that failure.
 
 Customers retain application/documentation profiles, data-package selections,
@@ -320,3 +321,28 @@ workflow owner to recover. Fresh `WAITING_REVIEWER` confirms repair; a reference
 without that diagnostic remains `NEEDS_PROCESS_REVIEW`. Normal approval remains
 a separate explicit Process decision. Startup/prerequisite unavailability is not
 proof of a missing task and must be refreshed before deciding on recovery.
+
+### Physical target publication binding
+
+Application initialization resolves each declared connection alias to one exact
+server, verifies alias and canonical endpoint equality, and reads that server's
+publication context through nConfig's `readRuntimeProperty`. Transport authority
+contains the exact server and publication, never a caller-supplied physical role.
+Missing or invalid publication context refuses routing. This does not change
+human authorization, selected release scope, installation or publication approval.
+
+The shared application initialization target declares `publication: STAGED`.
+`resolveProfile` rejects a legacy `target.runtimeRole` or a non-STAGED baseline
+selection. Application artwork and runtime dependencies expose publication context
+rather than a physical runtime-role label. Customer connection aliases remain
+explicit overrides; do not repeat the inherited publication default.
+## Documentation Install-Only Handoff
+
+For a documentation profile, content-pack status stays a read-only System query.
+Install-only delegates to the configured CMS Staged baseline's
+`/publication/baselines/:baselineCode/content-pack/imports` command. Preserve the
+original human requester and correlation identity, fixed profile target and
+single dispatch; no browser pack/path/runtime selector is forwarded. CMS verifies
+the BackOffice runtime principal and its configured release before invoking
+nImport with target-local authority. Installation never requests approval or
+publishes Online. Ordinary System/nImport caller authorization is unchanged.

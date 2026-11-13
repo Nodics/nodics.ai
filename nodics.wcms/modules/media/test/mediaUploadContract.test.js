@@ -103,6 +103,33 @@ class NodicsError extends Error {
         true
     );
 
+    SERVICE.DefaultRecordOwnershipPolicyService = require(
+        '../../../../nodics.foundation/modules/nDatabase/database/src/service/access/defaultRecordOwnershipPolicyService');
+    SERVICE.DefaultMediaLifecycleCoordinationService = {
+        isVersioned: () => true,
+        records: result => result.result,
+    };
+    SERVICE.DefaultMediaService.get = async () => ({ result: [] });
+    const retained = await uploadService.upload({
+        tenant: 'default',
+        enterpriseCode: 'default',
+        authData: { loginId: 'signed-exporter' },
+        createdBy: 'untrusted-caller-value',
+        schemaName: 'tenant',
+        folderCode: 'exportFiles',
+        formatCode: 'exportFile',
+        files: [{
+            fieldName: 'file',
+            originalFileName: 'retained-export.csv',
+            mimeType: 'text/csv',
+            buffer: buffer,
+            sizeBytes: buffer.length
+        }]
+    });
+    assert.strictEqual(retained.createdBy, 'signed-exporter');
+    assert.strictEqual(retained.versionId, 0);
+    delete SERVICE.DefaultMediaLifecycleCoordinationService;
+
     await assert.rejects(uploadService.upload({ tenant: 'default', files: [] }), error => error.code === 'ERR_MED_00001');
     delete global.SERVICE.DefaultMediaService;
     await assert.rejects(uploadService.upload({

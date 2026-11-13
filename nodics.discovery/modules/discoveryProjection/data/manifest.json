@@ -1,0 +1,30 @@
+{
+    "contractVersion": 2,
+    "module": "discoveryProjection",
+    "sections": {
+        "init-v001": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "0.0.1",
+            "displayName": "Discovery Projection permission catalogue",
+            "description": "Discovery Projection init data",
+            "owningDomain": "discoveryProjection",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "RESTRICTED",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "selectionPolicy": "EXPLICIT",
+            "sourceRoot": "init-v001",
+            "files": {
+                "init-v001/headers/identity/discoveryProjectionPermissionHeader.js": "a0dd6e8296dabc6b5aa2fcd580b1d345359722ebb42390ffeeba196df65d6fe5",
+                "init-v001/records/identity/discoveryProjectionPermissionData.js": "b8744ae83f8d8587091c02c8ab81869e4f1c065140ad687a37b5df2cc9cf87e7"
+            }
+        }
+    }
+}

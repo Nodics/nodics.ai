@@ -352,3 +352,58 @@ The five required owner checks are outstanding requirements, not passed checks.
 Neither this action nor its successful response resolves the listing. Customer
 presentation must use its own authorized endpoint; this staff route does not grant
 customer access or authorize exposing the private stored receipt.
+
+
+## Inactive integration configuration
+
+Select only the ordinary namespace needed by each consuming server through its
+existing package metadata. Preserve existing discovery roots and package fields:
+
+```json
+{
+  "nodics": {
+    "runtimeModuleRoots": ["nodics.accelerators/modules/waste"],
+    "runtimeConfigurationContributions": [
+      { "moduleName": "eWaste", "namespace": "product" }
+    ]
+  }
+}
+```
+
+The Product STAGED authoring server selects `product`; the DigitalCore OPERATIONAL
+owner instead selects `{ "moduleName": "eWaste", "namespace": "digitalCore" }`.
+No role selector is accepted and eWaste need not be active on either consumer.
+The source eWaste owner and its runtime grants remain independently deployed.
+
+| Ordinary property | Supplied descriptor | Deployment selection still required |
+| --- | --- | --- |
+| `product.marketplaceAuthoring.intentSource` | `moduleName: eWaste`, `targetAuthority.publication: OPERATIONAL`; fixed consumer API `/internal/listing-requests/proof` | Reviewed `connectionName`, enabled authoring, signed source grant; optional exact target server/environment |
+| `digitalCore.digitalOwnership.owner` | `moduleName: eWaste`, `apiPrefix: /internal/digital-sales`, `targetAuthority.publication: OPERATIONAL` | Reviewed `connectionName`, independent enabled/qualified policy and signed source grant |
+| `digitalCore.ownershipEvidence.bindingAdmission` | `moduleName: eWaste`, `apiName: /internal/digital-listings/plan`, `targetAuthority.publication: OPERATIONAL` | Reviewed `connectionName`, exact `targetAuthority.server` (optional environment), explicit admission enablement and exact signed callers |
+
+Namespace selection never enables providers, adds active modules, changes grants,
+or supplies host connections. Remove the superseded runtimeRoleProfiles wrappers
+and intentSource.runtimeRole fields; there is no compatibility role fallback.
+`test/eWasteInactiveIntegrationConfiguration.test.js` exercises real inactive
+namespace discovery/merge, disabled defaults, untouched module/grant selections,
+later overrides, and publication-specific registry resolution without servers.
+
+
+### Explicit owner publication routing
+
+The ordinary eWaste.targetAuthorities selectors route by publication, not physical
+runtime roles: engagement uses OPERATIONAL; commerceStaged uses STAGED Product
+authoring; wcms uses STAGED Media source/evidence. Commerce remains OPERATIONAL.
+These existing Media APIs read original private source evidence, not ONLINE
+published delivery; do not substitute ONLINE to make a route resolve.
+Replace legacy runtimeRole selector objects rather than retaining aliases.
+Optional server/environment pins remain exact identifiers. Missing publication,
+wrong context, role selectors and unknown fields refuse before dispatch.
+
+Experience remote calls and customer photo analysis use the reviewed selector.
+Photo analysis retains the original customer bearer; internal source-proof calls
+retain runtime credentials and fixed Product APIs. Listing handoff rechecks target
+configuration and original admission after awaits. No context migration enables
+owners/providers, changes signed scopes, bypasses tenant or permission checks,
+or authorizes customer adoption. See eWasteOwnerPublicationRouting.test.js and
+eWasteListingHandoff.test.js for positive, refusal and in-flight drift coverage.

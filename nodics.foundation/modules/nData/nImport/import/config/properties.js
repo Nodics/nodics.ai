@@ -17,6 +17,9 @@
  * @override Projects enable and register remote sources and adapters in later configuration layers without changing framework defaults.
  */
 module.exports = {
+  schemaPolicies: {
+    import: { executionEvidence: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10 } } }
+  },
   serviceCommunication: {
     circuitBreaker: {
       domainRefusals: {
@@ -26,13 +29,14 @@ module.exports = {
   },
   tooling: {
     commands: {
-      'acceptance:staged-sample-data': {
+      "acceptance:staged-sample-data": {
         acceptanceContract: true,
         projectHome: true,
-        handler: '@nTooling/node-script',
-        script: 'src/service/acceptance/defaultStagedSampleAcceptanceService.mjs'
-      }
-    }
+        handler: "@nTooling/node-script",
+        script:
+          "src/service/acceptance/defaultStagedSampleAcceptanceService.mjs",
+      },
+    },
   },
   // Inert inventory; an allowed local server must explicitly select this capability.
   localResetProvider: {
@@ -40,6 +44,7 @@ module.exports = {
       import: {
         serviceNames: {
           DefaultDataInstallationService: true,
+          DefaultDataReleaseExecutionRecordService: true,
           DefaultImportDefinitionService: true,
           DefaultImportRunService: true,
         },
@@ -79,6 +84,7 @@ module.exports = {
       maximumContributionBytes: 8388608,
       maximumContributionPayloadBytes: 1048576,
       maximumModulesPerRun: 256,
+      continuationHistoryLimit: 20,
       allowDowngrade: false,
       initializationProfiles: {},
       types: {
@@ -130,8 +136,10 @@ module.exports = {
         },
         presentation: {
           title: "Content pack",
-          unavailableMessage: "Content has not been installed for this environment.",
-          disabledMessage: "Content-pack imports are not enabled for this environment.",
+          unavailableMessage:
+            "Content has not been installed for this environment.",
+          disabledMessage:
+            "Content-pack imports are not enabled for this environment.",
           importAction: "Import content",
           updateAction: "Update content",
           retryAction: "Retry import",
@@ -199,8 +207,7 @@ module.exports = {
   },
   apiExposure: {
     categories: {
-      dataImport: {
-      },
+      dataImport: {},
     },
   },
 };

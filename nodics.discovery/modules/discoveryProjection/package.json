@@ -16,12 +16,17 @@
             "service",
             "search",
             "test",
-            "llm"
+            "llm",
+            "data"
         ],
         "runtime": {
-            "router": false,
+            "router": true,
             "publish": false,
-            "web": false
+            "web": false,
+            "ownership": "functional"
         }
-    }
+    },
+    "requiredModules": [
+        "search"
+    ]
 }

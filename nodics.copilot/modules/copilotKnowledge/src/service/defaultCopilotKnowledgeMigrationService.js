@@ -145,34 +145,64 @@ module.exports = {
     });
     return plans.length ? { plans, presentation: policy.presentation } : null;
   },
-  /** Builds a generic Discovery declaration with fresh source and replacement checks. @param {Object} request Employee request. @param {boolean|string} write False for inspection, true for retirement, or ERASE for independent erasure admission. @returns {Object} Trusted owner request. */
-  declaration: function (request, write) {
-    const selected = this.authorize(request, write);
-    const assertCurrent = () => {
-      if (this.authorize(request, write).fingerprint !== selected.fingerprint)
-        this.fail();
-    };
-    return {
-      tenant: request.tenant,
-      enterpriseCode: selected.context.enterprise,
-      principalCode: selected.context.actor,
-      authData: request.authData,
-      planCode: request.migrationCode,
-      ownerType: "COPILOT_KNOWLEDGE",
-      legacyIndexName: selected.plan.legacyIndexName,
-      assertCurrent,
-      replacementEvidence: async (legacy) => {
+  /** Builds only bounded source scope and the transient original credential; never serializes callbacks.
+   * @param {Object} request Authenticated employee request.
+   * @param {boolean|string} write Existing permission mode.
+   * @returns {Object} Source-qualified declaration.
+   * @throws {Error} Invalid source access or missing signed credential.
+   */
+  declaration: function(request, write) {
+    const selected=this.authorize(request,write);
+    if(typeof request.authToken!=='string'||!request.authToken)this.fail();
+    return {tenant:request.tenant,enterpriseCode:selected.context.enterprise,principalCode:selected.context.actor,
+      authData:request.authData,planCode:request.migrationCode,ownerType:'COPILOT_KNOWLEDGE',legacyIndexName:selected.plan.legacyIndexName,
+      sourceCredential:request.authToken,sourceFingerprint:selected.fingerprint};
+  },
+  /** Rebuilds fresh source/replacement evidence on its actual owner from a transient signed employee credential.
+   * @param {Object} request Fixed internal evidence request.
+   * @returns {Promise<Object>} Bounded current decision, never credentials or model handles.
+   * @throws {Error} Revoked token, changed policy, mismatched identity or incomplete replacements.
+   */
+  validateRetirementAuthority: async function(request) {
+    if(!SERVICE.DefaultModuleService.isLocalModuleActive('copilotKnowledge'))this.fail();
+    const modes={preview:true,execute:true,inspect:false,previewErasure:'ERASE',erase:'ERASE',inspectErasure:false};
+    if(!Object.hasOwn(modes,request.operation)||typeof request.sourceCredential!=='string')this.fail();
+    const verified=await SERVICE.DefaultAuthorizationProviderService.authorizeToken({authToken:request.sourceCredential});
+    const authData=verified?.result;
+    if(authData?.tokenType!=='access'||authData.loginId!==request.principalCode||authData.tenant!==request.tenant||
+      !SERVICE.DefaultSecuredRequestPipelineService.hasAccessGroup({tenant:request.tenant,authData,router:{accessGroups:['employeeUserGroup']}}))this.fail();
+    const domainRequest={tenant:request.tenant,authData,migrationCode:request.planCode};
+    const configuration=SERVICE.DefaultCopilotKnowledgeRuntimeService.configuration();
+    domainRequest.securityContext=SERVICE.DefaultCopilotOrchestrationService.securityContext(domainRequest,configuration);
+    const selected=this.authorize(domainRequest,modes[request.operation]);
+    if(selected.fingerprint!==request.sourceFingerprint||selected.context.enterprise!==request.enterpriseCode||
+      selected.plan.legacyIndexName!==request.legacyIndexName||request.ownerType!=='COPILOT_KNOWLEDGE')this.fail();
+    const result={fingerprint:selected.fingerprint,principalCode:selected.context.actor,enterpriseCode:selected.context.enterprise,
+      tenant:request.tenant,planCode:request.planCode,ownerType:'COPILOT_KNOWLEDGE',legacyIndexName:selected.plan.legacyIndexName};
+    if(request.legacy)result.replacements=await this.replacementEvidence(domainRequest,modes[request.operation],selected,request.legacy);
+    return result;
+  },
+  /** Verifies sealed replacement generations and stable opaque provider binding identities.
+   * @param {Object} request Verified source request.
+   * @param {boolean|string} write Existing permission mode.
+   * @param {Object} selected Current source selection.
+   * @param {Object} legacy Exact physical legacy identity from its owner.
+   * @returns {Promise<Object[]>} Current immutable replacement evidence.
+   * @throws {Error} Source drift, model drift or unconfirmed physical count.
+   */
+  replacementEvidence: async function(request,write,selected,legacy) {
+    const assertCurrent=()=>{if(this.authorize(request,write).fingerprint!==selected.fingerprint)this.fail();};
         const owner = SERVICE.DefaultDiscoveryGenerationPublicationService;
         const evidence = [];
         for (const selection of selected.selections) {
           assertCurrent();
           const model =
-            SERVICE.DefaultDiscoveryDocumentProjectionService.getSearchModel({
+            await SERVICE.DefaultDiscoveryDocumentProjectionService.doDescribeIndex({
               ...selection.scope,
             });
           if (
-            !model?.indexDef?.indexName ||
-            model.indexDef.indexName.toLowerCase() === legacy.index
+            !model?.indexName ||
+            model.indexName.toLowerCase() === legacy.index
           )
             this.fail();
           const manifest = await owner.read(selection.scope);
@@ -194,9 +224,9 @@ module.exports = {
             current?.revision !== manifest.revision ||
             current.currentGeneration?.token !==
               manifest.currentGeneration.token ||
-            SERVICE.DefaultDiscoveryDocumentProjectionService.getSearchModel({
-              ...selection.scope,
-            }) !== model
+            (await SERVICE.DefaultDiscoveryDocumentProjectionService.doDescribeIndex({
+              ...selection.scope, targetAuthority:model.targetAuthority,
+            })).bindingId !== model.bindingId
           )
             this.fail();
           evidence.push({
@@ -205,13 +235,11 @@ module.exports = {
             indexConfigurationCode: selection.scope.indexConfigurationCode,
             revision: manifest.revision,
             generation: manifest.currentGeneration,
-            indexName: model.indexDef.indexName,
+            indexName: model.indexName,
           });
         }
         assertCurrent();
         return evidence;
-      },
-    };
   },
   /** Reviews replacement readiness without touching legacy writes. @param {Object} request Employee request. @returns {Promise<Object>} Review. */
   preview: async function (request) {
@@ -248,7 +276,7 @@ module.exports = {
       if (Object.keys(request.body || {}).length) this.fail();
       const declaration = this.declaration(request, false);
       const owner = SERVICE.DefaultDiscoveryIndexRetirementService;
-      return owner.project(declaration, await owner.inspect(declaration));
+      return owner.inspect(declaration);
     } catch {
       this.fail();
     }
@@ -288,10 +316,7 @@ module.exports = {
       if (Object.keys(request.body || {}).length) this.fail();
       const declaration = this.declaration(request, false);
       const owner = SERVICE.DefaultDiscoveryIndexRetirementService;
-      return owner.projectErasure(
-        declaration,
-        await owner.erasureEvidence(declaration),
-      );
+      return owner.inspectErasure(declaration);
     } catch {
       this.fail();
     }

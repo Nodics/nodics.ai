@@ -184,8 +184,9 @@ module.exports = {
             const binding = this.publicationSettings()[bindingKey], callers = binding?.callers;
             const identifier = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,191}$/.test(value);
             const keys = ['tenant', 'principalEnterpriseCode', 'serviceId', 'projectCode', 'environmentCode', 'serverCode', 'instanceCode', 'assignmentCode'];
+            const allowedPublications = bindingKey === 'sourceAuthority' ? ['STAGED'] : ['ONLINE', 'OPERATIONAL'];
             if (!identifier(binding?.moduleName) || !identifier(binding?.connectionName) || binding.connectionName === 'default' ||
-                !identifier(binding?.runtimeRole) || !Array.isArray(callers) || !callers.length || callers.length > 100 ||
+                !allowedPublications.includes(binding.publication) || !Array.isArray(callers) || !callers.length || callers.length > 100 ||
                 callers.some(caller => !caller || Object.keys(caller).sort().join(',') !== [...keys].sort().join(',') ||
                     keys.some(key => !identifier(caller[key])))) throw new Error('Exact Pricing publication caller binding is required');
             const matches = callers.filter(caller => caller.tenant === auth.tenant && caller.principalEnterpriseCode === auth.entCode &&

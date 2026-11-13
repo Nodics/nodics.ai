@@ -13,6 +13,24 @@ const _ = require('lodash');
 const util = require('util');
 const crypto = require('node:crypto');
 
+// Private acquisition evidence; never persisted as tenant configuration or binding.
+const acquiredConfigurations = new WeakMap();
+
+// A synchronous admission or readiness observation owns its resolution and binding evidence.
+const configurationObservations = new WeakMap();
+
+/** Reuses an effective destination only within the current synchronous admission observation. */
+function resolveObservedConfiguration(owner, moduleName, tenant) {
+    const observation = configurationObservations.get(owner);
+    if (!observation) return owner.resolveTenantDatabaseConfiguration(moduleName, tenant);
+    let modules = observation.destinations.get(tenant);
+    if (!modules) observation.destinations.set(tenant, modules = new Map());
+    if (!modules.has(moduleName)) {
+        modules.set(moduleName, owner.resolveTenantDatabaseConfiguration(moduleName, tenant));
+    }
+    return modules.get(moduleName);
+}
+
 /**
  * @module database/service/config/DefaultDatabaseConfigurationService
  * @description Runtime registry for Nodics database configuration, tenant database
@@ -96,7 +114,7 @@ module.exports = {
         let modules = NODICS.getModules();
         let dbModules = [];
         _.each(modules, (value, moduleName) => {
-            if (CONFIG.get('database')[moduleName]) {
+            if (Object.hasOwn(CONFIG.get('database') || {}, moduleName)) {
                 dbModules.push(moduleName);
             }
         });
@@ -133,16 +151,23 @@ module.exports = {
      * @throws {CLASSES.NodicsError} When database type, handler, or master endpoint is missing.
      */
     validateDatabaseConfiguration: function (moduleName, tenant, databaseConfiguration) {
-        if (!databaseConfiguration || !databaseConfiguration.options || !databaseConfiguration.options.databaseType) {
+        if (!_.isPlainObject(databaseConfiguration) || !_.isPlainObject(databaseConfiguration.options) ||
+            typeof databaseConfiguration.options.databaseType !== 'string' || !databaseConfiguration.options.databaseType.trim()) {
             throw new CLASSES.NodicsError('ERR_DBS_00003', 'database.' + moduleName + '.options.databaseType is required for tenant: ' + tenant);
         }
         let databaseType = databaseConfiguration.options.databaseType;
         let adapter = databaseConfiguration[databaseType];
-        if (!adapter || !adapter.options || !adapter.options.connectionHandler) {
+        if (!_.isPlainObject(adapter) || !_.isPlainObject(adapter.options) ||
+            typeof adapter.options.connectionHandler !== 'string' || !adapter.options.connectionHandler.trim()) {
             throw new CLASSES.NodicsError('ERR_DBS_00003', 'database.' + moduleName + '.' + databaseType + '.options.connectionHandler is required for tenant: ' + tenant);
         }
-        if (!adapter.master || !adapter.master.URI || !adapter.master.databaseName) {
+        if (!_.isPlainObject(adapter.master) || !['URI', 'databaseName'].every(key =>
+            typeof adapter.master[key] === 'string' && adapter.master[key].trim())) {
             throw new CLASSES.NodicsError('ERR_DBS_00003', 'database.' + moduleName + '.' + databaseType + '.master requires URI and databaseName for tenant: ' + tenant);
+        }
+        if (adapter.test !== undefined && (!_.isPlainObject(adapter.test) ||
+            !['URI', 'databaseName'].every(key => typeof adapter.test[key] === 'string' && adapter.test[key].trim()))) {
+            throw new CLASSES.NodicsError('ERR_DBS_00003', 'Invalid test database destination for module: ' + moduleName);
         }
         return adapter;
     },
@@ -156,11 +181,27 @@ module.exports = {
      * @throws {CLASSES.NodicsError} When the module, tenant, or database type configuration is invalid.
      */
     getDatabaseConfiguration: function (moduleName, tenant) {
-        this.validateModuleTenant(moduleName, tenant);
-        const connConfig = this.resolveTenantDatabaseConfiguration(moduleName, tenant);
-        this.assertTenantDatabaseIsolation(moduleName, tenant, connConfig);
-        this.assertTenantNamespaceBinding(tenant);
-        return connConfig;
+        return this.withConfigurationObservation(() => {
+            this.validateModuleTenant(moduleName, tenant);
+            const connConfig = resolveObservedConfiguration(this, moduleName, tenant);
+            this.assertTenantDatabaseIsolation(moduleName, tenant, connConfig);
+            this.assertTenantNamespaceBinding(tenant);
+            return connConfig;
+        });
+    },
+
+    /**
+     * Reuses pure resolution only within one synchronous admission call.
+     * Nested binding and peer checks share evidence; no cache crosses an await,
+     * next call or thrown failure. Overrides must preserve synchronous purity.
+     * @param {Function} observe Synchronous configuration admission operation.
+     * @returns {*} The operation's result; original refusals propagate unchanged.
+     */
+    withConfigurationObservation: function (observe) {
+        if (configurationObservations.has(this)) return observe();
+        configurationObservations.set(this, { destinations: new Map(), boundTenants: new Set() });
+        try { return observe(); }
+        finally { configurationObservations.delete(this); }
     },
 
     /**
@@ -187,40 +228,42 @@ module.exports = {
      * @returns {Object} Independent scopeKey/binding suitable for existing Tenant.properties.
      */
     buildTenantNamespaceBinding: function (tenantCode) {
-        this.createTenantNamespaceIntent(tenantCode);
-        if (!CONFIG.get('database', tenantCode)?.tenantNamespace) {
-            throw new CLASSES.NodicsError('ERR_DATABASE_TENANT_BINDING', 'Tenant namespace intent is required');
-        }
-        const { scopeKey, scope } = this.getTenantNamespaceBindingScope();
-        const modules = {};
-        const defaultTenant = CONFIG.get('defaultTenant') || 'default';
-        for (const moduleName of [...new Set(['default', ...this.getDatabaseActiveModules()])].sort()) {
-            const destination = this.resolveTenantDatabaseConfiguration(moduleName, tenantCode);
-            this.assertTenantDatabaseIsolation(moduleName, tenantCode, destination);
-            const base = this.resolveTenantDatabaseConfiguration(moduleName, defaultTenant);
-            const baseConfig = CONFIG.get('database', defaultTenant);
-            const targetConfig = CONFIG.get('database', tenantCode);
-            const baseType = _.merge({}, baseConfig.default, baseConfig[moduleName] || {}).options.databaseType;
-            const databaseType = _.merge({}, targetConfig.default, targetConfig[moduleName] || {}).options.databaseType;
-            const channels = {};
-            for (const channel of ['master', 'test']) {
-                if (!destination[channel]) continue;
-                if (!base[channel]) {
-                    throw new CLASSES.NodicsError('ERR_DATABASE_TENANT_BINDING', 'Channel has no qualified base identity');
-                }
-                channels[channel] = {
-                    base: { databaseType: baseType, connectionHandler: base.options.connectionHandler,
-                        databaseName: base[channel].databaseName,
-                        endpointFingerprint: this.getTenantEndpointFingerprint(base.options.connectionHandler, base[channel]) },
-                    destination: { databaseName: destination[channel].databaseName,
-                        endpointFingerprint: this.getTenantEndpointFingerprint(destination.options.connectionHandler, destination[channel]) }
-                };
+        return this.withConfigurationObservation(() => {
+            this.createTenantNamespaceIntent(tenantCode);
+            if (!CONFIG.get('database', tenantCode)?.tenantNamespace) {
+                throw new CLASSES.NodicsError('ERR_DATABASE_TENANT_BINDING', 'Tenant namespace intent is required');
             }
-            modules[moduleName] = { databaseType, connectionHandler: destination.options.connectionHandler, channels };
-        }
-        const candidate = { scopeKey, binding: { version: 1, tenantCode, scope, modules } };
-        this.validateTenantNamespaceBindingCandidate(candidate, { tenantCode, ...scope });
-        return candidate;
+            const { scopeKey, scope } = this.getTenantNamespaceBindingScope();
+            const modules = {};
+            const defaultTenant = CONFIG.get('defaultTenant') || 'default';
+            for (const moduleName of [...new Set(['default', ...this.getDatabaseActiveModules()])].sort()) {
+                const destination = resolveObservedConfiguration(this, moduleName, tenantCode);
+                this.assertTenantDatabaseIsolation(moduleName, tenantCode, destination);
+                const base = resolveObservedConfiguration(this, moduleName, defaultTenant);
+                const baseConfig = CONFIG.get('database', defaultTenant);
+                const targetConfig = CONFIG.get('database', tenantCode);
+                const baseType = _.merge({}, baseConfig.default, baseConfig[moduleName] || {}).options.databaseType;
+                const databaseType = _.merge({}, targetConfig.default, targetConfig[moduleName] || {}).options.databaseType;
+                const channels = {};
+                for (const channel of ['master', 'test']) {
+                    if (!destination[channel]) continue;
+                    if (!base[channel]) {
+                        throw new CLASSES.NodicsError('ERR_DATABASE_TENANT_BINDING', 'Channel has no qualified base identity');
+                    }
+                    channels[channel] = {
+                        base: { databaseType: baseType, connectionHandler: base.options.connectionHandler,
+                            databaseName: base[channel].databaseName,
+                            endpointFingerprint: this.getTenantEndpointFingerprint(base.options.connectionHandler, base[channel]) },
+                        destination: { databaseName: destination[channel].databaseName,
+                            endpointFingerprint: this.getTenantEndpointFingerprint(destination.options.connectionHandler, destination[channel]) }
+                    };
+                }
+                modules[moduleName] = { databaseType, connectionHandler: destination.options.connectionHandler, channels };
+            }
+            const candidate = { scopeKey, binding: { version: 1, tenantCode, scope, modules } };
+            this.validateTenantNamespaceBindingCandidate(candidate, { tenantCode, ...scope });
+            return candidate;
+        });
     },
 
     /**
@@ -300,12 +343,15 @@ module.exports = {
     assertTenantNamespaceBinding: function (tenant) {
         if (tenant === (CONFIG.get('defaultTenant') || 'default') ||
             CONFIG.get('database', tenant)?.tenantNamespace === undefined) return true;
+        const observation = configurationObservations.get(this);
+        if (observation?.boundTenants.has(tenant)) return true;
         const candidate = this.buildTenantNamespaceBinding(tenant);
         const bindings = CONFIG.get('database', tenant)?.tenantNamespaceBindings;
         if (!bindings || Object.getPrototypeOf(bindings) !== Object.prototype ||
             !Object.hasOwn(bindings, candidate.scopeKey) || !_.isEqual(bindings[candidate.scopeKey], candidate.binding)) {
             throw new CLASSES.NodicsError('ERR_DATABASE_TENANT_BINDING', 'Missing or mismatched durable tenant namespace binding');
         }
+        observation?.boundTenants.add(tenant);
         return true;
     },
 
@@ -331,10 +377,37 @@ module.exports = {
      */
     resolveTenantDatabaseConfiguration: function (moduleName, tenant) {
         let tenantConfig = CONFIG.get('database', tenant);
-        if (!tenantConfig || !tenantConfig.default) {
+        if (!_.isPlainObject(tenantConfig) || !_.isPlainObject(tenantConfig.default)) {
             throw new CLASSES.NodicsError('ERR_DBS_00003', 'Tenant database configuration must define database.default for tenant: ' + tenant);
         }
-        let dbConfig = _.merge({}, tenantConfig.default, tenantConfig[moduleName] || {});
+        if (Object.hasOwn(tenantConfig, moduleName) && !_.isPlainObject(tenantConfig[moduleName])) {
+            throw new CLASSES.NodicsError('ERR_DBS_00003', 'Invalid database module configuration: ' + moduleName);
+        }
+        let dbConfig = _.merge({}, tenantConfig.default, tenantConfig[moduleName]);
+        // Lodash merge ignores explicit undefined. Reject malformed authored destinations
+        // before they can disappear into otherwise-valid inherited endpoint values.
+        for (const fragment of [tenantConfig.default, tenantConfig[moduleName]]) {
+            if (!fragment) continue;
+            const fail = () => { throw new CLASSES.NodicsError('ERR_DBS_00003', 'Invalid database destination for module: ' + moduleName); };
+            if (Object.hasOwn(fragment, 'options') && !_.isPlainObject(fragment.options)) fail();
+            if (fragment.options && Object.hasOwn(fragment.options, 'databaseType') &&
+                (typeof fragment.options.databaseType !== 'string' || !fragment.options.databaseType.trim())) fail();
+            const type = dbConfig.options?.databaseType;
+            if (!Object.hasOwn(fragment, type)) continue;
+            const adapter = fragment[type];
+            if (!_.isPlainObject(adapter)) fail();
+            if (Object.hasOwn(adapter, 'options') && !_.isPlainObject(adapter.options)) fail();
+            if (adapter.options && Object.hasOwn(adapter.options, 'connectionHandler') &&
+                (typeof adapter.options.connectionHandler !== 'string' || !adapter.options.connectionHandler.trim())) fail();
+            for (const channel of ['master', 'test']) {
+                if (!Object.hasOwn(adapter, channel)) continue;
+                if (!_.isPlainObject(adapter[channel])) fail();
+                for (const key of ['URI', 'databaseName']) {
+                    if (Object.hasOwn(adapter[channel], key) &&
+                        (typeof adapter[channel][key] !== 'string' || !adapter[channel][key].trim())) fail();
+                }
+            }
+        }
         let connConfig = this.validateDatabaseConfiguration(moduleName, tenant, dbConfig);
         connConfig.options = _.merge({}, dbConfig.options, connConfig.options);
         const defaultTenant = CONFIG.get('defaultTenant') || 'default';
@@ -390,7 +463,7 @@ module.exports = {
         for (const peer of tenants) {
             if (peer === tenant) continue;
             for (const module of modules) {
-                const other = this.resolveTenantDatabaseConfiguration(module, peer);
+                const other = resolveObservedConfiguration(this, module, peer);
                 for (const channel of ['master', 'test']) {
                     if (!connection[channel]) continue;
                     if (['master', 'test'].some(otherChannel => other[otherChannel] &&
@@ -419,15 +492,32 @@ module.exports = {
      * @param {string} moduleName Active module name.
      * @param {string} tenant Active tenant code.
      * @param {Object} database Database handle or connection wrapper.
+     * @param {Object} [acquisition] Configuration and channel selection captured before provider dispatch.
      * @returns {undefined}
      * @sideEffects Mutates the in-memory `dbs` registry.
      * @throws {CLASSES.NodicsError} When module or tenant input is invalid.
      */
-    addTenantDatabase: function (moduleName, tenant, database) {
+    addTenantDatabase: function (moduleName, tenant, database, acquisition) {
         this.validateModuleTenant(moduleName, tenant);
         if (!database || typeof database !== 'object') {
             throw new CLASSES.NodicsError('ERR_DBS_00003', 'Tenant database handle is required for module: ' + moduleName + ', tenant: ' + tenant);
         }
+        const retained = this.dbs[moduleName]?.[tenant];
+        if (retained && retained !== database) {
+            throw new CLASSES.NodicsError('ERR_DBS_00003', 'Existing database registration cannot be replaced');
+        }
+        if (acquisition && !retained) {
+            acquiredConfigurations.set(database, _.cloneDeep(acquisition));
+            if (!this.dbs[moduleName]) this.dbs[moduleName] = {};
+            this.dbs[moduleName][tenant] = database;
+        }
+        const current = { tenant, configuration: this.getDatabaseConfiguration(moduleName, tenant),
+            testEnabled: this.isTestDatabaseEnabled() };
+        const original = acquiredConfigurations.get(database) || acquisition || current;
+        if (!_.isEqual(original, current)) {
+            throw new CLASSES.NodicsError('ERR_DBS_00003', 'Database acquisition configuration changed');
+        }
+        acquiredConfigurations.set(database, _.cloneDeep(original));
         if (!this.dbs[moduleName]) this.dbs[moduleName] = {};
         this.dbs[moduleName][tenant] = database;
     },
@@ -435,18 +525,44 @@ module.exports = {
     /**
      * Reads a tenant database handle from the module registry.
      *
-     * @param {string} moduleName Active module name. Falls back to `default` registry when unavailable.
+     * @param {string} moduleName Active module name. Shares default only for identical effective configuration.
      * @param {string} tenant Active tenant code.
      * @returns {Object|undefined} Database handle for the tenant.
      * @throws {CLASSES.NodicsError} When module or tenant input is invalid.
      */
     getTenantDatabase: function (moduleName, tenant) {
-        this.validateModuleTenant(moduleName, tenant);
-        if (tenant !== (CONFIG.get('defaultTenant') || 'default')) {
-            this.getDatabaseConfiguration(moduleName, tenant);
+        const configuration = this.getDatabaseConfiguration(moduleName, tenant);
+        return this.getAdmittedTenantDatabase(moduleName, tenant, configuration);
+    },
+
+    /** Returns the existing framework test-channel selection, without defining new defaults. */
+    isTestDatabaseEnabled: function () {
+        const test = CONFIG.get('test');
+        return !!(test && test.enabled && test.uTest && test.uTest.enabled);
+    },
+
+    /**
+     * Selects exact or same-tenant shared handles after scope, isolation and binding admission.
+     * Acquisition evidence must still match the full effective configuration and channel selection.
+     * Missing exact handles may share default only on full resolved equality; stale handles reject.
+     * @param {string} moduleName Admitted module.
+     * @param {string} tenant Admitted tenant.
+     * @param {Object} configuration Fresh resolved configuration.
+     * @returns {Object|undefined} Admitted handle, or undefined when none matches.
+     */
+    getAdmittedTenantDatabase: function (moduleName, tenant, configuration) {
+        let handle = this.dbs[moduleName]?.[tenant];
+        if (!handle && moduleName !== 'default') {
+            const defaultConfiguration = this.getDatabaseConfiguration('default', tenant);
+            if (!_.isEqual(configuration, defaultConfiguration)) return undefined;
+            handle = this.dbs.default?.[tenant];
         }
-        let database = this.dbs[moduleName] || (moduleName !== 'default' ? this.dbs.default : undefined);
-        return database ? database[tenant] : undefined;
+        if (!handle) return undefined;
+        const acquired = acquiredConfigurations.get(handle);
+        if (!acquired || !_.isEqual(acquired, { tenant, configuration, testEnabled: this.isTestDatabaseEnabled() })) {
+            throw new CLASSES.NodicsError('ERR_DBS_00003', 'Database handle configuration is stale or unregistered');
+        }
+        return handle;
     },
 
     /**
@@ -475,19 +591,22 @@ module.exports = {
                     return !!(handle && handle.master && handle.master.getConnection && handle.master.getConnection());
                 }));
             }
-            return requiredTenants.every(tenant => {
-                this.assertTenantNamespaceBinding(tenant);
-                return modules.every(moduleName => {
-                    this.validateModuleTenant(moduleName, tenant);
-                    if (tenant !== (CONFIG.get('defaultTenant') || 'default')) {
-                        const configuration = this.resolveTenantDatabaseConfiguration(moduleName, tenant);
+            if (configurationObservations.has(this)) return false;
+            configurationObservations.set(this, { destinations: new Map(), boundTenants: new Set() });
+            try {
+                return requiredTenants.every(tenant => {
+                    this.assertTenantNamespaceBinding(tenant);
+                    return modules.every(moduleName => {
+                        this.validateModuleTenant(moduleName, tenant);
+                        const configuration = resolveObservedConfiguration(this, moduleName, tenant);
                         this.assertTenantDatabaseIsolation(moduleName, tenant, configuration);
-                    }
-                    const database = this.dbs[moduleName] || (moduleName !== 'default' ? this.dbs.default : undefined);
-                    const handle = database && database[tenant];
-                    return !!(handle && handle.master && handle.master.getConnection && handle.master.getConnection());
+                        const handle = this.getAdmittedTenantDatabase(moduleName, tenant, configuration);
+                        return !!(handle && handle.master && handle.master.getConnection && handle.master.getConnection());
+                    });
                 });
-            });
+            } finally {
+                configurationObservations.delete(this);
+            }
         } catch (error) {
             return false;
         }

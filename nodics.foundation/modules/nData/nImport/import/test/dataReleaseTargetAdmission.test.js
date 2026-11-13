@@ -42,7 +42,9 @@ function fixture(t, schemas = ["promotion", "couponBatch"], staged = true) {
     "module.exports = " + JSON.stringify({ promotion: definitions }) + ";\n",
   );
   const ports = createPorts({
-    modules: { example: { name: "example", path: root } },
+    modules: { example: { name: "example", path: root }, promotion: {
+      name: "promotion", rawSchema: Object.fromEntries(schemas.map(name => [name, { model: true }]))
+    } },
     runtimeRole: staged ? "COMMERCE_STAGED" : "COMMERCE",
   });
   const get = CONFIG.get;

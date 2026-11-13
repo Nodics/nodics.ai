@@ -11,6 +11,8 @@
 
 /** @module discoveryConfig/config/properties @description Defines generic Discovery configuration defaults and schema access policies. @layer config @owner discoveryConfig */
 module.exports = {
+  // Declare ownership without overriding existing unknown-category exposure policy.
+  apiExposure: { categories: { moduleInternal: { inheritUnknown: true } } },
     // Inert inventory; an allowed local server must explicitly select this capability.
     localResetProvider: {
         "contributions": {
@@ -29,6 +31,7 @@ module.exports = {
 
     discovery: {
         config: {
+            targetAuthority: { publication: { $config: 'context', name: 'publication' }, server: null, environment: null },
             defaultEngine: 'elastic',
             supportedOwnerTypes: ['PRODUCT', 'CONTENT', 'PAGE', 'MEDIA', 'DOCUMENTATION'],
             supportedIndexTypes: ['SEARCH', 'SUGGEST', 'DETAIL', 'FACET'],

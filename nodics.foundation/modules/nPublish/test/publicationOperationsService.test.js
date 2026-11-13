@@ -12,6 +12,7 @@
 /** @module nPublish/test/PublicationOperationsService */
 const assert = require('assert');
 const service = require('../src/service/defaultPublicationOperationsService');
+const lifecycle = require('../src/service/defaultPublicationLifecycleService');
 class NodicsError extends Error { constructor(code, message) { super(message || code); this.code = code; } }
 const now = Date.now();
 const rows = [
@@ -35,6 +36,8 @@ global.SERVICE = {
         reconciledScopes.push(['outbox', request.publicationCode]); return { delivered: 1 };
     } },
     DefaultPublicationLifecycleService: {
+        getConfiguration: () => ({ lifecycle: { requireExpectedRevision: true } }),
+        requireExpectedRevision: lifecycle.requireExpectedRevision, copyRequest: lifecycle.copyRequest,
         getVersionProvider: () => ({ reconcile: async publication => ({ status: 'CONSISTENT', manifestCode: publication.targetVersion }) }),
         get: async request => rows.find(item => item.code === request.publicationCode),
         retry: async request => { retried = request; return { state: 'VALIDATING' }; },
@@ -80,9 +83,10 @@ global.SERVICE = {
         'invalid HTTP scope must not become a broad reconciliation');
     for (const state of ['REJECTED', 'WITHDRAWN', 'ROLLED_BACK']) {
         rows.push({ code: state, state, revision: 9 });
-        assert.deepStrictEqual(await service.recover({ publicationCode: state }), { resubmitted: state });
+        assert.deepStrictEqual(await service.recover({ publicationCode: state, expectedRevision: 9 }), { resubmitted: state });
     }
-    let recovered = await service.recover({ publicationCode: 'failed', reason: 'operator repair' });
+    for (const expectedRevision of [undefined, 1]) await assert.rejects(service.recover({ publicationCode: 'failed', expectedRevision }), error => error.code === 'ERR_PUB_00004');
+    let recovered = await service.recover({ publicationCode: 'failed', expectedRevision: 2, reason: 'operator repair' });
     assert.strictEqual(recovered.state, 'VALIDATING');
     assert.strictEqual(retried.expectedRevision, 2);
     await assert.rejects(service.recover({ publicationCode: 'online' }), error => error.code === 'ERR_PUB_00003');

@@ -45,7 +45,7 @@
   persistence, delivery, and runtime authority.
 - Use nData/nImport governed import flow; do not add an Axis-specific loader.
 - Keep the CMS-driven Axis baseline in the named `axis:axisBaseline` aggregate
-  manifest section. It must target `WCMS_STAGED`, retain immutable checksums,
+  manifest section. It must target the CMS owner in `STAGED` publication context, retain immutable checksums,
   and require explicit administrator-initiated publication; startup import must
   never publish it or write WCMS Online.
 - The bundled frontend fallback is executable/static client code owned by
@@ -73,3 +73,15 @@ node scripts/validate-axis-content-pack.mjs --check
 npm run validate
 npm test
 ```
+
+Axis CMS baseline metadata lives directly in ordinary `cms.publication.baselines`
+properties. Do not copy it into a runtime-role profile for Online delivery.
+Publication and data installation remain CMS-owned and explicitly governed.
+
+
+Axis release discovery uses ordinary `data.dataReleases.contributions` with the
+single source module `axis` and sections `axisBaseline` / `core-v001`. Keep the
+Init/Core split and existing inert initialization template. Admission requires
+actual CMS/Catalog schema owners and explicit STAGED publication context; never
+infer it from a runtime name, activate Axis on CMS, or import/publish from config.
+The separate `cms.publication` baseline descriptor remains CMS delivery composition.

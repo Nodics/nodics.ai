@@ -66,3 +66,20 @@ test('baseline documentation metadata and source checksums remain coherent', () 
   }
   contract.validateDataRelease(fileURLToPath(new URL('../', import.meta.url)), 'documentation');
 });
+
+test('English and Arabic homepage variants share governed identities and declare every translated field', () => {
+ const files=Object.keys(require('../data/manifest.json').sections.nexusCorporateSite.files).sort();
+ assert(files.findIndex(f=>f.endsWith('010_nexusTypeCodeData.js')) < files.findIndex(f=>f.endsWith('nexusComponentLocalizationData.js')));
+ assert(files.findIndex(f=>f.endsWith('nexusComponentData.js')) < files.findIndex(f=>f.endsWith('nexusComponentLocalizationData.js')));
+ const types=Object.values(require('../data/sample-v001/content/records/wcms/corporate/010_nexusTypeCodeData'));
+ const components=Object.values(require('../data/sample-v001/content/records/wcms/corporate/nexusComponentData'));
+ const variants=Object.values(require('../data/sample-v001/content/records/wcms/corporate/nexusComponentLocalizationData'));
+ const routes=Object.values(require('../data/sample-v001/content/records/wcms/corporate/nexusRouteData'));
+ const localeOwner=require('../../../../../../nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService');
+ for(const v of variants) { const c=components.find(c=>c.code===v.componentCode); assert(c); assert.equal(v.status,'READY'); assert.equal(localeOwner.validateVariant(v,types.find(t=>t.code===c.typeCode),c),true); }
+ const home=routes.filter(r=>r.path==='/' && ['en','ar'].includes(r.locale));
+ assert.equal(home.length,2); assert.equal(new Set(home.map(r=>r.page)).size,1);
+ assert.equal(new Set(variants.map(v=>v.code)).size,variants.length);
+ assert(variants.some(v=>v.locale==='ar' && v.componentCode==='nexusCorporateSiteHeader'));
+ assert(!JSON.stringify(components).includes('https://docs.nodics.in'));
+});

@@ -53,7 +53,7 @@ module.exports = {
             ? { internalPersistence: 'DURABLE_JOURNAL' }
             : {};
     },
-    /** Returns an inert owner identity shared by all runtime nodes in the trusted tenant. @param {Object} request Trusted request. @returns {Object} Scope. */
+    /** Returns an owner identity shared only by replicas of the selected logical runtime and tenant. @param {Object} request Trusted request. @returns {Object} Scope. */
     scope: function (request) {
         const tenant = request.tenant;
         if (
@@ -64,7 +64,13 @@ module.exports = {
                 'ERR_SYS_00002',
                 'A trusted tenant is required',
             );
-        return { tenant, code: 'governed-properties:' + tenant };
+        const owner = SERVICE.DefaultDatabaseConfigurationService;
+        if (!owner || typeof owner.getTenantNamespaceBindingScope !== 'function')
+            throw new CLASSES.NodicsError('ERR_SYS_00002', 'Stable runtime storage scope is required');
+        const binding = owner.getTenantNamespaceBindingScope();
+        if (!binding || !/^deployment_[a-f0-9]{64}$/.test(binding.scopeKey || ''))
+            throw new CLASSES.NodicsError('ERR_SYS_00002', 'Invalid runtime storage scope');
+        return { tenant, code: 'governed-properties:' + binding.scopeKey + ':' + tenant };
     },
     /** Requires the existing generated runtime-value service, without a database shortcut. @returns {Object} Generated owner. */
     store: function () {
@@ -287,6 +293,24 @@ module.exports = {
             ? this.validate(response.result[0], scope)
             : null;
     },
+    /** Reports this replica's watermark against an uncached owner read without applying or exposing values. @param {Object} request Trusted tenant request. @returns {Promise<Object>} Read-only acknowledgement. */
+    acknowledgement: async function (request) {
+        const enabled = this.policy().enabled, scope = this.scope(request);
+        const runtime = { project: NODICS.getEnvironmentName(), environment: NODICS.getSelectedEnvironmentName(),
+            server: NODICS.getServerName(), node: CONFIG.get('nodeId'), instanceCode: CONFIG.get('runtimeIdentity')?.instanceCode };
+        const base = { contractVersion: 1, tenant: scope.tenant, runtime, checkedAt: new Date().toISOString(), enabled };
+        if (!enabled) return { ...base, state: 'DISABLED' };
+        const current = await this.read(request), applied = this.appliedRevisions.get(scope.tenant);
+        if (applied && (!Number.isSafeInteger(applied.sequence) || applied.sequence < 1 || !/^[a-f0-9]{64}$/.test(applied.revision || '')))
+            throw new CLASSES.NodicsError('ERR_SYS_00002', 'Local property acknowledgement is invalid');
+        const expectedRevision = current?.revision || null, expectedSequence = current?.governedProperties.sequence || 0;
+        const appliedRevision = applied?.revision || null, appliedSequence = applied?.sequence || 0;
+        const state = !current ? (applied ? 'MISSING' : 'NOT_CONFIGURED') :
+            !applied ? 'NOT_APPLIED' : appliedSequence === expectedSequence && appliedRevision === expectedRevision ? 'CURRENT' :
+            appliedSequence >= expectedSequence || appliedRevision === expectedRevision ? 'INCONSISTENT' : 'STALE';
+        return { ...base, state, expectedRevision, expectedSequence, appliedRevision, appliedSequence,
+            adoptionConfirmed: state === 'CURRENT', clusterAcknowledged: false };
+    },
     /** Applies only committed override paths, preserving unrelated effective properties. @param {Object} request Trusted request. @param {Object} record Committed record. @returns {Object} Safe receipt. */
     apply: function (request, record) {
         const scope = this.scope(request);
@@ -433,7 +457,7 @@ module.exports = {
         );
         if (!_.isEqual(actual, change.nextSnapshot)) {
             throw new CLASSES.NodicsError(
-                'ERR_SYS_00002',
+                'ERR_DYN_PROPERTY_STALE',
                 'Property rollback is stale; affected paths changed',
             );
         }
@@ -483,7 +507,7 @@ module.exports = {
             !_.isEqual(preview.nextSnapshot, fresh.nextSnapshot)
         )
             throw new CLASSES.NodicsError(
-                'ERR_SYS_00002',
+                'ERR_DYN_PROPERTY_STALE',
                 'Property preview is stale; create a new request',
             );
         if (fresh.changedPaths.length === 0)
@@ -539,30 +563,36 @@ module.exports = {
             updatedAt: new Date().toISOString(),
         };
         this.validate(record, scope);
-        const response = current
-            ? await this.store().update({
-                  ...this.persistenceOptions(),
-                  tenant: scope.tenant,
-                  authData: request.authData,
-                  query: {
-                      code: scope.code,
-                      revision: current.revision,
-                      propertyReadFence: null,
-                  },
-                  model: {
-                      governedProperties: record.governedProperties,
-                      revision,
-                      updatedAt: record.updatedAt,
-                  },
-              })
-            : await this.store().save({
-                  ...this.persistenceOptions(),
-                  tenant: scope.tenant,
-                  authData: request.authData,
-                  model: record,
-                  options: { insertOnly: true },
-              });
-        const acknowledged =
+        const store = this.store();
+        let response;
+        try {
+            response = current
+                ? await store.update({
+                      ...this.persistenceOptions(),
+                      tenant: scope.tenant,
+                      authData: request.authData,
+                      query: {
+                          code: scope.code,
+                          revision: current.revision,
+                          propertyReadFence: null,
+                      },
+                      model: {
+                          governedProperties: record.governedProperties,
+                          revision,
+                          updatedAt: record.updatedAt,
+                      },
+                  })
+                : await store.save({
+                      ...this.persistenceOptions(),
+                      tenant: scope.tenant,
+                      authData: request.authData,
+                      model: record,
+                      options: { insertOnly: true },
+                  });
+        } catch {
+            throw new CLASSES.NodicsError('ERR_DYN_PROPERTY_RECOVERY_UNCONFIRMED');
+        }
+        const successfulResponse =
             response &&
             /^SUC_/.test(response.code || '') &&
             !response.error &&
@@ -575,7 +605,12 @@ module.exports = {
             response.result.success !== false &&
             (response.result.errors === undefined ||
                 (Array.isArray(response.result.errors) &&
-                    response.result.errors.length === 0)) &&
+                    response.result.errors.length === 0));
+        if (current && successfulResponse && response.result.acknowledged === true &&
+            response.result.matchedCount === 0) {
+            throw new CLASSES.NodicsError('ERR_DYN_PROPERTY_STALE');
+        }
+        const acknowledged = successfulResponse &&
             (current
                 ? response.result.matchedCount === 1 &&
                   response.result.acknowledged !== false
@@ -583,8 +618,8 @@ module.exports = {
                   response.result.revision === revision);
         if (!acknowledged)
             throw new CLASSES.NodicsError(
-                'ERR_SYS_00002',
-                'Property commit is stale or uncertain; refresh before recovery',
+                'ERR_DYN_PROPERTY_RECOVERY_UNCONFIRMED',
+                'Property commit was not acknowledged',
             );
         this.apply(request, record);
         let propagation = 'PENDING';

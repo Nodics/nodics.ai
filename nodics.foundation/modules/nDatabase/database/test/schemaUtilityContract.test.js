@@ -62,6 +62,7 @@ beforeEach(() => {
     global.SERVICE = {
         DefaultSchemaUtilityService: utility,
         DefaultSchemaSafeQueryService: safeQuery,
+        DefaultSchemaReadAccessPolicyService: require('../src/service/schema/defaultSchemaReadAccessPolicyService'),
         DefaultSchemaAuthoringPolicyService: authoring,
         DefaultSchemaAccessHandlerService: { getAccessPoint: auth => auth.access },
         DefaultItemService: {
@@ -98,6 +99,77 @@ test('generated metadata works without Workbench and both interfaces retain safe
     assert.deepEqual(descriptor.form.sections[0], { id: 'details', label: 'Details', fields: ['name'] });
     assert(descriptor.form.sections.some(section => section.fields.includes('note')));
     assert(!JSON.stringify(descriptor).includes('password'));
+    assert.equal(reads.length + impacts.length + writes, 0);
+});
+
+test('nullable native fields retain one concrete type and renderer without changing validation or hiding their module', async () => {
+    schema.definition.snapshot = { type: ['object', 'null'], required: false };
+    schema.definition.enabled = { type: ['null', 'bool'], required: false };
+    const descriptor = (await utility.capabilitiesGenerated(request)).data;
+    const snapshot = descriptor.fields.find(field => field.name === 'snapshot');
+    assert.equal(snapshot.type, 'object');
+    assert.equal(snapshot.component, 'json');
+    assert.equal(snapshot.required, false);
+    assert.equal(descriptor.fields.find(field => field.name === 'enabled').component, 'checkbox');
+    assert(!descriptor.queryCapabilities.sortableFields.includes('snapshot'));
+    assert(!descriptor.queryCapabilities.filterFields.some(field => field.field === 'snapshot'));
+    assert.equal(descriptor.queryCapabilities.filterFields.find(field => field.field === 'enabled').type, 'bool');
+    assert.deepEqual(schema.definition.snapshot.type, ['object', 'null']);
+    assert.equal((await utility.listSchemas(request)).data.schemas.length, 1);
+    schema.definition.snapshot.type = ['string', 'int', 'null'];
+    assert.throws(() => utility.buildFields('catalog', schema, schema.backoffice), { code: 'ERR_DBS_00004' });
+});
+
+test('HTTP mutation normalization refuses supplied invalid native enum values before persistence and ignores protected values', () => {
+    schema.definition.note.enum = ['DRAFT', 'READY'];
+    const descriptor = utility.buildDescriptor(request, modules.catalog, 'item', 'catalog');
+    for (const operation of ['create', 'update']) {
+        assert.throws(() => utility.buildMutationModel({ note: 'INVALID' }, descriptor, request, operation), { code: 'ERR_DBS_00003' });
+        assert.equal(utility.buildMutationModel({ note: 'READY' }, descriptor, request, operation).note, 'READY');
+    }
+    descriptor.fields.find(field => field.name === 'note').readOnly = true;
+    assert(!Object.hasOwn(utility.buildMutationModel({ note: 'INVALID' }, descriptor, request, 'update'), 'note'));
+});
+
+for (const router of [{ enabled: false }, { enabled: true, groups: { schemaOperations: false } }]) {
+    test('explicitly disabled record routers retain authorized inspection without advertising record actions ' + JSON.stringify(router), async () => {
+        schema.router = router;
+        const descriptor = (await utility.capabilitiesGenerated(request)).data;
+        assert.deepEqual(descriptor.operations, []);
+        assert.equal(descriptor.recordApi.available, false);
+        assert.equal(descriptor.recordApi.reason, 'SCHEMA_ROUTERS_DISABLED');
+        assert.equal(descriptor.mutationMode, 'READ_ONLY');
+        assert.equal(descriptor.authoring.authoringAllowed, false);
+        assert.deepEqual(descriptor.aggregateOperations, []);
+        assert.deepEqual(descriptor.bulkCapabilities.operations, []);
+        assert.ok(descriptor.fields.length);
+        request.authData.access = 0;
+        assert.equal(utility.resolveDescriptor(request, 'catalog', 'item'), undefined);
+        assert.equal(reads.length + writes, 0);
+    });
+}
+
+test('canonical relationship presentation inherits effective field copy while explicit relationship copy retains precedence', async () => {
+    schema.definition.warehouse.label = 'Storage reference';
+    schema.definition.warehouse.description = 'Raw property description';
+    schema.backoffice.fields = { warehouse: { label: 'Dispatch warehouse', description: 'Choose the warehouse responsible for dispatch.' } };
+    const descriptor = (await discoveryController.get(legacyRequest())).data;
+    const field = descriptor.fields.find(value => value.name === 'warehouse');
+    const relationship = descriptor.relationships.find(value => value.field === 'warehouse');
+    assert.equal(field.label, 'Dispatch warehouse');
+    assert.equal(relationship.label, field.label);
+    assert.equal(relationship.description, field.description);
+    assert.deepEqual(field.reference, relationship);
+    assert.equal(relationship.targetModule, 'location');
+    assert.equal(relationship.targetSchema, 'warehouse');
+    assert.equal(relationship.referenceProperty, 'code');
+    assert.equal(relationship.onTargetDelete, 'RESTRICT');
+    const actions = relationship.actions;
+    schema.backoffice.relationships = { warehouse: { label: 'Preferred dispatch location', description: 'Explicit relationship guidance.' } };
+    const customized = (await utility.capabilitiesGenerated(request)).data.relationships[0];
+    assert.equal(customized.label, 'Preferred dispatch location');
+    assert.equal(customized.description, 'Explicit relationship guidance.');
+    assert.deepEqual(customized.actions, actions);
     assert.equal(reads.length + impacts.length + writes, 0);
 });
 
@@ -426,4 +498,14 @@ test('canonical discovery enforces permission customization, exposure and inacti
         assert.equal(security.hasRoutePermission({ router: route, authData: { permissions: [discoveryPermission] } }), true);
         assert.equal(exposure.isApiExposureEnabled(exposure.getApiExposureCategory(route)), false);
     }
+});
+
+test('schema directives cannot become business fields or writable HTTP inputs', async () => {
+    schema.definition.$override = { type: 'object', description: 'Internal schema directive' };
+    schema.definition['nested.$operator'] = { type: 'string' };
+    const descriptor = (await utility.capabilitiesGenerated(request)).data;
+    assert(!descriptor.fields.some(field => field.name.includes('$')));
+    assert(!descriptor.form.sections.some(section => section.fields.some(name => name.includes('$'))));
+    assert.throws(() => utility.buildMutationModel({ $override: { active: true } }, descriptor, request), { code: 'ERR_DBS_00003' });
+    assert.equal(writes, 0);
 });

@@ -25,7 +25,15 @@ module.exports = {
         }
     },
 
-    paymentCore: { enabled: true },
+    paymentCore: {
+        enabled: true,
+        // The shipped card adapter is an offline mock; selecting it never qualifies real payments.
+        providerSelection: { CARD: 'stripe-sandbox', WALLET: 'stripe-sandbox', LOYALTY_REWARD: 'loyalty-reward-points' },
+        providerBindings: {
+            'stripe-sandbox': { serviceName: 'DefaultStripeSandboxAdapterService', methods: ['CARD', 'WALLET'] },
+            'loyalty-reward-points': { serviceName: 'DefaultLoyaltyRewardPaymentProviderService', methods: ['LOYALTY_REWARD'] }
+        }
+    },
     apiExposure: {
         categories: {
             moduleInternal: { enabled: true }

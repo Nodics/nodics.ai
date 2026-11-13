@@ -33,7 +33,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagedigitalPurchaseDeliveryReveal",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   }

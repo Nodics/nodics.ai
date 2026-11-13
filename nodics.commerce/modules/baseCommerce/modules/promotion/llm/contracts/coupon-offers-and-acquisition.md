@@ -8,6 +8,12 @@ Payment consideration, entitlements, reveal, delivery and staff redemption.
 
 ## Governed Offer
 
+For a fixed-expiry offer, set `couponOffer.expiryReminderEnabled` to `true`
+to opt purchases into Digital reminder eligibility. Promotion retains the
+choice at purchase. Omitted or false choices preserve ordinary coupon rights
+and do not enroll the purchase. Recipient and channel eligibility are checked
+again at delivery.
+
 New publication capture, validation and target preparation require a valid
 `couponOffer` whenever a policy declares `couponOffer`,
 `conditions.sourceProductCode` or `purchasedCouponPolicy`.

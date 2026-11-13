@@ -16,6 +16,7 @@ module.exports = {
     definitions: {
         ADD_SCORE: {
             ownerModule: 'rulesCore',
+            authoring: { label: { en: 'Add score', ar: 'إضافة نقاط' }, fields: [{ code: 'score', dataType: 'NUMBER', required: true }] },
             /** Implements validate as an overrideable service operation. */
             validate: function (outcome) {
                 let score = Number(outcome && outcome.parameters && outcome.parameters.score);

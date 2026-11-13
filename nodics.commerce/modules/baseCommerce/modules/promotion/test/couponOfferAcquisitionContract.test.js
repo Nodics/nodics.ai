@@ -82,6 +82,11 @@ test('explicit NONE/fixed validity and supported requirements inherit validated 
     for (const change of [{ expiry: {} }, { supply: { mode: 'UNLIMITED', quantity: 9999 } },
         { ownerLimit: 0 }, { requirements: { type: 'REWARDS', priceRef: 'price', customRule: true } }])
         assert.throws(() => offer.validate({ ...f.campaign.couponOffer, ...change }));
+    const fixed = { ...f.campaign.couponOffer, expiry: { mode: 'FIXED', at: '2030-01-01T00:00:00.000Z' } };
+    assert.equal(offer.validate(fixed).expiryReminderEnabled, undefined);
+    assert.equal(offer.validate({ ...fixed, expiryReminderEnabled: true }).expiryReminderEnabled, true);
+    assert.throws(() => offer.validate({ ...fixed, expiryReminderEnabled: 'true' }));
+    assert.throws(() => offer.validate({ ...f.campaign.couponOffer, expiryReminderEnabled: true }));
     f.settings.couponOffers.maximumCertificates = 1;
     assert.throws(() => offer.requirements({ type: 'CERTIFICATES', certificates: { quantity: 2, categoryCode: 'c', milestoneCode: 'm' } }));
     delete f.settings.couponOffers.maximumCertificates;

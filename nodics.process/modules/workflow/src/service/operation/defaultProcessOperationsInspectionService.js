@@ -141,6 +141,27 @@ module.exports = {
         return { code: 'SUC_PROCESS_00000', data: response.result || [] };
     },
 
+    /** Lists declared trigger relationships with paging controls separate from safe record filters and original human scope. */
+    listTriggers: async function (request) {
+        const service = SERVICE.DefaultProcessTriggerService;
+        if (!service || typeof service.get !== 'function')
+            throw new CLASSES.NodicsError('ERR_PROCESS_00014', 'Process trigger inspection is unavailable');
+        const query = this.safeQuery(request, ['code', 'definitionCode', 'triggerType', 'cronJobCode', 'status']);
+        const pageSize = this.listLimit(request);
+        const response = await service.get(this.serviceRequest(request, {
+            query,
+            searchOptions: { pageSize, pageNumber: 1, sort: { code: 1 } }
+        }));
+        const rows = response && response.result;
+        if (!response || !/^SUC_/.test(response.code || '') || response.success === false || response.error || response.errors ||
+            !Array.isArray(rows) || rows.length > pageSize ||
+            rows.some(row => !row || !this.isCode(row.code) || Object.entries(query).some(([key, value]) => row[key] !== value)) ||
+            new Set(rows.map(row => row.code)).size !== rows.length ||
+            (response.count !== undefined && (!Number.isSafeInteger(response.count) || response.count < rows.length)))
+            throw new CLASSES.NodicsError('ERR_PROCESS_00014', 'Process trigger inspection is unavailable');
+        return { code: 'SUC_PROCESS_00010', data: rows };
+    },
+
     /**
      * Reads one runtime instance by code.
      *

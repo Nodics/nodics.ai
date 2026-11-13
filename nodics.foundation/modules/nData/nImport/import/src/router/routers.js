@@ -17,306 +17,518 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 const releasePlanRequest = {
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-        releaseCodes: { type: 'array', minItems: 1, maxItems: 256, uniqueItems: true,
-            items: { type: 'string', pattern: '^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$' } },
-        modules: { type: 'array', minItems: 1, maxItems: 256, uniqueItems: true,
-            description: 'Legacy selector; use releaseCodes when a module owns multiple sections.',
-            items: { type: 'string', pattern: '^[A-Za-z][A-Za-z0-9._-]{0,127}$' } },
-        expectedReleases: { type: 'object', maxProperties: 256, additionalProperties: {
-            type: 'string', pattern: '^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$'
-        } }
-    }
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    continuation: {
+      type: "boolean",
+      description:
+        "Execute at most one release in a durable owner plan; never automatically retry an uncertain command.",
+    },
+    executionCode: {
+      type: "string",
+      pattern: "^releaseExecution_[a-f0-9]{64}$",
+    },
+    releaseCodes: {
+      type: "array",
+      minItems: 1,
+      maxItems: 256,
+      uniqueItems: true,
+      items: {
+        type: "string",
+        pattern: "^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$",
+      },
+    },
+    modules: {
+      type: "array",
+      minItems: 1,
+      maxItems: 256,
+      uniqueItems: true,
+      description:
+        "Legacy selector; use releaseCodes when a module owns multiple sections.",
+      items: { type: "string", pattern: "^[A-Za-z][A-Za-z0-9._-]{0,127}$" },
+    },
+    expectedReleases: {
+      type: "object",
+      maxProperties: 256,
+      additionalProperties: {
+        type: "string",
+        pattern: "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$",
+      },
+    },
+  },
 };
 
-const releasePlanBody = { required: true, content: { 'application/json': { schema: releasePlanRequest } } };
+const releasePlanBody = {
+  required: true,
+  content: { "application/json": { schema: releasePlanRequest } },
+};
+const sampleOperatorSetupSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["enterpriseCode", "expectedVersion"],
+  properties: {
+    enterpriseCode: {
+      type: "string",
+      pattern: "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$",
+    },
+    expectedVersion: { type: "string", pattern: "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+  },
+};
+const sampleOperatorSetupBody = {
+  required: true,
+  content: { "application/json": { schema: sampleOperatorSetupSchema } },
+};
+const tenantGroupSetupBody = {
+  required: true,
+  content: {
+    "application/json": {
+      schema: {
+        ...sampleOperatorSetupSchema,
+        required: [...sampleOperatorSetupSchema.required, "releaseCode"],
+        properties: {
+          ...sampleOperatorSetupSchema.properties,
+          releaseCode: releasePlanRequest.properties.releaseCodes.items,
+        },
+      },
+    },
+  },
+};
 
 module.exports = {
-    import: {
-        directImports: {
-            importInitPost: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.init.run',
-                apiExposure: 'dataImport',
-                key: '/init',
-                method: 'POST',
-                controller: 'DefaultImportController',
-                operation: 'importInitData',
-                help: {
-                    requestType: 'secured',
-                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
-                    method: 'POST',
-                    url: 'http://host:port/nodics/import/v0/init',
-                    body: {
-                        modules: 'Optional list of modules to import initialization data from',
-                        path: 'Optional external location containing import files'
-                    }
-                }
-            },
-            importCorePost: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.core.run',
-                apiExposure: 'dataImport',
-                key: '/core',
-                method: 'POST',
-                controller: 'DefaultImportController',
-                operation: 'importCoreData',
-                help: {
-                    requestType: 'secured',
-                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
-                    method: 'POST',
-                    url: 'http://host:port/nodics/import/v0/core',
-                    body: {
-                        modules: 'Optional list of modules to import core data from',
-                        path: 'Optional external location containing import files'
-                    }
-                }
-            },
-            importSamplePost: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.sample.run',
-                apiExposure: 'dataImport',
-                key: '/sample',
-                method: 'POST',
-                controller: 'DefaultImportController',
-                operation: 'importSampleData',
-                help: {
-                    requestType: 'secured',
-                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
-                    method: 'POST',
-                    url: 'http://host:port/nodics/import/v0/sample',
-                    body: {
-                        modules: 'Optional list of modules to import sample data from',
-                        path: 'Optional external location containing import files'
-                    }
-                }
-            },
-            importLocalPost: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.local.run',
-                apiExposure: 'dataImport',
-                key: '/local',
-                method: 'POST',
-                controller: 'DefaultImportController',
-                operation: 'importLocalData',
-                help: {
-                    requestType: 'secured',
-                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
-                    method: 'POST',
-                    url: 'http://host:port/nodics/import/v0/local',
-                    body: {
-                        inputPath: {
-                            rootPath: 'Absolute local import package path',
-                            dataPath: 'Optional data file directory override',
-                            headerPath: 'Optional header file directory override',
-                            successPath: 'Optional success archive directory override',
-                            errorPath: 'Optional error archive directory override'
-                        }
-                    }
-                }
-            },
-            importMediaPost: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.media.run',
-                apiExposure: 'dataImport',
-                key: '/media',
-                method: 'POST',
-                controller: 'DefaultImportController',
-                operation: 'importMediaData',
-                help: {
-                    requestType: 'secured',
-                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
-                    method: 'POST',
-                    url: 'http://host:port/nodics/import/v0/media',
-                    body: {
-                        mediaCode: 'media record code returned by the governed upload API',
-                        moduleName: 'Owning module for a generic schema-backed import target',
-                        schemaName: 'Owning schema/model for the records inside the uploaded file',
-                        operation: 'Optional schema operation, defaults to saveAll for schema-backed imports',
-                        definitionCode: 'Optional future nImport template code for reusable mappings; not required for generic schema-backed import',
-                        options: {
-                            validateOnly: 'When true, validate media and definition staging without importing records'
-                        }
-                    }
-                }
-            }
+  import: {
+    directImports: {
+      importInitPost: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.init.run",
+        apiExposure: "dataImport",
+        key: "/init",
+        method: "POST",
+        controller: "DefaultImportController",
+        operation: "importInitData",
+        help: {
+          requestType: "secured",
+          message:
+            "Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated",
+          method: "POST",
+          url: "http://host:port/nodics/import/v0/init",
+          body: {
+            modules:
+              "Optional list of modules to import initialization data from",
+            path: "Optional external location containing import files",
+          },
         },
-        dataReleases: {
-            initializationProfiles: {
-                secured: true, accessGroups: ['userGroup'], permission: 'import.release.view', permissions: ['import.core.run'],
-                apiExposure: 'dataImport', key: '/initialization-profiles', method: 'GET',
-                controller: 'DefaultDataReleaseController', operation: 'getInitializationProfiles'
-            },
-            initializationProfile: {
-                secured: true, accessGroups: ['userGroup'], permission: 'import.release.view', permissions: ['import.core.run'],
-                apiExposure: 'dataImport', key: '/initialization-profiles/:profileCode', method: 'GET',
-                controller: 'DefaultDataReleaseController', operation: 'getInitializationProfile'
-            },
-            validateInitializationProfile: {
-                secured: true, accessGroups: ['userGroup'], permission: 'import.release.validate', permissions: ['import.core.run'],
-                apiExposure: 'dataImport', key: '/initialization-profiles/:profileCode/validate', method: 'POST',
-                controller: 'DefaultDataReleaseController', operation: 'validateInitializationProfile'
-            },
-            installInitializationProfile: {
-                secured: true, accessGroups: ['userGroup'], permission: 'import.core.run',
-                apiExposure: 'dataImport', key: '/initialization-profiles/:profileCode/install', method: 'POST',
-                controller: 'DefaultDataReleaseController', operation: 'installInitializationProfile'
-            },
-            catalogueInit: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.release.view',
-                permissions: ['import.core.run'],
-                apiExposure: 'dataImport',
-                key: '/init',
-                method: 'GET',
-                controller: 'DefaultDataReleaseController',
-                operation: 'getInitCatalogue'
-            },
-            catalogueCore: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.release.view',
-                permissions: ['import.core.run'],
-                apiExposure: 'dataImport',
-                key: '/core',
-                method: 'GET',
-                controller: 'DefaultDataReleaseController',
-                operation: 'getCoreCatalogue'
-            },
-            catalogueSample: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.release.view',
-                permissions: ['import.core.run'],
-                apiExposure: 'dataImport',
-                key: '/sample',
-                method: 'GET',
-                controller: 'DefaultDataReleaseController',
-                operation: 'getSampleCatalogue'
-            },
-            preflightInit: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.release.validate',
-                permissions: ['import.core.run'],
-                apiExposure: 'dataImport',
-                key: '/init/validate',
-                method: 'POST',
-                controller: 'DefaultDataReleaseController',
-                operation: 'preflightInit',
-                requestBody: releasePlanBody
-            },
-            preflightCore: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.release.validate',
-                permissions: ['import.core.run'],
-                apiExposure: 'dataImport',
-                key: '/core/validate',
-                method: 'POST',
-                controller: 'DefaultDataReleaseController',
-                operation: 'preflightCore',
-                requestBody: releasePlanBody
-            },
-            preflightSample: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.release.validate',
-                permissions: ['import.core.run'],
-                apiExposure: 'dataImport',
-                key: '/sample/validate',
-                method: 'POST',
-                controller: 'DefaultDataReleaseController',
-                operation: 'preflightSample',
-                requestBody: releasePlanBody
-            },
-            executeInit: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.init.run',
-                apiExposure: 'dataImport',
-                key: '/init/install',
-                method: 'POST',
-                controller: 'DefaultDataReleaseController',
-                operation: 'executeInit',
-                requestBody: releasePlanBody
-            },
-            executeCore: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.core.run',
-                apiExposure: 'dataImport',
-                key: '/core/install',
-                method: 'POST',
-                controller: 'DefaultDataReleaseController',
-                operation: 'executeCore',
-                requestBody: releasePlanBody
-            },
-            executeSample: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.sample.run',
-                apiExposure: 'dataImport',
-                key: '/sample/install',
-                method: 'POST',
-                controller: 'DefaultDataReleaseController',
-                operation: 'executeSample',
-                requestBody: releasePlanBody
-            }
+      },
+      importCorePost: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.core.run",
+        apiExposure: "dataImport",
+        key: "/core",
+        method: "POST",
+        controller: "DefaultImportController",
+        operation: "importCoreData",
+        help: {
+          requestType: "secured",
+          message:
+            "Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated",
+          method: "POST",
+          url: "http://host:port/nodics/import/v0/core",
+          body: {
+            modules: "Optional list of modules to import core data from",
+            path: "Optional external location containing import files",
+          },
         },
-        importRunHistory: {
-            getImportRunHistory: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.history.view',
-                permissions: ['import.core.run'],
-                apiExposure: 'dataImport',
-                key: '/run/history',
-                method: 'GET',
-                controller: 'DefaultImportRunHistoryController',
-                operation: 'getImportRunHistory',
-                help: {
-                    requestType: 'secured',
-                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
-                    method: 'GET',
-                    url: 'http://host:port/nodics/import/v0/run/history',
-                    query: {
-                        runId: 'Optional import run id',
-                        status: 'Optional import run status',
-                        dataType: 'Optional import data type',
-                        tenant: 'Optional tenant code',
-                        moduleName: 'Optional module name',
-                        mediaCode: 'Optional media code for media-backed import run lookup',
-                        limit: 'Optional page size',
-                        skip: 'Optional page offset'
-                    }
-                }
+      },
+      importSamplePost: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.sample.run",
+        apiExposure: "dataImport",
+        key: "/sample",
+        method: "POST",
+        controller: "DefaultImportController",
+        operation: "importSampleData",
+        help: {
+          requestType: "secured",
+          message:
+            "Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated",
+          method: "POST",
+          url: "http://host:port/nodics/import/v0/sample",
+          body: {
+            modules: "Optional list of modules to import sample data from",
+            path: "Optional external location containing import files",
+          },
+        },
+      },
+      importLocalPost: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.local.run",
+        apiExposure: "dataImport",
+        key: "/local",
+        method: "POST",
+        controller: "DefaultImportController",
+        operation: "importLocalData",
+        help: {
+          requestType: "secured",
+          message:
+            "Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated",
+          method: "POST",
+          url: "http://host:port/nodics/import/v0/local",
+          body: {
+            inputPath: {
+              rootPath: "Absolute local import package path",
+              dataPath: "Optional data file directory override",
+              headerPath: "Optional header file directory override",
+              successPath: "Optional success archive directory override",
+              errorPath: "Optional error archive directory override",
             },
-            getImportRun: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'import.history.detail.view',
-                permissions: ['import.core.run'],
-                apiExposure: 'dataImport',
-                key: '/run/history/:runId',
-                method: 'GET',
-                controller: 'DefaultImportRunHistoryController',
-                operation: 'getImportRun',
-                help: {
-                    requestType: 'secured',
-                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
-                    method: 'GET',
-                    url: 'http://host:port/nodics/import/v0/run/history/:runId'
-                }
-            }
-        }
-    }
+          },
+        },
+      },
+      importMediaPost: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.media.run",
+        apiExposure: "dataImport",
+        key: "/media",
+        method: "POST",
+        controller: "DefaultImportController",
+        operation: "importMediaData",
+        help: {
+          requestType: "secured",
+          message:
+            "Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated",
+          method: "POST",
+          url: "http://host:port/nodics/import/v0/media",
+          body: {
+            mediaCode: "media record code returned by the governed upload API",
+            moduleName:
+              "Owning module for a generic schema-backed import target",
+            schemaName:
+              "Owning schema/model for the records inside the uploaded file",
+            operation:
+              "Optional schema operation, defaults to saveAll for schema-backed imports",
+            definitionCode:
+              "Optional future nImport template code for reusable mappings; not required for generic schema-backed import",
+            options: {
+              validateOnly:
+                "When true, validate media and definition staging without importing records",
+            },
+          },
+        },
+      },
+    },
+    dataReleases: {
+      listInitExecutions: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["userGroup"],
+        permission: "import.release.view",
+        apiExposure: "dataImport",
+        key: "/init/executions",
+        method: "GET",
+        controller: "DefaultDataReleaseController",
+        operation: "listInitExecutions",
+      },
+      inspectInitExecution: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["userGroup"],
+        permission: "import.release.view",
+        apiExposure: "dataImport",
+        key: "/init/executions/:executionCode",
+        method: "GET",
+        controller: "DefaultDataReleaseController",
+        operation: "inspectInitExecution",
+      },
+      listCoreExecutions: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["userGroup"],
+        permission: "import.release.view",
+        apiExposure: "dataImport",
+        key: "/core/executions",
+        method: "GET",
+        controller: "DefaultDataReleaseController",
+        operation: "listCoreExecutions",
+      },
+      inspectCoreExecution: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["userGroup"],
+        permission: "import.release.view",
+        apiExposure: "dataImport",
+        key: "/core/executions/:executionCode",
+        method: "GET",
+        controller: "DefaultDataReleaseController",
+        operation: "inspectCoreExecution",
+      },
+      listSampleExecutions: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["userGroup"],
+        permission: "import.release.view",
+        apiExposure: "dataImport",
+        key: "/sample/executions",
+        method: "GET",
+        controller: "DefaultDataReleaseController",
+        operation: "listSampleExecutions",
+      },
+      inspectSampleExecution: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["userGroup"],
+        permission: "import.release.view",
+        apiExposure: "dataImport",
+        key: "/sample/executions/:executionCode",
+        method: "GET",
+        controller: "DefaultDataReleaseController",
+        operation: "inspectSampleExecution",
+      },
+      validateSampleOperatorSetup: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["userGroup"],
+        permission: "import.release.validate",
+        apiExposure: "dataImport",
+        key: "/init/sample-operator/validate",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "validateSampleOperatorSetup",
+        requestBody: sampleOperatorSetupBody,
+      },
+      installSampleOperatorSetup: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["userGroup"],
+        permission: "import.init.run",
+        apiExposure: "dataImport",
+        key: "/init/sample-operator/install",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "installSampleOperatorSetup",
+        requestBody: sampleOperatorSetupBody,
+      },
+      validateTenantGroupSetup: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["userGroup"],
+        permission: "import.release.validate",
+        apiExposure: "dataImport",
+        key: "/init/tenant-groups/validate",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "validateTenantGroupSetup",
+        requestBody: tenantGroupSetupBody,
+      },
+      installTenantGroupSetup: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["userGroup"],
+        permission: "import.init.run",
+        apiExposure: "dataImport",
+        key: "/init/tenant-groups/install",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "installTenantGroupSetup",
+        requestBody: tenantGroupSetupBody,
+      },
+      initializationProfiles: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.release.view",
+        permissions: ["import.core.run"],
+        apiExposure: "dataImport",
+        key: "/initialization-profiles",
+        method: "GET",
+        controller: "DefaultDataReleaseController",
+        operation: "getInitializationProfiles",
+      },
+      initializationProfile: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.release.view",
+        permissions: ["import.core.run"],
+        apiExposure: "dataImport",
+        key: "/initialization-profiles/:profileCode",
+        method: "GET",
+        controller: "DefaultDataReleaseController",
+        operation: "getInitializationProfile",
+      },
+      validateInitializationProfile: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.release.validate",
+        permissions: ["import.core.run"],
+        apiExposure: "dataImport",
+        key: "/initialization-profiles/:profileCode/validate",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "validateInitializationProfile",
+      },
+      installInitializationProfile: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.core.run",
+        apiExposure: "dataImport",
+        key: "/initialization-profiles/:profileCode/install",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "installInitializationProfile",
+      },
+      catalogueInit: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.release.view",
+        permissions: ["import.core.run"],
+        apiExposure: "dataImport",
+        key: "/init",
+        method: "GET",
+        controller: "DefaultDataReleaseController",
+        operation: "getInitCatalogue",
+      },
+      catalogueCore: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.release.view",
+        permissions: ["import.core.run"],
+        apiExposure: "dataImport",
+        key: "/core",
+        method: "GET",
+        controller: "DefaultDataReleaseController",
+        operation: "getCoreCatalogue",
+      },
+      catalogueSample: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.release.view",
+        permissions: ["import.core.run"],
+        apiExposure: "dataImport",
+        key: "/sample",
+        method: "GET",
+        controller: "DefaultDataReleaseController",
+        operation: "getSampleCatalogue",
+      },
+      preflightInit: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.release.validate",
+        permissions: ["import.core.run"],
+        apiExposure: "dataImport",
+        key: "/init/validate",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "preflightInit",
+        requestBody: releasePlanBody,
+      },
+      preflightCore: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.release.validate",
+        permissions: ["import.core.run"],
+        apiExposure: "dataImport",
+        key: "/core/validate",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "preflightCore",
+        requestBody: releasePlanBody,
+      },
+      preflightSample: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.release.validate",
+        permissions: ["import.core.run"],
+        apiExposure: "dataImport",
+        key: "/sample/validate",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "preflightSample",
+        requestBody: releasePlanBody,
+      },
+      executeInit: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.init.run",
+        apiExposure: "dataImport",
+        key: "/init/install",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "executeInit",
+        requestBody: releasePlanBody,
+      },
+      executeCore: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.core.run",
+        apiExposure: "dataImport",
+        key: "/core/install",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "executeCore",
+        requestBody: releasePlanBody,
+      },
+      executeSample: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.sample.run",
+        apiExposure: "dataImport",
+        key: "/sample/install",
+        method: "POST",
+        controller: "DefaultDataReleaseController",
+        operation: "executeSample",
+        requestBody: releasePlanBody,
+      },
+    },
+    importRunHistory: {
+      getImportRunHistory: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.history.view",
+        permissions: ["import.core.run"],
+        apiExposure: "dataImport",
+        key: "/run/history",
+        method: "GET",
+        controller: "DefaultImportRunHistoryController",
+        operation: "getImportRunHistory",
+        help: {
+          requestType: "secured",
+          message:
+            "Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated",
+          method: "GET",
+          url: "http://host:port/nodics/import/v0/run/history",
+          query: {
+            runId: "Optional import run id",
+            status: "Optional import run status",
+            dataType: "Optional import data type",
+            tenant: "Optional tenant code",
+            moduleName: "Optional module name",
+            mediaCode: "Optional media code for media-backed import run lookup",
+            limit: "Optional page size",
+            skip: "Optional page offset",
+          },
+        },
+      },
+      getImportRun: {
+        secured: true,
+        accessGroups: ["userGroup"],
+        permission: "import.history.detail.view",
+        permissions: ["import.core.run"],
+        apiExposure: "dataImport",
+        key: "/run/history/:runId",
+        method: "GET",
+        controller: "DefaultImportRunHistoryController",
+        operation: "getImportRun",
+        help: {
+          requestType: "secured",
+          message:
+            "Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated",
+          method: "GET",
+          url: "http://host:port/nodics/import/v0/run/history/:runId",
+        },
+      },
+    },
+  },
 };

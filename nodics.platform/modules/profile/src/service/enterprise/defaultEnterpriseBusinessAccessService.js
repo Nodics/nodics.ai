@@ -33,20 +33,25 @@ module.exports = {
     const target = await SERVICE.DefaultEnterpriseTeamAdministrationService.enterpriseForAccess(auth.entCode);
     if (target.enterprise.code !== auth.entCode || target.enterprise.active !== true || target.tenantCode !== auth.tenant) this.fail();
     const catalogue = SERVICE.DefaultIdentityCatalogueService;
-    const roles = await catalogue.roles(), areas = catalogue.businessAreas(roles);
+    const roles = await catalogue.roles(), definitions = catalogue.businessAreas(roles);
     // A group shared between areas would make area-specific removal ambiguous.
     const groupAreas = new Map();
-    for (const area of areas) for (const level of area.levels) for (const group of roles[level.roleCode].groupCodes) {
+    for (const area of definitions) for (const level of area.levels) for (const group of roles[level.roleCode].groupCodes) {
       if (groupAreas.has(group) && groupAreas.get(group) !== area.code) this.fail();
       groupAreas.set(group, area.code);
     }
-    if (groupAreas.size) {
-      const groups = await m.groups(target.tenantCode, [...groupAreas.keys()]);
+    const groups = groupAreas.size ? await m.groups(target.tenantCode, [...groupAreas.keys()], true) : [];
+    if (groups.length) {
       const secured = SERVICE.DefaultSecuredRequestPipelineService;
       const inherited = secured.getEffectiveUserGroupCodes(groups);
       if (inherited.some(code => ["platformAdministratorUserGroup", "adminGroup", "runtimeConfigAdminUserGroup", "serviceAccountUserGroup"].includes(code)) ||
           secured.getHydratedGroupPermissions(groups).some(permission => permission.includes("*"))) this.fail();
     }
+    const available = new Set(groups.map(group => group.code));
+    const areas = definitions.map(area => ({
+      ...area,
+      levels: area.levels.filter(level => roles[level.roleCode].groupCodes.every(group => available.has(group))),
+    })).filter(area => area.levels.length);
     return { ...target, roles, areas, groupAreas };
   },
   /** Reads through generated owners and refuses incomplete or unbounded inventories. */
@@ -116,7 +121,7 @@ module.exports = {
       ...(target.assignment ? { assignmentCode: target.assignment.code } : {}), selections,
       otherGroupCodes: target.groupCodes.filter(code => !context.groupAreas.has(code)),
       reviewFingerprint: this.digest({ person: target.person, assignment: target.assignment,
-        groups: target.groupCodes, roles: context.roles, enterprise: context.enterprise, tenant: context.tenantCode }) };
+        groups: target.groupCodes, roles: context.roles, areas: context.areas, enterprise: context.enterprise, tenant: context.tenantCode }) };
   },
   /** Returns the bounded employee editor with inert persisted role choices; query selectors are not authority. */
   workspace: async function (request) {
@@ -196,7 +201,8 @@ module.exports = {
     await SERVICE.DefaultEnterpriseMembershipService.groups(context.tenantCode, next);
     if (this.digest(next) === this.digest(target.groupCodes)) return { employeeCode: target.person.code, changed: false };
     const fresh = await this.context(request);
-    if (this.digest(fresh.roles) !== this.digest(context.roles) || this.digest(fresh.enterprise) !== this.digest(context.enterprise)) this.fail();
+    if (this.digest(fresh.roles) !== this.digest(context.roles) || this.digest(fresh.areas) !== this.digest(context.areas) ||
+        this.digest(fresh.enterprise) !== this.digest(context.enterprise)) this.fail();
     await this.audit(request, input, "REQUESTED");
     if (target.assignment) {
       const team = SERVICE.DefaultEnterpriseTeamAdministrationService, m = SERVICE.DefaultEnterpriseMembershipService;

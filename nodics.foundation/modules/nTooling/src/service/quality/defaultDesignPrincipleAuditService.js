@@ -500,19 +500,13 @@ module.exports = exportedService = {
         const server = /^envs\/[^/]+\/[^/]+\/(?:[^/]+\/)?config\/properties\.js$/.test(file);
         const environment = /^envs\/[^/]+\/config\/properties\.js$/.test(file);
         const name = propertyPath.join('.');
-        const misplaced = new Set([
-            'runtimeIdentity', 'localResetProvider', 'backofficeLocalReset', 'copilot',
-            'profileExternalIdentity', 'runtimeConfigurationSchemas', 'profileCustomerBrowserSession',
-            'profileBrowserSession', 'defaultAuthDetail', 'apiExposure', 'search', 'publishEnabled',
-            'stripeProvider', 'httpHardening', 'product', 'cart', 'fulfillmentCore',
-        ]);
         const report = reason => failures.push(file + ': ' + reason + ' at ' + (name || '<root>'));
-        if (server && propertyPath.length === 1 && misplaced.has(name))
-            report('keep capability policy in module-owned runtime-role profiles or the environment');
-        if (server && ['data.dataReleases', 'tooling.runtime'].includes(name))
-            report('use owning module contributions or server package metadata');
-        if (environment && name === 'data.dataReleases.runtimeRoleProfiles')
-            report('release inventories belong to their module, not the environment');
+        // Actual deployment deltas use ordinary owner namespaces. Namespace presence
+        // cannot distinguish an override from a copied default; do not require retired profiles.
+        if (server && name === 'tooling.runtime')
+            report('use server package metadata for runtime tooling');
+        if (server && name === 'data.dataReleases.installers')
+            report('reusable installer definitions belong to the implementing module');
         if (name === 'backofficeRegistry.clientEndpoints')
             report('browser endpoint ownership belongs to each runtime server');
         if (server && propertyPath.at(-1) === 'mediaDeliveryBaseUrl')
@@ -565,9 +559,11 @@ module.exports = exportedService = {
                 if (options.customerProject === true && file === 'config/properties.js' && current.length === 1 &&
                     customerProjectRootNamespaces.has(String(key))) failures.push(file + ': customer project root must not carry framework/runtime default namespace ' + key + '; move defaults to the owning framework module and keep only true environment/server/customer overrides');
                 if (name === 'frontends' || name === 'tooling.topology.groups.frontends') failures.push(file + ': frontend lifecycle belongs to frontend applications, not backend properties');
+                if (key === 'runtimeRoleProfiles' || name === 'runtimeRole.roles') failures.push(file + ': retired role configuration at ' + name + '; use ordinary owner defaults and explicit deployment overrides');
                 if (key === '$config' && value.type === 'Literal' && value.value === 'profile') failures.push(file + ': retired profile binding; use existing layered properties');
                 if (['configurationValues.remoteEndpoints', 'configurationValues.runtimeAuthentication'].includes(name)) failures.push(file + ': duplicated configuration authority ' + name);
                 if (/^(?:authSecurity\.(?:jwt\.secret|apiKey\.pepper)|bootstrapIdentity\.(?:adminPassword|servicePassword|serviceApiKey)|defaultAuthDetail\.apiKey)(?:\.fallback)?$/.test(name) && value.type === 'Literal' && typeof value.value === 'string' && value.value.length) failures.push(file + ': authentication secret must use deployment input at ' + name);
+                if (/^credentials\..+\.(?:value|token)(?:\.fallback)?$/.test(name) && value.type === 'Literal' && value.value !== null && value.value !== '') failures.push(file + ': credential secret must use deployment input or governed runtime configuration at ' + name);
                 inspectObject(value, current, file);
                 if (value.type === 'ArrayExpression') value.elements.forEach(item => inspectObject(item, current, file));
             }

@@ -70,7 +70,7 @@ module.exports = {
             !security?.isPermissionGranted(permission, security.getGrantedPermissions(input), {}))
             throw new Error('Original Commerce participant authority is required');
         const policy = structuredClone(CONFIG.get('cart')?.participation?.profile);
-        if (!policy?.connectionName || !policy.targetAuthority || !Number.isSafeInteger(policy.timeoutMilliseconds) || policy.timeoutMilliseconds <= 0)
+        if (!policy?.connectionName || (policy.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(policy.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) || !Number.isSafeInteger(policy.timeoutMilliseconds) || policy.timeoutMilliseconds <= 0)
             throw new Error('Profile participant transport is unavailable');
         let result = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: 'profile',
             connectionName: policy.connectionName, targetAuthority: policy.targetAuthority,

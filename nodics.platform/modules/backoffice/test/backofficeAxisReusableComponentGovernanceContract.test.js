@@ -89,8 +89,15 @@ assert.deepStrictEqual(
   findNavigation(mediaCapability, "media-publication-requests").backendWorkspace,
   mediaLibrary.publicationWorkspace,
 );
-assert.deepStrictEqual(mediaConfiguration.media.library, { workspace: {}, publicationWorkspace: {} },
-  "Property defaults select no duplicate workspace definition");
+assert.deepStrictEqual(mediaConfiguration.media.library.workspace, {},
+  "Property defaults select no duplicate Media workspace definition");
+assert.deepStrictEqual(mediaConfiguration.media.library.publicationWorkspace, {},
+  "Property defaults select no duplicate publication workspace definition");
+const review = mediaConfiguration.media.library.review;
+assert(Number.isSafeInteger(review.maximumPreviewBytes) && review.maximumPreviewBytes > 0);
+assert(Array.isArray(review.previewMimeTypes) && review.previewMimeTypes.every(type => typeof type === "string" && type.startsWith("image/")));
+assert(!Object.hasOwn(review, "workspace") && !Object.hasOwn(review, "publicationWorkspace"),
+  "Bounded review presentation policy must not become another workspace registry");
 
 function findNavigation(capability, id) {
   return (capability.navigation || []).find((item) => item.id === id);
@@ -161,9 +168,8 @@ schemaBackedNavigation.forEach(({ capability, id, moduleName, schemaName }) => {
 
 mediaCapability.navigation.forEach((entry) => {
   assert(entry.help, entry.id + " media page must expose backend-owned help");
-  assert.strictEqual(
-    entry.help.documentationRoute,
-    "/docs/reference/media",
+  assert(
+    ["/docs/framework/wcms-media-management", "/docs/framework/wcms-media-operations-runbook", "/docs/framework/wcms-media-storage-delivery"].includes(entry.help.documentationRoute),
     entry.id + " must link to the nMedia framework documentation pack",
   );
   assert(

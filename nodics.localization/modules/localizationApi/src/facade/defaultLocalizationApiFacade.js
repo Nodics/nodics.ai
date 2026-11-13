@@ -17,6 +17,8 @@ module.exports = {
     /** Delegates coverage projection. */ coverage: function (request) { return SERVICE.DefaultLocalizationOperationsService.coverage(request); },
     /** Delegates translation queue projection. */ queue: function (request) { return SERVICE.DefaultLocalizationOperationsService.queue(request); },
     /** Delegates side-by-side projection. */ sideBySide: function (request) { return SERVICE.DefaultLocalizationOperationsService.sideBySide(request); },
+    /** Delegates release history projection. */ releases: function (request) { return SERVICE.DefaultLocalizationOperationsService.releases(request); },
+    /** Delegates approved translation memory projection. */ memory: function (request) { return SERVICE.DefaultLocalizationOperationsService.memory(request); },
     /** Delegates lifecycle analytics projection. */ analytics: function (request) { return SERVICE.DefaultLocalizationOperationsService.analytics(request); },
     /** Delegates draft persistence. */ saveDraft: function (request) { return SERVICE.DefaultLocalizationValueLifecycleService.saveDraft(request); },
     /** Delegates review submission. */ submitReview: function (request) { return SERVICE.DefaultLocalizationValueLifecycleService.submitReview(request); },

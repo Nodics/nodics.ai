@@ -17,306 +17,487 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
-    import: {
-        dataInstallation: {
-            model: true,
-            backoffice: { concurrency: { managed: true, field: 'revision' } },
-            service: {
-                enabled: true
-            },
-            event: {
-                enabled: false
-            },
-            router: { groups: { schemaOperations: true },
-                enabled: true
-            },
-            definition: {
-                revision: { type: 'int', required: true, default: 1, description: 'Database-managed counter fencing concurrent installation claims and completion' },
-                executionId: { type: 'string', required: false, description: 'Unique attempt identity that owns a running installation receipt' },
-                tenant: { type: 'string', required: true, description: 'Tenant owning the installed release state' },
-                environment: { type: 'string', required: true, description: 'Environment where the release was installed' },
-                moduleName: { type: 'string', required: true, description: 'Active module owning the data release' },
-                releaseCode: { type: 'string', required: false, description: 'Stable owner and manifest-section identity' },
-                sectionCode: { type: 'string', required: false, description: 'Owner-local aggregate manifest section identity' },
-                dataType: { type: 'string', required: true, description: 'Release type: init, core, or sample' },
-                version: { type: 'string', required: false, description: 'Installed immutable release version' },
-                checksum: { type: 'string', required: false, description: 'Installed immutable release checksum' },
-                availableVersion: { type: 'string', required: false, description: 'Release version used by the latest attempt' },
-                availableChecksum: { type: 'string', required: false, description: 'Release checksum used by the latest attempt' },
-                owningDomain: { type: 'string', required: false, description: 'Authoritative functional domain declared by the installed release' },
-                lifecycle: { type: 'string', required: false, description: 'Validated data lifecycle classification' },
-                destinationRole: { type: 'string', required: false, description: 'Validated runtime destination role' },
-                environmentScope: { type: 'array', required: false, description: 'Validated environment classes permitted by the release' },
-                sensitivity: { type: 'string', required: false, description: 'Validated data sensitivity classification' },
-                versioningPolicy: { type: 'string', required: false, description: 'Validated business versioning policy' },
-                publicationPolicy: { type: 'string', required: false, description: 'Validated publication requirement' },
-                initialPublicationPolicy: { type: 'string', required: false, description: 'Validated initial-publication policy' },
-                removalPolicy: { type: 'string', required: false, description: 'Validated explicit removal semantics' },
-                runId: { type: 'string', required: false, description: 'Successful import run that installed the release' },
-                status: { type: 'string', required: true, description: 'Current installation projection status' },
-                installedAt: { type: 'string', required: false, description: 'Successful installation timestamp' },
-                lastAttemptAt: { type: 'string', required: true, description: 'Latest governed installation attempt timestamp' }
-            }
+  import: {
+    dataReleaseExecutionRecord: {
+      super: "base",
+      model: true,
+      schemaPolicies: ["executionEvidence"],
+      service: { enabled: true },
+      event: { enabled: false },
+      router: { enabled: false },
+      backoffice: { concurrency: { managed: true, field: "revision" } },
+      definition: {
+        revision: { type: "int", required: true, default: 1 },
+        scopeKey: { type: "string", required: true },
+        requestedBy: { type: "string", required: true },
+        dataType: { type: "string", required: true },
+        planHash: { type: "string", required: true },
+        plan: { type: "object", required: true },
+        steps: { type: "array", required: true },
+        status: { type: "string", required: true },
+        createdAt: { type: "date", required: true },
+        updatedAt: { type: "date", required: true },
+      },
+      indexes: {
+        individual: {
+          releaseExecutionCode: {
+            name: "code",
+            enabled: true,
+            options: { unique: true },
+          },
+          releaseExecutionScope: {
+            name: "scopeKey",
+            enabled: true,
+            options: { unique: false },
+          },
         },
-        importDefinition: {
-            super: 'base',
-            model: true,
-            service: {
-                enabled: true
-            },
-            event: {
-                enabled: false
-            },
-            router: {
-                enabled: true
-            },
-            search: {
-                enabled: true,
-                idPropertyName: 'code'
-            },
-            tenants: ['default'],
-            definition: {
-                code: {
-                    type: 'string',
-                    required: true,
-                    description: 'Stable business code for the import definition selected by BackOffice users'
-                },
-                description: {
-                    type: 'string',
-                    required: false,
-                    description: 'Business-facing explanation of the file shape and target operation'
-                },
-                enabled: {
-                    type: 'bool',
-                    required: false,
-                    description: 'Whether this import definition may be selected for governed media-backed imports'
-                },
-                moduleName: {
-                    type: 'string',
-                    required: true,
-                    description: 'Owning module for the target schema or index contract'
-                },
-                schemaName: {
-                    type: 'string',
-                    required: false,
-                    description: 'Target schema name when importing records into schema-backed storage'
-                },
-                indexName: {
-                    type: 'string',
-                    required: false,
-                    description: 'Target search index name when importing records into search projection storage'
-                },
-                operation: {
-                    type: 'string',
-                    required: false,
-                    description: 'Generated data-handler operation such as saveAll'
-                },
-                tenants: {
-                    type: 'array',
-                    required: false,
-                    description: 'Tenant scope allowed by this definition; request tenant may narrow but not broaden it'
-                },
-                dataFilePrefix: {
-                    type: 'string',
-                    required: true,
-                    description: 'Prefix expected on staged data files before their extension'
-                },
-                query: {
-                    type: 'object',
-                    required: false,
-                    description: 'Import query mapping used by schema data handlers'
-                },
-                macros: {
-                    type: 'object',
-                    required: false,
-                    description: 'Optional relation macros used by model import processing'
-                },
-                options: {
-                    type: 'object',
-                    required: false,
-                    description: 'Additional import header options preserved by the existing header contract'
-                },
-                allowedExtensions: {
-                    type: 'array',
-                    required: false,
-                    description: 'Optional extension allow-list for media files used with this definition'
-                },
-                active: {
-                    type: 'bool',
-                    required: false,
-                    description: 'Whether the definition is active in the current tenant'
-                }
-            }
+      },
+    },
+    dataInstallation: {
+      model: true,
+      backoffice: { concurrency: { managed: true, field: "revision" } },
+      service: {
+        enabled: true,
+      },
+      event: {
+        enabled: false,
+      },
+      router: { groups: { schemaOperations: true }, enabled: true },
+      definition: {
+        revision: {
+          type: "int",
+          required: true,
+          default: 1,
+          description:
+            "Database-managed counter fencing concurrent installation claims and completion",
         },
-        importRun: {
-            super: 'base',
-            model: true,
-            service: {
-                enabled: true
-            },
-            event: {
-                enabled: false
-            },
-            router: {
-                enabled: true
-            },
-            definition: {
-                migration: {
-                    type: 'object',
-                    required: false,
-                    description: 'Strict installed migration plan, provenance and checkpoint evidence; internal journal service only'
-                },
-                migrationRevision: {
-                    type: 'int',
-                    required: false,
-                    description: 'Compare-and-set revision of strict installed migration evidence'
-                },
-                migrationAttempt: {
-                    type: 'int',
-                    required: false,
-                    description: 'Explicit stopped-worker recovery attempt; never a timeout lease'
-                },
-                runId: {
-                    type: 'string',
-                    required: true,
-                    description: 'Unique import run identifier'
-                },
-                status: {
-                    type: 'string',
-                    required: true,
-                    description: 'Current import run status'
-                },
-                dataType: {
-                    type: 'string',
-                    required: false,
-                    description: 'Import data type such as init, core, sample, local, or remote'
-                },
-                tenant: {
-                    type: 'string',
-                    required: false,
-                    description: 'Tenant used for the import run'
-                },
-                modules: {
-                    type: 'array',
-                    required: false,
-                    description: 'Modules requested for the import run'
-                },
-                dataReleases: {
-                    type: 'array',
-                    required: false,
-                    description: 'Immutable module release identities validated for this run'
-                },
-                requestedBy: {
-                    type: 'string',
-                    required: false,
-                    description: 'User or process that started the import run'
-                },
-                correlationId: {
-                    type: 'string',
-                    required: false,
-                    description: 'Correlation id from the triggering request or event'
-                },
-                contentPackCode: {
-                    type: 'string',
-                    required: false,
-                    description: 'Stable configured content-pack identifier'
-                },
-                contentPackVersion: {
-                    type: 'string',
-                    required: false,
-                    description: 'Immutable content-pack release version'
-                },
-                contentPackContractVersion: {
-                    type: 'int',
-                    required: false,
-                    description: 'Validated content-pack contract version'
-                },
-                contentPackChecksum: {
-                    type: 'string',
-                    required: false,
-                    description: 'Deterministic checksum of the generated content-pack release'
-                },
-                sourceName: {
-                    type: 'string',
-                    required: false,
-                    description: 'Client-safe configured source name without filesystem or credential details'
-                },
-                checksum: {
-                    type: 'string',
-                    required: false,
-                    description: 'Aggregate checksum derived from imported data files when available'
-                },
-                fingerprint: {
-                    type: 'string',
-                    required: false,
-                    description: 'Deterministic run fingerprint used for duplicate-import detection'
-                },
-                retry: {
-                    type: 'object',
-                    required: false,
-                    description: 'Retry metadata for governed import retry decisions'
-                },
-                rollback: {
-                    type: 'object',
-                    required: false,
-                    description: 'Rollback hook status and results for failed import runs'
-                },
-                startedAt: {
-                    type: 'string',
-                    required: false,
-                    description: 'Import run start timestamp'
-                },
-                finishedAt: {
-                    type: 'string',
-                    required: false,
-                    description: 'Import run finish timestamp'
-                },
-                durationMs: {
-                    type: 'int',
-                    required: false,
-                    description: 'Import run duration in milliseconds'
-                },
-                summary: {
-                    type: 'object',
-                    required: false,
-                    description: 'Import counters and aggregate summary'
-                },
-                dataFiles: {
-                    type: 'object',
-                    required: false,
-                    description: 'Discovered, matched, and unmatched import data files'
-                },
-                headers: {
-                    type: 'array',
-                    required: false,
-                    description: 'Import headers discovered for this run'
-                },
-                failures: {
-                    type: 'array',
-                    required: false,
-                    description: 'Normalized import failures with context'
-                },
-                validationErrors: {
-                    type: 'array',
-                    required: false,
-                    description: 'Validation errors collected before import processing'
-                },
-                validationReport: {
-                    type: 'object',
-                    required: false,
-                    description: 'Structured row-level validation report for governed file imports'
-                },
-                failureCount: {
-                    type: 'int',
-                    required: false,
-                    description: 'Number of recorded import failures'
-                },
-                validationErrorCount: {
-                    type: 'int',
-                    required: false,
-                    description: 'Number of recorded validation errors'
-                }
-            }
-        }
-    }
+        executionId: {
+          type: "string",
+          required: false,
+          description:
+            "Unique attempt identity that owns a running installation receipt",
+        },
+        tenant: {
+          type: "string",
+          required: true,
+          description: "Tenant owning the installed release state",
+        },
+        environment: {
+          type: "string",
+          required: true,
+          description: "Environment where the release was installed",
+        },
+        moduleName: {
+          type: "string",
+          required: true,
+          description: "Active module owning the data release",
+        },
+        releaseCode: {
+          type: "string",
+          required: false,
+          description: "Stable owner and manifest-section identity",
+        },
+        sectionCode: {
+          type: "string",
+          required: false,
+          description: "Owner-local aggregate manifest section identity",
+        },
+        dataType: {
+          type: "string",
+          required: true,
+          description: "Release type: init, core, or sample",
+        },
+        version: {
+          type: "string",
+          required: false,
+          description: "Installed immutable release version",
+        },
+        checksum: {
+          type: "string",
+          required: false,
+          description: "Installed immutable release checksum",
+        },
+        availableVersion: {
+          type: "string",
+          required: false,
+          description: "Release version used by the latest attempt",
+        },
+        availableChecksum: {
+          type: "string",
+          required: false,
+          description: "Release checksum used by the latest attempt",
+        },
+        owningDomain: {
+          type: "string",
+          required: false,
+          description:
+            "Authoritative functional domain declared by the installed release",
+        },
+        lifecycle: {
+          type: "string",
+          required: false,
+          description: "Validated data lifecycle classification",
+        },
+        destinationRole: {
+          type: "string",
+          required: false,
+          description: "Validated runtime destination role",
+        },
+        environmentScope: {
+          type: "array",
+          required: false,
+          description: "Validated environment classes permitted by the release",
+        },
+        sensitivity: {
+          type: "string",
+          required: false,
+          description: "Validated data sensitivity classification",
+        },
+        versioningPolicy: {
+          type: "string",
+          required: false,
+          description: "Validated business versioning policy",
+        },
+        publicationPolicy: {
+          type: "string",
+          required: false,
+          description: "Validated publication requirement",
+        },
+        initialPublicationPolicy: {
+          type: "string",
+          required: false,
+          description: "Validated initial-publication policy",
+        },
+        removalPolicy: {
+          type: "string",
+          required: false,
+          description: "Validated explicit removal semantics",
+        },
+        runId: {
+          type: "string",
+          required: false,
+          description: "Successful import run that installed the release",
+        },
+        status: {
+          type: "string",
+          required: true,
+          description: "Current installation projection status",
+        },
+        installedAt: {
+          type: "string",
+          required: false,
+          description: "Successful installation timestamp",
+        },
+        lastAttemptAt: {
+          type: "string",
+          required: true,
+          description: "Latest governed installation attempt timestamp",
+        },
+      },
+    },
+    importDefinition: {
+      super: "base",
+      model: true,
+      service: {
+        enabled: true,
+      },
+      event: {
+        enabled: false,
+      },
+      router: {
+        enabled: true,
+      },
+      search: {
+        enabled: true,
+        idPropertyName: "code",
+      },
+      tenants: ["default"],
+      definition: {
+        code: {
+          type: "string",
+          required: true,
+          description:
+            "Stable business code for the import definition selected by BackOffice users",
+        },
+        description: {
+          type: "string",
+          required: false,
+          description:
+            "Business-facing explanation of the file shape and target operation",
+        },
+        enabled: {
+          type: "bool",
+          required: false,
+          description:
+            "Whether this import definition may be selected for governed media-backed imports",
+        },
+        moduleName: {
+          type: "string",
+          required: true,
+          description: "Owning module for the target schema or index contract",
+        },
+        schemaName: {
+          type: "string",
+          required: false,
+          description:
+            "Target schema name when importing records into schema-backed storage",
+        },
+        indexName: {
+          type: "string",
+          required: false,
+          description:
+            "Target search index name when importing records into search projection storage",
+        },
+        operation: {
+          type: "string",
+          required: false,
+          description: "Generated data-handler operation such as saveAll",
+        },
+        tenants: {
+          type: "array",
+          required: false,
+          description:
+            "Tenant scope allowed by this definition; request tenant may narrow but not broaden it",
+        },
+        dataFilePrefix: {
+          type: "string",
+          required: true,
+          description:
+            "Prefix expected on staged data files before their extension",
+        },
+        query: {
+          type: "object",
+          required: false,
+          description: "Import query mapping used by schema data handlers",
+        },
+        macros: {
+          type: "object",
+          required: false,
+          description:
+            "Optional relation macros used by model import processing",
+        },
+        options: {
+          type: "object",
+          required: false,
+          description:
+            "Additional import header options preserved by the existing header contract",
+        },
+        allowedExtensions: {
+          type: "array",
+          required: false,
+          description:
+            "Optional extension allow-list for media files used with this definition",
+        },
+        active: {
+          type: "bool",
+          required: false,
+          description: "Whether the definition is active in the current tenant",
+        },
+      },
+    },
+    importRun: {
+      super: "base",
+      model: true,
+      service: {
+        enabled: true,
+      },
+      event: {
+        enabled: false,
+      },
+      router: {
+        enabled: true,
+      },
+      definition: {
+        migration: {
+          type: "object",
+          required: false,
+          description:
+            "Strict installed migration plan, provenance and checkpoint evidence; internal journal service only",
+        },
+        migrationRevision: {
+          type: "int",
+          required: false,
+          description:
+            "Compare-and-set revision of strict installed migration evidence",
+        },
+        migrationAttempt: {
+          type: "int",
+          required: false,
+          description:
+            "Explicit stopped-worker recovery attempt; never a timeout lease",
+        },
+        runId: {
+          type: "string",
+          required: true,
+          description: "Unique import run identifier",
+        },
+        status: {
+          type: "string",
+          required: true,
+          description: "Current import run status",
+        },
+        dataType: {
+          type: "string",
+          required: false,
+          description:
+            "Import data type such as init, core, sample, local, or remote",
+        },
+        tenant: {
+          type: "string",
+          required: false,
+          description: "Tenant used for the import run",
+        },
+        modules: {
+          type: "array",
+          required: false,
+          description: "Modules requested for the import run",
+        },
+        dataReleases: {
+          type: "array",
+          required: false,
+          description:
+            "Immutable module release identities validated for this run",
+        },
+        requestedBy: {
+          type: "string",
+          required: false,
+          description: "User or process that started the import run",
+        },
+        correlationId: {
+          type: "string",
+          required: false,
+          description: "Correlation id from the triggering request or event",
+        },
+        contentPackCode: {
+          type: "string",
+          required: false,
+          description: "Stable configured content-pack identifier",
+        },
+        contentPackVersion: {
+          type: "string",
+          required: false,
+          description: "Immutable content-pack release version",
+        },
+        contentPackContractVersion: {
+          type: "int",
+          required: false,
+          description: "Validated content-pack contract version",
+        },
+        contentPackChecksum: {
+          type: "string",
+          required: false,
+          description:
+            "Deterministic checksum of the generated content-pack release",
+        },
+        sourceName: {
+          type: "string",
+          required: false,
+          description:
+            "Client-safe configured source name without filesystem or credential details",
+        },
+        checksum: {
+          type: "string",
+          required: false,
+          description:
+            "Aggregate checksum derived from imported data files when available",
+        },
+        fingerprint: {
+          type: "string",
+          required: false,
+          description:
+            "Deterministic run fingerprint used for duplicate-import detection",
+        },
+        retry: {
+          type: "object",
+          required: false,
+          description: "Retry metadata for governed import retry decisions",
+        },
+        rollback: {
+          type: "object",
+          required: false,
+          description:
+            "Rollback hook status and results for failed import runs",
+        },
+        startedAt: {
+          type: "string",
+          required: false,
+          description: "Import run start timestamp",
+        },
+        finishedAt: {
+          type: "string",
+          required: false,
+          description: "Import run finish timestamp",
+        },
+        durationMs: {
+          type: "int",
+          required: false,
+          description: "Import run duration in milliseconds",
+        },
+        summary: {
+          type: "object",
+          required: false,
+          description: "Import counters and aggregate summary",
+        },
+        dataFiles: {
+          type: "object",
+          required: false,
+          description: "Discovered, matched, and unmatched import data files",
+        },
+        headers: {
+          type: "array",
+          required: false,
+          description: "Import headers discovered for this run",
+        },
+        failures: {
+          type: "array",
+          required: false,
+          description: "Normalized import failures with context",
+        },
+        validationErrors: {
+          type: "array",
+          required: false,
+          description: "Validation errors collected before import processing",
+        },
+        validationReport: {
+          type: "object",
+          required: false,
+          description:
+            "Structured row-level validation report for governed file imports",
+        },
+        failureCount: {
+          type: "int",
+          required: false,
+          description: "Number of recorded import failures",
+        },
+        validationErrorCount: {
+          type: "int",
+          required: false,
+          description: "Number of recorded validation errors",
+        },
+      },
+    },
+  },
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.import.dataInstallation.backoffice = Object.assign(
+  {
+    description:
+      "Installed release receipts at this destination. Use Data Import to validate and install releases; editing a receipt does not install data.",
+  },
+  module.exports.import.dataInstallation.backoffice,
+);
+module.exports.import.importDefinition.backoffice = Object.assign(
+  {
+    description:
+      "Reusable import definitions describing how a governed source maps to a destination model.",
+  },
+  module.exports.import.importDefinition.backoffice,
+);
+module.exports.import.importRun.backoffice = Object.assign(
+  {
+    description:
+      "Import execution history and outcomes at this destination. Inspect the original run before retrying uncertain work.",
+  },
+  module.exports.import.importRun.backoffice,
+);

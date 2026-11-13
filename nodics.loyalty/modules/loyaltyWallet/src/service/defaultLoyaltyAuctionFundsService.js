@@ -73,7 +73,9 @@ module.exports = {
    * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
    */
   remote: async function (request, target, body) {
-    if (!target.moduleName || !target.connectionName || !target.apiName || !target.targetAuthority?.runtimeRole ||
+    if (!target.moduleName || !target.connectionName || !target.apiName || !target.targetAuthority || target.targetAuthority.publication !== 'OPERATIONAL' ||
+            Object.keys(target.targetAuthority).some(key => !['publication', 'server', 'environment'].includes(key)) ||
+            Object.values(target.targetAuthority).some(value => typeof value !== 'string' || !value.trim() || value !== value.trim()) ||
         !Number.isSafeInteger(target.timeoutMs) || target.timeoutMs < 1 || target.maxAttempts !== 1)
       this.fail("CONFIGURATION");
     const result = await SERVICE.DefaultModuleService.invokeModule({ ...target, local: false, methodName: "POST",

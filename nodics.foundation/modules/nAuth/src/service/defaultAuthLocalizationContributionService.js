@@ -22,7 +22,7 @@ const contribution = {
     ownerModule: 'nAuth',
     entries: [{
         namespace: 'auth',
-        key: 'invalidCredentials',
+        key: 'invalid_credentials',
         defaultMessage: 'The employee identifier or password is incorrect.',
         parameters: [],
         exposure: 'PUBLIC'

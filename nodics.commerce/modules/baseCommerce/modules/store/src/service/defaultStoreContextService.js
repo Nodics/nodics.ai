@@ -13,6 +13,15 @@
 "use strict";
 /** @module store/src/service/defaultStoreContextService @description Resolves an active tenant-scoped selling context. @layer service @owner store */
 module.exports = {
+  /** Admits operational selling records through the local Store owner. */
+  validateImportTarget: function (request) {
+    if (request.enterpriseCode !== undefined || request.lifecycle === "PUBLISHABLE" ||
+        CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL" ||
+        SERVICE.DefaultModuleService?.isLocalModuleActive?.("store") !== true)
+      throw this.contextError("Store records require the local operational Store owner");
+    return true;
+  },
+
   /** Resolves one explicit active outlet through generated Store reads using caller authority. @param {Object} request Authorized operation context. @param {string} enterpriseCode Canonical merchant. @returns {Promise<Object>} Current bounded store identity/revision. */
   resolveMerchantStore: async function (request, enterpriseCode) {
     const code = this.resolveStoreCode(request);

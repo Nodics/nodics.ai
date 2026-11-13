@@ -39,7 +39,8 @@ function fixture() {
     badRead: false, loseCAS: false, commitInputs: false };
   global.CONFIG = { get: key => key === 'loyaltyRewardProvider'
     ? require('../../../../payment/modules/paymentProviders/modules/loyaltyRewardProvider/config/properties').loyaltyRewardProvider : undefined };
-  global.SERVICE = { DefaultCheckoutCompensationRecoveryService: recovery,
+  global.SERVICE = {
+      DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) }, DefaultCheckoutCompensationRecoveryService: recovery,
     DefaultCheckoutPlacementPortsService: { serviceAuthData: r => ({ tenant: r.tenant, enterpriseCode: r.enterpriseCode }) },
     DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
     DefaultPaymentExecutionService: payment, DefaultLoyaltyRewardPaymentProviderService: provider,

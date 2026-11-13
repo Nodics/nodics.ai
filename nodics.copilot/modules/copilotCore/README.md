@@ -1,5 +1,9 @@
 # copilotCore
 
+Environment metadata follows the active module through nConfig's trusted context
+binding, independently of runtime role names. This does not activate a provider
+or grant actor permissions; deployment overrides remain explicit.
+
 Optional [natural-language preparation](llm/examples/natural-language-preparation.md)
 interprets explicit enterprise, invitation, product, price and collection-centre requests without granting
 execution authority or advertising arbitrary Axis automation.

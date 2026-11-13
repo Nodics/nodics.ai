@@ -18,6 +18,8 @@
 const assert = require('node:assert/strict');
 const { describe, it, beforeEach } = require('node:test');
 const consumer = require('../src/service/publication/defaultCmsMediaDependencyReadinessService');
+const mediaReadiness = require('../../media/src/service/publication/defaultMediaDependencyReadinessService');
+const mediaReview = require('../../media/src/service/publication/defaultMediaPublicationReviewService');
 const baseline = require('../src/service/publication/defaultCmsPublicationBaselineService');
 
 describe('CMS retained Media dependency readiness', () => {
@@ -71,6 +73,8 @@ describe('CMS retained Media dependency readiness', () => {
         };
         global.SERVICE = {
             DefaultCmsMediaDependencyReadinessService: consumer,
+            DefaultMediaDependencyReadinessService: mediaReadiness,
+            DefaultMediaPublicationReviewService: mediaReview,
             DefaultCmsPublicationVersionProviderService: {
                 manifests: () => ({
                     getManifest: async (code, context) => {
@@ -122,8 +126,8 @@ describe('CMS retained Media dependency readiness', () => {
         assert.equal(result.qualified, false);
         assert.equal(result.dependencies[0].status, 'NOT_ACTIVATED');
         assert.match(result.dependencies[0].publicationCode, /^cmsMedia_[a-f0-9]{64}$/);
-        assert.equal(result.dependencies[0].publicationCode, consumer.publicationCode(publication, asset));
-        const reference = consumer.publicationCode(publication, asset);
+        assert.equal(result.dependencies[0].publicationCode, mediaReadiness.publicationCode(publication, asset));
+        const reference = mediaReadiness.publicationCode(publication, asset);
         for (const [source, key, value] of [
             [publication, 'code', 'another-publication'],
             [publication, 'targetVersion', 'another-manifest'],
@@ -132,7 +136,7 @@ describe('CMS retained Media dependency readiness', () => {
             [asset, 'checksum', 'c'.repeat(64)]
         ]) {
             const changed = { ...source, [key]: value };
-            assert.notEqual(consumer.publicationCode(source === publication ? changed : publication,
+            assert.notEqual(mediaReadiness.publicationCode(source === publication ? changed : publication,
                 source === asset ? changed : asset), reference);
         }
         assert.equal(calls.length, 2);

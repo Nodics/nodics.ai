@@ -30,9 +30,8 @@ module.exports = {
     /** Captures original authenticated enterprise aliases, never replacing a foreign signed scope. @param {Object} request Original operation. @returns {Object} Detached own-enterprise context. */
     context: function (request) {
         SERVICE.DefaultPromotionOperationService.requireOperationalRuntime();
-        const role = CONFIG.get('runtimeRole');
         const auth = request.authData || {}, enterpriseCode = auth.enterpriseCode || auth.entCode;
-        if ((typeof role === 'string' ? role : role?.code) !== 'COMMERCE' ||
+        if (SERVICE.DefaultModuleService?.isLocalModuleActive?.('promotion') !== true || CONFIG.get('runtimeRole')?.publication !== 'OPERATIONAL' ||
             !this.identifier(request.tenant) || auth.tenant !== request.tenant || !this.identifier(enterpriseCode) ||
             [request.enterpriseCode, request.entCode, auth.enterpriseCode, auth.entCode].some(value => value !== undefined && value !== enterpriseCode) ||
             [request.tenantCode, auth.tenantCode].some(value => value !== undefined && value !== request.tenant) ||

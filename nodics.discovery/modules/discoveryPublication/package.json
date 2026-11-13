@@ -1,7 +1,7 @@
 {
     "name": "discoveryPublication",
     "version": "0.0.0",
-    "index": "75.50",
+    "index": "75.85",
     "private": true,
     "main": "nodics.js",
     "description": "Discovery publication capability.",
@@ -18,9 +18,14 @@
             "llm"
         ],
         "runtime": {
-            "router": false,
+            "router": true,
             "publish": false,
-            "web": false
+            "web": false,
+            "ownership": "functional"
         }
-    }
+    },
+    "requiredModules": [
+        "discoveryProjection",
+        "discoveryRuntime"
+    ]
 }

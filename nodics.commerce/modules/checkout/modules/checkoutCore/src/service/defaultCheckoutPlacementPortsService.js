@@ -356,9 +356,7 @@ module.exports = {
   },
   /** Selects a Payment-owned provider adapter for the prepared method. @param {Object} method Prepared payment method. @returns {Object} Provider adapter. */
   paymentAdapter: function (method) {
-    if (method && method.methodCode === "LOYALTY_REWARD")
-      return SERVICE.DefaultLoyaltyRewardPaymentProviderService;
-    return SERVICE.DefaultStripeSandboxAdapterService;
+    return SERVICE.DefaultPaymentProviderSelectionService.resolve(method?.methodCode, method?.providerCode);
   },
   /** Returns true when the prepared method needs provider execution. @param {Object} method Prepared payment method. @returns {boolean} Provider execution flag. */
   requiresProviderAuthorization: function (method) {
@@ -721,9 +719,9 @@ module.exports = {
       capturePayment: async (request, order, authorization) => {
         if (!self.requiresProviderAuthorization(authorization))
           return authorization;
-        const role = CONFIG.get("runtimeRole"), policy = CONFIG.get("stripeProvider") || {};
+        const policy = CONFIG.get("stripeProvider") || {};
         const adapter = self.paymentAdapter(authorization);
-        const offlineCapture = (typeof role === "string" ? role : role?.code) === "COMMERCE" &&
+        const offlineCapture = SERVICE.DefaultModuleService?.isLocalModuleActive?.("checkoutCore") === true && CONFIG.get("runtimeRole")?.publication === "OPERATIONAL" &&
           authorization.methodCode === "CARD" && authorization.providerCode === "stripe-sandbox" &&
           adapter === SERVICE.DefaultStripeSandboxAdapterService && policy.enabled === true &&
           policy.sandboxOnly === true && policy.liveQualified === false && policy.maturity === "OFFLINE_CONFORMANCE";

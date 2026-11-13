@@ -19,6 +19,58 @@
 const participationWrites = new WeakSet();
 const importPlacementRequests = new WeakMap();
 module.exports = {
+  /** Reads default-off browser signup policy and validates the existing distributed limiter bounds. @returns {Object} Validated owner policy; no caller can choose enablement. */
+  browserFormPolicy: function () {
+    const policy = CONFIG.get("profileCustomerRegistrationForm")?.browser;
+    if (policy?.enabled !== true ||
+        ["request", "identity"].some((key) => {
+          const rate = policy.rates?.[key];
+          return !Number.isSafeInteger(rate?.limit) || rate.limit < 1 ||
+            !Number.isSafeInteger(rate?.windowSeconds) || rate.windowSeconds < 1;
+        })) throw new CLASSES.NodicsError("ERR_PROFILE_REGISTRATION_POLICY");
+    return policy;
+  },
+  /** Admits browser signup only in the configured default placement using the existing origin, rate, normalization and signup owners. @param {Object} request Original browser request. @returns {Promise<Object>} Credential-free completion, separate from sign-in and contact verification. */
+  registerBrowserForm: async function (request) {
+    const policy = structuredClone(this.browserFormPolicy());
+    const sessions = SERVICE.DefaultBrowserSessionService;
+    const browserRequest = { ...request, browserSessionPrincipalType: "Customer" };
+    sessions.validateOrigin(browserRequest, sessions.config(browserRequest));
+    const tenant = CONFIG.get("defaultTenant");
+    const enterpriseCode = CONFIG.get("defaultEnterprise");
+    const ip = request.httpRequest?.ip;
+    if ([tenant, enterpriseCode].some((value) => typeof value !== "string" ||
+        !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value)) ||
+        typeof ip !== "string" || !ip || ip.length > 128)
+      throw new CLASSES.NodicsError("ERR_PROFILE_REGISTRATION_POLICY");
+    if (request.tenant !== tenant ||
+        [request.entCode, request.enterprise?.code, request.httpRequest?.headers?.["x-enterprise-code"]]
+          .some((value) => value !== undefined && value !== enterpriseCode))
+      throw new CLASSES.NodicsError("ERR_AUTH_00003");
+    const rate = async (operation, identity) => {
+      if (typeof SERVICE.DefaultRateLimitService?.enforce !== "function")
+        throw new CLASSES.NodicsError("ERR_PROFILE_REGISTRATION_POLICY");
+      await SERVICE.DefaultRateLimitService.enforce({
+        moduleName: "profile", channelName: "rateLimit", tenant,
+        capability: "profile.customerRegistration", operation, identity,
+        ...policy.rates[operation], requireDistributed: true,
+      });
+    };
+    await rate("request", [ip]);
+    const model = this.formModel(request.httpRequest?.body || {});
+    await rate("identity", [model.loginId]);
+    await this.readActiveRegistrationPlacement(tenant, enterpriseCode);
+    // Recheck admission after awaited owner reads before entering the normal pipeline.
+    if (JSON.stringify(this.browserFormPolicy()) !== JSON.stringify(policy) ||
+        CONFIG.get("defaultTenant") !== tenant || CONFIG.get("defaultEnterprise") !== enterpriseCode)
+      throw new CLASSES.NodicsError("ERR_PROFILE_REGISTRATION_POLICY");
+    sessions.validateOrigin(browserRequest, sessions.config(browserRequest));
+    await FACADE.DefaultCustomerFacade.signUp({
+      tenant, entCode: enterpriseCode, enterprise: { code: enterpriseCode }, model,
+      authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+    });
+    return { registered: true };
+  },
   /** Reads fresh active placement for the explicit Customer import target, never inferring an enterprise from its tenant. @param {Object} metadata Governed operation metadata. @returns {Promise<Object>} Existing Enterprise/Tenant owner result. */
   readImportRegistrationPlacement: async function (metadata) {
     if (
@@ -1413,15 +1465,16 @@ module.exports = {
         tenant: request.tenant,
         loginId: request.model.loginId,
       })
-      .then((error) => {
+      .then(() => {
         process.error(
           request,
           response,
-          new CLASSES.NodicsError(error, null, "ERR_PRFL_00007"),
+          new CLASSES.NodicsError("ERR_PRFL_00007"),
         );
       })
-      .catch((success) => {
-        process.nextSuccess(request, response);
+      .catch((error) => {
+        if (error?.code === "ERR_PRFL_00005") process.nextSuccess(request, response);
+        else process.error(request, response, error);
       });
   },
   /**

@@ -66,6 +66,7 @@ sequenceDiagram
 - A failed or ambiguous claim acknowledgement never starts the owner operation.
 - Once claimed, the request cannot be automatically activated a second time.
 - A failed owner call or lost completion acknowledgement can leave ACTIVATING.
+  A proven stale property write closes as STALE and requires a new review.
   This is a recovery signal, not proof that nothing happened.
 - Inspect the actual owner state and available audit evidence before deciding
   recovery. Do not manually reset the status to APPROVED or replay the mutation.

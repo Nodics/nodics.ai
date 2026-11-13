@@ -1,0 +1,1396 @@
+{
+  "formatVersion": 1,
+  "ownerModule": "rulesApi",
+  "entries": [
+    {
+      "namespace": "rules",
+      "key": "invalid-detail",
+      "defaultMessage": "The owner returned an incompatible rule revision.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أعادت الخدمة المختصة مراجعة قواعد غير متوافقة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "missing-provider",
+      "defaultMessage": "The rule has no property provider.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا يتوفر مزوّد خصائص لهذه القاعدة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "history",
+      "defaultMessage": "History",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "السجل"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "audit",
+      "defaultMessage": "Audit",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التدقيق"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "bands",
+      "defaultMessage": "Bands",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النطاقات"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "property-catalogue",
+      "defaultMessage": "Property catalogue",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتالوج الخصائص"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "linked-bands",
+      "defaultMessage": "Linked bands",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النطاقات المرتبطة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "unsaved",
+      "defaultMessage": "Save or explicitly discard local changes before changing the selection.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "احفظ التغييرات المحلية أو تجاهلها صراحةً قبل تغيير الاختيار."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "invalid-list",
+      "defaultMessage": "The owner returned an incompatible rule list.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أعادت الخدمة المختصة قائمة قواعد غير متوافقة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "stale-command",
+      "defaultMessage": "The revision or your permissions changed. Reload and review before continuing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تغيّرت المراجعة أو صلاحياتك. أعد التحميل والمراجعة قبل المتابعة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "inspect-before-retry",
+      "defaultMessage": "Inspect the saved revision before another command. No request is automatically replayed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "افحص المراجعة المحفوظة قبل تنفيذ أمر آخر. لا يُعاد أي طلب تلقائياً."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "builder",
+      "defaultMessage": "Builder",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المصمم"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "simulation",
+      "defaultMessage": "Simulation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المحاكاة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "review",
+      "defaultMessage": "Review",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المراجعة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "workspace",
+      "defaultMessage": "Business Rules workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مساحة عمل قواعد الأعمال"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "description",
+      "defaultMessage": "Build conditions, test their outcome and submit the saved revision for review.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أنشئ الشروط واختبر نتائجها، ثم أرسل المراجعة المحفوظة للموافقة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "reload-saved",
+      "defaultMessage": "Reload saved revision",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعادة تحميل المراجعة المحفوظة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "discard",
+      "defaultMessage": "Discard local changes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تجاهل التغييرات المحلية"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "unsaved-changes",
+      "defaultMessage": "You have local changes. Save them before validation, simulation or approval.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لديك تغييرات محلية. احفظها قبل التحقق أو المحاكاة أو الموافقة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "definitions",
+      "defaultMessage": "Rule definitions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعريفات القواعد"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "refresh",
+      "defaultMessage": "Refresh",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "loading",
+      "defaultMessage": "Loading…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التحميل…"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "empty",
+      "defaultMessage": "No authorized rule definitions.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد تعريفات قواعد مسموح بها."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "select",
+      "defaultMessage": "Select a rule definition.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر تعريف قاعدة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "revision",
+      "defaultMessage": "Draft revision",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة المسودة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "version",
+      "defaultMessage": "Published version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النسخة المنشورة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "validation-passed",
+      "defaultMessage": "Saved draft validation passed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اجتازت المسودة المحفوظة التحقق."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "validation-failed",
+      "defaultMessage": "Saved draft needs correction before publication.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحتاج المسودة المحفوظة إلى تصحيح قبل النشر."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "approval",
+      "defaultMessage": "Approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموافقة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "open-review",
+      "defaultMessage": "Open approval review",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح مراجعة الموافقة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "work-areas",
+      "defaultMessage": "Rules policy work areas",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أقسام سياسة القواعد"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "rule-builder",
+      "defaultMessage": "Rule builder",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مصمم القواعد"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "draft-ready",
+      "defaultMessage": "The next draft is ready for editing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المسودة التالية جاهزة للتحرير."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "prepare-next",
+      "defaultMessage": "Prepare next draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تجهيز المسودة التالية"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "catalogue-required",
+      "defaultMessage": "Current owner authoring metadata is required before editing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يلزم توفر بيانات التأليف الحالية من الخدمة المختصة قبل التحرير."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "saved",
+      "defaultMessage": "Draft saved.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حُفظت المسودة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "save",
+      "defaultMessage": "Save draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حفظ المسودة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "validated",
+      "defaultMessage": "Draft validation passed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اجتازت المسودة التحقق."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "validate",
+      "defaultMessage": "Validate",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقق"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "no-bands",
+      "defaultMessage": "No governed score-band set is available for this policy.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا تتوفر مجموعة نطاقات درجات خاضعة للحوكمة لهذه السياسة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "bands-saved",
+      "defaultMessage": "Score-band draft saved.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حُفظت مسودة نطاقات الدرجات."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "save-bands",
+      "defaultMessage": "Save score-band draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حفظ مسودة نطاقات الدرجات"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "review-publish-bands",
+      "defaultMessage": "Review and publish bands",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة النطاقات ونشرها"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "band-draft-ready",
+      "defaultMessage": "Score-band draft is ready.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسودة نطاقات الدرجات جاهزة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "prepare-band-draft",
+      "defaultMessage": "Prepare next band draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تجهيز مسودة النطاقات التالية"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "simulated",
+      "defaultMessage": "Simulation completed without publishing the draft.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اكتملت المحاكاة دون نشر المسودة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "simulate",
+      "defaultMessage": "Simulate draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "محاكاة المسودة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "final-score",
+      "defaultMessage": "Final score",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الدرجة النهائية"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "band",
+      "defaultMessage": "Band",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النطاق"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "no-band",
+      "defaultMessage": "No band",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بلا نطاق"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "matched",
+      "defaultMessage": "Matched",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مطابق"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "skipped",
+      "defaultMessage": "Skipped",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متجاوز"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "saved-review",
+      "defaultMessage": "Review the saved revision below. Publication requires owner validation, a current simulation and Process approval.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع النسخة المحفوظة أدناه. يتطلب النشر تحقق الخدمة المختصة ومحاكاة حديثة وموافقة من سير العمل."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "submit",
+      "defaultMessage": "Submit for approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إرسال للموافقة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "versions",
+      "defaultMessage": "Versions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النسخ"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "no-versions",
+      "defaultMessage": "No authorized versions returned.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تُرجع الخدمة نسخاً مسموحاً بها."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "no-audit",
+      "defaultMessage": "No authorized audit events returned.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تُرجع الخدمة أحداث تدقيق مسموحاً بها."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "publish-bands",
+      "defaultMessage": "Publish score bands",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نشر نطاقات الدرجات"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "submit-exact",
+      "defaultMessage": "This sends the saved, validated and simulated revision to Process for review. It does not bypass approval.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يُرسل هذا الإجراء المراجعة المحفوظة والمتحقق منها والمحاكاة إلى سير العمل للمراجعة. لا يتجاوز الموافقة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "reviewed",
+      "defaultMessage": "I have reviewed this exact saved revision.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجعت هذه النسخة المحفوظة بعينها."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "cancel",
+      "defaultMessage": "Cancel",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إلغاء"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "bands-published",
+      "defaultMessage": "Score bands published.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نُشرت نطاقات الدرجات."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "submitted",
+      "defaultMessage": "Draft submitted for Process approval.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أُرسلت المسودة إلى سير العمل للموافقة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "confirm",
+      "defaultMessage": "Confirm",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تأكيد"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "inspect-policy",
+      "defaultMessage": "Inspect saved policy",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص السياسة المحفوظة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "review-exact",
+      "defaultMessage": "This is the exact saved revision awaiting your decision. The owner checks it again when you approve.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "هذه هي المراجعة المحفوظة التي تنتظر قرارك. تعيد الخدمة المختصة التحقق منها عند الموافقة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "true",
+      "defaultMessage": "True",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صحيح"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "false",
+      "defaultMessage": "False",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "خطأ"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "one-per-line",
+      "defaultMessage": "One value per line",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قيمة واحدة في كل سطر"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "date-epoch",
+      "defaultMessage": "Time in milliseconds since 1 January 1970, as required by this operator",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الوقت بالمللي ثانية منذ ١ يناير ١٩٧٠، وفق متطلبات عامل المقارنة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "group",
+      "defaultMessage": "Group",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المجموعة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "group-code",
+      "defaultMessage": "Group code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز المجموعة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "match",
+      "defaultMessage": "Match conditions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مطابقة الشروط"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "enabled",
+      "defaultMessage": "Enabled",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مفعّل"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "condition",
+      "defaultMessage": "Condition",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الشرط"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "condition-code",
+      "defaultMessage": "Condition code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز الشرط"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "property",
+      "defaultMessage": "Property",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الخاصية"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator",
+      "defaultMessage": "Comparison",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المقارنة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "value",
+      "defaultMessage": "Value",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القيمة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "remove",
+      "defaultMessage": "Remove",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إزالة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "add-value",
+      "defaultMessage": "Add value",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة قيمة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "upper-value",
+      "defaultMessage": "Upper value",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القيمة العليا"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "missing-value",
+      "defaultMessage": "When the value is missing",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عند غياب القيمة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "minimum-quality",
+      "defaultMessage": "Minimum input quality",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحد الأدنى لجودة المدخلات"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "no-minimum",
+      "defaultMessage": "No minimum",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "دون حد أدنى"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "minimum-confidence",
+      "defaultMessage": "Minimum confidence",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحد الأدنى للثقة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "remove-condition",
+      "defaultMessage": "Remove condition",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إزالة الشرط"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "add-condition",
+      "defaultMessage": "Add condition",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة شرط"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "depth-limit",
+      "defaultMessage": "Nested content exceeds the current owner limit. It is preserved and requires owner review.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يتجاوز المحتوى المتداخل الحد الحالي للخدمة المختصة. سيُحفظ كما هو ويحتاج إلى مراجعتها."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "add-nested-group",
+      "defaultMessage": "Add nested group",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة مجموعة متداخلة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "outcome",
+      "defaultMessage": "Outcome",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النتيجة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "no-outcome",
+      "defaultMessage": "No separate outcome",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "دون نتيجة منفصلة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "remove-group",
+      "defaultMessage": "Remove group",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إزالة المجموعة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "add-group",
+      "defaultMessage": "Add group",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة مجموعة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "band-code",
+      "defaultMessage": "Band code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز النطاق"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "minimum-score",
+      "defaultMessage": "Minimum score",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الدرجة الدنيا"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "maximum-score",
+      "defaultMessage": "Maximum score",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الدرجة القصوى"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "open-band",
+      "defaultMessage": "Leave empty for an open final range",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اتركه فارغاً إذا كان النطاق الأخير مفتوحاً"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "preserved-outcome",
+      "defaultMessage": "Extended outcome is preserved and requires its owner editor.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حُفظت النتيجة الموسّعة كما هي وتحتاج إلى محرر الخدمة المختصة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "remove-band",
+      "defaultMessage": "Remove band",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إزالة النطاق"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "add-band",
+      "defaultMessage": "Add band",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة نطاق"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "simulation-contract-required",
+      "defaultMessage": "This provider has not declared structured simulation input. Its existing input is preserved.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم يعلن هذا المزوّد مدخلات محاكاة منظمة. حُفظت مدخلاته الحالية كما هي."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "simulation-only",
+      "defaultMessage": "These values are hypothetical. Simulation does not change customer records or publish policy.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "هذه قيم افتراضية. لا تغيّر المحاكاة سجلات العملاء ولا تنشر السياسة."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "add-simulation-property",
+      "defaultMessage": "Add simulation property",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة خاصية للمحاكاة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "preserved-input",
+      "defaultMessage": "Unknown input is preserved.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حُفظ المدخل غير المعروف كما هو."
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "available",
+      "defaultMessage": "Value is available",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القيمة متاحة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "input-quality",
+      "defaultMessage": "Input quality",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جودة المدخلات"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "confidence",
+      "defaultMessage": "Confidence",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الثقة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "remove-input",
+      "defaultMessage": "Remove input",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إزالة المدخل"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "workspace-title",
+      "defaultMessage": "Rule Definitions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعريفات القواعد"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "match.all",
+      "defaultMessage": "All conditions",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كل الشروط"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "match.any",
+      "defaultMessage": "Any condition",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أي شرط"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "missing.required",
+      "defaultMessage": "required",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مطلوب"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "missing.optional",
+      "defaultMessage": "optional",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختياري"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "missing.fallback_allowed",
+      "defaultMessage": "fallback allowed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يُسمح بالقيمة البديلة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.equals",
+      "defaultMessage": "equals",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يساوي"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.not_equals",
+      "defaultMessage": "not equals",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا يساوي"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.in",
+      "defaultMessage": "in",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ضمن القائمة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.not_in",
+      "defaultMessage": "not in",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ليس ضمن القائمة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.greater_than",
+      "defaultMessage": "greater than",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أكبر من"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.greater_than_or_equal",
+      "defaultMessage": "greater than or equal",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أكبر من أو يساوي"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.less_than",
+      "defaultMessage": "less than",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أقل من"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.less_than_or_equal",
+      "defaultMessage": "less than or equal",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أقل من أو يساوي"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.between",
+      "defaultMessage": "between",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بين"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.is_available",
+      "defaultMessage": "is available",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متاح"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.is_not_available",
+      "defaultMessage": "is not available",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "غير متاح"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.is_true",
+      "defaultMessage": "is true",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صحيح"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.is_false",
+      "defaultMessage": "is false",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "خطأ"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.contains",
+      "defaultMessage": "contains",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتوي على"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.does_not_contain",
+      "defaultMessage": "does not contain",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا يحتوي على"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.contains_any",
+      "defaultMessage": "contains any",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتوي على أي قيمة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "operator.contains_all",
+      "defaultMessage": "contains all",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتوي على كل القيم"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "status.active",
+      "defaultMessage": "ACTIVE",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نشط"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "status.draft",
+      "defaultMessage": "DRAFT",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسودة"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "status.approved",
+      "defaultMessage": "APPROVED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معتمد"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "status.pending",
+      "defaultMessage": "PENDING",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قيد الانتظار"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "status.rejected",
+      "defaultMessage": "REJECTED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مرفوض"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "status.inactive",
+      "defaultMessage": "INACTIVE",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "غير نشط"
+      }
+    },
+    {
+      "namespace": "rules",
+      "key": "status.published",
+      "defaultMessage": "PUBLISHED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منشور"
+      }
+    }
+  ]
+}

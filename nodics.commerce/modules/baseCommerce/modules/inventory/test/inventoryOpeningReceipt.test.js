@@ -21,10 +21,10 @@ const schemas = require('../src/schemas/schemas').inventory;
 function fixture(t) {
     const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES, NODICS: global.NODICS, UTILS: global.UTILS };
     t.after(() => Object.assign(global, previous));
-    const state = { tables: { balance: [], movement: [], receipt: [] }, writes: 0, transactions: 0, capable: true, fail: '', lost: false, role: 'COMMERCE', publicationRole: 'ONLINE',
+    const state = { tables: { balance: [], movement: [], receipt: [] }, writes: 0, transactions: 0, capable: true, fail: '', lost: false, role: 'UNRELATED', runtimePublication: 'OPERATIONAL', publicationRole: 'ONLINE',
         transactionPolicy: { enabled: true, failClosed: true, maximumCommitTimeMs: 5000 } };
     global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
-    global.CONFIG = { get: key => key === 'runtimeRole' ? { code: state.role } : key === 'inventory' ? { publication: { runtimeRole: state.publicationRole } } : key === 'databaseTransactions' ? state.transactionPolicy : {} };
+    global.CONFIG = { get: key => key === 'runtimeRole' ? { code: state.role, publication: state.runtimePublication } : key === 'inventory' ? { publication: { runtimeRole: state.publicationRole } } : key === 'databaseTransactions' ? state.transactionPolicy : {} };
     global.UTILS = { createModelName: name => name };
     global.NODICS = { getModels: () => Object.fromEntries(['inventoryBalance', 'inventoryMovement', 'inventoryOpeningReceiptRecord'].map(name =>
         [name, { name, versioned: false, rawSchema: schemas[name], compareAndSetItem() {} }])) };
@@ -51,7 +51,7 @@ function fixture(t) {
         }
     });
     let tail = Promise.resolve();
-    global.SERVICE = {
+    global.SERVICE = { DefaultModuleService: { isLocalModuleActive: moduleName => ["inventory"].includes(moduleName), },
         DefaultSecuredRequestPipelineService: {
             getGrantedPermissions: req => req.authData.permissions || [],
             isPermissionGranted: (permission, granted) => granted.includes(permission)
@@ -119,11 +119,11 @@ test('concurrent same intake commits once; changed intake/source or preexisting 
 
 test('Staged, unknown runtime, missing human permission and tenant/enterprise mismatches never write', async t => {
     const f = fixture(t);
-    for (const role of ['COMMERCE_STAGED', 'PLATFORM', '']) {
-        f.state.role = role;
+    for (const publication of ['STAGED', 'ONLINE', undefined]) {
+        f.state.runtimePublication = publication;
         await assert.rejects(owner.receive(f.request, f.input, f.source), { code: 'ERR_INVENTORY_OPENING_UNAVAILABLE' });
     }
-    f.state.role = 'COMMERCE';
+    f.state.runtimePublication = 'OPERATIONAL';
     for (const auth of [{ ...f.request.authData, permissions: [] }, { ...f.request.authData, tenant: 'other' }, { ...f.request.authData, entCode: 'other' }, { ...f.request.authData, principalType: 'customer' }, { ...f.request.authData, tokenType: 'service' }])
         await assert.rejects(owner.receive({ ...f.request, authData: auth }, f.input, f.source), { code: 'ERR_AUTH_00003' });
     SERVICE.DefaultInventoryPublicationService.readConfigured = async () => [{ schema: 'warehouse', policy: { code: f.input.warehouseCode, status: 'ACTIVE', tenant: f.request.tenant, enterpriseCode: 'other' } }];

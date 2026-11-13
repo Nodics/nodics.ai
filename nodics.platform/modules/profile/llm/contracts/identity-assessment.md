@@ -47,7 +47,7 @@ The existing assessment workflow has a separately default-disabled
 `ownerService` defaults to `DefaultProfileBootstrapIdentityAssessmentService`.
 This is not a login exemption list or a qualification setting. Its bounded
 `sources` select exact approved Init release codes and versions; the framework
-selector is `profile:init-v001` version `0.0.8` from `init-v001`. Later layers may select their
+selector is `profile:init-v001` version `0.0.1` from `init-v001`. Later layers may select their
 approved releases or override the comparison owner, preserving the contracts
 below. A selection is usable only when the existing nImport installation owner
 reports exactly one active CURRENT installation with the same release version,
@@ -60,7 +60,7 @@ a synthetic identity, claim a record, mutate credentials or install indexes.
 Only safe expected principal metadata is retained. The fresh complete inventory
 is read from `saveAll` or `ensureBootstrapAll` principal headers without invoking
 either operation. Historical receipts remain bound to their original release
-version and checksum: a `0.0.1` or `0.0.2` receipt cannot qualify the `0.0.3` source. The inventory
+version and checksum; a receipt for a different source cannot qualify the selected release. The inventory
 must match every non-email, non-service source principal exactly, including its
 kind, code, login, active state, declared principal type and groups. Credential
 references must resolve to their exact existing login owner; this metadata check
@@ -73,10 +73,13 @@ remain present after successful comparison.
 
 Human bootstrap employees and the credential-bearing guest belong to the
 configured authority tenant (`defaultTenant`), not each newly provisioned tenant.
-The forward `profile:init-v001` version `0.0.8` separates `defaultEmployeeData`
+Release 0 `profile:init-v001` version `0.0.1` separates `defaultEmployeeData`
 (humans) from `preservedServiceEmployeeData` (runtime service principal). Its human
 and guest headers declare `options.tenants: [defaultTenant]`. Service employees,
-groups and supporting reference data retain their tenant-local dispatch.
+groups and supporting reference data retain their tenant-local dispatch. The
+authority-tenant guest is an inactive Customer with a generated credential. The
+bootstrap principals and default Enterprise omit optional address and contact
+links. Deployments can supply their own records through governed project data.
 
 This uses nImport's existing `resolveTargetTenants`: the explicit request tenant
 intersects the finalized layered header selector and never broadens it. Later
@@ -88,37 +91,27 @@ customizations now belong to `defaultServiceEmployee` and its separate
 The source-review owner uses the same selector before reading expected records.
 That selection never broadens the review comparator's authority-tenant ceiling.
 
-Project contributions do not have to rename their own `init-v001` root merely
-because the framework's selected source moved to `init-v001`. The existing
-immutable release plan resolves each owner's own physical root, then merges
-matching header/file identities in layer order. A project still needs its
-contribution selected and checksum-covered by its own governed manifest/plan;
-unselected files are never admitted by filename matching alone. Human additions
-in a project's `defaultEmployeeData` and selectors on `defaultEmployee` continue
-to compose when its header contribution matches the selected successor's
-`preservedUsersHeader.js` identity. Human record keys `record0`, `record2` through
-`record5` are retained.
+Each owner declares its own release and checksum-covered files. nImport merges selected
+headers and records in layer order. The framework ships the human administrator in
+`defaultEmployeeData`, the guest in the customer dataset, and the internal
+`apiAdmin` in `preservedServiceEmployeeData`. Demo employees belong in application
+Sample. Project credentials are configured through the Profile bootstrap settings;
+they do not require copied employees or runtime assignment files.
 
-An existing service contribution under the old mixed `defaultEmployeeData`
-does require an explicit project migration: move its `record1` API-admin
-customization and any extra service records to `preservedServiceEmployeeData`,
-and contribute `defaultServiceEmployee` in the project's matching header, moving
-service-specific selectors/macros there. Both the header and record file must be
-covered by the project's forward manifest: header source-root ownership still
-fences which data contributions can compose. Leaving those records
-in the human file retains them under the human header's authority selector; it
-does not customize the new per-tenant service dataset. No automatic record
-classification, hidden remapping or unmanifested compatibility import occurs.
+On first startup, nImport installs the prerequisites declared by `profile:init-v001`
+as part of the same Init run. For example, Waste Carbon owns the definition of
+`carbon.holdings.finalize`. Profile declares the Carbon Init release as a prerequisite
+so the catalogue entry exists when Profile creates `apiAdmin`.
 
-Forward Init preserves installed identities through `ensureBootstrapAll` and
-selects module-owned group data as prerequisites. Group seeds use
-`ensureReferenceAll`: existing mappings, including intentionally removed
-permissions, are not replaced or unioned with source defaults. Assessment fixtures
-read those owner records, never the historical config-generated group aggregate.
+Forward Init preserves installed identities through `ensureBootstrapAll`.
+Assessment uses the Profile and nConfig bootstrap group sources and the exact
+permission pins described in the [identity access lifecycle](identity-access-lifecycle.md).
+The two group releases use `ensureReferenceAll` to create missing definitions
+and preserve existing mappings, including deliberately narrowed grants. Optional
+capability groups and enterprise roles enter the installation through explicit setup.
 This source release is not authorization to edit customer runtime permissions.
 
-The manifest selects version `0.0.3` within the `init-v001` source root of the
-same release identity; historical installation receipts are not rewritten. Startup
+The manifest selects Release 0 (`0.0.1`) within `init-v001`; historical installation receipts are not rewritten. Startup
 accepts the explicit newer version; a changed checksum at the same installed
 version remains a refusal. No initializer removes prior records, relinks people,
 reclassifies humans as services, grants access or suppresses inventory findings.

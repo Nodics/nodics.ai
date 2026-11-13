@@ -203,3 +203,5 @@ code is absent from the complete `AVAILABLE_SHOP` result. It accepts no entitlem
 identifiers and calls no Digital or Checkout API: already purchased coupon rights
 remain entirely with their owning capability and are not cancelled by catalogue
 omission.
+
+Publishable sample releases declare `selectionPolicy: EXPLICIT`. Operators select and validate these releases through nImport or Axis before Staged preparation; they are never implicit startup or default selections. Publication approval remains separate.

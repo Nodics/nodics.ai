@@ -10,7 +10,7 @@
  */
 
 /* Nodics. Copyright (c) 2026. Governed by the root LICENSE. */
-/** @module profile/test/profilePrivateNotificationTransport @description Deferred private outbound fixtures, not executed or deployment-qualified. @owner profile @layer test */
+/** @module profile/test/profilePrivateNotificationTransport @description Exercises detached private transport and redacted errors; fixtures do not qualify a deployment. @owner profile @layer test */
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const source = require("../src/service/enterprise/defaultEnterpriseManagementService");
@@ -98,4 +98,24 @@ test("private provider errors and unrelated paths cannot leave the owner boundar
     ),
     /ERR_PRFL_00003/,
   );
+});
+
+test("verification retry states preserve only fixed codes without private provider details", async (t) => {
+  const f = fixture(t);
+  CLASSES.NodicsError = class extends Error {
+    constructor(code) {
+      assert.equal(code, "ERR_PRFL_00003", "foreign status definitions are not loaded by Profile");
+      super(code);
+    }
+  };
+  for (const code of ["ERR_COMMS_VERIFY_RATE", "ERR_COMMS_VERIFY_STATE", "ERR_COMMS_VERIFY_CONFLICT"]) {
+    SERVICE.DefaultModuleService.invokeModule = async () => {
+      throw Object.assign(new Error("private proof and provider response"), { code, errInfo: "private", cause: "private" });
+    };
+    await assert.rejects(
+      f.owner.invokePrivateCommunication({ ...command(), apiName: "/internal/verification/commands" }, {}),
+      error => error.message === code && !error.errInfo && !error.cause,
+    );
+    await assert.rejects(f.owner.invokePrivateCommunication(command(), {}), /ERR_PRFL_00003/);
+  }
 });

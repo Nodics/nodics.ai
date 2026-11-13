@@ -84,6 +84,54 @@ module.exports = {
     },
 
     /**
+     * Reports generation availability without reading records, invoking policy
+     * providers, or creating an artifact. Route authorization remains independent.
+     *
+     * @param {Object} request Trusted secured runtime request; caller settings are not used.
+     * @returns {Promise<Object>} Versioned, client-safe runtime availability evidence.
+     */
+    workspace: function (request) {
+        if (request) this.resolveEnterpriseCode(request);
+        let data = {
+            contractVersion: 1,
+            kind: 'GOVERNED_EXPORT',
+            availability: 'UNAVAILABLE',
+            formats: [],
+            reason: 'Export availability could not be verified. Refresh its current status.'
+        };
+        try {
+            let config = this.getConfiguration();
+            data.formats = Array.isArray(config.allowedFormats)
+                ? Array.from(new Set(config.allowedFormats.filter(format => ['csv', 'json'].includes(format)))) : [];
+            let exposure = CONFIG && CONFIG.get ? CONFIG.get('apiExposure') || {} : {};
+            if (typeof config.enabled !== 'boolean') {
+                data.reason = 'Export availability could not be verified. Refresh its current status.';
+            } else if (config.enabled === false || exposure.categories?.dataExport?.enabled !== true) {
+                data.availability = 'DISABLED';
+                data.reason = 'File export is not enabled in this workspace.';
+            } else {
+                let methods = [
+                    ['DefaultSchemaUtilityService', 'getSchema'],
+                    ['DefaultSchemaSafeQueryService', 'searchGenerated'],
+                    ['DefaultSchemaReadAccessPolicyService', 'applyExportPolicies'],
+                    ['DefaultMediaUploadService', 'upload']
+                ];
+                let collaboratorsAvailable = typeof SERVICE !== 'undefined' && methods.every(([name, method]) =>
+                    SERVICE[name] && typeof SERVICE[name][method] === 'function');
+                if (data.formats.length && collaboratorsAvailable) {
+                    data.availability = 'AVAILABLE';
+                    delete data.reason;
+                } else {
+                    data.reason = 'File export is unavailable. Ask your administrator to check this workspace.';
+                }
+            }
+        } catch (_) {
+            data.formats = [];
+        }
+        return Promise.resolve({ code: 'SUC_SYS_00000', data: data });
+    },
+
+    /**
      * Returns governed export history by projecting generated export media.
      * Media remains the storage and download authority; nExport owns the
      * export-run projection shown to BackOffice clients.
@@ -98,14 +146,18 @@ module.exports = {
         let config = this.getConfiguration();
         let mediaConfig = config.media || {};
         let query = this.getHistoryQuery(request, mediaConfig);
-        let response = await SERVICE.DefaultMediaService.get({
+        const limit = this.resolveHistoryLimit(request);
+        const skip = this.resolveHistorySkip(request);
+        const pageNumber = Math.floor(skip / limit) + 1;
+        const pageOffset = skip % limit;
+        const readPage = (page) => SERVICE.DefaultMediaService.get({
             tenant: request.tenant,
             authData: request.authData,
             query: query,
             searchOptions: {
-                limit: this.resolveHistoryLimit(request),
-                skip: this.resolveHistorySkip(request),
-                sort: { updatedAt: -1, createdAt: -1, code: -1 },
+                pageSize: limit,
+                pageNumber: page,
+                sort: { created: -1, code: -1 },
                 projection: {
                     code: 1,
                     name: 1,
@@ -121,14 +173,20 @@ module.exports = {
                     enterpriseCode: 1,
                     ownerReference: 1,
                     status: 1,
+                    created: 1,
+                    createdBy: 1,
                     createdAt: 1,
                     updatedAt: 1,
                 },
             },
         });
+        let records = this.items(await readPage(pageNumber));
+        if (pageOffset && records.length === limit) {
+            records = records.concat(this.items(await readPage(pageNumber + 1)));
+        }
         return {
             code: 'SUC_SYS_00000',
-            data: this.items(response).map((media) => this.projectHistoryMedia(media)),
+            data: records.slice(pageOffset, pageOffset + limit).map((media) => this.projectHistoryMedia(media)),
         };
     },
 
@@ -140,7 +198,7 @@ module.exports = {
      */
     normalizeRequest: function (request) {
         let config = this.getConfiguration();
-        if (config.enabled === false) {
+        if (config.enabled !== true) {
             throw new CLASSES.NodicsError('ERR_EXP_00001', 'Data export is disabled by configuration');
         }
         let body = (request && request.export) || {};
@@ -242,9 +300,23 @@ module.exports = {
                     }),
                 ),
             );
-            let page = response.data || response.result || {};
-            let pageRecords = Array.isArray(page.records) ? page.records : [];
-            totalCount = Number(page.totalCount || totalCount || pageRecords.length);
+            let page = response && (response.data || response.result);
+            if (!response || response.error || response.acknowledged === false || response.success === false ||
+                ['FAILED', 'UNAVAILABLE'].includes(response.status) ||
+                response.code !== undefined && !/^SUC_/.test(response.code) ||
+                response.errors !== undefined && (!Array.isArray(response.errors) || response.errors.length) ||
+                !page || !Array.isArray(page.records) || page.records.length > pageSize ||
+                !Number.isSafeInteger(page.totalCount) || page.totalCount < 0 ||
+                page.totalCount < records.length + page.records.length ||
+                page.pageNumber !== undefined && page.pageNumber !== pageNumber ||
+                page.pageSize !== undefined && page.pageSize !== pageSize ||
+                pageNumber > 1 && page.totalCount !== totalCount ||
+                !page.records.length && records.length < page.totalCount) {
+                throw new CLASSES.NodicsError('ERR_EXP_00001',
+                    'Export source results could not be confirmed. Preview the current records before generating another file');
+            }
+            let pageRecords = page.records;
+            totalCount = page.totalCount;
             records = records.concat(pageRecords);
             if (pageRecords.length < pageSize || records.length >= totalCount) break;
             pageNumber += 1;
@@ -460,7 +532,10 @@ module.exports = {
             folderCode: mediaConfig.folderCode || 'exportFiles',
             formatCode: mediaConfig.formatCode || 'exportFile',
         };
-        let enterpriseCode = this.safeOptionalCode(input.enterpriseCode) || this.resolveEnterpriseCode(request);
+        const enterpriseCode = this.resolveEnterpriseCode(request);
+        if (input.enterpriseCode !== undefined && this.safeOptionalCode(input.enterpriseCode) !== enterpriseCode) {
+            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Export history is limited to the signed enterprise.');
+        }
         if (enterpriseCode) query.enterpriseCode = enterpriseCode;
         let mediaCode = this.safeOptionalCode(input.mediaCode);
         if (mediaCode) query.code = mediaCode;
@@ -486,13 +561,13 @@ module.exports = {
     /** Projects one generated export media record into the shared run summary shape. */
     projectHistoryMedia: function (media) {
         let source = media || {};
-        let createdAt = source.updatedAt || source.createdAt;
+        let createdAt = source.created || source.createdAt || source.updatedAt;
         return {
             runId: source.code,
             status: source.status || 'COMPLETED',
             dataType: 'export',
             modules: ['export', source.ownerReference || source.name || source.originalFileName].filter(Boolean),
-            requestedBy: 'nExport',
+            requestedBy: typeof source.createdBy === 'string' ? source.createdBy : undefined,
             createdAt: createdAt instanceof Date ? createdAt.toISOString() : createdAt,
             summary: {
                 recordsRead: 1,
@@ -528,6 +603,8 @@ module.exports = {
         return SERVICE.DefaultMediaUploadService.upload({
             tenant: request.tenant,
             authData: request.authData,
+            // Artifact identity is independent of second-resolution display names and identical bytes.
+            mediaCode: 'data-export-' + crypto.randomUUID(),
             enterpriseCode: payload.enterpriseCode,
             moduleName: payload.moduleName,
             schemaName: payload.schemaName,
@@ -555,6 +632,15 @@ module.exports = {
      * @returns {string} Enterprise code.
      */
     resolveEnterpriseCode: function (request) {
+        const signed = request.authData?.entCode || request.authData?.enterpriseCode || request.authData?.enterprise?.code;
+        if (signed) {
+            const headers = request.httpRequest?.headers || {};
+            if (Object.entries(headers).some(([name, value]) =>
+                ['x-enterprise-code', 'entcode'].includes(name.toLowerCase()) && value !== undefined && value !== signed)) {
+                throw new CLASSES.NodicsError('ERR_AUTH_00003', 'The selected enterprise does not match your signed workspace.');
+            }
+            return signed;
+        }
         return (
             request.enterpriseCode ||
             (request.authData && request.authData.enterprise && request.authData.enterprise.code) ||
@@ -597,10 +683,10 @@ module.exports = {
      * @returns {Promise<Object[]>} Export-safe models.
      */
     applyExportAccessPolicies: function (request, models) {
-        let exportModels = this.cloneModels(models || []);
         if (!SERVICE.DefaultSchemaReadAccessPolicyService || typeof SERVICE.DefaultSchemaReadAccessPolicyService.applyExportPolicies !== 'function') {
-            return Promise.resolve(exportModels);
+            return Promise.reject(new CLASSES.NodicsError('ERR_EXP_00001', 'Export policy service is required for governed exports'));
         }
+        let exportModels = this.cloneModels(models || []);
         return SERVICE.DefaultSchemaReadAccessPolicyService.applyExportPolicies(request, {
             success: {
                 result: exportModels,

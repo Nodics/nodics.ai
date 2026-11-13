@@ -31,6 +31,7 @@ const capability = {
     "documentation": [
         {
             "id": "framework",
+            "guide": "framework",
             "label": "Framework",
             "type": "CMS",
             "route": "/docs/framework",
@@ -70,6 +71,7 @@ const capability = {
         },
         {
             "id": "swaggers",
+            "guide": "framework",
             "label": "Swaggers",
             "type": "OPENAPI",
             "route": "/docs/swaggers",
@@ -330,7 +332,8 @@ const capability = {
             "featureState": "ACTIVE",
             "help": {
                 "summary": "Manage documentation hierarchy, dashboard pages, visual contracts, access metadata, and review submission through governed CMS content.",
-                "documentationRoute": "/docs/framework/documentation-management"
+                "documentationRoute": "/docs/framework/docs-documentation-publishing-runbook",
+                "documentationFragment": "docsDocumentationPublishingRunbook-3-authoring-steps"
             }
         },
         {
@@ -363,7 +366,8 @@ const capability = {
             "featureState": "ACTIVE",
             "help": {
                 "summary": "Create, rename, reorder, and relate section, group, subgroup, and topic nodes without hardcoding Axis navigation.",
-                "documentationRoute": "/docs/framework/documentation-management"
+                "documentationRoute": "/docs/framework/docs-documentation-publishing-runbook",
+                "documentationFragment": "docsDocumentationPublishingRunbook-3-authoring-steps"
             }
         },
         {
@@ -396,7 +400,8 @@ const capability = {
             "featureState": "ACTIVE",
             "help": {
                 "summary": "Author detailed topic pages with business summary, technical summary, visual requirements, source evidence, and rendered CMS page links.",
-                "documentationRoute": "/docs/framework/documentation-management"
+                "documentationRoute": "/docs/framework/docs-documentation-publishing-runbook",
+                "documentationFragment": "docsDocumentationPublishingRunbook-3-authoring-steps"
             }
         },
         {
@@ -429,7 +434,8 @@ const capability = {
             "featureState": "ACTIVE",
             "help": {
                 "summary": "Decide which documentation is public in Nexus, authenticated in Axis, or limited by role, group, or permission.",
-                "documentationRoute": "/docs/framework/documentation-management"
+                "documentationRoute": "/docs/framework/docs-documentation-publishing-runbook",
+                "documentationFragment": "docsDocumentationPublishingRunbook-3-authoring-steps"
             }
         },
         {
@@ -464,7 +470,8 @@ const capability = {
             "featureState": "ACTIVE",
             "help": {
                 "summary": "Review staged documentation changes, approval evidence, publish readiness, checksums, and admin override audit records.",
-                "documentationRoute": "/docs/framework/release-staging-and-publication"
+                "documentationRoute": "/docs/framework/docs-documentation-publishing-runbook",
+                "documentationFragment": "docsDocumentationPublishingRunbook-5-review-and-online-activation"
             }
         },
         {
@@ -497,7 +504,8 @@ const capability = {
             "featureState": "ACTIVE",
             "help": {
                 "summary": "Inspect current keyword metadata and external-search facets without making an index the content authority.",
-                "documentationRoute": "/docs/framework/documentation-management"
+                "documentationRoute": "/docs/framework/docs-documentation-publishing-runbook",
+                "documentationFragment": "docsDocumentationPublishingRunbook-3-authoring-steps"
             }
         },
         {
@@ -537,7 +545,8 @@ const capability = {
             "featureState": "ACTIVE",
             "help": {
                 "summary": "Check hierarchy, visual requirements, audience access, search metadata, source evidence, and nPublish handoff readiness before submitting documentation.",
-                "documentationRoute": "/docs/framework/documentation-management"
+                "documentationRoute": "/docs/framework/docs-documentation-publishing-runbook",
+                "documentationFragment": "docsDocumentationPublishingRunbook-3-authoring-steps"
             }
         },
         {
@@ -570,50 +579,9 @@ const capability = {
             "featureState": "ACTIVE",
             "help": {
                 "summary": "Validate source ownership, checksums, visual evidence, diagrams, and implementation references before publication.",
-                "documentationRoute": "/docs/framework/documentation-management"
+                "documentationRoute": "/docs/framework/docs-documentation-publishing-runbook",
+                "documentationFragment": "docsDocumentationPublishingRunbook-3-authoring-steps"
             }
-        },
-        {
-            "id": "documentation-framework",
-            "label": "Framework",
-            "route": "/docs/framework",
-            "icon": "content",
-            "order": 120,
-            "group": {
-                "id": "documentation",
-                "label": "Documentation",
-                "order": 1600
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "ACTIVE"
-        },
-        {
-            "id": "documentation-swaggers",
-            "label": "Swaggers",
-            "route": "/docs/swaggers",
-            "icon": "reference",
-            "order": 130,
-            "group": {
-                "id": "documentation",
-                "label": "Documentation",
-                "order": 1600
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "ACTIVE"
         },
         {
             "id": "runtime-operations",
@@ -829,8 +797,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Discover authorized backend schemas, query records, and use allowed operations without making Axis a schema or API authority.",
-                "documentationRoute": "/docs/solutions/backoffice/schema-workbench",
-                "documentationFragment": "what-this-screen-does"
+                "documentationRoute": "/docs/framework/schema-data-modeling-management",
+                "documentationFragment": "schemaDataModelingManagement-1-shared-schema-metadata-for-every-api-consumer"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -858,8 +826,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Review overall runtime status, modules requiring attention, failed integration/data-exchange operations, warnings, and authorized operational quick links.",
-                "documentationRoute": "/docs/reference/backoffice",
-                "documentationFragment": "system-integrations"
+                "documentationRoute": "/docs/framework/platform-module-registry-journey",
+                "documentationFragment": "platformModuleRegistryJourney-6-read-the-registry-without-confusing-its-states"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -889,8 +857,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Inspect the effective Axis navigation composition resolved from BackOffice module defaults and governed override readiness.",
-                "documentationRoute": "/docs/reference/backoffice",
-                "documentationFragment": "navigation-composition"
+                "documentationRoute": "/docs/framework/axis-business-customization",
+                "documentationFragment": "axisBusinessCustomization-5-operations-and-governance"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -918,8 +886,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Review registered BackOffice capabilities and module catalogue data contributed by owning modules.",
-                "documentationRoute": "/docs/reference/backoffice",
-                "documentationFragment": "capability-discovery"
+                "documentationRoute": "/docs/framework/platform-module-registry-journey",
+                "documentationFragment": "platformModuleRegistryJourney-7-axis-administrator-walkthrough"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -973,8 +941,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Review functional readiness, guided setup, release-data progress, publishing attention, and next recommended Axis actions.",
-                "documentationRoute": "/docs/nodics-axis/employee-login-recovery-lock-and-dashboard",
-                "documentationFragment": "dashboard"
+                "documentationRoute": "/docs/nodics-axis",
+                "documentationFragment": "overview-2-choose-an-application-from-the-dashboard"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1090,8 +1058,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Inspect module registrations, availability, readiness, and refresh behavior from the BackOffice registry without replacing module-owned health authority.",
-                "documentationRoute": "/docs/reference/backoffice",
-                "documentationFragment": "module-health-operations"
+                "documentationRoute": "/docs/framework/platform-module-registry-journey",
+                "documentationFragment": "platformModuleRegistryJourney-6-read-the-registry-without-confusing-its-states"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1120,8 +1088,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Review governed import and export flows, source files, run history, validation, and outbound data contracts owned by nImport and nExport.",
-                "documentationRoute": "/docs/capabilities/data-exchange",
-                "documentationFragment": "import-and-export"
+                "documentationRoute": "/docs/framework/data-import-export-migration",
+                "documentationFragment": "dataImportExportMigration-7-two-data-creation-lanes"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [

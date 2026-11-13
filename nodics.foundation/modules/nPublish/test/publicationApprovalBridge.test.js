@@ -18,7 +18,7 @@ const workflow = require('../src/service/defaultPublicationApprovalWorkflowServi
 const callback = require('../src/service/defaultPublicationApprovalCallbackService');
 const lifecycle = require('../src/service/defaultPublicationLifecycleService');
 const defaults = require('../config/properties');
-const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES };
+const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES, NODICS: global.NODICS };
 after(() => {
     Object.entries(previous).forEach(([key, value]) => {
         if (value === undefined) delete global[key];
@@ -28,12 +28,13 @@ after(() => {
 
 function fixture(domain = 'example', owner = 'exampleOwner') {
     const policy = { ownerModule: owner, definitionCode: 'exampleReview',
-        actionKey: owner + '.applyPublicationDecision', sourceRuntimeRole: 'EXAMPLE_STAGED' };
+        actionKey: owner + '.applyPublicationDecision', sourcePublication: 'STAGED' };
     const settings = structuredClone(defaults);
     settings.runtimeRole = { code: 'EXAMPLE_STAGED', publication: 'STAGED' };
     settings.publish.approvalWorkflow = { domains: { [domain]: policy },
-        target: { connectionName: 'process', connectionType: 'abstract', runtimeRole: 'PROCESS', timeoutMs: 5000 } };
+        target: { connectionName: 'process', connectionType: 'abstract', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMs: 5000 } };
     global.CONFIG = { get: key => settings[key] };
+    global.NODICS = { getRawModule: () => ({}), getModule: () => ({ rawSchema: {} }) };
     global.CLASSES = { NodicsError: class extends Error {
         constructor(code, message) { super(message); this.code = code; }
     } };
@@ -76,6 +77,8 @@ function fixture(domain = 'example', owner = 'exampleOwner') {
     settings.publish.providers.versionProviders = { [domain]: provider };
     settings.publish.providers.domainAdapters = { [domain]: {} };
     global.SERVICE = {
+        DefaultModuleRegistrationAgentService: { getLocalModules: () => [owner],
+            buildOwnershipEvidence: () => ({ clientCallable: true }), isOwningRegistration: value => value.clientCallable },
         DefaultPublicationApprovalWorkflowService: workflow,
         DefaultPublicationLifecycleService: Object.assign({}, lifecycle),
         DefaultServiceTokenService: { requireRuntimePrincipal: (input, module) => {
@@ -104,7 +107,7 @@ function fixture(domain = 'example', owner = 'exampleOwner') {
 test('neutral bridge defaults require an explicit Process connection and do not select a provider', () => {
     const f = fixture();
     const target = structuredClone(defaults.publish.approvalWorkflow.target);
-    assert.deepEqual(target, { connectionName: null, connectionType: 'abstract', runtimeRole: 'PROCESS' });
+    assert.deepEqual(target, { connectionName: null, connectionType: 'abstract', targetAuthority: { publication: 'OPERATIONAL' } });
     assert.equal(defaults.publish.providers.workflowProvider, null);
     assert.deepEqual(defaults.publish.providers.workflowProviders, {});
     f.settings.publish.approvalWorkflow.target = target;
@@ -132,7 +135,7 @@ test('inherited bridge mechanics preserve explicit connection and original calle
     const transport = f.calls.find(call => call[0] === 'transport')[1];
     assert.equal(transport.connectionName, 'partnerProcess');
     assert.equal(transport.connectionType, 'abstract');
-    assert.deepEqual(transport.targetAuthority, { runtimeRole: 'PROCESS' });
+    assert.deepEqual(transport.targetAuthority, { publication: 'OPERATIONAL' });
     assert.equal(transport.timeoutMs, 43210);
     assert.equal(transport.local, false);
     assert.equal(transport.maxAttempts, 1);
@@ -526,4 +529,49 @@ test('concurrent decisions use publication revision CAS; at most one activation 
     assert.equal(results.filter(result => result.status === 'fulfilled').length, 1);
     assert.equal(f.calls.filter(call => call[0] === 'activate').length, 1);
     assert.equal(f.stored.state, 'ONLINE');
+});
+
+test('physical role renames preserve local domain ownership and explicit publication routing', async () => {
+    const f = fixture();
+    f.settings.runtimeRole.code = 'CUSTOMER_AUTHORING_HOST';
+    const agent = require('../../nService/src/service/module/defaultModuleRegistrationAgentService');
+    global.NODICS = { getActiveModules: () => ['exampleOwner'],
+        getRawModule: () => ({ metaData: { nodics: { runtime: { router: true } } } }),
+        getModule: () => ({ rawSchema: {} }) };
+    SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({}) }) };
+    SERVICE.DefaultModuleRegistrationAgentService = agent;
+    f.request.httpRequest.headers = { authorization: 'Bearer original' };
+    const authority = { publication: 'OPERATIONAL', server: 'combined', environment: 'local' };
+    f.settings.publish.approvalWorkflow.target.targetAuthority = authority;
+    await workflow.requestApproval(f.stored, f.request);
+    const transport = f.calls.find(call => call[0] === 'transport')[1];
+    assert.deepEqual(transport.targetAuthority, authority);
+    const resolver = require('../../nService/src/service/module/defaultRuntimeRegistryResolverService');
+    const owner = { moduleName: 'workflow', endpoint: 'http://not-contacted.invalid/workflow',
+        server: 'combined', environment: 'local', runtimeRole: { code: 'RENAMED', publication: 'OPERATIONAL' } };
+    assert.equal(resolver.ownerMatches(transport, owner), true);
+    for (const wrong of [{ moduleName: 'cms' }, { server: 'other' }, { environment: 'other' },
+        { runtimeRole: { code: 'PROCESS', publication: 'ONLINE' } }])
+        assert.equal(resolver.ownerMatches(transport, { ...owner, ...wrong }), false);
+    SERVICE.DefaultRouterService.getModuleServerConfig = () => ({ getOptions: () => ({ remoteOnly: true }) });
+    assert.throws(() => workflow.assertSource(f.policy), /Staged runtime/);
+});
+
+test('missing local owner, source-only capability, malformed authority and retired role selectors fail before transport', async () => {
+    for (const mutate of [
+        f => { SERVICE.DefaultModuleRegistrationAgentService.getLocalModules = () => []; },
+        f => { SERVICE.DefaultModuleRegistrationAgentService.isOwningRegistration = () => false; },
+        f => { delete f.settings.runtimeRole.publication; },
+        f => { f.policy.sourceRuntimeRole = 'EXAMPLE_STAGED'; },
+        f => { delete f.policy.sourcePublication; },
+        f => { f.settings.publish.approvalWorkflow.target.targetAuthority = { runtimeRole: 'PROCESS' }; },
+        f => { f.settings.publish.approvalWorkflow.target.targetAuthority = { publication: 'OPERATIONAL', server: '' }; },
+        f => { f.settings.publish.approvalWorkflow.target.targetAuthority = { publication: 'STAGED' }; },
+    ]) {
+        const f = fixture();
+        f.request.httpRequest.headers = { authorization: 'Bearer original' };
+        mutate(f);
+        await assert.rejects(workflow.requestApproval(f.stored, f.request));
+        assert.equal(f.calls.some(call => call[0] === 'transport'), false);
+    }
 });

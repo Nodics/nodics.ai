@@ -20,7 +20,8 @@ module.exports = {
             policyService: SERVICE.DefaultCopilotPolicyService,
             knowledgeService: SERVICE.DefaultCopilotKnowledgeService,
             discoveryRuntimeService: SERVICE.DefaultDiscoveryRuntimeService,
-            publicationService: SERVICE.DefaultCopilotKnowledgePublicationService
+            publicationService: SERVICE.DefaultCopilotKnowledgePublicationService,
+            publishedSourceProviderService: SERVICE.DefaultCopilotPublishedKnowledgeSourceProviderService
         };
     },
     /** Validates and bounds one retrieval request. @param {Object} request Request. @param {Object} configuration Retrieval configuration. @returns {Object} Normalized input. */
@@ -90,6 +91,12 @@ module.exports = {
         if (!scope.sourceCodes.length) return dependencies.policyService.deepFreeze({ queryScope: scope, evidence: [], citations: [], insufficientEvidence: true });
         const searchRequest = this.buildSearchRequest(input, scope, configuration);
         const sources = request.registry.sources.filter(source => scope.sourceCodes.includes(source.code));
+        const published = sources.filter(source => source.sourceType === 'PUBLISHED_DOCUMENTATION');
+        if (published.length) {
+            if (!dependencies.publishedSourceProviderService) throw new Error('COPILOT_PUBLISHED_CONTENT_PROVIDER_REQUIRED');
+            await dependencies.publishedSourceProviderService.assertCurrent(published);
+            request.assertCurrent?.();
+        }
         let generations;
         if (request.publicationEnabled === true) {
             generations = await dependencies.publicationService.active(request, sources);
@@ -103,6 +110,7 @@ module.exports = {
             searchOptions: { limit: input.size },
             searchService: request.searchService
         });
+        if (published.length) await dependencies.publishedSourceProviderService.assertCurrent(published);
         const freshGenerations = generations ? await dependencies.publicationService.active(request, sources) : null;
         request.assertCurrent?.();
         const allowed = records.filter(record => {

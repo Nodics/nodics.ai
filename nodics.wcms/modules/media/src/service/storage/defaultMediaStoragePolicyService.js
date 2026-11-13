@@ -48,8 +48,9 @@ module.exports = {
     getFolderPolicy: function (folderCode) {
         let configuration = this.getConfiguration();
         let folders = configuration.folders || {};
-        let effectiveFolderCode = folderCode || 'default';
-        let folder = folders[effectiveFolderCode] || folders.default;
+        let effectiveFolderCode = folderCode ?? 'default';
+        let folder = typeof effectiveFolderCode === 'string' && Object.hasOwn(folders, effectiveFolderCode)
+            ? folders[effectiveFolderCode] : undefined;
         if (!folder) {
             throw new CLASSES.NodicsError('ERR_MED_00003', 'Invalid media folder');
         }

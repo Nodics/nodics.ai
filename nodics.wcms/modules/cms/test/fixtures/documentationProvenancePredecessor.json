@@ -1,0 +1,78 @@
+{
+  "reason": "Immutable pre-provenance correction selection; not installed-runtime proof",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "cms",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "34d5df86b61d7edaa973e5e6b354d8b168a80ec1975ec3e24cb8ebc786c939bb",
+      "generatedHashes": {
+        "docs-v001/records/documentation/cmsDocumentationNodeData.js": "8900d93b89137fd30fc242d2a3ad584d9aa079f93edcf5028c1e67c805dec6ca",
+        "docs-v001/records/documentation/cmsDocumentationPageMetadataData.js": "005c8113950889c5352d05866366717dae28badae9e7d00e7aaa19c5605b64d9",
+        "docs-v001/records/documentation/cmsDocumentationPublicationStateData.js": "7534d5b9e1deb30ab148b2ee3c24826a0a5a59cffcb20b92e5c67e2f41f917b0",
+        "docs-v001/records/documentation/cmsDocumentationSearchMetadataData.js": "261e5e8dab711885a4ed4fa02474146efc360f707e321db92e6e782f89aad519",
+        "docs-v001/records/documentation/cmsDocumentationComponentData.js": "b2ad3bbead51886531011f91131f84002ffe7d6141a807fb6ffa4363644e1699",
+        "docs-v001/records/documentation/cmsDocumentationPageData.js": "64584f8c7fada9203efbf3a5622c97a85cc227a57c2de289acd00a39e05fe686",
+        "docs-v001/records/documentation/cmsDocumentationRouteData.js": "30c571d8186862e08e3fa52d11b2cd80411377fc02d41ba724a2ba66a3a92e7e",
+        "docs-v001/headers/100_cmsDocumentationContentPackHeader.js": "310190d2ad5de701077fbd42c0c2f80f5058696a3d96b32daff1ff8b0097ec67"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  },
+  "successorVersion": "0.0.2",
+  "articles": [
+    {
+      "id": "wcms.publishing-lifecycle",
+      "componentCode": "nodicsDocsComponentwcmsPublishingLifecycle",
+      "previousFile": "docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/cmsDocumentationRelease002ComponentData.js",
+      "blocksSha256": "9801d49a4c0636fd4e0836107f10c42fafac0636f07f8cf77c4f9b2980848bb6",
+      "digestMode": "titled",
+      "sourceChecksum": "8e1bfbb059f74b319c119cab629b385f28af787be93ca7210c113ce59cd576b0",
+      "sourceWordCount": 3513
+    },
+    {
+      "id": "wcms.cms-source-map-authoring-contract",
+      "componentCode": "nodicsDocsComponentwcmsCmsSourceMapAuthoringContract",
+      "previousFile": "docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/cmsDocumentationRelease002ComponentData.js",
+      "blocksSha256": "6785628d63d3945c1477b3a9a4d2c6fab33dfdc431cc5dde3624e054d03f7de9",
+      "digestMode": "titled",
+      "sourceChecksum": "b81b2d9c187b5423720e442ae7ba432c086431119004eb55adb4a44cf89d8b66",
+      "sourceWordCount": 1221
+    }
+  ],
+  "successorSnapshot": "test/fixtures/documentationReviewPredecessor"
+}

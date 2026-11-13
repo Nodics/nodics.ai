@@ -234,7 +234,8 @@ module.exports = {
             sourceProviderCode: sourceMedia && sourceMedia.providerCode,
             sourceStorageKey: sourceMedia && sourceMedia.storageKey,
             folderCode: asset.folderCode || 'default', formatCode: asset.formatCode || 'original',
-            mediaCode: asset.code, fileName: asset.originalFileName, originalFileName: asset.originalFileName,
+            mediaCode: sourceMedia?.retained ? this.recordCode([asset.code, asset.manifestCode]) : asset.code,
+            fileName: asset.originalFileName, originalFileName: asset.originalFileName,
             mimeType: asset.mimeType, sizeBytes: buffer.length, maximumBytes: buffer.length, buffer: buffer });
         return Object.assign({ code: asset.code, checksum: asset.checksum, checksumAlgorithm: asset.checksumAlgorithm,
             folderCode: asset.folderCode, formatCode: asset.formatCode }, storage);
@@ -297,14 +298,59 @@ module.exports = {
         }
         try {
             let replicationMedia = await this.storePlacementCopy(asset, buffer, request, topology.replicationProviderCode, activeMedia);
-            await this.savePlacement(replicationMedia, asset, topology.replicationLocationRole, request,
+            if (activeMedia?.retained) {
+                const replica = await SERVICE.DefaultMediaStorageProviderRegistryService.read({
+                    providerCode: replicationMedia.providerCode, storageKey: replicationMedia.storageKey,
+                    maximumBytes: buffer.length
+                });
+                if (replica.length !== buffer.length || this.checksum(replica, asset.checksumAlgorithm) !== asset.checksum) {
+                    throw new CLASSES.NodicsError('ERR_MED_00014', 'Retained Media replica bytes failed integrity validation');
+                }
+            }
+            const placement = await this.savePlacement(replicationMedia, asset, topology.replicationLocationRole, request,
                 'REPLICATION_SYNCHRONIZED', { sourceProviderCode: activeMedia && activeMedia.providerCode });
+            if (activeMedia?.retained) {
+                if (!placement?.code || !SERVICE.DefaultMediaPublicationReceiptService) {
+                    throw new CLASSES.NodicsError('ERR_MED_00024', 'Retained replica placement or receipt evidence is unavailable');
+                }
+                await SERVICE.DefaultMediaArtifactPublicationService.recordReceipt(this.evidenceRequest(request, {
+                    receiptType: 'REPLICATION_RECEIPT', status: 'ACCEPTED',
+                    targetRuntimeRole: topology.replicationLocationRole,
+                    mediaCode: asset.code, checksum: asset.checksum, publicationCode: asset.publicationCode,
+                    manifestCode: asset.manifestCode, evidence: { placementCode: placement.code, providerCode: replicationMedia.providerCode }
+                }));
+            }
             return this.markReplicationSynchronized(asset, replicationMedia, request);
         } catch (error) {
             let queued = await this.recordReplicationFailure(asset, activeMedia, request, error);
             if (topology.strictReplication === true || topology.policy === 'STRICT_PROD_WITH_DR') throw error;
             return queued;
         }
+    },
+    /** Distinguishes a retained Online manifest from generic transfer manifests on the same runtime. */
+    usesRetainedReplication: async function (manifestCode, request) {
+        const policy = this.policy();
+        if (policy.runtimeRole !== 'ONLINE' || policy.versionProviderEnabled !== true ||
+            !/^[a-f0-9]{64}$/.test(manifestCode || '')) return false;
+        const manifests = SERVICE.DefaultMediaRetainedPublicationService;
+        const manifest = await manifests.one(SERVICE.DefaultMediaTransferManifestService, { code: manifestCode }, request);
+        return Boolean(manifest?.artifacts?.asset);
+    },
+    /** Resolves and verifies the exact retained revision before copying or retrying its bytes. */
+    replicateRetainedAsset: async function (identity, request) {
+        const retry = { ...request, retryCount: Number(request.retryCount || 0) + 1 };
+        let retained;
+        try {
+            retained = await SERVICE.DefaultMediaPublicationTargetService.resolveDelivery(identity.code, request);
+            if (!identity.manifestCode || retained.manifestCode !== identity.manifestCode ||
+                retained.media.checksum !== identity.checksum) {
+                throw new CLASSES.NodicsError('ERR_MED_00014', 'Active retained Media differs from the requested replica revision');
+            }
+        } catch (error) {
+            return this.recordReplicationFailure(identity, undefined, retry, error);
+        }
+        const asset = { ...identity, ...retained.media, manifestCode: retained.manifestCode };
+        return this.replicateAsset(asset, retained.buffer, { retained: true }, retry);
     },
     /** Replays replication for approved package assets through governed provider APIs. */
     reconcileReplication: async function (assets, request) {
@@ -319,6 +365,15 @@ module.exports = {
             return result;
         }
         for (let asset of assets) {
+            const manifestCode = asset.manifestCode || request.manifestCode;
+            if (await this.usesRetainedReplication(manifestCode, request)) {
+                const outcome = await this.replicateRetainedAsset({ ...asset, manifestCode }, request);
+                if (outcome?.status === 'REPLICATION_SYNCHRONIZED') result.synchronized += 1;
+                else if (outcome?.status === 'REPLICATION_ESCALATED') result.escalated += 1;
+                else if (outcome) result.queued += 1;
+                else result.skipped += 1;
+                continue;
+            }
             let existing = this.items(await SERVICE.DefaultMediaService.get({ tenant: request.tenant, authData: request.authData,
                 query: { code: asset.code, checksum: asset.checksum }, searchOptions: { limit: 2 } }));
             if (existing.length !== 1) {
@@ -370,6 +425,25 @@ module.exports = {
         let result = { scanned: rows.length, synchronized: 0, queued: 0, skipped: 0, escalated: 0,
             status: 'MEDIA_REPLICATION_RETRY_COMPLETE' };
         for (let row of rows) {
+            if (await this.usesRetainedReplication(row.manifestCode, request)) {
+                const topology = this.topology();
+                if (row.replicationProviderCode !== topology.replicationProviderCode ||
+                    row.replicationLocationRole !== topology.replicationLocationRole ||
+                    row.activeLocationRole !== topology.activeLocationRole) {
+                    result.skipped += 1;
+                    continue;
+                }
+                const outcome = await this.replicateRetainedAsset({
+                    code: row.mediaCode, checksum: row.mediaChecksum, checksumAlgorithm: row.checksumAlgorithm,
+                    ownerModule: row.ownerModule, ownerType: row.ownerType, ownerReference: row.ownerReference,
+                    publicationType: row.publicationType, publicationCode: row.publicationCode, manifestCode: row.manifestCode
+                }, { ...request, retryCount: row.retryCount });
+                if (outcome?.status === 'REPLICATION_SYNCHRONIZED') result.synchronized += 1;
+                else if (outcome?.status === 'REPLICATION_ESCALATED') result.escalated += 1;
+                else if (outcome) result.queued += 1;
+                else result.skipped += 1;
+                continue;
+            }
             let active = this.items(await SERVICE.DefaultMediaService.get({ tenant: request.tenant, authData: request.authData,
                 query: { code: row.mediaCode, checksum: row.mediaChecksum }, searchOptions: { limit: 2 } }));
             if (active.length !== 1 || !active[0].storageKey) {

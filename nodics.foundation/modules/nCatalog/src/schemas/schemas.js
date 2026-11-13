@@ -66,3 +66,6 @@ module.exports = {
         }
     }
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.catalog.catalog.backoffice = Object.assign({ description: "Catalog identities, business usage types and optional subcatalog relationships." }, module.exports.catalog.catalog.backoffice);

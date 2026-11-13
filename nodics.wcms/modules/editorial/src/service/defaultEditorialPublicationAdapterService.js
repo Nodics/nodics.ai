@@ -19,7 +19,7 @@ module.exports = {
             let response = await SERVICE[service].get({ tenant: request.tenant, authData: request.authData, query: query, searchOptions: { limit: 500 } });
             return response && response.result || [];
         };
-        let locales = await load('DefaultEditorialArticleLocalizationService', { articleCode: article.code, revision: article.revision });
+        let locales = await load('DefaultEditorialArticleLocalizationService', { articleCode: article.code, revision: article.revision, status: 'READY' });
         locales.forEach(item => result.push({ schema: 'editorialArticleLocalization', code: item.code, version: String(item.revision) }));
         (article.authorCodes || []).forEach(code => result.push({ schema: 'editorialAuthor', code: code, version: 'current' }));
         (article.taxonomyTermCodes || []).forEach(code => result.push({ schema: 'editorialTaxonomyTerm', code: code, version: 'current' }));
@@ -30,9 +30,10 @@ module.exports = {
         return result;
     },
     /** Validates approval, revision identity, localization and route-safe slug before activation. */
-    validate: function (publication, article, request, dependencies) {
-        let valid = article.status === 'APPROVED' && Number(article.revision) === Number(publication.sourceVersion) && Boolean(article.slug) && Array.isArray(dependencies) && dependencies.length > 1;
-        return Promise.resolve({ valid: valid, articleRevision: article.revision, dependencyCount: dependencies.length });
+    validate: async function (publication, article, request, dependencies) {
+        const featuredMedia = await SERVICE.DefaultEditorialFeaturedMediaService.evaluate(request, article);
+        let valid = article.status === 'APPROVED' && Number(article.revision) === Number(publication.sourceVersion) && Boolean(article.slug) && Array.isArray(dependencies) && dependencies.length > 1 && featuredMedia.ready;
+        return { valid, articleRevision: article.revision, dependencyCount: dependencies.length, featuredMedia };
     },
     /** Emits post-activation projection hooks only after nPublish activation succeeds. */
     afterActivate: async function (publication, activation, request) {

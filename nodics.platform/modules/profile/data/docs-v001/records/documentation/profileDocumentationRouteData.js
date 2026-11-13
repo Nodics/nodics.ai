@@ -26,7 +26,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageplatformOverview",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -38,7 +38,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagesecurityIdentityAccessGovernance",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   }

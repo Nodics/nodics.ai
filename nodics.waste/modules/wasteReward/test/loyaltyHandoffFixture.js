@@ -37,12 +37,12 @@ module.exports = {
                 principalId: 'commerce-runtime', entCode: 'runtime', runtimeInstanceId: 'instance',
                 runtimeScope: { projectCode: 'project', environmentCode: 'unit', serverCode: 'commerce', instanceCode: 'instance', assignmentCode: 'assignment' },
                 modules: ['loyaltyApi'], permissions: ['loyalty.wallet.read'], groups: [], userGroups: [] } };
-        state.evidencePolicy = { runtimeRole: 'LOYALTY', callers: [{ tenant: 'T', principalEnterpriseCode: 'runtime',
+        state.evidencePolicy = { callers: [{ tenant: 'T', principalEnterpriseCode: 'runtime',
             enterpriseCode: 'market', serviceId: 'commerce-runtime', ...state.evidenceAuth.runtimeScope }] };
         const get = CONFIG.get;
         global.CONFIG = { get: key => key === 'loyalty' ? { ...defaults, transactions: { ...defaults.transactions, enabled: true },
             ...(allowProjection ? { api: { readEvidence: state.evidencePolicy } } : {}) } :
-            allowProjection && key === 'runtimeRole' ? { code: 'LOYALTY' } :
+            allowProjection && key === 'runtimeRole' ? { code: 'RENAMED_REWARD_HOST', publication: 'OPERATIONAL' } :
             key === 'databaseTransactions' ? { enabled: true, failClosed: true, maximumCommitTimeMs: 5000 } : get(key) };
         global.FACADE = { DefaultLoyaltyInternalFacade: facade };
         Object.assign(SERVICE, { DefaultLoyaltyWalletOperationService: wallet, DefaultLoyaltyRewardOperationService: operations,
@@ -94,9 +94,9 @@ module.exports = {
                 return { code: 'SUC_TEST', count: selected.length, result: copy(selected) };
             } };
         }
-        SERVICE.DefaultModuleService = { invokeModule: async input => {
+        SERVICE.DefaultModuleService = { isLocalModuleActive: name => name === "loyaltyWallet", invokeModule: async input => {
             assert.equal(input.moduleName, 'loyaltyApi'); assert.equal(input.connectionName, 'loyalty');
-            assert.deepEqual(input.targetAuthority, { runtimeRole: 'LOYALTY' }); assert.equal(input.tenant, 'T');
+            assert.deepEqual(input.targetAuthority, { publication: 'OPERATIONAL' }); assert.equal(input.tenant, 'T');
             assert.equal(input.maxAttempts, 1); assert.equal(input.methodName, 'POST');
             const operation = input.apiName === '/wallets' ? 'openWallet' : input.apiName === '/reward-earnings' ? 'earnRewards' :
                 allowProjection && input.apiName === '/wallet-projections' ? 'ownerWalletProjection' :

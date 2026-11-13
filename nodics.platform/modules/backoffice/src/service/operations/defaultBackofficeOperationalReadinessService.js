@@ -18,13 +18,7 @@
  */
 module.exports = {
   _lastPublishedSignature: null,
-  _findingAcknowledgements: Object.create(null),
-  _lastOperationalReadinessSnapshot: null,
-  _operationalReadinessTimeline: [],
   _repairAttempts: [],
-  _repairReceipts: [],
-  _repairResultsByKey: Object.create(null),
-  _repairLocksByTarget: Object.create(null),
   _repairProviderRegistry: Object.create(null),
   _repairProviderCapabilityCache: Object.create(null),
   _repairTelemetry: {
@@ -171,8 +165,10 @@ module.exports = {
   },
   /** Returns operator command guidance for the acceptance evidence loop. */
   acceptanceOperatorCommands: function () {
+    const command = ((CONFIG.get('tooling') || {}).acceptance || {}).platformCommand;
     return [
-      "npm run docker-local:acceptance",
+      typeof command === 'string' && /^[a-z][a-z0-9:-]+$/.test(command)
+        ? 'npm run ' + command : 'Select the configured tooling acceptance command',
       "npm run project:post-reset-readiness -- --live --json",
       "Refresh Axis dashboard bootstrap",
     ];
@@ -215,25 +211,19 @@ module.exports = {
         "unknown",
     );
   },
-  /** Creates a stable acknowledgement key without storing property values. */
-  acknowledgementKey: function (tenant, code, propertyPath) {
-    return [tenant || "default", code || "UNKNOWN", propertyPath || ""]
-      .map((value) => String(value))
-      .join("|");
-  },
-  /** Returns current bounded acknowledgement evidence for one startup finding. */
-  findAcknowledgement: function (request, code, propertyPath) {
-    let record =
-      this._findingAcknowledgements[
-        this.acknowledgementKey(request && request.tenant, code, propertyPath)
-      ];
-    if (!record) return undefined;
-    return {
-      acknowledged: true,
-      acknowledgedAt: record.acknowledgedAt,
-      acknowledgedBy: record.acknowledgedBy,
-      reasonCode: record.reasonCode,
-    };
+  /** Rehydrates owner evidence before deriving a fresh startup report. */
+  startupValidationWithEvidence: async function (request) {
+    let error;
+    try { await SERVICE.DefaultBackofficeReadinessEvidenceService.loadAcknowledgements(request); }
+    catch (failure) { error = failure; }
+    const report = this.startupValidationReport(request);
+    if (error) {
+      report.findings.push(this.startupFinding('READINESS_ACKNOWLEDGEMENTS_UNAVAILABLE', 'ERROR', 'backoffice',
+        'Persisted startup review evidence is unavailable.', 'Restore the BackOffice evidence store and refresh readiness.',
+        { ownerType: 'PERSISTENCE', dismissible: false, auditRequired: true }));
+      report.summary.total++; report.summary.errors++; report.state = 'NOT_READY';
+    }
+    return report;
   },
   /** Creates bounded repair metadata for startup/configuration findings. */
   startupRepair: function (repair, options) {
@@ -304,7 +294,6 @@ module.exports = {
             propertyPath: rule.path,
             dismissible: rule.dismissible,
             auditRequired: rule.auditRequired,
-            acknowledgement: this.findAcknowledgement(request, code, rule.path),
             repair: rule.repair || {
               available: true,
               operation: "runtimeConfiguration.update",
@@ -349,7 +338,6 @@ module.exports = {
             ownerType: rule.ownerType,
             propertyPath: rule.path,
             dismissible: rule.dismissible !== false,
-            acknowledgement: this.findAcknowledgement(request, code, rule.path),
             auditRequired: rule.auditRequired !== false,
             repair: rule.repair || {
               available: true,
@@ -434,7 +422,6 @@ module.exports = {
           ownerType: "BACKOFFICE_OPERATIONS",
           dismissible: false,
           auditRequired: true,
-          acknowledgement: this.findAcknowledgement(request, code),
           repair: {
             available: false,
             operation: "backoffice.operations.configure",
@@ -489,6 +476,11 @@ module.exports = {
           left.code.localeCompare(right.code)
         );
       });
+    const evidence = SERVICE.DefaultBackofficeReadinessEvidenceService;
+    if (evidence) for (const finding of findings) {
+      const acknowledgement = evidence.findAcknowledgement(request, finding);
+      if (acknowledgement) finding.acknowledgement = acknowledgement;
+    }
     let summary = findings.reduce(
       (result, finding) => {
         result.total++;
@@ -612,6 +604,7 @@ module.exports = {
       server: instance.server,
       node: instance.node || "default",
       runtimeRole: instance.runtimeRole && instance.runtimeRole.code,
+      runtimeRoles: instance.runtimeRole?.code ? [instance.runtimeRole.code] : [],
       publication: instance.runtimeRole && instance.runtimeRole.publication,
       state: state,
       freshness: freshness,
@@ -626,7 +619,19 @@ module.exports = {
         : "Runtime heartbeat is visible to BackOffice.",
     };
   },
-  /** Builds stable operator-safe runtime communication diagnostics from active bootstrap evidence. */
+  /** Reads the selected deployment graph from nConfig without creating a second owner catalogue. */
+  selectedRuntimePlacements: function () {
+    try {
+      const placements = SERVICE.DefaultDeploymentModuleOwnershipService?.runtimePlacements();
+      if (!Array.isArray(placements) || !placements.length || placements.some(item =>
+        !item.projectCode || !item.environmentCode || !item.serverCode || !item.instanceCode || !Array.isArray(item.modules)))
+        return { available: false, placements: [] };
+      return { available: true, placements };
+    } catch (_) {
+      return { available: false, placements: [] };
+    }
+  },
+  /** Builds stable operator-safe runtime communication diagnostics from selected and observed owner evidence. */
   runtimeCommunicationDiagnostics: function (modules, availability) {
     modules = modules || {};
     availability = availability || {};
@@ -649,7 +654,7 @@ module.exports = {
       ),
     ).sort();
     let runtimeRoles = Array.from(
-      new Set(observations.map((item) => item.runtimeRole).filter(Boolean)),
+      new Set(observations.flatMap((item) => item.runtimeRoles).filter(Boolean)),
     ).sort();
     let stale = observations.filter((item) =>
       ["HEARTBEAT_STALE", "RUNTIME_UNAVAILABLE"].includes(item.reasonCode),
@@ -660,7 +665,20 @@ module.exports = {
           String((entry[1] || {}).state || "UNKNOWN"),
         ),
     );
+    const topology = this.selectedRuntimePlacements();
+    const missingPlacements = topology.placements.filter(placement => !observations.some(item =>
+      item.environment === placement.environmentCode && item.server === placement.serverCode &&
+      item.instanceId === placement.instanceCode));
+    const selectedOwnersPresent = topology.available && missingPlacements.length === 0;
     let communicationChecks = [
+      {
+        code: "SELECTED_RUNTIME_OWNERS_PRESENT",
+        state: selectedOwnersPresent ? "READY" : "MISSING",
+        message: selectedOwnersPresent
+          ? "Every selected deployment runtime is registered."
+          : "A selected runtime or its deployment graph is unavailable.",
+        action: "Restore the selected owner runtime and refresh Module Registry.",
+      },
       {
         code: "RUNTIME_IDENTITY_PRESENT",
         state: observations.length > 0 ? "READY" : "MISSING",
@@ -687,7 +705,7 @@ module.exports = {
       {
         code: "RUNTIME_API_KEY_GRANT_READY",
         state:
-          observations.length > 0 && unavailable.length === 0
+          selectedOwnersPresent && observations.length > 0 && unavailable.length === 0
             ? "READY"
             : "NEEDS_ATTENTION",
         message:
@@ -698,7 +716,7 @@ module.exports = {
       {
         code: "MODULE_REGISTRY_RECONCILED",
         state:
-          stale.length === 0 && unavailable.length === 0
+          selectedOwnersPresent && stale.length === 0 && unavailable.length === 0
             ? "READY"
             : "NEEDS_ATTENTION",
         message:
@@ -712,10 +730,15 @@ module.exports = {
         observations
           .map((item) => item.reasonCode)
           .concat(unavailable.length > 0 ? ["RUNTIME_UNAVAILABLE"] : [])
-          .concat(observations.length === 0 ? ["RUNTIME_NOT_REGISTERED"] : []),
+          .concat(observations.length === 0 ? ["RUNTIME_NOT_REGISTERED"] : [])
+          .concat(!topology.available ? ["RUNTIME_TOPOLOGY_UNAVAILABLE"] : [])
+          .concat(missingPlacements.length ? ["RUNTIME_SELECTED_OWNER_MISSING"] : []),
       ),
     ).sort();
     return {
+      selectedTopologyAvailable: topology.available,
+      expectedRuntimeCount: topology.placements.length,
+      missingPlacements: missingPlacements.map(({ environmentCode, serverCode, instanceCode }) => ({ environmentCode, serverCode, instanceCode })),
       entries: entries,
       observations: observations,
       serverKeys: serverKeys,
@@ -735,6 +758,14 @@ module.exports = {
     let runtimeCount = diagnostics.entries.length;
     let unavailable = diagnostics.unavailable;
     let blockers = [];
+    if (!diagnostics.selectedTopologyAvailable)
+      blockers.push(this.readinessBlocker("RUNTIME_TOPOLOGY_UNAVAILABLE", "BLOCKED", "RUNTIME", "NCONFIG_DEPLOYMENT_GRAPH",
+        "Restore deployment graph readiness", "The selected deployment graph could not be read from nConfig.",
+        { recoveryHint: "Check the validated deployment configuration and restart the owning runtime before refreshing readiness." }));
+    for (const placement of diagnostics.missingPlacements)
+      blockers.push(this.readinessBlocker("RUNTIME_SELECTED_OWNER_MISSING", "BLOCKED", "RUNTIME", "NCONFIG_DEPLOYMENT_GRAPH",
+        "Restore the selected runtime", "Selected runtime " + placement.instanceCode + " on " + placement.serverCode + " is not registered.",
+        { recoveryHint: "Start the selected owner runtime, verify its Profile runtime grant, and refresh Module Registry." }));
     if (runtimeCount === 0)
       blockers.push(
         this.readinessBlocker(
@@ -790,15 +821,19 @@ module.exports = {
       key: "runtimeCommunication",
       title: "Runtime internal communication",
       businessStatus:
-        blockers.length > 0
-          ? "NEEDS_ATTENTION"
-          : runtimeCount > 0
+        !diagnostics.selectedTopologyAvailable || diagnostics.missingPlacements.length > 0
+          ? "NOT_READY"
+          : blockers.length > 0
+            ? "NEEDS_ATTENTION"
+            : runtimeCount > 0
             ? "READY"
             : "NOT_CONFIGURED",
       ownerModule: "nService",
       source: "BACKOFFICE_BOOTSTRAP",
       route: "/system/modules",
       summary: {
+        expectedRuntimeCount: diagnostics.expectedRuntimeCount,
+        missingRuntimeCount: diagnostics.missingPlacements.length,
         runtimeCount: runtimeCount,
         unavailableCount: unavailable.length,
         staleCount: diagnostics.staleCount,
@@ -1314,12 +1349,22 @@ module.exports = {
     if (request && request.authToken) return "Bearer " + request.authToken;
     return undefined;
   },
-  /** Extracts unique nImport catalogue targets from application preparation profiles. */
+  /** Selects unique nImport targets from typed preparation, retaining an explicit empty list; raw owner packages supply the existing omitted-list default. */
   importReadinessTargets: function (profiles) {
     let targets = {};
     [].concat(profiles || []).forEach((profile) => {
-      [].concat((profile || {}).dataPackages || []).forEach((step) => {
-        if (!step || !step.dataType || !step.targetServer) return;
+      const source = profile || {};
+      const steps = source.preparationSteps === undefined
+        ? source.dataPackages || [] : source.preparationSteps;
+      if (!Array.isArray(steps)) {
+        throw new CLASSES.NodicsError(
+          "ERR_BOF_00000", "Application preparation catalogue must be an array",
+        );
+      }
+      steps.forEach((step) => {
+        if (!step || step.enabled === false ||
+            (step.type || "DATA_RELEASE") !== "DATA_RELEASE" ||
+            !step.dataType || !step.targetServer) return;
         let dataType = String(step.dataType);
         let key = [
           step.targetServer,
@@ -1347,7 +1392,7 @@ module.exports = {
         ),
     );
   },
-  /** Calls the owner nImport catalogue route for one target runtime. */
+  /** Reads nImport through the existing verified deployment binding, retaining the initiating human and one GET attempt. */
   invokeImportCatalogue: async function (target, request) {
     if (
       !SERVICE.DefaultModuleService ||
@@ -1358,18 +1403,19 @@ module.exports = {
         "Module communication service is unavailable",
       );
     }
+    const owner = SERVICE.DefaultBackofficeApplicationInitializationService;
+    if (!owner || typeof owner.applicationTargetBinding !== "function") {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00000", "Application target binding is unavailable",
+      );
+    }
+    const binding = owner.applicationTargetBinding(target.targetServer, "import");
     let authorization = this.authorizationHeader(request);
     return SERVICE.DefaultModuleService.invokeModule({
       moduleName: "import",
       local: false,
-      connectionName: target.targetServer,
+      ...binding,
       connectionType: "abstract",
-      targetAuthority: {
-        server: target.targetServer,
-        runtimeRole: target.targetRuntimeRole
-          ? { code: target.targetRuntimeRole }
-          : undefined,
-      },
       methodName: "GET",
       apiName: "/" + target.dataType,
       timeoutMs: 30000,
@@ -1937,10 +1983,21 @@ module.exports = {
     };
   },
   /** Builds owner-backed approval readiness from Process evidence carried by CMS/application projections. */
-  approvalSection: function (profileStatusReport) {
+  approvalSection: function (profileStatusReport, modules, availability) {
     let statuses = [].concat((profileStatusReport || {}).statuses || []);
     let errors = [].concat((profileStatusReport || {}).errors || []);
     let blockers = [];
+    const topology = this.selectedRuntimePlacements();
+    const processRequired = statuses.length > 0 || topology.placements.some(item => item.modules.includes("workflow"));
+    const processAvailable = topology.available && [].concat((modules || {}).workflow || []).some(instance => {
+      const observation = this.runtimeObservation(instance, availability);
+      return observation.state === "UP" && observation.freshness === "FRESH" && topology.placements.some(item =>
+        item.environmentCode === observation.environment && item.serverCode === observation.server && item.instanceCode === observation.instanceId);
+    });
+    if (processRequired && !processAvailable)
+      blockers.push(this.readinessBlocker("PROCESS_OWNER_UNAVAILABLE", "BLOCKED", "PROCESS_WORKFLOW", "BACKOFFICE_AVAILABILITY",
+        "Restore Process and refresh readiness", "The selected Process owner is unavailable. Retained approval decisions do not establish current task readiness.",
+        { recoveryHint: "Restore the selected Process runtime and its Profile grant, then refresh Approval Queue and readiness." }));
     statuses.forEach((status) => {
       let capability = (status && status.capability) || {};
       let diagnostic = capability.approvalDiagnostic || {};
@@ -2026,12 +2083,13 @@ module.exports = {
     return {
       key: "approval",
       title: "Process approval tasks",
-      businessStatus: blockers.length ? "NEEDS_ATTENTION" : "READY",
+      businessStatus: processRequired && !processAvailable ? "NOT_READY" : blockers.length ? "NEEDS_ATTENTION" : "READY",
       ownerModule: "workflow",
       source: "PUBLICATION_APPROVAL",
       route: "/process/approval-queue",
       summary: {
         profileCount: statuses.length,
+        ownerAvailable: processAvailable,
         pendingApprovalCount: pending,
         blockerCount: blockers.length,
         providerErrorCount: errors.length,
@@ -2166,12 +2224,19 @@ module.exports = {
     });
     let mediaStateCounts = this.countByValue(mediaStates, (state) => state);
     let ready = mediaStates.filter(
-      (state) => state === "READY_OR_NOT_REQUIRED",
+      (state) => ["READY", "NOT_REQUIRED", "READY_OR_NOT_REQUIRED"].includes(state),
     ).length;
     let needsRepair = mediaStates.filter(
       (state) => state === "NEEDS_REPAIR",
     ).length;
     let ownerSummary = (ownerReadiness && ownerReadiness.summary) || {};
+    // A manifest or unavailable provider cannot establish an inventory count.
+    const ownerCount = (provider, key) => {
+      const value = ownerSummary[key];
+      return ownerSummary[provider] === true && Number.isSafeInteger(value) && value >= 0
+        ? value
+        : null;
+    };
     return {
       key: "media",
       title: "Media objects and references",
@@ -2196,12 +2261,12 @@ module.exports = {
         mediaReferenceProviderAvailable:
           ownerSummary.referenceProviderAvailable,
         mediaCleanupProviderAvailable: ownerSummary.cleanupProviderAvailable,
-        mediaObjectCount: ownerSummary.mediaCount || 0,
-        incompleteMetadataCount: ownerSummary.incompleteMetadataCount || 0,
-        missingPhysicalCount: ownerSummary.missingPhysicalCount || 0,
-        referenceCount: ownerSummary.referenceCount || 0,
-        brokenReferenceCount: ownerSummary.brokenReferenceCount || 0,
-        cleanupCandidateCount: ownerSummary.cleanupCandidateCount || 0,
+        mediaObjectCount: ownerCount("providerAvailable", "mediaCount"),
+        incompleteMetadataCount: ownerCount("providerAvailable", "incompleteMetadataCount"),
+        missingPhysicalCount: ownerCount("providerAvailable", "missingPhysicalCount"),
+        referenceCount: ownerCount("referenceProviderAvailable", "referenceCount"),
+        brokenReferenceCount: ownerCount("referenceProviderAvailable", "brokenReferenceCount"),
+        cleanupCandidateCount: ownerCount("cleanupProviderAvailable", "cleanupCandidateCount"),
         draftCleanupStatus: ownerSummary.draftCleanupStatus,
         rejectedDraftCleanupStatus: ownerSummary.rejectedDraftCleanupStatus,
         acceptedEvidenceRetentionStatus:
@@ -2225,9 +2290,6 @@ module.exports = {
   },
   /** Reads eWaste owner readiness locally or through its configured module connection. */
   eWasteAcceptanceReadiness: async function (request, context) {
-    let service = SERVICE.DefaultEWasteAcceptanceReadinessService;
-    if (service && typeof service.readiness === "function")
-      return service.readiness(context);
     if (
       !SERVICE.DefaultModuleService ||
       typeof SERVICE.DefaultModuleService.invokeModule !== "function"
@@ -2236,10 +2298,13 @@ module.exports = {
     let authorization = this.authorizationHeader(request);
     return SERVICE.DefaultModuleService.invokeModule({
       moduleName: "eWaste",
-      local: false,
+      serviceName: "DefaultEWasteAcceptanceReadinessService",
+      operationName: "readiness",
+      request: context,
+      requestBody: {},
       connectionType: "abstract",
       targetAuthority: {
-        runtimeRole: { code: "WASTE" },
+        publication: "OPERATIONAL",
       },
       methodName: "GET",
       apiName: "/readiness/acceptance",
@@ -2375,43 +2440,6 @@ module.exports = {
           "eWaste acceptance readiness is clear.",
     };
   },
-  /** Summarizes nSearch/read-source configuration without requiring custom-project runtime settings. */
-  searchConfigurationSummary: function () {
-    let search = CONFIG.get("search") || {};
-    let defaultOptions = (search.default || {}).options || {};
-    let runtimeRoleConfig = CONFIG.get("runtimeRole") || {};
-    let runtimeRole =
-      runtimeRoleConfig.code ||
-      runtimeRoleConfig.name ||
-      runtimeRoleConfig.roleCode ||
-      undefined;
-    let runtimeProfile =
-      runtimeRole && search.runtimeRoleProfiles
-        ? search.runtimeRoleProfiles[String(runtimeRole)]
-        : undefined;
-    let profileEntries = Object.entries(runtimeProfile || {}).filter(
-      (entry) => {
-        let value = entry[1] || {};
-        return value.options && value.options.enabled === true;
-      },
-    );
-    let defaultEnabled = defaultOptions.enabled === true;
-    let fallbackEnabled = defaultOptions.fallback === true;
-    let engine = defaultOptions.engine || "database";
-    return {
-      runtimeRole: runtimeRole ? String(runtimeRole) : "UNKNOWN",
-      engine: String(engine),
-      defaultSearchEnabled: defaultEnabled,
-      defaultFallbackEnabled: fallbackEnabled,
-      runtimeProfileCount: profileEntries.length,
-      runtimeProfileCodes: profileEntries.map((entry) => String(entry[0])),
-      readSourcePolicy: fallbackEnabled
-        ? "SEARCH_WITH_DATABASE_FALLBACK"
-        : defaultEnabled || profileEntries.length > 0
-          ? "SEARCH_ENGINE"
-          : "DATABASE_OR_OWNER_DEFAULT",
-    };
-  },
   /** Returns bounded discovery/search diagnostics from owner services. */
   searchReadinessEvidence: function (context) {
     context = context || {};
@@ -2497,11 +2525,11 @@ module.exports = {
   },
   /** Builds owner-backed readiness for search indexes and database/search read-source policy. */
   searchSection: function (context) {
-    let configuration = this.searchConfigurationSummary();
     let evidence = this.searchReadinessEvidence(context);
     let diagnostics = evidence.diagnostics || {};
     let ownerReadiness = evidence.ownerReadiness || {};
     let ownerSummary = ownerReadiness.summary || {};
+    let configuration = ownerSummary;
     let blockers = []
       .concat(ownerReadiness.blockers || [])
       .map((item) =>
@@ -2545,7 +2573,7 @@ module.exports = {
           {
             repairOperation: "search.refreshEngines",
             repairAction: "REFRESH_SEARCH_ENGINE",
-            repairAvailable: true,
+            repairAvailable: false,
             repairEligibility: "MANUAL",
             repairLabel: "Refresh search engine",
             suggestedAction:
@@ -2553,7 +2581,7 @@ module.exports = {
             businessImpact:
               "Pages or workbenches configured to render from search may show empty or stale results until the search engine is healthy.",
             recoveryHint:
-              "Switch read-source policy to database fallback or repair/reindex the search engine, then refresh readiness.",
+              "Use the owning application to verify its selected provider and recover the index, then refresh readiness. Configuration alone does not establish a fallback.",
           },
         ),
       );
@@ -2587,7 +2615,7 @@ module.exports = {
     }
     let hasConfiguredSearch =
       configuration.defaultSearchEnabled ||
-      configuration.runtimeProfileCount > 0 ||
+      configuration.enabledModuleCount > 0 ||
       evidence.activeSearchModuleCount > 0 ||
       evidence.activeDiscoveryModuleCount > 0 ||
       (diagnostics.attempts || 0) > 0 ||
@@ -2609,7 +2637,7 @@ module.exports = {
         readSourcePolicy: configuration.readSourcePolicy,
         defaultSearchEnabled: configuration.defaultSearchEnabled,
         defaultFallbackEnabled: configuration.defaultFallbackEnabled,
-        runtimeProfileCount: configuration.runtimeProfileCount,
+        enabledModuleCount: configuration.enabledModuleCount,
         ownerProviderAvailable: !!evidence.ownerReadiness,
         ownerBusinessStatus: ownerReadiness.businessStatus,
         configuredModuleCount: ownerSummary.configuredModuleCount,
@@ -2817,10 +2845,6 @@ module.exports = {
           ? "Assistant knowledge sources are configured and indexed."
           : "Configure Copilot Knowledge retrieval and enabled sources before relying on Assistant answers.",
     };
-  },
-  /** Returns the bounded in-memory operational readiness timeline for Axis and support diagnostics. */
-  operationalReadinessTimeline: function () {
-    return (this._operationalReadinessTimeline || []).slice();
   },
   /** Normalizes one requested owner repair without trusting frontend state. */
   normalizeRepairRequest: function (request) {
@@ -3213,60 +3237,6 @@ module.exports = {
       };
     return { provider: this.repairProviderDescriptor(entry, capability) };
   },
-  /** Returns a stable repair target key for locks, receipts, and telemetry. */
-  repairTargetKey: function (repair) {
-    let ids = this.normalizeRepairTargetIdentifiers(repair.targetIdentifiers);
-    let encoded = Object.keys(ids)
-      .sort()
-      .map((key) => key + "=" + ids[key])
-      .join("&");
-    return [repair.ownerModule, repair.operation, repair.action, encoded]
-      .map((value) => String(value || ""))
-      .join("|");
-  },
-  /** Attempts to acquire an execution lock for a repair target. */
-  acquireRepairLock: function (repair, request) {
-    let targetKey = this.repairTargetKey(repair);
-    let now = Date.now();
-    let existing = this._repairLocksByTarget[targetKey];
-    if (existing && existing.expiresAtMs > now)
-      return {
-        acquired: false,
-        targetKey: targetKey,
-        lock: Object.assign({}, existing, {
-          expiresAtMs: undefined,
-          expiresAt: new Date(existing.expiresAtMs).toISOString(),
-        }),
-      };
-    let expiresAtMs =
-      now + Math.max(5000, Number(repair.timeoutMs || 30000) + 30000);
-    let lock = {
-      targetKey: targetKey,
-      ownerModule: repair.ownerModule,
-      operation: repair.operation,
-      action: repair.action,
-      idempotencyKey: repair.idempotencyKey,
-      correlationId: repair.correlationId,
-      acquiredAt: this.now(),
-      expiresAtMs: expiresAtMs,
-      principal: this.principal(request),
-    };
-    this._repairLocksByTarget[targetKey] = lock;
-    return {
-      acquired: true,
-      targetKey: targetKey,
-      lock: Object.assign({}, lock, {
-        expiresAtMs: undefined,
-        expiresAt: new Date(expiresAtMs).toISOString(),
-      }),
-    };
-  },
-  /** Releases a target execution lock owned by the current idempotency key. */
-  releaseRepairLock: function (targetKey, idempotencyKey) {
-    let existing = this._repairLocksByTarget[targetKey];
-    if (existing && existing.idempotencyKey === idempotencyKey)
-      delete this._repairLocksByTarget[targetKey];
-  },
   /** Returns policy/safety metadata for a repair request. */
   repairSafety: function (repair, result) {
     result = result || {};
@@ -3349,47 +3319,6 @@ module.exports = {
       reason: "event_publish_failed",
       errorCode: error.code,
     }));
-  },
-  /** Records a durable-shape in-memory receipt until persistence is introduced. */
-  recordRepairReceipt: function (result, request) {
-    if (result.dryRun || result.idempotentReplay) return undefined;
-    let receipt = {
-      receiptCode: ["repair", result.ownerModule, Date.now()]
-        .map((value) => String(value || "unknown"))
-        .join(":"),
-      receiptType: "OPERATIONAL_READINESS_REPAIR",
-      state: result.state,
-      ownerModule: result.ownerModule,
-      operation: result.operation,
-      action: result.action,
-      targetIdentifiers: result.targetIdentifiers,
-      evidenceReference: result.evidenceReference,
-      correlationId: result.correlationId,
-      idempotencyKey: result.idempotencyKey,
-      principal: this.principal(request),
-      checkedAt: result.checkedAt,
-    };
-    this._repairReceipts = [receipt]
-      .concat(this._repairReceipts || [])
-      .slice(0, 50);
-    if (
-      SERVICE.DefaultBackofficeRepairReceiptService &&
-      typeof SERVICE.DefaultBackofficeRepairReceiptService.save === "function"
-    ) {
-      Promise.resolve(
-        SERVICE.DefaultBackofficeRepairReceiptService.save({
-          tenant: request && request.tenant,
-          authData: request && request.authData,
-          query: { receiptCode: receipt.receiptCode },
-          model: receipt,
-        }),
-      ).catch(() => false);
-    }
-    return receipt;
-  },
-  /** Returns bounded client-safe repair receipts. */
-  repairReceipts: function () {
-    return (this._repairReceipts || []).slice();
   },
   /** Returns the owner-provider execution function. */
   invokeRepairProvider: async function (provider, repair, request) {
@@ -3708,7 +3637,8 @@ module.exports = {
         providerCapabilityTtlMs: this.repairProviderCapabilityTtlMs(),
         telemetry: Object.assign({}, this._repairTelemetry),
         recentProviderEvents: (this._repairProviderEvents || []).slice(0, 10),
-        recentReceiptCount: (this._repairReceipts || []).length,
+        receiptStorage: "DURABLE_OWNER",
+        uncertainReplayAllowed: false,
         operatorCommands: [
           "Open Module Registry",
           "Review repair provider readiness",
@@ -3756,13 +3686,6 @@ module.exports = {
       );
       return this.recordRepairAttempt(unsupported, request);
     }
-    if (this._repairResultsByKey[repair.idempotencyKey]) {
-      return this.normalizeRepairResult(
-        repair,
-        this._repairResultsByKey[repair.idempotencyKey],
-        { idempotentReplay: true },
-      );
-    }
     if (repair.batch && repair.dryRun !== true) {
       let batchBlocked = this.normalizeRepairResult(
         repair,
@@ -3792,7 +3715,6 @@ module.exports = {
             "Open the owning workspace and follow the manual recovery guidance.",
         },
       );
-      this._repairResultsByKey[repair.idempotencyKey] = blocked;
       return this.recordRepairAttempt(blocked, request);
     }
     if (repair.highImpact && repair.dryRun !== true && !repair.operatorNote) {
@@ -3836,8 +3758,6 @@ module.exports = {
             : "Open the owning workspace or register the owner repair provider before executing.",
         },
       );
-      if (!repair.dryRun)
-        this._repairResultsByKey[repair.idempotencyKey] = unavailable;
       return this.recordRepairAttempt(unavailable, request);
     }
     let providerValidation = this.validateRepairProviderCapability(
@@ -3850,72 +3770,60 @@ module.exports = {
         {},
         providerValidation,
       );
-      if (!repair.dryRun)
-        this._repairResultsByKey[repair.idempotencyKey] = invalidProvider;
       return this.recordRepairAttempt(invalidProvider, request);
     }
-    let lockResult = repair.dryRun
-      ? undefined
-      : this.acquireRepairLock(repair, request);
-    if (lockResult && lockResult.acquired === false) {
-      let locked = this.normalizeRepairResult(
-        repair,
-        {},
-        {
-          state: "REPAIR_LOCKED",
-          message: "Another repair is already running for this target.",
-          nextAction:
-            "Wait for the active repair lock to expire or complete, then refresh readiness.",
-          lock: lockResult.lock,
-          provider: providerValidation.provider,
-        },
-      );
-      return this.recordRepairAttempt(locked, request);
+    if (typeof providerEntry.provider.authorizeRepair !== "function" ||
+        await providerEntry.provider.authorizeRepair(repair, request) !== true) {
+      throw new CLASSES.NodicsError("ERR_AUTH_00003", "Owner repair authorization is required");
     }
+    if (repair.dryRun) {
+      const result = await this.invokeRepairProvider(providerEntry.provider, repair, request);
+      return this.recordRepairAttempt(this.normalizeRepairResult(repair, result, { provider: providerValidation.provider }), request);
+    }
+    const evidence = SERVICE.DefaultBackofficeRepairEvidenceService;
+    if (!evidence) throw new CLASSES.NodicsError("ERR_BOF_00101");
+    let claim = await evidence.claim(request, repair);
+    if (claim.locked) return this.recordRepairAttempt(this.normalizeRepairResult(repair, {}, {
+      state: "REPAIR_LOCKED", message: "Another repair owns this target.",
+      nextAction: "Inspect the original repair receipt. Expiry or restart does not permit replay.",
+      provider: providerValidation.provider }), request);
+    if (claim.row.status === "COMPLETED") return this.recordRepairAttempt(evidence.replay(claim.row), request);
+    const pending = () => this.normalizeRepairResult(repair, {
+      state: "RECONCILIATION_REQUIRED", retryable: false,
+      retryPolicy: { safeToRetry: false, reuseIdempotencyKey: true },
+      evidenceReference: claim.row.code,
+      message: "Repair completion has not been confirmed by its owner.",
+      nextAction: "Inspect the original owner receipt. Repeat this exact request only to reconcile evidence; do not create another repair."
+    }, { provider: providerValidation.provider });
+    if (claim.row.status !== "READY") {
+      const provider = providerEntry.provider;
+      const recovered = typeof provider.reconcileRepair === "function" ?
+        await provider.reconcileRepair(repair, request) : undefined;
+      if (recovered?.completionVerified === true)
+        return this.recordRepairAttempt(await evidence.finish(claim,
+          this.normalizeRepairResult(repair, recovered, { provider: providerValidation.provider })), request);
+      return this.recordRepairAttempt(pending(), request);
+    }
+    claim = await evidence.dispatch(claim);
+    let ownerResult;
     try {
-      let ownerResult = await this.invokeRepairProvider(
-        providerEntry.provider,
-        repair,
-        request,
-      );
-      let normalized = this.normalizeRepairResult(repair, ownerResult, {
-        provider: providerValidation.provider,
-        lock: lockResult && lockResult.lock,
-      });
-      let receipt = this.recordRepairReceipt(normalized, request);
-      if (receipt) normalized.receipt = receipt;
-      if (!repair.dryRun) {
-        let eventEvidence = await this.publishRepairEvent(normalized, request);
-        normalized.events = Object.assign({}, normalized.events, {
-          emitted: eventEvidence && eventEvidence.skipped !== true,
-          reason: eventEvidence && eventEvidence.reason,
-        });
-        this._repairResultsByKey[repair.idempotencyKey] = normalized;
-      }
-      return this.recordRepairAttempt(normalized, request);
-    } catch (error) {
-      let failed = this.normalizeRepairResult(
-        repair,
-        {},
-        {
-          state: "FAILED",
-          message:
-            "Owner repair provider failed before returning a governed result.",
-          nextAction:
-            "Open the owning workspace, review provider health, and retry only if the retry policy allows it.",
-          provider: providerValidation.provider,
-          lock: lockResult && lockResult.lock,
-          evidenceReference:
-            error && error.code ? String(error.code) : undefined,
-        },
-      );
-      if (!repair.dryRun)
-        this._repairResultsByKey[repair.idempotencyKey] = failed;
-      return this.recordRepairAttempt(failed, request);
-    } finally {
-      if (lockResult && lockResult.acquired)
-        this.releaseRepairLock(lockResult.targetKey, repair.idempotencyKey);
+      ownerResult = await this.invokeRepairProvider(providerEntry.provider, repair, request);
+    } catch {
+      const completed = await evidence.uncertain(claim);
+      return this.recordRepairAttempt(completed || pending(), request);
     }
+    if (ownerResult?.completionVerified !== true) {
+      const completed = await evidence.uncertain(claim);
+      return this.recordRepairAttempt(completed || pending(), request);
+    }
+    const normalized = this.normalizeRepairResult(repair, ownerResult, { provider: providerValidation.provider });
+    const completed = await evidence.finish(claim, normalized);
+    const eventEvidence = await this.publishRepairEvent(completed, request);
+    completed.events = Object.assign({}, completed.events, {
+      emitted: eventEvidence && eventEvidence.skipped !== true,
+      reason: eventEvidence && eventEvidence.reason
+    });
+    return this.recordRepairAttempt(completed, request);
   },
   /** Creates a compact client-safe snapshot from the canonical readiness aggregate. */
   operationalReadinessSnapshot: function (report) {
@@ -3938,7 +3846,7 @@ module.exports = {
       checkedAt: report.checkedAt,
       summary: report.summary,
       blockerCount: blockers.length,
-      blockers: blockers.slice(0, 25),
+      blockers: blockers.slice(0, this.getConfiguration().evidence.snapshotBlockerLimit),
       sections: sections.map((section) => ({
         key: section.key,
         title: section.title,
@@ -3950,43 +3858,27 @@ module.exports = {
       })),
     };
   },
-  /** Records snapshot and emits best-effort backend-owned readiness event evidence. */
-  recordOperationalReadinessSnapshot: function (report, context) {
-    context = context || {};
-    let snapshot = this.operationalReadinessSnapshot(report);
-    this._lastOperationalReadinessSnapshot = snapshot;
-    let event = {
-      id:
-        String(snapshot.checkedAt || new Date().toISOString()) +
-        ":" +
-        String(snapshot.state || "UNKNOWN"),
-      eventType: "backoffice.operationalReadiness.snapshot",
-      label: "Operational readiness",
-      state: snapshot.state,
-      checkedAt: snapshot.checkedAt,
-      blockerCount: snapshot.blockerCount,
-      source: snapshot.source,
-      tenant: context.tenant,
-      environment: context.environment,
-    };
-    this._operationalReadinessTimeline = [event]
-      .concat(this._operationalReadinessTimeline || [])
-      .filter(
-        (item, index, values) =>
-          values.findIndex((candidate) => candidate.id === item.id) === index,
-      )
-      .slice(0, 20);
-    let publisher = SERVICE.DefaultBackofficeAuditService;
-    if (publisher && typeof publisher.record === "function") {
-      Promise.resolve(publisher.record(event)).catch(() => false);
-    }
+  /** Persists the observation before exposing a durable receipt; predecessor is same-actor evidence only. */
+  recordOperationalReadinessSnapshot: async function (report, context) {
+    const snapshot = await SERVICE.DefaultBackofficeReadinessEvidenceService.recordSnapshot(context.request,
+      this.operationalReadinessSnapshot(report));
+    if (SERVICE.DefaultBackofficeAuditService) await SERVICE.DefaultBackofficeAuditService.record({
+      eventType: 'backoffice.operationalReadiness.snapshot', outcome: 'persisted', reasonCode: snapshot.state,
+      operation: snapshot.evidenceCode, principalId: this.principal(context.request), tenant: context.request.tenant
+    });
     return snapshot;
   },
   /** Builds the canonical post-reset operational readiness aggregate for Axis and tooling. */
   operationalReadinessReport: async function (request, context) {
+    // Fixed, content-free owner timings are optional diagnostics, never readiness evidence.
+    const measure = (phase, operation) => {
+      const registry = SERVICE.DefaultBackofficeRegistryService;
+      return registry && typeof registry.measureBootstrapPhase === "function"
+        ? registry.measureBootstrapPhase(phase, operation) : operation();
+    };
     context = context || {};
     let startupValidation =
-      context.startupValidation || this.startupValidationReport(request);
+      context.startupValidation || await this.startupValidationWithEvidence(request);
     let startupBlockers = []
       .concat(
         (startupValidation.findings || []).map((finding) =>
@@ -4025,10 +3917,10 @@ module.exports = {
             ]
           : [],
       );
-    let importSection = await this.importReadinessSection(
+    let importSection = await measure("operational.imports", () => this.importReadinessSection(
       request,
       context.applicationInitializationProfiles,
-    );
+    ));
     let profileStatusReport =
       context.applicationProfileStatusReport ||
       (await this.applicationProfileStatusEntries(
@@ -4060,15 +3952,15 @@ module.exports = {
       this.moduleRuntimeSection(context.modules, context.availability),
       importSection,
       this.publishingSection(profileStatusReport),
-      this.approvalSection(profileStatusReport),
+      this.approvalSection(profileStatusReport, context.modules, context.availability),
       this.documentationSection(
         context.documentationSources,
         context.documentationPublication,
       ),
-      await this.mediaSection(profileStatusReport, context),
-      await this.eWasteAcceptanceSection(request, context),
+      await measure("operational.media", () => this.mediaSection(profileStatusReport, context)),
+      await measure("operational.acceptance", () => this.eWasteAcceptanceSection(request, context)),
       this.searchSection(context),
-      await this.assistantSection(request),
+      await measure("operational.assistant", () => this.assistantSection(request)),
       this.applicationSection(
         profileStatusReport,
         context.applicationInitializationProfiles,
@@ -4100,24 +3992,33 @@ module.exports = {
       summary: summary,
       sections: sections,
     };
-    let snapshot = this.recordOperationalReadinessSnapshot(
-      report,
-      Object.assign({}, context, {
-        tenant: request && request.tenant,
-      }),
-    );
-    report.summary = Object.assign({}, report.summary, {
-      latestSnapshot: {
-        state: snapshot.state,
-        checkedAt: snapshot.checkedAt,
-        blockerCount: snapshot.blockerCount,
-      },
-      timeline: this.operationalReadinessTimeline(),
-    });
+    let snapshot;
+    try {
+      snapshot = await this.recordOperationalReadinessSnapshot(report, { ...context, request });
+      report.summary.latestSnapshot = { state: snapshot.state, checkedAt: snapshot.checkedAt,
+        blockerCount: snapshot.blockerCount, evidenceCode: snapshot.evidenceCode,
+        durable: snapshot.durable, buildIdentity: snapshot.buildIdentity };
+      if (snapshot.previousSnapshot) report.summary.previousSnapshot = snapshot.previousSnapshot;
+      report.summary.timeline = [snapshot, ...(snapshot.history || [])].slice(0, this.getConfiguration().evidence.timelineLimit).map(item => ({
+        eventType: 'backoffice.operationalReadiness.snapshot', label: 'Operational readiness',
+        id: item.evidenceCode, state: item.state, checkedAt: item.checkedAt, blockerCount: item.blockerCount,
+        historical: item.historical === true, source: 'backoffice.operationalReadiness.snapshot'
+      }));
+    } catch (error) {
+      report.state = 'NOT_READY';
+      report.summary.latestSnapshot = { state: 'UNAVAILABLE', durable: false };
+      report.sections.push({ key: 'readinessEvidence', title: 'Readiness evidence', businessStatus: 'BLOCKED',
+        ownerModule: 'backoffice', source: 'BACKOFFICE_READINESS_EVIDENCE', route: '/dashboard',
+        summary: { durable: false }, blockers: [this.readinessBlocker('READINESS_EVIDENCE_UNAVAILABLE', 'BLOCKED',
+          'PERSISTENCE', 'BACKOFFICE_READINESS_EVIDENCE', 'Restore the evidence store and refresh readiness',
+          'Current owner checks ran, but their durable readiness receipt could not be confirmed.')],
+        nextAction: 'Restore the BackOffice evidence store and refresh readiness.' });
+      report.summary.total++; report.summary.blockers++; report.summary.BLOCKED = (report.summary.BLOCKED || 0) + 1;
+    }
     return report;
   },
   /** Records auditable acknowledgement for one active startup finding. */
-  acknowledgeFinding: function (request) {
+  acknowledgeFinding: async function (request) {
     let input = (request && request.startupFindingAcknowledgement) || {};
     let code = String(input.code || "").trim();
     let reason = String(input.reason || "").trim();
@@ -4165,14 +4066,15 @@ module.exports = {
       tenant: request && request.tenant,
       correlationId: request && request.correlationId,
     };
-    this._findingAcknowledgements[
-      this.acknowledgementKey(record.tenant, record.code, record.propertyPath)
-    ] = record;
+    let persisted;
+    try { persisted = await SERVICE.DefaultBackofficeReadinessEvidenceService.acknowledge(request, finding, record); }
+    catch (error) { throw new CLASSES.NodicsError('ERR_BOF_00100',
+      'Startup review evidence could not be confirmed. Refresh readiness and inspect the acknowledgement before trying again.'); }
     if (
       SERVICE.DefaultBackofficeAuditService &&
       typeof SERVICE.DefaultBackofficeAuditService.record === "function"
     ) {
-      Promise.resolve(
+      await Promise.resolve(
         SERVICE.DefaultBackofficeAuditService.record({
           eventType: "backoffice.startupFinding.acknowledge",
           outcome: "acknowledged",
@@ -4183,9 +4085,10 @@ module.exports = {
           correlationId: record.correlationId,
           reasonCode: record.reasonCode,
         }),
-      ).catch(() => false);
+      ).catch(() => { throw new CLASSES.NodicsError("ERR_BOF_00100",
+        "Startup review was retained but audit delivery could not be confirmed. Refresh readiness and inspect the acknowledgement before trying again."); });
     }
-    return Promise.resolve(record);
+    return persisted;
   },
   /** Validates cross-setting invariants without reading or returning secrets. */
   validateConfiguration: function () {

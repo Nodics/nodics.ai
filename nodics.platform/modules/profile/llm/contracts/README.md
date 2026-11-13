@@ -182,3 +182,31 @@ Read [Proof-bound employee application intake](identity-access-lifecycle.md#proo
 ## Application-review recovery and notification evidence
 
 Read [Application-review recovery and notification evidence](identity-access-lifecycle.md#application-review-recovery-and-notification-evidence).
+
+
+## Notification transport placement
+
+Notification source proof, recipient resolution and inbox identity target the
+logical implementing module in explicit `OPERATIONAL` publication context.
+Physical runtime role labels do not authorize or route these calls. Preserve
+configured connections and the fixed API, tenant/Enterprise scope, source digest,
+permissions and recipient preferences. Private notification proof/dispatch uses
+runtime authentication; employee inbox identity forwards the original validated
+employee bearer. Neither path may substitute the other's credential authority.
+
+
+## Workflow transport ownership
+
+Workflow calls use `DefaultModuleService`, logical module `workflow` and explicit
+`targetAuthority.publication: OPERATIONAL`; a physical Process role label is not
+a routing or authorization requirement. Preserve selected connections, original
+caller/tenant/Enterprise binding, scoped runtime authentication, exact published
+definition/version, instance and execution handles, one-use claims and receipt
+validation. This change enables no workflow, grants no permissions and permits
+no retry of uncertain starts, claims or retirement commands.
+
+The owner declaration `profile.applyEmployeeApplicationDecision` targets Profile
+in `OPERATIONAL` context through `remote.targetAuthority`. Process resolves this
+ordinary owner contribution without activating Profile or deriving authority from
+`PLATFORM`. The fixed callback API, service-token admission, opaque execution
+handles and `requiresCompletedTask` requirement remain unchanged.

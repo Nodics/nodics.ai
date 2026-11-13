@@ -133,7 +133,7 @@ module.exports = {
         const expected = _.cloneDeep(query);
         const read = { tenant: context.tenant, authData: _.cloneDeep(request.authData),
             query: _.cloneDeep(query), options: { recursive: false, skipItemCache: true },
-            searchOptions: { limit: 101, sort: { versionId: -1 } } };
+            searchOptions: { limit: 101, pageSize: 101, pageNumber: 1, sort: { versionId: -1 } } };
         const response = await service.get(read);
         this.authorize(request, 'cms.backoffice.view');
         // Generated services select a tenant-bound model; their success envelope has no tenant field.
@@ -178,7 +178,18 @@ module.exports = {
             site.catalog !== catalogCode)) this.deny();
         const catalogueSites = await this.records('DefaultCmsSiteService', request, { catalog: catalogCode, active: true });
         if (!catalogueSites.length || catalogueSites.some(site => site.catalog !== catalogCode ||
-            site.enterpriseCode !== context.enterpriseCode)) this.deny();
+            site.enterpriseCode !== undefined && site.enterpriseCode !== context.enterpriseCode)) this.deny();
+        const unboundPeers = catalogueSites.filter(site => site.enterpriseCode === undefined);
+        if (unboundPeers.length) {
+            // Documentation source packs share a Catalog with read-only Sites.
+            // A registered product is not write authority: the selected Site
+            // must still be enterprise-bound and every record keeps its scope.
+            for (const code of new Set([siteCode, ...unboundPeers.map(site => site.code)])) {
+                const products = await this.records('DefaultCmsDocumentationProductService', request,
+                    { site: code, contentCatalog: catalogCode, active: true });
+                if (products.length !== 1) this.deny();
+            }
+        }
         this.authorize(request, permission);
         return { enterpriseCode: context.enterpriseCode, siteCode, catalogCode };
     },

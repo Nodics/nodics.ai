@@ -102,7 +102,7 @@ test("unselected ownership returns bounded unavailable evidence before binding o
 test("selected ownership still validates owner configuration, binding and exact remote evidence", async t => {
   const f = fixture(t, { productType: 'DIGITAL', digitalDeliveryType: 'DIGITAL_OWNERSHIP', inventoryStrategy: 'DIGITAL_COMMERCE', assetCode: 'asset' });
   SERVICE.DefaultDigitalCommerceOwnershipService = ownership;
-  const owner = { moduleName: 'domain', connectionName: 'domain', targetAuthority: 'DOMAIN', apiPrefix: '/internal/sales' };
+  const owner = { moduleName: 'domain', connectionName: 'domain', targetAuthority: { publication: 'OPERATIONAL' }, apiPrefix: '/internal/sales' };
   const policy = { ...require('../config/properties').digitalCore.digitalOwnership, enabled: true, qualified: true, owner };
   CONFIG.get = () => ({ digitalOwnership: policy });
   let reads = 0, calls = 0;

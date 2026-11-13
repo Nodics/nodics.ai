@@ -28,3 +28,28 @@ tenant-scoped `CronJob` wrapper with singleton state.
 For Copilot refresh, target-approved inputs include the assigned source code and
 current policy fingerprint. Follow Knowledge's Process-backed-refresh guide for
 assignment and runtime grants; do not add Copilot-specific policy to Cron.
+
+
+## Business scheduler workspace
+
+New schedules use the existing reviewed inactive-draft contract and explicitly
+configured targets. The Axis business workspace no longer supplies an active
+demo definition, execution node or one-second timer. This changes no generic
+Cron API, group, permission, target or activation default. Technical clients
+remain independently owner-authorized; generic save is not a draft fallback.
+
+The Cron BackOffice contribution declares the existing create/run/start/stop/
+pause/resume transports under `cronjob.lifecycle.manage`. BackOffice filters each
+action independently of `cronjob.backoffice.view`; metadata is not a grant.
+Missing or ambiguous declarations offer no browser command. State hints never
+replace Cron enforcement. Inventory needs a positive owner envelope and actual
+identities/active flags. A command acknowledgement is not completed execution.
+After an uncertain response, retain its job reference and inspect scheduler/log
+evidence with the owner before another operation; do not replay automatically.
+
+Customize labels/approved targets through Cron configuration or the smallest
+project renderer, preserving source/actor scope and the reviewed draft protocol.
+`cronJobBusinessNavigation.test.js` composes actual BackOffice permission filtering
+with existing secured routers. Axis client/action/page tests cover malformed
+evidence and scope retirement. Actual scheduled firing and role journeys remain
+separate live acceptance, not inferred from these source checks.

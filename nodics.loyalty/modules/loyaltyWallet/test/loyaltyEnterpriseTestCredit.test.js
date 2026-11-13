@@ -32,7 +32,7 @@ function fixture(t) {
     loyalty: { ...clone(require("../../loyaltyCore/config/properties").loyalty), ...walletDefaults,
       transactions: { ...walletDefaults.transactions, enabled: true },
       enterpriseTestCredits: { ...walletDefaults.enterpriseTestCredits, enabled: true, allowedEnvironments: ["isolated-test"] } },
-    runtimeRole: { code: "LOYALTY" },
+    runtimeRole: { code: "COHOST", publication: "OPERATIONAL" },
     databaseTransactions: { enabled: true, failClosed: true, maximumCommitTimeMs: 5000 },
   };
   const rows = {}, database = {}, models = {}, state = {
@@ -45,9 +45,9 @@ function fixture(t) {
     reason: "Reviewed Enterprise demonstration allocation", idempotencyKey: "command", confirmed: true } };
   global.CONFIG = { get: key => configuration[key] };
   global.UTILS = { createModelName: name => name };
-  global.NODICS = { getSelectedEnvironmentName: () => state.environment, getModels: () => models };
+  global.NODICS = { isModuleActive: name => name === "loyaltyWallet", getSelectedEnvironmentName: () => state.environment, getModels: () => models };
   let queue = Promise.resolve();
-  global.SERVICE = { DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"),
+  global.SERVICE = { DefaultModuleService: require("../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService.js"), DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"),
     DefaultLoyaltyRewardOperationService: operations,
     DefaultLoyaltyWalletOperationService: require("../src/service/defaultLoyaltyWalletOperationService"),
     DefaultLoyaltyTransactionService: transaction,
@@ -76,9 +76,9 @@ function fixture(t) {
         return pending;
       },
     },
-    DefaultModuleService: { invokeModule: async call => {
+    DefaultModuleService: { ...require("../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService.js"), invokeModule: async call => {
       assert.equal(call.local, false);
-      assert.deepEqual(call.targetAuthority, { runtimeRole: "PLATFORM" });
+      assert.deepEqual(call.targetAuthority, { publication: "OPERATIONAL" });
       assert.equal(call.tenant, "tenant");
       assert.equal(call.header.Authorization, request.authorization, "Profile receives the original signed credential");
       assert.equal(call.header["X-Enterprise-Code"], "platform");
@@ -482,4 +482,19 @@ test("unqualified transaction, database model and unique index refuse before rec
   await assert.rejects(f.run(), { code: "ERR_LOYALTY_TEST_CREDIT_UNAVAILABLE" });
   assert.equal(f.state.reads, 0);
   assert.equal(f.state.writes, 0);
+});
+
+
+test("local ownership and explicit publication override physical role labels without bypassing admission", async t => {
+  const f = fixture(t);
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly: true }) }) };
+  await assert.rejects(f.run());
+
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly: false }) }) };
+  for (const publication of [undefined, "STAGED", "ONLINE"]) {
+    f.configuration.runtimeRole.publication = publication;
+    await assert.rejects(f.run());
+  }
+  f.configuration.runtimeRole = { code: "UNRELATED_PHYSICAL_NAME", publication: "OPERATIONAL" };
+  await f.run();
 });

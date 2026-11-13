@@ -35,3 +35,38 @@ test('the native-local entry cannot select an arbitrary remote database', () => 
     }
     assert.throws(() => assertLocalConnection({ URI: 'mongodb://localhost' }));
 });
+
+test('maintenance context observes initialized owners only after the canonical projection completes', async () => {
+    const { createRequire } = await import('node:module');
+    const require = createRequire(import.meta.url);
+    const { loadContext } = await import('../src/service/schema/defaultInstalledVersionMigrationCommand.mjs');
+    const projection = require('../../../nTooling/src/service/project/defaultProjectConfigurationProbeService');
+    const credentials = require('../../../nTooling/src/service/project/defaultProjectLocalRuntimeCredentialService');
+    const initializer = require('../../../nConfig/src/service/DefaultFrameworkInitializerService');
+    const before = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, NODICS: global.NODICS };
+    const originals = { resolve: projection.resolve, mergeEnvironment: credentials.mergeEnvironment, load: initializer.loadMaintenanceServices };
+    const events = [], raw = {};
+    let release, ready = false, pending;
+    const gate = new Promise(resolve => { release = resolve; });
+    try {
+        credentials.mergeEnvironment = () => { events.push('private-inputs'); return {}; };
+        projection.resolve = async () => { events.push('projection-start'); await gate; ready = true; events.push('projection-complete'); return {}; };
+        initializer.loadMaintenanceServices = async () => { assert(ready); events.push('maintenance'); };
+        global.CONFIG = { get: () => { assert(ready, 'configuration cannot be observed before projection acknowledgement'); return { class: 'LOCAL' }; } };
+        global.SERVICE = { DefaultFilesLoaderService: { loadSchemaFiles: () => { assert(ready); events.push('schema-read'); return raw; } },
+            DefaultDatabaseSchemaHandlerService: { buildDatabaseSchema: async value => { assert.equal(value, raw); events.push('schema-build'); } } };
+        global.NODICS = { setActiveChannel: channel => { assert.equal(channel, 'master'); events.push('master'); } };
+        pending = loadContext({ environment: 'qualityLocal', server: 'authoring' }); pending.catch(() => {});
+        await new Promise(resolve => setImmediate(resolve));
+        const beforeCompletion = events.slice();
+        release();
+        const context = await pending;
+        assert.deepEqual(beforeCompletion, ['private-inputs', 'projection-start']);
+        assert.equal(context.raw, raw);
+        assert.deepEqual(events, ['private-inputs', 'projection-start', 'projection-complete', 'maintenance', 'schema-read', 'schema-build', 'master']);
+    } finally {
+        release(); if (pending) await pending.catch(() => {});
+        projection.resolve = originals.resolve; credentials.mergeEnvironment = originals.mergeEnvironment; initializer.loadMaintenanceServices = originals.load;
+        Object.assign(global, before);
+    }
+});

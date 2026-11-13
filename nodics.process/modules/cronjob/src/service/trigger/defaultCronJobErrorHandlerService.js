@@ -124,10 +124,9 @@ module.exports = {
         this.LOG.debug('Changing job state to error');
         let jobDefinition = request.definition;
         jobDefinition.endTime = new Date();
-        if (!jobDefinition.log) {
-            jobDefinition.log = [];
-        }
-        jobDefinition.log.push(request.error);
+        const code = /^ERR_[A-Z0-9_]{1,64}$/.test(request.error?.code || '') ? request.error.code : 'ERR_JOB_00000';
+        const target = ['processTrigger', 'startNode', 'internal', 'external'].find(key => jobDefinition.jobDetail?.[key]) || 'unknown';
+        jobDefinition.log = [{ code, target, message: 'Scheduled execution failed. Inspect the target and its owner diagnostics before an explicit retry.' }];
         SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
             status: ENUMS.CronJobStatus.ERROR.key,
             endTime: jobDefinition.endTime,

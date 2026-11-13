@@ -20,7 +20,7 @@ const assert = require("node:assert/strict");
 const { fork } = require("node:child_process");
 const { once } = require("node:events");
 const path = require("node:path");
-const owner = require("../src/service/defaultDiscoveryIndexRetirementService");
+const owner = require("../../discoveryProjection/src/service/defaultDiscoveryPhysicalRetirementService");
 const receiptSchema = require("../src/schemas/schemas").discoveryPublication
   .discoveryIndexRetirementReceipt;
 
@@ -48,9 +48,10 @@ test(
     t.after(() => elastic.close());
     const journal = await persistence.create(receiptSchema);
     t.after(() => journal.close());
-    SERVICE.DefaultDiscoveryIndexRetirementReceiptService = journal.service;
+    // Native-provider qualification uses the journal boundary directly; DMS portability is covered separately.
+    SERVICE.DefaultDiscoveryRetirementReceiptTransportService = journal.service;
     const models = new Map();
-    SERVICE.DefaultDiscoveryDocumentProjectionService = {
+    SERVICE.DefaultDiscoveryProjectionOwnerService = {
       getSearchModel: (input) => models.get(input.indexName),
     };
     let serial = 0;

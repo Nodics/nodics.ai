@@ -38,15 +38,23 @@ module.exports = {
         if (!serviceName || !SERVICE[serviceName] || typeof SERVICE[serviceName].get !== 'function') {
             return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Generated schema read service is not available'));
         }
-        return SERVICE[serviceName]
-            .get({
-                tenant: request.tenant,
-                authData: request.authData,
-                moduleName: request.moduleName,
-                query: input.query,
-                searchOptions: input.searchOptions,
-                options: { recursive: false },
-            })
+        const read = {
+            tenant: request.tenant,
+            authData: request.authData,
+            moduleName: request.moduleName,
+            query: input.query,
+            searchOptions: input.searchOptions,
+            options: { recursive: false },
+        };
+        const execute = () => SERVICE[serviceName].get(read);
+        let result;
+        if (request.httpRequest) {
+            const owner = SERVICE.DefaultSchemaReadAccessPolicyService;
+            if (typeof owner?.withGeneratedHttpRead !== 'function')
+                return Promise.reject(new CLASSES.NodicsError('ERR_AUTH_00003'));
+            result = owner.withGeneratedHttpRead(request, read, execute);
+        } else result = execute();
+        return Promise.resolve(result)
             .then((result) => {
                 return {
                     code: 'SUC_DBS_00000',
@@ -156,7 +164,7 @@ module.exports = {
      */
     buildRecordProjection: function (descriptor) {
         let projection = { _id: 0 };
-        let fieldNames = (descriptor.fields || []).filter((field) => field && field.name).map((field) => field.name);
+        let fieldNames = (descriptor.fields || []).filter((field) => field && this.isSafeProjectionField(field.name)).map((field) => field.name);
         let presentationFields = [descriptor.displayProperty].concat(descriptor.displayProperties || []).filter((name) => {
             return this.isSafeProjectionField(name);
         });

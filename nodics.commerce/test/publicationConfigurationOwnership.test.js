@@ -11,20 +11,18 @@
 
 "use strict";
 
-/** @module nodics.commerce/test/publicationConfigurationOwnership @description Verifies owner registration, independent qualification and role-scoped overrides without runtime startup. @owner nodics.commerce @layer test */
+/** @module nodics.commerce/test/publicationConfigurationOwnership @description Verifies owner registration, independent qualification and publication-context overrides without runtime startup. @owner nodics.commerce @layer test */
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const bindings = require("../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService");
-const loader = require("../../nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService");
 const publish = require("../../nodics.foundation/modules/nPublish/config/properties");
 
-/** Uses the real configuration merge and role projection, never a second inheritance implementation. */
-function resolve(owner, role, overlay = {}) {
-  return loader.deriveRuntimeRoleCapabilityProfiles(
-    bindings.merge(bindings.merge(bindings.merge(publish, owner), overlay), {
-      runtimeRole: { code: role },
-    }),
-  );
+/** Uses canonical configuration bindings and effective publication context. */
+function resolve(owner, publication, overlay = {}) {
+  return bindings.resolve(bindings.merge(bindings.merge(publish, owner), overlay), {}, {
+    serverCode: "arbitraryCustomerRuntime", environmentVariables: {},
+    readRuntimeProperty: () => publication,
+  });
 }
 
 for (const domain of ["product", "pricing", "tax", "inventory", "promotion"]) {
@@ -39,11 +37,11 @@ for (const domain of ["product", "pricing", "tax", "inventory", "promotion"]) {
         domain.slice(1) +
         "PublicationService";
   test(
-    domain + " owns role registrations without qualification or connections",
+    domain + " owns publication registrations without qualification or connections",
     () => {
-      const staged = resolve(defaults, "COMMERCE_STAGED");
-      const online = resolve(defaults, "COMMERCE");
-      const unrelated = resolve(defaults, "OTHER");
+      const staged = resolve(defaults, "STAGED");
+      const online = resolve(defaults, "ONLINE");
+      const operational = resolve(defaults, "OPERATIONAL");
       assert.equal(staged.publish.providers.versionProviders[domain], provider);
       assert.equal(
         staged.publish.providers.workflowProviders[domain],
@@ -55,10 +53,11 @@ for (const domain of ["product", "pricing", "tax", "inventory", "promotion"]) {
       );
       assert.equal(online.publish.setup.observation.enabled, false);
       assert.equal(online.publish.providers.versionProviders[domain], null);
-      assert.equal(unrelated.publish.providers.versionProviders[domain], null);
-      assert.equal(unrelated[domain].publication.targetTransportProvider, null);
+      assert.equal(operational.publish.providers.versionProviders[domain], null);
+      assert.equal(operational[domain].publication.targetTransportProvider,
+        online[domain].publication.targetTransportProvider);
       assert.equal(staged[domain].publication.target.connectionName, null);
-      assert.equal(staged[domain].publication.target.runtimeRole, "COMMERCE");
+      assert.equal(staged[domain].publication.target.publication, "OPERATIONAL");
       const policy =
         domain === "product" ? "catalogueVersioned" : "publicationVersioned";
       assert.equal(
@@ -66,8 +65,8 @@ for (const domain of ["product", "pricing", "tax", "inventory", "promotion"]) {
         true,
       );
       assert.equal(
-        unrelated.schemaPolicies[domain][policy].isVersionedEnabled,
-        false,
+        operational.schemaPolicies[domain][policy].isVersionedEnabled,
+        domain === "product",
       );
       if (domain !== "product") {
         assert.equal(
@@ -81,27 +80,17 @@ for (const domain of ["product", "pricing", "tax", "inventory", "promotion"]) {
         );
         assert.equal(online[domain].publication.runtimeRole, "ONLINE");
       }
-      const customized = resolve(defaults, "COMMERCE_STAGED", {
+      const customized = resolve(defaults, "STAGED", {
         [domain]: {
-          runtimeRoleProfiles: {
-            COMMERCE_STAGED: {
-              publication: {
-                targetTransportProvider: "PartnerTransport",
-                target: { connectionName: "reviewedTarget" },
-              },
-            },
+          publication: {
+            targetTransportProvider: "PartnerTransport",
+            target: { connectionName: "reviewedTarget" },
           },
         },
-        schemaPolicies: {
-          runtimeRoleProfiles: {
-            COMMERCE_STAGED: {
-              [domain]: {
-                [policy]: { isVersionedEnabled: false },
-              },
-            },
-          },
-        },
+        schemaPolicies: { [domain]: { [policy]: { isVersionedEnabled: false } } },
       });
+      assert.throws(() => resolve(defaults, "UNKNOWN"), /publication context/i);
+
       assert.equal(
         customized[domain].publication.targetTransportProvider,
         "PartnerTransport",

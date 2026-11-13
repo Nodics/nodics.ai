@@ -49,7 +49,12 @@ test('publication parser size and read-only delivery stay CMS-owned', () => {
     assert.equal(routes.deployPublication.bodyParserHandler, 'cmsPublicationBodyParserHandler');
     assert.equal(require('../config/properties').cms.publication.maximumDeploymentRequestBytes, '64mb');
     const delivery = require('../src/router/routers').cms.cmsDelivery;
-    assert.deepEqual(Object.keys(delivery).sort(), ['resolvePublicPage', 'resolveAuthenticatedPage', 'resolveStorefrontPage'].sort());
+    assert.deepEqual(Object.keys(delivery).sort(), ['documentationGuides', 'publishedKnowledge', 'resolvePublicPage', 'resolveAuthenticatedPage', 'resolveStorefrontPage'].sort());
+    assert.equal(delivery.publishedKnowledge.secured, false);
+    assert.equal(delivery.publishedKnowledge.cache.enabled, false);
+    assert.equal(delivery.documentationGuides.secured, true);
+    assert.equal(delivery.documentationGuides.permissionConfig, 'cms.delivery.authenticatedPermission');
+    assert.equal(delivery.documentationGuides.cache.enabled, false);
     for (const route of Object.values(delivery)) {
         assert.equal(route.method, 'GET', route.key);
         assert.notEqual(route.apiExposure, 'moduleInternal', route.key);

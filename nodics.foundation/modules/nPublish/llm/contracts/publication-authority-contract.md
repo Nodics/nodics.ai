@@ -114,7 +114,8 @@ Operations reconciliation also invokes the owning provider for retained activati
 operations and historical ACTIVATING records without a targetVersion. Providers
 inspect the exact operation key and retained source, not mutable latest content.
 This does not automatically approve or promote a publication. FAILED recovery
-uses retry; REJECTED, WITHDRAWN and ROLLED_BACK use resubmit and renewed approval.
+uses operation-qualified retry as described below; REJECTED, WITHDRAWN and
+ROLLED_BACK use explicit resubmit and renewed approval.
 Target failures retain operation identity for inspection; operators reconcile an
 uncertain commit before a new approval attempt. No generic target store or
 automatic compensation is introduced.
@@ -126,7 +127,7 @@ unscoped request through controller normalization. An omitted code retains the
 authorized bounded batch operation. A selected non-CMS publication must never
 drain unrelated CMS events. Later-layer reconcilers preserve this scope contract.
 
-FAILED retry, revalidation and renewed approval retain the original activation
+For validation/activation failures, FAILED retry, revalidation and renewed approval retain the original activation
 operation, including its predecessor version and optional target revision.
 Activation must replay that same key through the provider, which reconciles its
 durable receipt; it must not read current Online to manufacture a new operation
@@ -158,7 +159,7 @@ fail after external work succeeds but before the local response is observed.
 ## Immutable Source And Installed Compatibility
 
 Reuse the owning versioned database/service providers for immutable authoring
-versions. Select them through existing schema policies and runtime-role profiles
+versions. Select them through existing schema policies and explicit publication context bindings
 where supported; do not add a parallel snapshot store or copy persistence into
 domain adapters. A broad tenant-owned policy must not accidentally version
 operational balances, reservations or transactions along with publication sources.
@@ -202,3 +203,85 @@ idempotent retry and retained-version rollback before registration. Reuse nPubli
 Process, nService and owning persistence/storage/search facilities; do not create
 another lifecycle or customer-project enforcement implementation. These are
 qualification requirements, not a declaration that every domain implements them.
+
+
+Repeated creation of the same publication code must preserve the exact source and
+any explicitly supplied target scope. A conflicting target requires a new
+request. A provider may qualify the current Online target before offering and
+starting rollback. Target owners still enforce that condition during mutation.
+
+## Original rollback and withdrawal recovery
+
+A provider may separately declare `targetCommandReceiptContract: 'v1'`. This is
+independent of activation's `targetReceiptContract`. Before the first target
+effect, nPublish captures the original command in the existing atomic transition
+journal's `details.targetCommandOperation`. It binds operation, original key,
+publication/domain/root/source, activation key, original transient revision and a
+SHA-256 hash of the exact target version. The hash preserves long multilingual
+version identity without weakening generic evidence redaction or string limits.
+There is no new journal, collection or caller-controlled top-level descriptor.
+
+FAILED recovery classifies only the current exact authoritative journal entry.
+Validation/activation failures retain revalidation and approval semantics plus the
+original activation identity. A qualified failed rollback or withdrawal resumes
+its own operation through a contiguous, matching journal chain. The provider sees
+the actual advancing lifecycle revision and the same original target key, never
+a fabricated revision or fresh predecessor. Missing, changed, gapped or legacy
+command evidence remains held. Non-opted-in providers retain ordinary command
+behavior but cannot silently recover these failures through activation.
+
+The qualified provider returns a positive `receipt` with exact operation/key,
+publication/root/source, target version and nonnegative integer `affected`.
+Negative or contradictory receipts fail before completion hooks and terminal
+state. Domains retain atomic target persistence, immutable receipt replay,
+complete-set validation and intervening-publication fences; nPublish receipt
+shape checks do not establish target atomicity. In-flight commands require the
+caller's current expected revision before provider I/O. Operator recovery also
+requires that revision, without replacing a missing or stale value. A completed
+identical command is read-only; inspect uncertain completion before explicitly
+resubmitting a terminal request for a new approval cycle.
+
+The composed Editorial tests exercise actual lifecycle, version/source/target
+services and managed persistence owners through isolated repository/provider
+ports, including concurrent recovery, response/hook/terminal-ack loss, repeated
+failure and contradictory receipts. They are not native approval evidence.
+
+
+## Business inspection and explicit operator controls
+
+The existing human publication GET invokes `inspect`, which reads through `get`
+and returns a copy with nonpersistent `operatorOperations` and
+`operatorGuidance`. Internal lifecycle/domain reads still use the exact stored
+record through `get`. Inspection does not append audit, change state, create
+permissions or confer activation authority. FAILED eligibility uses the current
+exact journal classification; original rollback/withdrawal proof and qualified
+provider methods are required. Terminal states offer no implicit resubmission.
+For a qualified Online rollback, inspect the actual current target version before
+offering the operation. Different, absent, negative or unavailable current target
+evidence holds rollback while retaining readable request history. Execution
+independently rechecks CAS, journal, retained target and intervening publications.
+Read eligibility is neither a target lock nor proof of public access.
+
+The existing request navigation declares permission-qualified retry/rollback and
+original in-flight withdrawal transports through `lifecycleActions`. BackOffice
+filters permissions/availability; Axis intersects those declarations with the
+fresh owner eligibility. No new route, group, grant, token type, approval or
+exposure default is introduced. The existing human `runtimeConfigAdminUserGroup`
+route admission and granular permissions remain independently enforced; service
+approval/activation routes remain service-only. Metadata is not authentication.
+
+Axis first reads the exact originating runtime/request, requires unchanged
+root/source/state/revision and permitted operation, then asks for explicit
+confirmation. The POST contains the inspected publication concurrency revision,
+not the source version. A positive acknowledgement must match original
+publication/domain/root/source, advance the revision and reach the operation's
+expected state. Retry may revalidate or finish its original qualified command;
+revalidation still requires normal review/approval before activation. Unknown or
+contradictory responses are held, with no automatic read-as-write retry. A later
+fresh inspection is required before another explicit preparation. Actor/source
+retirement and permission changes discard prepared or delayed private evidence.
+The original command journal remains the owner recovery route after navigation
+or response loss; browser state is not another lifecycle store.
+
+
+A provider may admit retry of a failed legacy rollback only through canRetryRejectedRollback returning exactly true after fresh owner checks. CMS admits only its transaction-scoped ERR_CMS_00116 rejection, a contiguous Online to Rolling Back to Failed journal, unchanged activation/predecessor identities and the same current Online pointer. Retry appends audit evidence and uses current pointer fencing; it never rewrites the old journal or activates a new revision. Timeouts, response loss, incomplete history and other failures remain blocked unless the existing qualified command receipt contract proves recovery.

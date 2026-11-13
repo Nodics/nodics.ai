@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @module backoffice/test/backofficeDocumentationForwardRelease @description Guards the isolated Axis setup successor, frozen release bytes and source-only publication handoff. @layer test @owner backoffice */
+/** @module backoffice/test/backofficeDocumentationForwardRelease @description Guards forward metadata correction, frozen releases and source-only publication handoff. @layer test @owner backoffice */
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -20,8 +20,10 @@ const root = path.resolve(__dirname, '..');
 const framework = path.resolve(root, '../../..');
 const contract = require(path.join(framework, 'nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService'));
 const previous = require('./fixtures/documentationFrozen001.json').sections.documentation;
-const next = require('../data/manifest.json').sections.documentation;
-const selected = contract.readDocumentationRelease(root, 'documentation');
+const frozen002 = require('./fixtures/documentationFrozen002.json').sections.documentation;
+const active = contract.readDocumentationRelease(root, 'documentation');
+const next = require('./fixtures/documentationReviewPredecessor.json').sections.documentation;
+const selected = { ...active, manifest: next, fileRoot: path.join(root, 'test/fixtures/documentationReviewPredecessor') };
 const local = { ...selected, children: [] };
 const historicalFile = file => {
     const fixture = path.join(root, 'test/fixtures/unreleasedPredecessor', file);
@@ -32,6 +34,55 @@ const components = family(local, 'Component');
 const original = suffix => Object.keys(previous.generatedHashes).filter(file => file.endsWith(suffix + 'Data.js'))
     .flatMap(file => Object.values(require(historicalFile(file))));
 const axis = components.find(record => record.properties.code === 'applications.axis-setup-error-contracts').properties;
+const file002 = file => {
+    const fixture = path.join(root, 'test/fixtures/release002', file);
+    return fs.existsSync(fixture) ? fixture : path.join(selected.fileRoot, file);
+};
+const records002 = suffix => Object.keys(frozen002.generatedHashes)
+    .filter(file => file.endsWith(suffix + 'Data.js'))
+    .flatMap(file => Object.values(require(file002(file))));
+
+test('all eight frozen 0.0.2 payloads retain exact bytes and superseded files leave shipping data', () => {
+    assert.equal(frozen002.version, '0.0.2');
+    assert.equal(contract.releaseChecksum(frozen002.generatedHashes), '711722bc5cb4ef7000f9f4dd7be5327ac8c3790f7d4345c07892003d4cdfd455');
+    assert.equal(Object.keys(frozen002.generatedHashes).length, 8);
+    for (const [file, hash] of Object.entries(frozen002.generatedHashes)) {
+        assert.equal(contract.sha256(fs.readFileSync(file002(file))), hash, file);
+        if (!next.generatedHashes[file]) assert.equal(fs.existsSync(path.join(root, 'data', file)), false, file);
+    }
+});
+
+test('0.0.3 changes only registry word counts and their unapproved staged review evidence', () => {
+    for (const suffix of ['Component', 'Node', 'SearchMetadata', 'Page', 'Route']) {
+        assert.deepEqual(family(local, suffix), records002(suffix), suffix);
+    }
+    const before = records002('PageMetadata');
+    const after = family(local, 'PageMetadata');
+    assert.deepEqual(after.map(record => record.code), before.map(record => record.code));
+    for (const record of before) {
+        const expected = structuredClone(record);
+        if (record.documentId === 'platform.module-registry') {
+            assert.equal(record.wordCount, 2395);
+            assert.equal(record.sourceWordCount, 2395);
+            expected.wordCount = expected.sourceWordCount = 2689;
+        }
+        assert.deepEqual(after.find(item => item.code === record.code), expected);
+    }
+    const states = family(local, 'PublicationState');
+    assert.equal(states.length, records002('PublicationState').length);
+    for (const state of records002('PublicationState')) {
+        const expected = structuredClone(state);
+        if (state.targetCode === 'nodicsDocsMetadataplatformModuleRegistry') {
+            expected.stagedVersion = '0.0.3';
+            expected.checksum = contract.sha256(JSON.stringify(after.find(record => record.code === state.targetCode)));
+        }
+        assert.deepEqual(states.find(item => item.code === state.code), expected);
+    }
+    const sameVersion = { ...next, version: '0.0.2' };
+    assert.throws(() => contract.validateGeneration(frozen002, sameVersion), /Immutable documentation release changed/);
+    const staleSeal = { ...next, releaseChecksum: frozen002.releaseChecksum };
+    assert.throws(() => contract.validateGeneration(frozen002, staleSeal), /checksum is inconsistent/);
+});
 
 test('all eight released 0.0.1 payloads retain their exact bytes', () => {
     assert.equal(previous.version, '0.0.1');
@@ -42,8 +93,8 @@ test('all eight released 0.0.1 payloads retain their exact bytes', () => {
     }
 });
 
-test('0.0.2 selects forward paths in docs-v001 without replacing released paths or shared composition', () => {
-    assert.equal(next.version, '0.0.2');
+test('0.0.3 selects forward metadata paths in docs-v001 without replacing released paths or shared composition', () => {
+    assert.equal(next.version, '0.0.3');
     assert.equal(next.contentPath, 'docs-v001');
     assert.equal(next.sourceAuthority, previous.sourceAuthority);
     assert.deepEqual(next.includes, previous.includes);
@@ -51,6 +102,7 @@ test('0.0.2 selects forward paths in docs-v001 without replacing released paths 
         assert.deepEqual(next[field], previous[field], field);
     }
     contract.validateGeneration(previous, next);
+    contract.validateGeneration(frozen002, next);
     const oldComponent = Object.keys(previous.generatedHashes).find(file => file.endsWith('ComponentData.js'));
     assert.equal(next.generatedHashes[oldComponent], undefined);
     const overwritten = structuredClone(next);
@@ -68,12 +120,12 @@ test('one successor header preserves dispatch, query, ordering and all canonical
     const files = Object.keys(next.generatedHashes);
     const headers = files.filter(file => file.includes('/headers/'));
     assert.equal(headers.length, 1);
-    assert.ok(headers[0].includes('Release002'));
+    assert.ok(headers[0].includes('Release003'));
     const before = require(historicalFile(Object.keys(previous.generatedHashes).find(file => file.includes('/headers/'))));
-    const after = require(path.join(root, 'data', headers[0]));
+    const after = require(path.join(selected.fileRoot, headers[0]));
     const dispatch = header => Object.entries(header).flatMap(([module, entries]) => Object.values(entries).map(entry => ({
         module, schemaName: entry.options.schemaName, operation: entry.options.operation,
-        prefix: entry.options.dataFilePrefix.replace('Release002', ''), query: entry.query
+        prefix: entry.options.dataFilePrefix.replace(/Release00[23]/, ''), query: entry.query
     })));
     assert.deepEqual(dispatch(after), dispatch(before));
     for (const entries of Object.values(after)) for (const entry of Object.values(entries)) {
@@ -86,12 +138,20 @@ test('one successor header preserves dispatch, query, ordering and all canonical
     assert.equal(new Set(all.map(record => record.code)).size, all.length);
 });
 
-test('only the Axis article blocks change; original anchors and the other three bodies remain intact', () => {
+test('Axis setup changes and the bounded registry appendix preserve original anchors and other bodies', () => {
     const before = original('Component');
     assert.equal(components.length, 4);
     for (const record of before) {
         const current = components.find(item => item.code === record.code);
-        if (record.properties.code !== axis.code) assert.deepEqual(current.properties.blocks, record.properties.blocks);
+        if (record.properties.code === 'platform.module-registry') {
+            assert.deepEqual(current.properties.blocks.slice(0, record.properties.blocks.length), record.properties.blocks);
+            const appendix = current.properties.blocks.slice(record.properties.blocks.length);
+            assert.equal(appendix.length, 4);
+            assert.ok(appendix.every(block => block.kind === 'paragraph'));
+            for (const [index, phrase] of ['Active', 'Module Health Check', 'minimumLength', 'administrator decision'].entries()) {
+                assert.ok(appendix[index].text.includes(phrase), phrase);
+            }
+        } else if (record.properties.code !== axis.code) assert.deepEqual(current.properties.blocks, record.properties.blocks);
         else for (const heading of record.properties.blocks.filter(block => block.kind === 'heading')) {
             assert.ok(axis.blocks.some(block => block.kind === 'heading' && block.anchor === heading.anchor), heading.anchor);
         }
@@ -168,7 +228,7 @@ test('changed source and provenance records are Staged without newly fabricated 
     for (const record of records) {
         const state = states.find(state => state.targetCode === record.code);
         assert.equal(state.lifecycleState, 'STAGED');
-        assert.equal(state.stagedVersion, '0.0.2');
+        assert.equal(state.stagedVersion, record.documentId === 'platform.module-registry' ? '0.0.3' : '0.0.2');
         assert.equal(state.checksum, contract.sha256(JSON.stringify(record)));
         assert.equal(state.author, 'codex.source-editorial-review');
         for (const field of ['onlineVersion', 'actor', 'reviewer', 'approver', 'publisher']) assert.equal(state[field], undefined);
@@ -177,11 +237,11 @@ test('changed source and provenance records are Staged without newly fabricated 
     }
 });
 
-test('existing pack/profile/exact baseline selects 0.0.2 and validates through the unchanged contract', () => {
+test('existing pack/profile/exact baseline selects the active successor and validates through the unchanged contract', () => {
     const config = require(path.join(framework, 'nodics.docs/config/properties'));
     const baseline = config.cms.publication.baselines['docs-backoffice'];
     const profile = config.backofficeApplicationInitialization.profiles['docs-backoffice'];
-    assert.equal(baseline.releaseVersion, '0.0.2');
+    assert.equal(baseline.releaseVersion, active.manifest.version);
     assert.equal(baseline.sourceVersion, '0');
     assert.equal(profile.contentPackCode, 'backofficeDocumentation');
     assert.equal(baseline.contentPackCode, profile.contentPackCode);
@@ -189,4 +249,33 @@ test('existing pack/profile/exact baseline selects 0.0.2 and validates through t
     assert.equal(pack.source.manifestSection, 'documentation');
     const catalogue = contract.validateDataRelease(root);
     assert.equal(catalogue.documents.filter(document => document.ownerRoot === root).length, 4);
+});
+
+test('0.0.4 preserves the sealed predecessor and adds only the shared observation guidance', () => {
+    assert.equal(active.manifest.version, '0.0.4');
+    contract.validateGeneration(next, active.manifest);
+    for (const [file, hash] of Object.entries(next.generatedHashes)) assert.equal(contract.sha256(fs.readFileSync(path.join(selected.fileRoot, file))), hash);
+    const current = family({ ...active, children: [] }, 'Component');
+    assert.deepEqual(current.map(r => r.code), components.map(r => r.code));
+    for (const old of components) {
+        const now = current.find(r => r.code === old.code);
+        if (old.properties.code !== 'platform.module-registry') assert.deepEqual(now.properties.blocks, old.properties.blocks);
+        else {
+            assert.deepEqual(now.properties.blocks.slice(0, old.properties.blocks.length), old.properties.blocks);
+            const body = contract.documentationText(now.properties.blocks.slice(old.properties.blocks.length));
+            for (const phrase of ['partial view', 'distributed lease store', 'compare-and-set', 'activation decision']) assert.ok(body.includes(phrase));
+        }
+    }
+    for (const suffix of ['Page', 'Route', 'Node']) assert.deepEqual(family({ ...active, children: [] }, suffix), family(local, suffix));
+    const pages = family({ ...active, children: [] }, 'PageMetadata');
+    for (const record of current) {
+        const article = record.properties, page = pages.find(p => p.articleComponent === record.code);
+        const body = '# ' + article.title + '\n\n' + contract.documentationText(article.blocks);
+        assert.equal(article.source.checksum, contract.sha256(body));
+        assert.equal(article.source.wordCount, contract.countWords(body));
+        assert.equal(page.sourceChecksum, article.source.checksum);
+        assert.equal(page.sourceWordCount, article.source.wordCount);
+        assert.equal(page.wordCount, article.source.wordCount);
+        assert.equal(page.sourcePath, article.source.path);
+    }
 });

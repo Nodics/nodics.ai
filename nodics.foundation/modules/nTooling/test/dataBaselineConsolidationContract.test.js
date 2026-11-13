@@ -181,27 +181,30 @@ test('Profile Init pins module-owned identity prerequisites instead of legacy gr
     const init = sections.get('profile:init-v001').section;
     const prerequisites = new Map((init.prerequisites || []).map(ref => [ref.moduleName + ':' + ref.sectionCode, ref]));
     assert.equal(prerequisites.size, init.prerequisites.length, 'Prerequisites cannot repeat');
-    // Section codes are manifest keys; do not infer domain participation from a filename.
-    const identitySections = [...sections].filter(([key]) => /:(permissionCatalogue|accessGroups|enterpriseRoles|businessAccessGroups|businessAccessRoles)$/.test(key));
-    const laterOptionalOwners = new Set(['commercialAgreement:permissionCatalogue', 'wasteCarbon:permissionCatalogue', 'wasteReward:permissionCatalogue']);
-    assert(identitySections.length > 20);
-    for (const key of laterOptionalOwners) {
-        const section = sections.get(key)?.section;
-        assert(section, `Optional owner ${key} must declare its permission catalogue`);
-        assert.equal(section.selectionPolicy, 'EXPLICIT', key);
-        assert.equal(prerequisites.has(key), false, `${key} must not become an implicit bootstrap grant`);
-    }
-    for (const [key, { section }] of identitySections) {
-        if (laterOptionalOwners.has(key)) continue;
+    const catalogues = [...sections.keys()].filter(key => key.endsWith(':permissionCatalogue') &&
+        key !== 'commercialAgreement:permissionCatalogue');
+    assert.equal(catalogues.length, 57, 'Review changes to the Release 0 bootstrap permission vocabulary');
+    const bootstrapGroups = ['profile:accessGroups', 'config:accessGroups'];
+    const required = new Set([...catalogues, ...bootstrapGroups, 'digitalCore:bundleRuntimePermissions',
+        'pricing:merchantEvidencePermission', 'profile:runtimeEvidencePermissions',
+        'wasteCarbon:transferFinalizationPermission', 'commsVerification:verificationExecutePermission']);
+    assert.deepEqual(new Set(prerequisites.keys()), required);
+    for (const key of required) {
+        const { section } = sections.get(key);
         const ref = prerequisites.get(key);
-        assert(ref, `Profile Init must pin ${key}`);
+        assert.equal(ref.partition, bootstrapGroups.includes(key) ? undefined : 'DEFAULT', key);
+        for (const dependency of section.prerequisites || []) {
+            assert(required.has(dependency.moduleName + ':' + dependency.sectionCode),
+                key + ' must not pull optional authority into bootstrap');
+        }
         assert.equal(ref.version, section.version, key);
         const checksum = contract.sha256(Object.keys(section.files).sort().map(file => file + ':' + section.files[file]).join('|') +
             (section.prerequisites?.length ? '|prerequisites:' + JSON.stringify(section.prerequisites) : ''));
         assert.equal(ref.checksum, checksum, key);
     }
-    // Optional special-access packs are not implicit bootstrap selections, but their pins are still authoritative.
+    // Capability setup still requires explicit, checksum-qualified owner releases.
     for (const [key, { section }] of [...sections].filter(([key]) => /:(permissionCatalogue|accessGroups|enterpriseRoles|businessAccessGroups|businessAccessRoles|specialAccessGroups|specialAccessRoles)$/.test(key))) {
+        if (!required.has(key)) assert.equal(section.selectionPolicy, 'EXPLICIT', key);
         for (const ref of section.prerequisites || []) {
             const targetKey = ref.moduleName + ':' + ref.sectionCode;
             const target = sections.get(targetKey)?.section;

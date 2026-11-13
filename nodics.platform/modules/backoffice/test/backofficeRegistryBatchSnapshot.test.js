@@ -38,8 +38,9 @@ function fixture(hooks = {}) {
         get: async key => records.get(key),
         deleteIfExpiresAt: async (key, expiry) =>
             records.get(key)?.expiresAt === expiry && records.delete(key),
-        set: async (key, value) => {
+        set: async (key, value, ttl, validate) => {
             await hooks.beforeSet?.(key, value);
+            if (validate) validate([...records].map(([key, value]) => ({ key, value })));
             records.set(key, value);
             await hooks.afterSet?.(key, value);
             return value;
@@ -83,13 +84,13 @@ function fixture(hooks = {}) {
     };
     const registry = Object.assign({}, definition, { _store: store,
         _metrics: { registrations: 0, renewals: 0, rejected: 0, expirations: 0 } });
-    registry.assertAuthorityClaimsAvailable = async function (...args) {
+    registry.assertAuthorityClaimsAvailable = function (...args) {
         claimChecks++;
         return definition.assertAuthorityClaimsAvailable.apply(this, args);
     };
     function batch(instanceId, names) {
         return { instanceId, project: 'fixtureProject', environment: 'fixtureEnvironment',
-            server: instanceId + 'Server', registrations: names.map(moduleName => ({
+            server: instanceId + 'Server', runtimeRole: { code: 'TEST', publication: 'OPERATIONAL' }, registrations: names.map(moduleName => ({
                 moduleName, displayName: moduleName, canonicalIdentity: moduleName, instanceId,
                 clientCallable: true, endpoint: 'http://127.0.0.1:4300',
             })) };
@@ -103,7 +104,7 @@ function fixture(hooks = {}) {
             } };
     }
     function standalone(batchValue) {
-        return registry.register({ body: batchValue.registrations[0], authData: auth(batchValue) });
+        return registry.register({ body: batchValue.registrations[0], authData: auth(batchValue), _runtimeCoordinates: { runtimeRole: batchValue.runtimeRole } });
     }
     return { registry, records, snapshots, audits, batch, auth, standalone,
         get scans() { return scans; }, get claimChecks() { return claimChecks; } };
@@ -176,8 +177,8 @@ test('partial failure waits for late sibling writes before refreshing persisted 
     const entered = deferred();
     const failure = new Error('isolated write failure');
     const f = fixture({ beforeSet: async key => {
-        if (key.startsWith('failed:')) throw failure;
-        if (key.startsWith('late:')) { entered.resolve(); await late.promise; }
+        if (JSON.parse(key)[3] === 'failed') throw failure;
+        if (JSON.parse(key)[3] === 'late') { entered.resolve(); await late.promise; }
     } });
     const batch = f.batch('partial', ['early', 'failed', 'late']);
     let settled = false;
@@ -234,7 +235,7 @@ test('concurrent batches never suppress standalone registration refreshes', asyn
     const late = deferred();
     const entered = deferred();
     const f = fixture({ beforeSet: async key => {
-        if (key === 'late:batchA') { entered.resolve(); await late.promise; }
+        if (JSON.parse(key)[3] === 'late' && JSON.parse(key)[4] === 'batchA') { entered.resolve(); await late.promise; }
     } });
     const a = f.batch('batchA', ['early', 'late']);
     const b = f.batch('batchB', ['other']);
@@ -296,7 +297,7 @@ test('expiry reconciliation cannot erase a concurrent registration or its observ
     };
     const old = f.batch('expired', ['old']);
     await f.standalone(old);
-    f.records.get('old:expired').expiresAt = Date.now() - 1;
+    f.records.get(JSON.stringify(['fixtureProject', 'fixtureEnvironment', 'expiredServer', 'old', 'expired'])).expiresAt = Date.now() - 1;
     const sweep = f.registry.expireStale();
     await entered.promise;
     const fresh = f.batch('fresh', ['new']);
@@ -306,7 +307,7 @@ test('expiry reconciliation cannot erase a concurrent registration or its observ
     assert.deepEqual(f.snapshots.at(-1).map(item => item.moduleName), ['new']);
     assert.deepEqual([...availability], ['fresh']);
     assert.deepEqual([...discovery], ['new']);
-    assert.equal(f.records.has('new:fresh'), true);
+    assert.equal(f.records.has(JSON.stringify(['fixtureProject', 'fixtureEnvironment', 'freshServer', 'new', 'fresh'])), true);
 });
 
 test('catalogue failure cannot prevent expiry from publishing remaining owners', async () => {
@@ -314,9 +315,9 @@ test('catalogue failure cannot prevent expiry from publishing remaining owners',
     const f = fixture({ reconcileActive: async () => { throw failure; } });
     await f.standalone(f.batch('expired', ['old']));
     await f.standalone(f.batch('active', ['current']));
-    f.records.get('old:expired').expiresAt = Date.now() - 1;
+    f.records.get(JSON.stringify(['fixtureProject', 'fixtureEnvironment', 'expiredServer', 'old', 'expired'])).expiresAt = Date.now() - 1;
     await assert.rejects(f.registry.expireStale(), error => error === failure);
-    assert.equal(f.records.has('old:expired'), false);
+    assert.equal(f.records.has(JSON.stringify(['fixtureProject', 'fixtureEnvironment', 'expiredServer', 'old', 'expired'])), false);
     assert.deepEqual(f.snapshots.at(-1).map(item => item.moduleName), ['current']);
 });
 
@@ -331,13 +332,13 @@ test('every authority claim is still checked, including duplicate rejection', as
     await assert.rejects(f.registry.registerBatch(challenger, f.auth(challenger)),
         error => error.code === 'ERR_BOF_00000');
     assert.equal(f.claimChecks, 3);
-    assert.equal(f.records.has('claimed:challenger'), false);
-    assert.equal(f.records.has('independent:challenger'), true);
+    assert.equal(f.records.has(JSON.stringify(['fixtureProject', 'fixtureEnvironment', 'challengerServer', 'claimed', 'challenger'])), false);
+    assert.equal(f.records.has(JSON.stringify(['fixtureProject', 'fixtureEnvironment', 'challengerServer', 'independent', 'challenger'])), true);
     assert.equal(f.snapshots.at(-1).length, 2);
-    assert(f.audits.some(event => event.reasonCode === 'DUPLICATE_AUTHORITY_CLAIM'));
+    assert(f.audits.some(event => event.reasonCode === 'DUPLICATE_MODULE_OWNER'));
 });
 
-test('claim-bearing batches retain per-item authority scans but only one snapshot refresh', async () => {
+test('claim-bearing batches retain atomic admission checks and one snapshot refresh', async () => {
     const f = fixture();
     const batch = f.batch('claims', Array.from({ length: 72 }, (_, i) => 'module' + i));
     for (const item of batch.registrations) {
@@ -346,7 +347,7 @@ test('claim-bearing batches retain per-item authority scans but only one snapsho
     }
     await f.registry.registerBatch(batch, f.auth(batch));
     assert.equal(f.claimChecks, 72);
-    assert.equal(f.scans, 73);
+    assert.equal(f.scans, 1);
     assert.equal(f.snapshots.length, 1);
 });
 
@@ -408,4 +409,57 @@ test('actual Promotion operational report descriptor survives registration and r
     const invalid = structuredClone(batch);
     invalid.registrations[0].backoffice.navigation.find(item => item.id === 'coupon-acquisition-reporting').backendWorkspace.ownerSelector.publicationRole = 'UNKNOWN';
     await assert.rejects(f.registry.registerBatch(invalid, f.auth(invalid)), /Invalid module registration batch/);
+});
+
+
+test('batch accepts only code/publication and rejects the retired roles field before writing', async () => {
+    const f = fixture(), batch = f.batch('shape', ['module']);
+    batch.runtimeRole.roles = ['TEST'];
+    await assert.rejects(f.registry.registerBatch(batch, f.auth(batch)), /Invalid module registration batch/);
+    assert.equal(f.records.size, 0);
+    delete batch.runtimeRole.roles;
+    await f.registry.registerBatch(batch, f.auth(batch));
+    assert.deepEqual([...f.records.values()][0].runtimeRole, { code: 'TEST', publication: 'OPERATIONAL' });
+});
+
+// Exercise the complete batch owner, including later-layer register overrides and retry callbacks.
+test('one lazy installed-source snapshot serves a whole batch and retries; later batches refresh it', async t => {
+    const previous = { NODICS: global.NODICS, UTILS: global.UTILS };
+    t.after(() => Object.assign(global, previous));
+    let scans = 0, scope = 'functional';
+    global.NODICS = { getRawModule: () => undefined };
+    global.UTILS = { createInstalledSourceResolver: () => {
+        scans++;
+        const snapshotScope = scope;
+        return name => ({ name, metaData: { nodics: { runtime: { ownership: snapshotScope } } } });
+    }, resolveInstalledSourceDescriptor: () => { throw Error('Unexpected per-claim discovery'); } };
+    const f = fixture(), names = Array.from({length: 24}, (_, i) => 'owner' + i);
+    // Every candidate must inspect other logical servers, rather than skip same-server leases.
+    for (let i = 0; i < 32; i++) f.records.set('peer' + i, {
+        moduleName: 'peer' + i, projectCode: 'fixtureProject', environment: 'fixtureEnvironment',
+        server: 'peerServer', runtimeRole: {publication: 'OPERATIONAL'}, clientCallable: true,
+        authorityClaims: [], expiresAt: Date.now() + 60000,
+    });
+    const admission = f.registry.assertAuthorityClaimsAvailable;
+    f.registry.assertAuthorityClaimsAvailable = function (...args) {
+        admission.apply(this, args);
+        return admission.apply(this, args); // same operation, fresh atomic-store callback
+    };
+    f.registry.register = function (request) { return definition.register.call(this, request); };
+    const batch = f.batch('batch', names);
+    await f.registry.registerBatch(batch, f.auth(batch));
+    assert.equal(scans, 1);
+    assert.equal(f.claimChecks, names.length * 2);
+    await f.registry.registerBatch(batch, f.auth(batch));
+    assert.equal(scans, 2, 'renewal must not retain the prior operation snapshot');
+    const challenger = f.batch('challenger', names);
+    await assert.rejects(f.registry.registerBatch(challenger, f.auth(challenger)), /Duplicate functional/);
+    assert.equal(scans, 3, 'failed batch also shares one snapshot');
+    scope = 'sourceOnly';
+    await assert.rejects(f.registry.registerBatch(batch, f.auth(batch)), /Source-only/);
+    assert.equal(scans, 4, 'changed installed metadata must be checked next operation');
+    global.UTILS.createInstalledSourceResolver = () => { scans++; throw Error('Ambiguous installed source'); };
+    await assert.rejects(f.registry.registerBatch(batch, f.auth(batch)), /Ambiguous installed source/);
+    assert.equal(scans, 5, 'failed discovery must not trigger N rescans');
+    assert.equal(f.records.size, 56, 'rejected operations cannot install challenger leases');
 });

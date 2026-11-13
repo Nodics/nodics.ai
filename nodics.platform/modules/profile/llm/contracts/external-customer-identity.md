@@ -103,3 +103,11 @@ localhost, IPv4 loopback and IPv6 loopback requests receive non-Secure cookies;
 HTTPS retains Secure. This is resolved per request without changing shared
 configuration. Exact credentialed CORS, CSRF, proof freshness and refresh rotation
 remain required. Non-loopback HTTP and SameSite=None with non-Secure cookies fail.
+
+## Configuration schema ownership
+
+Profile declares `runtimeConfigurationSchemas.telegramExternalIdentity` once in
+its ordinary module properties, independent of the hosting runtime role. Schema
+discovery neither enables an identity provider nor supplies credentials or
+permissions. Existing sensitive-field, credential-reference and authorization
+checks remain mandatory; deployment overrides use ordinary nConfig layering.

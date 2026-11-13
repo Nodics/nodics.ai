@@ -61,9 +61,8 @@ const nexusEditorialArticleData = {
         specialFrom: special === true ? created : undefined,
         specialUntil: undefined,
         specialVariant: special === true ? 'gold' : undefined,
-        status: 'APPROVED',
+        status: 'DRAFT',
         publishFrom: publishFrom,
-        publicationCode: `${code}-publication-r1`,
         revision: 1,
         sequence: index
     };

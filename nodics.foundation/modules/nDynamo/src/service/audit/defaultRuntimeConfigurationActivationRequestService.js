@@ -148,6 +148,16 @@ module.exports = {
             activationRequest.approvalStatus !== 'APPROVED' ||
             activationRequest.status !== 'APPROVED'
         ) {
+            if (activationRequest.status === 'STALE') {
+                throw new CLASSES.NodicsError('ERR_DYN_PROPERTY_STALE');
+            }
+            if (activationRequest.configurationType === 'propertyConfiguration') {
+                throw new CLASSES.NodicsError(
+                    activationRequest.status === 'ACTIVATING'
+                        ? 'ERR_DYN_PROPERTY_RECOVERY_UNCONFIRMED'
+                        : 'ERR_DYN_PROPERTY_NOT_ACTIVATABLE',
+                );
+            }
             throw new CLASSES.NodicsError(
                 'ERR_SYS_00002',
                 'Activation request must be approved and unclaimed before activation',
@@ -188,8 +198,20 @@ module.exports = {
                 activatedBy: actor,
             },
         );
-        // Unknown owner or final-ack outcomes retain the claim; never replay automatically.
-        const success = await this.activateConfiguration(request, claimed);
+        // Only the property owner can declare that the attempted write did not happen.
+        let success;
+        try {
+            success = await this.activateConfiguration(request, claimed);
+        } catch (error) {
+            if (claimed.configurationType === 'propertyConfiguration' &&
+                error?.code === 'ERR_DYN_PROPERTY_STALE') {
+                await this.updateRequestState(request, claimed, {
+                    status: this.getActivationState('STALE'),
+                });
+            }
+            throw error;
+        }
+        // Unknown owner or final-ack outcomes retain the claim for reconciliation.
         const updatedRequest = await this.updateRequestState(request, claimed, {
             status: 'ACTIVATED',
         });
@@ -392,15 +414,18 @@ module.exports = {
         if (
             activation.configurationType !== 'propertyConfiguration' ||
             activation.approvalStatus !== 'APPROVED' ||
-            !['ACTIVATING', 'ACTIVATED'].includes(activation.status) ||
+            !['ACTIVATING', 'ACTIVATED', 'STALE'].includes(activation.status) ||
             !activation.configuration ||
             activation.configurationDigest !==
                 this.createConfigurationDigest(activation.configuration)
         ) {
             throw new CLASSES.NodicsError(
-                'ERR_SYS_00002',
+                'ERR_DYN_PROPERTY_RECOVERY_UNCONFIRMED',
                 'Property recovery requires an intact claimed approval',
             );
+        }
+        if (activation.status === 'STALE') {
+            return this.createPropertyReconciliationReceipt(activation);
         }
         const current = await persistence.refresh(request);
         const evidence = current
@@ -408,6 +433,18 @@ module.exports = {
                   (entry) => entry.activationRequestCode === activation.code,
               )
             : [];
+        const reviewedRevision = activation.preview?.persistenceRevision;
+        // The retained journal must prove that the reviewed revision can no
+        // longer win a write, and that this request never committed.
+        if (activation.status === 'ACTIVATING' && current && evidence.length === 0 &&
+            reviewedRevision !== current.revision &&
+            (reviewedRevision === null ||
+                current.governedProperties.audit.some((entry) => entry.revision === reviewedRevision))) {
+            const closed = await this.updateRequestState(request, activation, {
+                status: this.getActivationState('STALE'),
+            });
+            return this.createPropertyReconciliationReceipt(closed);
+        }
         const match = evidence[0];
         if (
             evidence.length !== 1 ||
@@ -423,7 +460,7 @@ module.exports = {
                 )
         ) {
             throw new CLASSES.NodicsError(
-                'ERR_SYS_00002',
+                'ERR_DYN_PROPERTY_RECOVERY_UNCONFIRMED',
                 'No exact committed property evidence is available; do not replay',
             );
         }
@@ -433,13 +470,18 @@ module.exports = {
                 : await this.updateRequestState(request, activation, {
                       status: 'ACTIVATED',
                   });
+        return this.createPropertyReconciliationReceipt(updated, match.revision);
+    },
+
+    /** Projects an original outcome without implying a commit for a stale approval. */
+    createPropertyReconciliationReceipt: function (activation, committedRevision) {
         return {
             code: 'SUC_SYS_00000',
             data: {
-                activationRequestCode: updated.code,
-                status: updated.status,
-                revision: updated.revision,
-                committedRevision: match.revision,
+                activationRequestCode: activation.code,
+                status: activation.status,
+                revision: activation.revision,
+                ...(committedRevision && { committedRevision }),
                 replayed: false,
             },
         };

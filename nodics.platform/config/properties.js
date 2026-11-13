@@ -21,4 +21,18 @@
  * @owner nodics.platform
  * @override Customer projects may disable or narrow API categories from their server/environment configuration.
  */
-module.exports = {};
+module.exports = {
+  backofficeFunctionalModuleActivationData: {
+    modules: {
+      "nodics.platform": {
+        dataPackages: {
+          $config: "keyed",
+          key: "code",
+          entries: [
+            { code: "profile:enterpriseRoles", required: true, trigger: "ACTIVATION", targetModule: "profile" },
+          ],
+        },
+      },
+    },
+  },
+};

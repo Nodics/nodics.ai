@@ -114,6 +114,7 @@ test.beforeEach(() => {
         principalAuthorizationScopes: scopePolicy,
         waste: {
           operations: {
+            ...require("../../wasteCore/config/properties").waste.operations,
             requireScopes: true,
             requireVerification: true,
             requireDifferentApprover: true,

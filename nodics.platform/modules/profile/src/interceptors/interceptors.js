@@ -17,6 +17,11 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+  publicEmployeeLifecycleCreate: { type: "schema", item: "employee", trigger: "preSave", active: "true", index: -37, handler: "DefaultEmployeeUpdateInterceptorService.guardPublicCreation" },
+  publicEmployeeLifecycleRemove: { type: "schema", item: "employee", trigger: "preRemove", active: "true", index: -37, handler: "DefaultEmployeeUpdateInterceptorService.guardPublicRemoval" },
+  publicEmployeeLifecycleUpdate: { type: "schema", item: "employee", trigger: "preUpdate", active: "true", index: -70, handler: "DefaultEmployeeUpdateInterceptorService.guardPublicUpdate" },
+  publicEnterpriseLifecycleRemove: { type: "schema", item: "enterprise", trigger: "preRemove", active: "true", index: -37, handler: "DefaultEnterpriseUpdateInterceptorService.guardPublicRemoval" },
+  publicEnterpriseLifecycleUpdate: { type: "schema", item: "enterprise", trigger: "preUpdate", active: "true", index: -70, handler: "DefaultEnterpriseUpdateInterceptorService.guardPublicUpdate" },
   ...Object.fromEntries(["permission", "enterpriseRole"].flatMap(item => [
     ["preGet", "authorize"], ["preSave", "validate"], ["preUpdate", "validate"], ["preRemove", "remove"],
     ["postSave", "finalize"], ["postUpdate", "finalize"], ["postRemove", "finalize"],

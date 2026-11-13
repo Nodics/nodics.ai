@@ -12,7 +12,9 @@ the consumer operation completed.
 
 Opt-in [durable property activation](llm/examples/durable-property-activation.md)
 uses the existing runtime-value store for an atomic approved override and audit,
-with restart restoration and metadata-only refresh. Read migration, capacity,
+with restart restoration and metadata-only refresh. The secured governance summary
+reports this node's expected and applied property revision without applying it.
+A current node is not an acknowledgement from every replica. Read migration, capacity,
 rollback and distributed-acceptance limits before enabling it.
 
 `nDynamo` is the governed runtime change capability. It lets an authorized

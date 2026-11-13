@@ -16,6 +16,8 @@
  * @owner backoffice
  * @override Projects may replace catalogue policy while preserving canonical functional identity, durable registration, protected-module rules, revision semantics, and observed-versus-desired state separation.
  */
+const configurationInitializer = require("../../../../../../nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService");
+
 module.exports = {
   /** Initializes the functional-module catalogue service. */
   init: function () {
@@ -895,6 +897,8 @@ module.exports = {
       observation.projectCode,
       observation.functionalModule,
     );
+    const packagesChanged = !this.sameActivationDataPackages(
+      existing.activationDataPackages, observation.activationDataPackages);
     let changed =
       existing.code !== canonicalCode ||
       existing.functionalModule !== observation.functionalModule ||
@@ -906,10 +910,7 @@ module.exports = {
       existing.moduleIndex !== observation.moduleIndex ||
       existing.required !== observation.required ||
       !this.sameList(existing.technicalModules, observation.technicalModules) ||
-      !this.sameActivationDataPackages(
-        existing.activationDataPackages,
-        observation.activationDataPackages,
-      ) ||
+      packagesChanged ||
       !this.sameList(existing.observedServers, observedServers);
     // Runtime membership and display observations are not administrator decisions.
     let decisionChanged =
@@ -919,11 +920,11 @@ module.exports = {
       existing.enabled !== desiredEnabled ||
       existing.required !== observation.required ||
       existing.registeredVersion !== observation.registeredVersion ||
-      !this.sameActivationDataPackages(
-        existing.activationDataPackages,
-        observation.activationDataPackages,
-      );
-    let model = {
+      packagesChanged;
+    // A renewing runtime has no new metadata to publish. Rewriting the full
+    // snapshot is expensive and can erase another runtime's newer observation
+    // without a change to the independent administrator decision revision.
+    let model = changed ? {
       code: canonicalCode,
       functionalModule: observation.functionalModule,
       runtimeState: "ACTIVE",
@@ -937,7 +938,7 @@ module.exports = {
       updatedAt: changed ? now : existing.updatedAt,
       updatedBy: changed ? "runtime-reconciler" : existing.updatedBy,
       lastObservedAt: now,
-    };
+    } : { lastObservedAt: now };
     if (decisionChanged)
       Object.assign(model, {
         registrationState: desiredRegistrationState,
@@ -969,9 +970,21 @@ module.exports = {
       throw new Error("Runtime registration batch is missing project identity");
     let observations = this.buildObservations(batch);
     let records = [];
-    for (let registration of batch.registrations || []) {
-      if (registration.moduleKind !== "group" || registration.functionalModule) continue;
-      let existing = await this.getRecord(batch.project, registration.moduleName, { authData });
+    const structuralGroups = (batch.registrations || []).filter(registration =>
+      registration.moduleKind === "group" && !registration.functionalModule);
+    // One fresh complete scoped read for structural declarations, not a durable
+    // proof cache. Observation reconciliation below retains its fresh reads.
+    const groupRecords = structuralGroups.length ? await this.getAllRecords({
+      tenant: this.getTenant({ authData }),
+      authData: this.getPersistenceAuthData(authData),
+      query: { projectCode: batch.project },
+    }) : [];
+    const groupsByCode = new Map(groupRecords.map(record => [record.code, record]));
+    for (let registration of structuralGroups) {
+      const canonical = this.normalizeFunctionalModule(registration.moduleName);
+      const identities = [canonical].concat(this.getLegacyFunctionalModules(canonical));
+      const existing = identities.map(identity => groupsByCode.get(
+        String(batch.project) + "::" + String(identity))).find(Boolean);
       if (!existing || existing.compositionOnly === true) continue;
       let result = await this.updateRecord({
         tenant: this.getTenant({ authData }),
@@ -982,6 +995,8 @@ module.exports = {
       if (this.getMatchedCount(result) !== 1)
         throw new CLASSES.NodicsError("ERR_BOF_00000",
           "Functional-module declaration changed concurrently; retry registration");
+      groupsByCode.set(existing.code, { ...existing, compositionOnly: true,
+        catalogueRevision: Number(existing.catalogueRevision || 1) + 1 });
     }
     for (let observation of observations) {
       records.push(
@@ -995,6 +1010,7 @@ module.exports = {
     activeLeases,
     affectedProjects,
     request,
+    observation = {},
   ) {
     activeLeases = activeLeases || [];
     let projects = new Set(
@@ -1013,6 +1029,9 @@ module.exports = {
         query: { projectCode: project },
       });
       for (let record of records) {
+        // A snapshot cannot retire observations registered after its capture began.
+        if (Number.isFinite(observation.snapshotAt) &&
+            new Date(record.lastObservedAt).getTime() >= observation.snapshotAt) continue;
         let matching = activeLeases.filter(
           (lease) =>
             lease.projectCode === project &&
@@ -1025,12 +1044,22 @@ module.exports = {
             ),
           ),
         );
-        let runtimeState = matching.length > 0 ? "ACTIVE" : "OFFLINE";
+        const partial = observation.completeSnapshot === false;
+        if (partial) {
+          const retiredServers = new Set((observation.removedLeases || [])
+            .filter(lease => lease.projectCode === project && lease.functionalModuleIdentity === record.functionalModule)
+            .map(lease => [lease.environment, lease.server, lease.node || 'default'].join(':')));
+          observedServers = this.uniqueSorted((record.observedServers || [])
+            .filter(server => !retiredServers.has(server)).concat(observedServers));
+        }
+        let runtimeState = observedServers.length > 0 ? "ACTIVE" : "OFFLINE";
         let technicalModules = this.uniqueSorted(
           matching
             .map((lease) => lease.moduleName)
             .filter((name) => name && name !== record.functionalModule),
         );
+        // A local store cannot subtract a peer's technical membership.
+        if (partial) technicalModules = this.uniqueSorted((record.technicalModules || []).concat(technicalModules));
         // Preserve last-known membership offline and for legacy leases without module names.
         if (!matching.some((lease) => lease.moduleName))
           technicalModules = record.technicalModules || [];
@@ -1053,6 +1082,7 @@ module.exports = {
           query: {
             code: record.code,
             catalogueRevision: record.catalogueRevision,
+            ...(record.lastObservedAt === undefined ? {} : { lastObservedAt: record.lastObservedAt }),
           },
           model: model,
         });
@@ -1109,6 +1139,25 @@ module.exports = {
       ),
     };
   },
+  /** Projects action eligibility from the original authenticated request and canonical route permissions; execution retains every existing owner guard. */
+  clientActions: function (request) {
+    const auth = request && request.authData;
+    const secured = SERVICE.DefaultSecuredRequestPipelineService;
+    if (!auth || auth.principalType !== "human" || auth.tokenType !== "access" ||
+        !secured || typeof secured.hasRoutePermission !== "function") return [];
+    const routes = require("../../router/routers").backoffice.registryDiscovery;
+    const commands = {
+      register: routes.registerFunctionalModule,
+      activate: routes.activateFunctionalModule,
+      rollback: routes.rollbackFunctionalModule,
+      deactivate: routes.deactivateFunctionalModule,
+      deregister: routes.deregisterFunctionalModule,
+      installSampleData: { permission: "import.sample.run" },
+    };
+    return Object.entries(commands).filter(([, router]) =>
+      router && secured.hasRoutePermission({ ...request, router }) === true,
+    ).map(([action]) => action);
+  },
   /** Returns a client-safe projection enriched with durable activation receipt history. */
   projectClientSafeWithReceipts: async function (record, options, request) {
     let receiptMap = await this.getActivationReceiptMap(
@@ -1120,13 +1169,13 @@ module.exports = {
       record,
       request,
     );
-    return this.projectClientSafe(
+    return { ...this.projectClientSafe(
       record,
       Object.assign({}, options, {
         receiptMap: receiptMap,
         dependencyStates: dependencyStates,
       }),
-    );
+    ), allowedActions: this.clientActions(request) };
   },
   /** Returns normalized HTTP or internal query parameters. */
   getQuery: function (request) {
@@ -1829,7 +1878,14 @@ module.exports = {
         "Runtime registry resolver is unavailable for activation data",
       );
     }
-    let targetAuthority = { server: targetServer };
+    const deployment = configurationInitializer.getPropertyBindingContext(__filename);
+    const publication = deployment.readRuntimeProperty(targetServer, ["runtimeRole", "publication"]);
+    if (!["OPERATIONAL", "STAGED"].includes(publication))
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00000",
+        "Activation data requires an Operational or Staged import runtime",
+      );
+    const targetAuthority = { server: targetServer, publication };
     let owner = await resolver.resolveRuntimeOwner({
       moduleName: "system",
       connectionName: targetServer,
@@ -1907,16 +1963,13 @@ module.exports = {
         "Module transport is unavailable for activation data",
       );
     }
-    let uri = this.buildActivationDataReleaseUrl(
-      owner,
-      releaseRequest.dataType,
-      mode,
-    );
+    const { dataType, ...body } = releaseRequest;
+    let uri = this.buildActivationDataReleaseUrl(owner, dataType, mode);
     let operationRequest = moduleService.buildExternalRequest({
       uri: uri,
       methodName: "POST",
       header: { Authorization: authorization },
-      requestBody: releaseRequest,
+      requestBody: body,
       timeoutMs: Number(
         (CONFIG.get("backofficeFunctionalModuleActivationData") || {})
           .timeoutMs || 30000,

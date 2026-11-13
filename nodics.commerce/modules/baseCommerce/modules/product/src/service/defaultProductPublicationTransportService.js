@@ -17,15 +17,17 @@ module.exports = {
         const policy = (CONFIG.get('product') || {}).publication || {}, target = policy[side] || {};
         const source = side === 'target';
         if (!source) SERVICE.DefaultProductPublicationTargetService.assertOnline();
-        if ((source && (CONFIG.get('runtimeRole') || {}).publication !== 'STAGED') ||
+        if (SERVICE.DefaultModuleService?.isLocalModuleActive?.('product') !== true ||
+            (source && (CONFIG.get('runtimeRole') || {}).publication !== 'STAGED') ||
             !target.connectionName || target.connectionName === 'default' || !target.connectionType ||
-            target.moduleName !== 'product' || typeof target.runtimeRole !== 'string' || !target.runtimeRole.trim()) {
+            target.moduleName !== 'product' || Object.hasOwn(target, 'runtimeRole') ||
+            !(source ? ['OPERATIONAL', 'ONLINE'] : ['STAGED']).includes(target.publication)) {
             throw new Error('Explicit Product publication runtime authority is required');
         }
         const token = NODICS.getInternalAuthToken(request.tenant);
         if (!token) throw new Error('Product publication runtime authentication is unavailable');
         return SERVICE.DefaultModuleService.invokeModule({ moduleName: 'product', connectionName: target.connectionName,
-            connectionType: target.connectionType, targetAuthority: { runtimeRole: target.runtimeRole }, local: false,
+            connectionType: target.connectionType, targetAuthority: { publication: target.publication }, local: false,
             tenant: request.tenant, methodName: 'POST', apiName: '/internal/products/publication/' + operation,
             requestBody: input, maxAttempts: 1, timeoutMs: target.timeoutMs, idempotencyKey: input.operationKey,
             header: { Authorization: 'Bearer ' + token, tenant: request.tenant },

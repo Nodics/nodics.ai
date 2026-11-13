@@ -102,3 +102,64 @@ idempotency and layered `serviceCommunication` policy; do not bypass discovery.
   package claims. Active-module membership alone does not prove local hosting.
 
 Native business workspaces reuse the concrete module capability builder. `nativeWorkspace` projects the same common navigation fields while replacing the schema target with bounded, non-executable workspace/view keys. Ownership remains the publishing module; registration and BackOffice validation remain mandatory.
+
+
+## Runtime-local mechanics and functional owners
+
+The existing owner package metadata may declare
+`nodics.runtime.ownership: "runtimeLocal"`. Callable modules may omit the declaration
+and use functional scope. After canonical schema materialization, a non-callable
+registration with any schema/service claims must declare ownership explicitly in
+trusted installed metadata. Missing classification rejects outgoing registration
+and final admission; neither wire scope nor generic `owns` labels can satisfy it.
+This keeps metadata-only planning consistent with actual authority without loading
+foreign schemas under another runtime configuration. Explicit `functional` additionally declares
+service-only authority even without HTTP/schema claims. Explicit `sourceOnly`
+identifies a reviewed local helper and rejects any callable or persisted claims;
+other values reject. The registration agent's `getModuleOwnershipScope(moduleName,
+sourceModule?)` reads trusted source metadata, never the incoming lease's scope.
+`getModuleOwnershipKey(coordinates, registration, sourceModule?)` uses project,
+environment, module and explicit publication; runtime-local keys additionally
+include the logical server. Optional source descriptors are internal loader input,
+not HTTP arguments. Missing source cannot grant a runtime-local exception.
+
+System, Token, Validator, Import, Export, Search engine mechanics and Publication
+execution declare runtime-local responsibility in their own package/AGENTS files.
+Their APIs and schema/service claims remain registered. Functional Product, Wallet,
+Discovery and other owners are not exempted by package group, schema count or role
+name. Remote-only loaded consumers remain excluded from local registration.
+
+BackOffice applies the same trusted distinction to its atomic module and schema
+claim collision checks. Runtime-local remote resolution requires an explicit
+logical target server; lease freshness must not pick a different runtime's health,
+configuration or installation history. This classification changes neither signed
+module grants nor physical database namespaces. Source dependency loading and
+qualified DefaultModuleService remote invocation retain their existing owners.
+
+
+## Canonical target authority
+
+DMS `normalizeTargetAuthority` is the single selector validator reused by the
+registry resolver. A supplied selector must contain explicit publication STAGED,
+ONLINE or OPERATIONAL and may contain bounded environment/server/node pins only.
+String roles, code fields, nested runtimeRole, null, empty selectors and unknown
+fields reject. Omission means no supplied selector; it is not equivalent to an
+invalid selector. Runtime role codes remain descriptive lease metadata only.
+Validate before local/remote selection and even when no registry candidates exist.
+BackOffice delegates to this same canonical resolver when no layered resolver is
+present; it never falls back to filtering only by module and newest timestamp.
+Diagnostics expose targetPublication, not a target role authority.
+
+
+Registration ownership discovery is operation-scoped. nService's
+`createOwnershipSourceResolver()` prefers loaded descriptors and lazily creates
+one canonical nConfig installed-source snapshot for all missing descriptors in
+one single registration or validated batch, including atomic-store retries.
+BackOffice binds batch child requests privately and releases the binding when
+each child settles; request fields cannot select a resolver. Later operations
+create fresh snapshots. Discovery errors remain failures for that operation.
+Never cache grants, lease snapshots, admission decisions or source descriptors
+globally. Every retry still checks current atomic lease entries and exact
+project/environment/publication/logical-server boundaries. Runtime-local and
+source-only classification, duplicate/missing source checks and signed module
+scope remain unchanged.

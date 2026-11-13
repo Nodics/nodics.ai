@@ -26,11 +26,11 @@ function fixture() {
   const context = {enterpriseCode:'shop',source:'cronjob',cronJobTenant:'t',cronJobCode:'job',firedAt:new Date().toISOString()};
   const reply = {instance:{code:'sweep-1',context},executionCode:r.body.executionCode};
   const calls = [];
-  global.CONFIG = {get:k=>k==='digitalCore'?{couponReminders:policy}:k==='runtimeRole'?{code:'COMMERCE'}:k==='process'?{actionAdapters:{enabled:true,allowedActions:['digitalCore.couponExpirySweep'],definitions:properties.process.actionAdapters.definitions}}:undefined};
+  global.CONFIG = {get:k=>k==='digitalCore'?{couponReminders:policy}:k==='runtimeRole'?{ code: "COMMERCE", publication: "OPERATIONAL" }:k==='process'?{actionAdapters:{enabled:true,allowedActions:['digitalCore.couponExpirySweep'],definitions:properties.process.actionAdapters.definitions}}:undefined};
   global.NODICS = {getSelectedEnvironmentName:()=> 'Local'};
   global.CLASSES = {NodicsError:class extends Error{constructor(code){super(code)}}};
   global.SERVICE = {DefaultServiceTokenService:{requireRuntimePrincipal:r=>r.authData},DefaultLoggerService:{assertSensitiveRequest:()=>{}},
-    DefaultModuleService:{invokeModule:async call=>{calls.push(call);return {data:reply}}},
+    DefaultModuleService:{isLocalModuleActive: moduleName => ["digitalCore"].includes(moduleName), invokeModule:async call=>{calls.push(call);return {data:reply}}},
     DefaultDigitalCommerceCouponReminderService:{sweep:async (request,execution)=>{calls.push({request,execution});return {status:'COMPLETED'}}},
     DefaultProcessRemoteActionAdapterService:{execute:async (_r,_e,declaration)=>declaration}};
   return {policy,r,reply,calls};
@@ -38,7 +38,7 @@ function fixture() {
 test('registered action is remote and claims Process context without changing signed enterprise',async()=>{
  const f=fixture();
  const declaration=await registry.execute(f.r,{node:{action:{moduleName:'digitalCore',operation:'couponExpirySweep'}}});
- assert.equal(declaration.runtimeRole,'COMMERCE'); assert.equal(declaration.apiName,'/workflow/actions/couponExpirySweep');
+ assert.deepEqual(declaration.targetAuthority,{publication:'OPERATIONAL'}); assert.equal(declaration.apiName,'/workflow/actions/couponExpirySweep');
  assert.deepEqual(await service.sweep(f.r),{status:'COMPLETED'});
  assert.equal(f.calls[0].requestBody.actionKey,'digitalCore.couponExpirySweep');
  assert.equal(f.calls[0].header,undefined); assert.equal(f.calls[0].maxAttempts,1);
@@ -90,7 +90,7 @@ function privateEntryFixture(qualified = true) {
  SERVICE.DefaultServiceTokenService=runtime;
  SERVICE.DefaultDigitalCouponReminderProcessService=service;
  let invoked=0;
- SERVICE.DefaultModuleService={invokeModule:async call=>{
+ SERVICE.DefaultModuleService={isLocalModuleActive: moduleName => ["digitalCore"].includes(moduleName), invokeModule:async call=>{
    invoked++;assert.equal(call.moduleName,'workflow');assert.equal(call.connectionName,'workflow');
    assert.equal(call.requireInternalAuth,true);assert.equal(call.header,undefined);
    const moduleOwner=require('../../../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService');
@@ -192,11 +192,12 @@ test('configured claim selects the registered Process owner without inactive wor
  const transport=require('../../../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService');
  NODICS.getRawModule=()=>undefined;
  const owner={moduleName:'workflow',connectionName:'processServer',server:'processServer',instanceId:'process-one',runtimeRole:{code:'PROCESS',publication:'OPERATIONAL'},endpoint:'http://process.test:4330/nodics/process',state:'UP',clientCallable:true};
- const call={moduleName:'workflow',connectionName:properties.digitalCore.couponReminders.actionAuthority.connectionName,targetAuthority:{runtimeRole:'PROCESS'},apiName:'/instances/one/actions/claim'};
+ const call={moduleName:'workflow',connectionName:properties.digitalCore.couponReminders.actionAuthority.connectionName,targetAuthority:{publication:'OPERATIONAL'},apiName:'/instances/one/actions/claim'};
  assert.equal(resolver.resolveFromOwners({...call,connectionName:'process'},[owner]),undefined);
  const selected=resolver.resolveFromOwners(call,[owner]);assert(selected);
  assert.equal(transport.buildRuntimeRegistryRequest(call,selected,{}).uri,'http://process.test:4330/nodics/process/v0/instances/one/actions/claim');
- assert.equal(resolver.resolveFromOwners(call,[{...owner,runtimeRole:{code:'COMMERCE'}}]),undefined);
+ assert.ok(resolver.resolveFromOwners(call,[{...owner,runtimeRole:{ code: "REGROUPED", publication: "OPERATIONAL" }}]));
+ assert.equal(resolver.resolveFromOwners(call,[{...owner,runtimeRole:{code:'PROCESS',publication:'STAGED'}}]),undefined);
 });
 
 test('actual nService fetch normalization retains bounded HTTP/network proof for Digital diagnostics',async()=>{
@@ -238,4 +239,19 @@ test('actual nService fetch normalization retains bounded HTTP/network proof for
     assert.equal(calls,1);
   } finally {await transport.closeTransport()}
  }
+});
+
+
+test('Process claim requires OPERATIONAL owner publication and preserves exact optional deployment and grants', async () => {
+ for (const targetAuthority of [undefined, {}, {publication:'STAGED'}, {publication:'ONLINE'},
+  {runtimeRole:'PROCESS'}, {publication:'OPERATIONAL',runtimeRole:'PROCESS'}, {publication:'OPERATIONAL',server:''}]) {
+  const f=fixture(); f.policy.actionAuthority.targetAuthority=targetAuthority;
+  await assert.rejects(service.sweep(f.r)); assert.equal(f.calls.length,0);
+ }
+ const f=fixture(), signed=structuredClone(f.r.authData);
+ f.policy.actionAuthority.targetAuthority={publication:'OPERATIONAL',server:'regrouped-workflow',environment:'Local'};
+ await service.sweep(f.r);
+ assert.deepEqual(f.calls[0].targetAuthority,f.policy.actionAuthority.targetAuthority);
+ assert.equal(f.calls[0].moduleName,'workflow'); assert.equal(f.calls[0].requireInternalAuth,true);
+ assert.deepEqual(f.r.authData,signed);
 });

@@ -510,6 +510,7 @@ module.exports = {
       delete result.decisionContract;
       delete result.reviewerEligibility;
       delete result.reviewContext;
+      delete result.rulesReviewContext;
       const policy = this.policyOf(version, matches[0]);
       const contract = this.taskDecisionContract(policy);
       if (contract) result.decisionContract = contract;
@@ -534,6 +535,8 @@ module.exports = {
           };
         result.reviewerEligibility = eligibility;
       }
+      const rulesReviewContext = contract && this.taskRulesReviewContext(instance, version);
+      if (rulesReviewContext) result.rulesReviewContext = rulesReviewContext;
       const reviewContext = this.taskReviewContext(instance, version);
       if (
         reviewContext &&
@@ -553,6 +556,19 @@ module.exports = {
    * @param {Object} version Exact published definition version.
    * @returns {Object|undefined} Bounded review identity when its owner action matches.
    */
+  taskRulesReviewContext: function (instance, version) {
+    const context = instance.context || {};
+    const actions = version.graph && version.graph.nodes;
+    if (version.definitionCode !== instance.definitionCode || version.version !== instance.version ||
+        version.status !== 'PUBLISHED' || !Array.isArray(actions) ||
+        actions.filter(node => node && node.type === 'ACTION' && node.action &&
+          node.action.moduleName === 'rulesApi' && node.action.operation === 'applyDecision').length !== 1 ||
+        typeof context.ruleSetCode !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(context.ruleSetCode) ||
+        !Number.isSafeInteger(context.draftRevision) || context.draftRevision < 1) return undefined;
+    return { contractVersion: 1, owner: 'rulesApi', ruleSetCode: context.ruleSetCode, draftRevision: context.draftRevision };
+  },
+
+  /** Projects an exact immutable publication identity for its verified owner action. */
   taskReviewContext: function (instance, version) {
     const stored = instance.context || {};
     const text = (value) =>
@@ -724,6 +740,15 @@ module.exports = {
     });
     let decision = (body && body.decision) || {};
     this.assertTaskActorPolicy(request, instance, policy, decision);
+    // The existing CMS definition predates explicit decision contracts.
+    if (
+      instance.definitionCode === "cmsPublicationApproval" &&
+      task.nodeCode === "publicationReview" &&
+      typeof decision.approved !== "boolean"
+    )
+      throw new CLASSES.NodicsError("ERR_PROCESS_00029");
+    if (task.status === "CLAIMED" && task.assignee !== actor)
+      throw new CLASSES.NodicsError("ERR_PROCESS_00029");
     let override = decision.emergencyOverride === true;
     if (override && !policy.emergencyOverridePermission) {
       throw new CLASSES.NodicsError(
@@ -2664,8 +2689,11 @@ module.exports = {
         "ERR_PROCESS_00012",
         "Process task transition is not allowed",
       );
-    let assignee = body.assignee || this.getActor(request);
-    this.assertCode(assignee);
+    const actor = this.getActor(request);
+    const assignee = body.assignee || actor;
+    // The exact authenticated employee identity can be an email login, unlike a queue code.
+    if (assignee !== actor || typeof actor !== "string" || !/^[^\s\p{Cc}]{1,256}$/u.test(actor))
+      this.assertCode(assignee);
     const instance = await this.requireInstance(request, task.instanceCode);
     if (!["RUNNING", "WAITING"].includes(instance.status))
       throw new CLASSES.NodicsError("ERR_PROCESS_00013");
@@ -3138,14 +3166,7 @@ module.exports = {
    * @returns {Promise<Object>} Trigger metadata list.
    */
   listTriggers: async function (request) {
-    if (!this.triggerService()) return { code: "SUC_PROCESS_00010", data: [] };
-    let response = await this.triggerService().get(
-      this.serviceRequest(request, {
-        query: request.query || {},
-        searchOptions: { limit: 100, sort: { code: 1 } },
-      }),
-    );
-    return { code: "SUC_PROCESS_00010", data: response.result || [] };
+    return SERVICE.DefaultProcessOperationsInspectionService.listTriggers(request);
   },
 
   /**
@@ -3318,6 +3339,24 @@ module.exports = {
     };
   },
 
+  /** Admits a remote scheduler only for a selected active Cron relationship. */
+  fireScheduledTrigger: function (request) {
+    const principal = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "cronjob");
+    SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "workflow");
+    const input = this.bodyOf(request);
+    const selected = CONFIG.get("process")?.remoteCronTriggers || {};
+    if (!Object.hasOwn(selected, request.triggerCode) || selected[request.triggerCode] !== true ||
+        principal.isSystem || principal.principalType !== "service" ||
+        !principal.permissions?.includes("process.trigger.execute") ||
+        !input.context?.cronJobCode || input.context.source !== "cronjob" ||
+        input.context.cronJobTenant !== request.tenant ||
+        (input.context.enterpriseCode !== undefined && input.context.enterpriseCode !== principal.entCode) ||
+        Object.keys(input).some(key => !["context", "correlationId", "instanceCode", "version"].includes(key))) {
+      throw new CLASSES.NodicsError("ERR_PROCESS_00020", "Scheduled trigger caller is unavailable");
+    }
+    return this.executeTrigger(request, true);
+  },
+
   /**
    * Executes a Process-owned trigger by starting the referenced process
    * definition. Cron or another authorized scheduler may call this endpoint,
@@ -3326,12 +3365,16 @@ module.exports = {
    * @param {Object} request Nodics request context.
    * @returns {Promise<Object>} Trigger execution and started instance summary.
    */
-  executeTrigger: async function (request) {
+  executeTrigger: async function (request, scheduled = false) {
     let body = this.bodyOf(request);
     let trigger = await this.requireTrigger(
       request,
       request.triggerCode || body.triggerCode,
     );
+    if (scheduled && (trigger.triggerType !== "CRON" || trigger.cronJobCode !== body.context.cronJobCode ||
+        (body.version !== undefined && body.version !== trigger.version))) {
+      throw new CLASSES.NodicsError("ERR_PROCESS_00020", "Scheduled trigger binding differs");
+    }
     if (trigger.active === false || trigger.status !== "ACTIVE") {
       throw new CLASSES.NodicsError(
         "ERR_PROCESS_00020",

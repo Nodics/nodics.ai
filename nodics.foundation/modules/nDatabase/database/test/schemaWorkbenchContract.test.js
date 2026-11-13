@@ -54,6 +54,7 @@ const profileModule = {
                 enabled: true,
                 operations: ['search', 'read', 'create', 'update', 'delete'],
                 bulkOperations: ['DELETE'],
+                form: { omitEmptyOptionalOnReview: true },
                 relationships: {
                     contacts: {
                         targetModule: 'profile',
@@ -233,6 +234,7 @@ let lastUpdateInput;
 global.SERVICE = {
     DefaultSchemaUtilityService: require('../src/service/schema/defaultSchemaUtilityService'),
     DefaultSchemaSafeQueryService: require('../src/service/schema/defaultSchemaSafeQueryService'),
+    DefaultSchemaReadAccessPolicyService: require('../src/service/schema/defaultSchemaReadAccessPolicyService'),
     DefaultSchemaAccessHandlerService: {
         getAccessPoint: (authData) => (authData.userGroups.includes('adminGroup') ? 10 : 0),
     },
@@ -254,7 +256,7 @@ global.SERVICE = {
             lastUpdateInput = input;
             return Promise.resolve({
                 code: 'SUC_UPD_00000',
-                result: { matchedCount: 1, modifiedCount: 1, models: [Object.assign({}, input.query, input.model)] },
+                result: { matchedCount: 1, modifiedCount: 1, models: [Object.assign({ tenant: "stored-business-tenant", enterpriseCode: "stored-business-enterprise" }, input.query, input.model)] },
             });
         },
     },
@@ -364,6 +366,8 @@ global.FACADE = Object.assign({}, global.FACADE, {
     );
     let descriptor = (await discovery.get(request)).data;
     assert.strictEqual(descriptor.schemaName, 'address');
+    assert.strictEqual(descriptor.form.omitEmptyOptionalOnReview, true);
+    assert.strictEqual(listed.data.schemas.find(schema => schema.schemaName === 'enterprise').form.omitEmptyOptionalOnReview, undefined);
     assert.deepStrictEqual(descriptor.operations, ['search', 'read', 'create', 'update', 'delete']);
     assert(!descriptor.fields.some((field) => field.name === 'password'), 'secret fields must never be projected');
     assert(!descriptor.fields.some((field) => field.name === 'accessGroups'), 'access policy fields must not be projected');
@@ -760,16 +764,16 @@ global.FACADE = Object.assign({}, global.FACADE, {
     );
     assert.deepStrictEqual(updated.data, {
         code: 'AXIS-QA-PRODUCT',
-        tenant: 'default',
-        enterpriseCode: 'agora',
+        tenant: 'stored-business-tenant',
+        enterpriseCode: 'stored-business-enterprise',
         type: 'HOME',
     });
     assert.strictEqual(lastUpdateInput.idempotencyKey, 'axis-update-0001');
     assert.deepStrictEqual(lastUpdateInput.query, { code: 'AXIS-QA-PRODUCT' });
     assert.deepStrictEqual(
         lastUpdateInput.model,
-        { type: 'HOME', tenant: 'default', enterpriseCode: 'agora' },
-        'Workbench update must preserve owner identity while filling runtime scope',
+        { type: 'HOME' },
+        'Update preserves stored placement; acting scope remains request context, not a record patch',
     );
     assert.deepStrictEqual(
         service.buildMutationModel(
@@ -860,6 +864,9 @@ global.FACADE = Object.assign({}, global.FACADE, {
                 { name: 'active' },
                 { name: 'description' },
                 { name: 'properties' },
+                { name: '$override' },
+                { name: 'nested.$operator' },
+                { name: 'password' },
             ],
         }),
         {

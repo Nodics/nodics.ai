@@ -36,7 +36,7 @@ test("source callbacks inherit owner response bounds and honor later overrides w
     DefaultProfileNotificationRecipientService: recipient,
     DefaultProfileCommerceNotificationRecipientService: { unwrap: value => value },
     DefaultLoggerService: { runSensitiveOperation: (_request, work) => work() },
-    DefaultModuleService: { invokeModule: async call => { invocation = call; throw stopped; } },
+    DefaultModuleService: { invokeModule: async call => { invocation = call; assert.deepEqual(call.targetAuthority, { publication: "OPERATIONAL" }); throw stopped; } },
   };
   for (const kind of ["Transfer", "Gift", "Auction", "Coupon"]) {
     const service = require("../src/service/identity/defaultProfile" + kind + "NotificationRecipientService");
@@ -461,7 +461,7 @@ function giftFixture(t) {
   const commsRoot = path.join(root, "nodics.communication/modules/commsCore");
   const communication = require(path.join(commsRoot, "src/service/defaultCommunicationRuntimeService"));
   const defaults = require(path.join(digitalRoot, "config/properties"));
-  f.config.digitalCore = clone(defaults.digitalCore); f.config.runtimeRole = { code: "COMMERCE" };
+  f.config.digitalCore = clone(defaults.digitalCore); f.config.runtimeRole = { code: "RENAMED_COMMERCE", publication: "OPERATIONAL" };
   Object.assign(f.config.profileGiftNotifications, { enabled: true, qualified: true });
   Object.assign(f.config.digitalCore.giftNotifications, { enabled: true, qualified: true,
     sourceCallers: [{ tenant: "tenant", principalEnterpriseCode: "runtime", enterpriseCode: "market", serviceId: "runtime", ...f.request.authData.runtimeScope }] });
@@ -486,7 +486,7 @@ function giftFixture(t) {
   const calls = [], stores = {}, headers = {};
   f.request.httpResponse = { setHeader: (key, value) => { headers[key] = value; } };
   global.FACADE = { DefaultProfileGiftNotificationRecipientFacade: require("../src/facade/identity/defaultProfileGiftNotificationRecipientFacade") };
-  Object.assign(NODICS, { getSelectedEnvironmentName: () => "unit", getIndexedModules: () => new Map([["digitalCore", { name: "digitalCore", path: digitalRoot }]]),
+  Object.assign(NODICS, { isModuleActive: name => name === "digitalCore", getSelectedEnvironmentName: () => "unit", getIndexedModules: () => new Map([["digitalCore", { name: "digitalCore", path: digitalRoot }]]),
     getRawModule: () => ({ name: "digitalCore", path: digitalRoot }) });
   const models = NODICS.getModels;
   NODICS.getModels = name => name === "digitalCore" ? { digitalBundleOperation: { primaryKey: "code", compareAndSetItem() {}, rawSchema: {} } } : models();
@@ -534,7 +534,7 @@ function giftFixture(t) {
       },
     };
   }
-  SERVICE.DefaultModuleService = { invokeModule: async call => {
+  SERVICE.DefaultModuleService = { ...require("../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService"), invokeModule: async call => {
     calls.push(call); SERVICE.DefaultLoggerService.assertSensitiveRequest(call);
     assert.equal(call.requireInternalAuth, true); assert.equal(call.header, undefined); assert.equal(call.secureTransport.required, true);
     assert.deepEqual(call.request, { tenant: "tenant" });
@@ -669,7 +669,7 @@ test("coupon controller composes source proof with real Enterprise membership, g
     callbacks++;
     assert.equal(call.requireInternalAuth, true);
     assert.equal(call.header, undefined);
-    assert.equal(call.targetAuthority.runtimeRole, "COMMERCE");
+    assert.deepEqual(call.targetAuthority, { publication: "OPERATIONAL" });
     return { code: "SUC_READ", data: { contractVersion: 1, tenant: "tenant", sourceModule: "digitalCore",
       sourceType: "DIGITAL_COUPON_EXPIRING", source: structuredClone(call.requestBody), eligible: true,
       ownerRef: { type: "ENTERPRISE", code: "E1" }, expiresAt } };

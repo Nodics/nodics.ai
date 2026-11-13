@@ -28,7 +28,7 @@ module.exports = {
         publication: { baselines: {
           "nexus": {
             "releaseCode": "nexus.web:nexusCorporateSite",
-            "releaseVersion": "0.0.1",
+            "releaseVersion": "0.0.4",
             "dataType": "sample",
             "rootType": "site",
             "rootCode": "nexusCorporateSite",
@@ -46,9 +46,22 @@ module.exports = {
                 slots: ['main']
             },
             componentKinds: [
-                { label: 'Nexus hero', typeCode: 'nexusPageHeroType', renderer: 'nexus.hero' },
-                { label: 'Nexus content section', typeCode: 'nexusContentSectionType', renderer: 'nexus.contentSection' },
-                { label: 'Nexus card grid', typeCode: 'nexusCardGridType', renderer: 'nexus.cardGrid' }
+                { label: 'Nexus hero', typeCode: 'nexusPageHeroType', renderer: 'nexus.hero', fields: [
+                    { property: 'title', label: 'Heading', labelKey: 'cms.field.heading', control: 'text', required: true, maxLength: 240 },
+                    { property: 'body', label: 'Body text', labelKey: 'cms.field.body', control: 'multiline', maxLength: 10000 }
+                ] },
+                { label: 'Nexus content section', typeCode: 'nexusContentSectionType', renderer: 'nexus.contentSection', fields: [
+                    { property: 'heading', label: 'Heading', labelKey: 'cms.field.heading', control: 'text', required: true, maxLength: 240 },
+                    { property: 'body', label: 'Body text', labelKey: 'cms.field.body', control: 'multiline', maxLength: 10000 }
+                ] },
+                { label: 'Nexus card grid', typeCode: 'nexusCardGridType', renderer: 'nexus.cardGrid', fields: [
+                    { property: 'heading', label: 'Heading', labelKey: 'cms.field.heading', control: 'text', required: true, maxLength: 240 },
+                    { property: 'body', label: 'Introductory text', labelKey: 'cms.field.introduction', control: 'multiline', maxLength: 10000 },
+                    { property: 'items', label: 'Cards', labelKey: 'cms.field.cards', itemLabel: 'Card', itemLabelKey: 'cms.field.card', control: 'items', required: true, maximumItems: 12, itemFields: [
+                        { property: 'title', label: 'Card heading', labelKey: 'cms.field.card-heading', control: 'text', required: true, maxLength: 160 },
+                        { property: 'text', label: 'Card text', labelKey: 'cms.field.card-text', control: 'multiline', maxLength: 2000 }
+                    ] }
+                ] }
             ]
         }
     },

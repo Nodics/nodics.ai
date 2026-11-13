@@ -20,3 +20,10 @@ releases, assign roles or grant operational authority.
 
 Read `AGENTS.md`, the contracts and examples, generated context, canonical
 Commerce documentation, and the release-readiness evidence before changes.
+
+
+Release source selectors now live in ordinary `data.dataReleases.contributions`,
+merged by source `moduleName` with explicitly replaced section lists. Role-profile
+selection is retired. Discovery remains inert; actual destination owners and
+explicit publication context govern admission. See
+[release composition](llm/contracts/README.md#explicit-release-contribution-composition).

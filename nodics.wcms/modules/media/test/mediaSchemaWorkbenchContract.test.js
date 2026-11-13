@@ -31,8 +31,10 @@ const mediaModule = {
 global.NODICS = {
     getModule: (name) => (name === 'media' ? mediaModule : undefined),
 };
+let publicationContext = 'STAGED';
 global.CONFIG = {
     get: (key) => {
+        if (key === 'runtimeRole') return { code: 'TEST_RUNTIME', publication: publicationContext };
         if (key === 'accessPoints') {
             return {
                 readAccessPoint: 1,
@@ -59,6 +61,8 @@ global.CONFIG = {
 };
 let lastMediaSearchInput;
 global.SERVICE = {
+    DefaultSchemaAuthoringPolicyService: require(path.join(coreRoot, 'modules/nDatabase/database/src/service/schema/defaultSchemaAuthoringPolicyService')),
+    DefaultSchemaReadAccessPolicyService: require(path.join(coreRoot, 'modules/nDatabase/database/src/service/schema/defaultSchemaReadAccessPolicyService')),
     DefaultSchemaUtilityService: require(path.join(coreRoot, 'modules/nDatabase/database/src/service/schema/defaultSchemaUtilityService')),
     DefaultSchemaAccessHandlerService: {
         getAccessPoint: () => 10,
@@ -106,6 +110,19 @@ const service = require(path.join(coreRoot, 'modules/nDatabase/database/test/hel
         httpRequest: { params: { schema: 'media' } },
     };
     let descriptor = (await SERVICE.DefaultSchemaUtilityService.getSchema(request, 'media')).data;
+    for (const stage of ['STAGED', 'ONLINE', 'OPERATIONAL']) {
+        publicationContext = stage;
+        for (const schemaName of ['mediaPlacement', 'mediaTransferManifest', 'mediaPublicationReceipt', 'mediaPhysicalArtifact', 'mediaReplicationQueue', 'mediaCleanupCandidate']) {
+            const described = (await SERVICE.DefaultSchemaUtilityService.getSchema(request, schemaName)).data;
+            assert.equal(described.mutationMode, 'READ_ONLY', `${schemaName} evidence must not be authored generically in ${stage}`);
+            assert.deepEqual([...described.operations].sort(), ['read', 'search']);
+            for (const operation of ['create', 'update', 'delete']) {
+                assert.throws(() => SERVICE.DefaultSchemaAuthoringPolicyService.assertMutationAllowed('media', schemaName, operation),
+                    error => error.code === 'ERR_AUTH_00003', `${schemaName}/${operation} must reject before persistence`);
+            }
+        }
+    }
+    publicationContext = 'STAGED';
     assert(!descriptor.fields.some((field) => field.name === 'storageKey'), 'media Workbench descriptor must not expose storageKey');
     assert(!descriptor.fields.some((field) => field.name === 'fullPath'), 'media Workbench descriptor must not expose fullPath');
     assert(descriptor.queryCapabilities.searchableFields.includes('originalFileName'), 'media Workbench search must include originalFileName');

@@ -21,7 +21,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaCollectionReference",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -33,7 +33,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaEnterpriseReference",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -45,7 +45,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaSourceInventory",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -57,7 +57,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaCatalogueReference",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -69,7 +69,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaConfigurationReference",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -81,7 +81,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaOverview",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -93,7 +93,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaDataNetwork",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -105,7 +105,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaSubmissionJourney",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -117,7 +117,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaOperationsRewards",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -129,7 +129,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaCouponsCommerce",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -141,7 +141,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaCustomization",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   },
@@ -153,7 +153,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPageacceleratorsCircaDeploymentVerification",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   }

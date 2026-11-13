@@ -303,6 +303,17 @@ before bootstrap. A CMS source uses a dedicated Site/catalog pair and a
 configured nImport pack; an OpenAPI source references the live System contract.
 Do not copy API contracts into CMS or add an Axis-owned source list.
 
+The authenticated setup catalogue projects visible `DOCUMENTATION_BUNDLE` profiles
+that declare `reader.route`. Each link uses its profile's Site, content pack
+and initialization code, together with the catalog and connection from the
+authorized `backofficeRegistry.documentationReaderSource`. Use `articleRoutes`
+for sibling articles in the same pack that fall outside its landing route.
+These profiles default to the Framework guide. A project root declares
+`guide: "project"`, `projectId`, and `projectLabel`. Its `channelReferences`
+link `channelId` and `channelLabel` to an already visible `sourceId`.
+Multiple projects can reference the same Framework article. The reference
+retains the target's permissions, pack and publication profile. Axis uses the authorized setup catalogue for pack management. WCMS Online supplies the reader menu and exact article routes from published CMS navigation components.
+
 Backend modules may also contribute bounded, non-executable
 `workbenchPresentation` hints on navigation entries. These hints can describe
 default columns, quick filters, and owner-action labels for reusable Axis schema
@@ -355,3 +366,7 @@ Fresh reset requires LOCAL class, explicit reset intent and exclusive owned star
 Only owned children are stopped. Frontends and Docker execution are independent.
 Missing identity grants or fixture prerequisites fail through their normal owners;
 the suite never adds privileges or accesses provider collections directly.
+
+## Recover a governed readiness repair
+
+Preview the selected owner target before execution. Keep the returned idempotency key and evidence reference with the support record. A completed repair returns a durable owner receipt; repeating the same authorized intent returns that receipt. Changed intent requires fresh review. If completion is unconfirmed, inspect the original owner execution and repeat the original request only for evidence reconciliation. Restart and elapsed time never authorize another mutation. A competing request remains blocked while the original target is unresolved. nImport preparation uses its own recorded release steps; generic cross-owner batches remain unavailable until their approval and compensation contracts exist.

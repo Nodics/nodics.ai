@@ -77,7 +77,7 @@ export async function loadContext(options) {
     const projectRoot = process.cwd();
     const credentials = require(path.join(tooling, 'defaultProjectLocalRuntimeCredentialService'));
     const variables = credentials.mergeEnvironment(projectRoot, options.environment);
-    probe.resolve({ projectRoot, frameworkRoot, environment: options.environment, server: options.server, variables });
+    await probe.resolve({ projectRoot, frameworkRoot, environment: options.environment, server: options.server, variables });
     if (CONFIG.get('environment').class !== 'LOCAL') throw new Error('Installed migration command requires LOCAL environment');
     const initializer = require(path.join(frameworkRoot, 'nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService'));
     await initializer.loadMaintenanceServices();

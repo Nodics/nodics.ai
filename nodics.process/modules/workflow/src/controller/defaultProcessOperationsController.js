@@ -19,6 +19,11 @@
  * @override Customer process overlays may customize request mapping while preserving backend-owned runtime and audit semantics.
  */
 module.exports = {
+  /** Projects private native command admission without caching or execution. @param {Object} request Trusted employee scope. @param {Function} callback Response callback. @returns {Promise<Object>} Metadata. */
+  getCommandCapabilities: function (request, callback) {
+    request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+    return this.invoke("getCommandCapabilities", request, callback);
+  },
   /** Reads target-scoped persisted action evidence without HTTP caching. @param {Object} request Verified runtime request. @param {Function} callback Response callback. @returns {Promise<Object>} History. */
   inspectRemoteActions: function (request, callback) {
     request.httpResponse?.setHeader?.("Cache-Control", "no-store");
@@ -47,6 +52,10 @@ module.exports = {
     promise.then((result) => callback(null, result)).catch(callback);
   },
 
+  /** Preserves the verified scheduler principal and the selected trigger coordinate. */
+  fireScheduledTrigger: function (request, callback) {
+    return this.invoke("fireScheduledTrigger", request, callback);
+  },
   /** Claims one current remote action for its scoped target runtime. */
   claimRemoteAction: function (request, callback) {
     return this.invoke("claimRemoteAction", request, callback);
@@ -82,6 +91,14 @@ module.exports = {
   /** Reads process instance detail with tasks and audit timeline. */
   getInstanceDetail: function (request, callback) {
     return this.invoke("getInstanceDetail", request, callback);
+  },
+  /** Returns the CMS-owned evidence under the employee's original task session. */
+  readCmsPublicationReview: function (request, callback) {
+    request.httpResponse?.setHeader("Cache-Control", "no-store");
+    const result = SERVICE.DefaultProcessPublicationDecisionCallbackService.readReview(request)
+      .then(data => ({ code: "SUC_PROCESS_00000", data }));
+    if (!callback) return result;
+    result.then(value => callback(null, value)).catch(callback);
   },
   /** Cancels a governed runtime instance. */
   cancelInstance: function (request, callback) {

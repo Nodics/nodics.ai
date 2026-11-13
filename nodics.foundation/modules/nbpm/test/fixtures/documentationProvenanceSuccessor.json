@@ -1,0 +1,59 @@
+{
+  "contractVersion": 2,
+  "recoveryEvidence": {
+    "sourceRoot": "data/docs-v001",
+    "method": "Exact retained source bytes; manifest section reconstructed from the owner contract and file digests",
+    "observedAt": "2026-11-12T17:48:54.046Z"
+  },
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "bpm",
+      "version": "0.0.2",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "14625423407c5ca16a22615200d1315b76e9cd307745269ff72d3f489b798cda",
+      "generatedHashes": {
+        "docs-v001/headers/100_bpmDocumentationRelease002ContentPackHeader.js": "ed5300c3fa547e27292b974cbb5d43aefc57890aabf4f28a2f84bad76544b7a9",
+        "docs-v001/records/documentation/bpmDocumentationNodeData.js": "7809c81d2a46576cb27234c2007f7fba55316c0e25faf75cbeb37ea8bd72925e",
+        "docs-v001/records/documentation/bpmDocumentationPageData.js": "9e9f520c2396420f1c8bd16aeb03e69ec2d765e6d4900e51f7aa8a674a27feca",
+        "docs-v001/records/documentation/bpmDocumentationRelease002ComponentData.js": "9ba757bec9878e0d538f7685d49f34245bfd18c1b5e56675a5f491fe75368849",
+        "docs-v001/records/documentation/bpmDocumentationRelease002PageMetadataData.js": "af342a6a1f3c8932790efe17f9e86aaf846f898f85e66ba8d1a88702384f4061",
+        "docs-v001/records/documentation/bpmDocumentationRelease002PublicationStateData.js": "bb5f442dad0a0cba6c6144bc5b161778271bf704d15a271fee14ad530e4fb93b",
+        "docs-v001/records/documentation/bpmDocumentationRelease002SearchMetadataData.js": "fc9cdcb407477d6b26e5d71bc1ce110fdac4a233056a877b124a940634ef9f16",
+        "docs-v001/records/documentation/bpmDocumentationRouteData.js": "6c6cafbd24b08982deaf5e7dff12aa20d9bfd1263bbc9657c861ea26d930a0c6"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -40,3 +40,12 @@ Native Telegram /start intake is implemented and disabled by default. Read the
 pre-body authentication, deployed secret references, trusted Mini App URLs,
 durable replay isolation, overrides and local validation. A launch reply is
 neither delivered-outcome evidence nor Profile-signed customer identity.
+
+
+Employee-mail composition defaults belong here: `employeeMail` is unselected
+(`none`) and nConfig selects Profile's existing template resources only after an
+explicit `employee` selection. This does not add source trust, enable SMTP or
+qualify Profile registration/recovery. Deployments retain actual resource and
+recipient/provider choices; do not repeat these definitions or standard Profile
+resource wiring in a customer module. `profileEmployeeMailConfiguration` and
+installed project configuration tests protect default, selected and later overrides.

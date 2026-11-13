@@ -1,0 +1,141 @@
+{
+  "startedAtUTC": "2026-10-30T10:12:14.601882+00:00",
+  "finishedAtUTC": "2026-10-30T10:12:15.348786+00:00",
+  "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+  "command": "node --test --test-reporter=tap nodics.commerce/test/frameworkReleaseContributionComposition.test.js nodics.commerce/test/platformDataReleaseCompositionContract.test.js nodics.loyalty/test/platformDataReleaseCompositionContract.test.js nodics.waste/test/platformDataReleaseCompositionContract.test.js nodics.platform/modules/axis/test/axisReleaseContributionContract.test.js",
+  "nodeVersion": "v24.18.0",
+  "exitCode": 0,
+  "stdout": "TAP version 13\n# Subtest: all six ordinary contributions compose without positional replacement or duplicated owners\nok 1 - all six ordinary contributions compose without positional replacement or duplicated owners\n  ---\n  duration_ms: 3.735834\n  type: 'test'\n  ...\n# Subtest: manifest targets admit only the selected profile destination\nok 2 - manifest targets admit only the selected profile destination\n  ---\n  duration_ms: 47.789958\n  type: 'test'\n  ...\n# Subtest: manifest targets admit only the selected workflow destination\nok 3 - manifest targets admit only the selected workflow destination\n  ---\n  duration_ms: 30.952625\n  type: 'test'\n  ...\n# Subtest: manifest targets admit only the selected location destination\nok 4 - manifest targets admit only the selected location destination\n  ---\n  duration_ms: 29.742208\n  type: 'test'\n  ...\n# Subtest: manifest targets admit only the selected cms destination\nok 5 - manifest targets admit only the selected cms destination\n  ---\n  duration_ms: 29.045584\n  type: 'test'\n  ...\n# Subtest: manifest targets admit only the selected unrelated destination\nok 6 - manifest targets admit only the selected unrelated destination\n  ---\n  duration_ms: 28.693042\n  type: 'test'\n  ...\n# Subtest: CMS Online cannot admit either Axis release or inherit the retired empty role allowance\nok 7 - CMS Online cannot admit either Axis release or inherit the retired empty role allowance\n  ---\n  duration_ms: 24.687208\n  type: 'test'\n  ...\n# Subtest: source discovery does not select inactive releases for startup or enable owner modules\nok 8 - source discovery does not select inactive releases for startup or enable owner modules\n  ---\n  duration_ms: 49.436166\n  type: 'test'\n  ...\n# Subtest: customer keyed selection can narrow Axis exactly and remove an inherited source without positional tails\nok 9 - customer keyed selection can narrow Axis exactly and remove an inherited source without positional tails\n  ---\n  duration_ms: 25.009583\n  type: 'test'\n  ...\n# Subtest: offline property projection resolves the same bounded list through actual nConfig bindings\nok 10 - offline property projection resolves the same bounded list through actual nConfig bindings\n  ---\n  duration_ms: 1.526458\n  type: 'test'\n  ...\n# Subtest: Commerce exposes its exact selected identity and workflow release definitions\nok 11 - Commerce exposes its exact selected identity and workflow release definitions\n  ---\n  duration_ms: 1.3955\n  type: 'test'\n  ...\n# Subtest: inactive Promotion exposes its catalogue through standard Platform discovery\nok 12 - inactive Promotion exposes its catalogue through standard Platform discovery\n  ---\n  duration_ms: 12.810292\n  type: 'test'\n  ...\n# Subtest: inactive Digital exposes its reminder permission catalogue on Platform\nok 13 - inactive Digital exposes its reminder permission catalogue on Platform\n  ---\n  duration_ms: 2.132167\n  type: 'test'\n  ...\n# Subtest: Loyalty exposes owner permission definitions, Enterprise reference and selected Wallet role releases\nok 14 - Loyalty exposes owner permission definitions, Enterprise reference and selected Wallet role releases\n  ---\n  duration_ms: 1.627875\n  type: 'test'\n  ...\n# Subtest: Axis contributes only its selected source sections and does not enable an initialization profile\nok 15 - Axis contributes only its selected source sections and does not enable an initialization profile\n  ---\n  duration_ms: 1.892416\n  type: 'test'\n  ...\n# Subtest: release selector composition leaves parent-owned CMS baseline and other namespaces unchanged\nok 16 - release selector composition leaves parent-owned CMS baseline and other namespaces unchanged\n  ---\n  duration_ms: 0.569458\n  type: 'test'\n  ...\n# Subtest: Waste exposes Carbon and Material participant groups to Platform authority\nok 17 - Waste exposes Carbon and Material participant groups to Platform authority\n  ---\n  duration_ms: 0.960125\n  type: 'test'\n  ...\n# Subtest: inactive Carbon exposes its explicit finalization permission through standard Platform discovery\nok 18 - inactive Carbon exposes its explicit finalization permission through standard Platform discovery\n  ---\n  duration_ms: 6.887\n  type: 'test'\n  ...\n1..18\n# tests 18\n# suites 0\n# pass 18\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 405.479083\n",
+  "stderr": "",
+  "syntaxChecks": [
+    {
+      "command": "node --check nodics.commerce/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "node --check nodics.loyalty/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "node --check nodics.wcms/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "node --check nodics.waste/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "node --check nodics.rulesEngine/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "node --check nodics.platform/modules/axis/config/properties.js",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "diffCheck": {
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "sha256": {
+    "nodics.commerce/config/properties.js": "b91726411d3dcc648e4d764a6491c4701a4cf60c86392e44020008fe8fb32ea7",
+    "nodics.loyalty/config/properties.js": "3e806694ac797132d58636f1feed0de7d27342165fdb1b5edcbde8fafa17714b",
+    "nodics.wcms/config/properties.js": "4b95da10da7c63d41b959034508a505845be09c0fe354daba6295303f10cc158",
+    "nodics.waste/config/properties.js": "dc29f20d847a25e04e549b0fd4f3675a6ce445dced9637962e24ae01d68a01ac",
+    "nodics.rulesEngine/config/properties.js": "8e8ea8d89b18a4c1b3df030cd5c0d2009936a5615d785ec88ffcaaf3aa075edf",
+    "nodics.platform/modules/axis/config/properties.js": "aa44be8a8b3e694d11b7899b47ee9be80c2a1199049a4463945d624a3207bec2",
+    "nodics.commerce/test/frameworkReleaseContributionComposition.test.js": "1201c420ef10b9ccbda6bb1ad9122f2d6ca3f83030bb455e23d361bf17bbe686",
+    "nodics.commerce/test/platformDataReleaseCompositionContract.test.js": "63af51b577dbe60e62395034b6497f569e320d2fafbd403db5a22a610f08fc1a",
+    "nodics.loyalty/test/platformDataReleaseCompositionContract.test.js": "c0264ccd23db3ee18c108e675b5cef072fd4a8c17d346a021df3ae1e2094bcff",
+    "nodics.waste/test/platformDataReleaseCompositionContract.test.js": "b26554a6b574570c8a56f91c060fc4a156ef7e4ee61798d8accdde0777b5d4cd",
+    "nodics.platform/modules/axis/test/axisReleaseContributionContract.test.js": "d97eb2a64c8d1eee4a29664d350911391d50b0ff0828c97e667938457b32799c",
+    "nodics.commerce/AGENTS.md": "283da9adffd98fe1c9f0d4c03951f4f450fd9d2b025a1ab2638047faea7a12af",
+    "nodics.commerce/README.md": "6397a85f863ed76b6b13ec13dfa001b7251beb8317d2c0c32ebc80b63b44df4c",
+    "nodics.loyalty/AGENTS.md": "48b11456e756ef2dbdbe7352d44fbf8982bc6122b6dff4fed9b1106c5f5d141e",
+    "nodics.loyalty/README.md": "5640bf8595e6c6e571b881ea5be6d5d6f8f6f2a75003842600886faeb1aad5bb",
+    "nodics.wcms/AGENTS.md": "51b56dc23df8e0de48aa1de5b7146a53b4e5519b8e0ffe7f768f3409c4f41a66",
+    "nodics.wcms/README.md": "f28c2a7a699becd07d9a6192f6c98e3a40fecc53f69890349e1f428ff4f5e21e",
+    "nodics.waste/AGENTS.md": "37ee0ab236b3f66f5a44f9583eb69ab2dd2a18eef9e0fd1fc6d5b55e41e1dbbb",
+    "nodics.waste/README.md": "ae2526463a6eff0b1ef3a91dd1508102cfd8cdd0aa549c3950b83e1d5e85880b",
+    "nodics.rulesEngine/AGENTS.md": "9d88c94a235e429921e5d6e7e6a2d111172a31488c51d1ad55edf696507e7c99",
+    "nodics.rulesEngine/README.md": "327fd2bb5177805e584673c7e3ec0a42aa1b50f4b55507319c3aed1f965ae00e",
+    "nodics.platform/modules/axis/AGENTS.md": "a3a086e367f4c6ab0cfa1aa54b05f3f57d11cc2653e02c4c8142cc8e1bb9c518",
+    "nodics.platform/modules/axis/README.md": "35c6d2dfb5ea16c09b40a3b75be18f9bd7f9c3d3b17af8e88f4ad36c7121e59d",
+    "nodics.commerce/llm/contracts/README.md": "d033669709351c202c1a25b6a5c476a980bcec3af7493383fc8cf42576176a2b",
+    "nodics.loyalty/llm/contracts/README.md": "0d9e7d26e4f8e5da59e21e2313fd3d129ca3cd63dbde2adcad754ccf318a446a",
+    "nodics.wcms/llm/contracts/README.md": "13242f6f8d1ecc883c13c245a07d68210cbb40d0a3ff45abbf87fa8342556620",
+    "nodics.waste/llm/contracts/README.md": "882ab669fbb7e450c1e77847c99b936d7352fa9185996bef40e732ea7e00a621",
+    "nodics.rulesEngine/llm/contracts/README.md": "fd9524f54919ed9561a0cd2aef2245bcc5069bf3e934333e87f972300adc0dd8"
+  },
+  "scopeReview": {
+    "result": "PASS",
+    "changes": "Five group release contribution declarations and Axis data.dataReleases declaration, plus owning tests/docs. Parent cms namespace removal in Axis preserved. No nConfig/nImport/runtime/provider source edits in this batch.",
+    "selectionEvidence": {
+      "sourceOwners": 21,
+      "sections": 52,
+      "profile": 41,
+      "processInstaller": 8,
+      "location": 1,
+      "axisCmsCatalogStaged": 2
+    },
+    "unchanged": "Owner manifests, section types/versions/selectionPolicy, import permissions, startup selections and opt-in activation. No servers, imports, DB or publication operations."
+  },
+  "parentHandoff": {
+    "authoredSelector": {
+      "data": {
+        "dataReleases": {
+          "contributions": {
+            "$config": "keyed",
+            "key": "moduleName",
+            "entries": [
+              {
+                "moduleName": "axis",
+                "sections": {
+                  "$config": "replace",
+                  "value": [
+                    "axisBaseline",
+                    "core-v001"
+                  ]
+                }
+              }
+            ],
+            "remove": []
+          }
+        }
+      }
+    },
+    "executionIsSeparate": {
+      "init": {
+        "dataType": "init",
+        "releaseCodes": [
+          "axis:axisBaseline"
+        ]
+      },
+      "core": {
+        "dataType": "core",
+        "releaseCodes": [
+          "axis:core-v001"
+        ]
+      }
+    },
+    "destination": "Actual CMS/Catalog schema owners with runtimeRole.publication STAGED; Online rejected. Source discovery is not activation or execution.",
+    "inactiveNamespaceSelector": {
+      "moduleName": "axis",
+      "namespace": "data"
+    },
+    "namespaceLimit": "Current nConfig accepts only one owner per namespace. Do not add several data namespace selectors; use existing explicit release selectors for other discovered sources."
+  }
+}

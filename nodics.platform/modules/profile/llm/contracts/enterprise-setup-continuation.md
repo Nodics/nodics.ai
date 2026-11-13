@@ -2,6 +2,13 @@
 
 ## Ownership And Availability
 
+The fresh authenticated management workspace advertises setup controls only to
+native PASSWORD human Platform administrators. Scoped enterprise administrators
+retain their registry/invitation task without this unsupported control; external
+proofs do not inherit it. The command independently revalidates current native
+actor, stamp and permission. `enterpriseManagementWorkspaceContract.test.js`
+covers scoped, external-proof and custom Platform-context projections.
+
 Profile owns retained enterprise setup intent and the fixed setup inspection and
 continuation commands. The exported owner is
 `DefaultEnterpriseSetupContinuationService` in `src/service/enterprise`.
@@ -23,8 +30,12 @@ enterpriseManagement: {
 ```
 
 Inspection and resume require inspection/private guard qualification. Resume also
-requires resume qualification and the existing qualified Team serialization and
-membership owners. Private mutation protection and public read redaction apply
+requires its own qualification covering the existing Team serialization and
+canonical actor owners. Native PASSWORD Platform authority uses
+`verifyAuthenticatedActor` independently of optional membership activation;
+linked contexts retain their qualified membership validation. The private
+SETUP_CONTINUATION admission never grants membership-switching or public Team
+authority. Private mutation protection and public read redaction apply
 independently of these switches. Disabling recovery never releases saved fences.
 
 ## Creation Snapshot And Private Field

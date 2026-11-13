@@ -40,7 +40,8 @@ function startupSeedFixture() {
   let notifications = 0, persisted = 0;
   events.triggerEnterpriseUpdateEvent = async () => { notifications++; throw new Error("runtime proof not yet issued"); };
   const release = { ...releaseOwner,
-    configuration: () => ({ types: { init: { enabled: true } } }),
+    configuration: () => require("../../../../nodics.foundation/modules/nData/nImport/import/config/properties").data.dataReleases,
+    startupSourceReview: async () => null, // This isolated guard fixture supplies a fresh-install plan.
     discoverReleases: () => [{ moduleName: "profile", releaseCode: "profile:init" }],
     isDestinationCompatible: () => true,
     preparePlan: async request => ({ tenant: request.tenant }),
@@ -139,7 +140,7 @@ function fixture() {
   global.CONFIG = { get: key => key === "defaultTenant" ? "default" : undefined };
   const scope = { projectCode: "project", environmentCode: "projectLocal", serverCode: "platform", instanceCode: "replica1" };
   const permission = "profile.tenant.namespace.bind";
-  const auth = { tenant: "default", tokenType: "service", principalType: "service", serviceId: "runtime", entCode: "platform",
+  const auth = { tenant: "default", tokenType: "service", principalType: "service", serviceId: "apiAdmin", entCode: "platform",
     runtimeInstanceId: "replica1", runtimeScope: { ...scope, assignmentCode: "grant1" }, modules: ["profile"], permissions: [permission, "profile.enterprise.search"] };
   const grant = { code: "grant1", scopeType: "RUNTIME_DEPLOYMENT", principalType: "service", principalCode: "runtime",
     inheritanceMode: "DIRECT", tenantCode: "default", enterpriseCode: "platform", status: "ACTIVE", effect: "ALLOW",
@@ -156,13 +157,14 @@ function fixture() {
     deploymentScopes: { [scopeKey]: { scope: structuredClone(candidate.binding.scope), modules: ["profile"] } } } };
   const state = { tenant: { _id: "id", code: "tenant-a", active: true, properties }, writes: 0, evidence: [], enabled: true };
   global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
-  global.CONFIG = { get: key => ({ defaultTenant: "default", profileModuleName: "profile", profileTenantProvisioning: { enabled: true, permission, inventoryPermission: "profile.enterprise.search" },
+  global.CONFIG = { get: key => ({ defaultTenant: "default", defaultAuthDetail: {entCode:"platform"}, profileModuleName: "profile", profileTenantProvisioning: { enabled: true, permission, inventoryPermission: "profile.enterprise.search" },
     apiExposure: { categories: { profileTenantProvisioning: { enabled: state.enabled } } } })[key] };
   global.NODICS = { getInternalAuthTokens: () => ({}), getSelectedEnvironmentName: () => "projectLocal" };
   const owner = { ...provisioning };
   global.SERVICE = {
     DefaultLoggerService: { runSensitiveOperation: async (request, work) => work() },
     DefaultEnterpriseTenantProvisioningService: owner, DefaultTenantProvisioningGuardService: guard,
+    DefaultDeploymentModuleOwnershipService: {runtimePlacements: () => grant.status === "ACTIVE" ? [grant.runtimeScope] : []},
     DefaultServiceTokenService: tokenOwner, DefaultRuntimeAuthorizationService: runtime,
     DefaultDatabaseConfigurationService: database,
     DefaultAuthorizationProviderService: { authorizeToken: async request => {
@@ -431,7 +433,7 @@ test("NEW provisioning snapshots only original approved deployment scopes from t
   assert.deepEqual(captured.enterpriseProvisioning.deploymentScopes[f.candidate.scopeKey], {
     scope: f.candidate.binding.scope, modules: ["profile"]
   });
-  f.grant.runtimeScope.permissions = ["profile.enterprise.search"];
+  f.grant.status = "INACTIVE";
   await assert.rejects(f.owner.captureCreationProperties("tenant-a", { enterpriseCode: "tenant-a",
     setupRequestKey: "b".repeat(64), setupRequestHash: "c".repeat(64) }));
 });
@@ -473,7 +475,8 @@ test("private forward Init only reapplies unprotected authority Tenant fields wi
   SERVICE.DefaultTenantService.get = async () => ({ code: "SUC_SYS_00000", result: [structuredClone(original)] });
   const request = { tenant: "default", model: { code: "default", active: true, description: "Default tenant" }, query: { code: "default" }, options: {} };
   const release = { ...owner,
-    configuration: () => ({ types: { init: { enabled: true } } }),
+    configuration: () => require("../../../../nodics.foundation/modules/nData/nImport/import/config/properties").data.dataReleases,
+    startupSourceReview: async () => null, // This isolated guard fixture supplies a fresh-install plan.
     discoverReleases: () => [{ moduleName: "profile", releaseCode: "profile:init-v001" }],
     isDestinationCompatible: () => true, preparePlan: async () => ({ tenant: "default" }),
     operationReleases: async () => [{ status: "AVAILABLE" }],
@@ -644,7 +647,8 @@ test("actual generated authority Tenant startup save preserves pins and refuses 
     SERVICE.DefaultTenantService = box.exports;
     const release = {
       ...releaseOwner,
-      configuration: () => ({ types: { init: { enabled: true } } }),
+      configuration: () => require("../../../../nodics.foundation/modules/nData/nImport/import/config/properties").data.dataReleases,
+    startupSourceReview: async () => null, // This isolated guard fixture supplies a fresh-install plan.
       discoverReleases: () => [
         { moduleName: "profile", releaseCode: "profile:init-v001" },
       ],
@@ -807,4 +811,43 @@ test("generated Tenant wrapper and actual pre/post pipeline dispatch retain priv
     const stored = await f.owner.rows("DefaultTenantService", { code: "tenant-a" });
     assert.deepEqual(stored[0].properties.database.tenantNamespaceBindings[f.candidate.scopeKey], f.candidate.binding);
   } finally { if (!oldUpper) delete String.prototype.toUpperCaseFirstChar; }
+});
+
+test("Profile deactivation inventories with native system authority and fresh bounded reads before notifying peers", async () => {
+  fixture(); let read, published; const removed = [];
+  const old = global.ENUMS;
+  global.ENUMS = { TargetType: { MODULE_NODES: { key: "MODULE_NODES" } } };
+  SERVICE.DefaultIdentityGovernanceService = { getSystemAuthData: () => ({ isSystem: true, userGroups: ["system"] }) };
+  NODICS.getActiveTenants = () => ["tenant-a"];
+  NODICS.removeInternalAuthToken = code => removed.push(["token",code]);
+  NODICS.removeActiveEnterprise = code => removed.push(["enterprise",code]);
+  SERVICE.DefaultEnterpriseService.get = async input => {
+    read = input; assert.equal(input.authData.isSystem,true); assert.equal(input.options.skipItemCache,true);
+    assert.equal(input.options.recursive,false); assert.equal(input.searchOptions.pageSize,1);
+    return { code:"SUC_DBS_00000", result:[] };
+  };
+  SERVICE.DefaultTenantHandlerService = { removeTenants:async codes => removed.push(["tenant",...codes]) };
+  SERVICE.DefaultEventService = { publish:async event => {published=event;return true;} };
+  const owner = {...require("../src/service/interceptors/defaultEnterpriseUpdateInterceptorService"),LOG:{debug(){},error(){},warn(){}}};
+  try {
+    await owner.triggerEnterpriseUpdateEvent({code:"tenant-a",active:false,tenant:"tenant-a"});
+    assert.deepEqual(read.query,{tenant:"tenant-a",active:true});
+    assert.equal(read.tenant,"default"); assert.deepEqual(removed,[["tenant","tenant-a"],["token","tenant-a"],["enterprise","tenant-a"]]);
+    assert.equal(published.event,"removeEnterprise"); assert.deepEqual(published.data.enterprise,{code:"tenant-a",active:false,tenant:{code:"tenant-a",active:false}});
+  } finally {if(old===undefined)delete global.ENUMS;else global.ENUMS=old;}
+});
+
+for (const mode of ["shared-active", "malformed", "failed"]) test("Profile deactivation retains tenant resources when remaining inventory is " + mode, async () => {
+  fixture(); let removed=0,published=0; const old=global.ENUMS;
+  global.ENUMS={TargetType:{MODULE_NODES:{key:"MODULE_NODES"}}};
+  SERVICE.DefaultIdentityGovernanceService={getSystemAuthData:()=>({isSystem:true,userGroups:["system"]})};
+  NODICS.getActiveTenants=()=>["tenant-a"];
+  SERVICE.DefaultEnterpriseService.get=async()=> mode==="shared-active" ? {code:"SUC_DBS_00000",result:[{code:"other"}]} : mode==="malformed" ? {code:"SUC_DBS_00000",result:{}} : {code:"ERR_DBS_00001",result:[]};
+  SERVICE.DefaultTenantHandlerService={removeTenants:async()=>{removed++;}};
+  SERVICE.DefaultEventService={publish:async()=>{published++;}};
+  const owner={...require("../src/service/interceptors/defaultEnterpriseUpdateInterceptorService"),LOG:{debug(){},error(){},warn(){}}};
+  try {const pending=owner.triggerEnterpriseUpdateEvent({code:"tenant-a",active:false,tenant:"tenant-a"});
+    if(mode==="shared-active")await pending;else await assert.rejects(pending);
+    assert.equal(removed,0);assert.equal(published,0);
+  } finally {if(old===undefined)delete global.ENUMS;else global.ENUMS=old;}
 });

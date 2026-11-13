@@ -24,7 +24,7 @@ global.SERVICE = {
     DefaultHealthService: { registerReadinessContributor: (name, value) => { readinessContributors[name] = value; } }
 };
 global.CONFIG = { get: key => key === 'search' ? {
-    default: { options: { enabled: false, fallback: true, engine: 'elastic' } },
+    default: { options: { enabled: false, fallback: true, engine: 'elastic' }, elastic: { options: {} } },
     runtimeRoleProfiles: { PLATFORM: { productProjection: { options: { enabled: true } } } },
     cms: { options: { enabled: true } },
 } : key === 'runtimeRole' ? { code: 'PLATFORM' } : undefined };
@@ -44,11 +44,21 @@ assert.strictEqual(service.getSearchReadiness(), true);
 let readiness = service.readiness();
 assert.strictEqual(readiness.contractVersion, 1);
 assert.strictEqual(readiness.businessStatus, 'READY');
-assert.strictEqual(readiness.summary.readSourcePolicy, 'SEARCH_WITH_DATABASE_FALLBACK');
+assert.strictEqual(readiness.summary.readSourcePolicy, 'SEARCH_ENGINE');
 assert.strictEqual(readiness.summary.runtimeRole, 'PLATFORM');
 assert.strictEqual(readiness.summary.configuredModuleCount, 1);
+assert.deepStrictEqual(readiness.summary.enabledModuleCodes, ['cms']);
+assert.strictEqual(readiness.summary.enabledModuleCount, 1);
+assert.strictEqual(readiness.summary.runtimeProfileCount, undefined);
 assert.strictEqual(readiness.summary.initializedEngineCount, 1);
-assert(readiness.summary.repairActions.some(action => action.operation === 'search.index.rebuild'));
+assert(readiness.summary.repairActions.every(action => action.available === false && action.reason === 'OWNER_COMMAND_REQUIRED'));
+assert.strictEqual(readiness.summary.indexFreshness, 'UNKNOWN');
+assert.strictEqual(readiness.summary.projectionFreshness, 'UNKNOWN');
+assert.strictEqual(readiness.summary.policyEvidence, 'CONFIGURATION_ONLY');
+service.searchEngines.cms.unknown = {};
+assert.strictEqual(service.getSearchReadiness(), false);
+assert.strictEqual(service.readiness().businessStatus, 'NEEDS_ATTENTION');
+delete service.searchEngines.cms.unknown;
 active = false;
 assert.strictEqual(service.getSearchReadiness(), false);
 let blocked = service.readiness();

@@ -5,7 +5,7 @@
     "transferFinalizationPermission": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Carbon held-transfer finalization permission",
       "description": "Explicit coordinator permission definition; no grants or provider qualification.",
       "owningDomain": "wasteCarbon",
@@ -126,8 +126,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7",
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660",
           "partition": "DEFAULT"
         },
         {

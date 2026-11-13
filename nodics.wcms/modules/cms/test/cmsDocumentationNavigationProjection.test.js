@@ -23,8 +23,10 @@ function fixture() {
     const route = { code: 'route', site: 'site', path: '/guide', locale: 'en', channel: 'web', accessMode: 'PUBLIC', page: 'page', active: true };
     const article = { code: 'article', renderer: 'documentation.component.article', active: true,
         properties: { code: 'owner.guide', route: '/guide', title: 'Current guide', summary: 'Current summary',
+            maturityState: 'IMPLEMENTED', implementationState: 'AVAILABLE', lifecycleState: 'PUBLISHED',
             source: { owner: 'capability' }, searchText: 'Current afterPublicationStepCode guidance', searchKeywords: ['selected stage'] } };
     const properties = { title: 'Documentation', items: [{ code: 'owner.guide', route: '/guide', title: 'Old guide',
+        maturityState: 'PLANNED', implementationState: 'PREVIEW', lifecycleState: 'DRAFT',
         summary: 'Old summary', searchText: 'Historical global barrier', searchKeywords: ['old'], order: 2 }] };
     const models = { 'cmsPageRoute:route': route, 'cmsPage:page': { code: 'page', active: true },
         'cmsComponentDetail:navigation': { source: 'page', target: 'navigation' },
@@ -42,6 +44,8 @@ test('snapshot reader search uses the exact current article without changing fro
     assert.equal(nav.properties.items[0].searchText, f.article.properties.searchText);
     assert.equal(nav.properties.items[0].title, 'Current guide');
     assert.equal(nav.properties.items[0].summary, 'Current summary');
+    for (const field of ['maturityState', 'implementationState', 'lifecycleState'])
+        assert.equal(nav.properties.items[0][field], f.article.properties[field]);
     assert.deepEqual(nav.properties.items[0].searchKeywords, ['selected stage']);
     assert.equal(nav.properties.items[0].order, 2);
     assert.equal(result.page.components.find(component => component.code === 'wrapper').components[0].properties.searchText, undefined);
@@ -91,4 +95,25 @@ test('article localization uses only the same preloaded exact component variants
     } };
     t.after(() => { delete global.SERVICE.DefaultCmsContentLocalizationService; });
     assert.equal(owner.documentationNavigationProperties(f.properties, f.models, f.route).items[0].searchText, 'Localized current search');
+});
+
+test('shared-route localization projects exact concrete scope before deriving documentation navigation', () => {
+    const priorConfig = global.CONFIG, priorServices = global.SERVICE;
+    global.CONFIG = { get: key => key === 'cms' ? { localization: { supportedLocales: ['en', 'ar'], defaultLocale: 'en', fallbackLocales: ['en'], legacyRouteLocale: 'default' }, publication: { maxBundleRoutes: 200 } } : undefined };
+    global.SERVICE = { DefaultCmsContentLocalizationService: require('../src/service/localization/defaultCmsContentLocalizationService') };
+    try {
+        const f = fixture(); f.route.locale = 'default';
+        f.models['cmsComponentLocalization:article-ar'] = { componentCode: 'article', locale: 'ar', status: 'READY', properties: { title: 'دليل حالي' } };
+        const before = structuredClone(f);
+        const projected = owner.publicationRoutes([f.route]);
+        for (const route of projected) {
+            const snapshot = owner.buildRouteSnapshot(f.models, route, projected);
+            const nav = snapshot.page.components.find(component => component.code === 'navigation');
+            assert.equal(nav.properties.items[0].title, route.locale === 'ar' ? 'دليل حالي' : 'Current guide');
+            assert.equal(snapshot.locale, route.locale);
+        }
+        assert.deepEqual(f, before);
+        CONFIG.get = key => key === 'cms' ? { localization: { supportedLocales: ['en', 'EN'], legacyRouteLocale: 'default' }, publication: { maxBundleRoutes: 200 } } : undefined;
+        assert.throws(() => owner.routePublicationLocales(f.route), /CMS_PUBLICATION_ROUTE_BOUNDARY/);
+    } finally { global.CONFIG = priorConfig; global.SERVICE = priorServices; }
 });

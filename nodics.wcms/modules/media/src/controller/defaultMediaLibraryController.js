@@ -18,6 +18,28 @@
  * @override Keep no-store envelopes, bounded DTOs and signed tenant/authority mapping.
  */
 module.exports = {
+    /** Maps fixed read-only review DTOs, discarding caller context and suppressing provider failures. */
+    invokeReview: function (operation, request, callback) {
+        const promise = Promise.resolve().then(async () => {
+            const http = request.httpRequest || {};
+            if (request.httpResponse?.setHeader) request.httpResponse.setHeader('Cache-Control', 'no-store');
+            if (!['reviewPublication', 'reviewImage'].includes(operation) || Object.keys(http.body || {}).length ||
+                Object.keys(http.query || {}).some(key => operation !== 'reviewPublication' || key !== 'localeCode'))
+                SERVICE.DefaultMediaLibraryService.fail();
+            const input = { publicationCode: http.params?.publicationCode,
+                ...(http.query?.localeCode !== undefined ? { localeCode: http.query.localeCode } : {}) };
+            const result = await FACADE.DefaultMediaLibraryFacade[operation](input, {
+                tenant: request.tenant, authData: request.authData,
+                requestId: request.requestId, correlationId: request.correlationId });
+            return operation === 'reviewImage' ? result : { code: 'SUC_MED_00032', data: result };
+        }).catch(() => { throw new CLASSES.NodicsError('ERR_MED_00023', 'Media review evidence is unavailable or invalid'); });
+        if (!callback) return promise;
+        promise.then(result => callback(null, result)).catch(callback);
+    },
+    /** Returns path-free exact retained metadata, not the current working row. */
+    reviewPublication: function (request, callback) { return this.invokeReview('reviewPublication', request, callback); },
+    /** Delivers only authorized bounded raster bytes through the existing content handler. */
+    reviewImage: function (request, callback) { return this.invokeReview('reviewImage', request, callback); },
     /** Maps one trusted router operation through the mergeable facade. */
     invoke: function (operation, request, callback) {
         const promise = Promise.resolve()

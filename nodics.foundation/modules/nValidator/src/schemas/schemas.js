@@ -66,3 +66,5 @@ module.exports = {
         }
     }
 };
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.validator.validator.backoffice = Object.assign({ description: "Validation rules available to this runtime. Rule execution and activation remain governed by the validation owner." }, module.exports.validator.validator.backoffice);

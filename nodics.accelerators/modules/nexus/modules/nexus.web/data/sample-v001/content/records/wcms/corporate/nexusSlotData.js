@@ -24,6 +24,7 @@
 /** @description Nexus corporate page slot. */
 module.exports = {
   "record0": {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     "code": "nexusCorporateMainSlot",
     "template": "nexusCorporatePageTemplate",
     "name": "main",

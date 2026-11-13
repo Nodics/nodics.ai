@@ -1,5 +1,15 @@
 # database AI Examples
 
+## Staged-only reference policy
+
+An authoring policy without a public-content lifecycle can declare
+`backoffice: { mutationPolicy: { allowedStages: ['STAGED'] } }` in its existing
+schema. Editorial content types use this for their REFERENCE foundation. This
+permits normal governed reference import on Staged while denying generic Online
+and Operational writes. Do not apply it to published articles or projections to
+avoid approval. Malformed stage lists fail closed; READ_ONLY and PUBLISHABLE
+restrictions continue to apply independently.
+
 This folder contains examples that help AI agents and developers work correctly inside the `nodics.foundation/modules/nDatabase/database` module boundary.
 
 Prefer small examples that show proper layered customization, configuration overrides, service extension, schema/router changes, tests, and documentation updates without modifying unrelated Nodics code.
@@ -121,3 +131,7 @@ required revision; broad filters are not a selected identity. Bulk requires
 schema opt-in and a valid header key; managed-counter multi-record CAS is rejected.
 Enterprise setup uses Profile POST `/enterprises` with `{ model }` and an
 `Idempotency-Key`; never route it through a generic enterprise PUT.
+
+Generated update normalization is called with operation `update`; it omits placement fields. Only creation injects authenticated tenant/enterprise defaults. The update query and original authenticated request still select and authorize the existing record.
+
+A schema with identity input `code` and ordinary `title` can declare `backoffice.updateFields: ['title']`. Create still asks for required `code`; update retains it in the original query and edits only title. For a domain-owned configurable list, reference its existing Framework path instead of copying the list. Test malformed selected paths, creation, updates and inline child fields.

@@ -19,6 +19,17 @@ module.exports = {
     "renderer": "documentation.component.navigation",
     "accessMode": "PUBLIC",
     "properties": {
+      "readerGuide": {
+        "guide": "framework",
+        "label": "Nodics Framework",
+        "route": "/docs?guide=framework",
+        "navigation": {
+          "id": "documentation-guide-framework",
+          "label": "Framework guide",
+          "route": "/docs?guide=framework",
+          "order": 300
+        }
+      },
       "title": "Circa",
       "searchLabel": "Search Circa documentation",
       "searchPlaceholder": "Search eWaste journeys, presets, catalogue and knowledge",

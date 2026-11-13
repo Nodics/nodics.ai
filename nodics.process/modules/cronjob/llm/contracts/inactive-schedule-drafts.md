@@ -126,3 +126,8 @@ Test current configuration drift, a lost acknowledgement, negative/multiple/coun
 responses, real inactive activator behavior and original-scope inspection.
 
 See the canonical [operator and customization guide](../../data/docs-v001/records/documentation/cronjobDocumentationComponentData.js).
+
+Current lifecycle inspection returns the stored Cron expression, scheduler time
+zone and the next eligible tick only when the exact timer is active. Inactive
+schedules have no next run. An unavailable next tick does not invalidate the
+lifecycle receipt. Axis presents this owner evidence without calculating ticks.

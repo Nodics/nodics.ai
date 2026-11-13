@@ -139,6 +139,7 @@ module.exports = {
         const components = this.readReleaseRecords(release, 'Component');
         const metadata = this.readReleaseRecords(release, 'PageMetadata');
         const routes = this.readReleaseRecords(release, 'Route').records;
+        this.validateCmsRouteDeliveryStates(routes);
         const product = this.readReleaseRecords(release, 'Product').records[0];
         const navigation = components.records.find(item => item.renderer === 'documentation.component.navigation');
         if (!product || !product.publicRootPath || !navigation || !navigation.properties) this.fail('ERR_TOOL_DOC_00005', 'Documentation requires product and navigation records');
@@ -266,6 +267,16 @@ module.exports = {
         };
         visit(release);
         return { records, origins };
+    },
+
+    /** Validates source route states against the CMS-owned schema; documentation lifecycle is a different field. Later source-tooling overlays must retain the target owner's delivery contract. */
+    validateCmsRouteDeliveryStates: function (routes) {
+        const schema = require('../../../../../nodics.wcms/modules/cms/src/schemas/schemas').cms.cmsPageRoute;
+        const states = schema.definition.deliveryState.enum;
+        for (const route of routes) {
+            if (route.deliveryState !== undefined && !states.includes(route.deliveryState))
+                this.fail('ERR_TOOL_DOC_00005', 'Documentation route has an invalid CMS delivery state: ' + route.code);
+        }
     },
 
     /** Validates references across explicitly selected owner catalogues without importing or activating any pack. */

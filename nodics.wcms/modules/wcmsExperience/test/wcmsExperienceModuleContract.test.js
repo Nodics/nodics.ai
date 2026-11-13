@@ -66,7 +66,7 @@ backoffice.init().then(() => {
     }
     assert.deepEqual(capability.navigation.map(entry => [entry.route, entry.requiredPermissions]), [
         ['/content/experience-studio', ['WCMS_EXPERIENCE_VIEW']],
-        ['/content/experience-studio/placements', ['WCMS_EXPERIENCE_VIEW', 'WCMS_EXPERIENCE_EDIT']],
+        ['/content/experience-studio/placements', ['WCMS_EXPERIENCE_VIEW']],
         ['/content/experience-studio/preview', ['WCMS_EXPERIENCE_PREVIEW']],
         ['/content/experience-studio/index-status', ['WCMS_EXPERIENCE_PUBLISH_STATUS']]
     ]);

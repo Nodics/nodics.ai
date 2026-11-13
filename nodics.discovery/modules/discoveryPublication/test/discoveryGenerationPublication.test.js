@@ -118,12 +118,24 @@ beforeEach(() => {
   removed = [];
   request = {
     tenant: "tenant",
+    authData: {actor: "domain"},
     indexName: "projection",
     indexConfigurationCode: "knowledge",
     ownerType: "KNOWLEDGE",
     ownerCode: "source",
   };
+  global.CONFIG = {get: () => ({publication: {targetAuthority: {publication: 'OPERATIONAL'}}})};
   global.SERVICE = {
+    DefaultDiscoveryGenerationPublicationService: service,
+    DefaultDiscoveryGenerationTransportService: require('../src/service/defaultDiscoveryGenerationTransportService'),
+    DefaultDiscoveryGenerationOwnerService: require('../src/service/defaultDiscoveryGenerationOwnerService'),
+    DefaultDiscoveryProjectionTransportService: require('../../discoveryProjection/src/service/defaultDiscoveryProjectionTransportService'),
+    DefaultModuleService: {
+      ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'),
+      isLocalModuleActive: () => true,
+      isCurrentRuntimeAuthority: () => true,
+      recordInvocationResolution: () => undefined
+    },
     DefaultDiscoveryGenerationService: {
       get: async (r) => ({
         code: "SUC_DB",

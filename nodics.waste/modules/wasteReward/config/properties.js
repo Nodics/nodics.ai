@@ -28,7 +28,7 @@ module.exports = {
     apiExposure: { categories: { wasteMaterialValueInternal: { enabled: true }, wasteMaterialValueRead: { enabled: true } } },
     wasteMaterialValue: {
         mock: { enabled: false },
-        profile: { connectionName: 'profile', targetAuthority: { runtimeRole: 'PLATFORM' }, timeoutMs: 10000 },
+        profile: { connectionName: 'profile', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMs: 10000 },
         evidence: { valuationProviderService: null, paymentProviderService: null, qualificationRef: null, allowSynthetic: false },
         validation: {
             decimalDigits: { minimum: 1, maximum: 100 }, operationalLimit: { minimum: 1, maximum: 100000 },
@@ -37,7 +37,7 @@ module.exports = {
             categoryWeightDigits: { minimum: 1, maximum: 30 }
         },
         limits: { contributionsPerBatch: 500, providerTimeoutMs: 10000, decimalDigits: 30, pageSize: 50 },
-        loyalty: { moduleName: 'loyaltyApi', connectionName: 'loyalty', targetAuthority: { runtimeRole: 'LOYALTY' }, timeoutMs: 15000 }
+        loyalty: { moduleName: 'loyaltyApi', connectionName: 'loyalty', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMs: 15000 }
     },
     schemaPolicies: {
         wasteReward: {

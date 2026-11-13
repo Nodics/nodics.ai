@@ -20,7 +20,8 @@
         "runtime": {
             "router": false,
             "publish": false,
-            "web": false
+            "web": false,
+            "ownership": "functional"
         }
     }
 }

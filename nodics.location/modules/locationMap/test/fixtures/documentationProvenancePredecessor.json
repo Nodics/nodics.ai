@@ -1,0 +1,67 @@
+{
+  "reason": "Immutable pre-provenance correction selection; not installed-runtime proof",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "locationMap",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "c858f0d752892a8351da88bd7f15c92d8662d2a0dfb13ae2762355bbfce4939b",
+      "generatedHashes": {
+        "docs-v001/records/documentation/locationMapDocumentationComponentData.js": "c8560ce34dacd10eeff0b100f5498dc895f545c2d847183b40767818d18ac14d",
+        "docs-v001/records/documentation/locationMapDocumentationPageMetadataData.js": "3746af81b94ce32c6064657c9027a7950b8166325ed5edffb10c5cb55170239c",
+        "docs-v001/records/documentation/locationMapDocumentationNodeData.js": "f867e7dae9cebc4fe992944e0742f183631adbcac14e5903d4a5eaafb43c98fa",
+        "docs-v001/records/documentation/locationMapDocumentationPageData.js": "19a2e6bfaf609803bb1b203554ff0e7d000c261cf8868ff628529b05fb1d8159",
+        "docs-v001/records/documentation/locationMapDocumentationRouteData.js": "7453d1f109f1c4fb026ac90b78453448ab1d9a781920017baf93347406a7a98a",
+        "docs-v001/records/documentation/locationMapDocumentationSearchMetadataData.js": "a6d1d4e83465c326d16b0ad0fd8347b2594c4cb50786d51da318198a51fc474d",
+        "docs-v001/records/documentation/locationMapDocumentationPublicationStateData.js": "a02a4a4469a079f084fcd5f711563123c34d67f7a27020344ed71c5b616a047d",
+        "docs-v001/headers/100_locationMapDocumentationContentPackHeader.js": "f0417711f98fab45fa5561fa9ec38652c33150bc68583a6390eea57f8c3cdcc6"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  },
+  "successorVersion": "0.0.2",
+  "articles": [
+    {
+      "id": "location.shared-map-configuration",
+      "componentCode": "nodicsDocsComponentlocationSharedMapConfiguration",
+      "previousFile": "docs-v001/records/documentation/locationMapDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/locationMapDocumentationRelease002ComponentData.js",
+      "blocksSha256": "88af34dd62d2987b8a22efe166537486122409b6c1ba0ecfd02b33cdd4e27ad0",
+      "digestMode": "titled",
+      "sourceChecksum": "39f40161f96bb14c3119d97f408444ff57eb0a20682779635691071b203bd4c3",
+      "sourceWordCount": 1605
+    }
+  ]
+}

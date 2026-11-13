@@ -103,6 +103,10 @@ module.exports = {
         },
         cmsBase: {
             super: 'base',
+            // Keep immutable source revisions distinguishable in every inherited owner workbench.
+            backoffice: {
+                form: { defaultColumns: ['code', 'versionId', 'name', 'typeCode', 'path', 'locale', 'active'] }
+            },
             model: false,
             service: {
                 enabled: false
@@ -629,7 +633,8 @@ module.exports = {
                 routeType: { type: 'string', required: true, default: 'PAGE', enum: ['PAGE', 'ALIAS', 'REDIRECT'], description: 'Route resolution behavior' },
                 redirectPath: { type: 'string', required: false, description: 'Safe relative redirect target for REDIRECT routes' },
                 deliveryState: { type: 'string', required: true, default: 'DRAFT', enum: ['DRAFT', 'ONLINE'], description: 'Fail-closed delivery activation state; workflow publishing may govern transition later' },
-                accessMode: { type: 'string', required: true, default: 'AUTHENTICATED', enum: ['PUBLIC', 'AUTHENTICATED', 'CUSTOMER'], description: 'Required delivery access boundary' }
+                accessMode: { type: 'string', required: true, default: 'AUTHENTICATED', enum: ['PUBLIC', 'AUTHENTICATED', 'CUSTOMER'], description: 'Required delivery access boundary' },
+                navigationEntry: { type: 'object', required: false, description: 'Owner-projected navigation label retained with the exact route version' }
             },
             indexes: {
                 composite: {
@@ -1298,6 +1303,15 @@ for (const name of ['cmsPublicationManifest', 'cmsOnlinePublicationPointer', 'cm
     module.exports.cms[name].backoffice = { mutationMode: 'READ_ONLY', operations: ['search', 'read'] };
 }
 
+// Explicit, sealed Staged content releases seed these source records through nImport.
+for (const name of ['cmsTypeCode', 'cmsTypeCode2Renderer', 'cmsComponentTypeGroup', 'cmsSlotDefinition',
+    'cmsPageTemplate', 'cmsSite', 'cmsComponent', 'cmsComponentLocalization', 'cmsComponentMedia', 'cmsPage', 'cmsPageRoute', 'cmsNavigationNode']) {
+    module.exports.cms[name].dataRelease = {
+        stagedSourceOperation: 'saveAll',
+        stagedSourceWriterGroups: ['cmsBusinessFullControlUserGroup']
+    };
+}
+
 // Human authoring belongs to scoped CMS commands, never legacy generated /all writes.
 for (const schema of Object.values(module.exports.cms)) {
     if (schema.model !== true) continue;
@@ -1311,3 +1325,35 @@ for (const schema of Object.values(module.exports.cms)) {
 }
 module.exports.cms.cmsSite.definition.enterpriseCode = { type: 'string', required: false,
     description: 'Governed enterprise owner of this Site. Unbound or foreign-owned shared Catalog Sites are unavailable to business authoring.' };
+module.exports.cms.cmsSite.backoffice.displayProperties = ['name', 'code'];
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.cms.cmsTypeCode.backoffice = Object.assign({ description: "CMS component type definitions used to classify renderable content." }, module.exports.cms.cmsTypeCode.backoffice);
+module.exports.cms.cmsTypeCode2Renderer.backoffice = Object.assign({ description: "Approved mappings from CMS type codes to inert frontend renderer identities." }, module.exports.cms.cmsTypeCode2Renderer.backoffice);
+module.exports.cms.cmsComponentTypeGroup.backoffice = Object.assign({ description: "Business groupings of CMS component types available to authoring tools." }, module.exports.cms.cmsComponentTypeGroup.backoffice);
+module.exports.cms.cmsSite.backoffice = Object.assign({ description: "Website identity, content-catalog selection and delivery context. Saving authoring data does not publish the website." }, module.exports.cms.cmsSite.backoffice);
+module.exports.cms.cmsComponentDetail.backoffice = Object.assign({ description: "Structured content details belonging to a CMS component." }, module.exports.cms.cmsComponentDetail.backoffice);
+module.exports.cms.cmsPage.backoffice = Object.assign({ description: "CMS page authoring records, templates and composition. Use Page Designer and governed publication for live delivery." }, module.exports.cms.cmsPage.backoffice);
+module.exports.cms.cmsComponent.backoffice = Object.assign({ description: "Reusable CMS components and their declarative properties. Renderer execution remains frontend-owned." }, module.exports.cms.cmsComponent.backoffice);
+module.exports.cms.cmsComponentLocalization.backoffice = Object.assign({ description: "Language-specific copy for CMS components." }, module.exports.cms.cmsComponentLocalization.backoffice);
+module.exports.cms.cmsComponentMedia.backoffice = Object.assign({ description: "Media associations used by CMS components. Media retains file and delivery authority." }, module.exports.cms.cmsComponentMedia.backoffice);
+module.exports.cms.cmsPageRoute.backoffice = Object.assign({ description: "Website paths linked to CMS pages. Public routing depends on the approved published manifest." }, module.exports.cms.cmsPageRoute.backoffice);
+module.exports.cms.cmsNavigationNode.backoffice = Object.assign({ description: "Website navigation entries and hierarchy. Visibility and published delivery remain governed by CMS." }, module.exports.cms.cmsNavigationNode.backoffice);
+module.exports.cms.cmsPageTemplate.backoffice = Object.assign({ description: "Reusable page layouts and their allowed slot composition." }, module.exports.cms.cmsPageTemplate.backoffice);
+module.exports.cms.cmsSlotDefinition.backoffice = Object.assign({ description: "Named page slots and their content-placement constraints." }, module.exports.cms.cmsSlotDefinition.backoffice);
+module.exports.cms.cmsRestrictionType.backoffice = Object.assign({ description: "Supported kinds of CMS content visibility restrictions." }, module.exports.cms.cmsRestrictionType.backoffice);
+module.exports.cms.cmsRestriction.backoffice = Object.assign({ description: "Content visibility conditions evaluated by the CMS owner." }, module.exports.cms.cmsRestriction.backoffice);
+module.exports.cms.cmsDocumentationProduct.backoffice = Object.assign({ description: "Documentation product identity and its canonical website/catalog bindings." }, module.exports.cms.cmsDocumentationProduct.backoffice);
+module.exports.cms.cmsDocumentationNavigation.backoffice = Object.assign({ description: "Documentation-reader navigation metadata derived from canonical documentation content." }, module.exports.cms.cmsDocumentationNavigation.backoffice);
+module.exports.cms.cmsDocumentationNode.backoffice = Object.assign({ description: "Documentation hierarchy nodes linking reader sections to canonical content." }, module.exports.cms.cmsDocumentationNode.backoffice);
+module.exports.cms.cmsDocumentationPage.backoffice = Object.assign({ description: "Documentation page bindings and reader presentation metadata." }, module.exports.cms.cmsDocumentationPage.backoffice);
+module.exports.cms.cmsDocumentationDashboard.backoffice = Object.assign({ description: "Documentation landing-page and overview presentation metadata." }, module.exports.cms.cmsDocumentationDashboard.backoffice);
+module.exports.cms.cmsDocumentationTemplate.backoffice = Object.assign({ description: "Documentation-reader template definitions." }, module.exports.cms.cmsDocumentationTemplate.backoffice);
+module.exports.cms.cmsDocumentationAccessPolicy.backoffice = Object.assign({ description: "Documentation visibility policy. Reader access remains subject to current authenticated scope." }, module.exports.cms.cmsDocumentationAccessPolicy.backoffice);
+module.exports.cms.cmsDocumentationPublicationState.backoffice = Object.assign({ description: "Documentation publication evidence tied to the owning CMS lifecycle." }, module.exports.cms.cmsDocumentationPublicationState.backoffice);
+module.exports.cms.cmsDocumentationSearchMetadata.backoffice = Object.assign({ description: "Documentation search presentation metadata for authorised reader content." }, module.exports.cms.cmsDocumentationSearchMetadata.backoffice);
+module.exports.cms.cmsMigrationAudit.backoffice = Object.assign({ description: "Retained CMS migration evidence and outcomes." }, module.exports.cms.cmsMigrationAudit.backoffice);
+module.exports.cms.cmsPublicationManifest.backoffice = Object.assign({ description: "Frozen CMS publication bundles and their source identities. Use publication commands to change live content." }, module.exports.cms.cmsPublicationManifest.backoffice);
+module.exports.cms.cmsOnlinePublicationPointer.backoffice = Object.assign({ description: "Current Online manifest pointers. This owner-managed projection is read-only to generic authoring." }, module.exports.cms.cmsOnlinePublicationPointer.backoffice);
+module.exports.cms.cmsPublicationDeploymentReceipt.backoffice = Object.assign({ description: "Retained target deployment acknowledgements for exact CMS publication bundles." }, module.exports.cms.cmsPublicationDeploymentReceipt.backoffice);
+module.exports.cms.cmsPublicationEventOutbox.backoffice = Object.assign({ description: "Owner-managed CMS publication event delivery evidence." }, module.exports.cms.cmsPublicationEventOutbox.backoffice);

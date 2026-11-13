@@ -13,6 +13,7 @@
  * @module backoffice/test/backofficeApplicationMediaRetryContract
  * @description Protects inspected asset reuse, one-shot CAS replacement and fail-closed preparation.
  */
+const { describe, it, beforeEach, afterEach } = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
 const service = require("../src/service/defaultBackofficeApplicationInitializationService");
@@ -314,11 +315,11 @@ describe("BackOffice preparation Media retries", function () {
     assert.equal(repair.input, undefined);
   });
   it("does not offer unnecessary CMS initialization while separate Media approval is pending", async function () {
-    owner.applicationTargetBinding = () => ({});
+    owner.applicationTargetBinding = () => ({ connectionName: "staged", targetAuthority: { server: "staged", publication: "STAGED" } });
     owner.profile = () => ({
       code: "site",
       type: "WEBSITE",
-      target: { moduleName: "cms" },
+      target: { moduleName: "cms", connectionName: "staged", publication: "STAGED" },
     });
     owner.preparationSteps = () => [];
     owner.preparationStatus = async () => ({
@@ -358,9 +359,9 @@ describe("BackOffice preparation Media retries", function () {
       owner.profile = () => ({
         code: "site",
         type: "WEBSITE",
-        target: { moduleName: "cms" },
+        target: { moduleName: "cms", connectionName: "staged", publication: "STAGED" },
       });
-      owner.applicationTargetBinding = () => ({});
+      owner.applicationTargetBinding = () => ({ connectionName: "staged", targetAuthority: { server: "staged", publication: "STAGED" } });
       owner.preparationSteps = () => [
         { type: "MEDIA_ASSET_MANIFEST", required: true },
       ];
@@ -397,10 +398,10 @@ describe("BackOffice preparation Media retries", function () {
     owner.profile = () => ({
       code: "site",
       type: "WEBSITE",
-      target: { moduleName: "cms" },
+      target: { moduleName: "cms", connectionName: "staged", publication: "STAGED" },
     });
     owner.human = () => "operator";
-    owner.applicationTargetBinding = () => ({});
+    owner.applicationTargetBinding = () => ({ connectionName: "staged", targetAuthority: { server: "staged", publication: "STAGED" } });
     owner.mediaManifestCodes = () => ["hero"];
     owner.preparationSteps = () => [
       { type: "MEDIA_ASSET_MANIFEST", required: true },
@@ -458,9 +459,9 @@ describe("BackOffice preparation Media retries", function () {
     owner.profile = () => ({
       code: "site",
       type: "WEBSITE",
-      target: { moduleName: "cms" },
+      target: { moduleName: "cms", connectionName: "staged", publication: "STAGED" },
     });
-    owner.applicationTargetBinding = () => ({});
+    owner.applicationTargetBinding = () => ({ connectionName: "staged", targetAuthority: { server: "staged", publication: "STAGED" } });
     owner.preparationSteps = () => [
       { type: "MEDIA_ASSET_MANIFEST", required: true },
     ];

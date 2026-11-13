@@ -17,6 +17,12 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  // Registry mechanics belong here; active owners supply schemas and later
+  // deployment/runtime layers supply explicit values, never default credentials.
+  runtimeConfigurationSchemas: {},
+  runtimeConfiguration: {},
+  secureConfiguration: {},
+  credentials: {},
   runtimeConfigurationSecurity: {
     encryptionKey: {
       $config: "env",

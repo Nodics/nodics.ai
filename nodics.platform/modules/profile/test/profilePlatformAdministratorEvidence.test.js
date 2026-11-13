@@ -173,10 +173,11 @@ test("Wallet original-token proof transport interoperates with the actual Profil
   SERVICE.DefaultLoyaltyParticipantService = require("../../../../nodics.loyalty/modules/loyaltyWallet/src/service/defaultLoyaltyParticipantService");
   f.config.loyalty = copy(require("../../../../nodics.loyalty/modules/loyaltyWallet/config/properties").loyalty);
   f.config.loyalty.enterpriseTestCredits = { ...f.config.loyalty.enterpriseTestCredits, enabled: true, allowedEnvironments: ["isolated-test"] };
-  f.config.runtimeRole = { code: "LOYALTY" };
+  f.config.runtimeRole = { code: "COHOST", publication: "OPERATIONAL" };
+  NODICS.isModuleActive = name => name === "loyaltyWallet";
   const source = { tenant: "authority", authData: copy(f.request.authData), authorization: "Bearer original",
     payload: { walletCode: "wallet", programCode: "program", rewardTypeCode: "point", amount: "10.00", reason: "Test allocation", idempotencyKey: "key", confirmed: true } };
-  SERVICE.DefaultModuleService = { invokeModule: async call => {
+  SERVICE.DefaultModuleService = { ...require("../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService"), invokeModule: async call => {
     assert.equal(call.apiName, routes.platformAdministratorEvidence.evidence.key);
     assert.equal(call.header.Authorization, source.authorization);
     assert.equal(call.header["X-Enterprise-Code"], source.authData.entCode);

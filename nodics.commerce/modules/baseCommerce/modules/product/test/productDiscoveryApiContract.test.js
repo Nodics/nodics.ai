@@ -21,7 +21,13 @@ const test = require('node:test');
  * @owner product
  */
 
-const properties = require('../config/properties');
+const bindings = require('../../../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService');
+const properties = bindings.resolve(require('../config/properties'), {}, {
+    readRuntimeProperty: () => 'OPERATIONAL'
+});
+// These CURRENT projection fixtures exercise discovery outside the activation rollout.
+properties.product.discovery.activationScopes = [];
+properties.product.discovery.catalogue.enabled = false;
 const routers = require('../src/router/routers');
 const discoveryController = require('../src/controller/defaultProductDiscoveryController');
 const publicationController = require('../src/controller/defaultProductPublicationController');
@@ -88,17 +94,17 @@ const variants = [
     { code: 'agoraOxfordShirtBlueM', tenant: 'default', productCode: 'agoraOxfordShirt', sku: 'AGORA-SHIRT-M', status: 'ACTIVE', attributes: {}, revision: 1 }
 ];
 const projections = [
-    { code: 'agoraLinenWrapDress|agoraMainStore|en', tenant: 'default', productCode: 'agoraLinenWrapDress', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
+    { code: 'agoraLinenWrapDress|agoraApparelStore|en', tenant: 'default', productCode: 'agoraLinenWrapDress', storeCode: 'agoraApparelStore', locale: 'en', status: 'CURRENT',
         payload: { code: 'agoraLinenWrapDress', name: 'Linen Wrap Dress', description: 'Linen dress', slug: 'linen-wrap-dress', seo: { title: 'Linen' },
             localizedAttributes: { material: 'linen' }, classificationValues: { domain: 'apparel' }, categoryCodes: ['agoraWomen'], variantCodes: ['agoraLinenWrapDressNaturalS'],
             media: { primaryImage: 'agora-owned-product-linen-wrap-dress-primary', primaryAlt: 'Linen wrap dress' },
             variantSkuMap: { agoraLinenWrapDressNaturalS: 'AGORA-DRESS-S' },
             price: { currency: 'USD', unitAmount: '129.00', priceRowCode: 'internalPriceRow' },
             availability: { available: true, status: 'IN_STOCK', warehouseCode: 'internalWarehouse' }, inventory: { available: 12 }, sku: 'AGORA-DRESS-S' } },
-    { code: 'agoraOxfordShirt|agoraMainStore|en', tenant: 'default', productCode: 'agoraOxfordShirt', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
+    { code: 'agoraOxfordShirt|agoraApparelStore|en', tenant: 'default', productCode: 'agoraOxfordShirt', storeCode: 'agoraApparelStore', locale: 'en', status: 'CURRENT',
         payload: { code: 'agoraOxfordShirt', name: 'Oxford Shirt', description: 'Oxford shirt', slug: 'oxford-shirt', seo: { title: 'Oxford' },
             localizedAttributes: { material: 'cotton' }, classificationValues: { domain: 'apparel' }, categoryCodes: ['agoraMen'], variantCodes: ['agoraOxfordShirtBlueM'] } },
-    { code: 'agoraStylePass5Coupon|agoraMainStore|en', tenant: 'default', productCode: 'agoraStylePass5Coupon', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
+    { code: 'agoraStylePass5Coupon|agoraApparelStore|en', tenant: 'default', productCode: 'agoraStylePass5Coupon', storeCode: 'agoraApparelStore', locale: 'en', status: 'CURRENT',
         payload: { code: 'agoraStylePass5Coupon', name: 'Agora Style Pass 5 Percent Coupon', description: 'A digital coupon product for buying one future-use 5 percent Agora Apparel discount code.', slug: 'agora-style-pass-5-percent-coupon', seo: { title: 'Agora coupon' },
             localizedAttributes: { material: 'Digital coupon code' }, classificationValues: { domain: 'apparel', productType: 'DIGITAL', digitalDeliveryType: 'COUPON_CODE', inventoryStrategy: 'COUPON_CODE_POOL', couponBenefit: '5 percent discount' },
             categoryCodes: ['agoraDigitalCoupons'], collectionCodes: ['agoraCouponMarketplace'], variantCodes: ['agoraStylePass5CouponDigital'],
@@ -244,7 +250,7 @@ test('customer discovery lists Product cards with safe price and availability bu
     let response = await discoveryController.list({
         tenant: 'default',
         entCode: 'default',
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', categoryCode: 'agoraWomen', domainCode: 'apparel', pageSize: '12' } }
+        httpRequest: { query: { storeCode: 'agoraApparelStore', locale: 'en', categoryCode: 'agoraWomen', domainCode: 'apparel', pageSize: '12' } }
     });
 
     assert.equal(response.data.products.length, 1);
@@ -274,7 +280,7 @@ test('customer discovery lists Product cards with safe price and availability bu
     assert.equal(response.data.discovery.fieldMappingCode, 'agoraProductDiscoveryFieldMapping');
     assert.equal(response.data.discovery.rankingProfileCode, 'agoraProductRankingProfile');
     assert.deepEqual(searchRequests[0].query, {
-        tenant: 'default', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
+        tenant: 'default', storeCode: 'agoraApparelStore', locale: 'en', status: 'CURRENT',
         'payload.categoryCodes': 'agoraWomen', 'payload.classificationValues.domain': 'apparel'
     });
 });
@@ -282,13 +288,13 @@ test('customer discovery lists Product cards with safe price and availability bu
 test('customer discovery maps storefront collection codes to indexed product category classifications', async () => {
     let response = await discoveryController.list({
         tenant: 'default',
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', collectionCode: 'agoraWomen', pageSize: '12' } }
+        httpRequest: { query: { storeCode: 'agoraApparelStore', locale: 'en', collectionCode: 'agoraWomen', pageSize: '12' } }
     });
 
     assert.equal(response.data.products.length, 1);
     assert.equal(response.data.products[0].productCode, 'agoraLinenWrapDress');
     assert.deepEqual(searchRequests[0].query, {
-        tenant: 'default', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT', 'payload.categoryCodes': 'agoraWomen'
+        tenant: 'default', storeCode: 'agoraApparelStore', locale: 'en', status: 'CURRENT', 'payload.categoryCodes': 'agoraWomen'
     });
 });
 
@@ -298,7 +304,7 @@ test('customer discovery fails open when secured Discovery configuration lookup 
     };
     let response = await discoveryController.list({
         tenant: 'default',
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', categoryCode: 'agoraWomen', pageSize: '12' } }
+        httpRequest: { query: { storeCode: 'agoraApparelStore', locale: 'en', categoryCode: 'agoraWomen', pageSize: '12' } }
     });
 
     assert.equal(response.data.products.length, 1);
@@ -309,12 +315,12 @@ test('customer discovery fails open when secured Discovery configuration lookup 
 
 test('customer discovery resolves default tenant for public storefront requests', async () => {
     let response = await discoveryController.list({
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', pageSize: '12' } }
+        httpRequest: { query: { storeCode: 'agoraApparelStore', locale: 'en', pageSize: '12' } }
     });
 
     assert.equal(response.data.tenant, 'default');
     assert.equal(searchRequests[0].query.tenant, 'default');
-    assert.equal(searchRequests[0].query.storeCode, 'agoraMainStore');
+    assert.equal(searchRequests[0].query.storeCode, 'agoraApparelStore');
     assert.equal(searchRequests[0].query.locale, 'en');
 });
 
@@ -325,7 +331,7 @@ test('customer discovery falls back to Product projection store when browse sear
     };
     let response = await discoveryController.list({
         tenant: 'default',
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', categoryCode: 'agoraWomen', pageSize: '12' } }
+        httpRequest: { query: { storeCode: 'agoraApparelStore', locale: 'en', categoryCode: 'agoraWomen', pageSize: '12' } }
     });
 
     assert.equal(response.data.products.length, 1);
@@ -340,7 +346,7 @@ test('customer discovery completes short search-adapter pages from Product proje
     };
     let response = await discoveryController.list({
         tenant: 'default',
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', pageSize: '2' } }
+        httpRequest: { query: { storeCode: 'agoraApparelStore', locale: 'en', pageSize: '2' } }
     });
 
     assert.equal(response.data.products.length, 2);
@@ -369,7 +375,7 @@ test('customer discovery uses active nSearch registry before projection-store fa
 
     let response = await discoveryController.list({
         tenant: 'default',
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', categoryCode: 'agoraWomen', pageSize: '12' } }
+        httpRequest: { query: { storeCode: 'agoraApparelStore', locale: 'en', categoryCode: 'agoraWomen', pageSize: '12' } }
     });
 
     assert.equal(response.data.products.length, 1);
@@ -386,7 +392,7 @@ test('customer discovery applies text search during projection-store fallback', 
     };
     let response = await discoveryController.list({
         tenant: 'default',
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', q: 'linen', pageSize: '12' } }
+        httpRequest: { query: { storeCode: 'agoraApparelStore', locale: 'en', q: 'linen', pageSize: '12' } }
     });
 
     assert.deepEqual(response.data.products.map(item => item.productCode), ['agoraLinenWrapDress']);
@@ -401,7 +407,7 @@ test('customer discovery text fallback scans beyond the requested first page bef
     };
     let response = await discoveryController.list({
         tenant: 'default',
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', q: 'coupon', pageSize: '2' } }
+        httpRequest: { query: { storeCode: 'agoraApparelStore', locale: 'en', q: 'coupon', pageSize: '2' } }
     });
 
     assert.deepEqual(response.data.products.map(item => item.productCode), ['agoraStylePass5Coupon']);
@@ -411,7 +417,7 @@ test('customer discovery text fallback scans beyond the requested first page bef
 test('customer discovery finds coupon products by digital coupon projection metadata', async () => {
     let response = await discoveryController.list({
         tenant: 'default',
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', domainCode: 'apparel', q: 'coupon', pageSize: '12' } }
+        httpRequest: { query: { storeCode: 'agoraApparelStore', locale: 'en', domainCode: 'apparel', q: 'coupon', pageSize: '12' } }
     });
 
     assert.deepEqual(response.data.products.map(item => item.productCode), ['agoraStylePass5Coupon']);
@@ -419,7 +425,7 @@ test('customer discovery finds coupon products by digital coupon projection meta
     assert.equal(response.data.products[0].availability.status, 'IN_STOCK');
     assert.deepEqual(searchRequests[0].query, {
         tenant: 'default',
-        storeCode: 'agoraMainStore',
+        storeCode: 'agoraApparelStore',
         locale: 'en',
         status: 'CURRENT',
         'payload.classificationValues.domain': 'apparel',
@@ -430,24 +436,24 @@ test('customer discovery finds coupon products by digital coupon projection meta
 test('customer discovery extracts nested nSearch Elasticsearch hits', () => {
     let rows = discovery.records({ result: { hits: { hits: [{ _source: projections[0] }] } } });
     assert.equal(rows.length, 1);
-    assert.equal(rows[0].code, 'agoraLinenWrapDress|agoraMainStore|en');
+    assert.equal(rows[0].code, 'agoraLinenWrapDress|agoraApparelStore|en');
     rows = discovery.records({ result: { body: { hits: { hits: [{ _source: projections[1] }] } } } });
     assert.equal(rows.length, 1);
-    assert.equal(rows[0].code, 'agoraOxfordShirt|agoraMainStore|en');
+    assert.equal(rows[0].code, 'agoraOxfordShirt|agoraApparelStore|en');
     rows = discovery.records({ data: { result: { response: { body: { hits: { hits: [{ _source: projections[0] }] } } } } } });
     assert.equal(rows.length, 1);
-    assert.equal(rows[0].code, 'agoraLinenWrapDress|agoraMainStore|en');
+    assert.equal(rows[0].code, 'agoraLinenWrapDress|agoraApparelStore|en');
 });
 
 test('customer discovery delegates customer-safe result ordering to Commerce Search when available', async () => {
     let response = await discoveryController.list({
         tenant: 'default',
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', pageSize: '12' } }
+        httpRequest: { query: { storeCode: 'agoraApparelStore', locale: 'en', pageSize: '12' } }
     });
 
     assert.deepEqual(response.data.products.map(item => item.productCode), ['agoraStylePass5Coupon', 'agoraOxfordShirt', 'agoraLinenWrapDress']);
     assert.equal(rankingRequests.length, 1);
-    assert.equal(rankingRequests[0].request.storeCode, 'agoraMainStore');
+    assert.equal(rankingRequests[0].request.storeCode, 'agoraApparelStore');
     assert.equal(rankingRequests[0].products[0].sku, undefined);
     assert.equal(rankingRequests[0].products[0].inventory, undefined);
 });
@@ -455,7 +461,7 @@ test('customer discovery delegates customer-safe result ordering to Commerce Sea
 test('customer PDP resolves one Product detail through Product search projection only', async () => {
     let response = await discoveryController.detail({
         tenant: 'default',
-        httpRequest: { params: { productCode: 'agoraOxfordShirt' }, query: { storeCode: 'agoraMainStore', locale: 'en' } }
+        httpRequest: { params: { productCode: 'agoraOxfordShirt' }, query: { storeCode: 'agoraApparelStore', locale: 'en' } }
     });
 
     assert.equal(response.data.product.productCode, 'agoraOxfordShirt');
@@ -487,7 +493,7 @@ test('operator publication orchestration reads persisted Product records and wri
         authData: { tenant: 'default', loginId: 'operator-1' },
         correlationId: 'corr-publish-1',
         now: '2026-08-14T00:00:00.000Z',
-        httpRequest: { body: { catalogVersion: 'agoraStaged', storeCode: 'agoraMainStore' } }
+        httpRequest: { body: { catalogVersion: 'agoraStaged', storeCode: 'agoraApparelStore' } }
     });
 
     assert.equal(response.data.requested, 2);
@@ -514,12 +520,12 @@ test('operator publication can include projection snapshots only when requested 
         authData: { tenant: 'default', loginId: 'operator-1' },
         correlationId: 'corr-publish-2',
         now: '2026-08-14T00:00:00.000Z',
-        httpRequest: { body: { catalogVersion: 'agoraStaged', storeCode: 'agoraMainStore', includeProjectionSnapshots: true } }
+        httpRequest: { body: { catalogVersion: 'agoraStaged', storeCode: 'agoraApparelStore', includeProjectionSnapshots: true } }
     });
 
     assert.equal(response.data.published, 2);
     assert.equal(response.data.projectionSnapshots.length, 2);
-    assert.equal(response.data.projectionSnapshots[0].storeCode, 'agoraMainStore');
+    assert.equal(response.data.projectionSnapshots[0].storeCode, 'agoraApparelStore');
     assert(response.data.projectionSnapshots.every(snapshot => Array.isArray(snapshot.projections)));
     assert.equal(response.data.projectionSnapshots.flatMap(snapshot => snapshot.projections).length, 4);
 });
@@ -531,10 +537,10 @@ test('operator restoration ingests evidenced projections through Product search 
         now: '2026-08-15T00:00:00.000Z',
         httpRequest: {
             body: {
-                storeCode: 'agoraMainStore',
+                storeCode: 'agoraApparelStore',
                 projectionSnapshots: [
-                    { productCode: 'agoraLinenWrapDress', storeCode: 'agoraMainStore', projections: [projections[0]] },
-                    { productCode: 'agoraOxfordShirt', storeCode: 'agoraMainStore', projections: [projections[1]] }
+                    { productCode: 'agoraLinenWrapDress', storeCode: 'agoraApparelStore', projections: [projections[0]] },
+                    { productCode: 'agoraOxfordShirt', storeCode: 'agoraApparelStore', projections: [projections[1]] }
                 ]
             }
         }

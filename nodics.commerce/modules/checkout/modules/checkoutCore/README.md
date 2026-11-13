@@ -68,3 +68,6 @@ See [forward recovery](llm/contracts/forward-purchase-recovery.md) for the quali
 command-status action union and explicit original-key confirmation endpoint.
 Bundle/coupon continuation never creates another Payment or reprices a Cart;
 selected auctions resume their original phase journal and protected hold.
+
+Payment Core owns configurable provider selection; Checkout preserves original
+provider identity during capture and recovery. See [the owner contract](llm/contracts/README.md).

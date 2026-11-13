@@ -21,14 +21,25 @@ module.exports = {
     describe: function (schema) {
         let config = schema && schema.backoffice || {};
         let policy = config.mutationPolicy || {};
+        const stages = ['STAGED', 'ONLINE', 'OPERATIONAL'];
+        if (Object.hasOwn(policy, 'allowedStages') &&
+            (!Array.isArray(policy.allowedStages) || !policy.allowedStages.length ||
+                new Set(policy.allowedStages).size !== policy.allowedStages.length ||
+                policy.allowedStages.some(stage => !stages.includes(stage)))) {
+            throw new CLASSES.NodicsError('ERR_DBS_00004', 'Schema authoring stage policy is invalid');
+        }
         let publishRequired = policy.publishRequired === true || policy.lifecycle === 'PUBLISHABLE' ||
             config.lifecycle === 'PUBLISHABLE' || config.mutationMode === 'PUBLISHABLE';
         let role = CONFIG.get('runtimeRole') || {};
-        let stage = ['STAGED', 'ONLINE', 'OPERATIONAL'].includes(role.publication) ? role.publication : 'UNASSIGNED';
+        let stage = stages.includes(role.publication) ? role.publication : 'UNASSIGNED';
         return {
             publishRequired: publishRequired,
             stage: stage,
-            authoringAllowed: config.mutationMode !== 'READ_ONLY' && (!publishRequired || stage === 'STAGED'),
+            authoringAllowed: config.mutationMode !== 'READ_ONLY' && (!publishRequired || stage === 'STAGED') &&
+                (!policy.allowedStages || policy.allowedStages.includes(stage)),
+            ...(stage === 'STAGED' && publishRequired && config.mutationMode === 'READ_ONLY' &&
+                (!policy.allowedStages || policy.allowedStages.includes(stage)) &&
+                schema.dataRelease?.stagedSourceOperation === 'saveAll' ? { stagedSourceOperation: 'saveAll' } : {}),
         };
     },
 
@@ -48,7 +59,7 @@ module.exports = {
         if (!authority.authoringAllowed) {
             throw new CLASSES.NodicsError('ERR_AUTH_00003', authority.publishRequired
                 ? 'This schema can be authored only in Staged. Online changes must use the owning publication workflow.'
-                : 'This schema is read-only for generic authoring.');
+                : 'This schema is read-only or cannot be authored in the current publication context.');
         }
     },
 };

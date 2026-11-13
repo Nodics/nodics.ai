@@ -99,6 +99,7 @@ global.CONFIG = {
 };
 global.NODICS = {
     getActiveModules: () => ['unregisteredSampleModule'],
+    getModule: () => ({ rawSchema: {} }),
     getRawModule: moduleName => ({
         rawSchema: {},
         metaData: {

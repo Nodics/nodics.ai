@@ -47,6 +47,7 @@ test("historical retirement selects stored closure and never current approval or
       ? { applications: { review: f.policy } }
       : "default";
   SERVICE.DefaultModuleService.invokeModule = async (command) => {
+    if (command.moduleName === "workflow") assert.deepEqual(command.targetAuthority, { publication: "OPERATIONAL" });
     f.sent.push(command);
     return {
       result: { status: "RETIRED", instanceCode: prior.review.instanceCode },
@@ -104,6 +105,7 @@ test("late Process start reconciles a superseded closed attempt without marking 
     },
   };
   SERVICE.DefaultModuleService.invokeModule = async (command) => {
+    if (command.moduleName === "workflow") assert.deepEqual(command.targetAuthority, { publication: "OPERATIONAL" });
     const prior = structuredClone(original.application);
     prior.closedAt = "2026-09-30T02:00:00.000Z";
     prior.closedFromRevision = 3;
@@ -313,6 +315,7 @@ function fixture() {
     DefaultEnterpriseApplicationService: intake,
     DefaultModuleService: {
       invokeModule: async (command) => {
+        if (command.moduleName === "workflow") assert.deepEqual(command.targetAuthority, { publication: "OPERATIONAL" });
         if (command.apiName === "/internal/communications") {
           SERVICE.DefaultLoggerService.assertSensitiveRequest(command.request);
           assert.equal(captured.has({ ...command.request }), false);
@@ -403,6 +406,7 @@ test("unconfirmed delivery preserves the original message across a later copy ch
   const f = fixture();
   let attempts = 0;
   SERVICE.DefaultModuleService.invokeModule = async (command) => {
+    if (command.moduleName === "workflow") assert.deepEqual(command.targetAuthority, { publication: "OPERATIONAL" });
     f.sent.push(structuredClone(command));
     if (++attempts === 1) throw new Error("lost response");
     return {
@@ -564,24 +568,21 @@ test("application projection still rejects drafts and unsupported lifecycle stat
 });
 test("review workspace remains visible when intake is paused without mutating shared metadata", () => {
   fixture();
-  const capability = require("../src/service/defaultProfileBackofficeCapabilityService");
   const config = {
-    workspace: { tabs: [] },
+    workspace: { defaultTab: "missing", tabs: [] },
     applications: {
       enabled: false,
       review: { enabled: true },
-      reviewWorkspace: { id: "employee-applications", sections: [] },
+      reviewWorkspace: { id: "employee-applications", sections: [{ id: "review-list", type: "table" }, { id: "public-intake", public: true }] },
     },
   };
   CONFIG.get = (key) => (key === "enterpriseManagement" ? config : undefined);
-  const first = capability
-    .getCapability()
-    .navigation.find((item) => item.id === "enterprises");
-  assert.equal(first.backendWorkspace.tabs[0].id, "employee-applications");
+  const first = management.buildAccessWorkspace({ publicOnly: false });
+  assert.equal(first.tabs[0].id, "employee-applications");
+  assert.equal(first.defaultTab, "employee-applications");
+  assert.deepEqual(first.tabs[0].sections.map(section => section.id), ["review-list"]);
   assert.deepEqual(config.workspace.tabs, []);
+  assert.equal(config.applications.reviewWorkspace.sections.length, 2);
   config.applications.review.enabled = false;
-  const second = capability
-    .getCapability()
-    .navigation.find((item) => item.id === "enterprises");
-  assert.deepEqual(second.backendWorkspace.tabs, []);
+  assert.deepEqual(management.buildAccessWorkspace({ publicOnly: false }).tabs, []);
 });

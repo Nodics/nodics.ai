@@ -58,12 +58,11 @@ Only active modules contribute properties, in index order. External, tenant and
 persisted configuration retain their existing authorities and precedence.
 
 Apply the [mandatory default ownership gate](../../../nSetup/llm/contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate).
-Owner-contributed runtime-role profiles carry standard publication adapters,
-observer registrations and role mechanics; customer layers supply only genuine
-selection and overrides. Registering a provider is not qualifying or enabling it.
+Owner-contributed ordinary namespaces carry reusable defaults; customer layers
+supply only genuine overrides. Explicit publication policies retain their own
+qualification and authorization boundaries. Registering a provider is not qualifying or enabling it.
 Do not infer publication permission from a schema flag, load an inactive domain
-to obtain its defaults, or move all domains into nConfig/nPublish. Prove selected
-and unselected role behavior through this loader after the source batch is complete.
+to obtain its defaults, or move all domains into nConfig/nPublish. Prove owner-default inheritance and explicit overrides through this loader.
 
 Moving a value requires evidence of active ownership and ordering. Do not infer
 precedence from a directory name, move local credentials into a default, or
@@ -95,54 +94,33 @@ Verify with `test/configurationOwnershipContract.test.js`,
 `prepareStart` scenarios. Read `nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js`
 for the human journey, examples, migration and operational limits.
 
-## Capability role profiles
+## Capability-owned defaults
 
-An active owner may declare a top-level namespace's `runtimeRoleProfiles`, keyed
-by the selected `runtimeRole.code`. The existing role-profile projection applies
-that one profile and removes the map from effective configuration, including
-when no role matches. It supports functional, accelerator and customer namespaces
-without a Foundation registry of their names. Nested data-release initialization
-profiles retain their existing dedicated projection.
+Reusable defaults belong to the implementing module's ordinary namespace in
+`config/properties.js`. Project/environment/server/node layers contain only
+intentional overrides through the existing configuration binding and merge flow.
+Runtime names and descriptive `runtimeRole.code` do not select capability policy.
+`runtimeRole.roles` and `runtimeRoleProfiles` are retired and rejected; migrate
+all contributors before deployment. No compatibility projection is retained.
 
-This is selection of contributed configuration, not module activation or import
-authorization. Missing roles retain base values. Existing role-profile semantics
-remain: profile objects merge into base objects and profile arrays replace base
-arrays. Ordinary contribution arrays still follow the separately documented
-binding/merge contract. Later runtime overrides operate on effective consumer
-keys; consumed profiles are not reapplied. Put environment/server exceptions in
-the selected profile where required by that existing precedence.
-
-Explicit `replace` and `keyed` operations inside top-level capability role
-profiles remain deferred until the selected profile meets the complete base
-namespace. A role contribution may load before the base list's owner; resolving
-its keyed operation against an empty role-local list must not erase inherited
-entries. Preserve operation order across role contributions, including removals
-and later re-additions. References still resolve at their ordinary contribution
-boundary; this defers collection merging only, not references or authority checks.
-Deferred bookkeeping is internal and removed with the role map. Ordinary role
-arrays retain positional contribution merging and replace base arrays at projection.
-
-Data-release role profiles retain their dedicated accumulating `contributions`
-merge. Profiles derived from a selected server's declared `runtimeModuleRoots`
-must use that same merge when composed with already-loaded role profiles, before
-role projection. Positional merging here could replace one domain's inactive-owner
-selector with another domain's selector. Other ordered profile arrays retain
-replacement semantics; ordinary configuration arrays remain positional. Raw
-module discovery and explicit section selectors are both required by nImport;
-this composition grants neither module activation nor import authorization.
+Explicit `replace` and `keyed` collection operations apply at ordinary contribution
+boundaries. They do not wait for a later role fold. Owner defaults must be loaded
+before their deployment overrides. Initialization remains governed by explicit
+release selections, prerequisites, destination admission and permissions; removal
+of role projection does not authorize imports or synthesize installer profiles.
 
 ### Explicit Inactive Owner Configuration
 
 A selected server may declare up to 32 `nodics.runtimeConfigurationContributions`
 entries in its existing package metadata. Each entry has exactly `moduleName`,
-`namespace`, and `runtimeRole`; it never accepts a file path or URL. The owner
+and `namespace`; it never accepts a role selector, file path or URL. The owner
 must be discoverable beneath that server's declared `runtimeModuleRoots` (or
 `extends` when roots are omitted). nConfig uses its existing metadata discovery
 and duplicate-name validation, including in offline tooling without a global
 NODICS module map. It reads only the conventional owner `config/properties.js`,
-rejects escaped symlinks, and resolves only the selected role's profile.
+rejects escaped symlinks, and resolves only the selected ordinary namespace.
 
-The contribution is the owner's `<namespace>.runtimeRoleProfiles.<runtimeRole>`.
+The contribution is the owner's ordinary `<namespace>` value.
 It becomes a selected default through `configurationBindings.merge`, after
 ordinary framework contributions and before project/environment/server/node
 contributions. Active owner placeholders must not erase explicitly selected
@@ -155,8 +133,8 @@ collection operators in that input. The
 same merge applies offline. Explicit `$config: replace` with `value: []` disables
 an inherited path list; ordinary arrays retain their existing positional merge.
 References may reuse canonical owner descriptors rather than copying them.
-Unselected roles do not load their owners. Duplicate namespace/role selectors,
-unknown selected owners/profiles, unsafe identifiers and malformed selectors
+Unselected owners are not loaded. Duplicate namespace selectors,
+unknown selected owners/namespaces, unsafe identifiers and malformed selectors
 fail closed. Runtime activation, identity/credentials, topology and database
 namespaces cannot be selected through this mechanism.
 
@@ -167,7 +145,7 @@ For example, an Axis deployment's WCMS Online server can explicitly wire:
   "nodics": {
     "runtimeModuleRoots": ["nodics.wcms", "nodics.discovery", "nodics.platform"],
     "runtimeConfigurationContributions": [
-      { "moduleName": "axis", "namespace": "cms", "runtimeRole": "WCMS_ONLINE" }
+      { "moduleName": "axis", "namespace": "cms" }
     ]
   }
 }
@@ -188,7 +166,7 @@ The isolated `runtimeRootDataReleaseProjectionContract.test.js` covers live and
 offline composition, retained later selectors, immutable inputs, and discovery
 rejection after removing delegation. It reads manifests but performs no imports.
 
-Validate selected and unselected roles, unrelated owner namespaces, empty and
+Validate selected and unselected owners, unrelated namespaces, empty and
 shortened arrays, immutable inputs and later overrides with
 `test/runtimePropertyProjectionContract.test.js`, then run consumer preparation.
 
@@ -382,6 +360,20 @@ environment, server and optional `node` contributions. It does not start or acti
 that server. Metadata must identify each boundary and remain within the selected
 project. Missing/retired/escaping targets, unsafe paths and dependency cycles reject.
 
+A runtime projection name may also select a unique alias from the existing
+validated deployment alias map. Exact server names retain precedence. Missing,
+ambiguous, retired and escaping targets reject; no inferred endpoint, provider
+startup or second target registry is introduced. `runtimeIdentity.serverCode`
+projects the canonical selected server, with project/environment/node coordinates
+derived from the physical hierarchy. Instance and remote-module selections still
+come from the existing package metadata; missing instance identity grants nothing.
+Conflicting package/property coordinates reject rather than replacing topology.
+For example, `{ $config: 'runtime', name: 'inventoryPeer', path:
+'runtimeIdentity.serverCode' }` follows that declared peer alias without a
+customer-defined helper property. Node overrides still affect actual configurable
+leaves and cannot rename the canonical server. Canonicalized cycle keys preserve
+reference bounds even when aliases point back to the same server.
+
 Resolution projects only the selected property and its dependencies. Bidirectional
 peer connections do not recursively initialize entire runtimes. Every contribution
 resolves before the next one: later node overrides merge with an earlier resolved
@@ -410,16 +402,169 @@ sequence. This preserves explicit replacement/keyed semantics for framework-owne
 tooling defaults; never merge defaults back into already-resolved collections.
 This projection does not activate modules or alter runtime startup authority.
 
-## Owner Role Defaults And Deployment Differences
+## Owner Defaults And Deployment Differences
 
-Publication domains contribute standard provider registrations, source schema
-policies and read-only Online observers using existing runtimeRoleProfiles.
-Project/server layers retain explicit role selection, connection names, signed
-caller restrictions and qualification. To override a profile leaf, place the
-intentional difference under that same role profile: projection occurs after
-layer merging. Unqualified storage may explicitly keep isVersionedEnabled false.
-No registration selects an endpoint, imports a workflow or grants permission.
+Publication context is explicit STAGED, ONLINE or OPERATIONAL metadata. Never
+infer it from runtime names. Owner-specific publication policies, provider
+registrations and caller restrictions must remain explicit in their existing
+contracts; co-location does not authorize access or broaden publication policy.
+Customer layers override existing leaves only, without copying module defaults.
 
 Consumer mechanics do not belong to nConfig: nService owns defaultContentType;
 Cronjob owns cronjob.processRetrySleepTime; EMS owns emsClient.processRetrySleepTime.
-The obsolete global processRetrySleepTime and unused illegalUsernames are removed.
+
+### Functional owner validation
+
+`validateRuntimeModuleOwnership(runtimes)` consumes derived registration evidence,
+with explicit `projectCode`, `environment`, `server`, `runtimeRole.publication`, and
+`registrations`. These are transient validation results, not customer properties.
+nService's registration agent owns `buildOwnershipEvidence`,
+`isOwningRegistration` and `getModuleOwnershipKey`; all admission consumers reuse
+these helpers. Callable registration or materialized schema/service claims prove
+ownership. Foundation has no exemption. Source-only classification requires
+complete effective schema evidence with no claims and no callable registration.
+
+The same module can have separate STAGED, ONLINE and OPERATIONAL owners. Context
+comes only from explicit runtime publication metadata; role names never imply it.
+Replicas sharing the same logical server are permitted. Projects and environments
+are independent scopes. Missing schema evidence rejects complete validation.
+Isolated projection exposes `ownershipEvidence` after canonical maintenance-service
+loading and effective schema materialization through the existing database owner.
+`defaultDeploymentConfigurationProjectionService.validateEnvironmentOwnership`
+projects enabled backend runtimes and invokes this validator; it rejects actual
+duplicates and never starts providers or listeners. `resolve` is asynchronous;
+`read` remains the synchronous isolated-process entrypoint.
+Required source dependencies remain local; remote capability dependencies retain
+DefaultModuleService calls and Profile grants.
+
+Runtime-local infrastructure is explicitly declared by its canonical owner using
+`nodics.runtime.ownership: "runtimeLocal"`. Omission means functional ownership;
+invalid values reject. Runtime-local registrations retain endpoints and claims,
+but their ownership key also includes the logical server. This is not a blanket
+Foundation exemption or permission grant. The environment validator independently
+discovers installed owner metadata and rejects a projected scope mismatch. It
+never trusts a wire registration's scope. Functional Product, Wallet and Discovery
+owners remain unique per explicit publication context. Storage namespace checks
+remain nDatabase-owned; semantic claim scope does not rename or migrate schemas.
+
+### Publication-conditioned owner leaves
+
+Use the existing context binding in ordinary owner properties:
+
+```js
+runtimeRole: { $config: "context", name: "publication" },
+isVersionedEnabled: {
+  $config: "context", name: "publication",
+  cases: { STAGED: true, ONLINE: false, OPERATIONAL: false }
+}
+```
+
+The selected deployment's explicit `runtimeRole.publication` is read through the
+existing bounded runtime-property projection, including a selected node override.
+It is available before owner contributions merge. Only STAGED, ONLINE and
+OPERATIONAL are accepted. A map may contain only these keys; the selected case
+must exist. Missing/unknown context and missing cases fail closed. Cases apply
+only to publication context bindings, never arbitrary code or runtime role names.
+Only the selected value resolves. Existing binding bounds/cycle checks and later
+ordinary deployment overrides remain authoritative. This selects property values,
+not modules, permissions, imports or endpoints.
+
+
+Explicit `functional` owner metadata admits service-only authority into uniqueness
+validation even without HTTP/schema claims. Explicit `sourceOnly` is reserved for
+reviewed local helpers and rejects contradictory callable or persisted evidence.
+Both decisions come from canonical installed metadata, never projected or wire
+assertions. Absence of HTTP alone does not establish helper status.
+
+## Functional dependency placement
+
+A resolved activation graph records explicit module/group entry selections separately
+from required implementation dependencies. Within one project, environment and
+publication context, a unique explicit functional owner serves other consumers
+through DefaultModuleService. Selecting a group supplies default ownership for its contained capabilities,
+not external dependencies merely referenced by that group. An explicit module
+selection in one runtime overrides that broader group default. Competing direct
+module selections, or competing group defaults without a direct selection, reject. A dependency used by
+only one runtime can remain local; competing explicit owners or an otherwise
+ambiguous dependency require a corrected runtime selection and fail closed.
+
+Placement is a transient projection of the existing module metadata and layered
+configuration, never a second persisted registry or a customer-authored dependency
+inventory. Runtime-local infrastructure and source-only helpers retain their
+trusted classification. Explicit remote source loading is not local ownership.
+The same activation resolver must serve startup and peer projection; a separate
+approximation of dependency activation is prohibited. Derived remote endpoints
+retain existing protocol and endpoint overrides, while operation authorization,
+publication approval and DB configuration remain owned by their existing modules.
+
+### Installed active dependency discovery
+
+When selected raw roots omit an explicitly selected or required module, the initializer
+uses the canonical bounded installed-source resolver under the trusted framework and
+project roots. It stages descriptors and merges them into the existing raw registry
+only after graph resolution succeeds, preserving existing identities and selected
+topology. Missing sources, duplicates, escaping paths and dependency cycles reject.
+Required dependencies retain their canonical parent chains and activation gates.
+Inherited group containers do not select all sibling capabilities: their declared
+members are discovered as metadata for existing dependency validation, not activated.
+No customer dependency inventory or second module loader is introduced.
+
+This active graph admission is distinct from inactive import prerequisite lookup:
+`resolveInstalledSourceDescriptor` remains read-only and never registers, activates,
+loads properties or widens module roots. The pure graph helper still performs no
+filesystem discovery or global registry writes.
+
+Offline deployment projections bind their explicitly selected environment and
+server over inherited `S`/`SERVER` and `E`/`ENV` inputs, and clear ambient node
+selectors. Unrelated private inputs are preserved without mutating the caller's
+map. Nested projections for another runtime must not inherit the first runtime's
+selection. The canonical coordinate normalizer owns this boundary for both
+isolated reads and direct asynchronous resolution; callers must await resolution.
+`test/deploymentProjectionCoordinates.test.js` protects selection and input isolation.
+
+Offline maintenance preparation reads inert layered status definitions through
+the already loaded nService owner after service composition. It does not invoke
+status lifecycle hooks, providers or imports. This keeps ordinary NodicsError
+construction available to source inspection and maintenance validation without
+replacing the effective service graph or fabricating a test error registry.
+
+
+### Early composition default ownership
+
+Bootstrap composition discovery retains reusable definitions/defaults in their
+implementing Framework modules, then applies actual project, environment, server
+and node values in that order. Discovered module defaults never overwrite those
+selected scopes. Preserve the ordinary composition/binding owner, missing-root
+validation boundary and later-layer overrides; do not fix precedence by copying a
+definition into a customer module or inventing another registry.
+
+The normal selected-runtime binding consumer must preserve that complete bootstrap
+projection above the Framework contribution being loaded. Explicit layered
+dependency readers retain their existing boundary; they are not replaced by a
+future layer. Context comes only from the existing loader roots and reader, not
+a customer property flag or a separate composition authority.
+
+Unselected project/environment/server/node packages in discovery never contribute
+bootstrap selections. Classify them through existing Nodics package metadata, not
+name suffixes; only the explicitly selected runtime roots apply their overrides.
+
+## Isolated projection process lifetime
+
+The configuration owner flushes its one private CLI result and exits the isolated
+child, even when loaded modules retain timers. Library callers of `resolve` and
+`read` retain their own lifecycle. Failed child exceptions must not propagate
+stdout, stderr or environment-bearing invocation objects into operational logs.
+Report only validated coordinates and a bounded failure code; never treat partial
+stdout as a valid projection or increase timeouts to mask a completed child.
+
+
+The build owner retains the validated input digest for the running instance.
+`DefaultInfraService.getValidatedBuildIdentity()` returns a detached, client-safe
+identity after successful manifest validation. It never recomputes running identity
+from later filesystem edits; failed validation clears the proof. Readiness consumers
+reuse this source evidence and cannot treat a current disk manifest as a running
+build. `serverGeneratedArtifactContract.test.js` covers the boundary.
+
+### Projected runtime identity
+
+`readRuntimeProperty(..., runtimeIdentity, node)` uses the same selected project, environment, server and node declarations as local composition. Server metadata supplies the baseline; later property layers supply instance-specific values and collection overrides. Revalidate canonical coordinates after resolution. Never silently use the server instance for a distinct node, or let a node declaration substitute a different topology identity.

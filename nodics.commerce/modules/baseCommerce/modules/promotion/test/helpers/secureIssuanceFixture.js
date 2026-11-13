@@ -61,7 +61,7 @@ module.exports = {
         const payload = { campaigns: [campaign], couponBatches: [intent] };
         const request = { tenant: 'tenantA', enterpriseCode: 'issuerA', contribution, authData: {
             tenant: 'tenantA', enterpriseCode: 'issuerA', loginId: 'operatorA', tokenType: 'access', principalType: 'human' } };
-        const settings = { runtimeRole: 'COMMERCE', databaseTransactions: { enabled: true, failClosed: true, maximumCommitTimeMs: 5000 },
+        const settings = { runtimeRole: { code: 'COMMERCE', publication: 'OPERATIONAL' }, databaseTransactions: { enabled: true, failClosed: true, maximumCommitTimeMs: 5000 },
             log: { requestPrivacy: { qualified: true, captureMode: 'disabled' } },
             secretProtection: { purposes: { PROMOTION_COUPON_TOKEN: { activeKeyId: 'primary', keys: { primary: { encryptionKey: crypto.randomBytes(32).toString('hex') } } } } },
             promotion: { budgetAdmission: { maximumCampaignsPerContribution: 50 }, publication: {
@@ -92,7 +92,7 @@ module.exports = {
         }));
         global.NODICS = { getModels: (module, tenant) => module === 'promotion' && tenant === 'tenantA' ? models : {} };
         let queue = Promise.resolve();
-        global.SERVICE = {
+        global.SERVICE = { DefaultModuleService: { isLocalModuleActive: moduleName => ["promotion"].includes(moduleName), },
             DefaultCouponOfferService: require('../../src/service/defaultCouponOfferService'),
             DefaultPromotionOperationService: operation, DefaultPromotionSetupContributionService: setup,
             DefaultPromotionBudgetAdmissionService: admission, DefaultCouponSecureIssuanceService: secure,

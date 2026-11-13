@@ -138,17 +138,22 @@ module.exports = {
             limit.windowSeconds < 1
         )
             this.fail('UNAVAILABLE');
-        await SERVICE.DefaultRateLimitService.enforce({
-            moduleName: 'profile',
-            channelName: 'rateLimit',
-            tenant: context.tenant,
-            capability: 'profile.employeeRecovery',
-            operation: name,
-            identity,
-            limit: limit.limit,
-            windowSeconds: limit.windowSeconds,
-            requireDistributed: true,
-        });
+        try {
+            await SERVICE.DefaultRateLimitService.enforce({
+                moduleName: 'profile',
+                channelName: 'rateLimit',
+                tenant: context.tenant,
+                capability: 'profile.employeeRecovery',
+                operation: name,
+                identity,
+                limit: limit.limit,
+                windowSeconds: limit.windowSeconds,
+                requireDistributed: true,
+            });
+        } catch (error) {
+            if (error?.code === 'ERR_CACHE_00011') this.fail('RATE');
+            throw error;
+        }
     },
     /**
      * Uses the existing exact DTO validator.
@@ -242,8 +247,15 @@ module.exports = {
      * @param {Object} fields Operation-specific server-held verification fields.
      * @returns {Promise<Object>} Verification transport result without local fallback.
      */
-    verifyRpc: function (context, session, operation, fields) {
-        return this.base().verifyRpc.call(this, context, session, operation, fields);
+    verifyRpc: async function (context, session, operation, fields) {
+        try {
+            return await this.base().verifyRpc.call(this, context, session, operation, fields);
+        } catch (error) {
+            if (error?.code === 'ERR_COMMS_VERIFY_RATE') this.fail('RATE');
+            if (error?.code === 'ERR_COMMS_VERIFY_STATE') this.fail('VERIFY_AGAIN');
+            if (error?.code === 'ERR_COMMS_VERIFY_CONFLICT') this.fail('CONFLICT');
+            throw error;
+        }
     },
     /**
      * Sends the current code through the existing Communication intent owner.
@@ -292,8 +304,8 @@ module.exports = {
     credential: async function (identity) {
         const person = identity.person;
         const reference = person && person.password;
-        const id = reference && typeof reference === 'object' ? reference._id : reference;
-        if (!id) this.fail('ACCOUNT');
+        const id = reference && Object.getPrototypeOf(reference) === Object.prototype ? reference._id : reference;
+        if (!SERVICE.DefaultPasswordSaveInterceptorService.ownershipId(id)) this.fail('ACCOUNT');
         const credential = await this.read('DefaultPasswordService', identity.tenant, { _id: id });
         if (
             !credential ||
@@ -346,7 +358,21 @@ module.exports = {
                 (typeof enterprise.tenant === 'object' ? enterprise.tenant.code : enterprise.tenant) ===
                     identity.tenant,
         );
-        if (matches.length !== 1) this.fail('ACCOUNT');
+        const authentication = SERVICE.DefaultAuthenticationProviderService;
+        if (typeof authentication?.assertEmployeeRegistrationSession !== 'function') this.fail('UNAVAILABLE');
+        const eligible = [];
+        for (const enterprise of matches) {
+            try {
+                await authentication.assertEmployeeRegistrationSession(person, {
+                    ...enterprise,
+                    tenant: { ...(typeof enterprise.tenant === 'object' ? enterprise.tenant : {}), code: identity.tenant },
+                });
+                eligible.push(enterprise);
+            } catch (error) {
+                if (!['ERR_AUTH_00001', 'ERR_PROFILE_REG_ASSIGNMENT'].includes(error?.code)) throw error;
+            }
+        }
+        if (eligible.length !== 1) this.fail('ACCOUNT');
         const version = Number(person.authVersion || 1);
         if (!Number.isSafeInteger(version) || version < 1) this.fail('ACCOUNT');
         session.identity = {
@@ -355,7 +381,7 @@ module.exports = {
             loginId: person.loginId,
             passwordId: String(credential._id),
             authVersion: version,
-            enterpriseCode: matches[0].code,
+            enterpriseCode: eligible[0].code,
         };
         session.operationReference =
             'employee-recovery:' + this.digest([session.challenge.challengeCode, session.binding, session.identity]);
@@ -609,13 +635,19 @@ module.exports = {
      */
     workspace: function () {
         const p = this.policy();
+        const presentation = { ...p.presentation };
+        if (typeof presentation.passwordHelp === 'string') {
+            presentation.passwordHelp = presentation.passwordHelp
+                .replaceAll('{{minimumPasswordLength}}', String(p.minimumPasswordLength))
+                .replaceAll('{{maximumPasswordLength}}', String(p.maximumPasswordLength));
+        }
         return {
             contractVersion: 1,
             owner: 'profile',
             renderer: 'axis.employee-recovery',
             method: p.method,
             endpoints: p.endpoints,
-            presentation: p.presentation,
+            presentation,
             constraints: {
                 maximumNameLength: 128,
                 minimumPasswordLength: p.minimumPasswordLength,

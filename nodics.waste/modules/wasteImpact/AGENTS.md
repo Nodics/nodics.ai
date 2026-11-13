@@ -3,6 +3,8 @@
 Ordered fallback uses the existing dispatcher and trusted `fallbackProviderServices`.
 Validate each candidate before accepting it, preserve attempt provenance and prohibit
 mock fallback. See the provider contract; there is no second registry or persistence owner.
+Reusable provider chains live in their owning module's `wasteImpact.providerProfiles`.
+Deployments select a profile explicitly and override only intentional differences.
 
 Follow the parent contract: `../../AGENTS.md`.
 

@@ -82,6 +82,34 @@ See [Isolated native transaction qualification](media-lifecycle-contracts.md#iso
 
 See [Media Readiness Diagnostics](media-lifecycle-contracts.md#media-readiness-diagnostics).
 
+An explicit unknown folder fails policy validation. Omitting the folder uses the configured default. Staged content requires authenticated preview. Anonymous published delivery resolves through the Online owner.
+
 ## Application Preparation Upload Inspection
 
 See [Application Preparation Upload Inspection](media-lifecycle-contracts.md#application-preparation-upload-inspection).
+
+## Publication context configuration
+
+Ordinary module properties select publication defaults using the existing nConfig
+context binding (`name: publication`). Runtime display labels never select source
+providers or versioned schema policy. Staged selects source transport; Online and
+Operational do not. Missing/unknown context rejects configuration. This selection
+does not supply a target connection, installed qualification, actor grant or
+publication approval. Later deployment overrides retain normal inheritance.
+
+
+## Publication transport placement
+
+Publication transport uses the logical owning module and explicit destination
+`publication` (Online for deployment/status/rollback; Staged for Media source
+proof). The calling module must be locally active in the matching source
+publication context. Physical runtime role names do not select or authorize
+these calls. Preserve explicit connection selection, scoped internal tokens,
+original actor/tenant evidence, operation keys and exact receipt readback;
+configuration alone grants no publication or mutation authority.
+
+Media reference lookup declares nImport's bounded pre-write dependency retry only for an affirmative generated empty eligible-record read with the exact code/status query. Later phases may hydrate the Media row before CMS bindings run again. Ambiguous records, denied/provider reads, contradictory counts and malformed envelopes remain terminal; lookup never authorizes or applies the caller's write.
+
+Library publication receipts use the shared bounded form summary and local next-step contract. Keep exact source version zero visible, retain the acknowledged publication reference across metadata refresh, and map the returned workflow reference only to an authorized Process destination. This adds no approval or publication authority.
+
+Physical artifacts, placements, transfer manifests, publication receipts, replication queue and cleanup candidates are operational evidence. Their effective schemas permit only search/read through generic administration and reject generated HTTP create/update/delete in every runtime. Existing Media provider, publication, replication and cleanup operations retain their own secured service writes. Schema metadata never supplies a manual way to invent checksum, approval or audit evidence.

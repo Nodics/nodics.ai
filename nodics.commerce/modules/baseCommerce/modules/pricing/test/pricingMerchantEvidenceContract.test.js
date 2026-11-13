@@ -122,7 +122,7 @@ function fixture(t) {
       ),
     }),
   });
-  global.CONFIG = { get: () => ({ merchantEvidence: { qualified: true } }) };
+  global.CONFIG = { get: key => key === "runtimeRole" ? { code: "UNRELATED", publication: "OPERATIONAL" } : ({ merchantEvidence: { qualified: true } }) };
   global.SERVICE = {
     DefaultLoggerService: { hasPrivateCaptureProtection: () => true },
     DefaultServiceTokenService: { requireRuntimePrincipal: () => auth },
@@ -183,7 +183,7 @@ test("native default uses canonical membership and published prices, not stored/
 test('merchant row delivery consumes original Cart Product pins with unchanged private admission', async t => {
   const f = fixture(t), pins = [{ productCode: 'product', storeCode: 'outlet', targetVersion: 'a'.repeat(64) }], reads = [];
   const settings = { merchantEvidence: { qualified: true }, publication: { delivery: { rowReleases: true } } };
-  CONFIG.get = () => settings;
+  CONFIG.get = key => key === "runtimeRole" ? { code: "UNRELATED", publication: "OPERATIONAL" } : settings;
   f.cart.locale = 'en';
   SERVICE.DefaultPricingPublicationService.rowProductCodes = async () => ['product'];
   SERVICE.DefaultProductDiscoveryService = { consumerReferences: async (context, items) => {
@@ -376,7 +376,7 @@ function delegatedFixture(t) {
     await readPolicy.providerResult(request, response, model);
     return { code: 'SUC_READ', result: response.success.result };
   };
-  CONFIG.get = key => key === 'accessPoints' ? { readAccessPoint: 1, fullAccessPoint: 10 }
+  CONFIG.get = key => key === 'runtimeRole' ? { code: 'UNRELATED', publication: 'OPERATIONAL' } : key === 'accessPoints' ? { readAccessPoint: 1, fullAccessPoint: 10 }
     : key === 'promotion' ? { sellerAuthorization: { enabled: true, qualified: true, maximumSellers: 10 } }
     : { merchantEvidence: { qualified: true } };
   Object.assign(SERVICE, {
@@ -557,8 +557,8 @@ function businessFixture(t) {
   f.grant = { tenant: 'tenant', principalEnterpriseCode: 'deployment', enterpriseCode: 'issuer',
     serviceId: f.auth.serviceId, ...f.auth.runtimeScope };
   f.pricing = { merchantEvidence: { qualified: true, businessCallers: {
-    enabled: true, runtimeRole: 'COMMERCE', callers: [f.grant] } } };
-  f.role = { code: 'COMMERCE' };
+    enabled: true, callers: [f.grant] } } };
+  f.role = { code: "COMMERCE", publication: "OPERATIONAL" };
   f.environment = 'test';
   CONFIG.get = key => key === 'pricing' ? f.pricing : key === 'runtimeRole' ? f.role
     : key === 'identityGovernance' ? require('../../../../../../nodics.foundation/modules/nAuth/config/properties').identityGovernance : get(key);
@@ -700,7 +700,7 @@ test('Pricing-only business delegation cannot lend canonical persistence authori
 test('same-enterprise body selection needs no cross-enterprise policy and preserves legacy three selectors', async t => {
   const f = delegatedFixture(t), get = CONFIG.get;
   CONFIG.get = key => key === 'pricing' ? { merchantEvidence: { qualified: true,
-    businessCallers: { enabled: false, runtimeRole: 'COMMERCE', callers: [] } } } : get(key);
+    businessCallers: { enabled: false, callers: [] } } } : get(key);
   assert.equal((await owner.evaluate(f.input)).enterpriseCode, 'issuer');
   f.input.payload.enterpriseCode = 'issuer';
   assert.equal((await owner.evaluate(f.input)).enterpriseCode, 'issuer');
@@ -711,13 +711,13 @@ test('business allowlist is exact, bounded, unambiguous and never supplies runti
     f => { f.pricing.merchantEvidence.businessCallers.enabled = false; },
     f => { f.pricing.merchantEvidence.qualified = false; },
     f => { delete f.pricing.merchantEvidence.businessCallers; },
-    f => { f.pricing.merchantEvidence.businessCallers.runtimeRole = 'COMMERCE_STAGED'; },
+    f => { f.role.publication = 'STAGED'; },
     f => { f.pricing.merchantEvidence.businessCallers.callers = []; },
     f => { f.pricing.merchantEvidence.businessCallers.callers.push({ ...f.grant }); },
     f => { f.pricing.merchantEvidence.businessCallers.callers = Array.from({ length: 101 }, () => ({ ...f.grant })); },
     f => { f.grant.anyEnterprise = true; },
     f => { f.grant.enterpriseCode = '*'; },
-    f => { f.role.code = 'COMMERCE_STAGED'; },
+    f => { SERVICE.DefaultModuleService.isLocalModuleActive = () => false; },
     f => { f.environment = 'other'; },
     f => { f.auth.permissions = []; },
     f => { f.auth.modules = ['pricing']; },
@@ -753,7 +753,7 @@ test('request, policy, runtime, privacy and publication-context drift refuse acr
       f => { f.grant.assignmentCode = 'other'; },
       f => { f.pricing.merchantEvidence.qualified = false; },
       f => { f.pricing.publication = { delivery: { enabled: false } }; },
-      f => { f.role.code = 'COMMERCE_STAGED'; },
+      f => { SERVICE.DefaultModuleService.isLocalModuleActive = () => false; },
       f => { f.environment = 'other'; },
       () => { SERVICE.DefaultLoggerService.hasPrivateCaptureProtection = () => false; },
     ]) {
@@ -851,7 +851,7 @@ test('group-free merchant admission reads actual activated Pricing pointer/recei
 test('framework merchant admission, exposure and monetary qualification defaults remain disabled', () => {
   const pricing = require('../config/properties'), promotion = require('../../promotion/config/properties');
   assert.equal(pricing.pricing.merchantEvidence.qualified, false);
-  assert.deepEqual(pricing.pricing.merchantEvidence.businessCallers, { enabled: false, runtimeRole: 'COMMERCE', callers: [] });
+  assert.deepEqual(pricing.pricing.merchantEvidence.businessCallers, { enabled: false, callers: [] });
   assert.equal(pricing.apiExposure.categories.commerceMerchantPricing.enabled, false);
   assert.equal(promotion.promotion.merchantBenefits.qualified, false);
   assert.equal(promotion.promotion.merchantBenefits.pricedSource.qualified, false);

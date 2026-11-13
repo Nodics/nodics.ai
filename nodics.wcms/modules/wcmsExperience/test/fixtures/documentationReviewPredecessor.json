@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "successorVersion": "0.0.3",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "wcmsExperience",
+      "version": "0.0.2",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "fefe04e125573bdb4344d6959d3c2db5906838059498dfc26c313e73e82be8c2",
+      "generatedHashes": {
+        "docs-v001/records/documentation/wcmsExperienceDocumentationNodeData.js": "2975b1d38b39772306287d462efb4c44e8f9c172de82e169c2484858df5b64b3",
+        "docs-v001/records/documentation/wcmsExperienceDocumentationPageData.js": "220d37039dee35a08326802655391a703055e5fb4f7a02a76b1ddb0437565139",
+        "docs-v001/records/documentation/wcmsExperienceDocumentationRouteData.js": "f574cdc37ceed5e9bd55e4d4ea09319d37a7c25ee038e8fd4126779e6d28b8fd",
+        "docs-v001/records/documentation/wcmsExperienceDocumentationRelease002ComponentData.js": "d0fe9596977a369a7c2b242597e545e483c8bf3fd8dbcab583bab45efe93a5be",
+        "docs-v001/records/documentation/wcmsExperienceDocumentationRelease002PageMetadataData.js": "7c2b07e68cacf911fc1ac63b1e8b1e66f26f2786cd35f8871dd185354597084b",
+        "docs-v001/records/documentation/wcmsExperienceDocumentationRelease002SearchMetadataData.js": "a56b4e2386b8f5ff97250dda4d34262be9893d331530a20dcb17b70ec8321f9f",
+        "docs-v001/records/documentation/wcmsExperienceDocumentationRelease002PublicationStateData.js": "b098ec77e92f8374ed70b71b947f15a63fb105f133fa27d5ff6a960499116aba",
+        "docs-v001/headers/100_wcmsExperienceDocumentationRelease002ContentPackHeader.js": "3b6fa4df2de2ae85ca5a74a238b2b0e77956343ce4e50312620d56a9498238aa"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

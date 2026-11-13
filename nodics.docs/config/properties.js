@@ -909,6 +909,9 @@ module.exports = {
       "docs-apparelproduct": {
         "code": "docs-apparelproduct",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/accelerators-agora-apparel-product-data-authoring"
+        },
         "enabled": true,
         "owner": "apparelProduct",
         "applicationCode": "axis",
@@ -937,6 +940,9 @@ module.exports = {
       "docs-domaincommercecore": {
         "code": "docs-domaincommercecore",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/accelerators-domain-commerce-source-map"
+        },
         "enabled": true,
         "owner": "domainCommerceCore",
         "applicationCode": "axis",
@@ -965,6 +971,9 @@ module.exports = {
       "docs-electronicsproduct": {
         "code": "docs-electronicsproduct",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/accelerators-agora-electronics-product-semantics"
+        },
         "enabled": true,
         "owner": "electronicsProduct",
         "applicationCode": "axis",
@@ -993,6 +1002,9 @@ module.exports = {
       "docs-nexus-web": {
         "code": "docs-nexus-web",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/applications-nexus-data-content-guide"
+        },
         "enabled": true,
         "owner": "nexus.web",
         "applicationCode": "axis",
@@ -1021,6 +1033,9 @@ module.exports = {
       "docs-telcosubscription": {
         "code": "docs-telcosubscription",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/accelerators-agora-telco-service-journey"
+        },
         "enabled": true,
         "owner": "telcoSubscription",
         "applicationCode": "axis",
@@ -1049,6 +1064,9 @@ module.exports = {
       "docs-ewaste": {
         "code": "docs-ewaste",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/accelerators/circa"
+        },
         "enabled": true,
         "owner": "eWaste",
         "applicationCode": "axis",
@@ -1077,6 +1095,9 @@ module.exports = {
       "docs-commercesearchcore": {
         "code": "docs-commercesearchcore",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/commerce-search-guide"
+        },
         "enabled": true,
         "owner": "commerceSearchCore",
         "applicationCode": "axis",
@@ -1105,6 +1126,9 @@ module.exports = {
       "docs-promotion": {
         "code": "docs-promotion",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/promotion-campaigns-coupon-issuance"
+        },
         "enabled": true,
         "owner": "promotion",
         "applicationCode": "axis",
@@ -1124,6 +1148,9 @@ module.exports = {
       "docs-cart": {
         "code": "docs-cart",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/cart-customer-intent-calculation"
+        },
         "enabled": true,
         "owner": "cart",
         "applicationCode": "axis",
@@ -1143,6 +1170,9 @@ module.exports = {
       "docs-digitalcore": {
         "code": "docs-digitalcore",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/digital-purchase-delivery-reveal"
+        },
         "enabled": true,
         "owner": "digitalCore",
         "applicationCode": "axis",
@@ -1162,6 +1192,9 @@ module.exports = {
       "docs-inventory": {
         "code": "docs-inventory",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/inventory-stock-management"
+        },
         "enabled": true,
         "owner": "inventory",
         "applicationCode": "axis",
@@ -1190,6 +1223,9 @@ module.exports = {
       "docs-pricing": {
         "code": "docs-pricing",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/pricing-promotions-tax-management"
+        },
         "enabled": true,
         "owner": "pricing",
         "applicationCode": "axis",
@@ -1218,6 +1254,9 @@ module.exports = {
       "docs-product": {
         "code": "docs-product",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/catalog-product-discovery-management"
+        },
         "enabled": true,
         "owner": "product",
         "applicationCode": "axis",
@@ -1246,6 +1285,9 @@ module.exports = {
       "docs-shoppinglist": {
         "code": "docs-shoppinglist",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/commerce-shopping-list-commerce-boundary"
+        },
         "enabled": true,
         "owner": "shoppingList",
         "applicationCode": "axis",
@@ -1274,6 +1316,12 @@ module.exports = {
       "docs-checkoutcore": {
         "code": "docs-checkoutcore",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/commerce-cart-order",
+          "articleRoutes": [
+            "/docs/framework/commerce-enterprise-operations"
+          ]
+        },
         "enabled": true,
         "owner": "checkoutCore",
         "applicationCode": "axis",
@@ -1302,6 +1350,12 @@ module.exports = {
       "docs-order": {
         "code": "docs-order",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/order-management-lifecycle",
+          "articleRoutes": [
+            "/docs/framework/commerce-returns-refunds"
+          ]
+        },
         "enabled": true,
         "owner": "order",
         "applicationCode": "axis",
@@ -1330,6 +1384,12 @@ module.exports = {
       "docs-fulfillmentcore": {
         "code": "docs-fulfillmentcore",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/fulfillment-shipping-management",
+          "articleRoutes": [
+            "/docs/framework/commerce-fulfillment-core-source-map"
+          ]
+        },
         "enabled": true,
         "owner": "fulfillmentCore",
         "applicationCode": "axis",
@@ -1358,6 +1418,12 @@ module.exports = {
       "docs-paymentcore": {
         "code": "docs-paymentcore",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/commerce-payment-fulfillment",
+          "articleRoutes": [
+            "/docs/framework/commerce-payment-provider-boundaries"
+          ]
+        },
         "enabled": true,
         "owner": "paymentCore",
         "applicationCode": "axis",
@@ -1386,6 +1452,14 @@ module.exports = {
       "docs-commscore": {
         "code": "docs-commscore",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/communication-provider-runbooks",
+          "articleRoutes": [
+            "/docs/framework/communication-overview",
+            "/docs/framework/communication-email-sms-templates",
+            "/docs/framework/communication-durable-outcomes"
+          ]
+        },
         "enabled": true,
         "owner": "commsCore",
         "applicationCode": "axis",
@@ -1414,6 +1488,13 @@ module.exports = {
       "docs-copilotcapability": {
         "code": "docs-copilotcapability",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/copilot/import-inspection",
+          "articleRoutes": [
+            "/docs/framework/copilot/process-inspection",
+            "/docs/framework/copilot/rules-inspection"
+          ]
+        },
         "enabled": true,
         "owner": "copilotCapability",
         "applicationCode": "axis",
@@ -1442,6 +1523,9 @@ module.exports = {
       "docs-copilotconversation": {
         "code": "docs-copilotconversation",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/copilot/retention-lifecycle"
+        },
         "enabled": true,
         "owner": "copilotConversation",
         "applicationCode": "axis",
@@ -1470,6 +1554,13 @@ module.exports = {
       "docs-copilotknowledge": {
         "code": "docs-copilotknowledge",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/copilot/collection-inspection",
+          "articleRoutes": [
+            "/docs/framework/copilot/recorded-manual-refresh",
+            "/docs/framework/copilot/knowledge-generation-recovery"
+          ]
+        },
         "enabled": true,
         "owner": "copilotKnowledge",
         "applicationCode": "axis",
@@ -1498,6 +1589,18 @@ module.exports = {
       "docs-copilotworkbench": {
         "code": "docs-copilotworkbench",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/copilot/order-notification-operations",
+          "articleRoutes": [
+            "/docs/framework/copilot/governed-schema-actions",
+            "/docs/framework/copilot/process-lifecycle-actions",
+            "/docs/framework/copilot/process-trigger-actions",
+            "/docs/framework/copilot/process-task-actions",
+            "/docs/framework/copilot/secure-coupon-fulfillment",
+            "/docs/framework/copilot/standalone-business-actions",
+            "/docs/framework/copilot/original-business-results"
+          ]
+        },
         "enabled": true,
         "owner": "copilotWorkbench",
         "applicationCode": "axis",
@@ -1526,6 +1629,9 @@ module.exports = {
       "docs-discoveryruntime": {
         "code": "docs-discoveryruntime",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/discovery-search-indexing"
+        },
         "enabled": true,
         "owner": "discoveryRuntime",
         "applicationCode": "axis",
@@ -1554,6 +1660,9 @@ module.exports = {
       "docs-contactsubmission": {
         "code": "docs-contactsubmission",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/engagement-contact-submission-operations"
+        },
         "enabled": true,
         "owner": "contactSubmission",
         "applicationCode": "axis",
@@ -1582,6 +1691,9 @@ module.exports = {
       "docs-customerfeedback": {
         "code": "docs-customerfeedback",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/engagement-customer-feedback"
+        },
         "enabled": true,
         "owner": "customerFeedback",
         "applicationCode": "axis",
@@ -1610,6 +1722,13 @@ module.exports = {
       "docs-customerreview": {
         "code": "docs-customerreview",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/engagement-customer-reviews",
+          "articleRoutes": [
+            "/docs/framework/engagement-review-moderation-governance",
+            "/docs/framework/engagement-review-aggregation-recovery"
+          ]
+        },
         "enabled": true,
         "owner": "customerReview",
         "applicationCode": "axis",
@@ -1638,6 +1757,13 @@ module.exports = {
       "docs-engagementcore": {
         "code": "docs-engagementcore",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/engagement-unified-operations",
+          "articleRoutes": [
+            "/docs/framework/engagement-governed-automation",
+            "/docs/framework/engagement-enterprise-operations"
+          ]
+        },
         "enabled": true,
         "owner": "engagementCore",
         "applicationCode": "axis",
@@ -1666,6 +1792,12 @@ module.exports = {
       "docs-cache": {
         "code": "docs-cache",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/cache-runtime-state-management",
+          "articleRoutes": [
+            "/docs/framework/foundation-cache-provider-runbooks"
+          ]
+        },
         "enabled": true,
         "owner": "cache",
         "applicationCode": "axis",
@@ -1694,6 +1826,9 @@ module.exports = {
       "docs-ncommon": {
         "code": "docs-ncommon",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/foundation-error-handling-status-codes"
+        },
         "enabled": true,
         "owner": "nCommon",
         "applicationCode": "axis",
@@ -1722,6 +1857,15 @@ module.exports = {
       "docs-config": {
         "code": "docs-config",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/framework-runtime-server-composition",
+          "articleRoutes": [
+            "/docs/framework/framework-module-loading-service-precedence",
+            "/docs/framework/configuration-runtime-behavior-management",
+            "/docs/framework/configuration-framework-startup-lifecycle",
+            "/docs/framework/runtime-governed-change"
+          ]
+        },
         "enabled": true,
         "owner": "config",
         "applicationCode": "axis",
@@ -1750,6 +1894,12 @@ module.exports = {
       "docs-import": {
         "code": "docs-import",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/data-import-export-migration",
+          "articleRoutes": [
+            "/docs/framework/data-import-export-provider-guides"
+          ]
+        },
         "enabled": true,
         "owner": "import",
         "applicationCode": "axis",
@@ -1778,6 +1928,13 @@ module.exports = {
       "docs-database": {
         "code": "docs-database",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/schema-data-modeling-management",
+          "articleRoutes": [
+            "/docs/framework/persistence-provider-data-access-layer",
+            "/docs/framework/foundation-database-provider-boundaries"
+          ]
+        },
         "enabled": true,
         "owner": "database",
         "applicationCode": "axis",
@@ -1806,6 +1963,12 @@ module.exports = {
       "docs-emsclient": {
         "code": "docs-emsclient",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/events-messaging-cluster-coordination",
+          "articleRoutes": [
+            "/docs/framework/foundation-ems-runtime-client-runbook"
+          ]
+        },
         "enabled": true,
         "owner": "emsClient",
         "applicationCode": "axis",
@@ -1834,6 +1997,9 @@ module.exports = {
       "docs-nms": {
         "code": "docs-nms",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/foundation-nms-runtime-monitoring"
+        },
         "enabled": true,
         "owner": "nms",
         "applicationCode": "axis",
@@ -1862,6 +2028,9 @@ module.exports = {
       "docs-otp": {
         "code": "docs-otp",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/security-otp-security-flow"
+        },
         "enabled": true,
         "owner": "otp",
         "applicationCode": "axis",
@@ -1890,6 +2059,9 @@ module.exports = {
       "docs-pipeline": {
         "code": "docs-pipeline",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/pipeline-business-logic-orchestration"
+        },
         "enabled": true,
         "owner": "pipeline",
         "applicationCode": "axis",
@@ -1918,6 +2090,12 @@ module.exports = {
       "docs-router": {
         "code": "docs-router",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/routing-api-governance",
+          "articleRoutes": [
+            "/docs/framework/routing-api-request-lifecycle"
+          ]
+        },
         "enabled": true,
         "owner": "router",
         "applicationCode": "axis",
@@ -1946,6 +2124,12 @@ module.exports = {
       "docs-nservice": {
         "code": "docs-nservice",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/foundation-service-runtime-overrides",
+          "articleRoutes": [
+            "/docs/framework/foundation-module-to-module-communication"
+          ]
+        },
         "enabled": true,
         "owner": "nService",
         "applicationCode": "axis",
@@ -1974,6 +2158,20 @@ module.exports = {
       "docs-ntooling": {
         "code": "docs-ntooling",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/framework-local-quick-start",
+          "articleRoutes": [
+            "/docs/framework/framework-fresh-schema-setup-journey",
+            "/docs/framework/framework-local-runtime-troubleshooting",
+            "/docs/framework/framework-devops-runtime",
+            "/docs/framework/framework-runtime-release-rollback",
+            "/docs/framework/framework-local-browser-acceptance-journey",
+            "/docs/framework/framework-local-verification-checklist",
+            "/docs/framework/framework-release-upgrade-compatibility",
+            "/docs/framework/tooling-ai-developer-enablement",
+            "/docs/framework/foundation-tooling-runtime-contracts"
+          ]
+        },
         "enabled": true,
         "owner": "nTooling",
         "applicationCode": "axis",
@@ -2002,6 +2200,9 @@ module.exports = {
       "docs-bpm": {
         "code": "docs-bpm",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/process-workflow-bpm-source-map"
+        },
         "enabled": true,
         "owner": "bpm",
         "applicationCode": "axis",
@@ -2030,6 +2231,12 @@ module.exports = {
       "docs-localizationcore": {
         "code": "docs-localizationcore",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/localization-internationalization",
+          "articleRoutes": [
+            "/docs/framework/localization-runtime-authoring"
+          ]
+        },
         "enabled": true,
         "owner": "localizationCore",
         "applicationCode": "axis",
@@ -2058,6 +2265,9 @@ module.exports = {
       "docs-loyaltywallet": {
         "code": "docs-loyaltywallet",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/loyalty-wallets-rewards-ledger"
+        },
         "enabled": true,
         "owner": "loyaltyWallet",
         "applicationCode": "axis",
@@ -2086,6 +2296,14 @@ module.exports = {
       "docs-backoffice": {
         "code": "docs-backoffice",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/platform-module-registry",
+          "articleRoutes": [
+            "/docs/framework/axis-business-customization",
+            "/docs/framework/applications-axis-setup-error-contracts",
+            "/docs/framework/platform-module-registry-journey"
+          ]
+        },
         "enabled": true,
         "owner": "backoffice",
         "applicationCode": "axis",
@@ -2114,6 +2332,12 @@ module.exports = {
       "docs-installer": {
         "code": "docs-installer",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/installer-installed-runtime-application-builder",
+          "articleRoutes": [
+            "/docs/framework/builder-workspace-generation"
+          ]
+        },
         "enabled": true,
         "owner": "installer",
         "applicationCode": "axis",
@@ -2142,6 +2366,13 @@ module.exports = {
       "docs-profile": {
         "code": "docs-profile",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/platform-overview",
+          "articleRoutes": [
+            "/docs/framework/security-identity-access-governance",
+            "/docs/framework/profile-notification-recipients"
+          ]
+        },
         "enabled": true,
         "owner": "profile",
         "applicationCode": "axis",
@@ -2170,6 +2401,15 @@ module.exports = {
       "docs-cronjob": {
         "code": "docs-cronjob",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/cron/inactive-schedule-drafts",
+          "articleRoutes": [
+            "/docs/framework/cron-operations",
+            "/docs/framework/cron-node-responsibility-tee",
+            "/docs/framework/cron-project-customization",
+            "/docs/framework/process-cronjob-data-authoring"
+          ]
+        },
         "enabled": true,
         "owner": "cronjob",
         "applicationCode": "axis",
@@ -2198,6 +2438,9 @@ module.exports = {
       "docs-workflow": {
         "code": "docs-workflow",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/process"
+        },
         "enabled": true,
         "owner": "workflow",
         "applicationCode": "axis",
@@ -2226,6 +2469,9 @@ module.exports = {
       "docs-wasteimpact": {
         "code": "docs-wasteimpact",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/waste-impact-providers"
+        },
         "enabled": true,
         "owner": "wasteImpact",
         "applicationCode": "axis",
@@ -2254,6 +2500,12 @@ module.exports = {
       "docs-cms": {
         "code": "docs-cms",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/wcms-publishing-lifecycle",
+          "articleRoutes": [
+            "/docs/framework/wcms-cms-source-map-authoring-contract"
+          ]
+        },
         "enabled": true,
         "owner": "cms",
         "applicationCode": "axis",
@@ -2282,6 +2534,14 @@ module.exports = {
       "docs-media": {
         "code": "docs-media",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/wcms-media-management",
+          "articleRoutes": [
+            "/docs/framework/wcms-media-storage-delivery",
+            "/docs/framework/wcms-media-import-publication",
+            "/docs/framework/wcms-media-operations-runbook"
+          ]
+        },
         "enabled": true,
         "owner": "media",
         "applicationCode": "axis",
@@ -2310,6 +2570,14 @@ module.exports = {
       "docs-wcms": {
         "code": "docs-wcms",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/wcms-overview",
+          "articleRoutes": [
+            "/docs/framework/wcms-content-catalog-model",
+            "/docs/framework/wcms-page-designer-components",
+            "/docs/framework/wcms-site-publication-visibility"
+          ]
+        },
         "enabled": true,
         "owner": "wcms",
         "applicationCode": "axis",
@@ -2338,6 +2606,9 @@ module.exports = {
       "docs-copilotprovider": {
         "code": "docs-copilotprovider",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/copilot-provider-usage-budgets"
+        },
         "enabled": true,
         "owner": "copilotProvider",
         "applicationCode": "axis",
@@ -2366,6 +2637,9 @@ module.exports = {
       "docs-copilotevaluation": {
         "code": "docs-copilotevaluation",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/copilot-evaluation-release-gates"
+        },
         "enabled": true,
         "owner": "copilotEvaluation",
         "applicationCode": "axis",
@@ -2394,6 +2668,9 @@ module.exports = {
       "docs-rulesevaluation": {
         "code": "docs-rulesevaluation",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/rules-deterministic-evaluation"
+        },
         "enabled": true,
         "owner": "rulesEvaluation",
         "applicationCode": "axis",
@@ -2422,6 +2699,9 @@ module.exports = {
       "docs-wastematerial": {
         "code": "docs-wastematerial",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/waste-material-taxonomy-evidence"
+        },
         "enabled": true,
         "owner": "wasteMaterial",
         "applicationCode": "axis",
@@ -2450,6 +2730,9 @@ module.exports = {
       "docs-locationapproval": {
         "code": "docs-locationapproval",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/location-approval-schema-boundary"
+        },
         "enabled": true,
         "owner": "locationApproval",
         "applicationCode": "axis",
@@ -2478,6 +2761,9 @@ module.exports = {
       "docs-locationdraft": {
         "code": "docs-locationdraft",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/location-draft-schema-boundary"
+        },
         "enabled": true,
         "owner": "locationDraft",
         "applicationCode": "axis",
@@ -2506,6 +2792,9 @@ module.exports = {
       "docs-locationprojection": {
         "code": "docs-locationprojection",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/location-marker-projection-boundary"
+        },
         "enabled": true,
         "owner": "locationProjection",
         "applicationCode": "axis",
@@ -2534,6 +2823,9 @@ module.exports = {
       "docs-locationsearch": {
         "code": "docs-locationsearch",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/location-search-projection-boundary"
+        },
         "enabled": true,
         "owner": "locationSearch",
         "applicationCode": "axis",
@@ -2562,6 +2854,9 @@ module.exports = {
       "docs-locationtype": {
         "code": "docs-locationtype",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/location-taxonomy-schema-boundary"
+        },
         "enabled": true,
         "owner": "locationType",
         "applicationCode": "axis",
@@ -2590,6 +2885,9 @@ module.exports = {
       "docs-locationmap": {
         "code": "docs-locationmap",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/location-shared-map-configuration"
+        },
         "enabled": true,
         "owner": "locationMap",
         "applicationCode": "axis",
@@ -2618,6 +2916,9 @@ module.exports = {
       "docs-wcmsexperience": {
         "code": "docs-wcmsexperience",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/wcms-experience-placement-delivery"
+        },
         "enabled": true,
         "owner": "wcmsExperience",
         "applicationCode": "axis",
@@ -2646,6 +2947,9 @@ module.exports = {
       "docs-rediscache": {
         "code": "docs-rediscache",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/foundation-redis-provider-operations"
+        },
         "enabled": true,
         "owner": "redisCache",
         "applicationCode": "axis",
@@ -2674,6 +2978,37 @@ module.exports = {
       "docs-foundation": {
         "code": "docs-foundation",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/framework/foundation-overview",
+          "articleRoutes": [
+            "/docs/framework/accelerators-agora-industry-templates",
+            "/docs/framework/commerce-base-foundations",
+            "/docs/framework/commerce-data-authoring-fulfillment",
+            "/docs/framework/framework-why-nodics-exists",
+            "/docs/framework/framework-how-nodics-works",
+            "/docs/framework/framework-adoption-and-first-journey",
+            "/docs/framework/docs-documentation-roadmap",
+            "/docs/framework/docs-documentation-principles",
+            "/docs/framework/docs-reader-journey-and-coverage",
+            "/docs/framework/docs-documentation-publishing-model",
+            "/docs/framework/applications-suite",
+            "/docs/framework/solutions-task-execution-engine",
+            "/docs/framework/solutions-data-engineering-analytics-platform",
+            "/docs/framework/framework-capability-documentation-maturity-pattern",
+            "/docs/framework/docs-overview",
+            "/docs/framework/docs-documentation-publishing-runbook",
+            "/docs/framework/reference-internal-source-boundary-register",
+            "/docs/framework/reference-source-map-glossary",
+            "/docs/framework/reference-source-backed-documentation-coverage-audit",
+            "/docs/framework/reference-documentation-gap-backlog",
+            "/docs/framework/framework-modular-architecture",
+            "/docs/framework/framework-architecture-decision-guide",
+            "/docs/framework/commerce-overview",
+            "/docs/framework/framework-customization-guide",
+            "/docs/framework/framework-backend-extension-patterns",
+            "/docs/framework/framework-axis-content-customization"
+          ]
+        },
         "enabled": true,
         "owner": "nodics.docs",
         "applicationCode": "axis",
@@ -2702,6 +3037,9 @@ module.exports = {
       "circadocs": {
         "code": "circadocs",
         "type": "DOCUMENTATION_BUNDLE",
+        "reader": {
+          "route": "/docs/circa-ewaste"
+        },
         "enabled": true,
         "owner": "eWaste",
         "applicationCode": "axis",
@@ -2797,7 +3135,7 @@ module.exports = {
         },
         "docs-digitalcore": {
           "contentPackCode": "digitalCoreDocumentation",
-          "releaseVersion": "0.0.3",
+          "releaseVersion": "0.0.4",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -2825,7 +3163,7 @@ module.exports = {
         },
         "docs-shoppinglist": {
           "contentPackCode": "shoppingListDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -2860,7 +3198,7 @@ module.exports = {
         },
         "docs-commscore": {
           "contentPackCode": "commsCoreDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -2881,7 +3219,7 @@ module.exports = {
         },
         "docs-copilotknowledge": {
           "contentPackCode": "copilotKnowledgeDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.2",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -2930,7 +3268,7 @@ module.exports = {
         },
         "docs-cache": {
           "contentPackCode": "cacheDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.2",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -2944,21 +3282,21 @@ module.exports = {
         },
         "docs-config": {
           "contentPackCode": "configDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-import": {
           "contentPackCode": "importDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.2",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-database": {
           "contentPackCode": "databaseDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.2",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3000,7 +3338,7 @@ module.exports = {
         },
         "docs-nservice": {
           "contentPackCode": "nServiceDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.2",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3014,7 +3352,7 @@ module.exports = {
         },
         "docs-bpm": {
           "contentPackCode": "bpmDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3035,35 +3373,35 @@ module.exports = {
         },
         "docs-backoffice": {
           "contentPackCode": "backofficeDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.4",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-installer": {
           "contentPackCode": "installerDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.4",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-profile": {
           "contentPackCode": "profileDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-cronjob": {
           "contentPackCode": "cronjobDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.4",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-workflow": {
           "contentPackCode": "workflowDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3077,14 +3415,14 @@ module.exports = {
         },
         "docs-cms": {
           "contentPackCode": "cmsDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.4",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-media": {
           "contentPackCode": "mediaDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.2",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3161,21 +3499,21 @@ module.exports = {
         },
         "docs-locationmap": {
           "contentPackCode": "locationMapDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.2",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-wcmsexperience": {
           "contentPackCode": "wcmsExperienceDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.2",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
         },
         "docs-rediscache": {
           "contentPackCode": "redisCacheDocumentation",
-          "releaseVersion": "0.0.1",
+          "releaseVersion": "0.0.2",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"

@@ -22,16 +22,20 @@ module.exports = {
         const owner = SERVICE.DefaultMediaRetainedPublicationService;
         const authorizing = operation === 'authorize';
         owner.assertScope(request, authorizing ? 'ONLINE' : 'STAGED');
+        if (!SERVICE.DefaultModuleService?.isLocalModuleActive('media') ||
+            !SERVICE.DefaultModuleService.isCurrentRuntimeAuthority({ publication: authorizing ? 'ONLINE' : 'STAGED' })) {
+            throw new CLASSES.NodicsError('ERR_MED_00011', 'Media transport requires local publication ownership');
+        }
         const target = owner.policy()[authorizing ? 'source' : 'target'] || {};
         const paths = { deploy: 'deploy', getStatus: 'status', rollback: 'rollback', reconcile: 'reconcile', authorize: 'authorize-target' };
-        if (!paths[operation] || !target.connectionName || target.connectionName === 'default' || !target.connectionType) {
+        if (!paths[operation] || target.publication !== (authorizing ? 'STAGED' : 'ONLINE') || !target.connectionName || target.connectionName === 'default' || !target.connectionType) {
             throw new CLASSES.NodicsError('ERR_MED_00011', 'An explicit Media transport connection is required');
         }
         const token = NODICS.getInternalAuthToken(request.tenant);
         if (!token) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Media transport requires its scoped runtime token');
         const result = await SERVICE.DefaultModuleService.invokeModule({ moduleName: 'media', local: false,
             connectionName: target.connectionName, connectionType: target.connectionType,
-            targetAuthority: { runtimeRole: authorizing ? 'WCMS_STAGED' : 'WCMS_ONLINE' }, tenant: request.tenant,
+            targetAuthority: { publication: target.publication }, tenant: request.tenant,
             methodName: 'POST', apiName: (authorizing ? '/publication/' : '/publication/target/') + paths[operation],
             header: { Authorization: 'Bearer ' + token, tenant: request.tenant },
             requestBody: input, timeoutMs: target.timeoutMs, maxAttempts: target.maxAttempts,

@@ -28,8 +28,8 @@ test('registered Staged domains retain scoped administration while disabled glob
     try {
         global.CONFIG = { get: key => config[key] };
         global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
-        global.SERVICE = { Provider: provider, DefaultPublicationLifecycleService: {
-            resolveProvider: lifecycle.resolveProvider,
+        global.SERVICE = { Provider: provider, DefaultSecuredRequestPipelineService: { hasAccessGroup: () => true }, DefaultPublicationLifecycleService: {
+            resolveProvider: lifecycle.resolveProvider, inspect: lifecycle.inspect, getVersionProvider: lifecycle.getVersionProvider, getConfiguration: lifecycle.getConfiguration,
             get: async request => { reads++; assert.equal(request.tenant, 'tenant-a'); return { domain: request.publicationCode === 'cms' ? 'cms' : 'product' }; },
             rollback: async request => { writes++; assert.equal(request.expectedRevision, 7); return { state: 'ROLLED_BACK' }; }
         }, DefaultPublicationOperationsService: { diagnostics: async () => { throw new Error('Unscoped operation escaped'); } } };
@@ -64,6 +64,39 @@ test('registered Staged domains retain scoped administration while disabled glob
     } finally {
         for (const key of Object.keys(saved)) { if (saved[key] === undefined) delete global[key]; else global[key] = saved[key]; }
     }
+});
+
+test('tenant administrators must pass the source domain scope before inspection or rollback', async t => {
+    const controller = require('../src/controller/defaultPublicationLifecycleController');
+    const saved = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES };
+    t.after(() => Object.assign(global, saved));
+    global.CONFIG = { get: () => true };
+    global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
+    const publication = { domain: 'cms', code: 'menu-publication' };
+    const operations = [];
+    global.SERVICE = {
+        DefaultSecuredRequestPipelineService: { hasAccessGroup: () => false },
+        DefaultPublicationLifecycleService: {
+            get: async request => { assert.equal(request.tenant, 'tenant-a'); return publication; },
+            getDomainAdapter: domain => domain === 'cms' ? {
+                authorizeScopedOperator: async (operation, selected, request) => {
+                    assert.equal(selected, publication);
+                    assert.equal(request.tenant, 'tenant-a');
+                    if (request.authData.entCode !== 'enterprise-a') throw new CLASSES.NodicsError('ERR_AUTH_00003');
+                    operations.push(operation);
+                }
+            } : {},
+            inspect: async () => publication,
+            rollback: async () => ({ state: 'ROLLED_BACK' })
+        }
+    };
+    const request = entCode => ({ tenant: 'tenant-a', authData: { entCode }, httpRequest: { params: { publicationCode: publication.code } } });
+    assert.equal(await controller.get(request('enterprise-a')), publication);
+    assert.deepEqual(await controller.rollback(request('enterprise-a')), { state: 'ROLLED_BACK' });
+    await assert.rejects(controller.rollback(request('foreign')), { code: 'ERR_AUTH_00003' });
+    publication.domain = 'commerce';
+    await assert.rejects(controller.get(request('enterprise-a')), { code: 'ERR_AUTH_00003' });
+    assert.deepEqual(operations, ['get', 'rollback']);
 });
 
 for (const [name, key, permission, method] of [

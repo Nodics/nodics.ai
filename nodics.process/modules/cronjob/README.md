@@ -99,7 +99,7 @@ handling. A human bearer token can authorize a CronJob command; module calls
 performed by the job use the separate tenant-scoped internal service-token flow.
 
 Scheduler bookkeeping uses owner-bound `persistRuntimeState`, never business
-execution authority. The [detailed guide](data/docs-v001/records/documentation/cronjobDocumentationComponentData.js)
+execution authority. The [detailed guide](data/docs-v001/records/documentation/cronjobDocumentationRelease002ComponentData.js)
 defines its permitted fields, exact acknowledgement and drain guarantees.
 
 Axis can present a Cron operation panel, but it remains a client. Saving a job
@@ -112,6 +112,14 @@ example, an inactive job should not show `run` or `start` as immediately
 available, a running job should make `stop` and `pause` visible, and a paused
 job should make `resume` visible. That policy is only presentation guidance.
 Cron remains the final authority and must validate every command server-side.
+
+The inactive-draft save acknowledgement describes the original save. Its copy
+points operators to Schedule control for the current state, so it remains truthful
+after activation or a completed run. Actual timer inspection and persisted execution
+evidence remain separate from that historical receipt. The current inspection
+also identifies the scheduler time zone and stored expression. Only a proven
+active timer can report a next eligible tick. A tick can be skipped if another
+execution already holds the job.
 
 When a Cron job declares `jobDetail.processTrigger`, Cron may start a governed
 Process trigger through Process APIs. The Cron definition still owns schedule
@@ -197,7 +205,7 @@ environment.
 ## Continue
 
 - Inactive Process schedule drafts: [contract](llm/contracts/inactive-schedule-drafts.md)
-  and [step-by-step guide](data/docs-v001/records/documentation/cronjobDocumentationComponentData.js).
+  and [step-by-step guide](data/docs-v001/records/documentation/cronjobDocumentationRelease002ComponentData.js).
   Deployment-approved targets can be reviewed and inserted without scheduling.
   This optional command defaults off and never activates a job.
 - Process capability family: [nodics.process](../../README.md)
@@ -214,3 +222,34 @@ This capability declares an inert model-service inventory for [governed Local re
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
 
 New job executions require fresh business activation and a current scoped runtime credential. Deactivation blocks new targets while admitted jobs retain their existing completion/recovery behavior.
+
+
+## Business scheduler workspace
+
+New schedules use the existing reviewed inactive-draft contract and explicitly
+configured targets. The Axis business workspace no longer supplies an active
+demo definition, execution node or one-second timer. This changes no generic
+Cron API, group, permission, target or activation default. Technical clients
+remain independently owner-authorized; generic save is not a draft fallback.
+
+The Cron BackOffice contribution declares the existing create/run/start/stop/
+pause/resume transports under `cronjob.lifecycle.manage`. BackOffice filters each
+action independently of `cronjob.backoffice.view`; metadata is not a grant.
+Missing or ambiguous declarations offer no browser command. State hints never
+replace Cron enforcement. Inventory needs a positive owner envelope and actual
+identities/active flags. A command acknowledgement is not completed execution.
+After an uncertain response, retain its job reference and inspect scheduler/log
+evidence with the owner before another operation; do not replay automatically.
+
+Customize labels/approved targets through Cron configuration or the smallest
+project renderer, preserving source/actor scope and the reviewed draft protocol.
+`cronJobBusinessNavigation.test.js` composes actual BackOffice permission filtering
+with existing secured routers. Axis client/action/page tests cover malformed
+evidence and scope retirement. Actual scheduled firing and role journeys remain
+separate live acceptance, not inferred from these source checks.
+
+Documentation provenance release 0.0.2 preserves article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](data/manifest.json) selects it; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.
+
+## Execution failure and overlap
+
+On one execution node, manual runs and natural ticks use the same tenant/job pool wrapper. A second manual run is rejected while the full target pipeline is pending; natural ticks during work are skipped and never replayed. There is no catch-up queue or automatic scheduler retry. Stop prevents new ticks and preserves admitted completion; refresh/removal cannot replace a running wrapper. Persisted start/end times and terminal status establish completion, not a command acknowledgement. Safe failure attribution contains only a stable error code and target kind; provider payloads, credentials, URLs and stacks are not business evidence. Last skipped tick is a bounded observation, not a complete run history. A stopped or paused timer remains stopped or paused when its admitted execution ends. This is single-process exclusion, not distributed exactly-once delivery or crash-recovery certification.

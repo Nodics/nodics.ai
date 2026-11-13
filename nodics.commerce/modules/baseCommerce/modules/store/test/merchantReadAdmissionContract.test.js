@@ -45,7 +45,7 @@ test.beforeEach(() => {
         presentation: { storeLabel: 'Outlet' } } };
     global.CONFIG = { get: key => ({ schemaPolicies: properties.schemaPolicies, accessPoints: {
         readAccessPoint: 1, writeAccessPoint: 2, removeAccessPoint: 3, fullAccessPoint: 10 },
-        runtimeRole: 'COMMERCE', digitalCore, promotion: {} }[key]) };
+        runtimeRole: { code: 'COMMERCE', publication: 'OPERATIONAL' }, digitalCore, promotion: {} }[key]) };
     const effective = schemaOwner.applyNamedSchemaPolicies('store', clone(schemas));
     model = { moduleName: 'store', schemaName: 'store', rawSchema: effective.store };
     global.SERVICE = {
@@ -55,7 +55,7 @@ test.beforeEach(() => {
         DefaultRecordOwnershipPolicyService: { enforce: async () => true },
         DefaultSecuredRequestPipelineService: { getGrantedPermissions: () => ['commerce.coupon.pos.redeem'],
             isPermissionGranted: (p, permissions) => permissions.includes(p) || permissions.includes('*') },
-        DefaultModuleService: { invokeModule: async request => {
+        DefaultModuleService: { isLocalModuleActive: name => ['digitalCore', 'store'].includes(name), invokeModule: async request => {
             assert.equal(request.apiName, '/identity/scopes/me');
             assert.equal(request.header.Authorization, 'Bearer fixture-only');
             profileReads++; return { data: clone(scopes) };

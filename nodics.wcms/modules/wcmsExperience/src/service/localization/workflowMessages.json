@@ -1,0 +1,1266 @@
+{
+  "formatVersion": 1,
+  "ownerModule": "wcmsExperience",
+  "entries": [
+    {
+      "namespace": "experience",
+      "key": "cms-unavailable",
+      "defaultMessage": "CMS authoring is unavailable for this role or runtime.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تأليف المحتوى غير متاح لهذا الدور أو بيئة التشغيل."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "loading-choices",
+      "defaultMessage": "Loading authorized websites and content…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل المواقع والمحتوى المسموح به…"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "refresh-choices",
+      "defaultMessage": "Refresh authoring choices",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث خيارات التأليف"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "guided-title",
+      "defaultMessage": "Build and review an experience",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إنشاء تجربة ومراجعتها"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "guided-help",
+      "defaultMessage": "Choose the website and saved page. Edit content, make targeting unambiguous, then preview and request publication approval.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر الموقع والصفحة المحفوظة. حرّر المحتوى وحدّد الاستهداف بوضوح، ثم عاين التجربة واطلب الموافقة على نشرها."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "catalog",
+      "defaultMessage": "Content catalog",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتالوج المحتوى"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "website",
+      "defaultMessage": "Experience website",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "موقع التجربة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "page",
+      "defaultMessage": "Experience page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صفحة التجربة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "refresh-pages",
+      "defaultMessage": "Refresh pages",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث الصفحات"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "no-pages",
+      "defaultMessage": "No saved pages are available for this website. Create a page in Content Designer first.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد صفحات محفوظة لهذا الموقع. أنشئ صفحة في مصمم المحتوى أولاً."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "content-step",
+      "defaultMessage": "1. Content and publication",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "١. المحتوى والنشر"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "target-step",
+      "defaultMessage": "2. Targeting and placement",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "٢. الاستهداف والموضع"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "reading-placements",
+      "defaultMessage": "Inspecting the saved page and placements…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ فحص الصفحة والمواضع المحفوظة…"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "inspect-placement",
+      "defaultMessage": "Inspect saved placements",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص المواضع المحفوظة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "no-placements",
+      "defaultMessage": "No experience placements reference this page yet. Add a scoped placement using the owner workspace, then inspect it here.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا تشير أي مواضع تجربة إلى هذه الصفحة بعد. أضف موضعاً ضمن النطاق من مساحة العمل المختصة، ثم افحصه هنا."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "placement",
+      "defaultMessage": "Saved placement",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموضع المحفوظ"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "revision",
+      "defaultMessage": "Revision",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المراجعة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "read-only",
+      "defaultMessage": "Your role can inspect this placement. Editing requires the owner permissions for content and experiences.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يسمح دورك بفحص هذا الموضع. يتطلب التعديل صلاحيات المحتوى والتجارب."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "slot",
+      "defaultMessage": "Experience slot",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منطقة التجربة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "target",
+      "defaultMessage": "Business target",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الهدف التجاري"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "priority",
+      "defaultMessage": "Placement priority",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أولوية الموضع"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "priority-help",
+      "defaultMessage": "Higher priority appears first for this target and slot.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تظهر الأولوية الأعلى أولاً لهذا الهدف والمنطقة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "overlap",
+      "defaultMessage": "Other placements share this target and slot:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تشترك مواضع أخرى في هذا الهدف والمنطقة:"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "tie",
+      "defaultMessage": "Choose a distinct priority before saving.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر أولوية مختلفة قبل الحفظ."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ordered",
+      "defaultMessage": "The selected priorities define their order.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحدّد الأولويات المختارة ترتيب العرض."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "saving",
+      "defaultMessage": "Saving the inspected placement…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ حفظ الموضع الذي فُحص…"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "saved",
+      "defaultMessage": "Placement saved. Inspect saved placements to load the new revision before preview.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حُفظ الموضع. افحص المواضع المحفوظة لتحميل المراجعة الجديدة قبل المعاينة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "held",
+      "defaultMessage": "Inspect saved placements before another command. The previous request will not be replayed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "افحص المواضع المحفوظة قبل تنفيذ أمر آخر. لن يُعاد إرسال الطلب السابق."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "save",
+      "defaultMessage": "Review placement changes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة تغييرات الموضع"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "discard",
+      "defaultMessage": "Discard local placement changes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تجاهل تغييرات الموضع المحلية"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "confirm-title",
+      "defaultMessage": "Save this placement revision?",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حفظ مراجعة هذا الموضع؟"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "save-notice",
+      "defaultMessage": "This updates the Staged placement. Publication still requires review and approval.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحدّث هذا الإجراء الموضع في بيئة الإعداد. يظل النشر بحاجة إلى المراجعة والموافقة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "cancel",
+      "defaultMessage": "Keep editing",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متابعة التحرير"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "confirm-save",
+      "defaultMessage": "Save inspected placement",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حفظ الموضع الذي فُحص"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "preview-step",
+      "defaultMessage": "3. Private preview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "٣. المعاينة الخاصة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "save-before-preview",
+      "defaultMessage": "Save and inspect the selected content and placement before preparing its preview.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "احفظ المحتوى والموضع المحددين وافحصهما قبل تجهيز المعاينة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "preview-restricted",
+      "defaultMessage": "Private preview is not available for this role.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المعاينة الخاصة غير متاحة لهذا الدور."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.preview-how-placements-will-appear-on-the-storefront-when-the-preview-is",
+      "defaultMessage": "Preview how placements will appear on the storefront. When the preview is ready, submit the changes for review before publishing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عاين طريقة ظهور المواضع في واجهة المتجر. عندما تصبح المعاينة جاهزة، أرسل التغييرات للمراجعة قبل النشر."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.governed-flow",
+      "defaultMessage": "Governed flow",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسار خاضع للحوكمة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.step",
+      "defaultMessage": "Step",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الخطوة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.inspect-indexed-staged-content-for-the-selected-journey-match-site-local",
+      "defaultMessage": "Inspect indexed Staged content for the selected journey. Match Site, locale and channel to the placement records. Authored records require a qualified Staged projection before they can appear here.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "افحص محتوى بيئة الإعداد المفهرس للمسار المحدد. طابق الموقع واللغة والقناة مع سجلات المواضع. تحتاج السجلات المؤلفة إلى إسقاط مؤهل في بيئة الإعداد قبل ظهورها هنا."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.preview-targeted-experience",
+      "defaultMessage": "Preview targeted experience",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معاينة التجربة المستهدفة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.wcms-experience-runtime-is-not-available-in-the-authenticated-backoffice",
+      "defaultMessage": "WCMS Experience runtime is not available in the authenticated BackOffice module connections.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "خدمة تجارب المحتوى غير متاحة ضمن اتصالات الوحدات المسموح بها في المكتب الخلفي."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.preview-capability-this-inspection-requires-a-qualified-staged-discovery",
+      "defaultMessage": "Preview capability: this inspection requires a qualified Staged Discovery projection. Saving or importing a placement does not publish or index it automatically.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إمكانية المعاينة: يتطلب هذا الفحص إسقاطاً مؤهلاً في خدمة الاكتشاف ببيئة الإعداد. لا يؤدي حفظ الموضع أو استيراده إلى نشره أو فهرسته تلقائياً."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.site",
+      "defaultMessage": "Site",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموقع"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.page-type",
+      "defaultMessage": "Page type",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نوع الصفحة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.target-type",
+      "defaultMessage": "Target type",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نوع الهدف"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.target-code",
+      "defaultMessage": "Target code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز الهدف"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.locale",
+      "defaultMessage": "Locale",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اللغة والمنطقة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.channel",
+      "defaultMessage": "Channel",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القناة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.observe-matching-staged-projections-for-this-journey-this-bounded-check-",
+      "defaultMessage": "Observe matching Staged projections for this journey. This bounded check does not certify Online publication or alias health.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اطّلع على إسقاطات بيئة الإعداد المطابقة لهذا المسار. لا يثبت هذا الفحص المحدود النشر العام أو سلامة الاسم المستعار."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.index-status",
+      "defaultMessage": "Index Status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حالة الفهرس"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.site-c9aa3f",
+      "defaultMessage": "Site:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموقع:"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.refresh-index-evidence",
+      "defaultMessage": "Refresh index evidence",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث أدلة الفهرس"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.index-status-request-failed",
+      "defaultMessage": "Index status request failed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر طلب حالة الفهرس."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.configure-targeted-cms-components-for-collection-brand-category-and-fall",
+      "defaultMessage": "Configure targeted CMS components for collection, brand, category, and fallback storefront journeys without changing frontend code.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اضبط مكونات المحتوى المستهدفة للمجموعات والعلامات والفئات والمسارات الافتراضية دون تغيير كود الواجهة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.experience-studio",
+      "defaultMessage": "Experience Studio",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استوديو التجارب"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.cms-owned-components",
+      "defaultMessage": "CMS-owned components",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مكونات تديرها خدمة المحتوى"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.discovery-delivery-index",
+      "defaultMessage": "Discovery delivery index",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فهرس تسليم الاكتشاف"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.backend-governed",
+      "defaultMessage": "Backend-governed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "خاضع لحوكمة الخادم"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.experience-authoring-is-temporarily-unavailable-inspect-readiness-and-re",
+      "defaultMessage": "Experience authoring is temporarily unavailable. Inspect readiness and refresh availability before continuing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تأليف التجارب غير متاح مؤقتاً. افحص الجاهزية وحدّث حالة التوفر قبل المتابعة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.advanced-placement-records",
+      "defaultMessage": "Advanced placement records",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سجلات المواضع المتقدمة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.run-staged-preview",
+      "defaultMessage": "Run staged preview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تشغيل معاينة الإعداد"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.manage-placements",
+      "defaultMessage": "Manage placements",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة المواضع"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.preview-request-failed",
+      "defaultMessage": "Preview request failed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر طلب المعاينة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.matched",
+      "defaultMessage": "Matched",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مطابق"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.default-fallback",
+      "defaultMessage": "Default fallback",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "البديل الافتراضي"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.no-matching-projection",
+      "defaultMessage": "No matching projection",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا يوجد إسقاط مطابق"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.no-indexed-slots-match-this-context-check-the-selected-site-locale-and-c",
+      "defaultMessage": "No indexed slots match this context. Check the selected Site, locale and channel against Placements. Authored Staged records alone do not establish an indexed preview; inspect Index Status before any publication action.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد مناطق مفهرسة تطابق هذا السياق. تحقّق من الموقع واللغة والقناة مقابل المواضع. سجلات الإعداد وحدها لا تنشئ معاينة مفهرسة؛ افحص حالة الفهرس قبل أي إجراء نشر."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.checking-private-preview-availability",
+      "defaultMessage": "Checking private preview availability…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التحقق من توفر المعاينة الخاصة…"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.private-preview-availability-could-not-be-confirmed",
+      "defaultMessage": "Private preview availability could not be confirmed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر تأكيد توفر المعاينة الخاصة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "ui.refresh-private-preview-availability",
+      "defaultMessage": "Refresh private preview availability",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث توفر المعاينة الخاصة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "preparing",
+      "defaultMessage": "Preparing the private preview. Keep this context open until the owner responds…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تجهيز المعاينة الخاصة. أبقِ هذا السياق مفتوحاً حتى تستجيب الخدمة المختصة…"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "private.prepare",
+      "defaultMessage": "Prepare private preview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعداد المعاينة الخاصة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "private.inspect",
+      "defaultMessage": "Inspect preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص الإعداد"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "private.notice",
+      "defaultMessage": "Preparation creates a private Staged preview. It does not approve or publish content, or change Online delivery.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ينشئ الإعداد معاينة خاصة في بيئة التجهيز. لا يعتمد المحتوى أو ينشره ولا يغيّر المحتوى المنشور."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "private.uncertain",
+      "defaultMessage": "Preparation could not be confirmed. Inspect its current status before another preparation.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر تأكيد الإعداد. افحص حالته الحالية قبل إعداد معاينة أخرى."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "private.ready",
+      "defaultMessage": "Private preview is ready. Run Staged preview to inspect this snapshot.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المعاينة الخاصة جاهزة. شغّل معاينة التجهيز لفحص هذه اللقطة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "private.retire",
+      "defaultMessage": "Retire pending preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إنهاء الإعداد المعلّق"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "private.retiretitle",
+      "defaultMessage": "Retire this pending private preparation?",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إنهاء هذا الإعداد الخاص المعلّق؟"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "private.retiremessage",
+      "defaultMessage": "This fences the inspected incomplete writer. It preserves the last complete preview, all retained bytes and Online delivery. Prepare a new preview explicitly afterwards.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يوقف هذا الإجراء الكاتب غير المكتمل الذي جرى فحصه. ويحافظ على آخر معاينة مكتملة وكل البيانات المحفوظة والمحتوى المنشور. يمكنك إعداد معاينة جديدة بعد ذلك."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "private.confirm",
+      "defaultMessage": "Retire inspected preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إنهاء الإعداد الذي جرى فحصه"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "private.cancel",
+      "defaultMessage": "Keep preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الاحتفاظ بالإعداد"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.code",
+      "defaultMessage": "Placement",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "موضع العرض"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.site",
+      "defaultMessage": "Website",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموقع الإلكتروني"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.pagetype",
+      "defaultMessage": "Page type",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نوع الصفحة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.slot",
+      "defaultMessage": "Slot",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منطقة العرض"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.targettype",
+      "defaultMessage": "Target type",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نوع الهدف"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.targetcode",
+      "defaultMessage": "Business target",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الهدف التجاري"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.component",
+      "defaultMessage": "Content block",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتلة المحتوى"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.rendererkey",
+      "defaultMessage": "Renderer",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عارض المحتوى"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.contractversion",
+      "defaultMessage": "Contract version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إصدار العقد"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.specificity",
+      "defaultMessage": "Target specificity",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "درجة تحديد الهدف"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.priority",
+      "defaultMessage": "Priority",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الأولوية"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.locale",
+      "defaultMessage": "Language",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اللغة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.channel",
+      "defaultMessage": "Channel",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القناة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.deliverystatus",
+      "defaultMessage": "Delivery status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حالة العرض"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "review.revision",
+      "defaultMessage": "Revision",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المراجعة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "status.status",
+      "defaultMessage": "Status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحالة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "status.indexing-mode",
+      "defaultMessage": "Indexing mode",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نمط الفهرسة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "status.matching-projections",
+      "defaultMessage": "Matching projections",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عدد نتائج الفهرس المطابقة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "status.current-index",
+      "defaultMessage": "Current index",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الفهرس الحالي"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "status.last-indexed",
+      "defaultMessage": "Last indexed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "آخر فهرسة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "status.publication-context",
+      "defaultMessage": "Publication context",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سياق النشر"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "status.observation-limit",
+      "defaultMessage": "Observation limit",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حد المراقبة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.tab.overview.label",
+      "defaultMessage": "Overview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نظرة عامة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.tab.placements.label",
+      "defaultMessage": "Placements",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مواضع العرض"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.tab.preview.label",
+      "defaultMessage": "Preview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معاينة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.tab.index-status.label",
+      "defaultMessage": "Index Status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حالة الفهرس"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.tab.overview.summary",
+      "defaultMessage": "Understand targeted CMS experiences before editing records.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعرّف إلى تجارب المحتوى المستهدفة قبل تعديل السجلات."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.tab.placements.summary",
+      "defaultMessage": "Manage page, slot, target, and component placement records.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أدر سجلات الصفحة والقسم والاستهداف ومواضع عرض المكوّنات."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.tab.preview.summary",
+      "defaultMessage": "Resolve a staged journey exactly as Axis would inspect it.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عاين تجربة المسودة بالنتيجة نفسها التي يفحصها Axis."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.tab.index-status.summary",
+      "defaultMessage": "Inspect the projection state used by storefront delivery.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "افحص حالة الفهرس المستخدمة لتقديم واجهة المتجر."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.journey.collection.title",
+      "defaultMessage": "Collection journey",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تجربة المجموعة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.journey.collection.summary",
+      "defaultMessage": "Show a targeted hero or carousel when a shopper lands from a curated collection.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اعرض لافتة أو شرائح مستهدفة عندما يصل المتسوّق من مجموعة مختارة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.journey.brand.title",
+      "defaultMessage": "Brand journey",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تجربة العلامة التجارية"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.journey.brand.summary",
+      "defaultMessage": "Use brand-specific banners, editorial blocks, or featured products while product search remains commerce-owned.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدم لافتات أو محتوى أو منتجات مميزة خاصة بالعلامة التجارية، مع بقاء البحث عن المنتجات لدى خدمة التجارة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.journey.default.title",
+      "defaultMessage": "Default fallback",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المحتوى الافتراضي البديل"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.journey.default.summary",
+      "defaultMessage": "Keep storefront pages visually complete when no category, collection, or brand placement matches.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أبقِ صفحات المتجر مكتملة عندما لا يتطابق أي موضع عرض للفئة أو المجموعة أو العلامة التجارية."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.step.1",
+      "defaultMessage": "Create CMS component",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إنشاء مكوّن محتوى"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.step.2",
+      "defaultMessage": "Attach placement",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ربط موضع العرض"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.step.3",
+      "defaultMessage": "Preview staged journey",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معاينة تجربة المسودة"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.step.4",
+      "defaultMessage": "Publish through nPublish",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النشر عبر nPublish"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "studio.step.5",
+      "defaultMessage": "Monitor index status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متابعة حالة الفهرس"
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "guided-target-help",
+      "defaultMessage": "Select a configured target for this website. Product and collection identities remain owned by their business modules.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر هدفًا مهيّأ لهذا الموقع. تظل هويات المنتجات والمجموعات تحت إدارة خدمات الأعمال المختصة."
+      }
+    },
+    {
+      "namespace": "experience",
+      "key": "guided-target-help.source",
+      "defaultMessage": "Select a configured target for this website. Product and collection identities remain owned by their business modules.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Select a configured target for this website. Product and collection identities remain owned by their business modules."
+      }
+    }
+  ]
+}

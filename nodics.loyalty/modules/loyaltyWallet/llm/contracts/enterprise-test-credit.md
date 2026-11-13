@@ -163,7 +163,8 @@ enterpriseTestCredits: {
 ```
 
 There is no inline production fallback. The reader validates the enabled value,
-runtimeRole LOYALTY, unique bounded environment identifiers, positive integer
+DMS local `loyaltyWallet` ownership and explicit OPERATIONAL publication, unique
+bounded environment identifiers, positive integer
 reason limit and absolute owner path; absent/malformed/unselected configuration
 refuses. Customer/runtime configuration may carry only intentional overriding
 values, never copies of definitions/defaults. Programs carry business reward

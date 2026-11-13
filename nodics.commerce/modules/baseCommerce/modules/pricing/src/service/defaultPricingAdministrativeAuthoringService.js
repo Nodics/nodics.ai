@@ -196,7 +196,7 @@ module.exports = {
     const policy = structuredClone(this.policy());
     if (!policy || ![policy.readPermission, policy.writePermission].every(p => typeof p === "string" && p) ||
       policy.identityTarget?.moduleName !== "profile" || !policy.identityTarget.connectionName ||
-      policy.identityTarget.targetAuthority?.runtimeRole !== "PLATFORM" || !/^v\d+$/.test(policy.identityTarget.apiVersion) ||
+      (policy.identityTarget.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(policy.identityTarget.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) || !/^v\d+$/.test(policy.identityTarget.apiVersion) ||
       !Number.isSafeInteger(policy.timeoutMs) || policy.timeoutMs < 1 || policy.timeoutMs > 60000 ||
       !Number.isSafeInteger(policy.maximumDecimalLength) || policy.maximumDecimalLength < 1 || policy.maximumDecimalLength > 1024 ||
       [policy.evidencePath, policy.recipientPath].some(path => typeof path !== "string" || !/^\/[A-Za-z0-9/_-]+$/.test(path))) this.fail("STORAGE");

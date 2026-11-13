@@ -57,3 +57,32 @@ confirmed execute, one-time run and persisted job read APIs. It must observe a
 new start/end pair and `SUCCESS`; an HTTP acknowledgement alone is insufficient.
 Do not add domain records, notification assertions, customer identities or
 credentials here. A downstream owner proves its own source and effects.
+
+
+## Business scheduler workspace
+
+New schedules use the existing reviewed inactive-draft contract and explicitly
+configured targets. The Axis business workspace no longer supplies an active
+demo definition, execution node or one-second timer. This changes no generic
+Cron API, group, permission, target or activation default. Technical clients
+remain independently owner-authorized; generic save is not a draft fallback.
+
+The Cron BackOffice contribution declares the existing create/run/start/stop/
+pause/resume transports under `cronjob.lifecycle.manage`. BackOffice filters each
+action independently of `cronjob.backoffice.view`; metadata is not a grant.
+Missing or ambiguous declarations offer no browser command. State hints never
+replace Cron enforcement. Inventory needs a positive owner envelope and actual
+identities/active flags. A command acknowledgement is not completed execution.
+After an uncertain response, retain its job reference and inspect scheduler/log
+evidence with the owner before another operation; do not replay automatically.
+
+Customize labels/approved targets through Cron configuration or the smallest
+project renderer, preserving source/actor scope and the reviewed draft protocol.
+`cronJobBusinessNavigation.test.js` composes actual BackOffice permission filtering
+with existing secured routers. Axis client/action/page tests cover malformed
+evidence and scope retirement. Actual scheduled firing and role journeys remain
+separate live acceptance, not inferred from these source checks.
+
+## Execution failure and overlap
+
+On one execution node, manual runs and natural ticks use the same tenant/job pool wrapper. A second manual run is rejected while the full target pipeline is pending; natural ticks during work are skipped and never replayed. There is no catch-up queue or automatic scheduler retry. Stop prevents new ticks and preserves admitted completion; refresh/removal cannot replace a running wrapper. Persisted start/end times and terminal status establish completion, not a command acknowledgement. Safe failure attribution contains only a stable error code and target kind; provider payloads, credentials, URLs and stacks are not business evidence. Last skipped tick is a bounded observation, not a complete run history. A stopped or paused timer remains stopped or paused when its admitted execution ends. This is single-process exclusion, not distributed exactly-once delivery or crash-recovery certification.

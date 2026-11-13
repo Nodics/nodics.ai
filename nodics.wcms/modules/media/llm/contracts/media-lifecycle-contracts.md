@@ -635,3 +635,13 @@ are registered in nTooling's existing `enterprise-lifecycle` suite through the
 installed Mocha CLI, not bare Node execution of Mocha globals.
 They cover positive, missing/drifted/retired, denied,
 ambiguous, malformed, tenant/token and bounded-input cases with no runtime writes.
+
+
+## Staged images in Page Designer
+
+A human employee with `media.content.read` can use
+`GET /library/draft-images` and `GET /library/:mediaCode/draft-image` on the
+Staged owner. The picker returns ready raster identities and labels within
+the employee's Media scope. The image response reuses the Media review MIME
+and size limits and disables caching. Axis saves attachment changes through
+CMS draft validation and save. Online publication remains a separate workflow.

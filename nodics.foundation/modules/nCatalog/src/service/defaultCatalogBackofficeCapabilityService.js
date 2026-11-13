@@ -72,8 +72,8 @@ const capability = {
             },
             "help": {
                 "summary": "Manage content catalogs that organize CMS content for governed authoring, preview, and delivery.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "content-catalogs"
+                "documentationRoute": "/docs/framework/wcms-content-catalog-model",
+                "documentationFragment": "wcmsContentCatalogModel-4-operator-view"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [

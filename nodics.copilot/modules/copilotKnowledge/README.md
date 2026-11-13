@@ -1,6 +1,6 @@
 # copilotKnowledge
 
-The [Knowledge Progress and Recovery guide](data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js)
+The [Knowledge Progress and Recovery guide](data/docs-v001/records/documentation/copilotKnowledgeDocumentationRelease002ComponentData.js)
 also covers reviewed dedicated legacy-index retirement, verified replacements,
 native provider barriers, original inspection and retained-data limitations.
 
@@ -44,7 +44,7 @@ safe-search APIs. See [Live Database Sources](llm/examples/live-database-sources
 for registration, exclusions, Axis steps, contracts, recovery and customization.
 Selected collection fields/capabilities and technical deletion-impact previews
 also run through these native owners in conversation. See the canonical
-[collection inspection guide](data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js).
+[collection inspection guide](data/docs-v001/records/documentation/copilotKnowledgeDocumentationRelease002ComponentData.js).
 An impact preview is not deletion, business cancellation or permission to execute.
 
 [Runtime-bound partitions](llm/examples/runtime-source-partitions.md) reuse the
@@ -105,8 +105,10 @@ and project roots; nDynamo owns durable selections and nSystem restores them.
 See [runtime knowledge configuration](llm/contracts/runtime-knowledge-configuration-contract.md)
 and [runtime registration](llm/examples/runtime-source-partitions.md).
 
-Trusted deployment hooks may delegate late startup ingestion to
-`DefaultCopilotKnowledgeRuntimeService.ingestOnStart()`. Optional startup narrowing
+The Knowledge module registers its own authenticated runtime ready contributor;
+`DefaultCopilotKnowledgeRuntimeService.ingestOnStart()` runs after internal identity
+is available. Required readiness stays down until selected indexing is acknowledged.
+Failures and timeouts are visible without automatic replay. Optional startup narrowing
 and operational policy live in `copilot.knowledge.ingestion.startup`; source
 selections remain governed runtime records. Reusable
 orchestration stays here. See the [startup contract](llm/contracts/secure-ingestion-and-retrieval-contract.md#trusted-startup-delegation)
@@ -129,7 +131,7 @@ for setup, permission boundaries, uncertain outcomes and customization. This doe
 not provision schedules or replace Process incident recovery.
 
 Source managers can optionally prepare a fingerprint-bound inactive schedule
-through the existing Cron owner. See [source-aware schedule setup](data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js#prepare-a-draft-from-knowledge-studio).
+through the existing Cron owner. See [source-aware schedule setup](data/docs-v001/records/documentation/copilotKnowledgeDocumentationRelease002ComponentData.js#prepare-a-draft-from-knowledge-studio).
 `studio.sourceScheduleDraftsEnabled` defaults false; the Axis surface additionally
 requires authorized Cron navigation and an exact approved target binding. Saving
 a draft never proves activation or bypasses source callback admission.
@@ -140,3 +142,25 @@ The [local authenticated acceptance guide](llm/examples/authenticated-erasure-ac
 covers disposable Profile operators, actual source publication, native retirement
 and removal, gate-disabled restart inspection and separately owned Axis browser
 testing. It distinguishes real component evidence from full application admission.
+
+Physical legacy migration remains portable across module owners through bounded
+Discovery commands. See [migration transport](llm/contracts/physical-migration-transport-contract.md)
+for fresh source authority, module-owned defaults and offline verification limits.
+
+
+Internal routes declare their `moduleInternal` exposure default here with neutral
+`inheritUnknown: true` policy. Registration preserves nRouter's existing unknown
+category denial or common default; it never enables a service, grants permissions
+or qualifies a provider. Later explicit category overrides remain supported.
+See nRouter's capability-owned exposure contract and
+`apiExposureOwnershipContract.test.js` for default, denied and override evidence.
+
+Published customer guidance uses the CMS Online provider and governed exact content
+pins. See [the publication contract](llm/contracts/secure-ingestion-and-retrieval-contract.md#published-customer-guidance).
+
+Published content uses the Framework `knowledge.publishedContent.connectionName`
+default `cmsOnline` through nService. Deployment aliases retain their own host and
+port mapping; source records and caller input cannot choose an arbitrary endpoint.
+The public proof endpoint and explicit Online authority remain fixed.
+
+Legacy source refresh must await the existing Discovery/nSearch visibility acknowledgement before reporting PROJECTED. A rejected, missing or failed-shard refresh remains unconfirmed; never retry writes automatically. Governed Discovery projections default to uncached reads so a cached empty or prior result cannot override refreshed source or generation evidence. Source policy and published Online digest checks still run before and after retrieval.

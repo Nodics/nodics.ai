@@ -66,9 +66,9 @@ test('lost commit acknowledgement resolves only original current-actor status wi
 test('actual permission, Profile deny, customer/service identities and foreign owner selectors cannot configure', async t => {
   const f = fixture(t);
   f.permissions.splice(f.permissions.indexOf('commerce.digital.bundle.configure'), 1);
-  await assert.rejects(participation.current(f.request), /permission/);
+  await assert.rejects(participation.current(f.request), { code: 'ERR_AUTH_00003' });
   f.permissions.push('commerce.digital.bundle.configure'); f.state.denied = true;
-  await assert.rejects(participation.configure(f.request, f.command()), /denied/);
+  await assert.rejects(participation.configure(f.request, f.command()), { code: 'ERR_AUTH_00003' });
   f.state.denied = false;
   for (const principalType of ['customer', 'service']) await assert.rejects(participation.current({ ...f.request,
     authData: { ...f.request.authData, principalType } }));

@@ -36,7 +36,7 @@ const policyConfiguration = require("../../copilotPolicy/config/properties")
   .copilot.policy;
 const discoveryBuilder = require("../../../../nodics.discovery/modules/discoveryProjection/src/service/defaultDiscoveryDocumentBuilderService");
 
-test("module lifecycle registers only non-public repository source types with Discovery", async () => {
+test("module lifecycle registers separate repository and published owner providers with Discovery", async () => {
   const registrations = [];
   global.SERVICE = {
     DefaultDiscoverySourceRegistryService: {
@@ -44,6 +44,7 @@ test("module lifecycle registers only non-public repository source types with Di
         registrations.push({ ownerType, sourceType, provider }),
     },
     DefaultCopilotRepositoryKnowledgeSourceProviderService: repositoryProvider,
+    DefaultCopilotPublishedKnowledgeSourceProviderService: require("../src/service/defaultCopilotPublishedKnowledgeSourceProviderService"),
     DefaultCopilotKnowledgeRuntimeService: {
       ...require("../src/service/defaultCopilotKnowledgeRuntimeService"),
       configuration: () => ({ knowledge: knowledgeConfiguration }),
@@ -61,14 +62,16 @@ test("module lifecycle registers only non-public repository source types with Di
         "SOURCE_CODE",
         "CUSTOMER_PROJECT",
         "CURATED_MEMORY",
+        "PUBLISHED_DOCUMENTATION",
       ],
     );
     assert.equal(
       registrations.some(
         (item) => item.sourceType === "PUBLISHED_DOCUMENTATION",
       ),
-      false,
+      true,
     );
+    assert.notEqual(registrations.find(item => item.sourceType === "PUBLISHED_DOCUMENTATION").provider, repositoryProvider);
     assert.equal(
       registrations.every((item) => item.ownerType === "COPILOT_KNOWLEDGE"),
       true,
@@ -153,6 +156,7 @@ test("repository ingestion is bounded, rejects secrets, and projects only safe c
       chunkService: chunks,
       discoveryDocumentBuilderService: discoveryBuilder,
       discoveryProjectionService: {
+        doRefresh: async () => ({code: "SUC_SRCH_00000", result: {_shards:{successful:1,failed:0}}}),
         doSave: async (request) => {
           projected.push(request.model);
           return {
@@ -291,6 +295,7 @@ test("projection failures and uncertain acknowledgements stop indexing without a
       chunkService: chunks,
       discoveryDocumentBuilderService: discoveryBuilder,
       discoveryProjectionService: {
+        doRefresh: async () => ({code: "SUC_SRCH_00000", result: {_shards:{successful:1,failed:0}}}),
         doSave: async () => {
           writes++;
           return response;
@@ -420,7 +425,9 @@ test("retrieval filters before Discovery and reauthorizes every returned result"
     },
   }));
   const searches = [];
+  const publicationChecks = [];
   const dependencies = {
+    publishedSourceProviderService: { assertCurrent: async sources => { publicationChecks.push(sources.map(source => source.code)); } },
     registryService: registryService,
     policyService: policy,
     knowledgeService: knowledgeService,
@@ -468,6 +475,7 @@ test("retrieval filters before Discovery and reauthorizes every returned result"
     ),
     false,
   );
+  assert.deepEqual(publicationChecks, [["public-docs"], ["public-docs"]]);
   const axisContext = policy.normalizeSecurityContext(
     {
       channel: "EMPLOYEE",
@@ -672,4 +680,17 @@ test("generated server copies never consume the authored repository source budge
     repositoryProvider.read(partition, options),
     /COPILOT_KNOWLEDGE_SOURCE_FILE_LIMIT_EXCEEDED/,
   );
+});
+
+test("legacy refresh waits for visible indexing and refuses incomplete owner acknowledgement", async () => {
+  const request={source:registryService.normalize(source(),knowledgeConfiguration.sourceRegistry,policy),securityContext:policy.normalizeSecurityContext({channel:"SYSTEM",actor:"indexer",permissions:["copilot.knowledge.source.manage"]},policyConfiguration),configuration:{...knowledgeConfiguration.ingestion,enabled:true},indexTenant:"tenant"};
+  let writes=0,release;
+  const dependencies={policyService:policy,sourceProviders:{REPOSITORY:{read:async()=>[{relativePath:"README.md",content:"Approved sample guidance"}]}},secretInspectionService:secretInspection,chunkService:chunks,discoveryDocumentBuilderService:discoveryBuilder,discoveryProjectionService:{doSave:async r=>{writes++;return {code:"SUC_SRCH_00000",result:[{code:r.model.code}]};},doRefresh:()=>new Promise(resolve=>{release=resolve;})}};
+  let finished=false;const pending=ingestion.ingestSource(request,dependencies).then(v=>{finished=true;return v;});
+  await new Promise(resolve=>setImmediate(resolve));assert.equal(writes,1);assert.equal(finished,false);
+  release({code:"SUC_SRCH_00000",result:{_shards:{successful:1,failed:0}}});assert.equal((await pending).state,"PROJECTED");
+  for(const response of [undefined,{code:"SUC_SRCH_00000",result:{}},{code:"ERR_SRCH_00000",result:{_shards:{successful:1,failed:0}}},{code:"SUC_SRCH_00000",result:{_shards:{successful:1,failed:1}}},{code:"SUC_SRCH_00000",acknowledged:false,result:{_shards:{successful:1,failed:0}}}]){
+    const before=writes;dependencies.discoveryProjectionService.doRefresh=async()=>response;await assert.rejects(ingestion.ingestSource(request,dependencies),/VISIBILITY_UNCONFIRMED/);assert.equal(writes,before+1);
+  }
+  assert.equal(require('../../../../nodics.discovery/modules/discoveryProjection/src/search/indexes').discoveryProjection.discoveryDocumentProjection.cache.enabled,false);
 });

@@ -23,8 +23,11 @@ module.exports = {
             idPropertyName: 'code',
             tenantPropertyName: 'tenant',
             partitionProperties: ['tenant', 'ownerType', 'indexConfigurationCode', 'storeCode', 'locale'],
-            cache: { enabled: true, ttl: 300 },
+            // Publication and source-policy checks require current derived records.
+            cache: { enabled: false, ttl: 300 },
             properties: {
+                // Keep the existing text mapping and pin its case-sensitive identity for generation predicates.
+                tenant: { enabled: true, type: 'text', fields: { keyword: { type: 'keyword', ignore_above: 256 } } },
                 ownerType: { enabled: true, type: 'keyword' },
                 ownerCode: { enabled: true, type: 'keyword' },
                 indexConfigurationCode: { enabled: true, type: 'keyword' },

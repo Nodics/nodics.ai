@@ -23,13 +23,17 @@ grant. Native topology acceptance remains separate from
 
 ## Optional release projection
 
-Registration honors the nImport DATA_RELEASE `selectionPolicy` contract.
-`EXPLICIT` projects as optional USER-triggered data, including Init releases;
-`DEFAULT` or omission preserves existing required activation behavior. Reject
-unknown values rather than silently turning malformed opt-in metadata into an
-automatic installation. Publication policy keeps its independent meaning.
-The package projection grants no import or ownership migration authority and
-does not replace destination validation. See
+Registration reads each technical owner's manifest and the effective
+`backofficeFunctionalModuleActivationData.modules` entry for its nearest
+functional owner. An explicit Init section becomes required for human capability
+activation when its exact package declares `required: true` and
+`trigger: "ACTIVATION"`. For example, Product registers
+`product:enterpriseRoles` for the Profile receiver. The source server is a
+valid default destination only for its own module. A deployment may supply a
+different server through the existing keyed package routing configuration.
+
+Other explicit releases retain the USER trigger. nImport still applies its
+selection, destination, permission, prerequisite and receipt checks. See
 `../../../nData/nImport/import/llm/contracts/README.md#explicit-release-selection`.
 
 This folder contains module-specific AI/developer contracts for `nodics.foundation/modules/nService`.
@@ -77,6 +81,23 @@ preserves response-owned evidence, circuit accounting and independent retry poli
 
 ## Tenant startup completion
 
+Selected tenant provisioning also supports request-bound live preparation.
+After nRouter has authenticated and authorized a secured route, it calls
+`ensureAuthenticatedEnterprise` before cache/controller dispatch. Only the signed
+enterprise and tenant may select an exact active entry from the existing private
+runtime inventory. The public header supplies no placement or configuration.
+The first admitted request awaits the same namespace pin, provider/model/search,
+Init, identity and target-token owners used at startup. Concurrent requests join
+the existing tenant preparation; provisional addressability never admits work.
+Already-ready subjects perform no inventory lookup. Missing, duplicate, foreign,
+inactive or failed evidence returns the content-free held status. No broker,
+polling loop, new endpoint, credential grant or automatic business-command retry
+is introduced. Unselected deployments retain their existing startup behavior.
+Later nService layers may override individual inventory/preparation members while
+preserving exact placement, completion and failure semantics. See
+`test/liveTenantAdmissionContract.test.js` and nRouter's
+`test/liveTenantPipelineContract.test.js`.
+
 Follow the [inventory binding and diagnostic contract](module-topology-and-transport-contract.md#enterprise-inventory).
 
 New-tenant addressability during model/search preparation is provisional, not
@@ -109,11 +130,10 @@ terminal logs use fixed repair guidance, not the rejected descriptor or raw caus
 The existing nSystem contributor exposes the sanitized reason in readiness
 details; its minimal UP/DOWN endpoint does not expose contributor reasons.
 
-`runtimeIdentity.instanceCode` is an explicit deployment value with a distinct
-Profile service principal and secret per replica. There is no process-ID identity
-fallback. `defaultAuthDetail` supplies tenant-scoped API-key proof and enterprise;
-local Profile and remote Profile issue through the same deployment authorization
-owner. Missing proof, instance or assignment fails closed.
+Each trusted runtime uses the installation service Employee and retained API key.
+Profile validates tenant, enterprise, canonical deployment coordinates and requested
+modules on startup and renewal. The signed token carries the account's named
+service permissions and an empty group list. Human access uses its own proof.
 
 Internal-token renewal uses one non-overlapping asynchronous timer, bounded tenant
 concurrency, expiry-based jitter, outage backoff and awaited shutdown. The default
@@ -139,7 +159,7 @@ A separate runtime can request protected remote APIs through explicit
 `runtimeIdentity.remoteModules` (for example `['profile', 'inventory']`).
 The provider adds these bounded codes to its active-module request. This does
 not activate source modules or establish local ownership. Every requested code
-still requires the same Profile deployment grant and route permission. Configure
+still requires inclusion in the canonical placement and the route permission. Configure
 remote endpoints through the existing server topology, including its abstract
 endpoint; an endpoint alone never grants capability access. Missing remote scope
 fails during protected calls rather than silently broadening the credential.
@@ -157,6 +177,8 @@ option restores ordinary local dispatch. Active source is not proof of local
 service ownership. See `test/moduleInvocationContract.test.js`.
 
 ## Selected authority-context defaults
+
+nService supplies `{ default: null, modules: {}, schemas: {} }` as its complete safe baseline. Empty selections retain existing module/schema fallback and grant no authority. Customer runtime files contain only their actual context selections.
 
 `runtimeAuthorityContexts.default` is an explicitly configured context, used only for modules whose entry is `true`, for example `{ default: 'warehouse.operational', modules: { stock: true, pricing: 'pricing.staged' } }`. Unselected/false modules retain their existing module/schema fallback. Explicit schema declarations and schema overrides retain precedence over module selections. A selected common default must be a nonempty string; malformed context values fail. Do not derive authority from a server name, module discovery, UI grouping or connection topology. Profile-issued deployment scope and runtime-role/tenant checks remain independent.
 
@@ -189,6 +211,20 @@ Inherit security policy and credential input defaults from
 [nAuth](../../../nAuth/llm/contracts/README.md#deployment-credentials-and-inherited-auth-policy).
 nService consumes current retained `defaultAuthDetail.apiKey` proof for both
 initial issuance and renewal. It never falls back to provisioning proof or a human
-administrator. Profile still validates tenant, enterprise and deployment grants.
+administrator. Profile still validates the authenticated tenant, enterprise and canonical deployment.
 A selected deployment may bind distinct runtime credentials through later layers.
 The logical auth cache namespace is `auth`; this does not change Profile ownership.
+
+## Tenant cleanup completion
+
+`DefaultTenantHandlerService.removeTenants` awaits the existing Cron, database,
+model and search owners for every selected module and tenant before removing its
+active marker or returning success. Empty input resolves without work. Owner
+failures propagate and retain the marker for inspection; prior cleanup effects
+are not transactional or rolled back. Business entry remains governed by fresh
+Enterprise status and session checks. Later service overrides may add awaited
+cleanup but must preserve completion and active-scope validation.
+`test/tenantStartupCompletionContract.test.js` composes the actual database
+registry validator and covers deferred, failed, empty and multi-tenant cleanup.
+
+The reusable BackOffice registration request deadline defaults to 5000 ms in nService. Keep it bounded below the lease and operational-state lifetime. Runtime batches must finish owner admission and return acknowledgement before they count as successful; neither persisted leases nor a longer timeout may bypass the existing readiness, identity, ownership or stale-state checks. Deployment overrides require actual transport constraints.

@@ -20,11 +20,12 @@ const createHarness = require('./fixtures/referenceReleaseHarness');
 test('neutral immutable release is explicit, retains its predecessor and imports without customer records', async () => {
     const state = createHarness({ eWaste: { name: 'eWaste', index: '92.71', path: path.resolve(__dirname, '..') } });
     const discovered = state.service.discoverReleases('core');
-    assert.deepEqual(discovered.map(item => item.releaseCode), ['eWaste:core-reference']);
-    assert.equal(discovered[0].version, '0.0.1');
-    assert.equal(discovered[0].selectionPolicy, 'EXPLICIT');
+    assert.deepEqual(discovered.filter(item => item.moduleName === 'eWaste').map(item => item.releaseCode), ['eWaste:core-reference', 'eWaste:drop-off-location']);
+    const reference = discovered.find(item => item.releaseCode === 'eWaste:core-reference');
+    assert.equal(reference.version, require('../data/manifest.json').sections['core-reference'].version);
+    assert.equal(reference.selectionPolicy, 'EXPLICIT');
     const request = { tenant: 'default', releaseRequest: {
-        dataType: 'core', releaseCodes: ['eWaste:core-reference'], expectedReleases: { 'eWaste:core-reference': '0.0.1' }
+        dataType: 'core', releaseCodes: ['eWaste:core-reference'], expectedReleases: { 'eWaste:core-reference': reference.version }
     } };
     await state.service.preflight(request);
     assert.equal(state.imports.length, 0);

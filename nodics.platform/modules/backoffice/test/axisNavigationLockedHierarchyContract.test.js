@@ -74,14 +74,16 @@ const expected = {
     'editorial-space': ['Editorial Workspace', 'Editorial Content', 'Article Editor', 'Editorial Review and Approval', 'Languages and Localization', 'Authors', 'Taxonomy', 'Series', 'Featured and Special Content', 'Corrections and Governance', 'Content Type Policies', 'Editorial Calendar', 'Editorial Preview and Distribution', 'Editorial History and Insights'],
     'process-and-automations': ['Operations Workspace', 'Workflow Management', 'Pipeline Management', 'Cron jobs', 'Triggers and Relationships', 'Automation Monitoring', 'Advanced Configuration'],
     'sustainability-operations': ['Waste Management', 'Waste Configuration'],
-    documentation: ['Dashboard', 'Documentation Designer', 'Framework', 'Swaggers', 'Nodics Axis'],
+    documentation: ['Dashboard', 'Documentation Designer'],
     publishing: ['Publishing Workspace', 'Publication Requests', 'Approval Queue', 'Staged-to-Online Operations', 'Publication Manifests', 'Publishing History', 'Publishing Audit', 'Scheduled Publications', 'Online Publications', 'Publication Dependencies', 'Failures & Recovery', 'Withdrawals & Rollbacks', 'Publishing Configuration', 'Setup & Accelerators']
 };
 
 const rootLabelsByGroup = {};
 const childrenByParent = {};
+const documentationSources = [];
 providerFiles.forEach(file => {
     const capability = require(path.join(root, file)).getCapability();
+    documentationSources.push(...(capability.documentation || []));
     (capability.navigation || []).forEach(item => {
         if (item.group && item.group.label === 'Content and Experience') {
             assert.strictEqual(item.group.id, 'content', `${file}:${item.id} must share the canonical content group`);
@@ -97,6 +99,15 @@ providerFiles.forEach(file => {
         rootLabelsByGroup[item.group.id].push(item.label);
     });
 });
+
+// Reader destinations are contributed metadata, not duplicated static primary-menu leaves.
+for (const [id, label, type] of [["framework", "Framework", "CMS"], ["swaggers", "Swaggers", "OPENAPI"], ["nodics-axis", "Nodics Axis", "CMS"]]) {
+    const source = documentationSources.find(item => item.id === id);
+    assert(source, "Documentation source remains discoverable: " + id);
+    assert.equal(source.label, label);
+    assert.equal(source.type, type);
+    assert(source.route.startsWith("/docs/") && !source.route.includes(".."));
+}
 
 Object.entries(expected).forEach(([groupId, expectedLabels]) => {
     assert.deepStrictEqual(

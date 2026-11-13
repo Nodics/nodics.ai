@@ -30,7 +30,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "copilotKnowledge",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -52,17 +52,12 @@
       "pages": 3,
       "components": 3,
       "routes": 3,
-      "releaseChecksum": "94b4cebcb28322006cff24c485ba41f209b2d87cee9e4a842cdc927e6e772635",
+      "releaseChecksum": "21326d5928a437312cb2e24a343a884e17cb2e77bfd3ebe1567d1867fa0cb934",
       "generatedHashes": {
         "docs-v001/records/documentation/copilotKnowledgeDocumentationNodeData.js": "98019217b3ac49ae3535a5375e9598c3f6c22318beb043d0ae76cd1c5fd53643",
-        "docs-v001/records/documentation/copilotKnowledgeDocumentationPageMetadataData.js": "23b9e1a0c67f0106496b21a01807de88ee6c96ef9ba44454eeb77b31473481f1",
-        "docs-v001/records/documentation/copilotKnowledgeDocumentationPublicationStateData.js": "c67338c40bacb4ec6ce4e98b543eeda20e05c0a24ae9350d8f1c4e7837411cb8",
-        "docs-v001/records/documentation/copilotKnowledgeDocumentationSearchMetadataData.js": "5758c5e0f1b9cce100bc6d42534ebe14bb12534c5c2fe3805dc8d0d61d30ad0f",
-        "docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js": "5d6ef092c25681bbd2790875e81ddae746d1b508706ce771da24fcff6904580b",
         "docs-v001/records/documentation/copilotKnowledgeDocumentationPageData.js": "e04c811df2963ef7de79d789bff0c9478de0cd23d0c35d5e161750727b372e81",
         "docs-v001/records/documentation/copilotKnowledgeDocumentationRouteData.js": "cf3c536e3ca1078159f219f0c847c7d6955a14ecf0edbdd0587631899f4389f9",
         "docs-v001/records/documentation/copilotKnowledgeDocumentationMediaData.js": "649e23c6ab8ee9c71ef339b034f464e09bed54c0388a7da1ccfe8b27eca8570f",
-        "docs-v001/headers/100_copilotKnowledgeDocumentationContentPackHeader.js": "2cb2d9d7a8fd08c563f0406ec680467fab96d386395177547ed57d602ba49a60",
         "docs-v001/assets/documentation/files/images/copilot-knowledge-progress-desktop.png": "5fa68e753381183d60be33c00eb2814af04893270f5aa158e3773af2db40a2b6",
         "docs-v001/assets/documentation/files/images/copilot-knowledge-progress-mobile.png": "e49d2214c5ed59384fb0f7e647df1643b6136cb931c4f9f84967ca09c4db3c4d",
         "docs-v001/assets/documentation/files/images/copilot-manual-refresh-desktop.png": "8cecc7e44266d4cf07eda7e6ee0771323ca7d8480e6b4781cfd6ad288c2ac492",
@@ -73,7 +68,12 @@
         "docs-v001/assets/documentation/files/images/legacy-erasure-mobile.jpg": "dbc7b15d00f19bf72e35eed1815d2755f55694b459007003b5c7d1df7ce4896d",
         "docs-v001/assets/documentation/files/images/legacy-retirement-desktop.png": "8f5462ab0e003398df3905904a88d15dc0efd59c5b8a25cecda8efcd922f1318",
         "docs-v001/assets/documentation/files/images/legacy-retirement-mobile.png": "84178c7f2e7641296cd71d28dd4b7bba48efd402df2e951fb22ad6ff4eb76d63",
-        "docs-v001/assets/documentation/copilotKnowledgeDocumentationAssetManifest.js": "1266db47deb8e71e3295dcbc7bc962945da348a3b371769a5be617c0f5939be3"
+        "docs-v001/assets/documentation/copilotKnowledgeDocumentationAssetManifest.js": "1266db47deb8e71e3295dcbc7bc962945da348a3b371769a5be617c0f5939be3",
+        "docs-v001/records/documentation/copilotKnowledgeDocumentationRelease002PageMetadataData.js": "82d3a82b2ad77dae01a6eb30b5623851d7272276a1278dfcc42153db27c62cf8",
+        "docs-v001/records/documentation/copilotKnowledgeDocumentationRelease002PublicationStateData.js": "3665e60677ccd9d12ecaae26bf61feef73e61a4d53d4eecf0ece40d89ff0e3c6",
+        "docs-v001/records/documentation/copilotKnowledgeDocumentationRelease002SearchMetadataData.js": "8ea12e3055a5413d01859ebea2b5fed8ed6166b5fe7f1420911c56f4a0108a59",
+        "docs-v001/records/documentation/copilotKnowledgeDocumentationRelease002ComponentData.js": "a7420b1920ca441b9e045d8c98872e0097c09beab3b63d34bbed794dbaa6d7a5",
+        "docs-v001/headers/100_copilotKnowledgeDocumentationRelease002ContentPackHeader.js": "385bc6afe4e645a00f93a89b0a6e0f093dba9f36e6e6152c20d9e74161ce18cd"
       },
       "includes": [
         {

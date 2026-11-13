@@ -201,7 +201,7 @@ module.exports = {
   rpc: async function (request, moduleName, path, body, p) {
     const invocation = { local: false, moduleName, tenant: request.tenant, request: { tenant: request.tenant },
       connectionName: moduleName === 'profile' ? p.profileConnectionName : moduleName === 'bidding' ? p.biddingConnectionName : p.communicationConnectionName,
-      targetAuthority: { runtimeRole: moduleName === 'profile' ? 'PLATFORM' : moduleName === 'bidding' ? 'COMMERCE' : 'ENGAGEMENT' },
+      targetAuthority: { publication: "OPERATIONAL" },
       apiName: path, methodName: 'POST', requestBody: body, requireInternalAuth: true,
       timeoutMs: p.timeoutMs, maxAttempts: 1, maxResponseBytes: 65536, followRedirects: false,
       secureTransport: { required: true, allowInsecureLoopback: p.allowInsecureLoopback } };

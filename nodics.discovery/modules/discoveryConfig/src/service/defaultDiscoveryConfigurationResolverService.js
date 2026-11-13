@@ -27,29 +27,64 @@ module.exports = {
         return (((CONFIG.get('discovery') || {}).runtime) || {}).profiles || {};
     },
 
+    /** Resolves owner-defined pins through the canonical DMS selector contract.
+     * @returns {Object} Explicit publication and non-null deployment pins.
+     * @throws {Error} For missing publication, retired fields or invalid pins.
+     */
+    targetAuthority: function () {
+        const authority = ((CONFIG.get('discovery') || {}).config || {}).targetAuthority;
+        if (!authority || !['STAGED','ONLINE','OPERATIONAL'].includes(authority.publication)) throw new Error('Discovery configuration requires explicit publication authority');
+        const selected = Object.fromEntries(Object.entries(authority).filter(([key,value]) =>
+            !(['server','environment'].includes(key) && value === null)));
+        return require('../../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService').normalizeTargetAuthority(selected);
+    },
+
+    /** Reads one fixed generated schema contract through the existing qualified transport.
+     * @param {Object} request Original tenant and actor context.
+     * @param {string} schema Fixed supported configuration schema.
+     * @param {Object} query Bounded selector constructed by this owner.
+     * @returns {Promise<Array>} Matching records; an empty result permits configured fallback.
+     * @throws {Error} For missing qualification, transport or owner authorization failure.
+     */
+    readConfiguration: async function (request, schema, query) {
+        const services = {
+            discoveryIndexConfiguration: 'readIndex',
+            discoveryQueryProfile: 'readQueryProfile'
+        };
+        if (!Object.prototype.hasOwnProperty.call(services, schema)) throw new Error('Unsupported Discovery configuration read');
+        const targetAuthority = this.targetAuthority();
+        const body = {tenant: request.tenant, query, pageSize: 1};
+        const response = await SERVICE.DefaultModuleService.invokeModule({
+            moduleName: 'discoveryConfig', targetAuthority,
+            serviceName: 'DefaultDiscoveryConfigurationReadService', operationName: services[schema],
+            apiName: '/internal/configuration/' + (schema === 'discoveryIndexConfiguration' ? 'index' : 'query-profile'), methodName: 'POST', tenant: request.tenant,
+            request: {...body, authData: request.authData}, requestBody: body,
+        });
+        return this.records(response);
+    },
+
     /** Resolves an active index configuration. @param {Object} request Tenant and owner context. @returns {Promise<Object|undefined>} Configuration. */
     resolveIndexConfiguration: async function (request) {
         if (request.indexConfiguration) return request.indexConfiguration;
-        let service = SERVICE.DefaultDiscoveryIndexConfigurationService;
-        if (service && typeof service.get === 'function') {
-            let query = { tenant: request.tenant, ownerType: request.ownerType, status: 'CURRENT' };
-            if (request.indexCode) query.code = request.indexCode;
-            let records = this.records(await service.get({ tenant: request.tenant, authData: request.authData, query, pageSize: 1 }));
-            if (records[0]) return records[0];
-        }
-        let fallback = this.fallback()[request.indexCode || request.ownerType];
+        const query = {tenant: request.tenant, status: 'CURRENT'};
+        if (request.ownerType) query.ownerType = request.ownerType;
+        if (request.indexCode) query.code = request.indexCode;
+        const records = await this.readConfiguration(request, 'discoveryIndexConfiguration', query);
+        if (records[0]) return records[0];
+        const fallback = this.fallback()[request.indexCode || request.ownerType];
         return fallback && fallback.indexConfiguration;
     },
 
     /** Resolves a query profile. @param {Object} request Tenant and profile context. @returns {Promise<Object|undefined>} Query profile. */
     resolveQueryProfile: async function (request) {
         if (request.queryProfile) return request.queryProfile;
-        let service = SERVICE.DefaultDiscoveryQueryProfileService;
-        if (service && typeof service.get === 'function' && request.queryProfileCode) {
-            let records = this.records(await service.get({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: request.queryProfileCode, status: 'CURRENT' }, pageSize: 1 }));
+        if (request.queryProfileCode) {
+            const records = await this.readConfiguration(request, 'discoveryQueryProfile', {
+                tenant: request.tenant, code: request.queryProfileCode, status: 'CURRENT'
+            });
             if (records[0]) return records[0];
         }
-        let fallback = this.fallback()[request.queryProfileCode || request.ownerType];
+        const fallback = this.fallback()[request.queryProfileCode || request.ownerType];
         return fallback && fallback.queryProfile;
     }
 };

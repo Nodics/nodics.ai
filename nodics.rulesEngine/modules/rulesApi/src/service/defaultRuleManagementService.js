@@ -30,9 +30,24 @@ module.exports = {
         return { code: 'RULE_SET_LIST', data: response.result || [] };
     },
 
+    /** Projects existing route admission only; a detail response never grants write authority. */
+    allowedOperations: function (request, group) {
+        const auth = request && request.authData;
+        const secured = SERVICE.DefaultSecuredRequestPipelineService;
+        if (!auth || auth.principalType !== 'human' || auth.tokenType !== 'access' ||
+            !(auth.principalId || auth.loginId || auth.code) || auth.runtimeScope || auth.serviceId ||
+            (request.tenant && auth.tenant && request.tenant !== auth.tenant) || !secured) return [];
+        const routes = require('../router/routers').rulesApi[group];
+        return Object.entries(routes).filter(([name, router]) => router.method !== 'GET' &&
+            !(group === 'ruleDefinitions' && name === 'publishDraft') &&
+            ['hasAcceptedTokenType', 'hasAccessGroup', 'hasRoutePermission'].every(method =>
+                typeof secured[method] === 'function' && secured[method]({ ...request, router }) === true))
+            .map(([name]) => name);
+    },
+
     /** Implements getDefinition as an overrideable service operation. */
     getDefinition: async function (request) {
-        return { code: 'RULE_SET_DETAIL', data: await this.lifecycle().requireRuleSet(request, request.ruleSetCode) };
+        return { code: 'RULE_SET_DETAIL', data: { ...await this.lifecycle().requireRuleSet(request, request.ruleSetCode), allowedOperations: this.allowedOperations(request, 'ruleDefinitions') } };
     },
 
     /** Implements listVersions as an overrideable service operation. */
@@ -71,7 +86,18 @@ module.exports = {
             code: 'RULE_PROPERTY_CATALOGUE',
             data: {
                 catalogue: catalogue,
-                operators: SERVICE.DefaultRuleOperatorService.operators()
+                operators: SERVICE.DefaultRuleOperatorService.operators(),
+                authoring: {
+                    contractVersion: 1,
+                    groupOperators: ['ALL', 'ANY'],
+                    inputQualities: Object.keys(SERVICE.DefaultRuleQualityService.ranks()),
+                    missingValueBehaviors: ['REQUIRED', 'OPTIONAL', 'FALLBACK_ALLOWED'],
+                    limits: SERVICE.DefaultRuleDefinitionValidationService.limits(),
+                    operators: SERVICE.DefaultRuleOperatorService.definitions(),
+                    outcomeTypes: Object.entries(SERVICE.DefaultRuleOutcomeRegistryService.definitions)
+                        .filter(([, definition]) => definition.authoring)
+                        .map(([code, definition]) => ({ code, ...definition.authoring }))
+                }
             }
         };
     },
@@ -106,7 +132,7 @@ module.exports = {
 
     /** Implements getBandSet as an overrideable service operation. */
     getBandSet: async function (request) {
-        return { code: 'SCORE_BAND_SET_DETAIL', data: await this.lifecycle().requireBandSet(request, request.bandSetCode) };
+        return { code: 'SCORE_BAND_SET_DETAIL', data: { ...await this.lifecycle().requireBandSet(request, request.bandSetCode), allowedOperations: this.allowedOperations(request, 'scoreBandSets') } };
     },
 
     /** Implements listBandVersions as an overrideable service operation. */
@@ -122,6 +148,7 @@ module.exports = {
     /** Implements simulateDraft as an overrideable service operation. */
     simulateDraft: async function (request) {
         let ruleSet = await this.lifecycle().requireRuleSet(request, request.ruleSetCode);
+        this.lifecycle().assertExpectedDraft(request, ruleSet);
         if (ruleSet.status !== 'DRAFT') throw new Error('Simulation requires an editable draft');
         let validation = await this.lifecycle().validateRuleSetDraft(Object.assign({}, request, { ruleSetCode: ruleSet.code }));
         let bandVersion = ruleSet.scoreBandSetCode

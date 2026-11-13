@@ -60,7 +60,23 @@ module.exports = {
         if (['EXTERNAL_LOG', 'DATABASE'].includes(sourceType) && (input.allowedChannels.length !== 1 || input.allowedChannels[0] !== 'EMPLOYEE' || ['tenantScopes', 'enterpriseScopes', 'environmentScopes'].some(key => !Array.isArray(input[key]) || !input[key].length))) throw new Error('COPILOT_LIVE_SOURCE_SCOPE_REQUIRED');
         if (sourceType === 'DATABASE' && (paths.some(value => value !== '*' && !/^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(value)) || excludedPaths.some(value => !/^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(value)))) throw new Error('COPILOT_DATABASE_COLLECTION_INVALID');
         if (input.enabled === true && String(input.version).toUpperCase() === 'UNRESOLVED') throw new Error('COPILOT_KNOWLEDGE_SOURCE_VERSION_UNRESOLVED');
+        let publishedContent;
+        if (input.publishedContent !== undefined) {
+            const value = input.publishedContent;
+            const identifier = text => typeof text === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(text);
+            if (sourceType !== 'PUBLISHED_DOCUMENTATION' || input.module !== 'cms' || input.public !== true ||
+                String(input.lifecycle).toUpperCase() !== 'ONLINE' || !Array.isArray(input.tenantScopes) || input.tenantScopes.length !== 1 ||
+                !identifier(input.tenantScopes[0]) || !value || typeof value !== 'object' || Array.isArray(value) ||
+                Object.keys(value).some(key => !['site','locale','channel','digests'].includes(key)) ||
+                !['site','locale','channel'].every(key => identifier(value[key])) ||
+                paths.length > 100 || paths.some(path => !/^[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*$/.test(path)) ||
+                new Set(paths).size !== paths.length || !value.digests || typeof value.digests !== 'object' || Array.isArray(value.digests) ||
+                Object.keys(value.digests).length !== paths.length || paths.some(path => !Object.hasOwn(value.digests, path) || !/^[a-f0-9]{64}$/.test(value.digests[path])))
+                throw new Error('COPILOT_PUBLISHED_CONTENT_BINDING_INVALID');
+            publishedContent = { site:value.site, locale:value.locale, channel:value.channel, digests:{...value.digests} };
+        }
         const normalized = {
+            ...(publishedContent ? { publishedContent } : {}),
             ...(input.runtimeModule ? { runtimeModule: input.runtimeModule } : {}),
             code: String(input.code), repository: String(input.repository), project: String(input.project), module: String(input.module),
             sourceType: sourceType, classification: classification, owner: String(input.owner), version: String(input.version),

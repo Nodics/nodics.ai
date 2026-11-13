@@ -18,24 +18,6 @@
  */
 
 module.exports = {
-  bootstrapIdentity: {
-    source: "environment",
-    adminPassword: {
-      $config: "env",
-      name: "NODICS_BOOTSTRAP_ADMIN_PASSWORD",
-      fallback: null,
-    },
-    servicePassword: {
-      $config: "env",
-      name: "NODICS_BOOTSTRAP_SERVICE_PASSWORD",
-      fallback: null,
-    },
-    serviceApiKey: {
-      $config: "env",
-      name: "NODICS_BOOTSTRAP_SERVICE_API_KEY",
-      fallback: null,
-    },
-  },
   defaultAuthDetail: {
     apiKey: { $config: "env", name: "NODICS_API_KEY", fallback: null },
   },
@@ -120,18 +102,7 @@ module.exports = {
       allowNonExpiringTokens: false,
       allowPasswordHeaders: false,
     },
-    bootstrapIdentity: {
-      required: true,
-      allowedSources: [
-        "environment",
-        "externalProperty",
-        "secretManager",
-        "runtimeSecret",
-      ],
-      localSources: ["localSample", "test"],
-      minimumPasswordLength: 16,
-      minimumApiKeyLength: 32,
-    },
+
   },
   cache: {
     auth: {

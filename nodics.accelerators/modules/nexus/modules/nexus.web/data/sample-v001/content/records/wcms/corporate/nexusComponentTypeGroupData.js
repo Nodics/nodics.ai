@@ -24,6 +24,7 @@
 /** @description Nexus corporate authoring component group. */
 module.exports = {
   record0: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusCorporateSectionGroup",
     name: "Nexus Corporate Sections",
     description:

@@ -64,7 +64,7 @@ async function run() {
         if (!client || !client.isOpen) return;
         const keys = [];
         for await (const key of client.scanIterator({ MATCH: prefix + '*', COUNT: 100 })) keys.push(key);
-        if (keys.length > 0) await client.del(keys);
+        for (const key of keys.flat()) await replicaOne.delete(String(key).slice(prefix.length));
     }
 
     try {
@@ -114,7 +114,10 @@ async function run() {
                 const sequence = offset + index;
                 const value = { moduleName: 'load-module-' + (sequence % 64), instanceId: 'load-' + sequence,
                     expiresAt: Date.now() + 30000 };
-                return replicaOne.set(value.moduleName + ':' + value.instanceId, value, 30000);
+                const target = sequence % 2 ? replicaOne : replicaTwo;
+                return target.set(value.moduleName + ':' + value.instanceId, value, 30000, entries => {
+                    assert(!entries.some(entry => entry.value.instanceId === value.instanceId), 'admission must observe the current independent-member snapshot');
+                });
             }));
         }
         const loadMs = Number(process.hrtime.bigint() - loadStarted) / 1000000;
@@ -122,7 +125,7 @@ async function run() {
         assert((await replicaTwo.size()) >= loadLeases, 'live Redis scan must observe the qualified lease workload');
 
         console.log('BackOffice Redis live contract validated: processes=2, leases=' + loadLeases +
-            ', concurrency=' + loadConcurrency + ', writeMs=' + loadMs.toFixed(3) + ', maxMs=' + maxLoadMs);
+            ', validatedAdmission=true, concurrency=' + loadConcurrency + ', writeMs=' + loadMs.toFixed(3) + ', maxMs=' + maxLoadMs);
     } finally {
         await cleanup(clientOne).catch(() => false);
         await cleanup(clientTwo).catch(() => false);

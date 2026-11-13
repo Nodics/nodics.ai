@@ -9,19 +9,25 @@
 
  */
 
-/** @module nodics.rulesEngine/config/properties @description Composes process-owned policy approval data-release contributions. @layer config @owner rulesEngine @override Later layers may select release placement by runtime role. */
+/** @module nodics.rulesEngine/config/properties @description Composes process-owned policy approval data-release contributions. @layer config @owner rulesEngine @override Later layers explicitly select source sections; destination owners retain admission. */
 module.exports = {
   data: {
     dataReleases: {
-      runtimeRoleProfiles: {
-        PROCESS: {
-          contributions: [
-            {
-              moduleName: "rulesApi",
-              sections: ["rulesPolicyApproval"],
-            },
-          ],
-        },
+      "contributions": {
+        "$config": "keyed",
+        "key": "moduleName",
+        "entries": [
+          {
+            "moduleName": "rulesApi",
+            "sections": {
+              "$config": "replace",
+              "value": [
+                "rulesPolicyApproval"
+              ]
+            }
+          }
+        ],
+        "remove": []
       },
     },
   },

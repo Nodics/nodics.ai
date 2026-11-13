@@ -21,7 +21,26 @@
  * nested field handling, external policy resolution, or response metadata while
  * preserving the generated get pipeline contract.
  */
+// Exact generated read provenance remains process-private and expires with the call.
+const generatedHttpReads = new WeakMap();
+function generatedReadBinding(request) { return JSON.stringify([request.tenant, request.authData]); }
 module.exports = {
+    /** Retains public origin across safe-query translation without forwarding Express/body fields. Not a permission grant. @param {Object} original Authenticated HTTP input. @param {Object} read Exact generated read. @param {Function} execute Existing generated service call. @returns {Promise<*>} Original result. */
+    withGeneratedHttpRead: async function (original, read, execute) {
+        if (!original?.httpRequest || typeof original.httpRequest !== 'object' ||
+            read.tenant !== original.tenant || read.authData !== original.authData || generatedHttpReads.has(read))
+            throw new CLASSES.NodicsError('ERR_AUTH_00003');
+        generatedHttpReads.set(read, generatedReadBinding(read));
+        try { return await execute(read); }
+        finally { generatedHttpReads.delete(read); }
+    },
+    /** Tests exact active provenance and refuses changed actor/tenant. Caller flags and copies confer no admission. @param {Object} request Generated read. @returns {boolean} Whether translation came from HTTP. */
+    isGeneratedHttpRead: function (request) {
+        const proof = generatedHttpReads.get(request);
+        if (proof === undefined) return false;
+        if (proof !== generatedReadBinding(request)) throw new CLASSES.NodicsError('ERR_AUTH_00003');
+        return true;
+    },
     /** Resolves fixed read hooks from actual prepared schema metadata, never request flags. Qualification is evidence, not a privacy bypass. @param {Object} model Prepared provider receiver. @returns {Object|null} Effective configured owner. */
     protectedReadOwner: function (model) {
         const policy =

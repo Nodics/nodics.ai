@@ -110,71 +110,53 @@ module.exports = {
         return assignment;
     },
 
-    /** Resolves one current explicit deployment grant; request headers express a request, never entitlement. */
+    /** Resolves one installation-owned topology entry. Runtime declarations can only request a subset. */
+    deployment: function (claims, modules) {
+        const placements = SERVICE.DefaultDeploymentModuleOwnershipService.runtimePlacements();
+        if (!Array.isArray(placements) || !placements.length || placements.length > 512) this.deny();
+        const matches = placements.filter(item => ['projectCode', 'environmentCode', 'serverCode', 'instanceCode'].every(key => claims[key] && item[key] === claims[key]));
+        if (matches.length !== 1 || !Array.isArray(matches[0].modules) ||
+            modules.some(name => !matches[0].modules.includes(name))) this.deny();
+        return matches[0];
+    },
+
+    /** Refuses invalid installation proof or deployment identity without reflecting credentials. */
+    deny: function () { throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Shared runtime identity or deployment scope is invalid'); },
+
+    /** Issues only for an authenticated native service Employee in its own tenant and enterprise. */
     authorize: async function (request) {
         const auth = request.authData || {}, principal = auth.person || {};
-        const principalCode = principal.loginId || auth.serviceId;
-        if ((principal.principalType || auth.principalType) !== 'service' || !principalCode ||
-            auth.tenant !== request.tenant || !auth.entCode || principal.active === false || principal.disabled === true) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime credentials require an authenticated service principal in the requested tenant');
-        }
-        const headers = request.headers || request.httpRequest && request.httpRequest.headers || {};
-        const claims = {
-            projectCode: headers['x-nodics-project'], environmentCode: headers['x-nodics-environment'],
-            serverCode: headers['x-nodics-server'], instanceCode: headers['x-nodics-runtime-instance']
-        };
+        const detail = CONFIG.get('defaultAuthDetail', request.tenant) || {};
+        const policy = CONFIG.get('authSecurity')?.internalToken;
+        if (!policy?.routePermission || !policy.moduleNamePattern) this.deny();
+        if (auth.tokenType || auth.isSystem || auth.sessionContext || auth.runtimeScope ||
+            principal.principalType !== 'service' || principal.loginId !== 'apiAdmin' || principal.code !== 'apiAdmin' ||
+            principal.active !== true || principal.disabled === true || principal.apiKeyStatus !== 'active' ||
+            (principal.enterpriseCode && principal.enterpriseCode !== auth.entCode) ||
+            !request.tenant || auth.tenant !== request.tenant || !detail.entCode || auth.entCode !== detail.entCode ||
+            !Array.isArray(principal.apiKeyScopes) || !principal.apiKeyScopes.includes(policy.routePermission)) this.deny();
+        const headers = request.headers || request.httpRequest?.headers || {};
+        const claims = { projectCode: headers['x-nodics-project'], environmentCode: headers['x-nodics-environment'],
+            serverCode: headers['x-nodics-server'], instanceCode: headers['x-nodics-runtime-instance'] };
         for (const [key, value] of Object.entries(claims)) this.assertCode(value, key);
-        const modules = typeof headers['x-nodics-modules'] === 'string' ? headers['x-nodics-modules'].split(',').map(value => value.trim()).filter(Boolean) : [];
-        const declaredLimit = Number(((CONFIG.get('authSecurity') || {}).internalToken || {}).maxDeclaredModules || 512);
-        if (!Number.isSafeInteger(declaredLimit) || declaredLimit < 1 || declaredLimit > 512 || !modules.length || modules.length > declaredLimit || new Set(modules).size !== modules.length) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Invalid module identity declaration');
-        }
-        for (const module of modules) {
-            if (!/^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(module)) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Invalid module identity declaration');
-        }
-        const owner = SERVICE.DefaultPrincipalScopeAssignmentService;
-        if (!owner || typeof owner.get !== 'function') throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime authorization authority is unavailable');
-        const result = await owner.get({ tenant: request.tenant,
-            authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
-            query: { principalType: 'service', principalCode, scopeType: 'RUNTIME_DEPLOYMENT', tenantCode: request.tenant, enterpriseCode: auth.entCode },
-            options: { recursive: false, skipItemCache: true, limit: 513 } });
-        if (!result || result.success === false || !/^SUC_/.test(result.code || '') ||
-            (result.errors && result.errors.length) || !Array.isArray(result.result) || result.result.length > 512) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime authorization authority returned an invalid result');
-        }
-        const now = Date.now();
-        const assignments = result.result.filter(item => item.principalType === 'service' && item.principalCode === principalCode &&
-            item.scopeType === 'RUNTIME_DEPLOYMENT' && item.tenantCode === request.tenant && item.enterpriseCode === auth.entCode);
-        for (const assignment of assignments) this.validateAssignment(assignment);
-        const activeInstances = assignments.filter(item => item.status === 'ACTIVE' && item.effect === 'ALLOW')
-            .map(item => item.runtimeScope.instanceCode);
-        if (!/Local$/u.test(claims.environmentCode) && new Set(activeInstances).size > 1) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Each runtime instance requires a distinct service principal');
-        }
-        const effective = assignments.filter(item => item.status === 'ACTIVE' &&
-            (!item.effectiveFrom || new Date(item.effectiveFrom).getTime() <= now) &&
-            (!item.effectiveTo || now < new Date(item.effectiveTo).getTime()) &&
-            Object.entries(claims).every(([key, value]) => item.runtimeScope[key] === value));
-        if (effective.some(item => item.effect === 'DENY') || effective.length !== 1 || effective[0].effect !== 'ALLOW') {
-            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'No unique approved runtime deployment grant');
-        }
-        const assignment = effective[0], scope = assignment.runtimeScope;
-        if (modules.some(module => !scope.modules.includes(module))) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Requested modules exceed approved runtime deployment scope');
-        }
-        const principalPermissions = auth.permissions || principal.userGroupPermissions || [];
-        if (!Array.isArray(principalPermissions) || scope.permissions.some(permission => !principalPermissions.includes('*') && !principalPermissions.includes(permission))) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime deployment permissions exceed the authenticated principal scope');
-        }
-        const policy = (CONFIG.get('authSecurity') || {}).internalToken || {};
-        const lifetime = Number(policy.maximumLifetimeSeconds || 300);
-        if (!Number.isSafeInteger(lifetime) || lifetime < 30 || lifetime > 900) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime credential lifetime must be bounded');
-        const remaining = assignment.effectiveTo ? Math.floor((new Date(assignment.effectiveTo).getTime() - now) / 1000) : lifetime;
-        if (remaining < 1) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime deployment grant is expired');
-        return { tenant: request.tenant, entCode: auth.entCode, serviceId: principalCode,
-            principalType: 'service', runtimeInstanceId: claims.instanceCode,
-            runtimeScope: { ...claims, assignmentCode: this.assertCode(assignment.code, 'assignment code') },
-            modules, permissions: scope.permissions.slice(), userGroups: [],
-            authVersion: auth.authVersion || principal.authVersion || 1, tokenLife: Math.min(lifetime, remaining) };
-    }
+        const limit = policy.maxDeclaredModules;
+        const moduleNamePattern = new RegExp(policy.moduleNamePattern);
+        const modules = typeof headers['x-nodics-modules'] === 'string' ? headers['x-nodics-modules'].split(',').map(name => name.trim()) : [];
+        if (!Number.isSafeInteger(limit) || limit < 1 || limit > 512 || !modules.length || modules.length > limit ||
+            new Set(modules).size !== modules.length || modules.some(name => !moduleNamePattern.test(name))) this.deny();
+        this.deployment(claims, modules);
+        const permissions = auth.permissions;
+        if (!Array.isArray(permissions) || !permissions.includes(policy.routePermission) ||
+            permissions.some(value => typeof value !== 'string' || !/^[A-Za-z][A-Za-z0-9_.:-]{0,191}$/.test(value))) this.deny();
+        const lifetime = policy.maximumLifetimeSeconds;
+        if (!Number.isSafeInteger(lifetime) || lifetime < 30 || lifetime > 900) this.deny();
+        const expiresIn = principal.apiKeyExpiresAt == null ? lifetime :
+            Math.floor((new Date(principal.apiKeyExpiresAt).getTime() - Date.now()) / 1000);
+        if (!Number.isSafeInteger(expiresIn) || expiresIn < 1) this.deny();
+        return { tenant: request.tenant, entCode: auth.entCode, serviceId: principal.loginId,
+            principalType: 'service', runtimeInstanceId: claims.instanceCode, runtimeScope: { ...claims, assignmentCode: this.assertCode(
+                SERVICE.DefaultMandatoryIdentityBootstrapService.runtimeDeploymentGrantCode(claims.environmentCode, claims.serverCode), 'placement code') },
+            modules, permissions: [...new Set(permissions)], userGroups: [],
+            authVersion: principal.authVersion, tokenLife: Math.min(expiresIn, lifetime) };
+    },
 };

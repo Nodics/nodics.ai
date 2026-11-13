@@ -5,13 +5,13 @@ contracts. The unreleased `profile:init-v001` baseline `0.0.1` uses `init-v001`.
 Historical group snapshots are test fixtures, not additional importable releases.
 Human, guest, service identity and tenant placement records are preserved. No
 credential is reset by importing this data and no new identity store is introduced.
-One group header imports the complete bootstrap snapshot, which already includes
-the final runtime configuration, service-account and BackOffice updates. Their
-preserved data contributions have no separate import headers. Tests compare the
-effective grants and run parent-group governance on an empty installation; file
-alphabetization must not import redundant child-only updates before their parents.
+nImport installs Profile’s base groups through `profile:accessGroups` and the
+runtime configuration groups through `config:accessGroups` before creating the
+bootstrap identities. Those are the only group packs in the default plan.
+The nConfig release pins its Profile parent group dependency. Domain groups
+and enterprise roles require explicit capability setup.
 
-Only the existing `runtimeConfigAdminUserGroup` gains:
+The following Copilot permissions belong to `runtimeConfigAdminUserGroup`.
 
 - `copilot.knowledge.internal.read` and `copilot.knowledge.restricted.read`;
 - `copilot.knowledge.source.manage`;

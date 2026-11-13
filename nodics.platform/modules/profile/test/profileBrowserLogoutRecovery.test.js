@@ -100,3 +100,31 @@ test('owner revocation outage still refuses success and retains cookies', async 
     await assert.rejects(service.logout(request), /unavailable/);
     assert.equal(request.responseHeaders['Set-Cookie'], undefined);
 });
+
+for (const customer of [false, true]) {
+    test(`a consumed ${customer ? 'Customer' : 'Employee'} refresh response cannot erase a concurrent rotation`, async () => {
+        const f = fixture(customer);
+        let complete;
+        let consumed = false;
+        SERVICE.DefaultAuthenticationProviderService.rotateRefreshToken = async () => {
+            if (consumed) throw new CLASSES.NodicsError('ERR_CACHE_00001');
+            consumed = true;
+            return new Promise(resolve => { complete = resolve; });
+        };
+        const headers = {
+            cookie: `${f.policy.refreshCookieName}=shared-old-refresh; ${f.policy.csrfCookieName}=shared-csrf`,
+            'x-csrf-token': 'shared-csrf',
+        };
+        const winner = f.request(headers), stale = f.request(headers);
+        const pending = service.restore(winner);
+        const refused = await service.restore(stale);
+        assert.deepEqual(refused, { restored: false, reason: 'BROWSER_SESSION_UNAVAILABLE' });
+        assert.equal(stale.responseHeaders['Set-Cookie'], undefined);
+        assert.equal(stale.responseHeaders['Cache-Control'], 'no-store');
+        complete({ authToken: 'rotated-access', refreshToken: 'rotated-refresh', loginId: 'sample-human' });
+        assert.equal((await pending).authToken, 'rotated-access');
+        assert.equal(winner.responseHeaders['Set-Cookie'].length, 2);
+        assert(winner.responseHeaders['Set-Cookie'].some(cookie => cookie.includes('rotated-refresh')));
+        assert(winner.responseHeaders['Set-Cookie'].every(cookie => !cookie.includes('Max-Age=0')));
+    });
+}

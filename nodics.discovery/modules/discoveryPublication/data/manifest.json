@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "discoveryPublication",
+  "sections": {
+    "init-v001": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Discovery Publication permission catalogue",
+      "description": "Internal generation owner permission vocabulary",
+      "owningDomain": "discoveryPublication",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/discoveryPublicationPermissionHeader.js": "cf7ff0155042d74cfaa99293ec1a9334b42dee5a16c68bf3d0a5ccb65b5ce922",
+        "init-v001/records/identity/discoveryPublicationPermissionData.js": "9326bceb0113e686201f8bdf2a3f4a310f17a915ba70a02ade966aa67796923f"
+      }
+    }
+  }
+}

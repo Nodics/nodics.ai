@@ -42,6 +42,7 @@ module.exports = {
     },
     /** Loads one exact immutable dependency version. */
     load: async function (identity, request) {
+        if (identity.schema === 'cmsExperiencePlacement') return SERVICE.DefaultWcmsExperiencePublicationSourceService.load(identity);
         let response = await this.serviceFor(identity.schema).get({ tenant: request.tenant, authData: request.authData,
             transactionContext: request.transactionContext,
             query: { code: identity.code, versionId: Number(identity.version), active: true }, searchOptions: { limit: 1 } });
@@ -50,7 +51,7 @@ module.exports = {
         return model;
     },
     /** Derives reader search from reachable exact frozen articles, never a stale shared scaffold or latest read. */
-    documentationNavigationProperties: function (properties, models, route) {
+    documentationNavigationProperties: function (properties, models, route, publicationRoutes) {
         const entries = Object.entries(models);
         const associations = new Map();
         for (const [key, item] of entries) {
@@ -60,9 +61,10 @@ module.exports = {
             associations.get(source).push(item.target && item.target.code || item.target);
         }
         const articles = new Map();
-        const scopedRoutes = entries.filter(([key, candidate]) => key.startsWith('cmsPageRoute:') && candidate.active !== false &&
-            candidate.routeType !== 'REDIRECT' && ['site', 'locale', 'channel', 'accessMode'].every(field => candidate[field] === route[field]));
-        for (const [, candidate] of scopedRoutes) {
+        const scopedRoutes = (publicationRoutes || entries.filter(([key]) => key.startsWith('cmsPageRoute:')).map(([, candidate]) => candidate))
+            .filter(candidate => candidate.active !== false && candidate.routeType !== 'REDIRECT' &&
+                ['site', 'locale', 'channel', 'accessMode'].every(field => candidate[field] === route[field]));
+        for (const candidate of scopedRoutes) {
             const pageCode = candidate.page && candidate.page.code || candidate.page;
             if (!models['cmsPage:' + pageCode] || models['cmsPage:' + pageCode].active === false) continue;
             const pending = [pageCode], seen = new Set();
@@ -89,11 +91,12 @@ module.exports = {
             if (!article || article.route !== item.route) return [];
             const keywords = Array.isArray(article.searchKeywords) ? article.searchKeywords : [];
             return [Object.assign({}, item, { title: article.title, summary: article.summary, searchKeywords: keywords,
+                maturityState: article.maturityState, implementationState: article.implementationState, lifecycleState: article.lifecycleState,
                 searchText: typeof article.searchText === 'string' ? article.searchText : [article.title, article.summary, ...keywords].filter(Boolean).join(' ') })];
         }) });
     },
     /** Produces one detached client-safe page graph from preloaded exact frozen dependencies. */
-    buildRouteSnapshot: function (models, route) {
+    buildRouteSnapshot: function (models, route, publicationRoutes) {
         if (!route) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_MISSING', 'Frozen CMS route is unavailable');
         let pageCode = route.page && route.page.code || route.page;
         let page = models['cmsPage:' + pageCode];
@@ -126,7 +129,7 @@ module.exports = {
                     rendererContractVersion: component.rendererContractVersion, rendererChannels: component.rendererChannels,
                     rendererDeprecated: component.rendererDeprecated, rendererReplacement: component.rendererReplacement,
                     properties: this.deliveryProperties(component.renderer === 'documentation.component.navigation'
-                        ? this.documentationNavigationProperties(resolved.properties, models, route) : resolved.properties), localization: resolved.localization,
+                        ? this.documentationNavigationProperties(resolved.properties, models, route, publicationRoutes) : resolved.properties), localization: resolved.localization,
                     media: componentMedia.map(reference => ({ componentMediaCode: reference.componentMediaCode,
                         mediaCode: reference.mediaCode, mediaSetCode: reference.mediaSetCode, mediaType: reference.mediaType,
                         role: reference.role, slot: reference.slot, localeCode: reference.localeCode,
@@ -134,26 +137,73 @@ module.exports = {
                     slot: item.slot || 'default', index: Number(item.index || 0), components: build(component.code, ancestors) };
             });
         };
+        const entry = route.navigationEntry;
+        const navigation = entry && route.routeType === 'PAGE' && typeof entry.code === 'string' &&
+            typeof entry.title === 'string' && entry.title.trim() && Number.isSafeInteger(entry.position) ?
+            [{ code: entry.code, title: entry.title, position: entry.position, path: route.path, pageCode }] : undefined;
         return { contractVersion: 0, site: route.site, path: route.path, locale: route.locale, channel: route.channel,
-            accessMode: route.accessMode, page: { code: page.code, name: page.name, typeCode: page.typeCode,
+            accessMode: route.accessMode, ...(navigation ? { navigation } : {}), page: { code: page.code, name: page.name, typeCode: page.typeCode,
                 template: page.template, renderer: page.renderer, rendererContractVersion: page.rendererContractVersion,
                 rendererChannels: page.rendererChannels, rendererDeprecated: page.rendererDeprecated,
                 rendererReplacement: page.rendererReplacement,
                 templateContract: template && { code: template.code, renderer: template.renderer, contractVersion: template.contractVersion },
                 components: build(page.code) } };
     },
-    /** Produces either one page snapshot or one atomic site-bundle snapshot. */
+    /** Resolves concrete publication locales for the configured shared-route sentinel. */
+    routePublicationLocales: function (route) {
+        const policy = (CONFIG.get('cms') || {}).localization || {};
+        if (!policy.legacyRouteLocale || route.locale !== policy.legacyRouteLocale) return [route.locale];
+        const supplied = policy.supportedLocales && policy.supportedLocales.length ? policy.supportedLocales : [policy.defaultLocale || 'en'];
+        const maximum = Number(((CONFIG.get('cms') || {}).publication || {}).maxBundleRoutes || 200);
+        if (!Array.isArray(supplied) || !supplied.length || supplied.length > maximum || !Number.isSafeInteger(maximum) || maximum < 1)
+            throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_BOUNDARY', 'Shared-route locale boundary is invalid');
+        const canonicalize = SERVICE.DefaultCmsContentLocalizationService && SERVICE.DefaultCmsContentLocalizationService.canonicalize;
+        const locales = supplied.map(locale => canonicalize ? canonicalize.call(SERVICE.DefaultCmsContentLocalizationService, locale) : Intl.getCanonicalLocales(locale)[0]);
+        if (locales.some(locale => !locale || locale === policy.legacyRouteLocale) || new Set(locales).size !== locales.length)
+            throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_BOUNDARY', 'Shared-route locale identities are ambiguous');
+        return locales;
+    },
+    /** Projects only frozen routes; an explicit locale wins over its shared-route projection. */
+    publicationRoutes: function (routes) {
+        const projected = new Map();
+        for (const route of routes) for (const locale of this.routePublicationLocales(route)) {
+            const candidate = Object.assign({}, route, { locale });
+            const key = JSON.stringify([route.site, route.path, locale, route.channel, route.accessMode]);
+            const explicit = locale === route.locale;
+            const previous = projected.get(key);
+            if (previous && previous.explicit === explicit)
+                throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_BOUNDARY', 'Frozen publication route identity is ambiguous');
+            if (!previous || explicit) projected.set(key, { route: candidate, explicit });
+        }
+        const maximum = Number(((CONFIG.get('cms') || {}).publication || {}).maxBundleRoutes || 200);
+        if (projected.size > maximum) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_BOUNDARY', 'Publication route boundary exceeded');
+        return Array.from(projected.values(), entry => entry.route);
+    },
+    /** Builds concrete immutable locale snapshots without treating a route sentinel as a language. */
     buildSnapshot: async function (publication, request) {
         let models = {};
         for (let identity of publication.dependencies || []) models[identity.schema + ':' + identity.code] = await this.load(identity, request);
-        if (publication.rootType !== 'site') return this.buildRouteSnapshot(models, models['cmsPageRoute:' + publication.rootCode]);
-        let site = models['cmsSite:' + publication.rootCode];
-        if (!site) throw new CLASSES.NodicsError('CMS_PUBLICATION_SITE_MISSING', 'Frozen CMS site is unavailable');
-        let routes = Object.keys(models).filter(key => key.startsWith('cmsPageRoute:')).map(key => models[key])
-            .filter(route => route.site === site.code).sort((left, right) => String(left.path).localeCompare(String(right.path)));
-        if (!routes.length) throw new CLASSES.NodicsError('CMS_PUBLICATION_SITE_EMPTY', 'Frozen CMS site contains no routes');
-        return this.compactSiteSnapshot({ contractVersion: 2, bundleType: 'SITE', site: site.code,
-            routes: routes.map(route => this.buildRouteSnapshot(models, route)) });
+        let sourceRoutes;
+        let site;
+        if (publication.rootType === 'site') {
+            const model = models['cmsSite:' + publication.rootCode];
+            if (!model) throw new CLASSES.NodicsError('CMS_PUBLICATION_SITE_MISSING', 'Frozen CMS site is unavailable');
+            SERVICE.DefaultCmsPublicationAdapterService.assertRootScope(publication, model);
+            site = model.code;
+            sourceRoutes = Object.keys(models).filter(key => key.startsWith('cmsPageRoute:')).map(key => models[key])
+                .filter(route => route.site === site).sort((left, right) => String(left.path).localeCompare(String(right.path)));
+        } else {
+            const route = models['cmsPageRoute:' + publication.rootCode];
+            if (!route) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_MISSING', 'Frozen CMS route is unavailable');
+            SERVICE.DefaultCmsPublicationAdapterService.assertRootScope(publication, route);
+            site = route.site;
+            sourceRoutes = [route];
+        }
+        if (!sourceRoutes.length) throw new CLASSES.NodicsError('CMS_PUBLICATION_SITE_EMPTY', 'Frozen CMS publication contains no routes');
+        const routes = this.publicationRoutes(sourceRoutes);
+        if (publication.rootType !== 'site' && routes.length === 1) return this.buildRouteSnapshot(models, routes[0], routes);
+        return this.compactSiteSnapshot({ contractVersion: 2, bundleType: 'SITE', site,
+            routes: routes.map(route => this.buildRouteSnapshot(models, route, routes)) });
     },
     /** Returns the serialized size used by target request-boundary checks. */
     manifestBytes: function (manifest) {
@@ -188,7 +238,7 @@ module.exports = {
         let routes = [].concat(siteManifest && siteManifest.snapshot && siteManifest.snapshot.routes || []);
         let childManifests = [];
         for (let index = 0; index < routes.length; index += 1) {
-            let route = routes[index];
+            let route = siteManifest.snapshot.sharedComponents ? SERVICE.DefaultCmsDeliveryService.expandSharedComponents(routes[index], siteManifest.snapshot.sharedComponents) : routes[index];
             let routeMediaCodes = this.collectMediaCodes(route);
             if (index === 0) {
                 [].concat(publication && publication.mediaCodes || []).forEach(code => {
@@ -202,11 +252,13 @@ module.exports = {
             ].join('_');
             let mediaRequest = Object.assign({}, request, { publicationCode: publication.code, manifestCode: childCode });
             let mediaAssets = routeMediaCodes.length ? await SERVICE.DefaultMediaPublicationTransferService.exportReferenced(routeMediaCodes, mediaRequest) : [];
-            let contentHash = this.contentHash(siteManifest.dependencies, route, mediaAssets);
+            let placements = siteManifest.cmsExperiencePlacements || [];
+            let contentHash = this.contentHash(siteManifest.dependencies, route, mediaAssets, placements);
             let model = { code: childCode, active: true, publicationCode: publication.code, rootType: 'pageRoute',
                 rootCode: route.path, sourceVersion: publication.sourceVersion, dependencies: siteManifest.dependencies,
                 snapshot: route, contentHash: contentHash, parentManifestCode: siteManifest.code,
                 createdBy: siteManifest.createdBy, correlationId: siteManifest.correlationId };
+            if (placements.length) model.cmsExperiencePlacements = placements;
             if (mediaAssets.length) model.mediaAssets = this.redactMediaAssets(mediaAssets);
             childManifests.push(await this.saveManifestModel(model, mediaAssets, request));
         }
@@ -267,22 +319,10 @@ module.exports = {
         });
         return Array.from(codes).sort();
     },
-    /** Loads optional experience placements that belong to the same site publication. */
-    publicationExperiencePlacements: async function (publication, snapshot, request) {
-        if (!SERVICE.DefaultCmsExperiencePlacementService || typeof SERVICE.DefaultCmsExperiencePlacementService.get !== 'function') return [];
-        let site = snapshot && snapshot.site || snapshot && snapshot.bundleType === 'SITE_INDEX' && snapshot.site;
-        if (!site && snapshot && snapshot.bundleType === 'SITE' && Array.isArray(snapshot.routes) && snapshot.routes[0]) site = snapshot.routes[0].site;
-        if (!site && snapshot && snapshot.path) site = snapshot.site;
-        if (!site) return [];
-        let response = await SERVICE.DefaultCmsExperiencePlacementService.get({ tenant: request.tenant, authData: request.authData,
-            transactionContext: request.transactionContext, query: { active: true, site: site }, searchOptions: { limit: 500 } });
-        return this.items(response).map(placement => {
-            let safe = Object.assign({}, placement);
-            delete safe._id;
-            delete safe.created;
-            delete safe.updated;
-            return safe;
-        }).sort((left, right) => String(left.code).localeCompare(String(right.code)));
+    /** Uses only placement values frozen in the reviewed dependency journal. Legacy publications never read mutable placements. */
+    publicationExperiencePlacements: async function (publication) {
+        return (publication.dependencies || []).filter(identity => identity.schema === 'cmsExperiencePlacement')
+            .map(identity => SERVICE.DefaultWcmsExperiencePublicationSourceService.load(identity));
     },
     /** Removes transfer-only bytes before manifests are stored in Mongo. */
     redactMediaAssets: function (mediaAssets) {

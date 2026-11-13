@@ -21,7 +21,7 @@ const owner = {
   identifier(value) { return typeof value === "string" && /^[A-Za-z0-9][A-Za-z0-9_.:@|\-]{0,191}$/.test(value); },
   async read(request) {
     const p = request.payload, policy = CONFIG.get("profileCustomerEvidence"), logger = SERVICE.DefaultLoggerService;
-    if (policy?.enabled !== true || CONFIG.get("runtimeRole")?.code !== policy.runtimeRole ||
+    if (policy?.enabled !== true || (SERVICE.DefaultModuleService?.isLocalModuleActive?.("profile") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") ||
         logger?.hasPrivateCaptureProtection?.(request) !== true) this.fail();
     const a = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "profile");
     if (a.principalType !== "service" || a.isSystem || !a.permissions?.includes("profile.customer.reference.read") ||
@@ -37,7 +37,7 @@ const owner = {
     if (grants.length !== 1) this.fail();
     const auth = structuredClone(a), selection = structuredClone(p), pin = structuredClone(policy);
     const check = () => { if (!isDeepStrictEqual(request.authData, auth) || !isDeepStrictEqual(request.payload, selection) ||
-      !isDeepStrictEqual(CONFIG.get("profileCustomerEvidence"), pin) || CONFIG.get("runtimeRole")?.code !== pin.runtimeRole ||
+      !isDeepStrictEqual(CONFIG.get("profileCustomerEvidence"), pin) || (SERVICE.DefaultModuleService?.isLocalModuleActive?.("profile") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") ||
       NODICS.getSelectedEnvironmentName() !== auth.runtimeScope.environmentCode || request.tenant !== auth.tenant ||
       [request.enterpriseCode, request.entCode, request.httpRequest?.headers?.["x-enterprise-code"]]
         .some(value => value !== undefined && value !== auth.entCode) ||

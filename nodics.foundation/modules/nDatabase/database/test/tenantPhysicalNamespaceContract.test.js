@@ -302,23 +302,59 @@ check('namespace refusals resolve through registered statuses and the actual Nod
         else SERVICE.DefaultStatusService = previous;
     }
 });
+check('single admission resolves each destination once and discards evidence after failure', () => {
+    const original = owner.resolveTenantDatabaseConfiguration;
+    const counts = new Map();
+    owner.resolveTenantDatabaseConfiguration = function (moduleName, tenant) {
+        const key = JSON.stringify([moduleName, tenant]);
+        counts.set(key, (counts.get(key) || 0) + 1);
+        return original.call(this, moduleName, tenant);
+    };
+    try {
+        owner.getDatabaseConfiguration('profile', 'alpha');
+        assert.equal(counts.size, 6);
+        assert([...counts.values()].every(count => count === 1));
+        counts.clear();
+        delete configs.alpha.tenantNamespaceBindings;
+        assert.throws(() => owner.getDatabaseConfiguration('profile', 'alpha'), error => error.code === 'ERR_DATABASE_TENANT_BINDING');
+        assert([...counts.values()].every(count => count === 1));
+        pin();
+        counts.clear();
+        owner.getDatabaseConfiguration('profile', 'alpha');
+        assert([...counts.values()].every(count => count === 1));
+        configs.alpha.profile = { mongodb: { master: { databaseName: owner.getDatabaseConfiguration('profile', 'beta').master.databaseName } } };
+        assert.throws(() => owner.getDatabaseConfiguration('profile', 'alpha'), error => error.code === 'ERR_DATABASE_TENANT_NAMESPACE');
+    } finally { owner.resolveTenantDatabaseConfiguration = original; }
+});
 check('readiness uses actual isolation and durable pins once per tenant without opening providers', () => {
     const originalBinding = owner.assertTenantNamespaceBinding;
+    const originalResolve = owner.resolveTenantDatabaseConfiguration;
     const bindings = [];
+    const destinations = new Map();
     let reads = 0;
     for (const moduleName of ['default', 'profile']) {
-        owner.dbs[moduleName] = Object.fromEntries(tenants.map(tenant => [tenant, {
+        for (const tenant of tenants) owner.addTenantDatabase(moduleName, tenant, {
             master: { getConnection: () => { reads++; return {}; } }
-        }]));
+        });
     }
+    reads = 0;
     owner.assertTenantNamespaceBinding = function (tenant) {
         bindings.push(tenant);
         return originalBinding.call(this, tenant);
+    };
+    owner.resolveTenantDatabaseConfiguration = function (moduleName, tenant) {
+        const key = JSON.stringify([moduleName, tenant]);
+        destinations.set(key, (destinations.get(key) || 0) + 1);
+        return originalResolve.call(this, moduleName, tenant);
     };
     try {
         assert.equal(connections.areRequiredConnectionsReady(), true);
         assert.deepEqual(bindings, ['default', 'alpha', 'beta']);
         assert.equal(reads, 14, 'Isolation checks also inspect acquired handles; none are skipped');
+        assert.equal(destinations.size, 6, 'All module and tenant pairs must be resolved');
+        assert([...destinations.values()].every(count => count === 1), 'Peer and pin checks reuse only this probe’s resolution');
+        assert.equal(connections.areRequiredConnectionsReady(), true);
+        assert([...destinations.values()].every(count => count === 2), 'A new probe resolves every destination afresh');
         bindings.length = 0;
         delete configs.alpha.tenantNamespaceBindings;
         assert.equal(connections.areRequiredConnectionsReady(), false);
@@ -328,19 +364,23 @@ check('readiness uses actual isolation and durable pins once per tenant without 
             databaseName: owner.getDatabaseConfiguration('profile', 'beta').master.databaseName
         } } };
         assert.equal(connections.areRequiredConnectionsReady(), false);
-    } finally { owner.assertTenantNamespaceBinding = originalBinding; }
+    } finally {
+        owner.assertTenantNamespaceBinding = originalBinding;
+        owner.resolveTenantDatabaseConfiguration = originalResolve;
+    }
 });
 check('readiness never retains pin approval, fabricates missing handles or hides provider failure', () => {
     for (const moduleName of ['default', 'profile']) {
-        owner.dbs[moduleName] = Object.fromEntries(tenants.map(tenant => [tenant, {
+        for (const tenant of tenants) owner.addTenantDatabase(moduleName, tenant, {
             master: { getConnection: () => ({}) }
-        }]));
+        });
     }
     assert.equal(connections.areRequiredConnectionsReady(), true);
     configs.alpha.tenantNamespaceBindings = {};
     assert.equal(connections.areRequiredConnectionsReady(), false);
     pin();
     delete owner.dbs.profile.alpha;
+    delete owner.dbs.default.alpha;
     assert.equal(connections.areRequiredConnectionsReady(), false);
     owner.dbs.profile.alpha = { master: { getConnection: () => { throw new Error('provider unavailable'); } } };
     assert.equal(connections.areRequiredConnectionsReady(), false);
@@ -366,16 +406,21 @@ check('readiness never retains pin approval, fabricates missing handles or hides
         for (const fixture of ['readinessGetter', 'readinessConfiguration']) {
             setup();
             for (const moduleName of ['default', 'profile']) {
-                owner.dbs[moduleName] = Object.fromEntries(tenants.map(tenant => [tenant, {
-                    master: { getConnection: () => ({}) }
-                }]));
+                for (const tenant of tenants) owner.addTenantDatabase(moduleName, tenant, {
+            master: { getConnection: () => ({}) }
+        });
             }
             global.SERVICE = { DefaultMongodbDatabaseConnectionHandlerService: provider };
             const loader = { ...initializer, LOG: log };
             await loader.loadServices({ name: 'database', path: path.resolve(__dirname, '..') });
             const selected = SERVICE.DefaultDatabaseConfigurationService;
             const loadedOwner = require('../src/service/config/defaultDatabaseConfigurationService');
-            selected.dbs = owner.dbs;
+            selected.dbs = {};
+            for (const moduleName of ['default', 'profile']) {
+                for (const tenant of tenants) selected.addTenantDatabase(moduleName, tenant, {
+                    master: { getConnection: () => ({}) }
+                });
+            }
             assert.equal(selected.getTenantDatabase, loadedOwner.getTenantDatabase);
             assert.equal(selected.getDatabaseConfiguration, loadedOwner.getDatabaseConfiguration);
             assert.equal(connections.areRequiredConnectionsReady(), true);
@@ -402,9 +447,9 @@ check('readiness never retains pin approval, fabricates missing handles or hides
     const health = require('../../../nSystem/src/service/health/defaultHealthService');
     setup();
     for (const moduleName of ['default', 'profile']) {
-        owner.dbs[moduleName] = Object.fromEntries(tenants.map(tenant => [tenant, {
+        for (const tenant of tenants) owner.addTenantDatabase(moduleName, tenant, {
             master: { getConnection: () => ({}) }
-        }]));
+        });
     }
     NODICS.getServerState = () => 'started';
     NODICS.getActiveModules = () => ['default', 'profile'];

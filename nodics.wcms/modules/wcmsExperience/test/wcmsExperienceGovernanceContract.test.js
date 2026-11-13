@@ -27,7 +27,7 @@ const requiredGovernancePhrases = [
     'Storefront/runtime delivery must not read draft or mutable Staged CMS records directly.',
     'cmsExperiencePlacement` is the targeting and placement source of truth.',
     'Discovery/Elasticsearch is the optimized delivery projection, not the authoring source.',
-    'Indexing must be triggered only from committed CMS publication flow',
+    'Online indexing must be triggered only from committed CMS publication flow',
     'indexing the same release twice produces the same effective projection',
     'WCMS_EXPERIENCE_VIEW',
     'Public resolver responses may include only storefront-safe component projections',

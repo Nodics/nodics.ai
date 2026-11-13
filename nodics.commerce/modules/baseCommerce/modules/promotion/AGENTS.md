@@ -310,8 +310,8 @@ is disabled; provider registration and activation require owner migration,
 retained target policy, durable receipts, pointer CAS and no-source-fallback reads.
 
 This capability owns its publication providers, standard transport and source
-schema role profile. COMMERCE contributes its read-only target observer;
-COMMERCE_STAGED contributes approval/version wiring. Keep installed qualification,
+schema publication policy. ONLINE and OPERATIONAL select delivery observers;
+STAGED selects approval/version wiring through nConfig publication-context bindings. Keep installed qualification,
 connections, signed caller scopes and explicit deployment differences separate.
 Use publicationConfigurationOwnership.test.js in the Commerce group for the
 shared role-isolation matrix, alongside this owner's behavioral regressions.
@@ -421,3 +421,19 @@ Enterprise only from the retained Product projection. This grants no private
 policy enumeration or transaction authority. Direct public availability and Cart
 scope checks retain their existing contracts. Verify the focused Search browsing
 scope regression in `test/promotionDistributionAdmissionContract.test.js`.
+
+Publication transport addresses the logical owner with an explicit publication
+context: STAGED for source authorization, OPERATIONAL or ONLINE for delivery.
+Physical server labels do not grant ownership. Require local module ownership and
+explicit source context before dispatch; retain the runtime token, fixed API,
+operation key, tenant binding and independent target authorization. Legacy
+transport `runtimeRole` selectors reject rather than providing a fallback.
+
+Identity and cross-owner commands route through existing DMS with explicit logical
+module and `targetAuthority.publication`, never physical role codes. Operational
+identity, Store, scheduler, payment and notification owners use OPERATIONAL;
+Product/Pricing authoring references use STAGED. Optional server/environment pins
+remain exact. Reject missing publication and obsolete role selectors. Preserve
+original actor or internal credentials as specified by each API, signed caller
+grants, tenant/business binding, enablement and qualification. Routing descriptors
+do not activate owners or providers. Tests must express these boundaries explicitly.

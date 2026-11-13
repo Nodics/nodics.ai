@@ -13,3 +13,10 @@ reconciliation, never widening. Optional reference assignments use
 stamp. Fresh sign-in is required. Existing business, financial, simulation and
 owner qualification gates still apply. Use explicit version/checksum preflight
 and retain the nImport receipt; skip CURRENT releases rather than replaying them.
+
+## Permission prerequisites
+
+The `participantTransactionAccess` Init release pins `permissionCatalogue` and
+`transferPermissions` before its group and role definitions. Fresh installation
+therefore installs the transfer vocabulary before Profile validates references.
+Definition installation does not assign staff, enable transfers or qualify funding.

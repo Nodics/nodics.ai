@@ -17,6 +17,39 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+  ERR_PROFILE_REFERENCE_SEED_REQUEST: {
+    code: "500",
+    message: "Identity reference setup could not be verified at REQUEST.",
+  },
+  ERR_PROFILE_REFERENCE_SEED_SOURCE_ADMISSION: {
+    code: "500",
+    message: "Identity reference setup could not be verified at SOURCE_ADMISSION.",
+  },
+  ERR_PROFILE_REFERENCE_SEED_MODEL: {
+    code: "500",
+    message: "Identity reference setup could not be verified at MODEL.",
+  },
+  ERR_PROFILE_REFERENCE_SEED_READ_REFERENCE: {
+    code: "500",
+    message: "Identity reference setup could not be verified at READ_REFERENCE.",
+  },
+  ERR_PROFILE_REFERENCE_SEED_PRESERVE_REFERENCE: {
+    code: "500",
+    message: "Identity reference setup could not be verified at PRESERVE_REFERENCE.",
+  },
+  ERR_PROFILE_REFERENCE_SEED_CREATE_REFERENCE: {
+    code: "500",
+    message: "Identity reference setup could not be verified at CREATE_REFERENCE.",
+  },
+  ERR_PROFILE_REFERENCE_SEED_WRITE_ACKNOWLEDGEMENT: {
+    code: "500",
+    message: "Identity reference setup could not be verified at WRITE_ACKNOWLEDGEMENT.",
+  },
+  ERR_PROFILE_REFERENCE_SEED_READBACK: {
+    code: "500",
+    message: "Identity reference setup could not be verified at READBACK.",
+  },
+
   ERR_PROFILE_COUPON_RECIPIENT_POLICY: {
     code: "403",
     message: "Coupon recipient resolution unconfirmed at POLICY.",
@@ -97,6 +130,10 @@ module.exports = {
   ERR_PROFILE_RECOVERY_INPUT: {
     code: "400",
     message: "Check the recovery information and try again.",
+  },
+  ERR_PROFILE_RECOVERY_RATE: {
+    code: "429",
+    message: "Please wait before trying account recovery again.",
   },
   ERR_PROFILE_RECOVERY_CONTINUATION: {
     code: "409",
@@ -186,6 +223,10 @@ module.exports = {
     code: "409",
     message: "Enterprise code already exists",
   },
+  ERR_PROFILE_ENTERPRISE_SETUP_NOT_READY: {
+    code: "503",
+    message: "Enterprise setup is not ready. Ask a platform administrator to review enterprise responsibilities and their required data in Data Import, then try again.",
+  },
   ERR_PROFILE_SETUP_INSPECTION_POLICY: {
     code: "400",
     message: "Enterprise setup inspection policy is unavailable",
@@ -219,8 +260,8 @@ module.exports = {
     message: "Customer registration process break",
   },
   ERR_PRFL_00007: {
-    code: "400",
-    message: "Customer already exist",
+    code: "409",
+    message: "This customer is already registered.",
   },
 };
 

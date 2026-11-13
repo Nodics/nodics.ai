@@ -122,3 +122,8 @@ module.exports = {
         }
     }
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.system.configuration.backoffice = Object.assign({ description: "Runtime configuration records. Applying a change requires the configuration owner and its activation policy." }, module.exports.system.configuration.backoffice);
+module.exports.system.eventListener.backoffice = Object.assign({ description: "Event-listener registrations for this runtime. Definitions do not prove a listener is active or an event was delivered." }, module.exports.system.eventListener.backoffice);
+module.exports.system.interceptor.backoffice = Object.assign({ description: "Interceptor definitions used by this runtime to validate or enrich operations." }, module.exports.system.interceptor.backoffice);

@@ -67,6 +67,17 @@ module.exports = {
       callback,
     );
   },
+  /** Registers a bounded public form through Profile's origin/rate/placement admission; no session or email verification is inferred. */
+  register: function (request, callback) {
+    return this.respond(
+      Promise.resolve().then(() => {
+        this.prepare(request);
+        return SERVICE.DefaultCustomerRegistrationService.registerBrowserForm(request);
+      }),
+      callback,
+      "SUC_PRFL_00000",
+    );
+  },
   /** Starts a customer session from the existing password authentication facade. */
   authenticate: function (request, callback) {
     const operation = Promise.resolve()
@@ -193,9 +204,9 @@ module.exports = {
     );
   },
   /** Adapts owner promises to the existing Nodics envelope/callback contract, with no token logging. */
-  respond: function (operation, callback) {
+  respond: function (operation, callback, code = "SUC_AUTH_00000") {
     const promise = operation.then((result) => ({
-      code: "SUC_AUTH_00000",
+      code,
       result,
     }));
     if (callback) {

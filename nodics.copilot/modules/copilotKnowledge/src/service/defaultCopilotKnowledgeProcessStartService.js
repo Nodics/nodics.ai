@@ -19,11 +19,13 @@
 module.exports = {
   /** Starts an owner-authorized stable identity through nService, accepting only exact Process evidence. @param {Object} request Verified caller request. @param {Object} selected Knowledge-owned assignment and target. @returns {Promise<Object>} Minimized Process receipt. */
   start: async function (request, selected) {
+    if (selected?.target?.publication !== "OPERATIONAL")
+      throw new CLASSES.NodicsError("ERR_CPK_00024");
     const response = await SERVICE.DefaultModuleService.invokeModule({
       moduleName: "workflow",
       local: false,
       connectionName: selected.target.connectionName,
-      targetAuthority: { runtimeRole: selected.target.runtimeRole },
+      targetAuthority: { publication: selected.target.publication },
       tenant: request.tenant,
       header: { tenant: request.tenant },
       methodName: "POST",

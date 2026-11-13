@@ -52,7 +52,7 @@ beforeEach(() => {
         enabled: true,
         actionAuthority: {
             connectionName: 'process-owner',
-            runtimeRole: 'PROCESS',
+            publication: 'OPERATIONAL',
             timeoutMs: 1000,
         },
         assignments: [
@@ -148,6 +148,7 @@ beforeEach(() => {
         },
         DefaultModuleService: {
             invokeModule: async (input) => {
+                assert.deepEqual(input.targetAuthority, { publication: "OPERATIONAL" });
                 claims.push(input);
                 if (claimed) throw new Error('already claimed');
                 claimed = true;
@@ -312,6 +313,8 @@ test('projection uncertainty and policy drift after ingestion withhold completio
 test('canonical Cron-to-Process context reaches one refresh without treating schedule metadata as authority', async () => {
     const cron = require('../../../../nodics.process/modules/cronjob/src/service/trigger/defaultCronJobTriggerHandlerService');
     const process = require('../../../../nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService');
+    SERVICE.DefaultModuleService.isLocalModuleActive = name => name === 'workflow';
+    SERVICE.DefaultModuleService.isCurrentRuntimeAuthority = authority => authority.publication === 'OPERATIONAL';
     const processInput = structuredClone(execution.instance.context);
     SERVICE.DefaultProcessRuntimeLifecycleService = {
         ...process,
@@ -494,5 +497,17 @@ test('history rejects missing or foreign acknowledgements and policy revocation 
         return response;
     };
     await assert.rejects(history.history(input));
+    assert.equal(writes.length, 0);
+});
+
+
+test('Workflow transport refuses non-operational and legacy role-only targets before claim or history', async () => {
+    for (const publication of [undefined, 'STAGED', 'ONLINE', 'PROCESS']) {
+        configuration.knowledge.workflowRefresh.actionAuthority.publication = publication;
+        configuration.knowledge.workflowRefresh.actionAuthority.runtimeRole = 'PROCESS';
+        await assert.rejects(workflow.refresh(request));
+        assert.throws(() => history.selection({ enabled: true, sourceType: 'DOCUMENT' }, {}, configuration));
+    }
+    assert.equal(claims.length, 0);
     assert.equal(writes.length, 0);
 });

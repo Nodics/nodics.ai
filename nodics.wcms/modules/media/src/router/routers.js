@@ -19,6 +19,38 @@
 module.exports = {
     media: {
         library: {
+            listDraftImages: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'media.content.read', apiExposure: 'mediaManagement',
+                key: '/library/draft-images', method: 'GET',
+                controller: 'DefaultMediaStorageController', operation: 'listDraftImages',
+                parameters: [{ name: 'pageNumber', in: 'query', schema: { type: 'integer', minimum: 1, maximum: 10000 } }],
+                responses: { '200': { description: 'Staged image choices in the employee enterprise' } }
+            },
+            previewDraftImage: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'media.content.read', apiExposure: 'mediaManagement',
+                key: '/library/:mediaCode/draft-image', method: 'GET',
+                controller: 'DefaultMediaStorageController', operation: 'previewDraftImage',
+                responseHandler: 'mediaContentResponseHandler',
+                parameters: [{ name: 'mediaCode', in: 'path', required: true, schema: { type: 'string' } }],
+                responses: { '200': { description: 'Authorized Staged image for authoring preview' } }
+            },
+            reviewPublication: { secured: true, authTokenTypes: ['access'],
+                accessGroups: ['runtimeConfigAdminUserGroup', 'commerceSetupPublisherUserGroup'],
+                permission: 'media.storage.policy.view', apiExposure: 'mediaManagement',
+                key: '/library/publications/:publicationCode/review', method: 'GET',
+                controller: 'DefaultMediaLibraryController', operation: 'reviewPublication',
+                parameters: [{ name: 'publicationCode', in: 'path', required: true, schema: { type: 'string' } },
+                    { name: 'localeCode', in: 'query', schema: { type: 'string', enum: ['en', 'ar'] } }],
+                responses: { '200': { description: 'Scoped exact retained Media review metadata; no provider paths or current-asset fallback' } } },
+            reviewImage: { secured: true, authTokenTypes: ['access'],
+                accessGroups: ['runtimeConfigAdminUserGroup', 'commerceSetupPublisherUserGroup'],
+                permission: 'media.content.read', apiExposure: 'mediaManagement',
+                key: '/library/publications/:publicationCode/review/image', method: 'GET',
+                controller: 'DefaultMediaLibraryController', operation: 'reviewImage', responseHandler: 'mediaContentResponseHandler',
+                parameters: [{ name: 'publicationCode', in: 'path', required: true, schema: { type: 'string' } }],
+                responses: { '200': { description: 'Authorized bounded retained raster image; does not activate public delivery' } } },
             list: { secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
                 permission: 'media.storage.policy.view', apiExposure: 'mediaManagement',
                 key: '/library', method: 'GET', controller: 'DefaultMediaLibraryController', operation: 'list' },

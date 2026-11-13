@@ -52,8 +52,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Review pending workflow tasks, running workflows, failed pipeline executions, upcoming or failed cron jobs, incidents, retries, SLA warnings, and operational exceptions.",
-                "documentationRoute": "/docs/capabilities/process-workflow/process-workflow-model",
-                "documentationFragment": "business-process-governance"
+                "documentationRoute": "/docs/framework/process",
+                "documentationFragment": "processOverview-1-beginner-mental-model"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -82,8 +82,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Manage tasks, approvals, workflow definitions, instances, designer, versions, activation, assignments, incidents, recovery, and audit.",
-                "documentationRoute": "/docs/capabilities/process-workflow/process-workflow-model",
-                "documentationFragment": "workflow-management"
+                "documentationRoute": "/docs/framework/process/runtime-lifecycle",
+                "documentationFragment": "processRuntimeLifecycle-1-lifecycle-summary"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -112,8 +112,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned pipeline workspace for definitions, designer, executions, stages, processors, validation, transformation, versions, failures, recovery, and audit.",
-                "documentationRoute": "/docs/framework/process/runtime-lifecycle",
-                "documentationFragment": "pipeline-management"
+                "documentationRoute": "/docs/framework/process",
+                "documentationFragment": "processOverview-1-beginner-mental-model"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -142,8 +142,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Connect manual, event, and scheduled triggers to workflows, pipelines, and domain operations without transferring ownership.",
-                "documentationRoute": "/docs/framework/process/runtime-lifecycle",
-                "documentationFragment": "scheduled-trigger-relationships"
+                "documentationRoute": "/docs/framework/process/scheduled-automation",
+                "documentationFragment": "processScheduledAutomation-2-trigger-lifecycle"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -172,8 +172,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned cross-engine monitoring for activity, queues, waiting work, duration, throughput, failures, retries, incidents, dead letters, and correlated executions.",
-                "documentationRoute": "/docs/framework/process/runtime-lifecycle",
-                "documentationFragment": "automation-monitoring"
+                "documentationRoute": "/docs/framework/process/devops-topology",
+                "documentationFragment": "processDevopsTopology-3-what-to-monitor"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -202,8 +202,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned governed adapters, policies, retry limits, execution boundaries, retention, and diagnostics with no secrets or executable code.",
-                "documentationRoute": "/docs/framework/process/runtime-lifecycle",
-                "documentationFragment": "automation-advanced-configuration"
+                "documentationRoute": "/docs/framework/process/developer-customization",
+                "documentationFragment": "processDeveloperCustomization-2-customization-first-approach"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -233,8 +233,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Create, update, version, deactivate, and archive governed process definitions after process APIs are active.",
-                "documentationRoute": "/docs/capabilities/process-workflow/process-workflow-model",
-                "documentationFragment": "process-definitions"
+                "documentationRoute": "/docs/framework/process/runtime-lifecycle",
+                "documentationFragment": "processRuntimeLifecycle-2-definition-lifecycle"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -264,8 +264,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Review human tasks, assignments, escalations, approvals, and handoffs created by governed workflow instances.",
-                "documentationRoute": "/docs/capabilities/process-workflow/process-workflow-model",
-                "documentationFragment": "tasks-and-approvals"
+                "documentationRoute": "/docs/framework/process/first-human-task",
+                "documentationFragment": "processFirstHumanTask-6-end-to-end-task-example"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -295,8 +295,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Create and manage Process-owned trigger relationships while Cron continues to own job execution.",
-                "documentationRoute": "/docs/framework/process/runtime-lifecycle",
-                "documentationFragment": "scheduled-trigger-relationships"
+                "documentationRoute": "/docs/framework/process/scheduled-automation",
+                "documentationFragment": "processScheduledAutomation-2-trigger-lifecycle"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -327,7 +327,7 @@ const capability = {
             "help": {
                 "summary": "Preview and edit backend-owned draft workflow graph metadata before validation and publishing.",
                 "documentationRoute": "/docs/framework/process/visual-designer",
-                "documentationFragment": "visual-workflow-designer-contract"
+                "documentationFragment": "processVisualDesigner-4-how-a-beginner-should-use-the-first-designer"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [

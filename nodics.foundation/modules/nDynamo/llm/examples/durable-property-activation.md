@@ -152,7 +152,7 @@ does not silently prune evidence or claim an implemented archival workflow.
 
 | Observation | Meaning | Operator action |
 | --- | --- | --- |
-| Stale preview | Effective or committed state changed | Refresh and create a new reviewed request |
+| Stale preview | The owner refused the write and records the claim as STALE (HTTP 409) | Preview the current values and create a new reviewed request |
 | Lost write acknowledgement | Commit may have happened | Do not replay; inspect request claim and authoritative value revision |
 | ACTIVATING remains | Owner or final acknowledgement was uncertain | Investigate request/value evidence; do not reset the claim automatically |
 | PENDING propagation | Commit is durable, publication unconfirmed | Restore/refresh participating nodes from storage and verify their state |
@@ -304,9 +304,12 @@ sequenceDiagram
    does not repeat the property commit or overwrite the original activating actor.
 5. An already completed request with matching evidence returns the same committed
    revision without another transition. The receipt includes `replayed: false`.
-6. Missing, duplicated, foreign or mismatched evidence refuses recovery and leaves
-   the claim untouched. It does not prove that execution failed. Investigate the
-   database/service transport through its existing owner; never manufacture audit.
+6. An older ACTIVATING claim can close as STALE if the complete durable journal
+   proves its reviewed revision was superseded and contains no commit for that
+   request. A STALE receipt has no committed revision and never executes the patch.
+7. Missing, duplicated, foreign or mismatched evidence that cannot prove either
+   outcome returns an unconfirmed conflict and leaves the claim untouched.
+   Investigate through the existing owner. Do not replay the mutation.
 
 Cluster event publication still does not prove every node is current. Verify
 effective values and readiness on each participating runtime, including after
@@ -328,3 +331,20 @@ later-layer overrides, reviewed removal/rollback, bounded due dispatch and
 evidence-only recovery. They use generated-service doubles. Deployed indexes,
 real database concurrency, distributed event delivery and runtime startup remain
 separate acceptance gates.
+
+## Runtime-local storage identity
+
+Durable property keys use `governed-properties:<deployment scopeKey>:<tenant>`.
+The scopeKey is supplied by nDatabase's existing canonical deployment binding,
+not request fields or a new configuration authority. Project, environment and
+logical server are bound; replica identity is intentionally excluded. All reads,
+CAS writes and property read fences use that same existing scope method.
+There is no legacy tenant-only read path. Existing Local Platform/Waste bindings
+remain distinct; the row key also isolates these property values if a generated
+store is shared. Other runtime configuration schema families retain their existing
+runtime-selected database boundaries; this does not qualify shared storage for
+all nDynamo schemas. No database names, schema fields or indexes changed.
+
+## Observe replica adoption
+
+Call the existing secured `GET /nodics/system/v0/config/runtime/summary` on each selected Native node. The `propertyAcknowledgement` field reads authoritative storage without applying it: compare `expectedRevision`/`expectedSequence` with `appliedRevision`/`appliedSequence`. A published metadata event is not a cluster acknowledgement. Restore a stale node through its existing committed-property refresh or normal startup; then read the summary again. Preserve the original activation request and obtain a newly approved compensating rollback. Never rewrite a watermark, reset ACTIVATING or replay an uncertain mutation to produce matching evidence.

@@ -23,7 +23,7 @@ const initializer = require('../src/service/DefaultFrameworkInitializerService')
 const infra = require('../src/service/defaultInfraService');
 
 test('maintenance loads services in effective order without lifecycle or generated startup', async () => {
-    const previous = { NODICS: global.NODICS, UTILS: global.UTILS, loadFiles: loader.loadFiles };
+    const previous = { NODICS: global.NODICS, UTILS: global.UTILS, SERVICE: global.SERVICE, loadFiles: loader.loadFiles };
     const descriptors = Object.getOwnPropertyDescriptors(String.prototype);
     const calls = [];
     const first = { name: 'capability' }, second = { name: 'extension' };
@@ -37,13 +37,17 @@ test('maintenance loads services in effective order without lifecycle or generat
     try {
         global.NODICS = { getIndexedModules: () => new Map([[1, first], [2, second]]) };
         global.UTILS = {};
+        global.SERVICE = { DefaultStatusService: {
+            loadStatusDefinitions: () => calls.push('status-definitions'),
+            init: () => assert.fail('status lifecycle must not run'),
+        } };
         loader.loadFiles = source => { assert.equal(source, '/src/utils/utils.js'); calls.push('utils'); };
         await owner.loadMaintenanceServices();
-        assert.deepEqual(calls, ['utils', 'utilities', 'capability', 'extension']);
+        assert.deepEqual(calls, ['utils', 'utilities', 'capability', 'extension', 'status-definitions']);
         owner.loadServices = async () => { throw new Error('invalid contribution'); };
         await assert.rejects(owner.loadMaintenanceServices(), /invalid contribution/);
     } finally {
-        global.NODICS = previous.NODICS; global.UTILS = previous.UTILS; loader.loadFiles = previous.loadFiles;
+        global.NODICS = previous.NODICS; global.UTILS = previous.UTILS; global.SERVICE = previous.SERVICE; loader.loadFiles = previous.loadFiles;
         for (const key of Object.getOwnPropertyNames(String.prototype)) if (!descriptors[key]) delete String.prototype[key];
         Object.defineProperties(String.prototype, descriptors);
     }
@@ -116,6 +120,15 @@ test('server build, clean and node loading preserve other servers and authored o
         operation = 'start'; select(serverB);
         await initializer.loadModules();
         assert.equal(SERVICE.DefaultItemService.generatedScope(), 'serverB');
+        const validated = infra.getValidatedBuildIdentity();
+        assert.match(validated.inputDigest, /^[a-f0-9]{64}$/);
+        assert.equal(validated.server, 'serverB');
+        assert.equal(validated.project, project.name);
+        assert.equal(validated.environment, environment.name);
+        validated.inputDigest = 'caller-mutation';
+        assert.notEqual(infra.getValidatedBuildIdentity().inputDigest, 'caller-mutation');
+        const runtimeBeforeDiskChange = NODICS;
+        const digestBeforeDiskChange = infra.getValidatedBuildIdentity().inputDigest;
         select(serverA);
         await initializer.loadModules();
         for (const [registry, suffix] of [[SERVICE, 'Service'], [FACADE, 'Facade'], [CONTROLLER, 'Controller']]) {
@@ -136,8 +149,12 @@ test('server build, clean and node loading preserve other servers and authored o
         }
         const originalTemplate = fs.readFileSync(path.join(source.path, 'src', 'service', 'common.js'), 'utf8');
         fs.appendFileSync(path.join(source.path, 'src', 'service', 'common.js'), '\n// changed template');
+        const current = NODICS; global.NODICS = runtimeBeforeDiskChange;
+        assert.equal(infra.getValidatedBuildIdentity().inputDigest, digestBeforeDiskChange, 'running identity must not be recomputed from edited files');
+        global.NODICS = current;
         select(serverA);
         await assert.rejects(initializer.loadModules(), /inputs are stale/);
+        assert.equal(infra.getValidatedBuildIdentity(), undefined, 'failed validation cannot retain proof');
         fs.writeFileSync(path.join(source.path, 'src', 'service', 'common.js'), originalTemplate);
         // A second process/node uses the same selected server directories and gets an uncontaminated baseline.
         select(serverA); await initializer.loadModules();

@@ -194,3 +194,26 @@ approved Waste asset to request a customer-owned coupon entitlement:
 - Waste must not create coupon codes, coupon tokens, coupon claim records,
   wallet balances, reward ledger entries, carbon ledger entries, store/POS
   claims, product pricing, or payment records.
+
+
+## Explicit release contribution composition
+
+Waste contributes six selected sections from four source owners. Profile owns enterprise/address/access definitions; the separate location sample section targets Location Type and Location Core schemas.
+The group owns ordinary `data.dataReleases.contributions` source selectors,
+expressed with `$config: "keyed"`, `key: "moduleName"`, and explicit replacement
+of each owner's `sections`. Duplicate source entries from retired role buckets
+are combined once. No `runtimeRoleProfiles` fold or role-to-destination map remains.
+
+Source visibility does not activate modules, install releases or grant permissions.
+The selected immutable headers and existing nImport destination contract admit
+only actual module/schema owners, or the explicitly configured owner installer.
+Environment, tenant, lifecycle, publication, prerequisite and permission checks
+remain authoritative. Existing manifest selection policies and checksums are
+unchanged; this migration does not add startup profile selections or imports.
+Later customer layers may narrow/remove sources through the same collection
+operators, without copying framework defaults or enabling business capabilities.
+
+The cross-group offline regression is
+`nodics.commerce/test/frameworkReleaseContributionComposition.test.js`; it uses
+real manifests/headers and isolated destination ports, including wrong-host,
+Online denial, collection projection and no-autoimport checks.

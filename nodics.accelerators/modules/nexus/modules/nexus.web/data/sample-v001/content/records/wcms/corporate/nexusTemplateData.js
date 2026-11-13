@@ -24,6 +24,7 @@
 /** @description Nexus corporate page template. */
 module.exports = {
   "record0": {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     "code": "nexusCorporatePageTemplate",
     "name": "Nodics Nexus Corporate Page",
     "renderer": "nexus.template.corporate",

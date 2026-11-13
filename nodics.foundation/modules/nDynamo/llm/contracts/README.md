@@ -41,3 +41,7 @@ runtime start, entity/provider initialization, data import or database operation
 Module/pre-script hooks must preserve the existing generation-only build contract.
 Focused target and failure tests remain in the already registered
 `test/governanceReportMaturityMatrix.test.js` entry.
+
+## Per-node property acknowledgement
+
+The existing secured nSystem governance summary exposes `propertyAcknowledgement` from the persistence owner. Read the committed revision without refresh/apply, compare it with this node's in-memory watermark, and return only tenant/runtime coordinates, timestamps, revisions, sequences and state. `CURRENT` establishes only the responding replica. `STALE`, `NOT_APPLIED`, `MISSING` and `INCONSISTENT` never imply convergence or permission to replay a mutation. A failed owner read remains an error. No values, private fences or secrets enter this projection.

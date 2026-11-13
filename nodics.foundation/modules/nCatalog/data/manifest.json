@@ -46,7 +46,8 @@
         "init-v001/records/catalog/defaultCatalogData.js": "f054c121c14494786e0b8edb00651f33a33979e0091667365a196786962490cb",
         "init-v001/headers/catalog/defaultCatalogHeader.js": "9560d86add83e6662ec97286d812e59a5a3adcde096d7b7f1308336544962993"
       },
-      "sourceRoot": "init-v001"
+      "sourceRoot": "init-v001",
+      "selectionPolicy": "EXPLICIT"
     },
     "sample-v001": {
       "kind": "DATA_RELEASE",

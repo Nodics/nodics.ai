@@ -52,6 +52,7 @@ async function run(failure, settings = {}) {
   const log = { debug() {}, warn() {}, error() {} };
   const processor = { ...outer, LOG: log };
   const fileProcessor = { ...file, LOG: log };
+  let accessChecks = 0;
   let attempts = 0;
   let archived = 0;
   const calls = [];
@@ -65,6 +66,8 @@ async function run(failure, settings = {}) {
     getActiveTenants: () => ["default"],
   };
   global.SERVICE = {
+    DefaultModelImportProcessService: { ...model, LOG: log },
+    ...(settings.traceAccess ? { DefaultSchemaWriteAccessPolicyService: { enforceImportPolicies: async () => { accessChecks++; throw failure; } } } : {}),
     DefaultImportRetryPolicyService: policy,
     DefaultImportDiagnosticsService: diagnostics,
     DefaultImportUtilityService: {
@@ -95,6 +98,14 @@ async function run(failure, settings = {}) {
         }
         assert.equal(name, "processModelImportPipeline");
         calls.push(request.dataModel.code);
+        if (settings.traceAccess) {
+          request.header.rawSchema = {};
+          request.header.options.schemaName ||= "fixture";
+          request.importModelFailureStage = "PERSIST"; // Caller data cannot mint a private owner stage.
+          await new Promise((resolve, reject) => SERVICE.DefaultModelImportProcessService.enforceImportAccessPolicies(request, {}, {
+            nextSuccess: resolve, error: (_request, _response, error) => reject(error),
+          }));
+        }
         if (
           request.dataModel.code === "pending" &&
           (!settings.recover || attempts === 1)
@@ -126,8 +137,22 @@ async function run(failure, settings = {}) {
   } catch (error) {
     rejected = error;
   }
-  return { request, rejected, attempts, archived, calls };
+  return { request, rejected, attempts, archived, calls, accessChecks };
 }
+
+test("actual model access step emits a fixed boundary code and keeps the original denial terminal", async () => {
+  const denial = new FixtureError("ERR_AUTH_00003");
+  const result = await run(denial, { traceAccess: true });
+  assert.equal(result.attempts, 1);
+  assert(result.rejected);
+  assert.equal(denial.code, "ERR_AUTH_00003");
+  assert(result.accessChecks > 0);
+  assert(result.rejected.errors.length > 0);
+  for (const error of result.rejected.errors) {
+    assert.equal(error.code, "ERR_IMP_MODEL_ACCESS");
+    assert.equal(error.errors[0].code, "ERR_AUTH_00003");
+  }
+});
 
 test("declared dependency retries only pending rows; recovered probe leaves no permanent failures", async () => {
   const result = await run(wrapped(safe()), { recover: true });

@@ -245,3 +245,53 @@ Transport classification consumes nService's bounded `metadata.remoteHttpFailure
 Normalization can replace the original top-level code/status; the normalized
 Nodics responseCode is not remote HTTP evidence. Actual fetch/normalization tests
 replace network I/O only and verify no private message/cause is propagated.
+
+Isolated Enterprise reminder composition uses Profile native locator/anchor and
+an exact assignment lookup before persisted group/scope evaluation. Identity
+lock or failed assignment lookup remains UNCONFIRMED with no Communication
+intent or inbox write. Successful explicit assignment absence does not bypass
+opt-in, persisted permissions or deny precedence.
+
+
+The ordinary `communication.dispatchEligibilityOwners.digitalCore.DIGITAL_COUPON_EXPIRING`
+descriptor selects module `digitalCore`, local service
+`DefaultDigitalCouponReminderDeliveryService`, target publication `OPERATIONAL`,
+and API `/internal/coupons/reminder-dispatch-eligibility`. Communication invokes
+fixed `isDispatchEligible` through DMS; ownership chooses local versus remote.
+The local request preserves the original actor, while the remote body contains
+only frozen intent coordinates under internal runtime authentication. There is
+no physical-role switch, hardcoded Commerce connection or catch/fallback. Fresh
+source/recipient refusal continues to suppress or retain uncertainty before
+claim and send; no reminder/provider enablement follows from this descriptor.
+
+
+### Owner routing adoption
+
+`digitalCore.couponReminders.actionAuthority` retains connectionName, timeoutMs and
+maxResponseBytes; replace its physical runtimeRole with
+`targetAuthority: { publication: "OPERATIONAL" }`. Optional server/environment
+pins select an exact deployment. The logical owner is workflow; the fixed
+`/instances/:instanceCode/actions/claim` API, opaque handle, original signed
+runtimeInstanceId and exact sweepCallers admission remain mandatory. STAGED,
+ONLINE, missing publication and legacy role selectors refuse before dispatch.
+Profile and Communication delivery targets likewise use OPERATIONAL. This
+migration does not select a schedule, enable delivery or grant a caller access.
+
+## Offer selection and initialization
+
+Promotion accepts the boolean `couponOffer.expiryReminderEnabled` on fixed-expiry
+offers and captures it in the purchase policy. Digital requires the retained
+value to be true during the sweep and each source recheck. Existing purchases
+without the field are ineligible. Profile independently checks recipient consent.
+
+Select `couponReminderWorkflow` for the Process definition installer,
+`couponReminderTrigger` for Workflow's draft trigger, and
+`couponReminderSchedule` for Cron's inactive hourly job. The schedule references
+the trigger, which references the published Digital definition. Kickoff colocates Cron and Workflow. Split deployments select the Workflow
+connection in Cron and allow the trigger code under Workflow's
+`process.remoteCronTriggers`. The signed Cron principal requires both module
+scopes and `process.trigger.execute`. Process checks the stored trigger/job
+relationship before starting an instance. Its ACTION uses the existing opaque claim to
+call the operational Digital owner on Commerce. Configure the authorized merchant
+context, execution node, caller grants and recipient/template bindings before
+activating the trigger and schedule. Import alone sends no messages.

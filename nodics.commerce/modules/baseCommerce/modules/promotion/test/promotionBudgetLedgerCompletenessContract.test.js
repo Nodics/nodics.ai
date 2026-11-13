@@ -34,7 +34,7 @@ function fixture(t, rows = []) {
     });
     global.CONFIG = { get: key => ({ defaultPageSize: 20, defaultErrorCodes: { NodicsError: 'ERR_SYS_00000' } }[key]) };
     global.CLASSES = { NodicsError };
-    global.SERVICE = {
+    global.SERVICE = { DefaultModuleService: { isLocalModuleActive: moduleName => ["promotion"].includes(moduleName), },
         DefaultStatusService: { get: code => {
             const status = statuses[code] || readStatuses[code] || commonStatuses[code] || authStatuses[code];
             assert(status, 'Status must be registered: ' + code);

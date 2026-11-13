@@ -135,3 +135,10 @@ Action completion audit may retain only an optional static diagnosticCode of
 digits or underscores. Invalid codes are omitted;
 never copy adapter output, messages, IDs or raw errors. Keep this projection
 generic without domain imports and preserve `test/processActionDiagnosticAudit.test.js`.
+
+Remote action routing uses moduleName plus explicit targetAuthority.publication
+and optional exact server/environment pins through nService/DMS. Reject retired
+runtimeRole selectors before issuing a handle. Keep immutable version/API binding,
+original signed runtime scope, completed task evidence and one-use claim CAS.
+The separate CMS decision callback retains its exact API/payload and requires
+explicit STAGED; never infer WCMS_STAGED or migrate stored workflow evidence.

@@ -26,15 +26,7 @@ global.CLASSES = {
 };
 global.CONFIG = {
     get: key => key === 'backofficeAxisPolicy' ? {
-        code: 'axisEmployeeExperiencePolicy',
-        contractVersion: 0,
-        screenLockEnabled: true,
-        idleTimeoutSeconds: 900,
-        minimumIdleTimeoutSeconds: 60,
-        maximumIdleTimeoutSeconds: 86400,
-        recentNavigationLimit: 12,
-        minimumRecentNavigationLimit: 1,
-        maximumRecentNavigationLimit: 24
+        ...require('../config/properties').backofficeAxisPolicy
     } : key === 'defaultTenant' ? 'default' : undefined
 };
 
@@ -72,8 +64,12 @@ const service = require(path.resolve(__dirname, '../src/service/policy/defaultAx
         idleTimeoutSeconds: 900,
         recentNavigationLimit: 12,
         revision: 0,
-        source: 'DEFAULT'
+        source: 'DEFAULT',
+        sessionRecoveryPresentation: require('../config/properties').backofficeAxisPolicy.sessionRecoveryPresentation
     });
+
+    assert.ok(fallback.sessionRecoveryPresentation?.lockedMessage.includes('unsaved'), 'Lock guidance must explain draft retention');
+    assert.ok(fallback.sessionRecoveryPresentation?.expiredMessage.includes('inspect'), 'Expiry guidance must warn about completed pending actions');
 
     let created = await service.update({
         tenant: 'tenantA',
@@ -120,6 +116,18 @@ const service = require(path.resolve(__dirname, '../src/service/policy/defaultAx
         body: { screenLockEnabled: true, idleTimeoutSeconds: 900, expectedRevision: 2 }
     }), /human employee principal/);
 
+    assert.strictEqual(persisted.sessionRecoveryPresentation, undefined, 'Source-owned guidance must not be copied into persistent policy');
+    const originalConfiguration = CONFIG.get;
+    const source = originalConfiguration('backofficeAxisPolicy');
+    const custom = { lockedMessage: 'Project recovery guidance', expiredMessage: 'Project expiry guidance' };
+    CONFIG.get = key => key === 'backofficeAxisPolicy' ? { ...source, sessionRecoveryPresentation: custom } : originalConfiguration(key);
+    assert.deepStrictEqual((await service.getEffective({ tenant: 'tenantA' })).sessionRecoveryPresentation, custom);
+    for (const invalid of [undefined, null, {}, { ...custom, lockedMessage: '' }, { ...custom, expiredMessage: 'x'.repeat(1025) }]) {
+        CONFIG.get = key => key === 'backofficeAxisPolicy' ? { ...source, sessionRecoveryPresentation: invalid } : originalConfiguration(key);
+        await assert.rejects(() => service.getEffective({ tenant: 'tenantA' }), /recovery presentation is incomplete/);
+    }
+    CONFIG.get = originalConfiguration;
+    assert.strictEqual(require('../src/schemas/apiContracts').axisPolicy.properties.contractVersion.minimum, 0);
     console.log('BackOffice Axis policy service tests passed');
 })().catch(error => {
     console.error(error);

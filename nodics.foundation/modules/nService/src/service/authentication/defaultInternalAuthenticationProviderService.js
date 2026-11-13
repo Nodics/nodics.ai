@@ -86,19 +86,19 @@ module.exports = {
         };
     },
 
-    /** Authenticates the configured provider proof and requests a grant-bound credential from Profile. */
+    /** Authenticates the configured provider proof and requests a deployment-bound credential from Profile. */
     fetchInternalAuthToken: async function (tntCode) {
         const credentials = CONFIG.get('defaultAuthDetail', tntCode) || {};
         const headers = this.buildRuntimeIdentityHeaders(tntCode);
         if (!credentials.apiKey || !credentials.entCode) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime identity provider credentials are unavailable');
         // The authority process authenticates the same configured provider proof and
-        // invokes the same Profile grant check before opening an HTTP listener.
-        if (NODICS.isModuleActive(CONFIG.get('profileModuleName') || 'profile')) {
+        // invokes the same Profile placement check before opening an HTTP listener.
+        if (SERVICE.DefaultModuleService.isLocalModuleActive(CONFIG.get('profileModuleName'))) {
             const proof = await SERVICE.DefaultAuthenticationProviderService.authenticateAPIKey({ apiKey: credentials.apiKey, entCode: credentials.entCode });
             const principal = proof.person || {};
             const response = await this.getInternalAuthToken({ tenant: tntCode, headers, authData: {
                 person: principal, tenant: proof.tenant, entCode: proof.enterprise && proof.enterprise.code,
-                permissions: [...new Set([...(principal.apiKeyScopes || []), ...(principal.userGroupPermissions || [])])]
+                permissions: [...new Set([...(principal.apiKeyScopes || []), ...(principal.userGroupPermissions || (principal.userGroups?.length ? UTILS.getUserGroupPermissions(principal.userGroups) : []))])]
             } });
             return response.result;
         }

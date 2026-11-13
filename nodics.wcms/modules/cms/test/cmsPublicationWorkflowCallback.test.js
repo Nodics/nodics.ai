@@ -9,54 +9,76 @@
 
  */
 
-/** Validates exact Process workflow binding, approved activation, rejection, Staged authority, and invalid evidence denial. */
-const assert = require('assert');
+/** Checks decision replay against committed journal identity without replaying approval or activation. */
+const assert = require('node:assert/strict');
 class NodicsError extends Error { constructor(code, message) { super(message); this.code = code; } }
-global.CLASSES = { NodicsError: NodicsError };
-let role = 'STAGED';
+global.CLASSES = { NodicsError };
+let role = 'STAGED', approved = 0, activated = 0, rejected = 0, stored;
 global.CONFIG = { get: key => key === 'cms' ? { publication: { runtimeRole: role } } : undefined };
-let approved = 0;
-let activated = 0;
-let rejected = 0;
-let runtimePrincipalChecks = 0;
-let lifecycleAuth;
-global.SERVICE = { DefaultPublicationLifecycleService: {
-    approve: async request => { approved++; lifecycleAuth = request.authData; assert.strictEqual(request.expectedRevision, 4);
-        return { code: request.publicationCode, state: 'APPROVED', revision: 5 }; },
-    activate: async request => { activated++; assert.strictEqual(request.expectedRevision, 5);
-        return { code: request.publicationCode, state: 'ONLINE', revision: 7, targetVersion: 'v2' }; },
-    reject: async request => { rejected++; lifecycleAuth = request.authData;
-        return { code: request.publicationCode, state: 'REJECTED', revision: 5 }; }
-}, DefaultServiceTokenService: { requireRuntimePrincipal: (request, owner) => {
-    runtimePrincipalChecks++; assert.strictEqual(owner, 'workflow'); assert.strictEqual(request.authData.tokenType, 'service');
-    return request.authData;
-} }, DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true, userGroups: ['systemGroup'] }) },
-DefaultCmsPublicationWorkflowService: { reference: publication => 'cmsPublicationApproval-' +
-    require('crypto').createHash('sha256').update(publication.code + ':' + String(publication.revision)).digest('hex').slice(0, 24) } };
+const reference = publication => 'cmsPublicationApproval-' + require('node:crypto').createHash('sha256')
+    .update(publication.code + ':' + publication.revision).digest('hex').slice(0, 24);
+const decision = approved => ({ tenant: 'default', authData: { tokenType: 'service' }, publicationDecision: {
+    publicationCode: 'home-v2', expectedRevision: 4, approved, reason: approved ? 'Ready' : 'Needs correction',
+    processInstanceCode: reference({ code: 'home-v2', revision: 4 }), processDefinitionCode: 'cmsPublicationApproval',
+    processVersion: 1, correlationId: 'correlation-1'
+} });
+function reset() { stored = { code: 'home-v2', domain: 'cms', revision: 4, state: 'PENDING_APPROVAL',
+    workflowRef: decision(true).publicationDecision.processInstanceCode, correlationId: 'correlation-1', auditTrail: [] }; }
+function transition(state, request, details) {
+    assert.equal(request.expectedRevision, stored.revision);
+    stored.auditTrail.push({ publicationCode: stored.code, fromState: stored.state, toState: state,
+        revision: stored.revision + 1, correlationId: request.correlationId, reason: request.reason, details });
+    stored = { ...stored, state, revision: stored.revision + 1 };
+    return stored;
+}
+global.SERVICE = {
+    DefaultPublicationLifecycleService: {
+        get: async () => structuredClone(stored),
+        approve: async request => { approved++; assert.equal(request.authData.isSystem, true);
+            return transition('APPROVED', request, { workflow: request.workflowEvidence }); },
+        reject: async request => { rejected++; return transition('REJECTED', request, { workflow: request.workflowEvidence }); },
+        activate: async request => { activated++;
+            if (stored.state === 'APPROVED') transition('ACTIVATING', request);
+            transition('ONLINE', { ...request, expectedRevision: stored.revision }, { version: 'v2' });
+            stored.targetVersion = 'v2'; return stored; }
+    },
+    DefaultServiceTokenService: { requireRuntimePrincipal: (request, owner) => {
+        assert.equal(owner, 'workflow'); assert.equal(request.authData.tokenType, 'service'); } },
+    DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
+    DefaultCmsPublicationWorkflowService: { reference }
+};
 const service = require('../src/service/publication/defaultCmsPublicationWorkflowCallbackService');
-const decision = approvedDecision => ({ publicationDecision: { publicationCode: 'home-v2', expectedRevision: 4,
-    approved: approvedDecision, reason: approvedDecision ? 'Ready' : 'Needs correction',
-    processInstanceCode: SERVICE.DefaultCmsPublicationWorkflowService.reference({ code: 'home-v2', revision: 4 }),
-    processDefinitionCode: 'cmsPublicationApproval', processVersion: 1,
-    correlationId: 'correlation-1' }, tenant: 'default', authData: { tokenType: 'service', principalId: 'process-runtime' } });
-
 (async () => {
-    let online = await service.applyDecision(decision(true));
-    assert.deepStrictEqual(online, { publicationCode: 'home-v2', state: 'ONLINE', revision: 7, targetVersion: 'v2' });
-    assert.strictEqual(approved, 1);
-    assert.strictEqual(activated, 1);
-    assert.strictEqual(lifecycleAuth.isSystem, true);
-    assert.deepStrictEqual(lifecycleAuth.userGroups, ['systemGroup']);
-    let denied = await service.applyDecision(decision(false));
-    assert.strictEqual(denied.state, 'REJECTED');
-    assert.strictEqual(rejected, 1);
-    let forged = decision(true);
-    forged.publicationDecision.processInstanceCode = 'cmsPublicationApproval-000000000000000000000000';
-    await assert.rejects(service.applyDecision(forged), /decision is invalid/);
-    await assert.rejects(service.applyDecision({ publicationDecision: Object.assign({}, decision(true).publicationDecision,
-        { processDefinitionCode: 'otherWorkflow' }), authData: { tokenType: 'service' } }), /decision is invalid/);
-    role = 'ONLINE';
-    await assert.rejects(service.applyDecision(decision(true)), /accepted only by CMS Staged/);
-    assert.strictEqual(runtimePrincipalChecks, 4);
-    console.log('CMS publication Process callback validated');
+    reset();
+    const online = await service.applyDecision(decision(true));
+    assert.deepEqual(online, { publicationCode: 'home-v2', state: 'ONLINE', revision: 7, targetVersion: 'v2' });
+    const committed = structuredClone(stored);
+    assert.deepEqual(await service.applyDecision(decision(true)), online);
+    assert.deepEqual(stored, committed); assert.equal(approved, 1); assert.equal(activated, 1);
+    for (const change of [d => { d.approved = false; }, d => { d.reason = 'Changed'; },
+        d => { d.processVersion = 2; }, d => { d.correlationId = 'other'; },
+        d => { d.processInstanceCode = 'cmsPublicationApproval-000000000000000000000000'; },
+        d => { d.processDefinitionCode = 'other'; }]) {
+        const altered = decision(true); change(altered.publicationDecision);
+        await assert.rejects(service.applyDecision(altered), { code: 'CMS_PUBLICATION_WORKFLOW_DECISION_INVALID' });
+        assert.deepEqual(stored, committed);
+    }
+    for (const change of [s => { s.domain = 'other'; }, s => { s.auditTrail[1].revision++; },
+        s => { s.auditTrail[0].details.workflow.version++; }, s => { s.targetVersion = 'different'; },
+        s => { s.revision++; }, s => { s.state = 'FAILED'; }, s => { s.workflowRef = 'different'; }]) {
+        stored = structuredClone(committed); change(stored);
+        await assert.rejects(service.applyDecision(decision(true)), { code: 'CMS_PUBLICATION_WORKFLOW_DECISION_INVALID' });
+    }
+    for (const state of ['APPROVED', 'ACTIVATING']) {
+        stored = structuredClone(committed); const count = state === 'APPROVED' ? 1 : 2;
+        stored.state = state; stored.revision = 4 + count; stored.auditTrail = stored.auditTrail.slice(0, count);
+        delete stored.targetVersion;
+        assert.deepEqual(await service.applyDecision(decision(true)), online);
+        assert.equal(approved, 1, 'Resume must retain the original approval');
+    }
+    reset(); const denied = await service.applyDecision(decision(false));
+    assert.equal(denied.state, 'REJECTED');
+    assert.deepEqual(await service.applyDecision(decision(false)), denied); assert.equal(rejected, 1);
+    role = 'ONLINE'; await assert.rejects(service.applyDecision(decision(true)), /only by CMS Staged/);
+    console.log('CMS exact callback replay, intermediate recovery and mismatched evidence checks passed');
 })().catch(error => { console.error(error); process.exit(1); });

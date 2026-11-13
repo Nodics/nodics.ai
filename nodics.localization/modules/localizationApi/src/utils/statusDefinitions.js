@@ -21,5 +21,6 @@ module.exports = {
     ERR_LAPI_00001: { code: '404', message: 'Published localization bundle is unavailable' },
     ERR_LAPI_00002: { code: '413', message: 'Localization bundle boundary exceeded' },
     SUC_LAPI_00000: { code: '200', message: 'Published localization bundle returned' },
-    SUC_LAPI_00001: { code: '304', message: 'Published localization bundle is unchanged' }
+    SUC_LAPI_00001: { code: '304', message: 'Published localization bundle is unchanged' },
+    SUC_LAPI_00002: { code: '200', message: 'Localization operation completed' }
 };

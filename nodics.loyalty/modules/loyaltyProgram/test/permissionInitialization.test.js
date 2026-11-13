@@ -18,24 +18,29 @@ const path = require("node:path");
 const createPorts = require("../../../../nodics.foundation/modules/nData/nImport/import/test/helpers/releaseExecution");
 
 test("Platform discovers inactive Program permission and includes it in default initialization", async () => {
-  const contributions = require("../../../config/properties").data.dataReleases.runtimeRoleProfiles.PLATFORM.contributions;
+  const bindings = require("../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService");
+  const contributions = bindings.merge({}, require("../../../config/properties")).data.dataReleases.contributions;
   const selected = contributions.filter(item => item.moduleName === "loyaltyProgram");
   assert.deepEqual(selected, [{ moduleName: "loyaltyProgram", sections: ["partnerEligibilityAdministrationPermission"] }]);
-  const state = createPorts({ modules: { loyaltyProgram: { name: "loyaltyProgram", path: path.resolve(__dirname, ".."), index: "12.2" } }, runtimeRole: "PLATFORM" });
+  const profileRoot = path.resolve(__dirname, "../../../../nodics.platform/modules/profile");
+  const { ContactType } = require(path.join(profileRoot, "src/utils/enums"));
+  global.ENUMS = { ContactType: Object.fromEntries(ContactType.definition.map(key => [key, { key }])) };
+  const schema = require(path.join(profileRoot, "src/schemas/schemas")).profile;
+  const state = createPorts({ modules: {
+    profile: { name: "profile", rawSchema: schema, path: profileRoot },
+    loyaltyProgram: { name: "loyaltyProgram", path: path.resolve(__dirname, ".."), index: "12.2" },
+  }, runtimeRole: "PLATFORM" });
   const service = state.service;
-  global.NODICS.getActiveModules = () => [];
+  global.NODICS.getActiveModules = () => ["profile"];
   service.configuration().contributions = selected;
   const code = "loyaltyProgram:partnerEligibilityAdministrationPermission";
   const releases = service.discoverReleases("init");
-  assert.deepEqual(releases.map(item => item.releaseCode), [code]);
-  assert.equal(releases[0].version, "0.0.1");
-  assert.equal(releases[0].selectionPolicy, "DEFAULT");
-  const initializer = require("../../../../nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService");
-  const definition = initializer.defaultInitializationProfileForRole("PLATFORM", new Set(["init", "core"])).localPlatformFoundation;
-  const profile = await service.buildInitializationProfile("localPlatformFoundation", definition, {});
-  assert.deepEqual(profile.steps[0].releases.map(item => item.releaseCode), [code]);
-  const plan = await service.preparePlan({ releaseRequest: { dataType: "init" } });
-  assert.deepEqual(plan.releases.map(item => item.releaseCode), [code]);
+  assert.deepEqual(releases.filter(item => item.moduleName === "loyaltyProgram").map(item => item.releaseCode), [code]);
+  const release = releases.find(item => item.releaseCode === code);
+  assert.equal(release.selectionPolicy, "DEFAULT");
+  assert.equal(service.validateDestination(release), true);
+  const profile = await service.buildInitializationProfile("platformFoundation", { steps: [{ dataType: "init" }] }, {});
+  assert(profile.steps[0].releases.some(item => item.releaseCode === code));
   assert.equal(state.imports.length, 0);
   assert.equal(require("../package.json").nodics.runtime.router, false);
   assert.equal(require("../../loyaltyWallet/data/manifest.json").sections.specialAccessRoles.selectionPolicy, "EXPLICIT");

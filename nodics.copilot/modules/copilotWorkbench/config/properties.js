@@ -18,17 +18,8 @@
  */
 module.exports = {
   copilot: {
-    runtimeRoleProfiles: {
-      PLATFORM: {
-        workbench: {
-          target: {
-            productModule: "product",
-            pricingModule: "pricing",
-          },
-        },
-      },
-    },
     workbench: {
+      target: { productModule: "product", pricingModule: "pricing" },
       receiptRecovery: {
         enabled: false,
         label: "Inspect original business results",
@@ -79,13 +70,13 @@ module.exports = {
         enabled: false,
         moduleName: "digitalCore",
         connectionName: null,
-        targetAuthority: { runtimeRole: "COMMERCE" },
+        targetAuthority: { publication: "OPERATIONAL" },
       },
       orderNotificationTarget: {
         enabled: false,
         moduleName: "digitalCore",
         connectionName: null,
-        targetAuthority: { runtimeRole: "COMMERCE" },
+        targetAuthority: { publication: "OPERATIONAL" },
       },
       couponPresentation: {
         redeemTab: "Redeem",

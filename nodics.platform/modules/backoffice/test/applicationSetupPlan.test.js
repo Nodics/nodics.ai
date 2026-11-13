@@ -42,8 +42,8 @@ const extended = { ...service, setupPlan(input) { const result = service.setupPl
 assert.equal(extended.describe(profile).setupPlan.stages.at(-1).code, 'partnerReview');
 console.log('application setup plan contract passed');
 const artwork = { mediaCode: 'owner-preview', alt: 'Application preview', secret: 'must-not-project' };
-const target = { runtimeRole: 'WCMS_STAGED', endpoint: 'must-not-project' };
-assert.deepEqual(service.describe({ ...profile, target, presentation: { ...profile.presentation, visual: artwork } }).visual, { mediaCode: artwork.mediaCode, alt: artwork.alt, runtimeRole: 'WCMS_STAGED', active: false });
+const target = { publication: 'STAGED', endpoint: 'must-not-project' };
+assert.deepEqual(service.describe({ ...profile, target, presentation: { ...profile.presentation, visual: artwork } }).visual, { mediaCode: artwork.mediaCode, alt: artwork.alt, publication: 'STAGED', active: false });
 for (const src of ['javascript:alert(1)', 'data:image/svg+xml,test', '//other.test/img', 'https://user:secret@other.test/img', 'http://other.test/img', '/\\other.test/img', 'relative.jpg']) {
   assert.equal(service.visual({ src, alt: 'Preview' }, target), undefined);
 }
@@ -52,7 +52,7 @@ assert.equal(service.visual(artwork), undefined, 'no transport target must not g
 for (const mediaCode of ['../secret', 'x/y', 'x?token=test', 'a'.repeat(161), '']) {
   assert.equal(service.visual({ ...artwork, mediaCode }, target), undefined);
 }
-assert.deepEqual(service.visual(artwork, { runtimeRole: 'PARTNER_CONTENT' }), { mediaCode: artwork.mediaCode, alt: artwork.alt, runtimeRole: 'PARTNER_CONTENT', active: false }, 'use the owning profile target, not a frontend runtime map');
+assert.deepEqual(service.visual(artwork, { publication: 'ONLINE' }), { mediaCode: artwork.mediaCode, alt: artwork.alt, publication: 'ONLINE', active: false }, 'use the owning profile target, not a frontend runtime map');
 const prepared = { readiness: 'IMPORTED', preparation: { steps: service.requiredFunctionalModules(profile).map(step => ({ ...step, status: 'CURRENT' })) } };
 assert.equal(service.applicationArtworkActive(profile, prepared), true, 'publication is not required for activated application media');
 assert.equal(service.applicationArtworkActive(profile, { ...prepared, readiness: 'NOT_IMPORTED' }), false, 'catalogue discovery is not application activation');

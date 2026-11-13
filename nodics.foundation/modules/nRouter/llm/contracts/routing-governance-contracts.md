@@ -146,6 +146,16 @@ Each route-owning capability declares `apiExposure.categories.<category>` in its
 
 The framework common default is enabled. Unknown categories inherit that default unless `apiExposure.unknown.enabled` explicitly overrides it. Missing or nonboolean effective enablement is denied; an explicit category denial cannot be undone by the common default. Deployment/node/tenant overrides remain authoritative. Declare customer categories in their actual customer capability even when inheriting the default. Do not copy every category into each project, infer categories from URLs, or change exposure when merely selecting internal provider/knowledge modules. Exposure is route availability, not permission to import, initialize or publish data.
 
+A capability that previously used an unknown category can declare the complete
+neutral policy `{ inheritUnknown: true }` in its own category default. nRouter
+validates this boolean and inherits `apiExposure.unknown.enabled` when present,
+otherwise the common default. This prevents ownership registration from silently
+bypassing an existing unknown-category denial. An explicit category `enabled`
+boolean remains authoritative; invalid explicit values deny rather than fall
+through. Ordinary declared categories without neutral inheritance keep their
+existing common-default behavior. This declaration never grants service tokens,
+permissions, source access or execution qualification.
+
 OpenAPI options retain the canonical environment/server returned by nTooling runtime metadata resolution, including short aliases. Resolve before populating runtime E/S arguments; never pass an unresolved alias into nConfig. Invalid selected servers must fail rather than fall back to a different graph.
 
 Outbound module URLs use the existing discovered package `prefix`, matching route registration. Keep logical module identity and connection aliases unchanged; discover a remote capability source when its API prefix differs from its name.
@@ -154,7 +164,7 @@ Outbound module URLs use the existing discovered package `prefix`, matching rout
 ## Configured browser-origin construction
 
 nRouter owns `httpHardening.cors.originDefaults` (`protocol: 'http'`,
-`host: 'localhost'`), the six standard application `originEndpoints`, enabled CORS,
+`host: 'localhost'`), the framework Axis and Nexus `originEndpoints`, enabled CORS,
 and `originEndpointOverrides` (empty). Later layers may disable or replace this
 policy. Changing endpoints or headers does not override explicit disablement. No request Host/Origin/forwarded header, bound listener, filesystem
 scan, DNS result or running-process inspection can create an allowed endpoint.
@@ -179,7 +189,12 @@ duplicate codes and invalid collection shapes reject. Explicit `allowedOrigins`
 remain additive; derived and explicit denials override every allow entry.
 
 Inherit the standard origins and declare differences through the existing layered
-`httpHardening.cors` policy.
+`httpHardening.cors` policy. Runtime-specific application restrictions belong in
+the customer server properties, not framework runtime-role profiles. For example,
+a deployment that excludes Nexus sets only
+`httpHardening.cors.originEndpointOverrides.nexus: false`. Preserve that explicit
+denial when regrouping modules; neither a module dependency nor a runtime role
+label supplies or removes browser authorization.
 Never derive API trust or CORS enablement from frontend lifecycle configuration.
 A frontend repository, process or health response is not required for backend
 startup, readiness or API acceptance. Frontends own rendering, outage/retry UI,
@@ -198,3 +213,9 @@ changes browser reachability only; request authorization remains independently
 enforced by the route/authentication owners.
 
 nRouter supplies the framework browser origins, Axis 3100 and Nexus 3200. Customer application origins belong in project/environment CORS properties so all intended API compositions receive them independently of application activation or frontend health. Server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.
+
+## Public JSON transfer
+
+The existing JSON response handler negotiates gzip for admitted, public GET success responses between 1 KiB and 8 MiB. Standard enablement, size bounds and compression level belong to `responseHandler.publicJsonCompression` in nRouter; projects supply only intentional overrides. Authenticated, cookie-bearing, sensitive, error, non-JSON and no-transform responses are excluded. Compression failure returns identical ordinary JSON; it never retries a domain operation or changes publication, access or cache authority. See `test/publicJsonCompressionContract.test.js` for successful, excluded and recovery cases.
+
+The request handler passes its trusted registered route as the fourth success-handler argument. Omitted metadata fails closed for compression. Size/level policy is validated before allocation; invalid policy preserves ordinary JSON. Accept-Encoding negotiation honors gzip exclusions and identity preference, and Vary preserves prior headers. Existing content encodings, Set-Cookie, range responses and private request capture contexts are never compressed by this path. Framework tests use a real HTTP listener and verify decompressed JSON byte semantics and transport-failure fallback; Native acceptance separately records the installed response.

@@ -27,6 +27,17 @@ module.exports = {
     postInit: function () { return Promise.resolve(true); },
     /** Returns layered administrative security policy. */
     getConfiguration: function () { return (CONFIG.get('backofficeRegistry') || {}).administration || {}; },
+    /** Projects canonical route admission for a human caller without granting or executing an action. */
+    allowsRouteAction: function (request, router) {
+        const auth = request && request.authData;
+        const secured = SERVICE.DefaultSecuredRequestPipelineService;
+        if (!router || !auth || auth.principalType !== 'human' || auth.tokenType !== 'access' ||
+            !this.getPrincipal(request) || auth.runtimeScope || auth.serviceId ||
+            (request.tenant && auth.tenant && request.tenant !== auth.tenant) || !secured) return false;
+        const candidate = { ...request, router };
+        return ['hasAcceptedTokenType', 'hasAccessGroup', 'hasRoutePermission'].every(method =>
+            typeof secured[method] === 'function' && secured[method](candidate) === true);
+    },
     /** Resolves the authenticated human principal. */
     getPrincipal: function (request) {
         let auth = request && request.authData || {};

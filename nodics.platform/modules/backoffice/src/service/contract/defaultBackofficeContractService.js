@@ -542,6 +542,7 @@ module.exports = {
             "type",
             "required",
             "maximumLength",
+            "minimumLength",
             "defaultValue",
             "bindToPath",
             "defaultFromParameter",
@@ -557,6 +558,11 @@ module.exports = {
         (Number.isInteger(field.maximumLength) &&
           field.maximumLength >= 1 &&
           field.maximumLength <= 4000)) &&
+      (field.minimumLength === undefined ||
+        (["TEXT", "EMAIL", "PASSWORD", "MULTILINE"].includes(field.type) &&
+          Number.isInteger(field.minimumLength) && field.minimumLength >= 1 &&
+          field.minimumLength <= 4000 &&
+          (field.maximumLength === undefined || field.minimumLength <= field.maximumLength))) &&
       (field.bindToPath === undefined ||
         typeof field.bindToPath === "boolean") &&
       (field.defaultFromParameter === undefined ||
@@ -640,6 +646,22 @@ module.exports = {
           section.columns.some((column) => column && column.field === field),
       )
     );
+  },
+  /** Validates inert form receipts and local navigation; it grants no destination access or command. */
+  validateWorkspaceResultPresentation: function (section) {
+    if (section.type !== "form") return false;
+    const action = section.resultNavigation;
+    if (action !== undefined && (!action || typeof action !== "object" || Array.isArray(action) ||
+      Object.keys(action).some(key => !["label", "route", "parameters"].includes(key)) ||
+      !this.isString(action.label, 128) || !this.isString(action.route, 512) ||
+      !/^\/[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*$/.test(action.route) || !this.validateWorkspaceMapping(action.parameters))) return false;
+    const summary = section.resultSummary;
+    if (summary !== undefined && (!Array.isArray(summary) || !summary.length || summary.length > 8 ||
+      summary.some(item => !item || typeof item !== "object" || Array.isArray(item) ||
+        Object.keys(item).some(key => !["field", "label"].includes(key)) ||
+        typeof item.field !== "string" || !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(item.field) || !this.isString(item.label, 128)) ||
+      new Set(summary.map(item => item.field)).size !== summary.length)) return false;
+    return true;
   },
   /** Bounds fresh inspection to one path parameter, the fixed POST owner and required frozen TEXT fields. */
   validateWorkspaceReadSource: function (section) {
@@ -748,6 +770,8 @@ module.exports = {
             "filters",
             "fields",
             "rowNavigation",
+            "resultNavigation",
+            "resultSummary",
             "readSource",
           ].includes(key),
       ) ||
@@ -765,6 +789,7 @@ module.exports = {
     if (
       (section.rowNavigation !== undefined &&
         !this.validateWorkspaceRowNavigation(section)) ||
+      ((section.resultNavigation !== undefined || section.resultSummary !== undefined) && !this.validateWorkspaceResultPresentation(section)) ||
       (section.readSource !== undefined &&
         !this.validateWorkspaceReadSource(section))
     )
@@ -1141,6 +1166,7 @@ module.exports = {
       let allowed = [
         "id",
         "label",
+        "guide", "projectId", "projectLabel", "channelId", "channelLabel", "channelReferences", "articleRoutes",
         "labelKey",
         "type",
         "route",
@@ -1158,6 +1184,19 @@ module.exports = {
       ];
       if (
         Object.keys(source).some((key) => !allowed.includes(key)) ||
+        (source.guide !== undefined && !["framework", "axis", "project"].includes(source.guide)) ||
+        (source.guide === "project"
+          ? !(this.isString(source.projectId, 128) && new RegExp(contracts.moduleName.pattern).test(source.projectId) && this.isString(source.projectLabel))
+          : source.projectId !== undefined || source.projectLabel !== undefined || source.channelId !== undefined) ||
+        ((source.channelId !== undefined || source.channelLabel !== undefined) &&
+          !(this.isString(source.channelId, 128) && new RegExp(contracts.moduleName.pattern).test(source.channelId) && this.isString(source.channelLabel))) ||
+        (source.channelReferences !== undefined && !(source.guide === "project" &&
+          Array.isArray(source.channelReferences) && source.channelReferences.length <= 128 &&
+          source.channelReferences.every(ref => ref && Object.keys(ref).length === 3 &&
+            this.isString(ref.sourceId, 128) && this.isString(ref.channelId, 128) &&
+            new RegExp(contracts.moduleName.pattern).test(ref.channelId) && this.isString(ref.channelLabel)))) ||
+        (source.articleRoutes !== undefined && !(this.isStringList(source.articleRoutes) &&
+          source.articleRoutes.every(route => /^\/docs(?:\/[A-Za-z0-9_-]+)+$/.test(route)))) ||
         !this.isString(source.label) ||
         !["CMS", "OPENAPI"].includes(source.type) ||
         !this.isSafePath(source.route) ||
@@ -1532,7 +1571,7 @@ module.exports = {
             (key) => !["code", "publication"].includes(key),
           ) &&
           this.isString(batch.runtimeRole.code, 64) &&
-          this.isString(batch.runtimeRole.publication, 64))) &&
+          ["STAGED", "ONLINE", "OPERATIONAL"].includes(batch.runtimeRole.publication))) &&
       (batch.node === undefined ||
         batch.node === null ||
         this.isString(batch.node)) &&

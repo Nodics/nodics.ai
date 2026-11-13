@@ -90,7 +90,7 @@ module.exports = {
         !auth.loginId || !authorization || auth.tenant !== r.tenant || !enterpriseCode ||
         auth.enterpriseCode && auth.entCode && auth.enterpriseCode !== auth.entCode ||
         [r.tenantCode, auth.tenantCode].some(value => value !== undefined && value !== r.tenant) ||
-        !p?.connectionName || !p.targetAuthority || !Number.isSafeInteger(p.timeoutMilliseconds) || p.timeoutMilliseconds <= 0)
+        !p?.connectionName || (p.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(p.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) || !Number.isSafeInteger(p.timeoutMilliseconds) || p.timeoutMilliseconds <= 0)
       throw new Error("Original Profile access authority is required");
     const original = structuredClone({ auth, tenant: r.tenant, enterpriseCode: r.enterpriseCode, profile: p });
     const result = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: "profile",

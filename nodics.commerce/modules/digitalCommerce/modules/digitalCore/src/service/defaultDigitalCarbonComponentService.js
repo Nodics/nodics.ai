@@ -43,7 +43,7 @@ module.exports = {
    */
   remote: async function (r, path, body) {
     const p = CONFIG.get("digitalCore")?.bundles?.carbon;
-    if (p?.qualified !== true || !p.connectionName || !p.targetAuthority || !Number.isSafeInteger(p.timeoutMilliseconds) || p.timeoutMilliseconds <= 0 ||
+    if (p?.qualified !== true || !p.connectionName || (p.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(p.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) || !Number.isSafeInteger(p.timeoutMilliseconds) || p.timeoutMilliseconds <= 0 ||
         !Number.isSafeInteger(p.maximumHoldingPages) || p.maximumHoldingPages < 1) throw new CLASSES.NodicsError("ERR_DIGITAL_BUNDLE_OWNER_UNAVAILABLE");
     let result;
     try {

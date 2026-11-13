@@ -29,6 +29,8 @@ module.exports = function (definition, trigger, context, timeZone) {
     let _running = false;
     let _paused = false;
     let _authToken = '';
+    let _jobPool;
+    const _self = this;
 
     this.getCronJob = function () {
         return _cronJob;
@@ -67,115 +69,86 @@ module.exports = function (definition, trigger, context, timeZone) {
         }
     };
 
+    /** Returns whether this timer is paused; independent of an admitted execution. */
+    this.isPaused = function () { return _paused; };
+
+    /** Returns actual timer state after an execution, including stop/pause during work. */
+    this.getIdleState = function () {
+        return !_active ? ENUMS.CronJobState.STOPED.key :
+            _paused ? ENUMS.CronJobState.PAUSED.key : ENUMS.CronJobState.ACTIVE.key;
+    };
+
+    /** Claims the same pooled wrapper used by natural ticks, synchronously. */
+    this.runOnce = function (currentDefinition) {
+        if (_running) throw new CLASSES.NodicsError('ERR_JOB_00006');
+        if (!execute(currentDefinition || _definition))
+            throw new CLASSES.NodicsError('ERR_JOB_00000', 'Execution node is not ready or the schedule has expired');
+    };
+
+    // There is no catch-up queue: a busy natural tick is skipped, never replayed.
+    // The running flag remains held until the full owner trigger pipeline settles.
+    function execute(executionDefinition) {
+        if (_running) return false;
+        if (executionDefinition.end && new Date(executionDefinition.end) < new Date()) return false;
+        if (NODICS.getServerState() !== 'started' ||
+            (CONFIG.get('nodeId') !== executionDefinition.runOnNode && CONFIG.get('nodeId') !== executionDefinition.tempNode)) return false;
+        _running = true;
+        executionDefinition.startTime = new Date();
+        const record = status => {
+            if (!executionDefinition.logResult) return;
+            SERVICE.DefaultCronJobLogService.save({ tenant: executionDefinition.tenant, model: {
+                jobCode: executionDefinition.code, startTime: executionDefinition.startTime,
+                endTime: new Date(), result: { status }
+            }}).catch(() => _self.LOG.error('Failed recording Cron execution log'));
+        };
+        try {
+            Promise.resolve(SERVICE.DefaultPipelineService.start('defaultCronJobTriggerHandlerPipeline', {
+                tenant: executionDefinition.tenant, job: _self,
+                cronJob: _self.getCronJob(), definition: executionDefinition
+            }, {})).then(() => { _running = false; record('SUCCESS'); }, error => {
+                _running = false;
+                record('ERROR');
+                _self.LOG.error('Cron execution failed', { code: error?.code, jobCode: executionDefinition.code });
+            });
+        } catch (error) {
+            _running = false;
+            throw error;
+        }
+        return true;
+    }
+
     this.init = function (oneTime) {
-        let _self = this;
-        let cronTime = this.getCronTime(oneTime);
-        var currentTime = new Date();
-        _self.LOG.info('###### Creating job: ' + _definition.code + ' tenant: ' + definition.tenant + ' with time schedule : ' + cronTime, ' at: ' + currentTime.getHours(), ':' + currentTime.getMinutes(), ':' + currentTime.getSeconds());
+        // Manual execution uses runOnce on the owner pool; no second temporary timer.
+        if (oneTime) throw new Error('Use the pooled runOnce admission for manual execution');
         _cronJob = new CronJob({
-            cronTime: cronTime,
-            /**
-             * Handles each scheduler tick by validating state, running the trigger pipeline, and writing optional execution logs.
-             *
-             * @returns {void}
-             */
+            cronTime: this.getCronTime(false),
+            /** Admits one natural tick on the pooled wrapper; busy executions are skipped without replay. */
             onTick: function () {
-                try {
-                    if (_active && !_paused && !_running) {
-                        let cronJob = _self.getCronJob();
-                        let startTime = new Date();
-                        if (_definition.end && _definition.end < new Date()) {
-                            _self.LOG.warn('   WARN: Job : ' + _definition.code + ' got expired. hence has been stopped');
-                            _self.stopJob(true);
-                        }
-                        if (NODICS.getServerState() === 'started' && (CONFIG.get('nodeId') === _definition.runOnNode || CONFIG.get('nodeId') === definition.tempNode)) {
-                            _running = true;
-                            _definition.startTime = startTime;
-                            _self.LOG.info('--->> job triggered : ' + _definition.code + ' tenant: ' + definition.tenant + ' at: ' + _definition.startTime.getHours() + ':' + _definition.startTime.getMinutes() + ':' + _definition.startTime.getSeconds());
-                            SERVICE.DefaultPipelineService.start('defaultCronJobTriggerHandlerPipeline', {
-                                tenant: _definition.tenant,
-                                job: _self,
-                                cronJob: cronJob,
-                                definition: _definition
-                            }, {}).then(success => {
-                                _running = false;
-                                let endTime = new Date();
-                                if (_definition.logResult) {
-                                    SERVICE.DefaultCronJobLogService.save({
-                                        tenant: _definition.tenant,
-                                        model: {
-                                            jobCode: _definition.code,
-                                            startTime: startTime,
-                                            endTime: endTime,
-                                            result: success
-                                        }
-                                    }).then(success => {
-                                        _self.LOG.debug('Log has been updated successfully');
-                                    }).catch(error => {
-                                        _self.LOG.error('Failed updating log');
-                                    });
-                                }
-                                if (oneTime) _self.stopJob(true);
-                            }).catch(error => {
-                                _running = false;
-                                _definition.endTime = new Date();
-                                _definition.error = error;
-                                _self.LOG.error('Job: ' + _definition.code + ' has issue while execution: ', error);
-                                if (_definition.logResult) {
-                                    SERVICE.DefaultCronJobLogService.save({
-                                        tenant: _definition.tenant,
-                                        model: {
-                                            jobCode: _definition.code,
-                                            startTime: _definition.startTime,
-                                            endTime: _definition.endTime,
-                                            result: _definition.error
-                                        }
-                                    }).then(success => {
-                                        _self.LOG.debug('Log has been updated successfully');
-                                    }).catch(error => {
-                                        _self.LOG.error('Failed updating log: ', error);
-                                    });
-                                }
-                                if (oneTime) _self.stopJob(true);
-                            });
-                        }
-                    }
-                } catch (error) {
-                    _self.handleError(error);
+                if (!_active || _paused) return;
+                if (_definition.end && new Date(_definition.end) < new Date()) { _self.stopJob(true); return; }
+                if (_running) {
+                    SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(_self, { lastSkippedAt: new Date() })
+                        .catch(() => _self.LOG.error('Failed recording skipped Cron tick'));
+                    return;
                 }
+                try { execute(_definition); } catch (error) { _self.handleError(error); }
             },
-            /**
-             * Handles scheduler completion by running the completion pipeline and marking the wrapper inactive.
-             *
-             * @returns {void}
-             */
+            /** Records timer completion without cancelling a target execution already admitted by the owner. */
             onComplete: function () {
-                try {
-                    if (NODICS.getServerState() === 'started' && (CONFIG.get('nodeId') === _definition.runOnNode || CONFIG.get('nodeId') === definition.tempNode)) {
-                        SERVICE.DefaultPipelineService.start('defaultCronJobCompleteHandlerPipeline', {
-                            tenant: _definition.tenant,
-                            job: _self,
-                            cronJob: _self.getCronJob(),
-                            definition: _definition
-                        }, {}).then(success => {
-                            _self.LOG.warn('Job : ' + _definition.code + ' completes successfully');
-                        }).catch(error => {
-                            _self.LOG.error('Job: ' + _definition.code + ' has issue while onComplete: ', error);
-                        });
-                    }
-                } catch (error) {
-                    _self.handleError(error);
-                }
                 _active = false;
+                // A stopped timer does not complete or cancel its already-admitted target.
+                if (_running || NODICS.getServerState() !== 'started') return;
+                try {
+                    SERVICE.DefaultPipelineService.start('defaultCronJobCompleteHandlerPipeline', {
+                        tenant: _definition.tenant, job: _self, cronJob: _self.getCronJob(), definition: _definition
+                    }, {}).catch(error => _self.handleError(error));
+                } catch (error) { _self.handleError(error); }
             },
-            start: _definition.runOnInit,
+            start: false,
             context: _context,
             timeZone: _timeZone
         });
         _active = false;
-        if (oneTime) {
-            _self.startJob(true);
-        }
     };
 
     this.startJob = function (disablePipeline) {

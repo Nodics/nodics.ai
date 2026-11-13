@@ -41,10 +41,13 @@ function fixture(t, onImport) {
         Object.assign(request.importRun, { status: 'COMPLETED', summary: { recordsSucceeded: 1, recordsFailed: 0 } });
         return result;
     };
+    const destinationSchemas = {};
+    NODICS.getModule = name => name === 'authority' ? { rawSchema: destinationSchemas } : undefined;
     NODICS.getActiveModules = () => ['authority'];
     const service = state.service;
     const write = moduleName => fs.writeFileSync(path.join(modules[moduleName].path, 'data/manifest.json'), JSON.stringify(manifests[moduleName]));
     const add = (moduleName, sectionCode, overrides = {}) => {
+        destinationSchemas[sectionCode] = { model: true };
         if (!modules[moduleName]) {
             modules[moduleName] = { name: moduleName, path: path.join(root, moduleName), index: '90' };
             manifests[moduleName] = { contractVersion: 2, module: moduleName, sections: {} };
@@ -121,6 +124,28 @@ test('54 inactive permission owners are selected exactly and awaited before grou
     assert.deepEqual(await f.service.installStartupReleases({ tenant: 'default' }), { skipped: true, reason: 'INIT_CURRENT' });
     assert.deepEqual(f.installations, before);
     assert.equal(f.imports.length, 58);
+});
+
+test('operation selection identifies canonical roots and prerequisites even when a dependency is already current', async t => {
+    const f = fixture(t);
+    const dependency = f.add('authority', 'baseGroups');
+    f.add('authority', 'bootstrap', { prerequisites: [dependency] });
+    await f.service.execute({ tenant: 'default', releaseRequest: { dataType: 'init', releaseCodes: ['authority:baseGroups'] } });
+    f.request.releaseRequest.selection = { contractVersion: 1, requestedReleaseCodes: ['foreign:root'], prerequisites: [] };
+    const validated = await f.service.preflight(f.request);
+    const expected = { contractVersion: 1, requestedReleaseCodes: ['authority:bootstrap'], prerequisites: [{
+        releaseCode: 'authority:baseGroups', moduleName: 'authority', dataType: 'init',
+        version: dependency.version, checksum: dependency.checksum,
+    }] };
+    assert.deepEqual(validated.data.selection, expected);
+    assert.equal(Object.isFrozen(validated.data.selection), true);
+    assert.equal(Object.isFrozen(validated.data.selection.prerequisites), true);
+    assert.equal(validated.data.releases.length, 2);
+    const installed = await f.service.execute(f.request);
+    assert.deepEqual(installed.data.selection, expected);
+    assert.deepEqual(installed.data.releases.map(item => item.releaseCode), ['authority:bootstrap']);
+    assert.equal(f.imports.length, 2);
+    assert.equal(JSON.stringify(installed.data.selection).includes(f.modules.authority.path), false);
 });
 
 test('dependency failure records only the claimed attempt and never dispatches dependent writes', async t => {
@@ -265,13 +290,13 @@ test('missing section, wrong type, wrong destination, wrong version and changed 
     for (const mutate of [
         () => { delete f.manifests.optionalOwner.sections.permissions; },
         () => { section.dataType = 'core'; },
-        () => { section.destinationRole = 'WASTE'; },
+        () => { section.environmentScope = ['PRODUCTION']; },
         () => { section.version = '1.0.0'; },
         () => { f.manifests.authority.sections.bootstrap.prerequisites[0].checksum = '0'.repeat(64); f.write('authority'); }
     ]) {
         f.manifests.optionalOwner.sections.permissions = section;
         Object.assign(section, original); mutate(); f.write('optionalOwner');
-        await assert.rejects(f.service.installStartupReleases({}), /prerequisite|destination/);
+        await assert.rejects(f.service.installStartupReleases({}), /prerequisite|destination|environment/);
         assert.equal(f.imports.length, 0); assert.equal(f.installations.length, 0);
     }
 });
@@ -504,6 +529,9 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
         discovery.indexModuleRecords(records, modules);
         const rawSnapshot = structuredClone(modules);
         const f = releaseExecution({ modules, runtimeRole: 'PLATFORM' });
+        NODICS.getModule = name => name === 'profile' ? { ...modules.profile,
+            rawSchema: Object.fromEntries(['permission', 'userGroup', 'enterpriseRole', 'principalScopeAssignment',
+                'employee', 'customer', 'address', 'contact', 'enterprise', 'tenant'].map(name => [name, { model: true }])) } : undefined;
         NODICS.getActiveModules = () => ['profile'];
         NODICS.getIndexedModules = () => new Map([['profile', modules.profile]]);
         NODICS.getNodicsHome = () => path.join(repo, 'nodics.foundation');
@@ -517,6 +545,7 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
             source: 'test', adminPassword: 'test-admin-password-12345', servicePassword: 'test-service-password-12345',
             serviceApiKey: 'test-service-api-key-value-12345678901234567890'
         } : key === 'authSecurity' ? { ...require('../../../../nAuth/config/properties').authSecurity,
+            bootstrapIdentity: require(path.join(repo, 'nodics.platform/modules/profile/config/properties')).authSecurity.bootstrapIdentity,
             compatibility: { ...require('../../../../nAuth/config/properties').authSecurity.compatibility, allowLocalBootstrapIdentity: true }
         } : config(key);
         const targets = [];
@@ -530,21 +559,22 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
         } };
         const request = { tenant: 'default', releaseRequest: { dataType: 'init', releaseCodes: ['profile:init-v001'] } };
         const plan = await f.service.preparePlan(request);
+        const orderedCodes = plan.releases.map(release => release.releaseCode);
+        const permissionIndex = orderedCodes.indexOf('wasteCarbon:transferFinalizationPermission');
+        assert(permissionIndex >= 0 && permissionIndex < orderedCodes.indexOf('profile:init-v001'),
+            'Fresh Init installs the service account permission before the account');
         const catalogue = plan.releases.filter(item => item.sectionCode === 'permissionCatalogue');
         const manifest = JSON.parse(fs.readFileSync(path.join(modules.profile.path, 'data/manifest.json'), 'utf8'));
         const pinned = manifest.sections['init-v001'].prerequisites;
         const catalogues = pinned.filter(item => item.sectionCode === 'permissionCatalogue');
         assert(catalogues.length >= 54, 'the full capability vocabulary remains explicitly pinned');
-        const additionalCatalogues = catalogue.filter(release =>
-            !catalogues.some(reference => reference.moduleName === release.moduleName));
-        assert.deepEqual(new Set(additionalCatalogues.map(release => release.releaseCode)),
-            new Set(['wasteCarbon:permissionCatalogue', 'wasteReward:permissionCatalogue']),
-            'Carbon and material-value roles carry their own transitive permission catalogues');
-        assert.equal(catalogue.length, catalogues.length + 2);
-        assert.equal(plan.prerequisiteReferences.length, pinned.length + 2);
-        assert.equal(plan.releases.length, pinned.length + 3);
+        assert.equal(catalogue.length, catalogues.length);
+        assert.equal(plan.releases.length, pinned.length + 1);
+        assert.deepEqual(plan.releases.filter(item => item.sectionCode === 'accessGroups')
+            .map(item => item.moduleName).sort(), ['config', 'profile']);
+        assert(!plan.releases.some(item => /Roles|businessAccessGroups/.test(item.sectionCode)));
         assert.equal(plan.releases.at(-1).releaseCode, 'profile:init-v001');
-        assert.equal(plan.releases.at(-1).version, '0.0.8');
+        assert.equal(plan.releases.at(-1).version, '0.0.1');
         const cart = plan.releases.find(release => release.moduleName === 'cart');
         assert(cart, 'the real absent Cart prerequisite is resolved without loading Cart');
         const cartRequest = f.service.createImportRequest(request, { ...plan, releases: [cart] }, false);
@@ -592,8 +622,8 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
         assert(tenantPlan.referenceReleases.length >= catalogues.length);
         assert(tenantPlan.releases.every(item => !['permissionCatalogue', 'enterpriseRoles'].includes(item.sectionCode)));
         assert(tenantPlan.releases.some(item => item.sectionCode === 'accessGroups'));
-        const shared = tenantPlan.releases.find(item => tenantPlan.referenceReleases.some(other => item.releaseCode === other.releaseCode));
-        assert(shared, 'group dependency closure must retain separate default and business nodes');
+        const globalPermission = tenantPlan.referenceReleases.find(item => item.releaseCode === 'cart:permissionCatalogue');
+        assert(globalPermission);
         const foreign = structuredClone(f.installations);
         SERVICE.DefaultImportService.importInitData = async importRequest => {
             assert.equal(importRequest.tenant, 'businessTenant');
@@ -601,7 +631,7 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
             importRequest.importRun = { status: 'COMPLETED', summary: { recordsSucceeded: 1, recordsFailed: 0 } };
             return {};
         };
-        const closureReceipt = f.installations.find(item => item.releaseCode === shared.releaseCode);
+        const closureReceipt = f.installations.find(item => item.releaseCode === globalPermission.releaseCode);
         const closureIndex = f.installations.indexOf(closureReceipt);
         f.installations.splice(closureIndex, 1);
         await assert.rejects(f.service.executePreparedPlan(tenantRequest, tenantPlan), /Referenced partition prerequisite is not current/);

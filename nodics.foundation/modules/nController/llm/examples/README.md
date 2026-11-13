@@ -13,3 +13,5 @@ secured routing, never from body siblings such as `authData` or `moduleName`.
 Unknown/read-only model fields cannot become runtime authority. See
 `nDatabase/database/test/generatedMutationParityContract.test.js` for both
 completion styles and the generated facade/service path with owner/CAS checks.
+
+Pass trusted `update` as the fourth argument to shared mutation normalization on PATCH. Keep create as the create operation. Never infer this choice from request body data; update models must preserve stored tenant/enterprise placement.

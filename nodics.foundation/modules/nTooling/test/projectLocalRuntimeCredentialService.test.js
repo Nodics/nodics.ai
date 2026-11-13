@@ -25,6 +25,14 @@ const service = require('../src/service/project/defaultProjectLocalRuntimeCreden
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-local-runtime-credentials-'));
 fs.mkdirSync(path.join(root, 'envs', 'kickoffLocal'), { recursive: true });
 
+const simulation = path.join(root, 'envs', 'kickoffDockerLocal');
+fs.mkdirSync(simulation);
+fs.writeFileSync(path.join(simulation, 'package.json'), JSON.stringify({
+    nodics: { deploymentClass: 'LOCAL_PRODUCTION_SIMULATION' }
+}));
+const injected = { NODICS_JWT_SECRET: 'fixture-container-injection' };
+assert.deepStrictEqual(service.mergeEnvironment(root, 'kickoffDockerLocal', injected), injected);
+assert(!fs.existsSync(service.credentialPath(root, 'kickoffDockerLocal')));
 const first = service.mergeEnvironment(root, 'kickoffLocal', {});
 const second = service.ensureCredentials(root, 'kickoffLocal');
 const file = service.credentialPath(root, 'kickoffLocal');
@@ -37,8 +45,8 @@ assert(first.NODICS_API_KEY_PEPPER, 'generated local credentials must include AP
 assert(first.NODICS_API_KEY, 'generated local credentials must include a server-local runtime proof');
 assert(first.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY,
     'native-local startup must support encrypted provider configuration');
-assert.strictEqual(first.NODICS_BOOTSTRAP_ADMIN_PASSWORD, 'adminPassword',
-    'native-local credentials must keep the documented administrator password');
+assert(!service.isWeakBootstrapSecret(first.NODICS_BOOTSTRAP_ADMIN_PASSWORD));
+assert.equal(first.NODICS_BOOTSTRAP_SERVICE_API_KEY, undefined);
 assert.strictEqual(first.NODICS_RUNTIME_API_KEY, undefined,
     'new native-local credentials must not generate server-shared runtime aliases');
 assert.strictEqual(first.NODICS_WASTE_API_KEY, undefined,

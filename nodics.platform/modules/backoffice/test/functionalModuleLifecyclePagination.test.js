@@ -67,6 +67,27 @@ async function run() {
     updates = [];
     await service.reconcileActiveRuntimeLeases(leases.slice(1), [], request);
     assert.deepEqual(updates[0].model.technicalModules, ['leaf-two']);
-    console.log('Functional-module lifecycle paging and replica membership validated');
+    records = [{ code: 'one', projectCode: 'project-one', functionalModule: 'module-one',
+        catalogueRevision: 4, technicalModules: ['leaf-one', 'leaf-two'], runtimeState: 'ACTIVE',
+        observedServers: ['local:a:default', 'local:b:default'], lastObservedAt: '2026-11-12T00:00:00.000Z' }];
+    updates = [];
+    await service.reconcileActiveRuntimeLeases(leases.slice(0, 1), [], request, { completeSnapshot: false });
+    assert.equal(updates.length, 0, 'one memory member cannot retire observations owned by another member');
+    await service.reconcileActiveRuntimeLeases([], ['project-one'], request,
+        { completeSnapshot: false, removedLeases: leases.slice(0, 1) });
+    assert.equal(updates[0].model.runtimeState, 'ACTIVE');
+    assert.deepEqual(updates[0].model.observedServers, ['local:b:default']);
+    assert.deepEqual(updates[0].model.technicalModules, ['leaf-one', 'leaf-two']);
+    assert.equal(updates[0].query.lastObservedAt, records[0].lastObservedAt);
+    Object.assign(records[0], updates[0].model); updates = [];
+    await service.reconcileActiveRuntimeLeases([], ['project-one'], request,
+        { completeSnapshot: false, removedLeases: leases.slice(1) });
+    assert.equal(updates[0].model.runtimeState, 'OFFLINE');
+    assert.deepEqual(updates[0].model.observedServers, []);
+    updates = [];
+    await service.reconcileActiveRuntimeLeases([], ['project-one'], request,
+        { completeSnapshot: true, snapshotAt: Date.parse(records[0].lastObservedAt) });
+    assert.equal(updates.length, 0, 'a stale full snapshot cannot retire a concurrent registration');
+    console.log('Functional-module lifecycle paging, partial peer preservation and snapshot fences validated');
 }
 run().catch(error => { console.error(error); process.exitCode = 1; });

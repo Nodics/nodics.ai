@@ -38,3 +38,9 @@ never mint credentials, seed fixtures, fund wallets, alter grants or retry an
 uncertain mutation automatically. Preserve exact synthetic receipt and replay
 assertions. Tests inject HTTP/storage; executing an installed suite is a separate
 authorized action with real simulation-state effects.
+
+Capability transport selects logical module plus explicit OPERATIONAL publication,
+with optional exact server/environment pins. Reject physical-role selectors.
+Preserve original bearer for participant reads and internal authentication for
+settlement/evidence. See the relocatable transport contract; do not infer grants
+from cohosting or rewrite persisted transaction evidence.

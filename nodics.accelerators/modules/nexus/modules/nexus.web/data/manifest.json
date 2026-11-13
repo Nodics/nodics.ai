@@ -6,7 +6,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "sample",
       "sourceRoot": "sample-v001",
-      "version": "0.0.1",
+      "version": "0.0.4",
       "displayName": "Nexus Corporate Site",
       "description": "Nexus corporate Site and page composition source",
       "owningDomain": "nexus.wcms",
@@ -22,19 +22,21 @@
       "initialPublicationPolicy": "ADMIN_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "files": {
-        "sample-v001/content/headers/wcms/nexusCorporateContentHeader.js": "018a10d95031b4aecff83f02a3d4230da7d6961c19df1f5d29a78000cf1ab5c1",
+        "sample-v001/content/headers/wcms/nexusCorporateContentHeader.js": "a37681b5787e98614c5ff8cc5563676b4b557eef83ea02b1ab6d63fffdd2ad95",
         "sample-v001/content/records/wcms/corporate/nexusCatalogData.js": "99682125076c6e0a417ff3f2e6c9756e2e1ea1198e88676e71bba6cfd2fa224a",
-        "sample-v001/content/records/wcms/corporate/nexusComponentData.js": "db83dc6c75306b8d6de1b8dcc6576ecc5784dd050b83d7f94407f1522167664b",
-        "sample-v001/content/records/wcms/corporate/nexusComponentTypeGroupData.js": "d5a0bd164ea25c2328a7c137cddc722f131faee8c13f3ce9554a83533734343b",
-        "sample-v001/content/records/wcms/corporate/nexusNavigationData.js": "9bc49e123c206afe4a61c6ba5f22b6df19341e700b0d507310c4737d720c4c8b",
-        "sample-v001/content/records/wcms/corporate/nexusPageData.js": "b11328228d7a06f2cf6403dbc599d27ea006b453fc09c9ceab9d02db681d684b",
-        "sample-v001/content/records/wcms/corporate/nexusRendererData.js": "8b4eaa2e9831d99801514bf6397d1d5ef5c4d06df2872e859dc038fc942b70ed",
-        "sample-v001/content/records/wcms/corporate/nexusRouteData.js": "c48f5ae53d94354f75ae263d3921b568b65aa252885a8db5b614e6932f39f4bd",
-        "sample-v001/content/records/wcms/corporate/nexusSiteData.js": "3fcbf0df63a65b55bce2a87fa3fc28ed7c0db94262b342252987603e719d7a92",
-        "sample-v001/content/records/wcms/corporate/nexusSlotData.js": "479cf5dc45e425c73043a05999428aaeffdc307898d4e08a4019c303d7946efc",
-        "sample-v001/content/records/wcms/corporate/nexusTemplateData.js": "393e700914e78627cd4d7a0a66ca80bd70c6a957fad77e714a0253421035160c",
-        "sample-v001/content/records/wcms/corporate/nexusTypeCodeData.js": "40447a8f0207abbb9f3e53cef8f5870366924756cda2081532a5ab169339319e"
-      }
+        "sample-v001/content/records/wcms/corporate/nexusComponentData.js": "fac5e24dae3c0d61b4e0d51f7b2e178450f7b8177113132390aef32dfa457617",
+        "sample-v001/content/records/wcms/corporate/nexusComponentTypeGroupData.js": "11b37149dce99c136f5b7c2fa094d077ddf808adeee87ae54bd30ebeb17bee14",
+        "sample-v001/content/records/wcms/corporate/nexusNavigationData.js": "f62bebc512cedce91d8a7bd2fd15b90b92ea0bbf27a30d29ba7d5cacca23be6b",
+        "sample-v001/content/records/wcms/corporate/nexusPageData.js": "3fb399ab539fe06db737b1b5349575bb81561eaa6ff8191744e67bbf634632dc",
+        "sample-v001/content/records/wcms/corporate/nexusRendererData.js": "b8e33dec83db28699d9efd162a912b0ef03aef48587518db614560f27729040f",
+        "sample-v001/content/records/wcms/corporate/nexusRouteData.js": "122df5620a47114f558db45f3d1b5fc0850e6dc4129b856b7d644c6e9e0e5e9a",
+        "sample-v001/content/records/wcms/corporate/nexusSiteData.js": "5b5dbea0f2bc641ec2302f71f4c846ed934e43d682c60a5166010d480cc4fb35",
+        "sample-v001/content/records/wcms/corporate/nexusSlotData.js": "f7f55233f437e9a841fead78d727ec73c0991b8ade6a595095ff7e7af0a29d71",
+        "sample-v001/content/records/wcms/corporate/nexusTemplateData.js": "b7ce40423ca57cb77920105421b8671df93ab81443afeee36995bd3f36beabee",
+        "sample-v001/content/records/wcms/corporate/010_nexusTypeCodeData.js": "39f8924678afa86a4614b2856cb9c59c5117cfd209ddb1badde54197ccb50f33",
+        "sample-v001/content/records/wcms/corporate/nexusComponentLocalizationData.js": "ae8abfa00f045900eb926e4756d9a213c10fb8b0f07cf3c9a47f67066d4ac8ee"
+      },
+      "selectionPolicy": "EXPLICIT"
     },
     "nexusEditorialSource": {
       "kind": "DATA_RELEASE",
@@ -57,12 +59,13 @@
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "files": {
         "sample-v001/content/headers/editorial/nexusEditorialSampleDataHeader.js": "21324874c0f8a7c75122e20b4243449ee9b659f3f0ce966af4121e01d254042e",
-        "sample-v001/content/records/editorial/nexusEditorialArticleData.js": "847ea2b83a258ed1f61cb531d9eaaf0568801592026d07e84a1e94b4b15d3ba3",
+        "sample-v001/content/records/editorial/nexusEditorialArticleData.js": "e4d8829d91c8a27ce1cb02f3dad6c5ae6046c944e8ee1f2519a6cae4da800c14",
         "sample-v001/content/records/editorial/nexusEditorialArticleLocalizationData.js": "7a57da0f213942fef2eebda2f2901b4b5aa101f59d6a44b667044f7879385e96",
         "sample-v001/content/records/editorial/nexusEditorialArticleTaxonomyData.js": "d3663de4d72d2236a129e11d450fa44fe1136057be499a87c62988599cee12a8",
         "sample-v001/content/records/editorial/nexusEditorialAuthorData.js": "9c8c7b59851fc248146d754af442cef7ba935245569dab0f78a09d0e145ceb18",
         "sample-v001/content/records/editorial/nexusEditorialTaxonomyTermData.js": "ae4da76968416126f5374ea38824e2ae0bda98bc16e6a2c89789b696fbfb697a"
-      }
+      },
+      "selectionPolicy": "EXPLICIT"
     },
     "nexusEngagementOperational": {
       "kind": "DATA_RELEASE",
@@ -136,7 +139,7 @@
         "sample-v001/content/assets/nexus-cms-media/files/nodicsSecureHero.png": "c24d18f224dc1b408278c347888779861476e720e55139367b7ff8701f9cccc5",
         "sample-v001/content/assets/nexus-cms-media/files/oxaviaHeroTwo.jpg": "730b287a38999e9048e9526c9363bd9135e51a21944885a9c2ec7c21f94a76c9",
         "sample-v001/content/headers/media/nexusMediaReferenceHeader.js": "db5c6f1551dd4e5bb17702fdaddec94fb0e54a1eab8e58cbd3bcfd3323e046f9",
-        "sample-v001/content/records/media/nexusComponentMediaData.js": "41bec06910de2041ef1c36ee62a7936c79a1ba019f4b418aae5c573dbae587c8",
+        "sample-v001/content/records/media/nexusComponentMediaData.js": "ed784f8c8568529c21475fb8cfefa641fa5b4ea3efabad37f01ea4d1346d7374",
         "sample-v001/content/records/media/nexusMediaData.js": "aef7d5269771e2ae7595ed1a14055d88cb995443c931e888efad16b50461cb79",
         "sample-v001/content/records/media/nexusMediaReferenceData.js": "557bcdf73b49d8fc9183c98f6b4132d7369bf460b0b959a473e1263834359fef",
         "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-electronics-home.png": "d8e6e478ef8554aaf9156f12fcc7fc2777b932fe5a4fcbd7ac5ef21bfae0b891",
@@ -152,7 +155,8 @@
         "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-apparel-shop-v2.png": "5781ecc4976ba22e7320d9b777d569014ab8df60f48ce1fc5516a29a7d8ce192",
         "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-apparel-mobile-v2.png": "985e5bea5db82940a231742da1b2491a9b418a9e4e51e0d6381d78db960c00e1",
         "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-apparel-menu.png": "5723af1c5ec26906662e85ea8b9976525bd4294ff6e48f5f7c7506549d92d8ea"
-      }
+      },
+      "selectionPolicy": "EXPLICIT"
     },
     "documentation": {
       "kind": "CONTENT_PACK",

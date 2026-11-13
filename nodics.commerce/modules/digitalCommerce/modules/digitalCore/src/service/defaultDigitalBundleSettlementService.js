@@ -52,7 +52,7 @@ module.exports = {
    */
   settings: function () {
     const p = CONFIG.get("digitalCore")?.bundleSettlement;
-    if (!p?.loyalty?.connectionName || !p.loyalty.targetAuthority || !Number.isSafeInteger(p.loyalty.timeoutMs) ||
+    if (!p?.loyalty?.connectionName || (p.loyalty.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(p.loyalty.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) || !Number.isSafeInteger(p.loyalty.timeoutMs) ||
         p.loyalty.timeoutMs < 1 || !Number.isSafeInteger(p.maximumPaymentRecords) || p.maximumPaymentRecords < 2 || p.feeAmount !== "0")
       throw new Error("Bundle settlement configuration is invalid");
     return p;

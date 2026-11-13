@@ -125,7 +125,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "media",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -147,16 +147,16 @@
       "pages": 4,
       "components": 4,
       "routes": 4,
-      "releaseChecksum": "f74638be9d66d7f1672dd22ca946f10434385d0b85b659126198089ef3018b72",
+      "releaseChecksum": "761bf611fca5febfaceefb8894850e522f6bcdb461cbfef775d04c508af93d76",
       "generatedHashes": {
         "docs-v001/records/documentation/mediaDocumentationNodeData.js": "f93ea09f3c0797923e2c2cdc0ab87e798da5db1483aa170a31a58085e1a1a341",
-        "docs-v001/records/documentation/mediaDocumentationPageMetadataData.js": "f8e7883dc41b1c39d0252d80707f35885a47e94a813ccc7f882fbfcbbc816f8b",
-        "docs-v001/records/documentation/mediaDocumentationPublicationStateData.js": "f2f68e683bb52a2126b1da3e8956a4a4486f8ca87958978ac47229059fac89f1",
-        "docs-v001/records/documentation/mediaDocumentationSearchMetadataData.js": "f45ea262a9578b54b3a3f8cdec495f15e456b50a706a4f38d7abfaf79469d7c8",
-        "docs-v001/records/documentation/mediaDocumentationComponentData.js": "0bdef3e43373a848ac839537cb1134646dfd399dd517c96b76a296a2d9fb5a3a",
+        "docs-v001/records/documentation/mediaDocumentationRelease002PageMetadataData.js": "47ca0e9afba1a8e23137c39ea1ebf2bca352186934a8e7c1c60f3ffaa1299e6e",
+        "docs-v001/records/documentation/mediaDocumentationRelease002PublicationStateData.js": "38d708eebb72aefe40b9a3e5afa27101dcdee3370380663b808c377b97e08f5a",
+        "docs-v001/records/documentation/mediaDocumentationRelease002SearchMetadataData.js": "6c348606585d2499aa4cb11991ce1da47b2c70dc6385e31005aff8da6cf962a8",
+        "docs-v001/records/documentation/mediaDocumentationRelease002ComponentData.js": "5c044ffccfda09043a8513ca956ec7382410ad9e1488b939b07af5fffaf6df45",
         "docs-v001/records/documentation/mediaDocumentationPageData.js": "9101757e4337605c93e4648ca24ff2ba6ad61f15da7f2ebc18bcd8a1d18b2c0b",
         "docs-v001/records/documentation/mediaDocumentationRouteData.js": "0b789dce2ac6f8a5be42ae9df07bd88d7f6bfca2b5064a19435dad3fa1102537",
-        "docs-v001/headers/100_mediaDocumentationContentPackHeader.js": "34faf4a80292f5d33fd80eb0f08c98a24f323ef9907654b75fa828c6a39f6ad0"
+        "docs-v001/headers/100_mediaDocumentationRelease002ContentPackHeader.js": "6ef5ae6e8041afc6e026bd46dca60f721b39b3d98d988031fcb614976fee1b5a"
       },
       "includes": [
         {

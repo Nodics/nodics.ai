@@ -31,7 +31,7 @@ module.exports = {
   },
   /** Independent Digital callback binds current entitlement, coupon, original owner and expiry. */
   source: async function (scope, body, p, checkpoint = () => {}) {
-    const call = { local: false, moduleName: "digitalCore", connectionName: p.sourceConnectionName, targetAuthority: { runtimeRole: "COMMERCE" },
+    const call = { local: false, moduleName: "digitalCore", connectionName: p.sourceConnectionName, targetAuthority: { publication: "OPERATIONAL" },
       apiName: "/internal/coupons/reminder-source", methodName: "POST", tenant: scope.tenant, request: { tenant: scope.tenant },
       requestBody: { ...body.source, channel: body.channel }, requireInternalAuth: true, timeoutMs: p.timeoutMs,
       maxAttempts: 1, maxResponseBytes: p.maxResponseBytes, followRedirects: false,

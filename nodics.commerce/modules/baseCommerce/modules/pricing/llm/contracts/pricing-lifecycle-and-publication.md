@@ -8,7 +8,8 @@ admit transport, not publication writes. Online `prepare`, `activate` and
 Staged `authorize` independently requires exactly one caller in
 `pricing.publication.target.callers`. These extend the existing explicitly selected
 transport bindings; they are not a new credential, publication lifecycle or registry.
-The binding must retain explicit module, non-default connection and runtime role.
+The binding must retain explicit module, non-default connection and publication
+authority. The source must be Staged. The target must be Online or Operational.
 Each caller has exactly these fields, supplied only by a reviewed deployment layer:
 
 ```json

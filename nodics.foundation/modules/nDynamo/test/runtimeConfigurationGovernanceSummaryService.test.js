@@ -97,6 +97,7 @@ let logQuery;
 let requestSearchOptions;
 let logSearchOptions;
 global.SERVICE = {
+    DefaultRuntimePropertyPersistenceService: { acknowledgement: async () => ({ state: 'STALE', expectedRevision: 'new', appliedRevision: 'old' }) },
     DefaultConfigurationActivationRequestService: {
         get: function (request) {
             requestQuery = request.query;
@@ -131,6 +132,8 @@ service.getGovernanceSummary({
     }
 }).then(summary => {
     assert.strictEqual(summary.code, 'SUC_SYS_00000');
+    assert.equal(summary.data.propertyAcknowledgement.state, 'STALE');
+    assert.equal(summary.data.propertyAcknowledgement.expectedRevision, 'new');
     assert.strictEqual(summary.metadata.tenant, 'default');
     assert.strictEqual(summary.metadata.requestQuery.configurationType, 'routerConfiguration');
     assert.strictEqual(summary.metadata.activationQuery.moduleName, 'profile');

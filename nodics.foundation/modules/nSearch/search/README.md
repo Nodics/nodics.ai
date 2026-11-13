@@ -10,6 +10,12 @@ Use this module for search behavior that should apply across engines. Engine-spe
 
 Search extensions should be driven by schemas, index definitions, layered configuration, and tests. Do not hardcode one project's indexing strategy into framework defaults.
 
+Readiness reports the effective module/provider configuration through
+`DefaultSearchConfigurationService`. Its `enabledModuleCodes` and
+`enabledModuleCount` describe configured active modules, not deployment roles
+or ownership grants. BackOffice displays this owner-provided summary without
+reapplying configuration presets.
+
 ## Capability
 
 The module contributes:
@@ -139,3 +145,6 @@ This capability declares an inert model-service inventory for [governed Local re
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
 
 Database fallback defaults to false. A caller/deployment may intentionally select fallback through the existing search options. Search activation and provider selection remain explicit.
+
+
+Readiness is configuration and connection evidence only. It never establishes index or projection freshness from an active client, promises database fallback from the fallback flag, or enables a repair command merely by naming it. Generic search repair entries remain unavailable until an owning command exists; use the application owner refresh/rebuild contract. Missing provider activity evidence is not healthy. Source and query visibility must be verified against the selected published revision.

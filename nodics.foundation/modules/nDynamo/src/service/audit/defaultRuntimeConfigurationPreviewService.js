@@ -277,7 +277,7 @@ module.exports = {
                     .enabled)
         ) {
             throw new CLASSES.NodicsError(
-                'ERR_SYS_00002',
+                'ERR_DYN_PROPERTY_INVALID',
                 'Property path commands require durable persistence',
             );
         }
@@ -353,7 +353,7 @@ module.exports = {
                 for (let index = 1; index < parts.length; index++) {
                     if (Array.isArray(_.get(next, parts.slice(0, index)))) {
                         throw new CLASSES.NodicsError(
-                            'ERR_SYS_00002',
+                            'ERR_DYN_PROPERTY_INVALID',
                             'Replace an entire array instead of changing an array member',
                         );
                     }
@@ -409,7 +409,7 @@ module.exports = {
             Object.keys(configuration).length === 0
         ) {
             throw new CLASSES.NodicsError(
-                'ERR_SYS_00001',
+                'ERR_DYN_PROPERTY_INVALID',
                 'Property configuration must be a non-empty object',
             );
         }
@@ -425,7 +425,7 @@ module.exports = {
                 (value && typeof value === 'object' && ancestors.has(value))
             ) {
                 throw new CLASSES.NodicsError(
-                    'ERR_SYS_00002',
+                    'ERR_DYN_PROPERTY_INVALID',
                     'Property configuration exceeds structural bounds',
                 );
             }
@@ -438,7 +438,7 @@ module.exports = {
                 return;
             if (!_.isPlainObject(value) && !Array.isArray(value)) {
                 throw new CLASSES.NodicsError(
-                    'ERR_SYS_00002',
+                    'ERR_DYN_PROPERTY_INVALID',
                     'Property configuration must contain JSON values',
                 );
             }
@@ -460,14 +460,14 @@ module.exports = {
         inspect(configuration, '');
         if (unsafePaths.length > 0) {
             throw new CLASSES.NodicsError(
-                'ERR_SYS_00002',
+                'ERR_DYN_PROPERTY_INVALID',
                 'Unsafe runtime property paths are not allowed: ' +
                     unsafePaths.join(', '),
             );
         }
         if (sensitivePaths.length > 0) {
             throw new CLASSES.NodicsError(
-                'ERR_SYS_00002',
+                'ERR_DYN_PROPERTY_INVALID',
                 'Sensitive properties must use layered external configuration or a secret manager: ' +
                     sensitivePaths.join(', '),
             );
@@ -502,7 +502,7 @@ module.exports = {
                     !/^[a-f0-9]{64}$/.test(command.rollbackRevision)))
         ) {
             throw new CLASSES.NodicsError(
-                'ERR_SYS_00002',
+                'ERR_DYN_PROPERTY_INVALID',
                 'Invalid property path command',
             );
         }
@@ -514,7 +514,7 @@ module.exports = {
                 !Object.prototype.hasOwnProperty.call(entry, 'value')
             ) {
                 throw new CLASSES.NodicsError(
-                    'ERR_SYS_00002',
+                    'ERR_DYN_PROPERTY_INVALID',
                     'Invalid property path value',
                 );
             }
@@ -542,7 +542,7 @@ module.exports = {
                 )
             ) {
                 throw new CLASSES.NodicsError(
-                    'ERR_SYS_00002',
+                    'ERR_DYN_PROPERTY_INVALID',
                     'Invalid or overlapping property paths',
                 );
             }
@@ -551,7 +551,7 @@ module.exports = {
                 path.startsWith('runtimePropertyGovernance.')
             ) {
                 throw new CLASSES.NodicsError(
-                    'ERR_SYS_00002',
+                    'ERR_DYN_PROPERTY_INVALID',
                     'Property governance controls require deployment configuration',
                 );
             }

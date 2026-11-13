@@ -240,3 +240,14 @@ requires the persisted final states. This module never imports a domain reminder
 service, calls a source record directly, creates a parallel outbox or treats a
 configured source name as authority. Digital or another domain owner proves
 eligibility separately through its own normal source binding.
+
+
+## Notification transport placement
+
+Notification source proof, recipient resolution and inbox identity target the
+logical implementing module in explicit `OPERATIONAL` publication context.
+Physical runtime role labels do not authorize or route these calls. Preserve
+configured connections and the fixed API, tenant/Enterprise scope, source digest,
+permissions and recipient preferences. Private notification proof/dispatch uses
+runtime authentication; employee inbox identity forwards the original validated
+employee bearer. Neither path may substitute the other's credential authority.

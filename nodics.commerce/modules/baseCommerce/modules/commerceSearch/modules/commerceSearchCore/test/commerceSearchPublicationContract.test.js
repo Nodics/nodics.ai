@@ -34,7 +34,7 @@ const rules = [
         code: 'agoraWomenRanking',
         tenant: 'default',
         name: 'Agora Women Ranking',
-        storeCode: 'agoraMainStore',
+        storeCode: 'agoraApparelStore',
         locale: 'en',
         scopeType: 'CATEGORY',
         categoryCode: 'agoraWomen',
@@ -51,7 +51,7 @@ const rules = [
         code: 'draftRule',
         tenant: 'default',
         name: 'Draft Rule',
-        storeCode: 'agoraMainStore',
+        storeCode: 'agoraApparelStore',
         locale: 'en',
         scopeType: 'CATEGORY',
         categoryCode: 'agoraWomen',
@@ -111,7 +111,7 @@ test('Commerce Search publishes approved rules to persisted and indexed projecti
     let response = await controller.publish({
         authData: { tenant: 'default', groups: ['adminGroup'] },
         now: '2026-08-15T00:00:00.000Z',
-        httpRequest: { body: { storeCode: 'agoraMainStore', locale: 'en' } }
+        httpRequest: { body: { storeCode: 'agoraApparelStore', locale: 'en' } }
     });
 
     assert.equal(response.data.requested, 1);
@@ -120,7 +120,7 @@ test('Commerce Search publishes approved rules to persisted and indexed projecti
     assert.deepEqual(readRequests[0].query, {
         tenant: 'default',
         status: { $in: ['APPROVED', 'PUBLISHED'] },
-        storeCode: 'agoraMainStore',
+        storeCode: 'agoraApparelStore',
         locale: 'en'
     });
     assert.equal(saved.length, 1);

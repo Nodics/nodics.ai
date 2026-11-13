@@ -25,7 +25,7 @@ const ports = require('../src/service/defaultCheckoutPlacementPortsService');
 const clone = value => structuredClone(value);
 
 function fixture(t, kind = 'human') {
-    const keys = ['CONFIG', 'SERVICE', 'FACADE', 'NODICS', 'CLASSES'], before = keys.map(key => [key, global[key]]);
+    const keys = ['CONFIG', 'SERVICE', 'FACADE', 'NODICS', 'CLASSES', 'UTILS'], before = keys.map(key => [key, global[key]]);
     t.after(() => before.forEach(([key, value]) => value === undefined ? delete global[key] : global[key] = value));
     const config = { cart: clone(require('../../cart/config/properties').cart),
         loyaltyRewardPayment: clone(require('../../../../payment/modules/paymentMethods/modules/loyaltyRewardPayment/config/properties').loyaltyRewardPayment) };
@@ -36,10 +36,14 @@ function fixture(t, kind = 'human') {
     const request = (body, params = {}, query) => ({ authData: clone(auth), tenant: 't', enterpriseCode: 'buyer-enterprise',
         authorization: 'Bearer shopper', httpRequest: { body, params, query, headers: { authorization: 'Bearer shopper', 'x-enterprise-code': 'buyer-enterprise' } } });
     global.CONFIG = { get: key => config[key] };
-    global.NODICS = { getInternalAuthToken: tenant => { assert.equal(tenant, 't'); return 'runtime'; } };
+    global.UTILS = { createModelName: name => name };
+    global.NODICS = { getModels: () => ({ checkoutCheckpoint: { primaryKey: 'code', rawSchema: { definition: { revision: { type: 'int' } } }, compareAndSetItem() {}, updateItems() {} } }), getInternalAuthToken: tenant => { assert.equal(tenant, 't'); return 'runtime'; } };
     global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message || code); this.code = code; } } };
     global.FACADE = { DefaultCartCustomerFacade: cartFacade, DefaultCheckoutCustomerFacade: checkoutFacade };
     global.SERVICE = {
+      DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) },
+        DefaultModelConcurrencyService: { getField: () => undefined },
+        DefaultDatabaseModelHandlerService: { inspectIndexes: async () => ({ versioned: false, indexes: [{ unique: true, key: { code: 1 } }] }) },
         DefaultCartMerchantScopeService: cartScope, DefaultCheckoutMerchantScopeService: checkoutScope,
         DefaultCartOperationService: cartOperation, DefaultCheckoutOperationService: checkoutOperation,
         DefaultCheckoutPlacementPortsService: ports, DefaultCheckoutCompensationRecoveryService: recovery,
@@ -83,7 +87,7 @@ function fixture(t, kind = 'human') {
         } },
         DefaultDigitalCommerceCheckoutService: {
             reserveForCheckout: async r => { assert.equal(r.enterpriseCode, 'merchant'); assert.equal(r.authData.enterpriseCode, 'buyer-enterprise');
-                assert.deepEqual(r.ownerRef, ownerRef); return [{ code: 'unit', digitalDeliveryType: 'DIGITAL_OWNERSHIP' }]; },
+                assert.deepEqual(r.ownerRef, ownerRef); return [{ code: 'unit', idempotencyKey: r.idempotencyKey + ':digital:unit', digitalDeliveryType: 'DIGITAL_OWNERSHIP' }]; },
             confirmSale: async () => [{ code: 'sale' }], deliver: async () => [{ code: 'delivery' }],
         },
     };
@@ -257,8 +261,8 @@ test('scope reads reject partial envelopes and changed original caller without e
 test('Store transport uses complete framework defaults and intentional deployment overrides', async t => {
     const f = fixture(t);
     assert.deepEqual(f.config.cart.merchantScope.storeTarget,
-        { connectionName: 'commerce', targetAuthority: { runtimeRole: 'COMMERCE' }, timeoutMs: 15000 });
-    f.config.cart.merchantScope.storeTarget = { connectionName: 'selling-owner', targetAuthority: { runtimeRole: 'COMMERCE' }, timeoutMs: 23000 };
+        { connectionName: 'commerce', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMs: 15000 });
+    f.config.cart.merchantScope.storeTarget = { connectionName: 'selling-owner', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMs: 23000 };
     await f.create();
     const call = f.calls.find(r => r.moduleName === 'store');
     assert.equal(call.connectionName, 'selling-owner'); assert.equal(call.timeoutMs, 23000); assert.equal(call.maxAttempts, 1);
@@ -293,4 +297,29 @@ test('another signed owner cannot recover a Cart or observe command-to-order bin
     const result = (await checkoutController.commandStatus(command)).data;
     assert.equal(result.status, 'UNCONFIRMED'); assert.equal(result.scopeQualified, false);
     assert.equal(result.orderCode, undefined); assert.equal(result.cartCode, undefined);
+});
+
+
+test('Inventory rechecks the original Customer and retained merchant before stock access', async t => {
+    const f = fixture(t, 'customer'); await f.create();
+    const inventory = require('../../../../baseCommerce/modules/inventory/src/service/defaultInventoryReservationOperationService');
+    SERVICE.DefaultInventoryOperationService = require('../../../../baseCommerce/modules/inventory/src/service/defaultInventoryOperationService');
+    SERVICE.DefaultModuleService.isLocalModuleActive = name => name === 'inventory';
+    f.config.runtimeRole = { publication: 'OPERATIONAL' };
+    f.config.inventory = { publication: { runtimeRole: 'ONLINE' } };
+    const original = { ...f.request({ cartCode: 'cart', orderCode: 'order' }), payload: { cartCode: 'cart', orderCode: 'order' }, idempotencyKey: 'purchase' };
+    const admitted = await checkoutFacade.context(original), auth = clone(admitted.authData);
+    const result = await inventory.resolveContext(admitted);
+    assert.equal(result.enterpriseCode, 'merchant');
+    assert.equal(result.participantEnterpriseCode, 'buyer-enterprise');
+    assert.equal(result.ownerId, 'customer');
+    assert.deepEqual(result.authData, auth);
+    for (const mutate of [r => r.enterpriseCode = 'other', r => r.ownerId = 'actor',
+        r => r.ownerRef.code = 'other', r => r.merchantScope.enterpriseCode = 'other',
+        r => r.httpRequest.headers['x-enterprise-code'] = 'merchant']) {
+        const bad = clone(admitted); mutate(bad); await assert.rejects(inventory.resolveContext(bad));
+    }
+    f.state.readChange = name => { if (name === 'Cart') admitted.ownerRef.code = 'changed'; };
+    await assert.rejects(inventory.resolveContext(admitted));
+    assert.equal(f.payments.length, 0);
 });

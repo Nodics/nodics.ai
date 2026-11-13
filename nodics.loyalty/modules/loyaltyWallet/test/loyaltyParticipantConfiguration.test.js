@@ -36,11 +36,11 @@ test("Wallet inherits complete Profile transport from its owner and preserves in
   for (const [key, value] of Object.entries(f.policy.identityTarget)) assert.deepEqual(f.calls[0][key], value);
   f.policy.identityTimeoutMs = 20000;
   f.policy.identityTarget.connectionName = "selected-profile";
-  f.policy.identityTarget.targetAuthority = { server: "selected-platform" };
+  f.policy.identityTarget.targetAuthority = { publication: "OPERATIONAL", server: "selected-platform" };
   await f.call();
   assert.equal(f.calls[1].connectionName, "selected-profile");
   assert.equal(f.calls[1].timeoutMs, 20000);
-  assert.deepEqual(f.calls[1].targetAuthority, { server: "selected-platform" });
+  assert.deepEqual(f.calls[1].targetAuthority, { publication: "OPERATIONAL", server: "selected-platform" });
   assert.deepEqual(f.calls[1].header, { Authorization: "Bearer original", "X-Enterprise-Code": "E" });
 });
 test("Wallet rejects incomplete/invalid transport values before invoking Profile", async t => {

@@ -17,6 +17,19 @@
  * @override Project, environment, server, node, tenant, or customer layers may refine presentation and feature policy without changing functional identity.
  */
 module.exports = {
+  backofficeFunctionalModuleActivationData: {
+    modules: {
+      "nodics.engagement": {
+        dataPackages: {
+          $config: "keyed",
+          key: "code",
+          entries: [
+            { code: "engagementCore:accessGroups", required: true, trigger: "ACTIVATION", targetModule: "profile" },
+          ],
+        },
+      },
+    },
+  },
   engagement: {
     capabilities: {
       contactSubmission: true,

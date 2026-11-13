@@ -11,6 +11,11 @@
 
 /** @module editorial/controller/DefaultEditorialAuthoringController @description Maps secured authoring HTTP requests to the Editorial facade. @layer controller @owner editorial */
 module.exports = {
+    /** Creates only an owner-managed initial draft. */ createDraft: function (request, callback) { return this.invoke('createDraft', request, callback); },
+    /** Reads the exact current editor workspace. */ workspace: function (request, callback) { return this.invoke('workspace', request, callback); },
+    /** Saves one atomic ordinary business revision. */ saveDraft: function (request, callback) { return this.invoke('saveDraft', request, callback); },
+    /** Inspects original command evidence without replay. */ inspectCommand: function (request, callback) { return this.invoke('inspectCommand', request, callback); },
+    /** Archives through publication-aware owner authority. */ archive: function (request, callback) { return this.invoke('archive', request, callback); },
     /** Invokes one authoring operation using the standard callback contract. */
     invoke: function (operation, request, callback) {
         request.editorial = request.httpRequest && request.httpRequest.body || request.editorial || {};

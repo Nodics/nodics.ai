@@ -14,7 +14,7 @@ module.exports = {
   loyalty: {
     api: {
       internalEnabled: true,
-      readEvidence: { runtimeRole: "LOYALTY", callers: [] },
+      readEvidence: { callers: [] },
     },
   },
   apiExposure: {

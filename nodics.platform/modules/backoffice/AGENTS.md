@@ -53,7 +53,8 @@ ordinary unselected initialization must still submit the governed CMS baseline.
   reads stay serial, including through owner request clones. Settle every item and
   preserve input-relative success/error order, successful undefined values and
   duplicate outcome positions. Never share readers across actors/compositions or
-  defer readiness/admission. Separate HTTP requests do not share the queue; this
+  defer readiness/admission. The explicit optional diagnostic projection preserves
+  every admission gate; follow [projection and admission](llm/contracts/capability-registry-contract.md#diagnostic-projection-and-admission). Separate HTTP requests do not share the queue; this
   is not a global limit or latency guarantee. See [bounded readiness composition](llm/contracts/capability-registry-contract.md#bounded-readiness-composition).
 
 - Generic tab workspace `setupContinuation` is an explicit versioned inert
@@ -301,3 +302,42 @@ roles. These are runtime registry coordinates, distinct from business publicatio
 state. Keep schema and registration validation aligned; preserve exact matching
 and reject unknown roles without aliases or fallbacks. The actual Promotion
 capability registration regression covers the `COMMERCE/OPERATIONAL` report.
+
+Runtime registration accepts only `runtimeRole: { code, publication }`; the removed
+`roles` field is invalid, without compatibility fallback. Code is display metadata,
+not module authority. Owning registrations require explicit STAGED, ONLINE or
+OPERATIONAL publication and one logical server per project/environment/module/context.
+Identical semantic schema/service claims may coexist across STAGED and ONLINE;
+physical namespace checks remain with nDatabase. Follow the atomic ownership
+contract in `llm/contracts/backoffice-governance-contracts.md`.
+
+
+Atomic ownership admission uses nService's installed-source ownership scope for
+both module and mechanical schema-claim collisions. Never trust a wire scope or
+apply a Foundation exemption. Functional owners remain unique per publication;
+explicit runtime-local mechanics remain logical-server scoped. See the governance
+contract's runtime-local infrastructure section.
+
+eWaste acceptance readiness dispatches through DefaultModuleService using the
+logical eWaste owner and OPERATIONAL publication. A loaded service is not proof
+of local ownership. Preserve the original operator bearer and readiness failure
+reporting; never bypass canonical local/remote resolution.
+
+Registration admission must reuse one lazy canonical installed-source resolver
+across the complete validated batch and its atomic retries, then discard it.
+Keep the binding private, preserve exact ownership checks and read fresh source
+metadata next operation; never introduce a process-wide authority cache.
+
+Module Registry action presentation is actor-bound. Project `allowedActions`
+through the existing canonical routes and nRouter permission evaluator; missing
+metadata is read-only. Do not grant activation to repair visible controls or
+persist presentation permissions. Preserve fresh command authorization and
+protect source consumers with `functionalModuleActionPresentation.test.js`.
+See the actor-bound section of `llm/contracts/capability-registry-contract.md`.
+
+
+Persist readiness observations and startup review through the owning generated
+evidence schemas. Preserve fresh admission, actor/tenant/deployment/build bindings,
+expiry and explicit persistence failures; see [durable readiness](llm/contracts/backoffice-governance-contracts.md#durable-readiness-observations-and-startup-review).
+
+Readiness compares current registration with nConfig’s selected deployment graph. A gracefully deregistered owner remains a missing dependency; retained approval decisions cannot establish current Process availability. See [selected runtime readiness](llm/contracts/backoffice-governance-contracts.md#selected-runtime-readiness).

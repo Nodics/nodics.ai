@@ -723,3 +723,12 @@ module.exports.workflow.processActionAttemptRecord = {
     },
   },
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.workflow.processDefinition.backoffice = Object.assign({ description: "Workflow definition authoring and lifecycle. Published versions and runtime execution remain Process-governed." }, module.exports.workflow.processDefinition.backoffice);
+module.exports.workflow.processDefinitionVersion.backoffice = Object.assign({ description: "Immutable published workflow definition versions retained for exact runtime execution." }, module.exports.workflow.processDefinitionVersion.backoffice);
+module.exports.workflow.processInstance.backoffice = Object.assign({ description: "Workflow execution state and original context. Use Process commands for transitions and recovery." }, module.exports.workflow.processInstance.backoffice);
+module.exports.workflow.processIncident.backoffice = Object.assign({ description: "Workflow exceptions and their recovery evidence. Inspect before explicitly retrying permitted work." }, module.exports.workflow.processIncident.backoffice);
+module.exports.workflow.processTask.backoffice = Object.assign({ description: "Human work items, assignments and decisions. Use the authorised task queue and decision commands." }, module.exports.workflow.processTask.backoffice);
+module.exports.workflow.processTrigger.backoffice = Object.assign({ description: "Approved event or command entry points for starting a Process workflow. Scheduling remains Cron-owned." }, module.exports.workflow.processTrigger.backoffice);
+module.exports.workflow.processAuditEvent.backoffice = Object.assign({ description: "Retained workflow execution and decision history. Audit evidence is not execution authority." }, module.exports.workflow.processAuditEvent.backoffice);

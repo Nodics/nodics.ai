@@ -5,7 +5,7 @@
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "cms permissionCatalogue",
       "description": "Explicit cms identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "cms",
@@ -29,7 +29,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.4",
+      "version": "0.0.1",
       "displayName": "cms accessGroups",
       "description": "Explicit cms identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "cms",
@@ -53,13 +53,13 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
+          "version": "0.0.1",
+          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
         },
         {
           "moduleName": "cms",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
           "partition": "DEFAULT"
         },
@@ -73,8 +73,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
         },
         {
           "moduleName": "publish",
@@ -88,7 +88,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "cms enterpriseRoles",
       "description": "Explicit cms identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "cms",
@@ -112,35 +112,44 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
+          "version": "0.0.1",
+          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
         }
       ]
     },
     "init-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "CMS Foundation",
-      "description": "Content Management local foundation data; identity and Process definitions remain separate owner releases.",
+      "description": "Staged CMS source for the default site and type codes. Publication requires administrator initiation.",
       "owningDomain": "cms",
-      "lifecycle": "REFERENCE",
+      "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
       "environmentScope": [
         "ALL"
       ],
       "sensitivity": "INTERNAL",
-      "versioningPolicy": "NONE",
-      "publicationPolicy": "NONE",
-      "initialPublicationPolicy": "NONE",
-      "removalPolicy": "RETAIN",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "files": {
         "init-v001/records/content/defaultCmsSiteData.js": "9fd567518f9585a68c56e513d7d6d5baa33abcaeb2613f28cff82f103503a147",
         "init-v001/records/content/defaultCmsTypeCodeData.js": "6217613834024e68f12622b15d55915c3f322231c06d5ceab6f43b12b0db63d3",
         "init-v001/headers/content/defaultCmsSiteDataHeader.js": "8b200a816cb4370e6aae385b1aafb2e8fe4b734339100dbe7b5091bdd23dddbd",
         "init-v001/headers/content/defaultCmsTypeCodeDataHeader.js": "118d8888cf51c1d34b5e58abd72fb20142500736b744cf229b0a5768dba65814"
       },
-      "sourceRoot": "init-v001"
+      "sourceRoot": "init-v001",
+      "selectionPolicy": "EXPLICIT",
+      "prerequisites": [
+        {
+          "moduleName": "catalog",
+          "sectionCode": "init-v001",
+          "version": "0.0.1",
+          "checksum": "f10ed7a81c3d0ae017448b2e7cadee2d035f78bb436735954d2e82bcf140cadb"
+        }
+      ]
     },
     "cmsPublicationApproval": {
       "kind": "DATA_RELEASE",
@@ -205,13 +214,14 @@
         "sample-v001/headers/typeCodes/sampleTypeCode2RendererDataHeader.js": "b43eb61d85fa1dfcb42ecedfcb950519ec2ecdbbcbe0407ac9ac905017ccc9ea",
         "sample-v001/headers/typeCodes/sampleTypeCodeDataHeader.js": "34c7a8a62a84cede7ee80710fb129c84dff17b7ce750532d538377744b9251dc"
       },
-      "sourceRoot": "sample-v001"
+      "sourceRoot": "sample-v001",
+      "selectionPolicy": "EXPLICIT"
     },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "cms",
-      "version": "0.0.1",
+      "version": "0.0.5",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -233,16 +243,16 @@
       "pages": 2,
       "components": 2,
       "routes": 2,
-      "releaseChecksum": "005891b624d605fcbc2bc72d9f53ea42a186a950b7c3d7880ab4217ca4960e47",
+      "releaseChecksum": "701285bc928ee7a97c519d3ac827f06c034e5aa72ea4346ca10fabd9f9d948bd",
       "generatedHashes": {
         "docs-v001/records/documentation/cmsDocumentationNodeData.js": "8900d93b89137fd30fc242d2a3ad584d9aa079f93edcf5028c1e67c805dec6ca",
-        "docs-v001/records/documentation/cmsDocumentationPageMetadataData.js": "87ba380224481f129f368595cf54290b00a3218bf34d3220993344d7cd1b3532",
-        "docs-v001/records/documentation/cmsDocumentationPublicationStateData.js": "a2ac394581537d791ba3cc0d4d8311b622ebf6e06eac26823c386382e55ea72c",
-        "docs-v001/records/documentation/cmsDocumentationSearchMetadataData.js": "280ca725534cd371bdee3134e45f9afb13b1ac0083e72c3f5011d6a968108122",
-        "docs-v001/records/documentation/cmsDocumentationComponentData.js": "05102073df53b10867b72fcd60fd1cea92296571884e5a134311f5afc1a0e982",
         "docs-v001/records/documentation/cmsDocumentationPageData.js": "64584f8c7fada9203efbf3a5622c97a85cc227a57c2de289acd00a39e05fe686",
         "docs-v001/records/documentation/cmsDocumentationRouteData.js": "30c571d8186862e08e3fa52d11b2cd80411377fc02d41ba724a2ba66a3a92e7e",
-        "docs-v001/headers/100_cmsDocumentationContentPackHeader.js": "310190d2ad5de701077fbd42c0c2f80f5058696a3d96b32daff1ff8b0097ec67"
+        "docs-v001/records/documentation/cmsDocumentationRelease005PageMetadataData.js": "a53e9b834b2b6f1fea5117cf80ebbc2e26a098f27bfa3c78c4cbf02bd349f074",
+        "docs-v001/records/documentation/cmsDocumentationRelease005PublicationStateData.js": "1c15ef47f776b2ada85575bf825f99ecb9bbe9ccb660bc3cecb01635732bf7b3",
+        "docs-v001/records/documentation/cmsDocumentationRelease005SearchMetadataData.js": "03729b89688bbe223f99ddfae89176b0954ade35817b17bebcb262be9831260c",
+        "docs-v001/records/documentation/cmsDocumentationRelease005ComponentData.js": "136c4711f4b35339b6814f0c9b828206709a5af74fe60bdaa5883216def812e2",
+        "docs-v001/headers/100_cmsDocumentationRelease005ContentPackHeader.js": "36c26d42f0b3a27bd741d510fa964918e9098ecad8fbff64f7a0aa71eb2365c5"
       },
       "includes": [
         {
@@ -259,7 +269,7 @@
     "businessAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "Content business access groups",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "cms",
@@ -283,20 +293,20 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
+          "version": "0.0.1",
+          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "cms",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
           "partition": "DEFAULT"
         }
@@ -305,7 +315,7 @@
     "businessAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "Content business access roles",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "cms",
@@ -329,8 +339,117 @@
         {
           "moduleName": "cms",
           "sectionCode": "businessAccessGroups",
-          "version": "0.0.3",
-          "checksum": "27da70956d363dd1c46bd3c31615f688040847949f1ff381b61631233d6a3ff7"
+          "version": "0.0.1",
+          "checksum": "04dd93803f98b4017d11834503b6cb61aad650661cebba87b0cd91fa9ecc19c4"
+        }
+      ]
+    },
+    "publicationReviewPermissions": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "CMS publication review permissions",
+      "description": "Registers the CMS approval permission required by its Process review task.",
+      "owningDomain": "cms",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/cmsPublicationReviewPermissionHeader.js": "7430a37976085e94ef7dfd69a6d1acfcd742e778ae1bc94ea5b6337c97d2636c",
+        "init-v001/records/identity/cmsPublicationReviewPermissionData.js": "3a54036e92f9ce6643a3f278aef6f4a537d949829fa4fb0ae6aa359552c9c771"
+      }
+    },
+    "publicationReviewGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "CMS publication review access groups",
+      "description": "Defines access to claim and decide a CMS publication review task.",
+      "owningDomain": "cms",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/cmsPublicationReviewGroupHeader.js": "592242a2d2883d3a366af9417c2afaff25409b4b7f273f848d87e53765c34fb7",
+        "init-v001/records/identity/cmsPublicationReviewGroupData.js": "9935015d6e68341833be71a359b08c531957f3bb8581c90d29bb857a61baa884"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.1",
+          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "cms",
+          "sectionCode": "publicationReviewPermissions",
+          "version": "0.0.1",
+          "checksum": "490cb70584fe6620ee2f9c8796fb9b4341c98a2a6c986138e7b14e2a79e0e023",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "workflow",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "9566b57a2b8b6230534305adaef173c7e1ecf28d5493c7193e9dd79c54d3a35e",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "publicationReviewRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "CMS publication review enterprise role",
+      "description": "Makes CMS publication review assignable independently of publish and rollback authority.",
+      "owningDomain": "cms",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/cmsPublicationReviewRoleHeader.js": "08c5900307182814e8035a2cdc5f18ee4ea4f5398fc8991eb5dd327c53bb15ee",
+        "init-v001/records/identity/cmsPublicationReviewRoleData.js": "1ba4f38c9945128efc8733acbb0c207a76d90c61d4a3b842889e8fa3dd740fbe"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "cms",
+          "sectionCode": "publicationReviewGroups",
+          "version": "0.0.1",
+          "checksum": "2bc3ffa877456a0de25c48ef4719f5cc261c0b116c198e49387dcd9bb3da8a34"
         }
       ]
     }

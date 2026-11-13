@@ -28,8 +28,8 @@ module.exports = {
         const budget = SERVICE.DefaultPromotionBudgetMutationService, r = result?.request;
         if (!r || !result || !budget) this.fail();
         SERVICE.DefaultPromotionOperationService.requireOperationalRuntime();
-        const auth = r.authData || {}, enterprise = auth.enterpriseCode || auth.entCode, role = CONFIG.get('runtimeRole');
-        if ((typeof role === 'string' ? role : role?.code) !== 'COMMERCE' || !budget.identifier(r.tenant) || auth.tenant !== r.tenant ||
+        const auth = r.authData || {}, enterprise = auth.enterpriseCode || auth.entCode;
+        if (SERVICE.DefaultModuleService?.isLocalModuleActive?.('promotion') !== true || CONFIG.get('runtimeRole')?.publication !== 'OPERATIONAL' || !budget.identifier(r.tenant) || auth.tenant !== r.tenant ||
             !budget.identifier(enterprise) || [r.enterpriseCode, r.entCode, auth.enterpriseCode, auth.entCode].some(value => value !== undefined && value !== enterprise) ||
             [r.tenantCode, auth.tenantCode].some(value => value !== undefined && value !== r.tenant) ||
             !budget.identifier(result.distributionStoreCode) ||

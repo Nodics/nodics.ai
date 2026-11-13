@@ -70,7 +70,7 @@ test.beforeEach(() => {
   global.CONFIG = {
     get: (key) =>
       key === "runtimeRole"
-        ? "COMMERCE"
+        ? { code: "COMMERCE", publication: "OPERATIONAL" }
         : { merchantRedemption: { enabled: true } },
   };
   global.SERVICE = {
@@ -81,7 +81,7 @@ test.beforeEach(() => {
         permission ? ["commerce.coupon.pos.redeem"] : [],
       isPermissionGranted: (p, g) => g.includes(p),
     },
-    DefaultModuleService: {
+    DefaultModuleService: {isLocalModuleActive: moduleName => ["digitalCore"].includes(moduleName),
       invokeModule: async (r) => {
         if (r.apiName !== "/identity/scopes/me") {
           assert.equal(r.apiName, "/references/read");

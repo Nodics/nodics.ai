@@ -109,3 +109,20 @@ owner APIs. Never promote emergency approval into acceptance defaults or retry a
 denied decision with broader authority. A missing/denied normal approval is a
 failed acceptance result. `test/guidedInitializationAcceptance.test.mjs` covers
 independent customer inputs and rejection boundaries.
+
+Publication defaults use nConfig's explicit publication-context binding in this
+module's ordinary properties, not runtime role profiles. Keep Staged source and
+Online target behavior isolated when changing runtime placement. Connections,
+installed qualification and approvals remain independently required. Run
+`nodics.wcms/test/wcmsPublicationConfiguration.test.js` from Framework root.
+
+Retained image qualification is implemented by Media’s `DefaultMediaDependencyReadinessService`; CMS owns exact sealed-bundle asset selection and delegates the shared read-only checks. Do not introduce a CMS copy of Media publication authority.
+
+The knowledge proof endpoint must retain uncached, stable public Online reads,
+exact pointer/snapshot scope and bounded output. Never accept an authenticated
+access override or return private manifest identities.
+
+Frozen documentation approval reviews include bounded plain-text article blocks and before/after content from the immutable snapshots. Unknown blocks and truncation are explicit; arbitrary source fields and provider URLs are excluded. Existing current-task, tenant, enterprise, reviewer and publication revision checks remain mandatory. The source correction is documented in CMS documentation release 0.0.3; installation and Online approval remain separate.
+
+
+A selected page can restore its exact predecessor even when that predecessor was published as part of a larger Site release. The Online owner verifies the current pointer and its previous-manifest lineage inside the transaction, restores only the selected delivery scope and preserves sibling routes. It rejects a stale pointer, missing route, different Site or unrelated predecessor. Review of older Site releases without a catalog field uses the exact frozen Site dependency to prove catalog ownership; a latest authoring read cannot supply that proof.

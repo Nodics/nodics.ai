@@ -75,7 +75,7 @@ module.exports = {
         connectionName: p.connectionName,
         tenant: r.tenant,
         request: privateRequest,
-        targetAuthority: { runtimeRole: "PLATFORM" },
+        targetAuthority: { publication: "OPERATIONAL" },
         methodName: "POST",
         apiName: "/internal/commerce/notification-recipient",
         header: { "X-Enterprise-Code": r.enterpriseCode },

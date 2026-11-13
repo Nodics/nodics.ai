@@ -16,9 +16,10 @@ const controller = require('../src/controller/defaultInventoryOperationControlle
 
 (async () => {
     const writes = [];
-    global.CONFIG = { get: key => key === 'runtimeRole' ? { code: 'COMMERCE' } : {} };
+    global.CONFIG = { get: key => key === 'runtimeRole' ? { code: 'arbitrary', publication: 'OPERATIONAL' } : key === 'inventory' ? { publication: { runtimeRole: 'ONLINE' } } : {} };
     global.FACADE = { DefaultInventoryOperationFacade: facade };
     global.SERVICE = {
+        DefaultModuleService: { isLocalModuleActive: name => name === "inventory" },
         DefaultInventoryOperationService: service,
         DefaultInventoryBalanceService: {
             get: async request => {

@@ -33,7 +33,7 @@ function owner(name, sections) {
             owningDomain: section.owningDomain, lifecycle: 'REFERENCE', destinationRole: section.destinationRole,
             environmentScope: ['LOCAL'], sensitivity: 'INTERNAL', versioningPolicy: 'NONE',
             publicationPolicy: 'NONE', initialPublicationPolicy: 'NONE', removalPolicy: 'RETAIN',
-            sourceRoot: 'init-v001',
+            sourceRoot: 'init-v001', installer: section.installer,
             files: Object.fromEntries(Object.keys(section.payloads).map(relative => [relative,
                 crypto.createHash('sha256').update(fs.readFileSync(path.join(ownerRoot, 'data', relative))).digest('hex')]))
         });
@@ -49,7 +49,7 @@ owner('activeOwner', { init: { owningDomain: 'active.domain', destinationRole: '
     'init-v001/records/activeData.js': 'module.exports = {};\n', 'init-v001/headers/activeHeader.js': 'module.exports = {};\n'
 } } });
 owner('inactiveOwner', {
-    processContribution: { owningDomain: 'wcms', destinationRole: 'PROCESS', payloads: {
+    processContribution: { installer: 'PROCESS_DEFINITION', owningDomain: 'wcms', destinationRole: 'PROCESS', payloads: {
         'init-v001/records/processData.js': 'module.exports = {};\n', 'init-v001/headers/processHeader.js': 'module.exports = {};\n'
     } },
     stagedContribution: { owningDomain: 'platform', destinationRole: 'WCMS_STAGED', payloads: {
@@ -71,17 +71,17 @@ fs.writeFileSync(path.join(root, 'inactiveOwner', 'data', 'init-v001', 'release.
 }));
 
 let policy = { allowedContractVersions: [2], lifecycleMetadataRequired: true, destinationEnforced: true,
-    allowedDestinationRoles: ['PROCESS'], contributions: [{ moduleName: 'inactiveOwner', sections: ['processContribution'] }],
+    contributions: [{ moduleName: 'inactiveOwner', sections: ['processContribution'] }],
     installers: { PROCESS_DEFINITION: 'DefinitionInstaller' },
     types: { init: { enabled: true, operatorExecution: true } } };
-global.CONFIG = { get: key => key === 'data' ? { dataReleases: policy } : key === 'runtimeRole' ? { code: 'PROCESS' } : key === 'environment' ? { class: 'LOCAL' } : undefined };
+global.CONFIG = { get: key => key === 'data' ? { dataReleases: policy } : key === 'runtimeRole' ? { code: 'PROCESS', publication: 'OPERATIONAL' } : key === 'environment' ? { class: 'LOCAL' } : undefined };
 global.NODICS = {
     getActiveModules: () => ['activeOwner'],
     getRawModule: name => owners[name],
     getSelectedEnvironmentName: () => 'local'
 };
 let installedContribution;
-global.SERVICE = { DefinitionInstaller: { installContribution: async request => {
+global.SERVICE = { DefinitionInstaller: { preflightContribution: async () => ({ ready: true }), installContribution: async request => {
     installedContribution = request.contribution; return { installed: request.contribution.releaseCode };
 } } };
 
@@ -97,8 +97,8 @@ try {
     assert.strictEqual(contribution.capability.displayName, 'Partner Process');
     assert.strictEqual(contribution.declaredFiles.some(file => file.endsWith('release.descriptor.json')), false);
     assert.strictEqual(service.validateDestination(contribution), true);
-    assert.throws(() => service.validateDestination(Object.assign({}, contribution, { destinationRole: 'WCMS_STAGED' })),
-        /not permitted for runtime destination PROCESS/);
+    assert.throws(() => service.validateDestination(Object.assign({}, contribution, { lifecycle: 'PUBLISHABLE' })),
+        /Staged destination/);
     contribution.installer = 'PROCESS_DEFINITION';
     let installation = await service.invokeImport({ dataReleasePlan: [contribution] }, 'init');
     assert.strictEqual(installedContribution.releaseCode, 'inactiveOwner:processContribution');

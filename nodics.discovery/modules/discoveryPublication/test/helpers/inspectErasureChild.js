@@ -15,7 +15,7 @@
  * @description Independent read-only process reconstructing original erasure evidence from real providers. No inherited JavaScript receipt state and no mutation command.
  * @layer test @owner discoveryPublication
  */
-const owner = require("../../src/service/defaultDiscoveryIndexRetirementService");
+const owner = require("../../../discoveryProjection/src/service/defaultDiscoveryPhysicalRetirementService");
 const provider = require("../../../../../nodics.foundation/modules/nSearch/elastic/test/helpers/isolatedRetirementProvider");
 const persistence = require("../../../../../nodics.foundation/modules/nDatabase/mongodb/test/helpers/disposableJournal");
 process.once("message", async (input) => {
@@ -32,10 +32,11 @@ process.once("message", async (input) => {
         .discoveryIndexRetirementReceipt,
       input.databaseName,
     );
-    SERVICE.DefaultDiscoveryDocumentProjectionService = {
+    SERVICE.DefaultDiscoveryProjectionOwnerService = {
       getSearchModel: () => elastic.model,
     };
-    SERVICE.DefaultDiscoveryIndexRetirementReceiptService = journal.service;
+    // Native-provider qualification uses the journal boundary directly; DMS portability is covered separately.
+    SERVICE.DefaultDiscoveryRetirementReceiptTransportService = journal.service;
     const request = {
       ...input.request,
       assertCurrent: async () => {},

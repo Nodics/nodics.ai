@@ -1,0 +1,69 @@
+{
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "workflow",
+      "version": "0.0.2",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 15,
+      "components": 15,
+      "routes": 15,
+      "releaseChecksum": "5a211e7884fb3503e04ccad81adb166d4bf1635d78a055ef32a99d6d78bf1aa3",
+      "generatedHashes": {
+        "docs-v001/records/documentation/workflowDocumentationNodeData.js": "5cf6541d45e243b0238643d901eb233c194cb8862cb5d19c4735ec6d64b09eb7",
+        "docs-v001/records/documentation/workflowDocumentationRelease002PageMetadataData.js": "99b2a28b29384ddeb023bf18f07a2080fad148a6be06ffc4e431a9507c8720f0",
+        "docs-v001/records/documentation/workflowDocumentationRelease002PublicationStateData.js": "7a5719c13e56f3d35b57f985864c60ef06443a9930b31980dddf4d900f5303e9",
+        "docs-v001/records/documentation/workflowDocumentationRelease002SearchMetadataData.js": "7c947db2e3ae810650f494ca2930a9422d26b3d5701c63ff9cd7aec1f44dfd5b",
+        "docs-v001/records/documentation/workflowDocumentationRelease002ComponentData.js": "1ddc4238961e7812dea9d93dc43cc6ba51df472161c09a47d6e3818e23e12754",
+        "docs-v001/records/documentation/workflowDocumentationPageData.js": "c8c71b20b1f850ad9956789dacd16f978a04c4e1b1309908e8ca66a2b392bbd7",
+        "docs-v001/records/documentation/workflowDocumentationRouteData.js": "2e08a3f4604fcd34c35e4b1e5649152144068b7ac6ab104a1186bab4a5e87f06",
+        "docs-v001/headers/101_workflowDocumentationRelease002ContentPackHeader.js": "a94649971ffe51847a0553e12b2c315e4779d05aa840170556d0cc3017bddf41"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  },
+  "reason": "Exact installed 0.0.2 source selection before search visibility correction; installed runtime proof is independent",
+  "changedSearchCodes": [
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessvisualdesigner",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessdevelopercustomization",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocesscustomprojectextension",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessoverview",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessruntimelifecycle",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessworkfloworchestrationpatterns",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessfirstworkflow",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessbusinessvalue",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessprocesscronruntime",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessactionadapters",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessincidentrecovery",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessdevopstopology",
+    "nodicsDocsSearchpagenodicsdocsmetadataprocessqaregressionguide"
+  ]
+}

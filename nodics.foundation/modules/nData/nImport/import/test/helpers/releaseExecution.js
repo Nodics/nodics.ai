@@ -17,19 +17,20 @@
 module.exports = function releaseExecution({ modules, configuration, environment = 'testEnvironment',
     environmentClass = 'LOCAL', runtimeRole = 'WCMS_STAGED', onImport } = {}) {
     const policy = configuration || {
-        ...structuredClone(require('../../config/properties').data.dataReleases),
-        allowedDestinationRoles: [runtimeRole]
+        ...structuredClone(require('../../config/properties').data.dataReleases)
     };
     const installations = [];
     const imports = [];
-    const state = { installations, imports, runtimeRole };
+    const state = { installations, imports, runtimeRole, publication: 'STAGED' };
     global.CONFIG = { get: key => ({
         data: { dataReleases: policy }, environment: { class: environmentClass },
-        defaultTenant: 'default', runtimeRole: { code: state.runtimeRole, publication: 'STAGED' }
+        defaultTenant: 'default', runtimeRole: { code: state.runtimeRole, publication: state.publication }
     })[key] };
     global.NODICS = {
         getActiveModules: () => Object.keys(modules),
         getRawModule: name => modules[name],
+        getModule: name => NODICS.getRawModule(name),
+        getServerName: () => "testServer",
         getSelectedEnvironmentName: () => environment
     };
     const importData = async request => {
@@ -39,6 +40,7 @@ module.exports = function releaseExecution({ modules, configuration, environment
         return { validationOnly: request.options.validateOnly };
     };
     global.SERVICE = {
+        DefaultSchemaAuthoringPolicyService: require("../../../../../nDatabase/database/src/service/schema/defaultSchemaAuthoringPolicyService"),
         DefaultDataInstallationService: {
             get: async request => {
                 const matched = installations.filter(item =>

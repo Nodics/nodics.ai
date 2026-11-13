@@ -228,7 +228,7 @@ export function writePlatformAcceptanceEvidence(selected, result, acceptanceArgu
 
 function runPlatformAcceptance(selected, args = process.argv.slice(4)) {
   const startedAt = new Date();
-  const acceptanceArguments = ['run', selected.acceptance.platformCommand || 'acceptance:local', '--', '--execute', '--approve-publications', '--leave-started'];
+  const acceptanceArguments = ['run', selected.acceptance.platformCommand, '--', '--execute', '--approve-publications', '--leave-started'];
   if (args.includes('--expect-documentation-not-installed')) acceptanceArguments.push('--expect-documentation-not-installed');
   if (args.includes('--qualify-documentation-rollback')) acceptanceArguments.push('--qualify-documentation-rollback');
   const result = spawnSync('npm', acceptanceArguments, {

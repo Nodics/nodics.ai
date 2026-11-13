@@ -138,9 +138,9 @@ test('changed test channel configuration prevents reusing either old registratio
 test('changed default configuration cannot alias a previously opened handle', async () => {
     await connections.createDatabase('default', 'default');
     configs.default.default.mongodb.master.options.auth = { username: 'changed', password: 'not-output' };
-    await connections.createDatabase('loyaltyWallet', 'default');
-    assert.equal(opened.length, 2);
-    assert.notEqual(held('default').master, held('loyaltyWallet').master);
+    await assert.rejects(connections.createDatabase('loyaltyWallet', 'default'), error => error.code === 'ERR_DBS_00003');
+    assert.equal(opened.length, 1);
+    assert.throws(() => held('default'), /stale/);
 });
 test('later connection owner customization is still selected and schema transaction exclusions remain enforced', async () => {
     let calls = 0;
@@ -154,7 +154,7 @@ test('later connection owner customization is still selected and schema transact
         assert.throws(() => transactions.operationOptions(token, prepared[2].dataBase, prepared[2]), /not enabled/);
     });
 });
-test('credit persistence qualifies registered wallet/balance/ledger and still refuses a separate ledger wrapper before reads', async () => {
+test('credit persistence shares an explicit Loyalty database and refuses a separate ledger before reads', async () => {
     SERVICE.DefaultLoyaltyRewardOperationService = { fail(code, message) { const error = Error(message); error.code = code; throw error; } };
     SERVICE.DefaultLoyaltyTransactionService = { run() { throw Error('transaction execution forbidden'); },
         qualify: () => ({ scope: { moduleName: 'loyaltyWallet', tenant: 'default' }, owner: transactions }) };
@@ -162,8 +162,11 @@ test('credit persistence qualifies registered wallet/balance/ledger and still re
         indexes: [{ unique: true, key: { code: 1 } }] }) };
     for (const isolated of [false, true]) {
         configuration.dbs = {};
-        configs.default.loyaltyLedger = isolated ? { mongodb: { master: { databaseName: 'isolatedLedger' } } } : {};
+        configs.default.loyaltyWallet = { mongodb: { master: { databaseName: 'loyalty' } } };
+        configs.default.loyaltyLedger = { mongodb: { master: { databaseName: isolated ? 'isolatedLedger' : 'loyalty' } } };
         await connections.createDatabaseConnection('default');
+        assert.notEqual(held('loyaltyWallet').master, held('default').master);
+        assert.equal(held('loyaltyWallet').master === held('loyaltyLedger').master, !isolated);
         const prepared = await models();
         prepared[1].compareAndSetItem = () => { throw Error('record mutation forbidden'); };
         NODICS.getModels = moduleName => Object.fromEntries(prepared.filter(model => model.moduleName === moduleName)
@@ -174,4 +177,194 @@ test('credit persistence qualifies registered wallet/balance/ledger and still re
             error.sampleCreditSchema === 'loyaltyLedger.rewardLedgerEntry');
         else await creditOwner.persistence({ tenant: 'default' });
     }
+});
+
+test('missing module registration shares only fully equal effective configuration in the same tenant', async () => {
+    NODICS.getActiveTenants = () => ['default'];
+    await connections.createDatabase('default', 'default');
+    // An unrelated tenant slot must not suppress legitimate same-tenant inheritance.
+    configuration.dbs.loyaltyWallet = { alpha: {} };
+    assert.equal(held('loyaltyWallet'), held('default'));
+    assert.equal(configuration.areRequiredConnectionsReady(), true);
+    for (const override of [
+        { master: { databaseName: 'separate' } }, { master: { URI: 'mongodb://other.invalid' } },
+        { master: { options: { auth: { username: 'different' } } } },
+        { test: { databaseName: 'separateTest' } }, { options: { modelHandler: 'Other' } }
+    ]) {
+        configs.default.loyaltyWallet = { mongodb: override };
+        assert.equal(held('loyaltyWallet'), undefined);
+        assert.equal(configuration.areRequiredConnectionsReady(), false);
+        assert.equal(opened.length, 1, 'read admission never opens connections');
+    }
+    configs.default.loyaltyWallet = {};
+    assert.equal(held('loyaltyWallet'), held('default'));
+});
+
+test('malformed explicit module destinations reject instead of inheriting a default handle', async () => {
+    NODICS.getActiveTenants = () => ['default'];
+    await connections.createDatabase('default', 'default');
+    for (const override of [undefined, null, false, '', [], 42,
+        { mongodb: { master: { URI: undefined } } }, { mongodb: { test: undefined } },
+        { options: { databaseType: undefined } },
+        { options: null }, { options: { databaseType: 'missing' } },
+        { mongodb: null }, { mongodb: { master: null } },
+        { mongodb: { master: { URI: '' } } }, { mongodb: { master: { databaseName: 42 } } },
+        { mongodb: { test: null } }, { mongodb: { options: { connectionHandler: false } } }
+    ]) {
+        configs.default.loyaltyWallet = override;
+        assert.throws(() => held('loyaltyWallet'), error => error.code === 'ERR_DBS_00003');
+        assert.equal(configuration.areRequiredConnectionsReady(), false);
+    }
+    assert.equal(opened.length, 1);
+});
+
+test('exact and fallback handles fail closed on destination, credentials and test-selection drift', async () => {
+    NODICS.getActiveTenants = () => ['default'];
+    await connections.createDatabaseConnection('default');
+    const retained = held('default');
+    for (const mutate of [
+        () => { configs.default.default.mongodb.master.URI = 'mongodb://changed.invalid'; },
+        () => { configs.default.default.mongodb.master.databaseName = 'changed'; },
+        () => { configs.default.default.mongodb.master.options.auth = { password: 'changed' }; },
+        () => { testEnabled = true; }
+    ]) {
+        const original = _.cloneDeep(configs);
+        mutate();
+        assert.throws(() => held('default'), /stale/);
+        assert.throws(() => held('loyaltyWallet'), /stale/);
+        assert.equal(configuration.areRequiredConnectionsReady(), false);
+        await assert.rejects(connections.createDatabase('default', 'default'));
+        assert.equal(opened.length, 1, 'no automatic replacement or relocation');
+        assert.equal(configuration.getRetainedTenantDatabaseForCleanup('default', 'default'), retained);
+        configs = original; testEnabled = false;
+    }
+    delete configuration.dbs.loyaltyWallet.default;
+    configs.default.default.mongodb.master.databaseName = 'changed';
+    assert.throws(() => held('loyaltyWallet'), /stale/);
+    await connections.closeAllConnections();
+    assert.equal(closed.length, 1);
+});
+
+test('an acquisition racing configuration drift cannot become current registration', async () => {
+    const create = SERVICE.QualifiedAdapter.createConnection;
+    SERVICE.QualifiedAdapter.createConnection = async config => {
+        const result = await create(config);
+        configs.default.default.mongodb.master.databaseName = 'changedDuringOpen';
+        return result;
+    };
+    await assert.rejects(connections.createDatabase('default', 'default'), /configuration changed/);
+    assert.ok(configuration.getRetainedTenantDatabaseForCleanup('default', 'default'));
+    assert.throws(() => held('default'), /stale/);
+    await connections.closeAllConnections();
+    assert.equal(closed.length, 1);
+});
+
+test('repeated creation reuses an admitted exact registration without opening a replacement', async () => {
+    await connections.createDatabase('default', 'default');
+    const original = held('default');
+    await connections.createDatabase('default', 'default');
+    assert.equal(held('default'), original);
+    assert.equal(opened.length, 1);
+});
+
+test('a losing acquisition closes only its new master/test clients and preserves the stale winner', async () => {
+    testEnabled = true;
+    const create = SERVICE.QualifiedAdapter.createConnection;
+    let release, entered;
+    const waiting = new Promise(resolve => { entered = resolve; });
+    let first = true;
+    SERVICE.QualifiedAdapter.createConnection = async config => {
+        const result = await create(config);
+        if (first) {
+            first = false;
+            entered();
+            await new Promise(resolve => { release = resolve; });
+        }
+        return result;
+    };
+    const losing = connections.createDatabase('default', 'default');
+    await waiting;
+    await connections.createDatabase('default', 'default');
+    const winner = held('default');
+    configs.default.default.mongodb.master.options.auth = { password: 'rotated' };
+    release();
+    await assert.rejects(losing, /cannot be replaced/);
+    assert.equal(opened.length, 4);
+    assert.equal(closed.length, 2);
+    assert.ok(!closed.includes(winner.master.getClient()));
+    assert.ok(!closed.includes(winner.test.getClient()));
+    assert.equal(configuration.getRetainedTenantDatabaseForCleanup('default', 'default'), winner);
+    assert.throws(() => held('default'), /stale/);
+    await connections.closeAllConnections();
+    assert.equal(new Set(closed).size, 4);
+});
+
+test('failed rejected-acquisition close is surfaced and retried at shutdown', async () => {
+    const create = SERVICE.QualifiedAdapter.createConnection;
+    const close = SERVICE.QualifiedAdapter.closeConnection;
+    let injected = false, fail = true;
+    SERVICE.QualifiedAdapter.createConnection = async config => {
+        const result = await create(config);
+        if (!injected) {
+            injected = true;
+            await connections.createDatabase('default', 'default');
+        }
+        return result;
+    };
+    SERVICE.QualifiedAdapter.closeConnection = async database => {
+        if (fail && database.getClient() === opened[0].client) throw Error('close refused');
+        return close(database);
+    };
+    await assert.rejects(connections.createDatabase('default', 'default'), error =>
+        error instanceof AggregateError && error.errors[1].message === 'close refused');
+    assert.equal(opened.length, 2);
+    assert.equal(held('default').master.getClient(), opened[1].client);
+    fail = false;
+    await connections.closeAllConnections();
+    assert.equal(new Set(closed).size, 2);
+});
+
+test('fallback and readiness respect refreshed layered getDatabaseConfiguration overrides', async () => {
+    NODICS.getActiveTenants = () => ['default'];
+    let refreshedName = 'layeredDefault', moduleNameOverride;
+    const selected = { ...configuration, dbs: {}, getDatabaseConfiguration(moduleName, tenant) {
+        const value = configuration.getDatabaseConfiguration.call(this, moduleName, tenant);
+        value.master.databaseName = moduleName === 'loyaltyWallet' && moduleNameOverride || refreshedName;
+        return value;
+    } };
+    SERVICE.DefaultDatabaseConfigurationService = selected;
+    await connections.createDatabase('default', 'default');
+    const original = selected.getTenantDatabase('default', 'default');
+    assert.equal(selected.getTenantDatabase('loyaltyWallet', 'default'), original);
+    assert.equal(selected.areRequiredConnectionsReady(), true);
+    moduleNameOverride = 'separateModule';
+    assert.equal(selected.getTenantDatabase('loyaltyWallet', 'default'), undefined);
+    assert.equal(selected.areRequiredConnectionsReady(), false);
+    moduleNameOverride = undefined;
+    refreshedName = 'refreshedDefault';
+    assert.throws(() => selected.getTenantDatabase('loyaltyWallet', 'default'), /stale/);
+    assert.equal(selected.areRequiredConnectionsReady(), false);
+    assert.equal(opened.length, 1);
+});
+
+test('real CONFIG refresh preserves module override precedence without caching old destinations', async () => {
+    NODICS.getActiveTenants = () => ['default'];
+    const Config = require('../../../nConfig/bin/config');
+    global.CONFIG = new Config();
+    CONFIG.setProperties({ defaultTenant: 'default', database: configs.default });
+    CONFIG.changeTenantProperties({ database: { loyaltyWallet: { mongodb: {
+        master: { databaseName: 'moduleOverride' }
+    } } } }, 'default');
+    await connections.createDatabaseConnection('default');
+    CONFIG.changeTenantProperties({ database: { default: { mongodb: {
+        master: { databaseName: 'refreshedDefault' }
+    } } } }, 'default');
+    assert.equal(configuration.getDatabaseConfiguration('loyaltyWallet', 'default').master.databaseName, 'moduleOverride');
+    assert.equal(configuration.getDatabaseConfiguration('default', 'default').master.databaseName, 'refreshedDefault');
+    assert.ok(held('loyaltyWallet'));
+    assert.throws(() => held('default'), /stale/);
+    CONFIG.changeTenantProperties({ database: { loyaltyWallet: { mongodb: {
+        master: { databaseName: 'refreshedModule' }
+    } } } }, 'default');
+    assert.throws(() => held('loyaltyWallet'), /stale/);
 });

@@ -42,6 +42,33 @@ Names are display information, never identity keys. Private UI state must not
 survive a signed owner/session change. New-customer invitation or registration
 is outside this directory and the current gifting scope.
 
+## Axis Customer Directory
+
+The same existing private search also supports read-only name/reference lookup
+from Profile's admitted Customer Workspace, Customers and Profiles, and Customers
+aliases. `buildCustomerWorkspace` publishes the generic backend-operations listing
+with fixed hidden `ownerType: CUSTOMER`, required bounded search, display-name and
+reference columns, and the OPERATIONAL Profile owner selector. It contributes no
+generic identity CRUD, contacts, account activity, balance or transaction controls.
+Disabled directory policy or an absent implementing owner disables the aliases.
+Invalid presentation never produces an executable placeholder.
+
+`profileParticipantDirectory.customerWorkspacePresentation` owns titles, labels
+and explanatory copy. Search limits are derived from the same effective directory
+policy; do not duplicate them in Axis or a customer index. The description's
+`{minimumSearchLength}` and `{maximumResults}` placeholders are inert owner-side
+substitution. Later modules may change copy or narrow existing bounds while
+preserving the fixed API projection and all independent actor/tenant checks.
+
+Axis waits for valid required filters, renders field-local minimum-length errors,
+and distinguishes untouched, loading, empty, denied and failed reads. Repeated
+valid search is a read, never account creation or recipient selection authority.
+Private results retire on actor, scope, source or metadata changes. A maximum-size
+result means refine the prefix; there is no fabricated total or client pagination.
+Run `test/profileCustomerDirectoryWorkspace.test.js` with the existing directory
+privacy tests and BackOffice API/field contract tests. Native acceptance must
+verify a real existing match, empty and denied reads and a narrow layout.
+
 ## Verification
 
 `test/profileParticipantDirectoryContract.test.js` isolates generated storage and

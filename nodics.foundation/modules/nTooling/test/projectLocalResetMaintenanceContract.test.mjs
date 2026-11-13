@@ -9,10 +9,10 @@
 
  */
 /** @module nTooling/test/projectLocalResetMaintenanceContract @description Isolated preflight/refusal tests using actual configuration consumers; no providers, runtime probes or mutations. @owner nTooling @layer test */
-import { test } from 'node:test';
+import { test, mock } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-import { assertLocalSocketExclusion, buildPlan, consumeRuntime, getLocalProviderProcessNameField, orchestrateAdmittedMaintenance, parseLocalSocketInventory, parseOptions, run, verifyLocalWriterExclusion, withMaintenanceRuntimeContext } from '../src/service/project/defaultProjectLocalResetMaintenanceService.mjs';
+import { assertLocalSocketExclusion, assertRegisteredScopeCoverage, buildPlan, consumeRuntime, getLocalProviderProcessNameField, orchestrateAdmittedMaintenance, parseLocalSocketInventory, parseOptions, run, verifyLocalWriterExclusion, withMaintenanceRuntimeContext, withRuntime } from '../src/service/project/defaultProjectLocalResetMaintenanceService.mjs';
 
 const args = ['--environment=acmeLocal', '--project=acme.project', '--databases=acmeLocalPlatform,acmeLocalWaste', '--auth-namespace=auth_acmeLocalRuntimeAuth_'];
 const options = () => parseOptions(args);
@@ -160,7 +160,7 @@ test('execution refuses injected discovery/owner/outage adapters with zero provi
 });
 
 /** Creates exact protected pins through the real configuration/provider owners; native registry reads are injected and read-only. */
-async function registeredRuntimeFixture(t, namespaceProject = 'acme.project') {
+async function registeredRuntimeFixture(t, namespaceProject = 'acme.project', retainedServers = ['platformServer', 'wasteServer']) {
   const previous = Object.fromEntries(['CONFIG', 'NODICS', 'CLASSES', 'SERVICE', '_'].map(key => [key, global[key]]));
   t.after(() => {
     for (const [key, value] of Object.entries(previous)) {
@@ -193,7 +193,8 @@ async function registeredRuntimeFixture(t, namespaceProject = 'acme.project') {
       getEnvironmentName: () => namespaceProject, getSelectedEnvironmentName: () => 'acmeLocal',
       getServerName: () => ['platformServer', 'wasteServer'][index] };
     const candidate = databaseOwner.buildTenantNamespaceBinding('alpha');
-    properties.database.tenantNamespaceBindings[candidate.scopeKey] = candidate.binding;
+    if (retainedServers.includes(['platformServer', 'wasteServer'][index]))
+      properties.database.tenantNamespaceBindings[candidate.scopeKey] = candidate.binding;
   }
   const selectedOptions = { ...options(), registeredTenants: ['alpha'] };
   const owner = { ...maintenance, createClient: () => ({ connect: async () => {}, close: async () => {}, db: () => ({
@@ -244,8 +245,34 @@ test('actual registered runtime composition rejects source base, endpoint and de
     change(snapshot);
     await assert.rejects(consumeRuntime(snapshot, registration), /RESET_TENANT_PIN_CHANGED/);
   }
-  await assert.rejects(consumeRuntime(f.snapshots[0], { ...registration, server: 'otherServer' }), /RESET_TENANT_PIN_CHANGED/);
+  const unbound = await consumeRuntime(f.snapshots[0], { ...registration, server: 'otherServer' });
+  assert.equal(unbound.databases.filter(target => target.tenantCode).length, 0);
+  assert.throws(() => assertRegisteredScopeCoverage(f.receipt, [unbound]), /RESET_TENANT_SCOPE_INCOMPLETE/);
   await assert.rejects(consumeRuntime(f.snapshots[0], { ...registration, receipt: structuredClone(f.receipt) }), /RESET_REGISTERED_PROOF_REQUIRED/);
+});
+
+test('partial registered preparation selects only retained runtime pins and accounts for every stored scope', async t => {
+  const f = await registeredRuntimeFixture(t, 'acme.project', ['platformServer']);
+  const platform = f.scopes[0], waste = f.scopes[1];
+  assert.equal(platform.databases.filter(target => target.tenantCode).length, 4);
+  assert.equal(waste.databases.filter(target => target.tenantCode).length, 0);
+  assert.deepEqual(waste.databases.map(target => target.name), ['acmeLocalWaste', 'acmeLocalWaste']);
+  assert.doesNotThrow(() => assertRegisteredScopeCoverage(f.receipt, f.scopes));
+  assert.throws(() => assertRegisteredScopeCoverage(f.receipt, [waste]), /RESET_TENANT_SCOPE_INCOMPLETE/);
+  assert.throws(() => assertRegisteredScopeCoverage(f.receipt, [{ databases: platform.databases.slice(0, -1) }, waste]),
+    /RESET_TENANT_SCOPE_INCOMPLETE/);
+  const plan = buildPlan(f.options, f.deployment, f.scopes);
+  assert.equal(plan.databaseCount, 4);
+  assert.deepEqual(plan.effects, { databasesDropped: 0, authKeysRemoved: 0 });
+  // Coverage is a preflight check, never an authority issuer; extra or malformed retained scopes refuse.
+  const copied = structuredClone(f.receipt);
+  const bindings = copied.tenants[0].properties.database.tenantNamespaceBindings;
+  bindings.foreignScope = structuredClone(Object.values(bindings)[0]);
+  assert.throws(() => assertRegisteredScopeCoverage(copied, f.scopes), /RESET_TENANT_SCOPE_INCOMPLETE/);
+  bindings.foreignScope = { modules: {} };
+  assert.throws(() => assertRegisteredScopeCoverage(copied, f.scopes), /RESET_TENANT_SCOPE_INCOMPLETE/);
+  copied.tenants[0].properties.database.tenantNamespaceBindings = {};
+  assert.throws(() => assertRegisteredScopeCoverage(copied, f.scopes), /RESET_TENANT_SCOPE_INCOMPLETE/);
 });
 
 test('explicit stale retirement resolves only retained destinations against unchanged current provider bases', async t => {
@@ -374,6 +401,48 @@ test('maintenance projection restores every caller registry and environment on s
       if (descriptor) Object.defineProperty(global, name, descriptor);
       else delete global[name];
     }
+  }
+});
+
+test('maintenance awaits async configuration and consumes its loaded services once before restoring globals', async () => {
+  const projection = require('../../nConfig/src/service/defaultDeploymentConfigurationProjectionService');
+  const initializer = require('../../nConfig/src/service/DefaultFrameworkInitializerService');
+  const before = global.NODICS;
+  let inspected = false;
+  const reload = mock.method(initializer, 'loadMaintenanceServices', async () => {
+    throw new Error('projection already loaded services');
+  });
+  const resolve = mock.method(projection, 'resolve', async () => {
+    await new Promise(resolve => setImmediate(resolve));
+    global.NODICS = { maintenance: true };
+    return { properties: { environment: { class: 'LOCAL' } } };
+  });
+  try {
+    assert.equal(await withRuntime(options(), '/tmp/customer', { server: 'platformServer' }, {}, async snapshot => {
+      inspected = true;
+      assert.equal(global.NODICS.maintenance, true);
+      assert.equal(snapshot.properties.environment.class, 'LOCAL');
+      return 'inspected';
+    }), 'inspected');
+    assert.equal(inspected, true);
+    assert.equal(global.NODICS, before);
+    assert.equal(reload.mock.callCount(), 0);
+    resolve.mock.mockImplementation(async () => ({ properties: { environment: { class: 'PRODUCTION' } } }));
+    await assert.rejects(withRuntime(options(), '/tmp/customer', { server: 'platformServer' }, {}, () => {
+      throw new Error('must not inspect non-Local owners');
+    }), /RESET_LOCAL_ENVIRONMENT_REQUIRED/);
+    resolve.mock.mockImplementation(async () => {
+      await new Promise(resolve => setImmediate(resolve));
+      global.NODICS = { maintenance: true };
+      throw new Error('async projection failed');
+    });
+    await assert.rejects(withRuntime(options(), '/tmp/customer', { server: 'platformServer' }, {}, () => {
+      throw new Error('must not inspect');
+    }), /async projection failed/);
+    assert.equal(global.NODICS, before);
+  } finally {
+    resolve.mock.restore();
+    reload.mock.restore();
   }
 });
 

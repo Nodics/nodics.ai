@@ -81,3 +81,39 @@ test('capability consumers restore test globals after success and synchronous fa
     assert.equal(global._, beforeLodash);
   } finally { router.resolveCorsOrigins = original; }
 });
+
+test('the tooling CLI waits for the canonical asynchronous projection before emitting its graph', async () => {
+  const fs = require('node:fs'), vm = require('node:vm');
+  const source = fs.readFileSync(path.join(__dirname, '../src/service/project/defaultProjectConfigurationProbeService.js'), 'utf8');
+  let complete;
+  const pending = new Promise(resolve => { complete = resolve; });
+  const writes = [], localModule = { exports: {} };
+  const owner = { resolve: options => { assert.equal(options.server, 'selectedServer'); return pending; } };
+  const localRequire = () => owner; localRequire.main = localModule;
+  const localProcess = { argv: ['node', 'probe', JSON.stringify({ projectRoot: '/independent-project', environment: 'quality', server: 'selectedServer' })],
+    stdout: { write: text => writes.push(text) }, exitCode: 0 };
+  vm.runInNewContext(source, { require: localRequire, module: localModule, process: localProcess, console: { error() {} } });
+  const before = writes.slice();
+  const expected = { properties: { selected: 'fixture' }, modules: ['selectedServer'] };
+  complete(expected);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(before, [], 'a pending promise is not a configuration graph');
+  assert.equal(writes.length, 1);
+  assert.deepEqual(JSON.parse(writes[0]), expected);
+});
+
+test('the tooling CLI refuses a failed asynchronous projection without emitting a false graph', async () => {
+  const fs = require('node:fs'), vm = require('node:vm');
+  const source = fs.readFileSync(path.join(__dirname, '../src/service/project/defaultProjectConfigurationProbeService.js'), 'utf8');
+  const writes = [], errors = [], localModule = { exports: {} };
+  const failure = new Error('fixture projection refusal');
+  const pending = Promise.reject(failure); pending.catch(() => {});
+  const localRequire = () => ({ resolve: () => pending }); localRequire.main = localModule;
+  const localProcess = { argv: ['node', 'probe', '{}'], stdout: { write: text => writes.push(text) }, exitCode: 0 };
+  vm.runInNewContext(source, { require: localRequire, module: localModule, process: localProcess, console: { error: error => errors.push(error) } });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(writes, []);
+  assert.equal(localProcess.exitCode, 1);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0], failure);
+});

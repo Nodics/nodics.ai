@@ -53,7 +53,7 @@ module.exports = {
   settings: function () {
     const p = (CONFIG.get("digitalCore") || {}).digitalOwnership || {};
     if (p.enabled !== true || p.qualified !== true || !p.owner?.moduleName || !p.owner.connectionName ||
-        !p.owner.targetAuthority || !p.owner.apiPrefix || !Number.isSafeInteger(p.timeoutMilliseconds) || p.timeoutMilliseconds <= 0)
+        (p.owner.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(p.owner.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) || !p.owner.apiPrefix || !Number.isSafeInteger(p.timeoutMilliseconds) || p.timeoutMilliseconds <= 0)
       throw new Error("Digital ownership owner is not qualified");
     return p;
   },

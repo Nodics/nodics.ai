@@ -113,7 +113,7 @@ test("real Digital mixed bundle retains Carbon hold after partial transfer and f
   assert.equal(f.get("wasteCarbonLot", "lot").operations[0].destinationHold, "HELD");
   assert.equal((await port.inspect(r, { ...input, ownerRef: input.recipientRef })).available, false);
   failCertificate = false;
-  await assert.rejects(bundles.transfer(r, operation.code), /lost finalization acknowledgement/);
+  await assert.rejects(bundles.transfer(r, operation.code), { code: "ERR_DIGITAL_CARBON_TRANSPORT" });
   assert.equal(rows.DefaultDigitalBundleOperationService[0].status, "TRANSFERRED");
   assert.equal(f.get("wasteCarbonLot", "lot").operations[0].status, "COMPLETED");
   assert.equal(certificateStatus, "TRANSFERRED");
@@ -259,7 +259,7 @@ test('Carbon delegation uses internal tenant token and exposes only registered s
     buildRequest: options => {
       assert.equal(options.header.Authorization, 'Bearer unit-only-internal-token');
       assert.equal(options.moduleName, 'wasteCarbon');
-      assert.equal(options.targetAuthority.runtimeRole, 'WASTE');
+      assert.equal(options.targetAuthority.publication, 'OPERATIONAL');
       assert.equal(options.maxAttempts, 1);
       return options;
     },

@@ -43,10 +43,8 @@ extension permits pending intent only with domain-owned fresh proof revalidation
 before every write. Existing LISTED onboarding, owner/custody isolation and exact
 generated CAS recovery remain unchanged; no grants or owner publications are created.
 
-Common Waste reference data belongs here. `wasteCore` contributes
-`NODICS_WASTE_MANAGEMENT_CO` into Profile's `enterprise` schema as the shared
-Waste demo/reference enterprise; collection, submission, verification, and
-other child modules consume it through their own association fields.
+Circa Sample supplies the demonstration operator and asset owner through
+Profile. Waste records identify their operating enterprise by reference.
 
 The Waste Management business anchor opens the consolidated dashboard and exposes All submissions and Review queue. Its navigation contribution is module-owned data. Separate configuration workbenches remain available. Accelerators attach their own subtrees through the existing cross-module parent contract.
 

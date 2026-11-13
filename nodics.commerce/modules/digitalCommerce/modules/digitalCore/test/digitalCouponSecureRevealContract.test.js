@@ -73,8 +73,8 @@ async function purchased(t) {
     const authData = { ...scope, principalId: scope.ownerId, loginId: scope.ownerId, principalType: 'customer', tokenType: 'access' };
     f.settings.digitalCore = { maximumCouponUnitsPerCheckout: 100,
         couponAccess: { maximumOwnEntitlements: 100,
-            profile: { connectionName: 'profile', targetAuthority: 'profile', timeoutMilliseconds: 1000 } } };
-    SERVICE.DefaultModuleService = { invokeModule: async input => {
+            profile: { connectionName: 'profile', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMilliseconds: 1000 } } };
+    SERVICE.DefaultModuleService = { isLocalModuleActive: name => ['promotion', 'digitalCore'].includes(name), invokeModule: async input => {
         assert.equal(input.apiName, '/customer/identity');
         return { contractVersion: 1, tenant: scope.tenant, enterpriseCode: scope.enterpriseCode,
             customer: { code: scope.ownerId, loginId: scope.ownerId } };
@@ -255,7 +255,7 @@ test('body privacy/qualification flags never admit reveal; employee/service/mism
         { ...f.customer, authData: { ...f.customer.authData, tokenType: 'service' } },
     ]) await assert.rejects(f.reveal(request), { code: 'ERR_DIGITAL_REVEAL_FORBIDDEN' });
     f.state.allowed = false; await assert.rejects(f.reveal()); f.state.allowed = true;
-    f.settings.runtimeRole = 'COMMERCE_STAGED'; await assert.rejects(f.reveal());
+    f.settings.runtimeRole = { code: 'arbitrary', publication: 'STAGED' }; await assert.rejects(f.reveal());
 });
 
 test('pending, missing, duplicate, mismatched amount or failed payment capture never reveals', async t => {

@@ -30,6 +30,7 @@ const _ = require('lodash');
 const repositoryRoot = path.resolve(__dirname, '../../../../../../');
 const importProperties = require('../config/properties');
 const authDefaults = require('../../../../nAuth/config/properties').authSecurity;
+const profileAuthDefaults = require('../../../../../../nodics.platform/modules/profile/config/properties').authSecurity;
 const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-import-env-'));
 const localProperties = {
     data: {
@@ -78,7 +79,9 @@ function loadProperties(relativePath) {
 }
 
 function config(values) {
-    const effective = _.merge({ authSecurity: _.merge({}, authDefaults) }, values || {});
+    // Bootstrap identity policy belongs to Profile; exercise the normal layered
+    // owner configuration rather than expecting Foundation to define it.
+    const effective = _.merge({ authSecurity: _.merge({}, authDefaults, profileAuthDefaults) }, values || {});
     return {
         /**
          * Resolves one fixture-backed configuration value.

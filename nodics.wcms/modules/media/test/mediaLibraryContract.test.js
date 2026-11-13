@@ -148,7 +148,10 @@ test('only recognized Process definition 404 reports the missing workflow releas
             code: 'ERR_PROCESS_00002',
             status: 404
         }),
-        { code: 'ERR_PROCESS_00002', responseCode: '404' }
+        { code: 'ERR_PROCESS_00002', responseCode: '404' },
+        { code: 'ERR_SYS_00000', responseCode: '500', metadata: {
+            remoteHttpFailure: { code: 'ERR_PROCESS_00002', httpStatus: 404 }
+        } }
     ]) {
         SERVICE.DefaultModuleService.invokeModule = async () => {
             throw error;
@@ -170,6 +173,9 @@ test('only recognized Process definition 404 reports the missing workflow releas
     }
     for (const error of [
         { code: 'ERR_PROCESS_00002', status: 403 },
+        { code: 'ERR_PROCESS_00002', responseCode: '404', metadata: {
+            remoteHttpFailure: { code: 'ERR_PROCESS_00002', httpStatus: 403 }
+        } },
         { code: 'ERR_AUTH_00003', status: 401 },
         { code: 'UNKNOWN', status: 404 },
         new Error('Invalid error code: ERR_PROCESS_00002')
@@ -321,7 +327,7 @@ function qualify(f) {
             }),
             assertSource: () => true,
             target: () => ({
-                runtimeRole: 'PROCESS',
+                targetAuthority: { publication: 'OPERATIONAL' },
                 connectionName: 'processServer',
                 connectionType: 'abstract'
             })
@@ -470,7 +476,7 @@ test('real workflow owner enforces selected Staged authority and caller read/sta
                     definitionCode: 'mediaPublicationApproval',
                     ownerModule: 'media',
                     actionKey: 'media.applyPublicationDecision',
-                    sourceRuntimeRole: 'WCMS_STAGED',
+                    sourcePublication: 'STAGED',
                     requesterBinding: 'NATIVE_ACTOR',
                     reviewNodeCode: 'mediaReview',
                     reviewPermission: 'publish.lifecycle.approve'
@@ -479,10 +485,13 @@ test('real workflow owner enforces selected Staged authority and caller read/sta
             target: {
                 connectionName: 'process',
                 connectionType: 'abstract',
-                runtimeRole: 'PROCESS'
+                targetAuthority: { publication: 'OPERATIONAL' }
             }
         }
     };
+    NODICS.getRawModule = () => ({ metaData: require('../package.json') });
+    NODICS.getModule = () => ({ rawSchema: require('../src/schemas/schemas').media });
+    SERVICE.DefaultModuleRegistrationAgentService = { ...agentSource, getLocalModules: () => ['media'] };
     SERVICE.DefaultPublicationLifecycleService.getWorkflowProvider = () =>
         owner;
     assert.equal(
@@ -820,6 +829,7 @@ test('actual Media capability and generic workspaces satisfy strict BackOffice c
             parent: 'nodics.wcms',
             canonicalIdentity: 'nodics.wcms/modules/media'
         });
+        NODICS.getModule = () => ({ rawSchema: require('../src/schemas/schemas').media });
         NODICS.getServerName = () => 'wcmsStagedServer';
         SERVICE.DefaultRouterService = {
             prepareUrl: () => 'http://localhost:4320/nodics/media/v0'
@@ -871,54 +881,23 @@ test('actual Media capability and generic workspaces satisfy strict BackOffice c
         )
     );
     assert.equal(
-        defaults.schemaPolicies.media.publicationVersioned.isVersionedEnabled,
+        defaults.schemaPolicies.media.publicationVersioned.cases.ONLINE.isVersionedEnabled,
         false
     );
     assert.equal(defaults.media.publication.versionProviderEnabled, false);
 });
 
-test('real native Local runtime configurations produce identical Media capability hashes despite qualification differences', (t) => {
+test('Media capability hash is independent of physical host naming and explicit publication context', (t) => {
     const f = fixture(t);
-    const path = require('node:path');
-    const { loadRuntime } = require(
-        path.resolve(
-            __dirname,
-            '../../../../../nodics.kickoff/test/helpers/configuration'
-        )
-    );
     const crypto = require('node:crypto');
     const hashes = new Set();
-    for (const server of [
-        'platformServer',
-        'wcmsStagedServer',
-        'wcmsOnlineServer',
-        'processServer',
-        'commerceServer',
-        'commerceStagedServer',
-        'engagementServer',
-        'loyaltyServer',
-        'locationServer',
-        'wasteServer'
-    ]) {
-        const effective = require('lodash/merge')(
-            {},
-            f.config,
-            loadRuntime(server)
-        );
-        CONFIG.get = (key) =>
-            effective[key] === undefined ? f.config[key] : effective[key];
-        const metadata = capability.getCapability();
-        assert.equal(
-            contract.validateBackofficeMetadata(metadata),
-            true,
-            server
-        );
-        hashes.add(
-            crypto
-                .createHash('sha256')
-                .update(JSON.stringify(metadata))
-                .digest('hex')
-        );
+    for (const publication of ['STAGED', 'ONLINE', 'OPERATIONAL']) {
+        for (const code of ['CUSTOMER_COMBINED', 'RENAMED_HOST']) {
+            f.config.runtimeRole = { code, publication };
+            const metadata = capability.getCapability();
+            assert.equal(contract.validateBackofficeMetadata(metadata), true);
+            hashes.add(crypto.createHash('sha256').update(JSON.stringify(metadata)).digest('hex'));
+        }
     }
     assert.equal(hashes.size, 1);
 });
@@ -930,12 +909,15 @@ test('real owner descriptors bind row navigation to fresh exact-version inspecti
     assert.equal(contract.validateBackofficeMetadata(metadata), true);
     const listing = metadata.navigation.find(entry => entry.id === 'media-library').backendWorkspace.tabs[0].sections[0];
     const form =
-        metadata.navigation.find(entry => entry.id === 'media-publication-requests').backendWorkspace.tabs[0].sections[0];
+        metadata.navigation.find(entry => entry.id === 'media-publication-requests').backendWorkspace.tabs.flatMap(tab => tab.sections).find(section => section.type === 'form');
     assert.deepEqual(listing.rowNavigation, {
         label: 'Inspect publication',
         route: '/media/publication',
         parameters: { mediaCode: 'code' }
     });
+    const publicationWorkspace = metadata.navigation.find(entry => entry.id === 'media-publication-requests').backendWorkspace;
+    assert.equal(publicationWorkspace.defaultTab, 'library');
+    assert.deepEqual(publicationWorkspace.tabs[0].sections[0].rowNavigation, listing.rowNavigation);
     assert.deepEqual(form.readSource.fields, {
         mediaCode: 'code',
         versionId: 'versionId'

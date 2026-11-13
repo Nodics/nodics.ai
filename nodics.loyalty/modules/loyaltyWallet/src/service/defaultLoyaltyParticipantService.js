@@ -55,8 +55,9 @@ module.exports = {
       Number.isSafeInteger(value) && value >= range.minimum && value <= range.maximum;
     if (!bounded(timeoutMs, p?.validation?.identityTimeoutMs) || !bounded(target?.maxAttempts, p?.validation?.identityMaxAttempts) ||
       target.moduleName !== "profile" || typeof target.connectionName !== "string" || !target.connectionName.trim() ||
-      !target.targetAuthority || typeof target.targetAuthority !== "object" || Array.isArray(target.targetAuthority) ||
-      !Object.keys(target.targetAuthority).length || Object.values(target.targetAuthority).some(value => typeof value !== "string" || !value.trim()) ||
+      !target.targetAuthority || target.targetAuthority.publication !== 'OPERATIONAL' ||
+            Object.keys(target.targetAuthority).some(key => !['publication', 'server', 'environment'].includes(key)) ||
+            Object.values(target.targetAuthority).some(value => typeof value !== 'string' || !value.trim() || value !== value.trim()) ||
       !/^v[0-9]+$/.test(target.apiVersion || "")) this.fail();
     return this.unwrap(await SERVICE.DefaultModuleService.invokeModule({ local: false,
       moduleName: target.moduleName, connectionName: target.connectionName, targetAuthority: target.targetAuthority, apiVersion: target.apiVersion,

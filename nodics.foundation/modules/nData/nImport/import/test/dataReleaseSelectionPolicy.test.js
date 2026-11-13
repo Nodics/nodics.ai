@@ -69,18 +69,40 @@ test('explicit releases stay discoverable but require exact selection; existing 
         steps: [{ dataType: 'init', releaseCodes: ['example:optional'] }]
     };
     service.configuration().types.init.startupProfileSelections = [{
-        environmentCode: 'testEnvironment', runtimeRole: 'PROCESS', profileCodes: ['selected']
+        environmentCode: 'testEnvironment', serverCode: 'testServer', profileCodes: ['selected']
     }];
+    const serverName = NODICS.getServerName;
+    NODICS.getServerName = () => undefined;
+    await assert.rejects(startup.installStartupReleases({}), /explicit environment and server/);
+    NODICS.getServerName = () => 'otherServer';
+    const unselectedStartup = await startup.installStartupReleases({});
+    assert.deepEqual(unselectedStartup.releases.map(release => release.releaseCode), ['example:baseline']);
+    NODICS.getServerName = serverName;
     const selectedStartupPlan = await startup.installStartupReleases({});
     assert.deepEqual(selectedStartupPlan.releases.map(release => release.releaseCode),
         ['example:baseline', 'example:optional']);
+    // A capability can export reference data to an active owner without running its code here.
+    const activeModules = NODICS.getActiveModules;
+    NODICS.getActiveModules = () => [];
+    service.configuration().contributions = [{ moduleName: 'example', sections: ['baseline', 'optional'] }];
+    const inactiveSelected = await startup.installStartupReleases({ tenant: 'business-tenant' });
+    assert.deepEqual((inactiveSelected.releases || []).map(release => release.releaseCode), ['example:optional']);
+    assert.equal(inactiveSelected.tenant, 'business-tenant');
+    assert.deepEqual(NODICS.getActiveModules(), [], 'data selection must not activate owner code');
+    NODICS.getServerName = () => 'otherServer';
+    assert.equal((await startup.installStartupReleases({ tenant: 'business-tenant' })).reason, 'NO_INIT_RELEASES');
+    NODICS.getServerName = serverName;
+    NODICS.getActiveModules = activeModules;
+    delete service.configuration().contributions;
     service.configuration().initializationProfiles.selected.steps.push({ dataType: 'core', releaseCodes: ['example:optional'] });
     await assert.rejects(startup.installStartupReleases({}), /Init releases only/);
     service.configuration().types.init.startupProfileSelections[0].profileCodes = ['missing'];
     await assert.rejects(startup.installStartupReleases({}), /profile is unavailable/);
     assert.equal(fixture.imports.length, 0);
-    fixture.runtimeRole = 'WCMS_STAGED';
-    await assert.rejects(service.preparePlan({ releaseRequest: { dataType: 'init', releaseCodes: ['example:optional'] } }), /destination/);
+    fixture.runtimeRole = 'RENAMED';
+    assert.ok(await service.preparePlan({ releaseRequest: { dataType: 'init', releaseCodes: ['example:optional'] } }));
+    service.configuration().types.init.startupProfileSelections[0].runtimeRole = 'PROCESS';
+    await assert.rejects(startup.installStartupReleases({}), /selection is invalid/);
     for (const invalid of ['explicit', 'AUTO', false, null]) {
         sections.optional.selectionPolicy = invalid;
         writeManifest();

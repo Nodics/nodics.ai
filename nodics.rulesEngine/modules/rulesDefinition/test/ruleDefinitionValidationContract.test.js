@@ -72,5 +72,12 @@ let overlap = validator.validateBands([
 ], 'REJECT');
 assert(overlap.issues.some(issue => issue.code === 'BAND_OVERLAP'));
 
+const conditionIssues = condition => { const issues = []; validator.validateCondition({ code: 'C', missingValueBehavior: 'REQUIRED', ...condition }, { weight: { dataType: 'NUMBER', allowedOperators: ['BETWEEN','IN'] }, category: { dataType: 'STRING', allowedOperators: ['EQUALS'], allowedValues: ['PHONE'] } }, issues, 'condition'); return issues; };
+assert(conditionIssues({ propertyCode: 'weight', operatorCode: 'BETWEEN', value: 10, valueTo: 1 }).some(issue => issue.code === 'CONDITION_VALUE_INVALID'));
+assert(conditionIssues({ propertyCode: 'weight', operatorCode: 'IN', value: ['one'] }).some(issue => issue.code === 'CONDITION_VALUE_INVALID'));
+assert(conditionIssues({ propertyCode: 'category', operatorCode: 'EQUALS', value: 'FORGED' }).some(issue => issue.code === 'CONDITION_VALUE_NOT_ALLOWED'));
+assert.equal(conditionIssues({ propertyCode: 'weight', operatorCode: 'BETWEEN', value: 1, valueTo: 10 }).length, 0);
+assert.equal(validator.validateDefinition({ propertyProviderCode: 'sample', definition: { groups: {} } }).valid, false);
+
 delete global.CONFIG;
 console.log('Rules definition validation contracts validated');

@@ -11,6 +11,8 @@
 
 "use strict";
 
+const apiContracts = require("../schemas/apiContracts");
+
 /**
  * @module nodics.process/modules/workflow/src/router/routers
  * @description Secured Process API routes for definition lifecycle, runtime instances, human tasks, and audit inspection.
@@ -193,6 +195,23 @@ module.exports = {
       },
     },
     processOperations: {
+      getCommandCapabilities: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["runtimeConfigAdminUserGroup"],
+        permission: "process.backoffice.view",
+        apiExposure: "processManagement",
+        key: "/operations/capabilities",
+        method: "GET",
+        controller: "DefaultProcessOperationsController",
+        operation: "getCommandCapabilities",
+        cache: { enabled: false },
+        summary: "Observe current native trigger authorization and command recording policy",
+        responses: { 200: {
+          description: "Private version-1 advisory command metadata; never execution authority",
+          content: { "application/json": { schema: apiContracts.commandCapabilities } },
+        } },
+      },
       startPublicationApproval: {
         secured: true,
         authTokenTypes: ["service"],
@@ -453,6 +472,18 @@ module.exports = {
           url: "http://host:port/nodics/process/v0/tasks/:taskCode",
         },
       },
+      readCmsPublicationReview: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["userGroup"],
+        permission: "process.backoffice.view",
+        apiExposure: "processManagement",
+        cache: { enabled: false },
+        key: "/instances/:instanceCode/tasks/:taskCode/cms-review",
+        method: "GET",
+        controller: "DefaultProcessOperationsController",
+        operation: "readCmsPublicationReview",
+      },
       claimTask: {
         secured: true,
         authTokenTypes: ["access"],
@@ -626,6 +657,17 @@ module.exports = {
           method: "POST",
           url: "http://host:port/nodics/process/v0/triggers/:triggerCode/archive",
         },
+      },
+      fireScheduledTrigger: {
+        secured: true,
+        authTokenTypes: ["service"],
+        accessGroups: ["userGroup"],
+        permission: "process.trigger.execute",
+        apiExposure: "moduleInternal",
+        key: "/internal/triggers/:triggerCode/fire",
+        method: "POST",
+        controller: "DefaultProcessOperationsController",
+        operation: "fireScheduledTrigger",
       },
       executeTrigger: {
         secured: true,

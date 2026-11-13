@@ -32,3 +32,9 @@ A registry lease endpoint already names its canonical module API path and is pre
 Inherit authentication policy and bind deployment credentials through the existing
 nAuth/nService contract. Keep provisioning proof separate from retained runtime
 proof; preserve strict shared auth state and Profile grants. See the local contract.
+
+
+Authority-context customization inherits empty `modules`/`schemas` maps and a null
+common default. Selecting a module with `true` requires an explicit nonempty
+common context; otherwise it is refused. Exact schema declarations remain higher
+priority, and this metadata never replaces Profile permissions or runtime grants.

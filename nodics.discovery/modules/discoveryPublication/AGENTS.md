@@ -37,3 +37,20 @@ private journaled persistence protocol; reject unguarded callers.
 - Follow global AI guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow every ancestor group `AGENTS.md` from root to this package.
 - Keep publication generic; domain eligibility remains with the domain source provider.
+
+Manifest reads/initialization/CAS use the fixed DMS owner transport; domain guards
+remain in source orchestration, not wire payloads. Preserve generated persistence,
+exact revision CAS and private schemas. Runtime result parsing is a real source
+dependency and must precede this module. Physical retirement executes on Projection through fixed owner APIs; private
+receipts remain here. Source revalidation and native model checks remain fresh;
+no callback, raw model or generic journal executor crosses transport.
+
+Trusted package metadata declares `functional` ownership because this module owns
+persisted discoveryGeneration and discoveryIndexRetirementReceipt state. Source-only helpers may
+be loaded elsewhere; that does not grant local schema or service authority.
+Unique owner admission remains per explicit publication context.
+
+
+Actorless domain reads must use the canonical service-token transport even for a cohosted owner. Never synthesize an actor or expose private generation schemas to public CRUD.
+
+The explicit init permission catalogue defines discovery.generation.read and discovery.generation.write. Import creates vocabulary, not runtime grants. Retained deployment assignments and service scope ceilings require exact Profile owner updates; neither configuration nor startup may silently expand an installed identity.

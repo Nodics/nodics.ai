@@ -113,6 +113,51 @@ module.exports = exportedService = {
     },
 
     /**
+     * Compresses only public, credential-free GET success bodies after owner admission.
+     * Server-authored route metadata and request privacy remain mandatory; Accept-Encoding
+     * negotiates representation only. Failure falls back to the identical JSON payload.
+     * @param {Object} route Trusted registered route, never caller-supplied metadata.
+     */
+    sendJson: function (request, response, payload, route) {
+        const policy = CONFIG.get('responseHandler')?.publicJsonCompression;
+        const headers = request.headers || {};
+        const currentType = response.getHeader?.('Content-Type');
+        if (!policy || policy.enabled !== true || route?.secured !== false ||
+            request.method !== 'GET' || ['authorization', 'cookie', 'authtoken', 'apikey', 'x-api-key']
+                .some(name => Object.keys(headers).some(key => key.toLowerCase() === name && headers[key])) ||
+            route.requestPrivacy?.sensitive === true ||
+            SERVICE.DefaultLoggerService?.isSensitiveRequest?.(request) ||
+            response.statusCode !== 200 || response.getHeader?.('Set-Cookie') ||
+            response.getHeader?.('Content-Encoding') || response.getHeader?.('Content-Range') ||
+            /no-transform/i.test(String(response.getHeader?.('Cache-Control') || '')) ||
+            (currentType && !String(currentType).toLowerCase().startsWith('application/json')) ||
+            typeof request.acceptsEncodings !== 'function' ||
+            !Number.isInteger(policy.minimumBytes) || policy.minimumBytes < 0 ||
+            !Number.isInteger(policy.maximumBytes) || policy.maximumBytes < policy.minimumBytes ||
+            !Number.isInteger(policy.level) || policy.level < 0 || policy.level > 9) {
+            response.json(payload);
+            return;
+        }
+        response.vary('Accept-Encoding');
+        if (request.acceptsEncodings('gzip', 'identity') !== 'gzip') {
+            response.json(payload);
+            return;
+        }
+        const encoded = Buffer.from(JSON.stringify(payload));
+        if (encoded.length < policy.minimumBytes || encoded.length > policy.maximumBytes) {
+            response.json(payload);
+            return;
+        }
+        require('node:zlib').gzip(encoded, { level: policy.level }, (error, compressed) => {
+            if (response.destroyed || response.writableEnded) return;
+            if (error) { response.json(payload); return; }
+            response.type('application/json');
+            response.setHeader('Content-Encoding', 'gzip');
+            response.send(compressed);
+        });
+    },
+
+    /**
      * Sends a normalized JSON success response.
      *
      * @param {Object} request Express request.
@@ -122,14 +167,14 @@ module.exports = exportedService = {
      * @sideEffects Writes HTTP status and JSON body.
      * @throws Delegates formatting failures to `handleError`.
      */
-    handleSuccess: function (request, response, success) {
+    handleSuccess: function (request, response, success, route) {
         try {
             if (success && success.metadata && success.metadata.rawResponse === true) {
                 if (success.metadata.contentType && response.type) {
                     response.type(success.metadata.contentType);
                 }
                 response.status((this.toHttpStatus || exportedService.toHttpStatus).call(this, success.responseCode || 200));
-                response.json(success.data);
+                (this.sendJson || exportedService.sendJson).call(this, request, response, success.data, route);
                 return;
             }
             success.code = success.code || 'SUC_SYS_00000';
@@ -137,7 +182,7 @@ module.exports = exportedService = {
             success.message = success.message || SERVICE.DefaultStatusService.get(success.code).message;
             Object.assign(success, (this.localizationMetadata || exportedService.localizationMetadata).call(this, success.code, success.metadata));
             response.status((this.toHttpStatus || exportedService.toHttpStatus).call(this, success.responseCode));
-            response.json(success);
+            (this.sendJson || exportedService.sendJson).call(this, request, response, success, route);
         } catch (error) {
             (this.handleError || exportedService.handleError).call(this, request, response, error);
         }

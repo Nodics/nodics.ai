@@ -4,9 +4,9 @@
   "sections": {
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "docs-v001",
+      "contentPath": "docs-v003",
       "pack": "bpm",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -20,7 +20,7 @@
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "cms-records",
-      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sourceAuthority": "data/docs-v003/records/documentation",
       "sites": [
         "nodicsDocumentationSite"
       ],
@@ -28,16 +28,16 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "8f27efc523ae2e0df75174e951cd53e99e6d8c2d438e54faaa09477bf6f77cd4",
+      "releaseChecksum": "2a17c99544cdabf800a1c6738ee67b73cc3ab15009e3885a44f7ed22261d13f9",
       "generatedHashes": {
-        "docs-v001/records/documentation/bpmDocumentationNodeData.js": "7809c81d2a46576cb27234c2007f7fba55316c0e25faf75cbeb37ea8bd72925e",
-        "docs-v001/records/documentation/bpmDocumentationPageMetadataData.js": "d9f6fb340a2e277df86d6aaad1dc64e00f50e6705edf2d7036d257f100f961d8",
-        "docs-v001/records/documentation/bpmDocumentationPublicationStateData.js": "15fe1f78c2bcf9c8555ab08b7cdbef74110e24e99b1d458b76cd031961c65376",
-        "docs-v001/records/documentation/bpmDocumentationSearchMetadataData.js": "858b07c699e1e28cd043cfc5642c479e348e3b58359a6a67bd476743fbe10a53",
-        "docs-v001/records/documentation/bpmDocumentationComponentData.js": "149fb481b8c23528732ef5701809e58feb66119dfdbe61450df29f1e56816640",
-        "docs-v001/records/documentation/bpmDocumentationPageData.js": "9e9f520c2396420f1c8bd16aeb03e69ec2d765e6d4900e51f7aa8a674a27feca",
-        "docs-v001/records/documentation/bpmDocumentationRouteData.js": "6c6cafbd24b08982deaf5e7dff12aa20d9bfd1263bbc9657c861ea26d930a0c6",
-        "docs-v001/headers/100_bpmDocumentationContentPackHeader.js": "3115758436db2c9e554779f637db37ba4f909c644b46305dda3480fc0ec99375"
+        "docs-v003/records/documentation/bpmDocumentationNodeData.js": "7809c81d2a46576cb27234c2007f7fba55316c0e25faf75cbeb37ea8bd72925e",
+        "docs-v003/records/documentation/bpmDocumentationRelease002PageMetadataData.js": "af342a6a1f3c8932790efe17f9e86aaf846f898f85e66ba8d1a88702384f4061",
+        "docs-v003/records/documentation/bpmDocumentationRelease002PublicationStateData.js": "bb5f442dad0a0cba6c6144bc5b161778271bf704d15a271fee14ad530e4fb93b",
+        "docs-v003/records/documentation/bpmDocumentationRelease002SearchMetadataData.js": "c27e70a8ba24681383892013fb3036a91700e9c8f341eaa27aee73bb72d00aed",
+        "docs-v003/records/documentation/bpmDocumentationRelease002ComponentData.js": "9ba757bec9878e0d538f7685d49f34245bfd18c1b5e56675a5f491fe75368849",
+        "docs-v003/records/documentation/bpmDocumentationPageData.js": "9e9f520c2396420f1c8bd16aeb03e69ec2d765e6d4900e51f7aa8a674a27feca",
+        "docs-v003/records/documentation/bpmDocumentationRouteData.js": "6c6cafbd24b08982deaf5e7dff12aa20d9bfd1263bbc9657c861ea26d930a0c6",
+        "docs-v003/headers/100_bpmDocumentationRelease002ContentPackHeader.js": "ed5300c3fa547e27292b974cbb5d43aefc57890aabf4f28a2f84bad76544b7a9"
       },
       "includes": [
         {

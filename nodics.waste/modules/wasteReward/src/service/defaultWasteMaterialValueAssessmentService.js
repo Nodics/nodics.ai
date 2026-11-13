@@ -99,7 +99,9 @@ module.exports = {
             if (settings.evidence[name] !== null && (typeof settings.evidence[name] !== 'string' ||
                 !/^[A-Za-z][A-Za-z0-9]*Service$/.test(settings.evidence[name])))
                 this.fail('CONFIGURATION', 'Evidence provider must be a registered service name');
-        if (!settings.loyalty.moduleName || !settings.loyalty.connectionName || !settings.loyalty.targetAuthority?.runtimeRole)
+        if (settings.loyalty.moduleName !== 'loyaltyApi' || !settings.loyalty.connectionName || !settings.loyalty.targetAuthority || settings.loyalty.targetAuthority.publication !== 'OPERATIONAL' ||
+            Object.keys(settings.loyalty.targetAuthority).some(key => !['publication', 'server', 'environment'].includes(key)) ||
+            Object.values(settings.loyalty.targetAuthority).some(value => typeof value !== 'string' || !value.trim() || value !== value.trim()))
             this.fail('CONFIGURATION', 'Canonical Loyalty transport authority is required');
         return settings;
     },

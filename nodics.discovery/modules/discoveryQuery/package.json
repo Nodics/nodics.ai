@@ -1,25 +1,26 @@
 {
-    "name": "discoveryQuery",
-    "version": "0.0.0",
-    "index": "75.60",
-    "private": true,
-    "main": "nodics.js",
-    "description": "Discovery query capability.",
-    "nodics": {
-        "kind": "capability",
-        "displayName": "Discovery Query",
-        "runtimeModule": true,
-        "loadableByNodicsModuleLoader": true,
-        "owns": [
-            "configuration",
-            "service",
-            "test",
-            "llm"
-        ],
-        "runtime": {
-            "router": false,
-            "publish": false,
-            "web": false
-        }
+  "name": "discoveryQuery",
+  "version": "0.0.0",
+  "index": "75.60",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Discovery query capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Discovery Query",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false,
+      "ownership": "sourceOnly"
     }
+  }
 }

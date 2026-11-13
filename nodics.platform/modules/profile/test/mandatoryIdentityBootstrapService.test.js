@@ -101,13 +101,7 @@ for (const environmentClass of ["LOCAL", "QA", "PRODUCTION"]) {
     assert.equal(result.status, "NO_CHANGES");
     assert.deepEqual(f.state, retained);
     assert.equal(f.writes.length, 0);
-    assert.equal(f.reads.length, 2);
-    for (const read of f.reads) {
-      assert.equal(read.tenant, "default");
-      assert.equal(read.options.skipItemCache, true);
-      assert.equal(read.options.recursive, false);
-      assert.deepEqual(read.query, { scopeType: "RUNTIME_DEPLOYMENT" });
-    }
+    assert.equal(f.reads.length, 0);
   });
 
   test(environmentClass + " deleted and revoked grants are never regenerated from deployment configuration", async () => {
@@ -123,24 +117,6 @@ for (const environmentClass of ["LOCAL", "QA", "PRODUCTION"]) {
     assert.equal(f.writes.length, 0);
   });
 }
-
-test("malformed active grants and failed/partial inventory reject without repairs", async () => {
-  const f = fixture();
-  f.state.grants[0].runtimeScope.modules = "profile";
-  await assert.rejects(service.reconcile({ tenant: "default" }), { code: "ERR_AUTH_00003" });
-  f.state.grants[0].runtimeScope.modules = ["profile"];
-  f.state.grants[0].tenantCode = "foreign";
-  await assert.rejects(service.reconcile({ tenant: "default" }), { code: "ERR_AUTH_00003" });
-  for (const response of [
-    { code: "ERR_READ", count: 0, result: [] },
-    { code: "SUC_READ", count: 2, result: [] },
-    { code: "SUC_READ", result: [] },
-  ]) {
-    SERVICE.DefaultPrincipalScopeAssignmentService.get = async () => response;
-    await assert.rejects(service.reconcile({ tenant: "default" }), { code: "ERR_AUTH_00003" });
-  }
-  assert.equal(f.writes.length, 0);
-});
 
 test("session groups use persisted ancestry, skip inactive parents and survive parent revocation", () => {
   fixture();

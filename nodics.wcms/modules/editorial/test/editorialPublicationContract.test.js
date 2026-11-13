@@ -13,7 +13,8 @@ const assert = require('assert');
 class NodicsError extends Error {}
 global.CLASSES = { NodicsError };
 global.CONFIG = { get: () => ({ publication: { maximumDependencies: 10 } }) };
-global.SERVICE = {};
+global.SERVICE = {
+        ...require('./helpers/editorialOwnerServices.js'),};
 const adapter = require('../src/service/defaultEditorialPublicationAdapterService');
 (async () => {
     let article = { code: 'article', revision: 2, status: 'APPROVED', slug: 'article', authorCodes: ['author'], taxonomyTermCodes: ['news'], siteCodes: ['main'] };

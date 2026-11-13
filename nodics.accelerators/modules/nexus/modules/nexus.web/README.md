@@ -84,3 +84,29 @@ Engagement, Media and optional documentation retain their own lifecycle lanes.
 Source consolidation does not rewrite installed receipts or authorize live replay.
 Derived component-media records exclude retired source components; surviving
 binding codes and exact source checksum validation remain stable.
+
+Publishable sample releases declare `selectionPolicy: EXPLICIT`. Operators select and validate these releases through nImport or Axis before Staged preparation; they are never implicit startup or default selections. Publication approval remains separate.
+
+The fresh, unreleased corporate baseline explicitly binds `nexusCorporateSite` to the `default` enterprise and its CMS authoring records to `nexusContentCatalog`. Pages, routes and navigation retain Site scope; reusable components, templates and media bindings retain Catalog scope. This source declaration does not adopt installed unowned content or grant access; Designer still requires Profile authorization and matching ownership.
+
+The CMS Designer configuration exposes Heading and Body text for hero/content
+sections and bounded editable Cards for card grids. Required base headings and
+card details are checked by CMS before writes. English and Arabic variants follow
+the component type localization schema; the UI does not invent translations.
+Nexus rendering consumes the canonical `title`, retaining `heading` as the legacy
+fallback. These presentation descriptors do not publish any source content.
+
+Entered translations stay DRAFT until explicitly reviewed and marked READY.
+Designer publication readiness reports unreviewed translations before creating a
+publication request; the publication adapter independently requires READY versions.
+Initial route version `0` remains part of the generated publication identity.
+
+The unreleased Editorial source baseline imports article masters as DRAFT without workflow, approval or publication evidence. Ready sample localization copy does not approve an article. Operators validate and submit each draft through Editorial, review through Process, and inspect the actual nPublish request before claiming Online delivery. This source correction does not rewrite installed records or receipts.
+
+The corporate source release 0.0.4 adds the normal Arabic `/` route with the same page/component identities and 34 reviewed English/Arabic component variants. CMS owns localized-property validation and Process approval remains required before Online delivery. The published header owns language choices; Arabic links name English-only detail and guide destinations. The source advance does not rewrite installed receipts or authorize automatic replay.
+
+Component type declarations are imported before variants using the canonical numbered type source. The immutable release manifest orders dependencies before localized records; a failed installation never changes Online content or its approval.
+
+Home product links, contact anchors, ecosystem statements and form captions are published localized CMS properties. The frontend owns translated interface labels and preserves locale on Editorial detail links.
+
+Designer defaults use the canonical localized `heading` property for content sections and card grids, and `title` for hero blocks. Keep these fields aligned with the content type schema and frontend renderer; customer overlays only supply intentional overrides.

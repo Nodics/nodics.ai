@@ -23,6 +23,10 @@ regressions remain mandatory before closing a refactor.
 Documentation `referenceCatalogues` validates explicit canonical cross-pack links
 without importing the targets. `includes` alone selects import composition.
 See [reference declaration](llm/examples/documentation-reference-catalogues.md).
+Documentation source checks also validate CMS route delivery states against the
+CMS-owned enum. Documentation lifecycle `STAGED` is not a route delivery state;
+unpublished source routes use `DRAFT`. This source check does not import, approve
+or establish Online readiness.
 
 Detailed material is preserved in the adjacent [implementation and operations guide](tooling-operations-guide.md). This README is the discovery index, not a replacement authority or evidence that runtime qualification passed.
 
@@ -39,9 +43,16 @@ See [Local Runtime Isolation](tooling-operations-guide.md#local-runtime-isolatio
 ## Maintenance Outage
 
 See [Maintenance Outage](tooling-operations-guide.md#maintenance-outage).
+Maintenance awaits the configuration owner's asynchronous projection, which loads
+effective maintenance services once. Caller registries remain scoped until both
+projection and inspection settle, including rejection; no provider initialization
+or runtime startup is admitted by this loading step.
 The existing offline reset command accepts an optional exact physical search
 scope. Its [admission contract](llm/contracts/tooling-governance-contracts.md#optional-physical-search-scope)
 preserves owner boundaries, dry-run and independently observed host exclusion.
+Registered tenant planning selects only retained runtime bindings, including for
+partially prepared tenants. It validates every retained scope and channel and
+refuses incomplete coverage; an unbound runtime contributes no derived target.
 
 ## Post-Reset Readiness
 
@@ -62,3 +73,16 @@ See [Tests](tooling-operations-guide.md#tests).
 ## What To Avoid
 
 See [What To Avoid](tooling-operations-guide.md#what-to-avoid).
+
+Configuration projection uses nConfig's canonical owner. Direct asynchronous
+resolution and the tooling CLI entry wait for the completed graph; the isolated
+read adapter remains synchronous. The CLI emits no graph on projection failure.
+`test/projectConfigurationHarness.test.js` protects that sequencing and delegation.
+
+
+Configuration source checks reject literal credential-map values as well as
+bootstrap/authentication secrets. Browser-validation defaults remain with nTooling;
+backend readiness uses API evidence independently of frontend availability.
+Reference artwork remains in the consumed application profile, not a global alias.
+
+Local topology defaults each runtime readiness deadline to 90 seconds in the Framework owner. An actual environment server may intentionally size `nodics.runtimeTooling.readinessTimeoutMs` as a positive safe integer in milliseconds; this changes only the bounded startup wait, never nSystem readiness, terminal registration refusal, ownership or startup rollback. See the topology contract.

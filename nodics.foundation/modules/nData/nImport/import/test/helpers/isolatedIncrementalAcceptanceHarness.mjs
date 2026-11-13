@@ -40,15 +40,25 @@ export function createIsolatedDeployment({ ports }) {
   const moduleRoot = path.join(root, 'modules', spec.moduleName);
   const metadata = (name, index, kind) => ({ name, index, private: true, version: '0.0.0', main: 'nodics.js',
     nodics: { kind, displayName: name, runtimeModule: true, loadableByNodicsModuleLoader: true, owns: ['configuration', 'data'], runtime: { router: false, publish: false, web: false } } });
+  const container = (name, index) => {
+    const packageJson = metadata(name, index, 'group');
+    Object.assign(packageJson.nodics, { runtimeModule: false, loadableByNodicsModuleLoader: false });
+    return packageJson;
+  };
   const secret = () => crypto.randomBytes(40).toString('hex');
   const bootstrapIdentity = { source: 'runtimeSecret', adminPassword: secret(), servicePassword: secret(), serviceApiKey: secret() };
   const secrets = [...Object.values(bootstrapIdentity).filter(value => value !== 'runtimeSecret'), secret(), secret()];
   composition.writeModule(root, { packageJson: metadata('nodics.incremental-acceptance', '9000.00', 'application'), properties: { project: { code: 'nodics.incremental-acceptance' } } });
+  composition.writeModule(path.join(root, 'envs'), { packageJson: container('incrementalAcceptanceEnvironments', '9000.01') });
+  composition.writeModule(path.join(root, 'modules'), { packageJson: container('incrementalAcceptanceModules', '9000.02') });
   composition.writeModule(moduleRoot, { packageJson: metadata(spec.moduleName, '9000.05', 'capability') });
-  composition.writeModule(environmentRoot, { packageJson: metadata(environmentName, '9000.10', 'environment'), properties: {
-    environment: { code: environmentName, class: 'LOCAL' }, log: { level: 'error' },
+  composition.writeModule(environmentRoot, { packageJson: metadata(environmentName, '9000.10', 'group'), properties: {
+    environment: { code: environmentName, class: 'LOCAL' },
+    log: { level: 'error', requestPrivacy: { qualified: {
+      $config: 'env', name: 'NODICS_ISOLATED_IMPORT_PRIVATE_CAPTURE_QUALIFIED', type: 'boolean',
+    } } },
     runtimeRole: { code: 'PLATFORM', publication: 'OPERATIONAL' },
-    runtimeIdentity: { instanceCode: 'isolated-import-1' }, bootstrapIdentity,
+    bootstrapIdentity,
     defaultAuthDetail: { apiKey: bootstrapIdentity.serviceApiKey, entCode: 'default' },
     authSecurity: { apiKey: { pepper: secrets[3] }, jwt: { secret: secrets[4] } },
     database: { default: { mongodb: { master: { URI: 'mongodb://127.0.0.1:' + ports.mongo, databaseName: 'isolatedIncrementalAcceptance' }, test: { URI: 'mongodb://127.0.0.1:' + ports.mongo, databaseName: 'isolatedIncrementalAcceptanceTest' } } } },
@@ -58,8 +68,9 @@ export function createIsolatedDeployment({ ports }) {
   const serverPackage = metadata(serverName, '9000.20', 'server');
   serverPackage.nodics.extends = ['nodics.foundation', 'nodics.platform'];
   serverPackage.nodics.runtimeModuleRoots = ['nodics.platform'];
+  serverPackage.nodics.runtimeIdentity = { instanceCode: 'isolated-import-1' };
   composition.writeModule(serverRoot, { packageJson: serverPackage, properties: {
-    activeModules: { groups: [], modules: ['profile', 'redisCache', spec.moduleName, 'nodics.incremental-acceptance', environmentName, serverName] },
+    activeModules: { groups: [], modules: ['profile', 'redisCache', spec.moduleName, 'nodics.incremental-acceptance'] },
     servers: { default: { endpoint: { httpHost: '127.0.0.1', httpPort: ports.http, httpsPort: 0 }, abstractEndpoint: { httpHost: '127.0.0.1', httpPort: ports.http, httpsPort: 0 } } },
   } });
   const c = { root, frameworkRoot, environmentName, serverName, moduleRoot, ports: { ...ports }, secrets, bootstrapIdentity, stage: null, runtimeRunning: false };
@@ -125,6 +136,8 @@ export function inspectDeployment(c) {
   assert.equal(result.properties.authSecurity.securityStamp.cacheModuleName, 'auth');
   assert.equal(result.properties.authSecurity.refreshToken.requireDistributedCache, true);
   assert.equal(result.properties.cache.auth.channels.auth.fallback, false);
+  assert.equal(result.properties.log.requestPrivacy.captureMode, 'disabled');
+  assert.notEqual(result.properties.log.requestPrivacy.qualified, true);
   return { moduleName: spec.moduleName, implementingOwner: 'import', discovered: true, stage: c.stage, authenticationBypass: false };
 }
 
@@ -151,7 +164,11 @@ export async function runIsolatedIncrementalAcceptance({ outputDirectory, execut
   const safe = value => c.secrets.reduce((text, secret) => text.split(secret).join('[REDACTED]'), String(value))
     .replace(/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g, '[REDACTED_TOKEN]');
   const launch = (binary, args, ipc = false) => {
-    const child = spawn(binary, args, { cwd: c.root, env: { PATH: process.env.PATH, HOME: process.env.HOME }, stdio: ['ignore', 'pipe', 'pipe', ...(ipc ? ['ipc'] : [])] });
+    const env = { PATH: process.env.PATH, HOME: process.env.HOME };
+    // The isolated worker has no inherited preload, APM or proxy variables.
+    // Its only endpoints bind loopback and its output is captured in private pipes.
+    if (ipc && binary === process.execPath) env.NODICS_ISOLATED_IMPORT_PRIVATE_CAPTURE_QUALIFIED = 'true';
+    const child = spawn(binary, args, { cwd: c.root, env, stdio: ['ignore', 'pipe', 'pipe', ...(ipc ? ['ipc'] : [])] });
     child.output = ''; child.stdout.on('data', bytes => { child.output += safe(bytes); }); child.stderr.on('data', bytes => { child.output += safe(bytes); });
     child.once('error', error => { child.launchError = error; }); children.push(child); return child;
   };

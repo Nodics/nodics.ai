@@ -29,6 +29,10 @@
 - Maintain framework documentation directly as CMS page/component records under
   `data/docs-v001/records/documentation`. `data/manifest.json` declares the pack;
   do not create a separate `docs/` authoring source or Markdown-to-CMS generator.
+- Keep documentation lifecycle separate from CMS route delivery. Unpublished
+  route records use CMS `DRAFT`, not documentation `STAGED`; validate them against
+  the CMS schema before import and refresh their manifest seals. This correction
+  grants no approval, publication or runtime adoption.
 - Ship only files selected by current manifest sections, including within v001.
   Preserve latest record intent and stable identities; keep superseded source
   snapshots under test fixtures, never as unselected data or retainedRoots.

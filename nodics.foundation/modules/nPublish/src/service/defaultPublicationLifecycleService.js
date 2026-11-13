@@ -11,6 +11,7 @@
 
 const administrativeOperations = new WeakMap();
 const retryValidations = new WeakMap();
+const crypto = require('node:crypto');
 
 /**
  * @module nPublish/service/DefaultPublicationLifecycleService
@@ -102,6 +103,60 @@ module.exports = {
         if (!publication) throw new CLASSES.NodicsError('ERR_PUB_00000', 'Publication request was not found');
         return publication;
     },
+    /** Projects business eligibility for existing operator commands without granting route permission or changing the stored request. */
+    inspect: async function (request) {
+        const publication = await this.get(request);
+        let operatorOperations = [], operatorGuidance = 'Continue review and publishing from the source workspace. Recorded history remains available here.';
+        try {
+            const provider = this.getVersionProvider(publication.domain);
+            if (publication.state === 'FAILED') {
+                const failed = this.failedOperation(publication);
+                if (['ROLLING_BACK', 'WITHDRAWING'].includes(failed)) {
+                    if (provider.targetCommandReceiptContract === 'v1') this.originalTargetCommand(publication, failed === 'ROLLING_BACK' ? 'ROLLBACK' : 'WITHDRAWAL');
+                    else if (failed !== 'ROLLING_BACK' || !provider.canRetryRejectedRollback ||
+                        await provider.canRetryRejectedRollback(publication, request) !== true) throw new Error('Original command recovery is not qualified');
+                    operatorGuidance = provider.targetCommandReceiptContract === 'v1'
+                        ? 'Resume the original failed operation. Its target receipt is retained; this does not activate another version.'
+                        : 'The owner confirmed this restore was rejected before changing Online content. Retry restores the same predecessor after checking the current release again.';
+                } else operatorGuidance = 'Retry revalidates the original request. Normal review and approval remain required before activation.';
+                operatorOperations = ['retry'];
+            } else if (publication.state === 'ONLINE') {
+                const hasPredecessor = typeof publication.previousOnlineVersion === 'string' && publication.previousOnlineVersion && typeof provider.rollback === 'function';
+                operatorOperations = hasPredecessor ? ['rollback'] : [];
+                operatorGuidance = hasPredecessor ? 'Restore the previous published version for this request. Restoration is blocked if another publication has replaced it.' : 'No previous published version is retained for this request. Check current delivery from its working record.';
+                if (provider.targetCommandReceiptContract === 'v1') {
+                    if (typeof provider.getOnlineVersion !== 'function') throw new Error('Current target inspection is unavailable');
+                    const current = await provider.getOnlineVersion(publication, request);
+                    if (!current || typeof current !== 'object' || Array.isArray(current) || current.success === false || current.acknowledged === false || current.error ||
+                        current.errors !== undefined && (!Array.isArray(current.errors) || current.errors.length) ||
+                        [current.code, current.responseCode].some(code => typeof code === 'string' && code.startsWith('ERR_')) ||
+                        !(current.version === null || typeof current.version === 'string' && current.version)) throw new Error('Current target evidence is unverified');
+                    if (current.version !== publication.targetVersion) {
+                        operatorOperations = [];
+                        operatorGuidance = 'A different version or no copy is currently deployed. Inspect current delivery in the source workspace; this historical request cannot replace it.';
+                    }
+                }
+                if (operatorOperations.includes('rollback') && provider.assertRollbackTarget) {
+                    try {
+                        await provider.assertRollbackTarget(publication, request);
+                    } catch (_) {
+                        operatorOperations = [];
+                        operatorGuidance = 'Refresh Publishing and inspect the current Online release before restoring a version.';
+                    }
+                }
+            } else if (['ROLLING_BACK', 'WITHDRAWING'].includes(publication.state)) {
+                const kind = publication.state === 'ROLLING_BACK' ? 'ROLLBACK' : 'WITHDRAWAL';
+                if (provider.targetCommandReceiptContract !== 'v1' || typeof provider[kind === 'ROLLBACK' ? 'rollback' : 'withdraw'] !== 'function') throw new Error('Original command recovery is not qualified');
+                this.originalTargetCommand(publication, kind);
+                operatorOperations = [kind === 'ROLLBACK' ? 'rollback' : 'withdraw'];
+                operatorGuidance = 'Resume only this retained in-flight operation. Its original target identity remains unchanged.';
+            }
+        } catch (_) {
+            operatorOperations = [];
+            operatorGuidance = 'Original operation evidence or its domain provider is unverified. Review the recorded history with the owning administrator; no recovery command is offered.';
+        }
+        return Object.assign({}, publication, { operatorOperations, operatorGuidance });
+    },
     /** Validates and returns the expected optimistic revision. */
     requireExpectedRevision: function (request, publication) {
         let expected = request && request.expectedRevision;
@@ -112,6 +167,67 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_PUB_00004', 'Publication revision conflict');
         }
         return Number(publication.revision || 0);
+    },
+    /** Classifies a failed operation from the current authoritative journal entry, never from error wording or caller flags. */
+    failedOperation: function (publication) {
+        const entry = Array.isArray(publication.auditTrail) && publication.auditTrail.at(-1);
+        if (publication.state !== 'FAILED' || !entry || entry.publicationCode !== publication.code || entry.toState !== 'FAILED' ||
+            entry.revision !== publication.revision || !['VALIDATING', 'ACTIVATING', 'ROLLING_BACK', 'WITHDRAWING'].includes(entry.fromState)) {
+            throw new CLASSES.NodicsError('ERR_PUB_00005', 'The original failed publication operation is unverified; inspect its owner journal');
+        }
+        return entry.fromState;
+    },
+    /** Builds optional qualified command intent for the transition journal before any rollback/withdrawal target effect. */
+    captureTargetCommand: function (publication, operation) {
+        const targetVersion = operation === 'ROLLBACK' ? publication.previousOnlineVersion : publication.targetVersion;
+        const text = (value, maximum = 1024) => typeof value === 'string' && value.trim() === value && value.length > 0 && value.length <= maximum && !/[\u0000-\u001f\u007f]/.test(value);
+        if (!['ROLLBACK', 'WITHDRAWAL'].includes(operation) || !Number.isSafeInteger(publication.revision) || publication.revision < 0 || !Number.isSafeInteger(publication.revision + 1) ||
+            ![publication.code, publication.domain, publication.rootType, publication.rootCode, publication.sourceVersion].every(value => text(value, 256)) ||
+            !text(publication.activationOperation?.key, 1000) ||
+            !text(targetVersion, 131072)) throw new CLASSES.NodicsError('ERR_PUB_00006', 'Exact publication source, activation and target identity are required for this command');
+        const originRevision = publication.revision + 1;
+        return { contractVersion: 1, operation, operationKey: publication.code + (operation === 'ROLLBACK' ? ':rollback:' : ':withdraw:') + String(originRevision),
+            publicationCode: publication.code, domain: publication.domain, rootType: publication.rootType, rootCode: publication.rootCode,
+            sourceVersion: publication.sourceVersion, activationKey: publication.activationOperation.key,
+            targetVersionHash: crypto.createHash('sha256').update(JSON.stringify(targetVersion)).digest('hex'), originRevision };
+    },
+    /** Resolves the original qualified intent through one contiguous operation/failure chain in the existing journal; no new lifecycle store exists. */
+    originalTargetCommand: function (publication, operation) {
+        const transient = operation === 'ROLLBACK' ? 'ROLLING_BACK' : 'WITHDRAWING';
+        const trail = publication.auditTrail;
+        if (!Array.isArray(trail) || !trail.length || ![transient, 'FAILED'].includes(publication.state)) throw new CLASSES.NodicsError('ERR_PUB_00006', 'Original publication command evidence is unavailable');
+        let revision = publication.revision, state = publication.state, candidate;
+        const same = require('node:util').isDeepStrictEqual;
+        for (let index = trail.length - 1; index >= 0; index--) {
+            const entry = trail[index], proof = entry?.details?.targetCommandOperation;
+            if (!entry || entry.publicationCode !== publication.code || entry.revision !== revision || entry.toState !== state ||
+                ![transient, 'FAILED'].includes(state) || !proof || candidate && !same(candidate, proof)) break;
+            candidate = candidate || proof;
+            if (state === transient && entry.fromState === 'ONLINE') {
+                const expected = this.captureTargetCommand(Object.assign({}, publication, { revision: entry.revision - 1 }), operation);
+                if (!same(candidate, expected)) break;
+                return Object.assign({}, candidate);
+            }
+            if (state === 'FAILED' && entry.fromState !== transient || state === transient && entry.fromState !== 'FAILED') break;
+            state = entry.fromState; revision--;
+        }
+        throw new CLASSES.NodicsError('ERR_PUB_00006', 'The original publication command journal is incomplete or changed; inspect before retrying');
+    },
+    /** Validates an opted-in provider command receipt against retained journal intent before lifecycle completion or derived hooks. */
+    targetCommandReceipt: function (provider, publication, proof, result) {
+        if (provider.targetCommandReceiptContract === undefined) return;
+        const receipt = result && result.receipt;
+        const targetVersion = proof?.operation === 'ROLLBACK' ? publication.previousOnlineVersion : publication.targetVersion;
+        if (provider.targetCommandReceiptContract !== 'v1' || !proof || !result || typeof result !== 'object' || Array.isArray(result) || !receipt || typeof receipt !== 'object' || Array.isArray(receipt) ||
+            result.success === false || result.acknowledged === false || result.error || receipt.success === false || receipt.acknowledged === false || receipt.error ||
+            receipt.errors !== undefined && (!Array.isArray(receipt.errors) || receipt.errors.length) ||
+            [result.code, result.responseCode, receipt.code, receipt.responseCode].some(code => typeof code === 'string' && code.startsWith('ERR_')) ||
+            result.errors !== undefined && (!Array.isArray(result.errors) || result.errors.length) ||
+            receipt.operationKey !== proof.operationKey || receipt.operation !== proof.operation || receipt.publicationCode !== publication.code ||
+            receipt.rootCode !== publication.rootCode || receipt.sourceVersion !== publication.sourceVersion || receipt.targetVersion !== targetVersion ||
+            typeof targetVersion !== 'string' || !targetVersion ||
+            crypto.createHash('sha256').update(JSON.stringify(targetVersion)).digest('hex') !== proof.targetVersionHash ||
+            !Number.isSafeInteger(receipt.affected) || receipt.affected < 0) throw new CLASSES.NodicsError('ERR_PUB_00006', 'Qualified publication command receipt is invalid');
     },
     /** Verifies that a configured lifecycle transition is permitted. */
     assertTransition: function (fromState, toState) {
@@ -248,6 +364,14 @@ module.exports = {
         let publication = await this.getRepository().get(request.publicationCode, request);
         if (!publication) throw new CLASSES.NodicsError('ERR_PUB_00000', 'Publication request was not found');
         if (publication.state !== 'FAILED') throw new CLASSES.NodicsError('ERR_PUB_00005', 'Only a failed publication can be retried');
+        this.requireExpectedRevision(request, publication);
+        const failed = this.failedOperation(publication);
+        if (failed === 'ROLLING_BACK' || failed === 'WITHDRAWING') {
+            const provider = this.getVersionProvider(publication.domain);
+            if (provider.targetCommandReceiptContract !== 'v1' && (failed !== 'ROLLING_BACK' || !provider.canRetryRejectedRollback ||
+                await provider.canRetryRejectedRollback(publication, request) !== true)) throw new CLASSES.NodicsError('ERR_PUB_00006', 'This domain requires qualified original-command recovery or proven pre-effect rejection before retry');
+            return failed === 'ROLLING_BACK' ? this.rollback(request) : this.withdraw(request);
+        }
         publication = await this.transition(publication, 'VALIDATING', request, {}, { retry: true });
         const validation = this.copyRequest(request, { expectedRevision: publication.revision });
         retryValidations.set(validation, publication);
@@ -305,6 +429,8 @@ module.exports = {
     activate: async function (request) {
         let publication = await this.getRepository().get(request.publicationCode, request);
         if (publication && publication.state === 'ONLINE') return publication;
+        if (!publication) throw new CLASSES.NodicsError('ERR_PUB_00000', 'Publication request was not found');
+        this.requireExpectedRevision(request, publication);
         const provider = this.getVersionProvider(publication.domain);
         if (publication.state !== 'ACTIVATING') {
             this.assertTransition(publication.state, 'ACTIVATING');
@@ -356,15 +482,33 @@ module.exports = {
     rollback: async function (request) {
         let publication = await this.getRepository().get(request.publicationCode, request);
         if (publication && publication.state === 'ROLLED_BACK') return publication;
-        if (publication.state !== 'ROLLING_BACK') publication = await this.transition(publication, 'ROLLING_BACK', request);
+        if (!publication) throw new CLASSES.NodicsError('ERR_PUB_00000', 'Publication request was not found');
+        this.requireExpectedRevision(request, publication);
+        const provider = this.getVersionProvider(publication.domain), qualified = provider.targetCommandReceiptContract !== undefined;
+        if (qualified && provider.targetCommandReceiptContract !== 'v1') throw new CLASSES.NodicsError('ERR_PUB_00006', 'Publication command receipt contract is unsupported');
+        let proof;
+        if (publication.state === 'FAILED') {
+            if (this.failedOperation(publication) !== 'ROLLING_BACK') throw new CLASSES.NodicsError('ERR_PUB_00005', 'Only the original rollback can recover this failure');
+            if (qualified) proof = this.originalTargetCommand(publication, 'ROLLBACK');
+            else if (!provider.canRetryRejectedRollback || await provider.canRetryRejectedRollback(publication, request) !== true)
+                throw new CLASSES.NodicsError('ERR_PUB_00006', 'A rejected rollback requires fresh owner proof that no target effect occurred');
+        }
+        if (publication.state !== 'ROLLING_BACK') {
+            if (publication.state === 'ONLINE' && provider.assertRollbackTarget)
+                await provider.assertRollbackTarget(publication, request);
+            if (qualified && !proof) proof = this.captureTargetCommand(publication, 'ROLLBACK');
+            publication = await this.transition(publication, 'ROLLING_BACK', request, {}, proof ? { targetCommandOperation: proof } : publication.state === 'FAILED' ? { retryAfterOwnerRejection: true, failedRevision: publication.revision } : undefined);
+        }
+        if (qualified) proof = this.originalTargetCommand(publication, 'ROLLBACK');
         try {
-            let result = await this.getVersionProvider(publication.domain).rollback(publication, publication.previousOnlineVersion, request);
+            let result = await provider.rollback(proof ? Object.assign({}, publication, { targetCommandOperation: proof }) : publication, publication.previousOnlineVersion, request);
+            this.targetCommandReceipt(provider, publication, proof, result);
             let adapter = this.getDomainAdapter(publication.domain);
             if (adapter.afterRollback) await adapter.afterRollback(publication, result, request);
-            return await this.transition(publication, 'ROLLED_BACK', Object.assign({}, request, { expectedRevision: publication.revision }), {}, result);
+            return await this.transition(publication, 'ROLLED_BACK', this.copyRequest(request, { expectedRevision: publication.revision }), {}, result);
         } catch (error) {
-            await this.transition(publication, 'FAILED', Object.assign({}, request, { expectedRevision: publication.revision }), {},
-                { failureCode: error.code || error.name || 'ROLLBACK_FAILED' }).catch(() => false);
+            await this.transition(publication, 'FAILED', this.copyRequest(request, { expectedRevision: publication.revision }), {},
+                Object.assign({ failureCode: error.code || error.name || 'ROLLBACK_FAILED' }, proof ? { targetCommandOperation: proof } : {})).catch(() => false);
             throw error;
         }
     },
@@ -372,17 +516,29 @@ module.exports = {
     withdraw: async function (request) {
         let publication = await this.getRepository().get(request.publicationCode, request);
         if (publication && publication.state === 'WITHDRAWN') return publication;
-        if (!publication || publication.state !== 'ONLINE') throw new CLASSES.NodicsError('ERR_PUB_00005', 'Only an Online publication can be withdrawn');
-        publication = await this.transition(publication, 'WITHDRAWING', request);
+        if (!publication) throw new CLASSES.NodicsError('ERR_PUB_00000', 'Publication request was not found');
+        this.requireExpectedRevision(request, publication);
+        const provider = this.getVersionProvider(publication.domain), qualified = provider.targetCommandReceiptContract !== undefined;
+        if (qualified && provider.targetCommandReceiptContract !== 'v1') throw new CLASSES.NodicsError('ERR_PUB_00006', 'Publication command receipt contract is unsupported');
+        let proof;
+        if (publication.state === 'FAILED') {
+            if (!qualified || this.failedOperation(publication) !== 'WITHDRAWING') throw new CLASSES.NodicsError('ERR_PUB_00005', 'Only the original qualified withdrawal can recover this failure');
+            proof = this.originalTargetCommand(publication, 'WITHDRAWAL');
+        } else if (publication.state !== 'ONLINE' && !(qualified && publication.state === 'WITHDRAWING')) throw new CLASSES.NodicsError('ERR_PUB_00005', 'Only an Online publication or its original qualified withdrawal can be withdrawn');
+        if (publication.state !== 'WITHDRAWING') {
+            if (qualified && !proof) proof = this.captureTargetCommand(publication, 'WITHDRAWAL');
+            publication = await this.transition(publication, 'WITHDRAWING', request, {}, proof ? { targetCommandOperation: proof } : undefined);
+        }
+        if (qualified) proof = this.originalTargetCommand(publication, 'WITHDRAWAL');
         try {
-            let provider = this.getVersionProvider(publication.domain);
             if (!provider.withdraw) throw new CLASSES.NodicsError('ERR_PUB_00002', 'Publication domain does not support withdrawal');
-            let result = await provider.withdraw(publication, request);
+            let result = await provider.withdraw(proof ? Object.assign({}, publication, { targetCommandOperation: proof }) : publication, request);
+            this.targetCommandReceipt(provider, publication, proof, result);
             let adapter = this.getDomainAdapter(publication.domain);
             if (adapter.afterWithdraw) await adapter.afterWithdraw(publication, result, request);
-            return await this.transition(publication, 'WITHDRAWN', Object.assign({}, request, { expectedRevision: publication.revision }), {}, result);
+            return await this.transition(publication, 'WITHDRAWN', this.copyRequest(request, { expectedRevision: publication.revision }), {}, result);
         } catch (error) {
-            await this.transition(publication, 'FAILED', Object.assign({}, request, { expectedRevision: publication.revision }), {}, { failureCode: error.code || error.name || 'WITHDRAWAL_FAILED' }).catch(() => false);
+            await this.transition(publication, 'FAILED', this.copyRequest(request, { expectedRevision: publication.revision }), {}, Object.assign({ failureCode: error.code || error.name || 'WITHDRAWAL_FAILED' }, proof ? { targetCommandOperation: proof } : {})).catch(() => false);
             throw error;
         }
     }

@@ -741,7 +741,7 @@ async function start({
           enabled: true,
           moduleName: "profile",
           connectionName: "profile",
-          targetAuthority: { runtimeRole: "PLATFORM" },
+          targetAuthority: { publication: "OPERATIONAL" },
         },
         standaloneInvitationsEnabled: true,
         receiptRecovery: { enabled: true },
@@ -758,7 +758,7 @@ async function start({
           enabled: true,
           moduleName: "workflow",
           connectionName: "process",
-          targetAuthority: { runtimeRole: "PROCESS" },
+          targetAuthority: { publication: "OPERATIONAL" },
         },
         ...(withProcessTriggerActions
           ? {
@@ -766,7 +766,7 @@ async function start({
                 enabled: true,
                 moduleName: "workflow",
                 connectionName: "process",
-                targetAuthority: { runtimeRole: "PROCESS" },
+                targetAuthority: { publication: "OPERATIONAL" },
               },
             }
           : {}),
@@ -776,7 +776,7 @@ async function start({
                 enabled: true,
                 moduleName: "workflow",
                 connectionName: "process",
-                targetAuthority: { runtimeRole: "PROCESS" },
+                targetAuthority: { publication: "OPERATIONAL" },
               },
               processLifecycleTimeoutMs: 30000,
             }
@@ -790,7 +790,7 @@ async function start({
         processInspection: {
           enabled: true,
           connectionName: "process",
-          targetAuthority: { runtimeRole: "PROCESS" },
+          targetAuthority: { publication: "OPERATIONAL" },
           scopes: [
             {
               tenant: "default",
@@ -812,7 +812,7 @@ async function start({
         rulesInspection: {
           enabled: true,
           connectionName: "rules",
-          targetAuthority: { runtimeRole: "RULES" },
+          targetAuthority: { publication: "OPERATIONAL" },
           maximumRows: 25,
           scopes: [
             {
@@ -834,7 +834,7 @@ async function start({
           enabled: true,
           moduleName: "digitalCore",
           connectionName: "commerce",
-          targetAuthority: { runtimeRole: "COMMERCE" },
+          targetAuthority: { publication: "OPERATIONAL" },
         },
       };
     }
@@ -854,7 +854,7 @@ async function start({
           pricingModule: "pricing",
           productModule: "product",
           connectionName: "commerceStaged",
-          targetAuthority: { runtimeRole: "STAGED" },
+          targetAuthority: { publication: "STAGED" },
         },
         receiptRecovery: { enabled: true },
       };
@@ -887,7 +887,7 @@ async function start({
           enabled: true,
           moduleName: "wasteCollection",
           connectionName: "waste",
-          targetAuthority: { runtimeRole: "WASTE" },
+          targetAuthority: { publication: "OPERATIONAL" },
         },
         receiptRecovery: { enabled: true },
       };
@@ -904,7 +904,7 @@ async function start({
         manualEnabled: true,
         actionAuthority: {
           connectionName: "process",
-          runtimeRole: "PROCESS",
+          publication: "OPERATIONAL",
           timeoutMs: 30000,
         },
         assignments: [
@@ -1518,7 +1518,7 @@ async function start({
                               remote: {
                                 moduleName: "copilotApi",
                                 target: "copilotKnowledge",
-                                runtimeRole: "PLATFORM",
+                                publication: "OPERATIONAL",
                                 apiName: "/workflow/actions/refreshKnowledge",
                                 recordAttempts: true,
                               },
@@ -1632,7 +1632,7 @@ async function start({
                     target: {
                       connectionName: "process",
                       connectionType: "abstract",
-                      runtimeRole: "PROCESS",
+                      targetAuthority: { publication: "OPERATIONAL" },
                     },
                   },
                 },

@@ -19,15 +19,21 @@
 module.exports = {
     /** Finds candidate placements for resolver context. @param {Object} context Resolver context. @returns {Promise<Array<Object>>} Candidate placements. */
     findPlacements: async function (context) {
-        if (this.shouldUseDiscovery()) {
-            try {
-                let placements = await this.findDiscoveryPlacements(context);
-                if (placements.length || !this.fixtureFallbackEnabled()) return placements;
-            } catch (error) {
-                if (!this.fixtureFallbackEnabled()) throw error;
-            }
+        const preview = this.config().stagedPreview;
+        if (context.previewMode === true && preview) {
+            if (preview.enabled !== true || !SERVICE.DefaultWcmsExperiencePreviewPreparationService) throw this.unavailable();
+            return SERVICE.DefaultWcmsExperiencePreviewPreparationService.readPrepared(context.sourceRequest, context);
         }
-        return this.fixturePlacements(context);
+        if (context.previewMode !== true && SERVICE.DefaultWcmsExperienceOnlinePublicationService)
+            return SERVICE.DefaultWcmsExperienceOnlinePublicationService.read(context).catch(() => { throw this.unavailable(); });
+        if (!this.shouldUseDiscovery()) throw this.unavailable();
+        try {
+            return await this.findDiscoveryPlacements(context);
+        } catch (error) {
+            // Provider details stay with the owner. Never turn a failed read into
+            // an empty match or serve authored fixtures as indexed content.
+            throw this.unavailable();
+        }
     },
 
     /** Returns WCMS Experience configuration. @returns {Object} Configuration. */
@@ -49,9 +55,9 @@ module.exports = {
             typeof SERVICE.DefaultDiscoveryRuntimeService.search === 'function';
     },
 
-    /** Determines whether fixture fallback is allowed. @returns {boolean} Fixture fallback state. */
-    fixtureFallbackEnabled: function () {
-        return this.projectionConfig().fixtureFallbackEnabled !== false;
+    /** Creates a client-safe owner error without provider internals. @returns {Error} Unavailable error. */
+    unavailable: function () {
+        return SERVICE.DefaultWcmsExperienceResolverService.error('ERR_WCMS_EXPERIENCE_INDEX_SERVICE_UNAVAILABLE');
     },
 
     /** Finds placements through the generic Discovery runtime service. @param {Object} context Resolver context. @returns {Promise<Array<Object>>} Placements. */
@@ -60,6 +66,7 @@ module.exports = {
         let records = await SERVICE.DefaultDiscoveryRuntimeService.search({
             tenant: context.tenant,
             authData: context.authData,
+            targetAuthority: {publication: context.previewMode === true ? 'STAGED' : 'ONLINE'},
             ownerType: projection.ownerType || 'WCMS_EXPERIENCE',
             indexConfiguration: {
                 code: projection.indexConfigurationCode || 'cmsExperiencePlacement',
@@ -108,14 +115,7 @@ module.exports = {
 
     /** Converts Discovery documents into placement payloads. @param {Array<Object>} records Discovery records. @returns {Array<Object>} Placements. */
     normalizeDiscoveryRecords: function (records) {
-        if (!Array.isArray(records)) return [];
+        if (!Array.isArray(records)) throw this.unavailable();
         return records.map(record => record && record.payload ? record.payload : record).filter(Boolean);
-    },
-
-    /** Returns configurable fixture placements for the first vertical slice and tests. @param {Object} context Resolver context. @returns {Array<Object>} Placements. */
-    fixturePlacements: function (context) {
-        let config = this.config();
-        let fixtures = config.fixturePlacements || [];
-        return Array.isArray(fixtures) ? fixtures.slice() : [];
     }
 };

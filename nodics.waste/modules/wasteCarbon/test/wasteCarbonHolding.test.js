@@ -261,7 +261,7 @@ test('explicit permission release has correct bytes and grants no role assignmen
     const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto');
     const manifest = require('../data/manifest.json'), section = manifest.sections.permissionCatalogue;
     const forward = manifest.sections.transferFinalizationPermission;
-    assert.equal(forward.selectionPolicy, 'EXPLICIT'); assert.equal(forward.version, '0.0.2');
+    assert.equal(forward.selectionPolicy, 'EXPLICIT'); assert.equal(forward.version, '0.0.1');
     for (const [file, expected] of Object.entries(forward.files))
         assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.resolve(__dirname, '../data', file))).digest('hex'), expected);
     const finalization = require('../data/init-v001/records/identity/wasteCarbonFinalizationPermissionData');

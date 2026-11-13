@@ -46,7 +46,7 @@ function storage(name) {
   };
 }
 test.beforeEach(() => {
-  policy = { environment: { class: "LOCAL" }, runtimeRole: { code: "LOYALTY" }, loyalty: {
+  policy = { environment: { class: "LOCAL" }, runtimeRole: { code: "COHOST", publication: "OPERATIONAL" }, loyalty: {
     transactions: { enabled: true }, sampleCredits: { enabled: true, maximumInstructions: 100,
       allowedEnvironments: ["exampleLocal"], approvedSources: [{ ...source, environmentCode: "exampleLocal",
         enterpriseCode: "merchant", instructionCode: "demo-credit", approvalReference: "approved-demo-credit" }] } } };
@@ -64,10 +64,10 @@ test.beforeEach(() => {
   global.CONFIG = { get: key => policy[key] };
   global.UTILS = { createModelName: name => name };
   database = {};
-  global.NODICS = { getSelectedEnvironmentName: () => "exampleLocal", getModels: () => Object.fromEntries(
+  global.NODICS = { isModuleActive: name => name === "loyaltyWallet", getSelectedEnvironmentName: () => "exampleLocal", getModels: () => Object.fromEntries(
     ["loyaltyWallet", "loyaltyWalletRewardBalance", "rewardLedgerEntry"].map(name => [name, { versioned: false, dataBase: database,
       compareAndSetItem() {}, rawSchema: { transaction: { enabled: true, sideEffects: "none" }, cache: { enabled: false }, event: { enabled: false } } }])) };
-  global.SERVICE = { DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"), DefaultLoyaltyRewardOperationService: operations,
+  global.SERVICE = { DefaultModuleService: require("../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService.js"), DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"), DefaultLoyaltyRewardOperationService: operations,
     DefaultDataReleaseService: { readContributionPayload: async (contribution, installer, basename) => {
       assert.deepEqual(contribution, request.contribution); assert.equal(installer, "LOYALTY_SAMPLE_CREDITS");
       assert.equal(basename, "loyaltyCredits.json"); return clone(payload);
@@ -315,4 +315,17 @@ test("later owner customization can narrow admission without replacing posting o
     if (Number(result.amount) > 1000) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_INVALID"); return result; } };
   assert.equal((await customized.preflightContribution(request)).ready, false);
   assert.equal((await owner.preflightContribution(request)).ready, true); assert.equal(writes, 0);
+});
+
+
+test("loaded remote-only Wallet and nonoperational publication cannot install sample credits", async () => {
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly: true }) }) };
+  await assert.rejects(owner.installContribution(request));
+  assert.equal(writes, 0);
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly: false }) }) };
+  for (const publication of [undefined, "STAGED", "ONLINE"]) {
+    policy.runtimeRole.publication = publication;
+    await assert.rejects(owner.installContribution(request));
+  }
+  assert.equal(writes, 0);
 });

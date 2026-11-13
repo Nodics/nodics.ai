@@ -29,26 +29,55 @@ class NodicsError extends Error {
     }
 }
 
+const actor = { loginId: 'operator', enterpriseCode: 'example' };
+
 function installServices() {
-    const mediaSets = [{ code: 'heroSet', name: 'Hero set', status: 'ACTIVE' }];
+    const mediaSets = [{ code: 'heroSet', name: 'Hero set', status: 'ACTIVE', active: true }];
     const entries = [];
+    const get = (rows) => input => {
+        if (typeof input === 'string') return rows.find(row => row.code === input);
+        assert.strictEqual(input.authData, actor);
+        return { code: 'SUC_FIND_00000', result: rows.filter(row =>
+            Object.entries(input.query).every(([key, value]) => row[key] === value)) };
+    };
     global.CLASSES = { NodicsError };
     global.SERVICE = {
         DefaultMediaSetEntryManagementService: setEntryManagementService,
         DefaultMediaSetService: {
-            records: mediaSets
+            records: mediaSets, get: get(mediaSets)
         },
         DefaultMediaSetEntryService: {
-            records: entries
-        }
+            records: entries,
+            get: get(entries),
+            save: input => {
+                const model = input.model || input;
+                if (input.model) {
+                    assert.strictEqual(input.authData, actor);
+                    assert.strictEqual(input.options.insertOnly, true);
+                    model.updated = new Date();
+                }
+                const index = entries.findIndex(entry => entry.code === model.code);
+                if (index < 0) entries.push(structuredClone(model));
+                else entries[index] = model;
+                return input.model ? { code: 'SUC_SAVE_00000', result: [model] } : model;
+            }
+        },
+        DefaultMediaLifecycleCoordinationService: {
+            load: async input => ({ code: input.mediaCode, status: 'READY',
+                formatCode: input.mediaCode.includes('Mobile') ? 'mobile' : input.mediaCode.includes('Desktop') ? 'desktop' : 'original' })
+        },
+        DefaultMediaLibraryService: { inScope: (asset, request) => request.authData === actor && asset.code !== 'foreignMedia' },
+        DefaultMediaStoragePolicyService: { getFormatPolicy: code => ({ code }) }
     };
     return { mediaSets, entries };
 }
 
 (async function () {
     const state = installServices();
+    const context = { tenant: 'default', authData: actor };
 
     const desktop = await facade.addMediaSetEntry({
+        ...context,
         code: 'heroDesktopEntry',
         mediaSetCode: 'heroSet',
         mediaCode: 'heroDesktopMedia',
@@ -65,6 +94,7 @@ function installServices() {
     assert.strictEqual(desktop.data.deviceCode, 'desktop');
 
     await facade.addMediaSetEntry({
+        ...context,
         code: 'heroMobileEntry',
         mediaSetCode: 'heroSet',
         mediaCode: 'heroMobileMedia',
@@ -114,12 +144,16 @@ function installServices() {
     assert.strictEqual(removed.code, 'SUC_MED_00015');
     assert.strictEqual(removed.data.removed, true);
 
-    assert.throws(() => setEntryManagementService.addEntry({
+    await assert.rejects(() => setEntryManagementService.addEntry({
+        ...context,
         code: 'badOwnerEntry',
         mediaSetCode: 'missingSet',
         mediaCode: 'mediaOne'
-    }), /Invalid media set/);
-    const productBoundInput = setEntryManagementService.addEntry({
+    }), /Media set is unavailable/);
+    await assert.rejects(() => setEntryManagementService.addEntry({ ...context, code: 'wrongFormat', mediaSetCode: 'heroSet', mediaCode: 'heroDesktopMedia', formatCode: 'mobile' }), /selected format/);
+    await assert.rejects(() => setEntryManagementService.addEntry({ ...context, code: 'foreign', mediaSetCode: 'heroSet', mediaCode: 'foreignMedia' }), /current enterprise/);
+    const productBoundInput = await setEntryManagementService.addEntry({
+        ...context,
         code: 'productBoundEntry',
         mediaSetCode: 'heroSet',
         mediaCode: 'mediaOne',

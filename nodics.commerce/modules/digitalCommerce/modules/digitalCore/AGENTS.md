@@ -368,3 +368,33 @@ from suppressed logs or forward arbitrary remote error codes/messages. Test the
 real controller/logger/runtime guard, including absent qualification and internal
 auth selection, in digitalCouponReminderRemoteAction.test.js. No diagnostic is
 proof of no effects or authority to replay an opaque Process handle.
+
+Ownership evidence requires DMS local `digitalCore` ownership and explicit
+OPERATIONAL publication, never physical runtime role membership. Product pointer
+reads independently require the Product serving owner. Preserve private capture,
+exact signed caller grants, permissions and revalidation before and after awaits.
+See `llm/contracts/ownership-evidence-api.md`.
+
+Reminder composition fixtures must exercise Profile native identity/lock proof
+and exact assignment lookup. Failed lookup is UNCONFIRMED, never an empty roster
+or permission to deliver; retain the native refusal regression in digitalCouponReminder.
+
+Digital binding-plan admission requires an exact target server and explicit
+OPERATIONAL publication. Physical role strings or runtimeRole objects are not
+source authority. Inactive eWaste descriptor selection supplies no connection,
+enablement, qualification or signed caller grant.
+
+Coupon-expiry dispatch eligibility contributes one ordinary communication owner
+descriptor. Use DMS local/remote routing for digitalCore with OPERATIONAL target
+publication and the fixed eligibility API; no ENGAGEMENT/COMMERCE profile or host
+alias. Preserve original local actor, fresh Profile eligibility and no fallback
+after local refusal. Descriptor selection does not enable reminders or providers.
+
+Identity and cross-owner commands route through existing DMS with explicit logical
+module and `targetAuthority.publication`, never physical role codes. Operational
+identity, Store, scheduler, payment and notification owners use OPERATIONAL;
+Product/Pricing authoring references use STAGED. Optional server/environment pins
+remain exact. Reject missing publication and obsolete role selectors. Preserve
+original actor or internal credentials as specified by each API, signed caller
+grants, tenant/business binding, enablement and qualification. Routing descriptors
+do not activate owners or providers. Tests must express these boundaries explicitly.

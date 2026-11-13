@@ -36,6 +36,22 @@ module.exports = {
         operation.then(success => callback(null, this.success(success))).catch(error => callback(error));
     },
 
+    /** Reads only public Online publication evidence; no employee or customer private composition is admitted. */
+    publishedKnowledge: function (request, callback) {
+        const query = request.httpRequest?.query || {};
+        request.delivery = { site: query.site, path: query.path, locale: query.locale, channel: query.channel };
+        const operation = SERVICE.DefaultCmsDeliveryService.publishedKnowledge(request);
+        if (!callback) return operation;
+        operation.then(value => callback(null, this.success(value))).catch(error => callback(error));
+    },
+
+    /** Reads the published guide menu using only server-selected delivery scope. */
+    documentationGuides: function (request, callback) {
+        const operation = SERVICE.DefaultCmsDocumentationReaderService.guides(request);
+        if (!callback) return operation;
+        operation.then(value => callback(null, this.success(value))).catch(error => callback(error));
+    },
+
     /** Resolves a page path only after deriving Site, locale, channel, and authority from Storefront introspection. */
     resolveStorefrontPage: function (request, callback) {
         let query = request.httpRequest && request.httpRequest.query ? request.httpRequest.query : request.query || {};

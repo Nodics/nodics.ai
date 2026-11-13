@@ -1,0 +1,97 @@
+{
+  "reason": "Immutable pre-provenance correction selection; not installed-runtime proof",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "media",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 4,
+      "components": 4,
+      "routes": 4,
+      "releaseChecksum": "19a1befc2ee2942274b8e5f1fde8402ccbcc27123e9405272b766cadfb25dec3",
+      "generatedHashes": {
+        "docs-v001/records/documentation/mediaDocumentationNodeData.js": "f93ea09f3c0797923e2c2cdc0ab87e798da5db1483aa170a31a58085e1a1a341",
+        "docs-v001/records/documentation/mediaDocumentationPageMetadataData.js": "4c8d19ae25e5fe1ced0ddf590cedc55b8eb5bf49d01f77bdb6935fb82a7001a1",
+        "docs-v001/records/documentation/mediaDocumentationPublicationStateData.js": "4efea90341c71a6ce45fd009bb04f0ec2a0cf6a5f4bec13ff79ac084830e07cf",
+        "docs-v001/records/documentation/mediaDocumentationSearchMetadataData.js": "aaf51c6c7adb4deca3d1f9a8061bffeeac210936bc09abdde2bb729d3b4d99ea",
+        "docs-v001/records/documentation/mediaDocumentationComponentData.js": "38a5bf183dab38c9fc899361a4d9199a9094934866fbb433a891b5c2938a942d",
+        "docs-v001/records/documentation/mediaDocumentationPageData.js": "9101757e4337605c93e4648ca24ff2ba6ad61f15da7f2ebc18bcd8a1d18b2c0b",
+        "docs-v001/records/documentation/mediaDocumentationRouteData.js": "0b789dce2ac6f8a5be42ae9df07bd88d7f6bfca2b5064a19435dad3fa1102537",
+        "docs-v001/headers/100_mediaDocumentationContentPackHeader.js": "34faf4a80292f5d33fd80eb0f08c98a24f323ef9907654b75fa828c6a39f6ad0"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  },
+  "successorVersion": "0.0.2",
+  "articles": [
+    {
+      "id": "wcms.media-management",
+      "componentCode": "nodicsDocsComponentwcmsMediaManagement",
+      "previousFile": "docs-v001/records/documentation/mediaDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/mediaDocumentationRelease002ComponentData.js",
+      "blocksSha256": "514aae006e0d2145ba167f694fac4a0cbd32ad0c4c97a8ac0dab8689975e8636",
+      "digestMode": "titled",
+      "sourceChecksum": "8728419320d4330e74adef678d8d0fc68ec4901cf80811170f40899936a5dafa",
+      "sourceWordCount": 754
+    },
+    {
+      "id": "wcms.media-storage-delivery",
+      "componentCode": "nodicsDocsComponentwcmsMediaStorageDelivery",
+      "previousFile": "docs-v001/records/documentation/mediaDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/mediaDocumentationRelease002ComponentData.js",
+      "blocksSha256": "a319f05be7ba854ac9329e529a422aa61143207b1214b6e82b1ec97e0fbf3a50",
+      "digestMode": "titled",
+      "sourceChecksum": "17c0fbed412fa8fe3eb31cb7bf5a16459a99e7ff6c52342771dcb652dd02e422",
+      "sourceWordCount": 647
+    },
+    {
+      "id": "wcms.media-import-publication",
+      "componentCode": "nodicsDocsComponentwcmsMediaImportPublication",
+      "previousFile": "docs-v001/records/documentation/mediaDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/mediaDocumentationRelease002ComponentData.js",
+      "blocksSha256": "9546aeef5cddb6bcf3a02fff64aa5bef7c8cc4d1d0525c47e402ba9bcb62fac4",
+      "digestMode": "titled",
+      "sourceChecksum": "596b0eb39cd96cbecf4dd57f6ab87e79b1ef4bed8367e0b408d94d8fbb459ac2",
+      "sourceWordCount": 603
+    },
+    {
+      "id": "wcms.media-operations-runbook",
+      "componentCode": "nodicsDocsComponentwcmsMediaOperationsRunbook",
+      "previousFile": "docs-v001/records/documentation/mediaDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/mediaDocumentationRelease002ComponentData.js",
+      "blocksSha256": "a6f46e84ebccdac655db9ed90ef23dccc24de1e78ef9e34f104e55d85f1369ff",
+      "digestMode": "titled",
+      "sourceChecksum": "b072b1fe98fc8ad3ffabf86517847677f227d0f77e7a3d88b1ac1c0d73a54645",
+      "sourceWordCount": 1678
+    }
+  ]
+}

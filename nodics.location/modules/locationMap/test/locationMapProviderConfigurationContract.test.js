@@ -19,7 +19,7 @@ const moduleRoot = path.resolve(__dirname, '..');
 const repositoryRoot = path.resolve(moduleRoot, '../../..');
 const schemas = require('../src/schemas/schemas').locationMap;
 const routers = require('../src/router/routers').locationMap.internal;
-const seedConfigurations = require('../data/init-v001/records/location/defaultLocationMapProviderConfigurationData');
+const seedConfigurations = require('./fixtures/scopedProviderConfigurations');
 const providers = require('../data/core-v001/records/location/locationMapProviderData');
 const usages = require('../data/core-v001/records/location/locationMapUsageData');
 const styles = require('../data/core-v001/records/location/locationMapStylePresetData');
@@ -45,13 +45,7 @@ assert.strictEqual(providers.record1.rendererType, 'XYZ_TILE');
 assert.strictEqual(usages.record0.code, 'COLLECTION_CENTRE_MAP');
 assert.strictEqual(styles.record0.styleUrl, 'mapbox://styles/mapbox/streets-v12');
 assert.deepStrictEqual(controls.record0.enabledControls, ['FILTERS', 'ZOOM', 'SCALE', 'GEOLOCATE', 'DIRECTIONS']);
-assert.strictEqual(seedConfigurations.record0.code, 'AXIS_COLLECTION_CENTRE_MAPBOX_STREETS');
-assert.strictEqual(seedConfigurations.record0.publicAccessToken, '');
-assert.strictEqual(seedConfigurations.record0.setupStatus, 'SETUP_REQUIRED');
-assert.strictEqual(seedConfigurations.record1.code, 'AXIS_COLLECTION_CENTRE_OSM_HOT');
-assert.strictEqual(seedConfigurations.record1.providerCode, 'OSM');
-assert.strictEqual(seedConfigurations.record1.publicAccessToken, '');
-assert.strictEqual(seedConfigurations.record1.setupStatus, 'ACTIVE');
+assert.equal(Object.values(require('../data/manifest.json').sections).some(section => section.dataType === 'init'), false);
 
 assert.strictEqual(routers.getEffectiveMapConfiguration.key, '/location/maps/configurations/effective');
 assert.strictEqual(routers.getEffectiveMapConfiguration.permission, 'system.schema.view');
@@ -99,7 +93,7 @@ global.SERVICE = {
             repositoryCalls.push({ operation: 'get', request });
             assert.strictEqual(request.tenant, 'default');
             if (request.query.code) {
-                assert.strictEqual(request.query.code, 'AXIS_COLLECTION_CENTRE_MAPBOX_STREETS');
+                assert.strictEqual(request.query.code, 'SHARED_COLLECTION_CENTRE_MAP');
             } else {
                 assert.deepStrictEqual(request.query, {
                     usageCode: 'COLLECTION_CENTRE_MAP',
@@ -113,7 +107,7 @@ global.SERVICE = {
         update: function (request) {
             repositoryCalls.push({ operation: 'update', request });
             assert.strictEqual(request.tenant, 'default');
-            assert.deepStrictEqual(request.query, { code: 'AXIS_COLLECTION_CENTRE_MAPBOX_STREETS', revision: configurationRecords[0].revision });
+            assert.deepStrictEqual(request.query, { code: 'SHARED_COLLECTION_CENTRE_MAP', surfaceCode: 'SHARED', usageCode: 'COLLECTION_CENTRE_MAP', revision: configurationRecords[0].revision });
             assert.strictEqual(request.model.publicAccessToken, 'pk.updated-public-token');
             configurationRecords[0] = Object.assign({}, configurationRecords[0], request.model, {revision: (configurationRecords[0].revision || 0) + 1});
             return Promise.resolve({ updated: 1 });
@@ -183,10 +177,10 @@ service.getEffectiveConfiguration({
     assert(!Object.prototype.hasOwnProperty.call(result, 'tokenReference'), 'tokenReference must not be exposed');
     return service.getConfiguration({
         tenant: 'default',
-        query: { surfaceCode: 'AXIS', usageCode: 'COLLECTION_CENTRE_MAP' }
+        query: { surfaceCode: 'SHARED', usageCode: 'COLLECTION_CENTRE_MAP' }
     });
 }).then(result => {
-    assert.strictEqual(result.code, 'AXIS_COLLECTION_CENTRE_MAPBOX_STREETS');
+    assert.strictEqual(result.code, 'SHARED_COLLECTION_CENTRE_MAP');
     assert.strictEqual(result.configured, true);
     assert.strictEqual(result.providerOptions.length, 2);
     assert.strictEqual(result.providerOptions[0].rendererCode, 'axis.location.mapbox');

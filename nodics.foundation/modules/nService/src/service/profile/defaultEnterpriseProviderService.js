@@ -120,7 +120,8 @@ module.exports = {
                     reject(new CLASSES.NodicsError('ERR_ENT_00000'));
                 }
             }).catch(error => {
-                reject(new CLASSES.NodicsError(error));
+                // The remote transport can wrap Profile's authorization denial in HTTP 500.
+                reject(new CLASSES.NodicsError(error?.code === 'ERR_AUTH_00003' ? 'ERR_AUTH_00003' : error));
             });
         });
 
@@ -143,12 +144,17 @@ module.exports = {
         const own = code === auth.entCode;
         const payload = own ? {} : { contractVersion: 1, enterpriseCode: code };
         const response = await SERVICE.DefaultModuleService.invokeModule({
-            local: false, moduleName, connectionName: 'profile', targetAuthority: { runtimeRole: 'PLATFORM' },
+            local: false, moduleName, connectionName: 'profile', targetAuthority: { publication: 'OPERATIONAL' },
             serviceName: 'DefaultEnterpriseService', operationName: own ? 'getRuntimeEnterprise' : 'resolveRuntimeEnterprise',
             apiName: own ? '/enterprise/get' : '/internal/enterprise/resolve', methodName: own ? 'GET' : 'POST',
             tenant, authToken: token, header: { 'x-enterprise-code': auth.entCode },
             request: { tenant, entCode: auth.entCode, authData: auth, payload }, requestBody: payload,
             responseType: true, maxAttempts: 1,
+        }).catch(error => {
+            if (error?.code === 'ERR_AUTH_00003') {
+                throw new CLASSES.NodicsError('ERR_AUTH_00003');
+            }
+            throw error;
         });
         const rows = response?.result, enterprise = Array.isArray(rows) && rows.length === 1 ? rows[0] : undefined;
         if (!/^SUC_/.test(response?.code || '') || response.success === false || response.error ||

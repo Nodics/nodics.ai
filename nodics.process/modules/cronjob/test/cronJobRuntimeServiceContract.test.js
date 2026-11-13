@@ -88,6 +88,7 @@ function FakeCronJob(definition) {
     this.setJobPool = function (jobPool) {
         this.jobPool = jobPool;
     };
+    this.runOnce = function () { this.manualRuns = (this.manualRuns || 0) + 1; };
     this.getDefinition = function () {
         return this.definition;
     };
@@ -257,7 +258,9 @@ cronJobService.get = function (request) {
     });
     assert.strictEqual(manualRunResult.result.length, 1, 'manual run should succeed for an active tenant-owned job');
     assert.strictEqual(manualRunResult.failed.length, 0, 'manual run should not record failures for an active tenant-owned job');
-    assert.strictEqual(fakeJobs[0].paused, false, 'manual run should resume the active tenant-owned job after the one-time execution is scheduled');
+    assert.strictEqual(fakeJobs[0].paused, false, 'manual run preserves the active timer state');
+    assert.strictEqual(fakeJobs[0].manualRuns, 1, 'manual run uses the original pooled wrapper');
+    assert.strictEqual(fakeJobs.length, 2, 'manual run creates no temporary wrapper');
 
     let pauseResult = await cronJobService.getCronJobRuntimeService().pauseJobs('tenantA', ['ownedJob']);
     assert.strictEqual(pauseResult.code, 'SUC_JOB_00000', 'pauseJobs should succeed for created jobs');

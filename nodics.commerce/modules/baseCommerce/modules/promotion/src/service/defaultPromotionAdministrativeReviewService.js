@@ -69,7 +69,7 @@ module.exports = {
                     k.toLowerCase() === "x-enterprise-code" && v !== auth.entCode || k.toLowerCase() === "x-tenant-code" && v !== auth.tenant))) this.fail();
         };
         if (!policy || policy.identityTarget?.moduleName !== "profile" || !policy.identityTarget.connectionName ||
-            policy.identityTarget.targetAuthority?.runtimeRole !== "PLATFORM" || !/^v\d+$/.test(policy.identityTarget.apiVersion) ||
+            (policy.identityTarget.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(policy.identityTarget.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) || !/^v\d+$/.test(policy.identityTarget.apiVersion) ||
             !Number.isSafeInteger(policy.timeoutMs) || policy.timeoutMs < 1 || policy.timeoutMs > 60000 ||
             [policy.evidencePath, policy.recipientPath].some(p => typeof p !== "string" || !/^\/[A-Za-z0-9/_-]+$/.test(p))) this.fail();
         const revalidate = async () => {

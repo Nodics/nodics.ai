@@ -30,7 +30,7 @@
     "displayName": "Installer and Application Builder"
   },
   "scripts": {
-    "test": "node test/installerModuleContract.test.js"
+    "test": "node --test test/*.test.js"
   },
   "dependencies": {}
 }

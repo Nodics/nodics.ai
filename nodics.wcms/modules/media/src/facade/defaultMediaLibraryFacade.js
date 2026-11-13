@@ -18,6 +18,10 @@
  * @override Preserve fixed operations and signed context when customizing orchestration.
  */
 module.exports = {
+    /** Reads exact immutable publication review metadata through the owning Media service. */
+    reviewPublication: function (input, request) { return SERVICE.DefaultMediaPublicationReviewService.review(input, request); },
+    /** Reads only scoped retained raster bytes, independently of Online delivery. */
+    reviewImage: function (input, request) { return SERVICE.DefaultMediaPublicationReviewService.image(input, request); },
     /** Returns a bounded safe library page. */
     list: function (input, request) {
         return SERVICE.DefaultMediaLibraryService.list(input, request);

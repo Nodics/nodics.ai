@@ -14,50 +14,30 @@
 /** @module nodics.commerce/test/platformDataReleaseCompositionContract @description Verifies exact Platform source-catalogue selectors without activating Commerce capabilities. @layer test @owner nodics.commerce */
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const properties = require("../config/properties");
+const bindings = require("../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService");
+const properties = bindings.merge({}, require("../config/properties"));
 
 const releases = [
-  ["product", "accessGroups", "0.0.4"],
-  ["promotion", "accessGroups", "0.0.4"],
-  ["promotion", "permissionCatalogue", "0.0.3"],
-  ["order", "accessGroups", "0.0.4"],
-  ["inventory", "specialAccessRoles", "0.0.3"],
-  ["digitalCore", "permissionCatalogue", "0.0.2"],
+  ["product", "accessGroups", "0.0.1"],
+  ["promotion", "accessGroups", "0.0.1"],
+  ["promotion", "permissionCatalogue", "0.0.1"],
+  ["order", "accessGroups", "0.0.1"],
+  ["inventory", "specialAccessRoles", "0.0.1"],
+  ["digitalCore", "permissionCatalogue", "0.0.1"],
   ["digitalCore", "bundleParticipantPermissions", "0.0.1"],
   ["digitalCore", "participantAccessGroups", "0.0.1"],
 ];
 
-test("Commerce exposes only its selected Platform identity releases", () => {
-  assert.deepEqual(
-    properties.data.dataReleases.runtimeRoleProfiles.PLATFORM.contributions,
-    [
-      { moduleName: "product", sections: ["accessGroups", "enterpriseRoles"] },
-      { moduleName: "promotion", sections: ["accessGroups", "enterpriseRoles", "businessAccessRoles", "permissionCatalogue"] },
-      { moduleName: "order", sections: ["accessGroups", "specialAccessGroups", "specialAccessRoles", "participantReadAccess", "participantTransactionAccess", "permissionCatalogue", "enterpriseRoles"] },
-      { moduleName: "cart", sections: ["participantTransactionAccess", "permissionCatalogue"] },
-      { moduleName: "checkoutCore", sections: ["participantTransactionAccess", "permissionCatalogue"] },
-      { moduleName: "bidding", sections: ["participantTransactionAccess", "permissionCatalogue"] },
-      { moduleName: "inventory", sections: ["specialAccessGroups", "specialAccessRoles"] },
-      {
-        moduleName: "digitalCore",
-        sections: [
-          "permissionCatalogue",
-          "bundleParticipantPermissions",
-          "participantAccessGroups",
-          "participantReadAccess",
-          "participantTransactionAccess",
-          "enterpriseParticipationAccess",
-          "enterpriseRoles",
-        ],
-      },
-    ],
-  );
-  assert.deepEqual(
-    properties.data.dataReleases.runtimeRoleProfiles.PROCESS.contributions.map(
-      (entry) => entry.moduleName,
-    ),
-    ["product", "pricing", "promotion", "inventory", "tax"],
-  );
+test("Commerce exposes its exact selected identity and workflow release definitions", () => {
+  const selected = properties.data.dataReleases.contributions;
+  assert.equal(new Set(selected.map(item => item.moduleName)).size, selected.length);
+  assert.equal(selected.reduce((sum, item) => sum + item.sections.length, 0), 33);
+  for (const [moduleName, section] of releases) {
+    assert(selected.find(item => item.moduleName === moduleName).sections.includes(section));
+  }
+  for (const owner of ['product', 'pricing', 'promotion', 'inventory', 'tax']) {
+    assert(selected.find(item => item.moduleName === owner).sections.includes(owner + 'PublicationWorkflow'));
+  }
   for (const [moduleName, sectionCode, version] of releases) {
     const modulePath =
       moduleName === "order"
@@ -83,10 +63,10 @@ test("inactive Promotion exposes its catalogue through standard Platform discove
   const owner = { name: "promotion", path: path.resolve(__dirname, "../modules/baseCommerce/modules/promotion") };
   global.NODICS = { getActiveModules: () => ["profile"], getRawModule: name => name === owner.name ? owner : undefined };
   const service = Object.create(releaseService);
-  service.configuration = () => ({ contributions: properties.data.dataReleases.runtimeRoleProfiles.PLATFORM.contributions });
+  service.configuration = () => ({ contributions: properties.data.dataReleases.contributions });
   service.error = (code, message) => Object.assign(new Error(message), { code });
   const release = service.discoverManifestRelease({ moduleName: owner.name, sectionCode: "permissionCatalogue" }, "init");
-  assert.equal(release.version, "0.0.3");
+  assert.equal(release.version, "0.0.1");
   assert.equal(release.sourceRoot, "init-v001");
   assert.equal(release.destinationRole, "PLATFORM");
   assert.equal(release.selectionPolicy, "EXPLICIT");
@@ -103,9 +83,9 @@ test("inactive Digital exposes its reminder permission catalogue on Platform", t
   const owner = { name: "digitalCore", path: path.resolve(__dirname, "../modules/digitalCommerce/modules/digitalCore") };
   global.NODICS = { getActiveModules: () => ["profile"], getRawModule: name => name === owner.name ? owner : undefined };
   const service = Object.create(releaseService);
-  service.configuration = () => ({ contributions: properties.data.dataReleases.runtimeRoleProfiles.PLATFORM.contributions });
+  service.configuration = () => ({ contributions: properties.data.dataReleases.contributions });
   service.error = (code, message) => Object.assign(new Error(message), { code });
   const release = service.discoverManifestRelease({ moduleName: owner.name, sectionCode: "permissionCatalogue" }, "init");
-  assert.equal(release.version, "0.0.2");
+  assert.equal(release.version, "0.0.1");
   assert.notEqual(service.discoveryOwners().find(item => item.moduleName === owner.name).active, true);
 });

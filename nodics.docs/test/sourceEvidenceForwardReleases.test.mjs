@@ -16,9 +16,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import { qualifySemanticReview } from '../scripts/semantic-review-contract.mjs';
 const require = createRequire(import.meta.url);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const contract = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService');
+const recoveredHistory = require('./fixtures/historicalOwnerReleases/provenance.json');
 const owners = [
     'nodics.commerce/modules/baseCommerce/modules/shoppingList',
     'nodics.platform/modules/installer'
@@ -36,7 +38,12 @@ function replaceCitation(value, from, to) {
 for (const owner of owners) test(owner + ': source correction uses an immutable forward release with genuine provenance', () => {
     const ownerRoot = path.join(root, owner);
     const fixture = require(path.join(ownerRoot, 'test/fixtures/frozenDocumentationSourceEvidence.json'));
-    const selected = require(path.join(ownerRoot, 'data/manifest.json')).sections.documentation;
+    const historyRoot = path.join(root, 'nodics.docs/test/fixtures/historicalOwnerReleases', owner);
+    assert.equal(recoveredHistory.revision, '00ad4b6b9375f40873079be97f5afcc030cc9ce5');
+    const recorded = recoveredHistory.owners.find(row => row.owner === owner);
+    assert.equal(contract.sha256(fs.readFileSync(path.join(historyRoot, 'data/manifest.json'))), recorded.manifestSha256);
+    const selected = require(path.join(historyRoot, 'data/manifest.json')).sections.documentation;
+    const active = require(path.join(ownerRoot, 'data/manifest.json')).sections.documentation;
     assert.equal(selected.version, '0.0.2');
     assert.equal(selected.contentPath, 'docs-v002');
     contract.validateGeneration(fixture.frozen, selected);
@@ -46,19 +53,45 @@ for (const owner of owners) test(owner + ': source correction uses an immutable 
     for (const section of [fixture.frozen, selected]) {
         assert.equal(contract.releaseChecksum(section.generatedHashes), section.releaseChecksum);
         for (const [file, expected] of Object.entries(section.generatedHashes))
-            assert.equal(contract.sha256(fs.readFileSync(path.join(ownerRoot, 'data', file))), expected, file);
+            assert.equal(contract.sha256(fs.readFileSync(path.join(historyRoot, 'data', file))), expected, file);
     }
-    const records = (section, suffix) => Object.keys(section.generatedHashes)
+    assert.equal(active.contentPath, 'docs-v001');
+    if (owner.endsWith('/shoppingList')) {
+        const forward = require(path.join(ownerRoot, 'test/fixtures/documentationProvenancePredecessor.json'));
+        assert.equal(forward.sections.documentation.version, selected.version);
+        assert.equal(active.version, forward.successorVersion);
+        contract.validateGeneration(forward.sections.documentation, active);
+    } else assert.equal(active.version, selected.version);
+    assert.equal(contract.releaseChecksum(active.generatedHashes), active.releaseChecksum);
+    for (const [file, expected] of Object.entries(active.generatedHashes))
+        assert.equal(contract.sha256(fs.readFileSync(path.join(ownerRoot, 'data', file))), expected, file);
+    const records = (section, suffix, base = historyRoot) => Object.keys(section.generatedHashes)
         .filter(file => file.endsWith(suffix + 'Data.js'))
-        .flatMap(file => Object.values(require(path.join(ownerRoot, 'data', file))));
-    const components = records(selected, 'Component');
+        .flatMap(file => Object.values(require(path.join(base, 'data', file))));
+    const components = records(active, 'Component', ownerRoot);
+    const historicalComponents = records(selected, 'Component');
     const oldComponents = records(fixture.frozen, 'Component');
-    const metadata = records(selected, 'PageMetadata');
-    const search = records(selected, 'SearchMetadata');
+    const metadata = records(active, 'PageMetadata', ownerRoot);
+    const search = records(active, 'SearchMetadata', ownerRoot);
     const { from, to } = fixture.citationReplacement;
     for (const old of oldComponents.filter(row => row.properties?.blocks)) {
         const current = components.find(row => row.code === old.code).properties;
-        assert.deepEqual(current.blocks, replaceCitation(old.properties.blocks, from, to));
+        const expected = replaceCitation(old.properties.blocks, from, to);
+        const historicalArticle = historicalComponents.find(row => row.code === old.code).properties;
+        assert.deepEqual(historicalArticle.blocks, expected);
+        assert.deepEqual(historicalArticle.sourceEvidence, replaceCitation(old.properties.sourceEvidence, from, to));
+        if (owner.endsWith('/shoppingList')) {
+            const review = require('./evidence/semantic-documentation-shopping-list-provenance-revalidation-2026-11-04.json');
+            const item = review.items[0];
+            const catalogue = contract.readDataCatalogue(ownerRoot);
+            assert.equal(qualifySemanticReview({ item: item.item, action: item.requestedAction },
+                review, catalogue.documents, root).status, 'closed-with-evidence');
+            const delta = review.semanticDelta;
+            assert.equal(expected[delta.blockIndex].kind, 'code');
+            assert.equal(expected[delta.blockIndex].text.split(delta.from).length, 2);
+            expected[delta.blockIndex].text = expected[delta.blockIndex].text.replace(delta.from, delta.to);
+        }
+        assert.deepEqual(current.blocks, expected);
         assert.deepEqual(current.sourceEvidence, replaceCitation(old.properties.sourceEvidence, from, to));
         assert.deepEqual(current.headings, old.properties.headings);
         assert.equal(current.route, old.properties.route);
@@ -74,15 +107,15 @@ for (const owner of owners) test(owner + ': source correction uses an immutable 
         assert.equal(current.source.checksum, contract.sha256(body));
         assert.equal(search.find(row => row.targetCode === page.code).searchText, current.searchText);
     }
-    const targets = new Map(Object.keys(selected.generatedHashes).filter(file =>
+    const targets = new Map(Object.keys(active.generatedHashes).filter(file =>
         file.includes('/records/') && file.endsWith('Data.js') && !file.endsWith('PublicationStateData.js'))
         .flatMap(file => Object.values(require(path.join(ownerRoot, 'data', file))).map(row => [row.code, row])));
     const oldStates = records(fixture.frozen, 'PublicationState');
-    for (const state of records(selected, 'PublicationState')) {
+    for (const state of records(active, 'PublicationState', ownerRoot)) {
         assert.equal(state.author, oldStates.find(row => row.code === state.code).author);
         assert.ok(state.author);
         assert.equal(state.lifecycleState, 'STAGED');
-        assert.equal(state.stagedVersion, selected.version);
+        assert.equal(state.stagedVersion, active.version);
         assert.deepEqual(state.auditTrail, []);
         for (const key of ['actor', 'reviewer', 'approver', 'publisher', 'onlineVersion'])
             assert.equal(Object.hasOwn(state, key), false, state.code + ':' + key);

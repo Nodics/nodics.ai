@@ -9,7 +9,9 @@ simulator. Its legacy execute method accepts only opaque `tok_test_` tokens and
 supports authorize, capture, void, and refund conformance. It does not call Stripe and must be
 reported as `OFFLINE_CONFORMANCE`, never as live-qualified.
 
-A project may enable the simulator only in isolated local/test configuration.
+The provider defaults disabled, independently of the hosting runtime role.
+A project may explicitly set `stripeProvider.enabled: true` only in isolated
+local/test configuration, inheriting the framework sandbox and maturity defaults.
 Production qualification requires a separate credentialed Stripe test-mode
 adapter, secret-manager integration, signed webhook verification and replay,
 ambiguous-timeout reconciliation, rate/capacity evidence, security and finance

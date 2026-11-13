@@ -11,7 +11,9 @@
     "system",
     "discoverySource",
     "discoveryProjection",
-    "discoveryRuntime"
+    "discoveryRuntime",
+    "copilotCore",
+    "discoveryPublication"
   ],
   "nodics": {
     "kind": "capability",
@@ -33,7 +35,8 @@
       "data"
     ],
     "runtime": {
-      "router": false,
+      "ownership": "functional",
+      "router": true,
       "publish": false,
       "web": false
     }

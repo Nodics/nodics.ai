@@ -1,5 +1,10 @@
 # wasteCollection Contracts
 
+Location enrichment normalizes generated read envelopes after module invocation.
+The local service path does not run the remote response selector; both paths must
+produce the same referenced Location record before joining coordinates. This is
+a read projection and must never recreate or modify the collection network.
+
 Collection-point create receipts use private `wasteCollectionCommandReceipt`
 storage under default-disabled `commandReceipts` admission. The existing native
 generated create retains location/reference and current schema authority.

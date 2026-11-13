@@ -50,6 +50,30 @@
           }
         }
       ]
+    },
+    "collection-categories": {
+      "kind": "DATA_RELEASE",
+      "dataType": "core",
+      "version": "0.0.1",
+      "displayName": "Collection categories",
+      "description": "Reusable collection categories vocabulary for Location.",
+      "owningDomain": "locationType",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "LOCATION",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "core-v001/headers/location/collectionCategoryHeader.js": "4010b884d615604b56315489295d500d71f0c4d763adcc2a04bf06ac38fd8a1f",
+        "core-v001/records/location/collectionCategoryData.js": "80a9b494c46e7d322d6804871807047756dea699813d38d35cb02d6ac522dea0"
+      },
+      "sourceRoot": "core-v001",
+      "selectionPolicy": "EXPLICIT"
     }
   }
 }

@@ -6,7 +6,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "rulesEvaluation",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -28,16 +28,16 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "53bf482ed446df82787157918c9e19e7782a2e14537bc9930abda67e4f36b2ba",
+      "releaseChecksum": "5056456ca156727ca9fbd975b888a5b70df7715ec1387ca076ad752af3877449",
       "generatedHashes": {
-        "docs-v001/records/documentation/rulesEvaluationDocumentationComponentData.js": "30a0f0210876e05a4ea3d0968e072a8b0f2c21cf50ce10a14390116f413176a8",
-        "docs-v001/records/documentation/rulesEvaluationDocumentationPageMetadataData.js": "3e088fc21d7490e5138507678a2eea45f385981323702d140ca52eae3b11785a",
         "docs-v001/records/documentation/rulesEvaluationDocumentationNodeData.js": "0ecf5c89cbc718e0a92bf9a8aa57805fd8bdc221ee427e487a50b4be6132dd59",
         "docs-v001/records/documentation/rulesEvaluationDocumentationPageData.js": "eb21d863511bb7a0fe764c072fb5c5a7db0425078778cb63b1430fa76431917d",
         "docs-v001/records/documentation/rulesEvaluationDocumentationRouteData.js": "91eab03f489392c24ea265e393d43ce1fca65f357b3e331cac975a0ea596a306",
-        "docs-v001/records/documentation/rulesEvaluationDocumentationSearchMetadataData.js": "b1cd94024769cd7b234969ee91bdb830dca3a369f91b042f362af02ff102928a",
-        "docs-v001/records/documentation/rulesEvaluationDocumentationPublicationStateData.js": "b0fd3497a483244e47f8bc27ba8a112ec67beef5f2a54cf37e8f45d589948081",
-        "docs-v001/headers/100_rulesEvaluationDocumentationContentPackHeader.js": "d3a3b23cb5cbfccfb6a1f4c397dc941d2611059f9f500037e8d50acb53080f3a"
+        "docs-v001/records/documentation/rulesEvaluationDocumentationRelease002ComponentData.js": "4cb157e0bd5b483fbbcad81737d8874261fc5de264630123c378d435e397ce5f",
+        "docs-v001/records/documentation/rulesEvaluationDocumentationRelease002PageMetadataData.js": "e365cf8ca369f563b6e050d1b97658b2b7ea16159267b86c26436639dd22b66b",
+        "docs-v001/records/documentation/rulesEvaluationDocumentationRelease002SearchMetadataData.js": "5f9e52586528fcddbbaa3da7b6f231d97af940d0a45966087fe22110ca7ee6f8",
+        "docs-v001/records/documentation/rulesEvaluationDocumentationRelease002PublicationStateData.js": "038c1f1d9011a835cd6c743a4143c2fb30d7e6a7d615c96f64bc0cb95d4a4e5f",
+        "docs-v001/headers/100_rulesEvaluationDocumentationRelease002ContentPackHeader.js": "725abce4e07cf7e819249a95d8ce177b1bccbe8963e7371794da232eecfe8ab0"
       },
       "includes": [
         {

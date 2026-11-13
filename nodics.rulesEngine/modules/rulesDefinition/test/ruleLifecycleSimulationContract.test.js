@@ -33,7 +33,12 @@ global.SERVICE = {
         save: async request => { rows[request.model.code] = { ...request.model }; return result(rows[request.model.code]); },
         update: async request => {
             let row = rows[request.query.code];
-            if (row) Object.assign(row, request.model.$set || request.model);
+            if (row) {
+                const patch = request.model.$set || request.model;
+                ['validation', 'lastSimulation', 'approval'].forEach(key => assert.notStrictEqual(patch[key], null, key + ' must not violate the object schema'));
+                Object.assign(row, patch);
+                Object.keys(request.model.$unset || {}).forEach(key => delete row[key]);
+            }
             return result({ modifiedCount:row ? 1 : 0 });
         }
     },
@@ -44,7 +49,7 @@ global.SERVICE = {
     DefaultScoreBandSetVersionService: {
         get: async request => result(request.query.bandSetCode === 'BANDS' && Number(request.query.version) === 1 ? [bandVersion] : [])
     },
-    DefaultRuleSetVersionService: { get:async () => result([]), save:async request => result(request.model) }
+    DefaultRuleSetVersionService: { get:async () => result([{ ...rows.POLICY, version:1, definition:{ groups:[] } }]), save:async request => result(request.model) }
 };
 
 global.CONFIG = { get: () => ({}) };
@@ -88,6 +93,20 @@ global.CONFIG = { get: () => ({}) };
         /successful simulation/
     );
 
+    rows.POLICY.lastSimulation = matching.lastSimulation;
+    rows.POLICY.approval = { status:'REJECTED' };
+    await lifecycle.updateRuleSetDraft({ tenant:'default', ruleSetCode:'POLICY', model:{ definition:{ groups:[] }, lastSimulation:{ forged:true }, approval:{ status:'APPROVED' } } });
+    assert.strictEqual(rows.POLICY.draftRevision, 2);
+    assert.strictEqual(rows.POLICY.lastSimulation, undefined);
+    assert.strictEqual(rows.POLICY.approval, undefined);
+    rows.POLICY.status = 'ACTIVE';
+    rows.POLICY.currentVersion = 1;
+    rows.POLICY.lastSimulation = matching.lastSimulation;
+    rows.POLICY.approval = { status:'APPROVED' };
+    await lifecycle.prepareNextRuleSetDraft({ tenant:'default', ruleSetCode:'POLICY' });
+    assert.strictEqual(rows.POLICY.status, 'DRAFT');
+    assert.strictEqual(rows.POLICY.draftRevision, 3);
+    ['validation','lastSimulation','approval'].forEach(key => assert.strictEqual(rows.POLICY[key], undefined));
     assert(audit.some(event => event.eventType === 'RULE_SET_CREATED'));
     console.log('Rules draft-first authoring and current-simulation governance contracts validated');
 })().finally(() => {

@@ -52,12 +52,13 @@ async function fixture() {
   const configuration = {
     defaultTenant: "default",
     defaultEnterprise: "platform",
-    runtimeRole: "PLATFORM",
+    runtimeRole: { code: "PLATFORM", publication: "OPERATIONAL" },
     environment: { class: "LOCAL" },
     enterpriseManagement: {},
-    authSecurity: structuredClone(
-      require(foundation + "nAuth/config/properties").authSecurity,
-    ),
+    authSecurity: {
+      ...structuredClone(require(foundation + "nAuth/config/properties").authSecurity),
+      bootstrapIdentity: structuredClone(properties.authSecurity.bootstrapIdentity),
+    },
     bootstrapIdentity: {
       source: "environment",
       adminPassword: crypto.randomBytes(32).toString("hex"),
@@ -100,7 +101,9 @@ async function fixture() {
     resolveInstalledSourceDescriptor: require(foundation + "nConfig/src/utils/utils").resolveInstalledSourceDescriptor.bind(require(foundation + "nConfig/src/utils/utils")),
     isBlank: (value) => !value,
   };
+  global.ENUMS = { ContactType: Object.fromEntries(require("../src/utils/enums").ContactType.definition.map(key => [key, { key }])) };
   const moduleOwner = {
+    rawSchema: require("../src/schemas/schemas").profile,
     name: "profile",
     path: path.resolve(__dirname, ".."),
     index: 1,
@@ -110,6 +113,7 @@ async function fixture() {
     getCustomHome: () => path.resolve(__dirname, "../../../.."),
     getActiveModules: () => ["profile"],
     getActiveTenants: () => ["default"],
+    getModule: (name) => (name === "profile" ? moduleOwner : undefined),
     getRawModule: (name) => (name === "profile" ? moduleOwner : undefined),
     getSelectedEnvironmentName: () => "fixtureLocal",
     getEnvironmentName: () => "fixture.project",
@@ -131,6 +135,7 @@ async function fixture() {
       getSystemAuthData: () => ({ isSystem: true }),
     },
     DefaultDataReleaseService: { ...releases },
+    DefaultSchemaAuthoringPolicyService: require(foundation + "nDatabase/database/src/service/schema/defaultSchemaAuthoringPolicyService"),
     DefaultImportUtilityService: { ...importUtility },
     DefaultSystemDataImportInitializerService: {
       ...initializer,
@@ -253,7 +258,7 @@ async function fixture() {
 test("forward Init authority receives human/guest identities while dynamic tenants receive only service identities and groups", async () => {
   const f = await fixture();
   const manifest = require("../data/manifest.json");
-  assert.equal(manifest.sections["init-v001"].version, "0.0.8");
+  assert.equal(manifest.sections["init-v001"].version, "0.0.1");
   assert.equal(manifest.sections["init-v001"].sourceRoot, "init-v001");
   assert.equal(manifest.retainedRoots, undefined);
   releases.validateRetainedRoots(path.resolve(__dirname, "../data"), manifest);
@@ -272,11 +277,18 @@ test("forward Init authority receives human/guest identities while dynamic tenan
   const guests = Object.values(
     require("../data/init-v001/records/user/defaultCutomerData"),
   );
-  assert.equal(humans.length, 5);
+  assert.equal(humans.length, 1);
   assert(humans.every((r) => r.principalType === "human"));
   assert.equal(services.length, 1);
   assert(services.every((r) => r.principalType === "service"));
   assert.equal(guests.length, 1);
+  assert.equal(guests[0].loginId, "guest");
+  assert.equal(guests[0].active, false);
+  const enterprise = require("../data/init-v001/records/enterprise/defaultEnterpriseData").record0;
+  for (const record of [...humans, ...services, ...guests, enterprise]) {
+    assert.equal(Object.hasOwn(record, "addresses"), false, record.code);
+    assert.equal(Object.hasOwn(record, "contacts"), false, record.code);
+  }
   for (const header of [headers.defaultEmployee, headers.defaultCustomer]) {
     assert.deepEqual(
       selector.resolveTargetTenants({ tenant: "default" }, header),
@@ -300,7 +312,7 @@ test("forward Init authority receives human/guest identities while dynamic tenan
       ["dynamic"],
     );
   }
-  assert.equal((await f.owner.sources("default")).expected.length, 6);
+  assert.equal((await f.owner.sources("default")).expected.length, 2);
   f.configuration.defaultTenant = "custom-authority";
   delete require.cache[headerPath];
   const custom = require(headerPath).profile;
@@ -517,7 +529,7 @@ test("project logical init-v001 contributions still merge with forward framework
     };
     const humans = Object.values(await read(humanHeader));
     const services = Object.values(await read(serviceHeader));
-    assert.equal(humans.length, 6);
+    assert.equal(humans.length, 2);
     assert(humans.some((r) => r.code === "customHuman"));
     assert(humans.every((r) => r.principalType === "human"));
     assert.equal(services.length, 2);
@@ -579,7 +591,7 @@ test("startup owner admits an explicit forward Init version but still rejects ch
   assert.equal(
     f.configuration.identityGovernance.migration.assessment.bootstrapReview
       .sources[0].version,
-    "0.0.8",
+    "0.0.1",
   );
   const reviewSource =
     f.configuration.identityGovernance.migration.assessment.bootstrapReview.sources[0];
@@ -596,12 +608,12 @@ test("startup owner admits an explicit forward Init version but still rejects ch
   assert.deepEqual(documentedSources, [reviewSource, reviewSource]);
 });
 
-test("real layered Init owners produce six expected source principals without copying credentials", async () => {
+test("real layered Init owners produce the administrator and guest assessment principals without copying credentials", async () => {
   const f = await fixture();
-  assert.equal(f.expected.expected.length, 6);
+  assert.equal(f.expected.expected.length, 2);
   assert.equal(
     f.expected.expected.filter((r) => r.principalType === "human").length,
-    5,
+    1,
   );
   assert.equal(
     f.expected.expected.filter((r) => r.principalType === "customer").length,
@@ -690,10 +702,10 @@ test("inventory/source/installation drift and wrong original operator reject rev
       f.state.partitions[0].employees[0].userGroups.push("unapproved");
     },
     (f) => {
-      f.state.partitions[0].employees[1].loginId = "renamed";
+      f.state.partitions[0].employees[0].loginId = "renamed";
     },
     (f) => {
-      f.state.partitions[0].employees[1]["authenticationIdentity.recordId"] =
+      f.state.partitions[0].employees[0]["authenticationIdentity.recordId"] =
         "other";
     },
     (f) => {
@@ -805,7 +817,7 @@ test("governed assessment retains findings and audits only after final observati
   };
   const initial = await f.migrationOwner.assessIdentities(f.request);
   assert.equal(reads, 3);
-  assert.equal(initial.data.findings.length, 6);
+  assert.equal(initial.data.findings.length, 2);
   assert.equal(initial.data.bootstrapReview.disposition, "REVIEW_REQUIRED");
   const events = [];
   SERVICE.DefaultAuthAuditService.record = async (event) => {
@@ -823,7 +835,7 @@ test("governed assessment retains findings and audits only after final observati
   f.request.httpResponse = { setHeader: (...args) => headers.push(args) };
   const result = await controller.reviewBootstrapIdentities(f.request);
   assert.equal(result.data.reviewRequired, true);
-  assert.equal(result.data.findings.length, 6);
+  assert.equal(result.data.findings.length, 2);
   assert.equal(result.data.readyForApply, false);
   assert.equal(result.data.bootstrapReview.auditRecorded, true);
   assert.equal(result.data.bootstrapReview.qualificationGranted, false);

@@ -42,6 +42,16 @@ module.exports = {
   },
   /** Composes independent Contact and decision guards through the prepared-schema standard cache/Mongo integration, not a fictitious generated preCount hook. @param {Object} request Exact provider read envelope retaining genuine owner admission. @param {Object} model Actual prepared provider receiver, never a submitted schema selector. @returns {boolean} Existing read guard. */
   providerRead: function (request, model) {
+    if (model?.schemaName === "employee") {
+      const employee = SERVICE.DefaultEmployeeGetInterceptorService;
+      if (typeof employee?.requiresEnterpriseScope !== "function" || typeof employee?.restrictEnterpriseRead !== "function") this.owner().fail();
+      if (employee.requiresEnterpriseScope(request))
+        return employee.restrictEnterpriseRead(request).then(() => this.verifyProviderRead(request, model));
+    }
+    return this.verifyProviderRead(request, model);
+  },
+  /** Applies independent fixed-schema guards after public Employee query preparation, before cache/provider execution. @param {Object} request Exact read. @param {Object} model Prepared schema. @returns {boolean} Owner acknowledgement. */
+  verifyProviderRead: function (request, model) {
     const owner = this.owner();
     if (
       !model?.rawSchema ||
@@ -55,6 +65,10 @@ module.exports = {
       ].includes(model.schemaName)
     )
       owner.fail();
+    if (model.schemaName === "employee") {
+      const employee = SERVICE.DefaultEmployeeGetInterceptorService;
+      if (typeof employee?.protectProviderRead !== "function" || employee.protectProviderRead(request) !== true) owner.fail();
+    }
     if (owner.guardContactRead(request) !== true) owner.fail();
     const decision =
       SERVICE.DefaultCustomerEligibilityDecisionGovernanceService;

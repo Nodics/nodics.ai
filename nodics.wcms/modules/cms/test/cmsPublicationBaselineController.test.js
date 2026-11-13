@@ -45,6 +45,20 @@ const controller = require('../src/controller/defaultCmsPublicationBaselineContr
     assert.strictEqual(received.request.authData.isSystem, true);
     assert.throws(() => controller.reconcileApproval({ authData: { tokenType: 'service', principalId: 'foreign' } }),
         /BackOffice runtime principal required/);
-    assert.strictEqual(principalChecks, 4);
+    SERVICE.DefaultCmsPublicationBaselineService.installContentPack = SERVICE.DefaultCmsPublicationBaselineService.status;
+    await controller.installContentPack(source);
+    assert.strictEqual(received.request.authData.isSystem, true);
+    assert.throws(() => controller.installContentPack({ authData: { tokenType: 'service', principalId: 'foreign' } }),
+        /BackOffice runtime principal required/);
+    const route = require('../src/router/routers').cms.cmsPublicationBaseline.installContentPack;
+    assert.strictEqual(route.secured, true);
+    assert.deepStrictEqual(route.authTokenTypes, ['service']);
+    assert.strictEqual(route.apiExposure, 'moduleInternal');
+    assert.strictEqual(route.permissionConfig, 'authSecurity.internalToken.routePermission');
+    const body = route.requestBody.content['application/json'].schema;
+    assert.strictEqual(body.additionalProperties, false);
+    assert.deepStrictEqual(body.required, ['requestedBy']);
+    assert.strictEqual(body.properties.packCode, undefined);
+    assert.strictEqual(principalChecks, 6);
     console.log('CMS publication baseline controller authority validated');
 })().catch(error => { console.error(error); process.exit(1); });

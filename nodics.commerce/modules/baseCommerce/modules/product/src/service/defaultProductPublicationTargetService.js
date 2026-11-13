@@ -20,11 +20,10 @@
 module.exports = {
     /** Resolves the existing Product manifest utility. */
     manifests: function () { return SERVICE.DefaultProductPublicationGraphService; },
-    /** Requires the configured Product serving authority without changing Commerce's operational role. */
+    /** Requires local Product ownership and its explicit serving publication context. */
     assertOnline: function () {
         const runtime = CONFIG.get('runtimeRole') || {};
-        const authority = (((CONFIG.get('product') || {}).publication || {}).target || {}).runtimeRole;
-        if (typeof authority !== 'string' || !authority.trim() || runtime.code !== authority ||
+        if (SERVICE.DefaultModuleService?.isLocalModuleActive?.('product') !== true ||
             !['OPERATIONAL', 'ONLINE'].includes(runtime.publication)) {
             throw new Error('Product target requires configured serving runtime authority');
         }

@@ -36,3 +36,11 @@ Run the focused contract test from the repository root after changes:
 ```bash
 node nodics.discovery/modules/discoveryPublication/test/discoveryPublicationContract.test.js
 ```
+
+
+Internal routes declare their `moduleInternal` exposure default here with neutral
+`inheritUnknown: true` policy. Registration preserves nRouter's existing unknown
+category denial or common default; it never enables a service, grants permissions
+or qualifies a provider. Later explicit category overrides remain supported.
+See nRouter's capability-owned exposure contract and
+`apiExposureOwnershipContract.test.js` for default, denied and override evidence.

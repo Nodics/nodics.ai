@@ -18,6 +18,14 @@ validating the contract version, content hashes, functional owners and document
 IDs. Review and publication use the existing CMS, Process and Media owners.
 Axis reads the access-filtered CMS projection, never repository files.
 
+The complete library selects composition release 0.0.6, which includes search
+metadata repairs from Comms Core, nBPM, Installer and Cron. Local has
+composition 0.0.4 installed.
+The successor preserves the shared payloads and 64 source selections, and the
+separate shared Foundation pack remains 0.0.2. Installation, approval and
+publication still run through the existing owners; source validation does not
+change the published library.
+
 Documentation is CMS data, maintained directly alongside the implemented
 functionality in `data/docs-v001/records/documentation`. Pages, components,
 navigation, access policies and publication metadata have one source of truth.
@@ -101,3 +109,5 @@ changed inputs reopen the item. The report exposes semantic open/closed counts
 separately from coverage triage. `test/semanticReviewContract.test.mjs` covers
 stale content/source, scope drift, foreign owners, missing anchors and fabricated
 status strings. This check validates evidence, not prose or deployment.
+
+Framework documentation composition 0.0.4 selects the capability provenance successors. Shared Foundation remains 0.0.2 with exact prior payload bytes; the shared publishing-runbook review remains open. Publication and semantic review are independently evidenced.

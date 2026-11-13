@@ -1,18 +1,28 @@
 # Shared map configuration
 
-Location Map owns one effective configuration per `usageCode` in the trusted
-runtime isolation context. Axis administers it; customer applications and future
-consumers read it. `surfaceCode: SHARED` identifies the primary record. `FALLBACK`
-records supply provider alternatives and are never competing primary settings.
-Legacy `AXIS` primary records remain readable until the next governed save
-migrates the same record in place. Ambiguous shared primaries fail explicitly.
+Location Map resolves each map usage in the trusted runtime tenant. An empty
+repository returns an active, tokenless OSM HOT tile descriptor from framework
+configuration. Core supplies reusable references. There is no provider Init pack.
+
+Resolution applies these layers in order. Each later layer overrides earlier fields.
+
+1. `locationMapConfiguration.defaultSelection` and the selected provider's `providerDefaults`.
+2. `projectOverrides[usageCode]` and the tenant's saved SHARED configuration.
+3. `applicationOverrides[surfaceCode][usageCode]` and the saved application configuration.
+
+Changing provider starts with that provider's style and clears the previous
+provider's token. Use a partial source override for fields that must continue
+to inherit, such as Circa's Dubai viewport. Axis saves a complete configuration
+for the chosen scope. Omit surfaceCode or request SHARED for the project view.
+Application rows use APP:AXIS or APP:CIRCA internally.
+FALLBACK rows are alternatives. Ambiguous primary selections fail.
 
 ## Operator behavior
 
 Use Axis **System Configuration → Map Configuration** to select the provider,
 style, public token, viewport, controls, category labels/colors/matching terms,
 and wheel mode, step, cooldown and animation. Saves use the existing secured
-Location route with `system.schema.workbench.manage`. The generated repository
+Location route with `system.schema.manage`. The generated repository
 owns atomic revision increments; clients send `expectedRevision` from the form.
 A stale form must reload before editing again.
 
@@ -26,7 +36,7 @@ allowed provider failure keeps the centre list usable and reports the fallback.
 
 - Authenticated applications read `/location/maps/configurations/effective`.
 - Anonymous applications read `/location/maps/configurations/public`; only
-  `locationMapConfiguration.publicUsageCodes` are exposed. This endpoint cannot
+  allowlisted public usages and surfaces are exposed. This endpoint cannot
   write and never returns internal metadata, token references or credentials.
 - Responses carry `contractVersion: 1`, stable `code`, `revision`,
   `refreshIntervalMs`, render descriptors, viewport, controls, `presentation`
@@ -58,7 +68,7 @@ provider descriptor, never executable backend content.
 
 Run `node --test nodics.location/modules/locationMap/test/*.test.js` from the
 framework root. Coverage includes coordinate ordering, provider fallback,
-legacy migration, shared public/authenticated reads, declarative customization,
+exact scope selection, shared public/authenticated reads, declarative customization,
 stale edits, duplicate primaries and private usage denial. Browser acceptance
 must change a label/color in Axis, observe another open application refresh,
 restore the original values, and check filters, wheel behavior and mobile layout.

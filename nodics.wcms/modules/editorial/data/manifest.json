@@ -30,7 +30,7 @@
       "kind": "DATA_RELEASE",
       "selectionPolicy": "EXPLICIT",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "description": "Editorial-owned neutral approval and publication definitions",
       "owningDomain": "editorial",
       "lifecycle": "OPERATIONAL_VERSIONED",
@@ -45,12 +45,17 @@
       "removalPolicy": "RETAIN",
       "installer": "PROCESS_DEFINITION",
       "files": {
-        "init-v001/records/process/editorialWorkflowDefinitionData.js": "2a57f151d7562422a0e3cde7ed3c3b804864d024c94e17c4f745cdd93bf5a183"
+        "init-v001/records/process/editorialWorkflowDefinitionData.js": "8b00e75795d6f6b84f70efe6626c16d6d0879dceb51d3f96472ed1d905435962"
       },
-      "sourceRoot": "init-v001"
+      "sourceRoot": "init-v001",
+      "capability": {
+        "code": "editorial",
+        "displayName": "Editorial"
+      }
     },
     "init-v001": {
       "kind": "DATA_RELEASE",
+      "displayName": "Editorial foundations",
       "dataType": "init",
       "version": "0.0.1",
       "description": "Editorial-owned content-type foundations",

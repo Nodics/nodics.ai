@@ -43,13 +43,13 @@ No definition is installed implicitly by either bridge service.
 ## Configuration Contract
 
 nPublish owns the neutral target defaults: `connectionName: null`,
-`connectionType: 'abstract'` and `runtimeRole: 'PROCESS'`. The latter is the
-bridge's required target authority, not the current deployment's runtime role.
+`connectionType: 'abstract'` and `targetAuthority: { publication: 'OPERATIONAL' }`.
+The logical destination is always `workflow`, resolved through nService/DMS.
 Domain modules contribute domain policies; deployments select the actual remote
 connection and explicitly opt into the provider. Inheriting these defaults does
 not select a provider, install a graph, grant access or enable publication.
 Later configuration may override transport settings; an absent/default connection
-or a non-Process target role still rejects. The resolved service contract is:
+or a missing/malformed/non-OPERATIONAL publication selector still rejects. The resolved service contract is:
 
 ```js
 publish: {
@@ -57,7 +57,7 @@ publish: {
         target: {
             connectionName: 'process',
             connectionType: 'abstract',
-            runtimeRole: 'PROCESS',
+            targetAuthority: { publication: 'OPERATIONAL' },
             timeoutMs: 5000
         },
         domains: {
@@ -65,15 +65,20 @@ publish: {
                 ownerModule: 'exampleOwner',
                 definitionCode: 'examplePublicationApproval',
                 actionKey: 'exampleOwner.applyPublicationDecision',
-                sourceRuntimeRole: 'EXAMPLE_STAGED'
+                sourcePublication: 'STAGED'
             }
         }
     }
 }
 ```
 
-The runtime must have `runtimeRole.publication: 'STAGED'` and the exact configured
-`runtimeRole.code`. An explicit remote-only Process connection is mandatory;
+The runtime must have `runtimeRole.publication: 'STAGED'`; the configured
+`ownerModule` must be in DMS registration agent's active local module list and
+carry callable or persisted ownership evidence. Remote-only and source-only
+modules cannot grant source authority. Physical `runtimeRole.code` is not an
+admission predicate. Retired `sourceRuntimeRole` and target `runtimeRole` fields
+reject; no compatibility inference exists. Optional exact `server` and
+`environment` strings belong inside `targetAuthority` and are forwarded intact. An explicit remote-only Process connection is mandatory;
 `default` is rejected. Domain policy is shared capability configuration, not a
 customer-specific wrapper or copied runtime implementation.
 
@@ -113,7 +118,7 @@ alone do not establish safe runtime integration.
    Existing consumers remain compatible with these additive fields.
 3. Domain graphs must use the existing remote action allowlist with
    `requiresCompletedTask: true`, the fixed owning module action key, the owning
-   Staged callback route and explicit target role. Product may contribute a shared
+   Staged callback route and explicit `targetAuthority.publication: STAGED`. Product may contribute a shared
    graph for its related Commerce publication domains; Media owns its graph and
    action. Process must receive the domain-owned, destination-qualified EXPLICIT
    releases through nImport's existing selection, validation and installation APIs.

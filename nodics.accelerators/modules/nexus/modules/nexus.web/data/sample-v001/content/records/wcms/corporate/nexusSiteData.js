@@ -24,6 +24,7 @@
 /** @description Nexus corporate CMS Site. */
 module.exports = {
   "record0": {
+    enterpriseCode: "default",
     "code": "nexusCorporateSite",
     "name": "Nodics Nexus Corporate Site",
     "catalog": "nexusContentCatalog",

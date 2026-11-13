@@ -26,7 +26,7 @@ module.exports = {
     "channel": "web",
     "page": "nodicsDocsPagecommunicationDurableOutcomes",
     "routeType": "PAGE",
-    "deliveryState": "STAGED",
+    "deliveryState": "DRAFT",
     "accessMode": "PUBLIC",
     "active": true
   }

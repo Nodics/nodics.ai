@@ -25,15 +25,12 @@ module.exports = {
             !/^[0-9a-f-]{36}$/.test(input.executionCode)) {
             throw new Error('Rules Process execution handle is invalid');
         }
-        let target = (((CONFIG.get('rulesEngine') || {}).approval) || {}).actionAuthority || {};
-        if (!target.connectionName || target.connectionName === 'default') {
-            throw new Error('Rules Process action authority is unavailable');
-        }
+        const target = SERVICE.DefaultRuleApprovalService.processTarget('actionAuthority');
         return SERVICE.DefaultModuleService.invokeModule({
             moduleName: 'workflow',
             connectionName: target.connectionName,
             connectionType: target.connectionType || 'abstract',
-            targetAuthority: { runtimeRole: target.runtimeRole || 'PROCESS' },
+            targetAuthority: { ...target.targetAuthority },
             local: false,
             tenant: request.tenant,
             methodName: 'POST',

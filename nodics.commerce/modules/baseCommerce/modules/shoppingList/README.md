@@ -46,3 +46,5 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Documentation provenance release 0.0.3 preserves article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](data/manifest.json) selects it; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.

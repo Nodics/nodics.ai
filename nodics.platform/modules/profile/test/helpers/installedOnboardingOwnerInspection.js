@@ -185,7 +185,7 @@ async function loadContext(options) {
   const tooling = foundation + "nTooling/src/service/project/";
   const credentials = require(tooling + "defaultProjectLocalRuntimeCredentialService");
   const variables = credentials.readExistingEnvironment(options["project-root"], options.environment);
-  const snapshot = require(foundation + "nConfig/src/service/defaultDeploymentConfigurationProjectionService").resolve({
+  const snapshot = await require(foundation + "nConfig/src/service/defaultDeploymentConfigurationProjectionService").resolve({
     projectRoot: options["project-root"], environment: options.environment, server: options.server,
     variables: { ...variables, S: options.server, SERVER: options.server,
       E: options.environment, ENV: options.environment, NODICS_NODE: "", N: "", NODE: "" },

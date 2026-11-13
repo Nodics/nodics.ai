@@ -12,6 +12,7 @@
 /* Nodics. Copyright (c) 2026. Governed by the root LICENSE. */
 'use strict';
 const crypto = require('node:crypto');
+const { isDeepStrictEqual: same } = require('node:util');
 /** @module inventory/service/defaultInventoryReservationOperationService @description Atomically acquires and releases Order stock holds through generated Inventory owners. @layer service @owner inventory @override Preserve signed buyer scope, installed persistence qualification, exact arithmetic, revision checks and atomic replay evidence. */
 module.exports = {
     /** Refuses uncertain stock evidence without exposing owner records. */
@@ -20,8 +21,9 @@ module.exports = {
     context: function (input) {
         const auth = input.authData || {}, enterpriseCode = auth.enterpriseCode || auth.entCode;
         const ownerId = auth.principalId || auth.code || auth.loginId;
-        const role = CONFIG.get('runtimeRole'), security = SERVICE.DefaultSecuredRequestPipelineService;
-        if ((typeof role === 'string' ? role : role?.code) !== 'COMMERCE' || auth.principalType !== 'customer' ||
+        const security = SERVICE.DefaultSecuredRequestPipelineService;
+        if (SERVICE.DefaultModuleService?.isLocalModuleActive?.('inventory') !== true ||
+            CONFIG.get('runtimeRole')?.publication !== 'OPERATIONAL' || CONFIG.get('inventory')?.publication?.runtimeRole !== 'ONLINE' || auth.principalType !== 'customer' ||
             [auth.tenant,enterpriseCode,ownerId,input.payload?.orderCode].some(value => typeof value !== 'string' || !value ||
                 value.length > 192 || /[\u0000-\u0020\u007f]/.test(value)) ||
             auth.tokenType !== 'access' || auth.tenant !== input.tenant || !enterpriseCode || !ownerId ||
@@ -29,6 +31,34 @@ module.exports = {
                 value !== undefined && value !== enterpriseCode) ||
             !security?.isPermissionGranted('commerce.checkout.place', security.getGrantedPermissions(input), {})) this.fail();
         return { ...input, enterpriseCode, ownerId, authData: structuredClone(auth), payload: structuredClone(input.payload || {}) };
+    },
+    /**
+     * Revalidates merchant-bound Customer checkout through the existing participant
+     * and retained Cart/Checkout owners before any stock access. Signed identity is
+     * unchanged; the merchant partition must match fresh canonical evidence.
+     * Legacy same-enterprise callers retain context() admission. Missing integration
+     * owners and in-flight drift refuse rather than trusting a body merchant field.
+     * @param {Object} input Original Checkout context.
+     * @returns {Promise<Object>} Detached admitted stock scope and original buyer.
+     */
+    resolveContext: async function (input) {
+        if (input.merchantScope === undefined) return this.context(input);
+        const scope = SERVICE.DefaultCartMerchantScopeService;
+        const checkout = typeof FACADE !== 'undefined' && FACADE.DefaultCheckoutCustomerFacade;
+        const auth = input.authData || {}, participant = auth.enterpriseCode || auth.entCode;
+        if (!scope?.state || !checkout?.context || auth.principalType !== 'customer' ||
+            input.participantEnterpriseCode !== participant ||
+            typeof input.payload?.orderCode !== 'string' || !input.payload.orderCode ||
+            input.payload.orderCode.length > 192 || /[\u0000-\u0020\u007f]/.test(input.payload.orderCode)) this.fail();
+        SERVICE.DefaultInventoryOperationService.requireOperationalRuntime();
+        const before = scope.state(input), merchant = structuredClone(input.merchantScope);
+        // Only the working merchant selector is reset for the participant owner.
+        // Original auth and HTTP aliases remain intact and independently checked.
+        const fresh = await checkout.context({ ...input, enterpriseCode: participant });
+        if (!same(scope.state(input), before) || !same(input.merchantScope, merchant) ||
+            ['tenant', 'enterpriseCode', 'ownerId', 'ownerRef', 'actorRef',
+                'participantEnterpriseCode', 'merchantScope', 'authData'].some(key => !same(fresh[key], input[key]))) this.fail();
+        return { ...fresh, authData: structuredClone(fresh.authData), payload: structuredClone(fresh.payload || {}) };
     },
     /** Builds generated owner access without changing signed buyer admission. */
     storage: function (r) {
@@ -119,7 +149,7 @@ module.exports = {
     /** Atomically acquires every physical entry or none; repeated original commands never subtract stock twice. */
     reserveAll: async function (input,commands) {
         if (!Array.isArray(commands) || commands.some(command => !command || typeof command !== 'object')) this.fail();
-        const r = this.context(input), intents = commands.map(command => this.instruction(r,structuredClone(command)));
+        const r = await this.resolveContext(input), intents = commands.map(command => this.instruction(r,structuredClone(command)));
         if (!intents.length || intents.length > 100 || new Set(intents.map(row=>row.code)).size !== intents.length) this.fail();
         await this.persistence(r);
         try {
@@ -156,7 +186,7 @@ module.exports = {
     /** Releases an exact buyer's original hold and balance atomically; missing acquisition has no stock effect. */
     release: async function (input,code) {
         if (typeof code !== 'string' || !code || code.length > 512 || /[\u0000-\u0020\u007f]/.test(code)) this.fail();
-        const r = this.context(input);
+        const r = await this.resolveContext(input);
         await this.persistence(r);
         return SERVICE.DefaultDatabaseTransactionService.execute({moduleName:'inventory',tenant:r.tenant},async transactionContext => {
             const tx={...r,transactionContext}, row=await this.read('DefaultInventoryReservationService',tx,{code});

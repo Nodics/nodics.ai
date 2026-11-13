@@ -81,8 +81,28 @@ approval/source/deployment pins stay with the consuming project; these roles
 never waive owner admission or activate operations.
 
 This capability owns its publication providers, standard transport and source
-schema role profile. COMMERCE contributes its read-only target observer;
-COMMERCE_STAGED contributes approval/version wiring. Keep installed qualification,
+schema publication policy. ONLINE and OPERATIONAL select delivery observers;
+STAGED selects approval/version wiring through nConfig publication-context bindings. Keep installed qualification,
 connections, signed caller scopes and explicit deployment differences separate.
 Use publicationConfigurationOwnership.test.js in the Commerce group for the
 shared role-isolation matrix, alongside this owner's behavioral regressions.
+
+Publication transport addresses the logical owner with an explicit publication
+context: STAGED for source authorization, OPERATIONAL or ONLINE for delivery.
+Physical server labels do not grant ownership. Require local module ownership and
+explicit source context before dispatch; retain the runtime token, fixed API,
+operation key, tenant binding and independent target authorization. Legacy
+transport `runtimeRole` selectors reject rather than providing a fallback.
+
+Inventory stock mutation requires positive DMS local inventory ownership, runtime
+publication OPERATIONAL and the separate inventory.publication.runtimeRole ONLINE
+serving policy. Missing context, source-only load, STAGED and runtime ONLINE do
+not admit these mutations. Keep tenant and operational command checks unchanged.
+
+
+Merchant-bound Customer stock reservation and release re-admit the original
+participant through the existing Cart/Checkout facade and reread its retained
+merchant binding. Preserve the signed Customer namespace, typed owner and actor;
+never substitute merchant identity into the bearer. Changed owner, merchant,
+headers or in-flight context refuse before stock access. Same-enterprise legacy
+admission and atomic balance/hold/movement requirements remain unchanged.

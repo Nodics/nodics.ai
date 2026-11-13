@@ -69,6 +69,20 @@ test("real maintained SMTP client captures only the approved pair with no relay 
   } finally { transport.close(); await server.close(); }
 });
 
+test("explicit local demo mailboxes remain exact allowlisted and never relay", async () => {
+  const recipient = "operator@sample.local";
+  const server = await createCapture({ ...options, recipients: [recipient] });
+  const transport = nodemailer.createTransport({ host: "127.0.0.1", port: server.port, secure: false,
+    ignoreTLS: true, auth: { user: sender, pass: password }, logger: false, debug: false });
+  try {
+    assert.deepEqual((await transport.sendMail({ from: sender, to: recipient, subject: "ARTIFICIAL", text: "Fixture only." })).accepted, [recipient]);
+    await assert.rejects(transport.sendMail({ from: sender, to: "other@sample.local", subject: "ARTIFICIAL", text: "Fixture only." }));
+    assert.equal(server.status().relay, false);
+    assert.equal(server.status().accepted, 1);
+  } finally { transport.close(); await server.close(); }
+  await assert.rejects(createCapture({ ...options, recipients: ["operator@example.com"] }), /CAPTURE_SELECTION_REFUSED/);
+});
+
 test("authentication, exact sender, one recipient and sequence are enforced before DATA", async () => {
   let writes = 0;
   const server = await createCapture({ ...options, onMessage: () => writes++ });

@@ -17,7 +17,7 @@ function fixture({ denyApproval = false, onlineImportAllowed = false, badNoOp = 
   withMediaDependency = false, baselineAlreadyOnline = false, omitMediaPublicationCode = false } = {}) {
   const calls = [];
   let installs = 0, approved = baselineAlreadyOnline, mediaApproved = false;
-  const profile = () => ({ profileCode: 'partnerFoundation', destinationRole: 'WCMS_STAGED', status: installs ? 'CURRENT' : 'AVAILABLE',
+  const profile = () => ({ profileCode: 'partnerFoundation', publicationContext: 'STAGED', status: installs ? 'CURRENT' : 'AVAILABLE',
     steps: ['init', 'core'].map(dataType => ({ dataType, releases: [{ status: 'CURRENT' }] })) });
   const options = {
     execute: true, approvePublications: true, log() {},
@@ -32,7 +32,8 @@ function fixture({ denyApproval = false, onlineImportAllowed = false, badNoOp = 
       calls.push({ url, request });
       if (route.endsWith('/authenticate')) return Response.json({ authToken: 'fixture' });
       if (route.endsWith('/bootstrap')) return Response.json({ modules: { import: [
-        { endpoint: 'https://staged.invalid/nodics/import', runtimeRole: { code: 'WCMS_STAGED', publication: 'STAGED' } },
+        { server: 'another-author', endpoint: 'https://unselected.invalid/nodics/import', runtimeRole: { publication: 'STAGED' } },
+        { server: 'authoring', endpoint: 'https://staged.invalid/nodics/import', runtimeRole: { code: 'WCMS_STAGED', publication: 'STAGED' } },
         { endpoint: 'https://online.invalid/nodics/import', runtimeRole: { code: 'WCMS_ONLINE', publication: 'ONLINE' } },
       ] } });
       if (url.hostname === 'online.invalid' && route.endsWith('/initialization-profiles'))
@@ -137,6 +138,8 @@ test('partner-specific inputs consume canonical initialization, denial and publi
   assert.equal(evidence.profileCode, 'partnerFoundation');
   assert.equal(evidence.repeatedInstall, 'SKIPPED_CURRENT');
   assert.equal(evidence.onlineDataImport, 'DISABLED');
+  assert.equal(evidence.publicationContext, 'STAGED');
+  assert(!f.calls.some(({url}) => url.hostname === 'unselected.invalid'));
   assert.equal(evidence.onlineDelivery, 'AVAILABLE');
   assert.deepEqual(evidence.mediaPublicationEvidence, [{ applicationCode: 'partnerSite', mediaCode: 'partnerHero',
     publicationCode: 'media-partner-hero', sourceVersion: 2 }]);

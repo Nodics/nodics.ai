@@ -497,6 +497,7 @@ module.exports = {
         request.model,
         request,
         "schmanm",
+        "update",
       );
     const receipts = SERVICE.DefaultSchemaCommandReceiptService;
     if (
@@ -584,6 +585,7 @@ module.exports = {
         "resolveSchemaModule",
         "buildGeneratedMutationModel",
         "getIdempotencyKey",
+        "assertSchemaHttpEnterpriseScope",
       ].some((name) => typeof service[name] !== "function")
     ) {
       throw new CLASSES.NodicsError(
@@ -598,6 +600,7 @@ module.exports = {
   executeGenericMutation: function (request, callback, execute, operation) {
     let result = Promise.resolve().then(() => {
       const utility = this.schemaUtilityService();
+      utility.assertSchemaHttpEnterpriseScope(request);
       const owner = utility.resolveSchemaModule(request.moduleName);
       SERVICE.DefaultSchemaAuthoringPolicyService.assertMutationAllowed(
         owner.moduleName,

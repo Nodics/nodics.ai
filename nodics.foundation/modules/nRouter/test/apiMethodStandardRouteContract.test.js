@@ -50,7 +50,9 @@ const readOperationAllowList = new Set([
     'ping',
     // Read-only projections: saved drafts and current search-index health.
     'resumeJourney',
-    'indexStatus'
+    'indexStatus',
+    // CMS read-only exact Online snapshot; cmsPublishedKnowledge.test.js proves no publication command.
+    'publishedKnowledge'
 ]);
 
 function collectRouterFiles(currentPath, files = []) {

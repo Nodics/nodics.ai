@@ -22,16 +22,16 @@ function fixture(t) {
   t.after(() => { for (const [k, v] of Object.entries(previous)) if (v === undefined) delete global[k]; else global[k] = v; });
   const grant = { tenant: "t", principalEnterpriseCode: "default", enterpriseCode: "business", serviceId: "runtime",
     projectCode: "project", environmentCode: "local", serverCode: "waste", instanceCode: "instance", assignmentCode: "assignment" };
-  const config = { profileCustomerEvidence: { enabled: true, runtimeRole: "PLATFORM", callers: [grant] }, runtimeRole: { code: "PLATFORM" }, defaultTenant: "default" };
+  const config = { profileCustomerEvidence: { enabled: true, callers: [grant] }, runtimeRole: { code: "COHOST", publication: "OPERATIONAL" }, defaultTenant: "default" };
   const authData = { tokenType: "service", principalType: "service", serviceId: "runtime", tenant: "t", entCode: "default", groups: [], userGroups: [],
     permissions: ["profile.customer.reference.read"], modules: ["profile"], runtimeInstanceId: "instance", runtimeScope: { ...grant } };
   const rows = { DefaultEnterpriseService: [{ code: "business", tenant: "t", active: true, revision: 1 }],
     DefaultTenantService: [{ code: "t", active: true, revision: 1 }],
     DefaultCustomerService: [{ code: "customer", loginId: "login", active: true, password: "private", metadata: { private: true } }] };
   const state = { reads: 0, private: true, drift: false, badCount: false };
-  global.CONFIG = { get: k => config[k] }; global.NODICS = { getSelectedEnvironmentName: () => "local" };
+  global.CONFIG = { get: k => config[k] }; global.NODICS = { isModuleActive: name => name === "profile", getSelectedEnvironmentName: () => "local" };
   global.CLASSES = { NodicsError: class extends Error {} };
-  global.SERVICE = { DefaultServiceTokenService: runtime, DefaultProfileCustomerEvidenceService: service,
+  global.SERVICE = { DefaultModuleService: require("../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService.js"), DefaultServiceTokenService: runtime, DefaultProfileCustomerEvidenceService: service,
     DefaultLoggerService: { hasPrivateCaptureProtection: () => state.private }, DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ owner: true }) } };
   for (const name of Object.keys(rows)) SERVICE[name] = { get: async r => {
     state.reads++; assert.deepEqual(r.authData, { owner: true }); assert.equal(r.options.skipItemCache, true);
@@ -141,4 +141,28 @@ test("actual route/controller preserve private original request and noncacheable
   assert.equal(route.permission, "profile.customer.reference.read"); assert.equal(route.requestPrivacy.sensitive, true);
   const result = await controller.read({ ...f.request, httpRequest: { body: f.request.payload }, httpResponse: { setHeader: (...v) => headers.push(v) } });
   assert.equal(result.data.customer.code, "customer"); assert.deepEqual(headers, [["Cache-Control", "no-store"]]);
+});
+
+
+test("local ownership and explicit publication override physical role labels without bypassing admission", async t => {
+  const f = fixture(t);
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly: true }) }) };
+  await assert.rejects(service.read(f.request));
+  assert.equal(f.state.reads, 0);
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly: false }) }) };
+  for (const publication of [undefined, "STAGED", "ONLINE"]) {
+    f.config.runtimeRole.publication = publication;
+    await assert.rejects(service.read(f.request));
+  }
+  f.config.runtimeRole = { code: "UNRELATED_PHYSICAL_NAME", publication: "OPERATIONAL" };
+  await service.read(f.request);
+});
+
+
+test("Profile customer evidence refuses ownership loss while a generated read is outstanding", async t => {
+  const f = fixture(t), read = SERVICE.DefaultCustomerService.get;
+  let remoteOnly = false;
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly }) }) };
+  SERVICE.DefaultCustomerService.get = async input => { const result = await read(input); remoteOnly = true; return result; };
+  await assert.rejects(service.read(f.request));
 });

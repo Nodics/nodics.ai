@@ -94,7 +94,7 @@ The source of truth must remain module definitions, schemas, services, pipelines
 
 ## Extension Path
 
-The approval bridge inherits neutral transport and Process target-role defaults
+The approval bridge inherits neutral transport and Workflow publication-selector defaults
 from nPublish. Deployments retain explicit connection and provider selection;
 the default null connection fails closed. See the
 [configuration contract](llm/contracts/process-approval-bridge.md#configuration-contract).
@@ -171,3 +171,40 @@ authoritative lifecycle/repository services retain internal updates. Never let
 generic CRUD manufacture approval, Online state or transition evidence. Verify
 the existing authority test and lifecycle/atomicity suites when changing this
 boundary; a domain retry must read or reuse the existing publication authority.
+
+Approval bridge policies require ownerModule and sourcePublication: STAGED. The
+DMS registration agent must prove that owner is active locally and carries module
+authority; physical host role codes are irrelevant. Workflow calls select
+targetAuthority: { publication: "OPERATIONAL" }, optionally with exact server and
+environment pins. Retired role selectors fail closed. See the
+[Process approval contract](llm/contracts/process-approval-bridge.md); original
+human bearer, signed callback scope, version pins and one-use claims are retained.
+
+
+Original rollback/withdrawal recovery is optional and provider-qualified through
+`targetCommandReceiptContract: 'v1'`. Existing immutable transition evidence keeps
+the original command identity across FAILED revisions; recovery resumes that
+operation instead of activating content. Stale or missing expected revisions and
+unverified original evidence are held. See the [authority contract](llm/contracts/publication-authority-contract.md#original-rollback-and-withdrawal-recovery).
+
+
+Publication inspection projects nonpersistent `operatorOperations` and
+`operatorGuidance` for existing retry, rollback and retained in-flight withdrawal.
+Eligibility is independent of API permission and approval. The request workspace
+contribution declares those existing human routes; BackOffice filters their
+permissions. Axis requires a fresh read and explicit confirmation with the
+inspected publication revision. Unknown completion remains held for inspection,
+without automatic replay. Qualified rollback inspection reads the current target
+and does not offer a historical request that would replace another deployment.
+
+Qualified Online request inspection checks the current target even when the
+request has no retained predecessor. A superseded or withdrawn first publication
+remains readable history; its stored ONLINE state is not current delivery proof.
+Unknown/negative target evidence holds recovery. This read-only presentation adds
+no lifecycle transition or permission. Customize provider evidence through the
+existing contract, not caller flags or replacement history.
+
+
+A provider may admit retry of a failed legacy rollback only through canRetryRejectedRollback returning exactly true after fresh owner checks. CMS admits only its transaction-scoped ERR_CMS_00116 rejection, a contiguous Online to Rolling Back to Failed journal, unchanged activation/predecessor identities and the same current Online pointer. Retry appends audit evidence and uses current pointer fencing; it never rewrites the old journal or activates a new revision. Timeouts, response loss, incomplete history and other failures remain blocked unless the existing qualified command receipt contract proves recovery.
+
+Standard workflow copy belongs to this module in `src/service/localization/workflowMessages.json`. Its contribution exposes stable public-safe UI labels only, never records, permissions or internal errors. English definitions and Arabic reference values use the Localization contribution, draft, review, approval and release APIs; loading the module does not approve or publish translations. Later project layers may supply intentional scoped translations through the same owner workflow. Preserve exact message parameters, authorization and uncertainty guidance.

@@ -92,9 +92,10 @@ module.exports = {
         if (!['FAILED', 'REJECTED', 'WITHDRAWN', 'ROLLED_BACK'].includes(publication.state)) {
             throw new CLASSES.NodicsError('ERR_PUB_00003', 'Publication is not in a recoverable state');
         }
-        request.expectedRevision = publication.revision;
-        request.reason = request.reason || 'Operator-governed recovery';
-        return publication.state === 'FAILED' ? SERVICE.DefaultPublicationLifecycleService.retry(request) :
-            SERVICE.DefaultPublicationLifecycleService.resubmit(request);
+        const lifecycle = SERVICE.DefaultPublicationLifecycleService;
+        lifecycle.requireExpectedRevision(request, publication);
+        const context = lifecycle.copyRequest(request, { expectedRevision: publication.revision,
+            reason: request.reason || 'Operator-governed recovery' });
+        return publication.state === 'FAILED' ? lifecycle.retry(context) : lifecycle.resubmit(context);
     }
 };

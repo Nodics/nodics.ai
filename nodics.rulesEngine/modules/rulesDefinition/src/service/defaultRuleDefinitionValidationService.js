@@ -70,6 +70,21 @@ module.exports = {
         } else if (Array.isArray(property.allowedOperators) && !property.allowedOperators.includes(condition.operatorCode)) {
             issues.push({ path: path, code: 'OPERATOR_NOT_ALLOWED_FOR_PROPERTY', operatorCode: condition.operatorCode });
         }
+        const descriptor = this.operatorService().definitions()[condition.operatorCode];
+        if (descriptor && descriptor.valueShape !== 'NONE') {
+            const shape = descriptor.valueShape;
+            const scalarValid = value => property.dataType === 'NUMBER' || property.dataType === 'DATE'
+                ? typeof value === 'number' && Number.isFinite(value)
+                : property.dataType === 'BOOLEAN' ? typeof value === 'boolean'
+                    : typeof value === 'string' && value.length > 0;
+            const values = shape === 'LIST' ? condition.value : [condition.value];
+            if (!Array.isArray(values) || !values.length || !values.every(scalarValid) ||
+                (shape === 'RANGE' && (!scalarValid(condition.valueTo) || condition.valueTo < condition.value)))
+                issues.push({ path: path, code: 'CONDITION_VALUE_INVALID' });
+            if (Array.isArray(property.allowedValues) && Array.isArray(values) &&
+                values.some(value => !property.allowedValues.includes(value)))
+                issues.push({ path: path, code: 'CONDITION_VALUE_NOT_ALLOWED' });
+        }
         if (!['REQUIRED','OPTIONAL','FALLBACK_ALLOWED'].includes(condition.missingValueBehavior)) {
             issues.push({ path: path, code: 'MISSING_VALUE_BEHAVIOR_INVALID' });
         }
@@ -99,6 +114,10 @@ module.exports = {
         if (!group || !['ALL','ANY'].includes(group.operator)) issues.push({ path: path, code: 'GROUP_OPERATOR_INVALID' });
         let conditions = group && group.conditions || [];
         let children = group && group.childGroups || [];
+        if (!Array.isArray(conditions) || !Array.isArray(children)) {
+            issues.push({ path: path, code: 'GROUP_MEMBERS_INVALID' });
+            return;
+        }
         if (conditions.length + children.length === 0) issues.push({ path: path, code: 'GROUP_EMPTY' });
         if (conditions.length > Number(limits.maximumConditionsPerGroup || 50)) issues.push({ path: path, code: 'CONDITION_LIMIT_EXCEEDED' });
         conditions.forEach((condition, index) => this.validateCondition(condition, propertyMap, issues, path + '.conditions[' + index + ']'));
@@ -117,7 +136,7 @@ module.exports = {
         let groups = definition.groups || [];
         let limits = this.limits();
         let issues = [];
-        if (!Array.isArray(groups) || groups.length === 0) issues.push({ path: 'definition.groups', code: 'RULE_GROUPS_REQUIRED' });
+        if (!Array.isArray(groups) || groups.length === 0) return { valid: false, issues: [{ path: 'definition.groups', code: 'RULE_GROUPS_REQUIRED' }] };
         if (groups.length > Number(limits.maximumRuleGroupsPerSet || 250)) issues.push({ path: 'definition.groups', code: 'RULE_GROUP_LIMIT_EXCEEDED' });
         let propertyMap = this.propertyMap(request.propertyProviderCode, request.context);
         let seenCodes = new Set();

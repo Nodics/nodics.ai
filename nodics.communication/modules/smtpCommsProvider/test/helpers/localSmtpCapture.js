@@ -20,10 +20,10 @@ const net = require("node:net");
 const crypto = require("node:crypto");
 const email = require("email-validator");
 
-/** Admits literal reserved test mailboxes only, never headers or routing syntax. */
+/** Admits literal test/demo mailboxes for this loopback-only non-relaying fixture. */
 function mailbox(value) {
   if (typeof value !== "string" || value.length > 254 || value !== value.toLowerCase() ||
-      /[\s<>;,\r\n]/.test(value) || !value.endsWith(".test") || !email.validate(value))
+      /[\s<>;,\r\n]/.test(value) || ![".test", ".local"].some(suffix => value.endsWith(suffix)) || !email.validate(value))
     throw new Error("CAPTURE_SELECTION_REFUSED");
   return value;
 }

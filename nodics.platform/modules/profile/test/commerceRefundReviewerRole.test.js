@@ -54,7 +54,7 @@ test("order owns the explicit insert-only reviewer contribution", async () => {
   assert.equal(release.kind, "DATA_RELEASE");
   assert.equal(release.dataType, "init");
   assert.equal(release.sourceRoot, "init-v001");
-  assert.equal(release.version, "0.0.4");
+  assert.equal(release.version, "0.0.1");
   assert.equal(release.selectionPolicy, "EXPLICIT");
   assert.equal(release.destinationRole, "PLATFORM");
   assert.equal(header.profile.orderUserGroup.options.operation, "ensureReferenceAll");
@@ -100,7 +100,7 @@ test("API and Axis reviewer definitions share one owner, without duplicate Profi
   const axisHeader = source.header;
   assert.equal(release.kind, "DATA_RELEASE");
   assert.equal(release.dataType, "init");
-  assert.equal(release.version, "0.0.4");
+  assert.equal(release.version, "0.0.1");
   assert.equal(release.sourceRoot, "init-v001");
   assert.equal(release.selectionPolicy, "EXPLICIT");
   assert.equal(release.destinationRole, "PLATFORM");

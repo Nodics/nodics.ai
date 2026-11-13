@@ -30,7 +30,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "workflow",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -52,16 +52,16 @@
       "pages": 15,
       "components": 15,
       "routes": 15,
-      "releaseChecksum": "959a1cee76797e29eb3215ef38013f313883cf40ad36468d3d89dd5437a1e3f1",
+      "releaseChecksum": "c78973be3b1e668d0b490678f33c6a553282c3b7b1322bbbedee4a6e54feae34",
       "generatedHashes": {
         "docs-v001/records/documentation/workflowDocumentationNodeData.js": "5cf6541d45e243b0238643d901eb233c194cb8862cb5d19c4735ec6d64b09eb7",
-        "docs-v001/records/documentation/workflowDocumentationPageMetadataData.js": "b5de1b4a8a666ac618b85a531c5ea6e10fdd3594c36afcf1cd2c2ee506cdf914",
-        "docs-v001/records/documentation/workflowDocumentationPublicationStateData.js": "2fa0cfed6ce789396fcaa014764d9fb082826b32211f6e29d399a8ce74733f06",
-        "docs-v001/records/documentation/workflowDocumentationSearchMetadataData.js": "8dd0c9a92517e5af4969fb5418263a4dfc73ea79b26bf242bad238ad6f2a4c93",
-        "docs-v001/records/documentation/workflowDocumentationComponentData.js": "37fe878562271dade372d82163fff1c5cd1af1d488ee4452a08fa195265e7a16",
+        "docs-v001/records/documentation/workflowDocumentationRelease002PageMetadataData.js": "99b2a28b29384ddeb023bf18f07a2080fad148a6be06ffc4e431a9507c8720f0",
+        "docs-v001/records/documentation/workflowDocumentationRelease003PublicationStateData.js": "1453ffaae9777af3551ea663215185e49983568542abf5b21ea0f6506b71a6c0",
+        "docs-v001/records/documentation/workflowDocumentationRelease003SearchMetadataData.js": "f77738e75705a85f6c98eb4d69cc32e1716e5a06ee25d17ad8844df611397252",
+        "docs-v001/records/documentation/workflowDocumentationRelease002ComponentData.js": "1ddc4238961e7812dea9d93dc43cc6ba51df472161c09a47d6e3818e23e12754",
         "docs-v001/records/documentation/workflowDocumentationPageData.js": "c8c71b20b1f850ad9956789dacd16f978a04c4e1b1309908e8ca66a2b392bbd7",
         "docs-v001/records/documentation/workflowDocumentationRouteData.js": "2e08a3f4604fcd34c35e4b1e5649152144068b7ac6ab104a1186bab4a5e87f06",
-        "docs-v001/headers/100_workflowDocumentationContentPackHeader.js": "595c04eef54a47a9c0137cd26053a5aa497625c883d2e5bde238588041c5c2f5"
+        "docs-v001/headers/102_workflowDocumentationRelease003ContentPackHeader.js": "638adb317327344bf0698a3cc7f692814705cfe28a3dd34bd083cef7cb266dd8"
       },
       "includes": [
         {

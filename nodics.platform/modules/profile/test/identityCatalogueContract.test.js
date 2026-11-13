@@ -45,7 +45,11 @@ function fixture() {
   const reads = [], writes = [], invalidations = [];
   const state = { import: false, fresh: true, groups: ["adminGroup"] };
   global.CONFIG = { get: key => ({ defaultTenant: "authority", defaultEnterprise: "PLATFORM" })[key] };
-  global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message || code); this.code = code; } } };
+  global.CLASSES = { NodicsError: class extends Error {
+    constructor(code, message) { super(message || code); this.code = code; }
+    addContext(context) { (this.contexts ||= []).push(context); }
+    add(error) { (this.errors ||= []).push(error); }
+  } };
   global.UTILS = { isObject: value => value && typeof value === "object" };
   const catalogue = { ...catalogueSource }, governance = { ...governanceSource };
   const matches = (row, query) => Object.entries(query).every(([key, value]) => {
@@ -168,6 +172,87 @@ test("reference import preserves narrowed and inactive records and uses insert-o
   assert.equal(f.writes.length, 1);
   assert.equal(f.writes[0].options.insertOnly, true);
 });
+/** Runs the actual generated save query graph against its owned base identity declaration. */
+async function buildGeneratedGroupQuery(request) {
+  const root = "../../../../nodics.foundation/modules/nDatabase/database/src/";
+  const owner = { ...require(root + "service/procs/query/defaultModelQueryBuilderPipelineService"), LOG: { debug() {} } };
+  const graph = require(root + "pipelines/pipelines").modelQueryBuilderPipeline;
+  const base = require(root + "schemas/schemas").default.base;
+  request.schemaModel = { schemaName: "userGroup", rawSchema: { definition: { ...base.definition, ...schema.userGroup.definition } } };
+  UTILS.isBlank = value => !value || Object.keys(value).length === 0;
+  let step = graph.startNode;
+  while (step && step !== "successEnd") {
+    const node = graph.nodes[step];
+    let stopped = false;
+    await new Promise((resolve, reject) => owner[node.handler.split(".")[1]](request, {}, {
+      nextSuccess: resolve, stop: () => { stopped = true; resolve(); },
+      error: (_request, _response, error) => reject(error),
+    }));
+    if (stopped) break;
+    step = node.success;
+  }
+}
+
+test("fresh tenant group reference survives actual generated primary-query preparation and expires after save", async () => {
+  const f = fixture(); f.state.import = true; f.state.importTenant = "business"; f.rows.userGroup.length = 0;
+  const service = SERVICE.DefaultUserGroupService, save = service.save;
+  let held, atomicCreates = 0;
+  service.save = async request => {
+    held = request;
+    await buildGeneratedGroupQuery(request);
+    assert.deepEqual(request.query, { code: "freshMember" });
+    await assert.rejects(f.governance.authorizeGroupMutation({ ...request, privateOwner: true }));
+    await groups.validate(request);
+    request.schemaModel.compareAndSetItem = async operation => {
+      assert.equal(operation.operation, "create");
+      assert.equal(operation.insertOnly, true);
+      atomicCreates++;
+      return save(request);
+    };
+    const persistence = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/procs/save/defaultModelSaveInitializerService");
+    return persistence.persistModel.call({ ...persistence,
+      resolveSaveMethod: () => { throw new Error("reference creation must never choose an upsert"); },
+    }, request);
+  };
+  await f.catalogue.ensureReferenceAll(service, { tenant: "business", authData: { userGroups: ["adminGroup"] },
+    models: [{ code: "freshMember", active: true, permissions: ["profile.read"] }] });
+  assert.equal(f.writes.length, 1);
+  assert.equal(atomicCreates, 1);
+  assert.equal(f.writes[0].options.insertOnly, true);
+  assert.equal(f.writes[0].tenant, "business");
+  assert.ok(f.reads.filter(read => read.name === "permission").every(read => read.tenant === "authority"));
+  await assert.rejects(f.governance.authorizeGroupMutation(held));
+  await assert.rejects(f.governance.authorizeGroupMutation({ ...held, privateOwner: true }));
+});
+
+test("private generated group admission refuses changed selectors, tenant, identity and insert mode", async () => {
+  for (const mutate of [
+    request => { request.query = { code: { $ne: "freshMember" } }; },
+    request => { request.query = { code: "other" }; },
+    request => { request.query = { code: "freshMember", active: true }; },
+    request => { request.query = { "code.value": "freshMember" }; },
+    request => { request.query = {}; },
+    request => { request.query = Object.assign(Object.create(null), { code: "freshMember" }); },
+    request => { request.query[Symbol("extra")] = true; },
+    request => { request.tenant = "foreign"; },
+    request => { request.model.code = "other"; },
+    request => { request.options.insertOnly = false; },
+  ]) {
+    const f = fixture(); f.state.import = true; f.state.importTenant = "business";
+    const service = SERVICE.DefaultUserGroupService;
+    service.save = async request => {
+      await buildGeneratedGroupQuery(request);
+      mutate(request);
+      await f.governance.authorizeGroupMutation(request);
+      f.writes.push(request);
+    };
+    await assert.rejects(f.catalogue.ensureReferenceAll(service, {
+      tenant: "business", authData: { userGroups: ["adminGroup"] }, models: [{ code: "freshMember", active: true }],
+    }));
+    assert.equal(f.writes.length, 0);
+  }
+});
+
 test("shared group mutations require native Platform authority even for a default-partition enterprise administrator", async () => {
   const f = fixture();
   const request = { ...f.request, model: { code: "viewer", permissions: [] } };
@@ -225,6 +310,52 @@ test("header groups alone cannot authorize reference import outside private owne
     tenant: "authority", authData: { userGroups: ["adminGroup"] }, models: [],
   }));
 });
+test("reference failures wrap the original denial in a fixed owner-stage code", async () => {
+  const f = fixture();
+  await assert.rejects(f.catalogue.ensureReferenceAll(SERVICE.DefaultUserGroupService, {
+    tenant: "business", authData: { userGroups: ["adminGroup"] },
+    models: [{ code: "tenantViewer", name: "Private reference name", active: true }],
+  }), error => {
+    assert.equal(error.code, "ERR_PROFILE_REFERENCE_SEED_SOURCE_ADMISSION");
+    assert.equal(error.errors[0].code, "ERR_AUTH_00003");
+    assert.deepEqual(error.errors[0].contexts, [{ owner: "profile", operation: "REFERENCE_SEED", stage: "SOURCE_ADMISSION" }]);
+    assert(!JSON.stringify(error).includes("Private reference name"));
+    return true;
+  });
+  assert.equal(f.writes.length, 0);
+});
+test("actual bounded router projection retains fixed seed stage while original denial stays server-side", async () => {
+  const f = fixture();
+  const get = CONFIG.get;
+  CONFIG.get = key => key === "defaultErrorCodes" ? { NodicsError: "ERR_SYS_00000" } : get(key);
+  const definitions = require("../src/utils/statusDefinitions");
+  SERVICE.DefaultStatusService = { get: code => definitions[code] || { code: "403", message: "Authority evidence is unavailable" } };
+  const NativeError = require("../../../../nodics.foundation/modules/nCommon/src/lib/nodicsError");
+  const router = require("../../../../nodics.foundation/modules/nRouter/src/service/handlers/response/defaultJsonResponseHandlerService");
+  const retry = require("../../../../nodics.foundation/modules/nData/nImport/import/src/service/process/init/defaultImportRetryPolicyService");
+  CLASSES.NodicsError = NativeError;
+  await assert.rejects(f.catalogue.ensureReferenceAll(SERVICE.DefaultUserGroupService, {
+    tenant: "private-business-partition", authData: { userGroups: ["adminGroup"] },
+    models: [{ code: "viewer", name: "Private business record name" }],
+  }), error => {
+    assert.equal(error.code, "ERR_PROFILE_REFERENCE_SEED_SOURCE_ADMISSION");
+    assert.equal(error.errors[0].code, "ERR_AUTH_00003");
+    const aggregate = new NativeError("ERR_IMP_00010");
+    aggregate.add(error);
+    const publicError = router.publicError(aggregate);
+    assert.equal(publicError.errors[0].code, "ERR_PROFILE_REFERENCE_SEED_SOURCE_ADMISSION");
+    assert.equal(publicError.errors[0].errors, undefined);
+    assert.equal(publicError.errors[0].contexts, undefined);
+    assert.equal(retry.canRetry(aggregate), false);
+    for (const diagnostic of [error.toJson(false), publicError]) {
+      assert(!JSON.stringify(diagnostic).includes("private-business-partition"));
+      assert(!JSON.stringify(diagnostic).includes("Private business record name"));
+    }
+    return true;
+  });
+  assert.equal(f.writes.length, 0);
+});
+
 test("tenant-local reference groups require exact private release scope while catalogue definitions remain global", async () => {
   const f = fixture();
   f.state.import = true; f.state.importTenant = "business";
@@ -286,7 +417,8 @@ function releaseFixture(t, tenantGroupsOnly = false) {
   const f = fixture(), profileServices = SERVICE;
   f.rows.permission.length = 0; f.rows.enterpriseRole.length = 0; f.rows.userGroup.length = 0;
   const importRoot = "../../../../nodics.foundation/modules/nData/nImport/import";
-  const modules = { profile: { name: "profile", path: root, index: "10" } };
+  const modules = { profile: { name: "profile", path: root, index: "10",
+    rawSchema: require("../src/schemas/schemas").profile } };
   const releaseState = require(importRoot + "/test/helpers/releaseExecution")({ modules, runtimeRole: "PLATFORM" });
   Object.assign(SERVICE, profileServices, { DefaultDataReleaseService: releaseState.service });
   const originalGet = CONFIG.get;
@@ -342,7 +474,10 @@ function releaseFixture(t, tenantGroupsOnly = false) {
     const save = service.save;
     service.save = async request => {
       request.schemaModel = { schemaName: name };
-      if (name === "userGroup") await groups.validate(request); else await f.governance.validate(request);
+      if (name === "userGroup") {
+        await buildGeneratedGroupQuery(request);
+        await groups.validate(request);
+      } else await f.governance.validate(request);
       const result = await persistence.persistModel.call({ ...persistence, insertModel: save,
         resolveSaveMethod: () => { throw new Error("reference import must never upsert"); } }, request);
       if (name !== "userGroup") await f.governance.finalize(request);

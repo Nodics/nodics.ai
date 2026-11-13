@@ -34,6 +34,7 @@ for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
 }
 const sections = new Map();
 const bootstrapForwardPermissions = new Set([
+  "transferFinalizationPermission",
   "bundleRuntimePermissions",
   "merchantEvidencePermission",
   "runtimeEvidencePermissions",
@@ -115,15 +116,12 @@ test("prerequisite graph is acyclic and every reference pins the exact owner byt
   };
   for (const code of sections.keys()) visit(code);
   const init = JSON.parse(fs.readFileSync(path.join(modules.get("profile").path, "data/manifest.json"))).sections["init-v001"];
-  assert.equal(init.version, "0.0.8", "changed installed dependency graph requires an explicit successor, not rehashed history");
-  const laterOptionalOwners = new Set(["commercialAgreement:permissionCatalogue", "wasteCarbon:permissionCatalogue", "wasteReward:permissionCatalogue"]);
+  assert.equal(init.version, "0.0.1", "initial Profile data belongs to the Release 0 baseline");
+  const startupDefinitions = [...sections.keys()].filter(code =>
+    code === "config:accessGroups" || code === "profile:accessGroups" ||
+    (code !== "commercialAgreement:permissionCatalogue" && /permission/i.test(code.split(":")[1])));
   assert.deepEqual(new Set(init.prerequisites.map(ref => ref.moduleName + ":" + ref.sectionCode)),
-    new Set([...sections.keys()].filter(code => !laterOptionalOwners.has(code))));
-  for (const code of laterOptionalOwners) {
-    assert(sections.has(code), code);
-    assert.equal(sections.get(code).section.selectionPolicy, "EXPLICIT",
-      "New optional capabilities must not silently change the retained Profile bootstrap or grant access");
-  }
+    new Set(startupDefinitions));
   for (const ref of init.prerequisites) {
     assert.equal(ref.checksum, checksum(sections.get(ref.moduleName + ":" + ref.sectionCode).section));
     assert.equal(ref.partition, (/permission/i.test(ref.sectionCode) || ["enterpriseRoles", "businessAccessRoles"].includes(ref.sectionCode)) ? "DEFAULT" : undefined);

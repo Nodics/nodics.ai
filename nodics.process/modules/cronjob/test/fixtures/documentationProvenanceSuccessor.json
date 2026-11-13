@@ -1,0 +1,67 @@
+{
+  "contractVersion": 2,
+  "recoveryEvidence": {
+    "sourceRoot": "data/docs-v001",
+    "method": "Exact retained source bytes; manifest section reconstructed from the owner contract and file digests",
+    "observedAt": "2026-11-12T17:48:54.057Z"
+  },
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "cronjob",
+      "version": "0.0.2",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 5,
+      "components": 5,
+      "routes": 5,
+      "releaseChecksum": "7c66d4a9e00c09fd6a0c4eaaf243d05accc0e10aa79b0c92ba31884a49590a82",
+      "generatedHashes": {
+        "docs-v001/assets/documentation/cronjobDocumentationAssetManifest.js": "7cfb4bf53b5d02eff9b9406c84ee18e61fdf671a91d64b0c4b969585ca80899a",
+        "docs-v001/assets/documentation/files/images/cron-schedule-draft-desktop.png": "ba547872c5630a22cf7e8386303a7459a155fd42c428162bdf81b2ba002876ea",
+        "docs-v001/assets/documentation/files/images/cron-schedule-draft-mobile.png": "4fd4bebb49ed19a5864a47a7ae31790d0655ec02d98b158a052d7c660898cc2f",
+        "docs-v001/assets/documentation/files/images/knowledge-source-schedules-desktop.png": "b88e17127740d6bf0e29b75fc7732049a7e6bf8c7fa88752d54ae2808de7de35",
+        "docs-v001/assets/documentation/files/images/knowledge-source-schedules-mobile.png": "509a3199e04f165b83b02db8ddd338819c9f25c4b0314c1bed686541e641da47",
+        "docs-v001/assets/documentation/files/images/schedule-lifecycle-desktop.png": "184c785bf4691137f89888b7694f03491e0872e6c7d7c826b45e31b3cc7378d8",
+        "docs-v001/assets/documentation/files/images/schedule-lifecycle-mobile.png": "17dee05ed20cf8f05b7e6da6fda1ac40017cb1b961f1eb158582154eebfe8d1e",
+        "docs-v001/headers/100_cronjobDocumentationRelease002ContentPackHeader.js": "f933061aa2c81906f133df336b45c586be14fff9e20c07fa4e3ca8c53bdb1c9e",
+        "docs-v001/records/documentation/cronjobDocumentationMediaData.js": "730100ef316aa56201d0f033204ed4c4a20844bd982b9adc208d243745129a3d",
+        "docs-v001/records/documentation/cronjobDocumentationNodeData.js": "48b850ac153858b3639f0ffaf1bb4d7e9bb1a596ff5a55b964f9c4ac3aa8521c",
+        "docs-v001/records/documentation/cronjobDocumentationPageData.js": "77158b4f4e6667e926e6eb799fe457f312006ab6eae3056ce07ab941157ef3cc",
+        "docs-v001/records/documentation/cronjobDocumentationRelease002ComponentData.js": "d1985925b1d22d8aea2c23524f0400fbe8eeb8188550944c17a7c34b3e273708",
+        "docs-v001/records/documentation/cronjobDocumentationRelease002PageMetadataData.js": "b84cee23aba08df2c8c27083e16d6909b5f16c645ec3179e50b1f4ceb05c521f",
+        "docs-v001/records/documentation/cronjobDocumentationRelease002PublicationStateData.js": "0571e3dcfd34438d14b8817a888756c92dc728936ef71febe93a2d4e5c7e82ea",
+        "docs-v001/records/documentation/cronjobDocumentationRelease002SearchMetadataData.js": "fe1ac97c8a54961c5ad2e1cda0277f543684baf1251b44f9a0ac57e65f7ad7ec",
+        "docs-v001/records/documentation/cronjobDocumentationRouteData.js": "4023f8c5101ea012ed91428abe555694ddfa54b908878a71c629266faf2768bf"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

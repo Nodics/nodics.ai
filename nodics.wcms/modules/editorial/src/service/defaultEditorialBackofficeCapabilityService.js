@@ -48,9 +48,9 @@ module.exports = {
             { id: 'reject', label: 'Request changes', intent: 'REJECT', permission: 'editorial.workflow.submit', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/reject', targetStatuses: ['IN_REVIEW'], order: 40 },
             { id: 'publish', label: 'Publish now', intent: 'UPDATE', permission: 'editorial.publish.execute', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/publish', targetStatuses: ['APPROVED'], order: 50 },
             { id: 'schedule', label: 'Schedule publication', intent: 'UPDATE', permission: 'editorial.publish.schedule', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/schedule', targetStatuses: ['APPROVED'], order: 60 },
-            { id: 'withdraw', label: 'Withdraw', intent: 'UPDATE', permission: 'editorial.publish.withdraw', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/withdraw', targetStatuses: ['PUBLISHED'], order: 70 }
+            { id: 'withdraw', label: 'Withdraw', intent: 'UPDATE', permission: 'editorial.publish.withdraw', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/withdraw', targetStatuses: ['DRAFT', 'READY', 'IN_REVIEW', 'CHANGES_REQUESTED', 'APPROVED', 'PUBLISHED', 'WITHDRAWN'], order: 70 }
         ];
-        navigation.filter(entry => ['editorial-content', 'editorial-news', 'editorial-blogs'].includes(entry.id)).forEach(entry => { entry.lifecycleActions = actions; });
+        navigation.filter(entry => ['editorial-content', 'editorial-articles', 'editorial-news', 'editorial-blogs'].includes(entry.id)).forEach(entry => { entry.lifecycleActions = actions; });
         return definitions.capability({ capabilityId: 'wcms-editorial', displayName: 'Editorial Content', category: 'content', icon: 'article', navigation: navigation });
     }
 };

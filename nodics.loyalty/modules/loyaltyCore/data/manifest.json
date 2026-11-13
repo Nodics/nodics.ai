@@ -25,17 +25,19 @@
       },
       "sourceRoot": "core-v001"
     },
-    "core-enterprise-reference": {
+    "sample-enterprises": {
       "kind": "DATA_RELEASE",
-      "dataType": "core",
+      "dataType": "sample",
       "version": "0.0.1",
-      "displayName": "Loyalty Enterprise Reference",
+      "displayName": "Loyalty sample enterprises",
       "description": "Loyalty marketplace enterprise records contributed to the Profile enterprise authority.",
       "owningDomain": "loyalty",
       "lifecycle": "REFERENCE",
       "destinationRole": "PLATFORM",
       "environmentScope": [
-        "ALL"
+        "LOCAL",
+        "DEVELOPMENT",
+        "TEST"
       ],
       "sensitivity": "INTERNAL",
       "versioningPolicy": "NONE",
@@ -43,10 +45,11 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "files": {
-        "core-v001/headers/profile/loyaltyCoreEnterpriseCoreHeader.js": "f760357f5e6f6f607ae74ff20ebd3b1b6b7c4145632623ec8e8650490841f586",
-        "core-v001/records/profile/loyaltyCoreEnterpriseCoreData.js": "4f5f5dbb505bc046849a0f1205c3c50538409e09708162ecf73c436284f42dfb"
+        "sample-v001/headers/profile/loyaltyEnterpriseSampleHeader.js": "649e2ab4027f2685dc7c68b3283cec35cd9a24d0f06de818d905d4e0a1e855e1",
+        "sample-v001/records/profile/loyaltyEnterpriseSampleData.js": "4fda79e181eb3ba069336ac260cb3c33c92bf5ad08c369015f5de5c632daefbd"
       },
-      "sourceRoot": "core-v001"
+      "sourceRoot": "sample-v001",
+      "selectionPolicy": "EXPLICIT"
     }
   }
 }

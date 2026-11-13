@@ -68,28 +68,33 @@ module.exports = {
     },
     /** Persists an idempotent target-local deployment receipt. */
     recordReceipt: async function (operation, manifest, result, request) {
-        let identity = request.publicationOperationKey || request.correlationId || manifest.code;
-        let code = operation + '_' + manifest.code + '_' + crypto.createHash('sha256').update(String(identity)).digest('hex').slice(0, 16);
-        let existing = await SERVICE.DefaultCmsPublicationDeploymentReceiptService.get({ tenant: request.tenant, authData: request.authData,
-            transactionContext: request.transactionContext,
-            query: { code: code }, searchOptions: { limit: 1 } });
-        if (existing && Array.isArray(existing.result) && existing.result[0]) return existing.result[0];
-        let model = { code: code, active: true, publicationCode: manifest.publicationCode,
-            manifestCode: manifest.code, sourceVersion: manifest.sourceVersion, operation: operation, status: 'ONLINE',
+        const identity = request.publicationOperationKey || request.correlationId || manifest.code;
+        const code = operation + '_' + manifest.code + '_' + crypto.createHash('sha256').update(String(identity)).digest('hex').slice(0, 16);
+        const model = { code, active: true, publicationCode: manifest.publicationCode,
+            manifestCode: manifest.code, sourceVersion: manifest.sourceVersion, operation, status: 'ONLINE',
             targetVersion: result.version, previousOnlineVersion: result.previousOnlineVersion,
-            operationKey: request.publicationOperationKey,
-            correlationId: request.correlationId || request.requestId };
-        try {
-            let response = await SERVICE.DefaultCmsPublicationDeploymentReceiptService.save({ tenant: request.tenant, authData: request.authData,
-                transactionContext: request.transactionContext, model: model });
-            return response && Array.isArray(response.result) ? response.result[0] : model;
-        } catch (error) {
-            let winner = await SERVICE.DefaultCmsPublicationDeploymentReceiptService.get({ tenant: request.tenant, authData: request.authData,
-                transactionContext: request.transactionContext,
-                query: { code: code }, searchOptions: { limit: 1 } });
-            if (winner && Array.isArray(winner.result) && winner.result[0]) return winner.result[0];
-            throw error;
-        }
+            operationKey: request.publicationOperationKey, correlationId: request.correlationId || request.requestId };
+        const expected = Object.freeze({ ...model });
+        const read = async () => {
+            const response = await SERVICE.DefaultCmsPublicationDeploymentReceiptService.get({ tenant: request.tenant,
+                authData: request.authData, transactionContext: request.transactionContext,
+                options: { recursive: false, skipItemCache: true }, query: { code }, searchOptions: { limit: 2 } });
+            const rows = response?.result;
+            if (!Array.isArray(rows) || rows.length > 1) throw new CLASSES.NodicsError('ERR_CMS_00117');
+            const receipt = rows[0];
+            if (receipt && Object.keys(expected).some(key => (receipt[key] ?? null) !== (expected[key] ?? null)))
+                throw new CLASSES.NodicsError('ERR_CMS_00117');
+            return receipt;
+        };
+        const existing = await read();
+        if (existing) return existing;
+        let failure;
+        try { await SERVICE.DefaultCmsPublicationDeploymentReceiptService.save({ tenant: request.tenant,
+            authData: request.authData, transactionContext: request.transactionContext, model }); }
+        catch (error) { failure = error; }
+        const persisted = await read();
+        if (persisted) return persisted;
+        throw failure || new CLASSES.NodicsError('ERR_CMS_00117');
     },
     /** Imports a complete release before atomically switching its target-local Online pointer. */
     deploy: async function (request) {
@@ -196,13 +201,13 @@ module.exports = {
             let manifest = await this.manifests().getManifest(input.manifestCode, request);
             if (!manifest) return undefined;
             let receipts = await SERVICE.DefaultCmsPublicationDeploymentReceiptService.get({ tenant: request.tenant,
-                authData: request.authData, query: { manifestCode: input.manifestCode }, searchOptions: { limit: 100 } });
+                authData: request.authData, transactionContext: request.transactionContext, options: { recursive: false, skipItemCache: true }, query: { manifestCode: input.manifestCode }, searchOptions: { limit: 100 } });
             let events = await SERVICE.DefaultCmsPublicationEventOutboxService.get({ tenant: request.tenant,
-                authData: request.authData, query: { manifestCode: input.manifestCode }, searchOptions: { limit: 100 } });
-            let safeReceipt = item => ({ code: item.code, operation: item.operation, status: item.status,
+                authData: request.authData, transactionContext: request.transactionContext, options: { recursive: false, skipItemCache: true }, query: { manifestCode: input.manifestCode }, searchOptions: { limit: 100 } });
+            let safeReceipt = item => ({ code: item.code, active: item.active, publicationCode: item.publicationCode, manifestCode: item.manifestCode, sourceVersion: item.sourceVersion, operation: item.operation, status: item.status,
                 targetVersion: item.targetVersion, previousOnlineVersion: item.previousOnlineVersion,
                 operationKey: item.operationKey, correlationId: item.correlationId });
-            let safeEvent = item => ({ code: item.code, operation: item.operation, status: item.status,
+            let safeEvent = item => ({ code: item.code, active: item.active, publicationCode: item.publicationCode, manifestCode: item.manifestCode, operation: item.operation, status: item.status,
                 operationKey: item.operationKey, sequence: item.sequence, attempts: item.attempts,
                 correlationId: item.correlationId, deliveredAt: item.deliveredAt,
                 failureCode: item.failureCode });
@@ -328,21 +333,44 @@ module.exports = {
                 state: !pointer ? 'MISSING' : pointer.active === false ? 'INACTIVE' : 'DIFFERENT_MANIFEST' });
         }
         let evidence = await this.getStatus(Object.assign({}, request, { cmsPublicationTarget: { manifestCode: manifest.code } }));
-        let missingReceipt = !evidence.receipts.some(item => item.operation === 'DEPLOY' && item.status === 'ONLINE');
+        const deployReceipts = evidence.receipts.filter(item => item.operation === 'DEPLOY');
+        const mismatchedReceipt = deployReceipts.some(item => item.active !== true || item.status !== 'ONLINE' ||
+            item.manifestCode !== manifest.code || item.publicationCode !== manifest.publicationCode ||
+            item.sourceVersion !== manifest.sourceVersion || item.targetVersion !== manifest.code);
+        if (mismatchedReceipt) return { status: 'RECEIPT_MISMATCH', manifestCode: manifest.code, repaired: false, repairRefused: true };
+        let missingReceipt = !deployReceipts.length;
         let missingOutbox = !evidence.outbox.some(item => item.operation === 'DEPLOY');
         if (drift.length) return { status: 'POINTER_DRIFT', manifestCode: manifest.code, repaired: false,
             repairRefused: true, drift: drift, missingReceipt: missingReceipt, missingOutbox: missingOutbox };
         if (input.repairEvidence !== true || (!missingReceipt && !missingOutbox)) return { status: missingReceipt || missingOutbox ? 'EVIDENCE_GAP' : 'CONSISTENT',
             manifestCode: manifest.code, repaired: false, missingReceipt: missingReceipt, missingOutbox: missingOutbox };
         let committed = await this.transaction(request, async transactionRequest => {
-            let result = { version: manifest.code };
-            if (missingReceipt) await this.recordReceipt('DEPLOY', manifest, result, transactionRequest);
-            let event = missingOutbox ? await SERVICE.DefaultCmsPublicationOutboxService.enqueue('DEPLOY', manifest, transactionRequest) : undefined;
-            return { event: event };
+            const observed = await this.reconcile(Object.assign({}, transactionRequest, {
+                cmsPublicationTarget: { ...input, repairEvidence: false }
+            }));
+            if (observed.status !== 'EVIDENCE_GAP') return { diagnostic: observed };
+            const predecessors = new Set();
+            for (const scope of scopes) {
+                const pointer = await this.manifests().getStoredPointer(scope, transactionRequest);
+                if (!pointer || pointer.active === false || pointer.manifestCode !== this.expectedPointerManifestCode(manifest, scope))
+                    throw new CLASSES.NodicsError('ERR_CMS_00116');
+                const revision = Number(pointer.revision || 0);
+                const fenced = await SERVICE.DefaultCmsOnlinePublicationPointerService.update({ tenant: request.tenant,
+                    authData: request.authData, transactionContext: transactionRequest.transactionContext,
+                    query: { code: pointer.code, revision, manifestCode: pointer.manifestCode, active: true },
+                    model: { revision: revision + 1 } });
+                if (this.manifests().affected(fenced) !== 1) throw new CLASSES.NodicsError('ERR_CMS_00116');
+                if (pointer.previousManifestCode) predecessors.add(pointer.previousManifestCode);
+            }
+            const result = { version: manifest.code, previousOnlineVersion: predecessors.size === 1 ? [...predecessors][0] : undefined };
+            if (observed.missingReceipt) await this.recordReceipt('DEPLOY', manifest, result, transactionRequest);
+            const event = observed.missingOutbox ? await SERVICE.DefaultCmsPublicationOutboxService.enqueue('DEPLOY', manifest, transactionRequest) : undefined;
+            return { event, receiptRepaired: observed.missingReceipt, outboxRepaired: observed.missingOutbox };
         });
+        if (committed.diagnostic) return committed.diagnostic;
         if (committed.event) await SERVICE.DefaultCmsPublicationOutboxService.deliver(committed.event, request);
         return { status: 'REPAIRED', manifestCode: manifest.code, repaired: true,
-            receiptRepaired: missingReceipt, outboxRepaired: missingOutbox };
+            receiptRepaired: committed.receiptRepaired, outboxRepaired: committed.outboxRepaired };
     },
     /** Collects orphaned published media while protecting every active/recoverable pointer and its rollback predecessor. */
     collectMediaGarbage: async function (request) {
@@ -448,6 +476,34 @@ module.exports = {
         }
         return count;
     },
+    /** Verifies an operator rollback still owns all Online pointers it could change, inside the pointer transaction. */
+    assertRollbackScope: async function (currentCode, predecessor, request) {
+        const manifests = this.manifests();
+        const current = await manifests.getManifest(currentCode, request);
+        const currentScopes = manifests.deliveryScopes(current);
+        const predecessorScopes = manifests.deliveryScopes(predecessor);
+        const currentKeys = new Set(currentScopes.map(scope => this.scopeIdentity(scope)));
+        const site = currentScopes[0]?.site;
+        const isSite = current?.rootType === 'site';
+        const scopedSiteRestore = !isSite && predecessor.rootType === 'site';
+        const predecessorKeys = new Set(predecessorScopes.map(scope => this.scopeIdentity(scope)));
+        if (!current || !site || !predecessorScopes.length ||
+            (isSite && predecessor.rootType !== 'site') ||
+            [...currentScopes, ...predecessorScopes].some(scope => scope.site !== site) ||
+            (!isSite && (scopedSiteRestore ? currentScopes.some(scope => !predecessorKeys.has(this.scopeIdentity(scope))) :
+                currentScopes.length !== predecessorScopes.length || predecessorScopes.some(scope => !currentKeys.has(this.scopeIdentity(scope)))))) {
+            throw new CLASSES.NodicsError('ERR_CMS_00116');
+        }
+        if (isSite && (await manifests.getSitePointers(site, request)).some(pointer => !currentKeys.has(this.scopeIdentity(pointer))))
+            throw new CLASSES.NodicsError('ERR_CMS_00116');
+        for (const scope of currentScopes) {
+            const pointer = await manifests.getPointer(scope, request);
+            if (pointer?.manifestCode !== this.expectedPointerManifestCode(current, scope) ||
+                (scopedSiteRestore && pointer.previousManifestCode !== this.expectedPointerManifestCode(predecessor, scope)))
+                throw new CLASSES.NodicsError('ERR_CMS_00116');
+        }
+        return scopedSiteRestore ? currentScopes : undefined;
+    },
     /** Restores a release already imported into this Online target. */
     rollback: async function (request) {
         this.assertOnlineRuntime();
@@ -456,9 +512,20 @@ module.exports = {
         if (!manifest) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_MISSING', 'Rollback manifest is not deployed on the Online target');
         this.applyCorrelation(request, input, manifest);
         let committed = await this.transaction(request, async transactionRequest => {
-            await this.deactivateOutsideBundleScope(manifest, transactionRequest);
+            const selectedScopes = input.expectedCurrentManifestCode !== undefined
+                ? await this.assertRollbackScope(input.expectedCurrentManifestCode, manifest, transactionRequest) : undefined;
+            if (!selectedScopes && (manifest.rootType === 'site' || input.expectedCurrentManifestCode === undefined))
+                await this.deactivateOutsideBundleScope(manifest, transactionRequest);
             let activation;
-            if (this.manifests().isSiteIndexManifest(manifest)) {
+            if (selectedScopes) {
+                for (const scope of selectedScopes) {
+                    const predecessorScope = this.manifests().deliveryScopes(manifest).find(candidate => this.scopeIdentity(candidate) === this.scopeIdentity(scope));
+                    const restored = this.manifests().isSiteIndexManifest(manifest)
+                        ? await this.loadIndexRouteManifest(predecessorScope, transactionRequest) : manifest;
+                    await this.manifests().activateScope(restored, predecessorScope, transactionRequest);
+                }
+                activation = { version: manifest.code, routeCount: selectedScopes.length, scoped: true };
+            } else if (this.manifests().isSiteIndexManifest(manifest)) {
                 let activations = [];
                 for (let route of [].concat(manifest.snapshot && manifest.snapshot.routes || [])) {
                     let child = await this.loadIndexRouteManifest(route, transactionRequest);

@@ -57,6 +57,13 @@ module.exports = {
      */
 
     prepareInvocation: function (definition) {
+        const authority = CONFIG.get('workflowTargetAuthority');
+        if (CONFIG.get('workflowModuleName') !== 'workflow' || !authority || authority.publication !== 'OPERATIONAL' ||
+            Object.keys(authority).some(key => !['publication', 'server', 'environment'].includes(key)) ||
+            Object.values(authority).some(value => typeof value !== 'string' || !value.trim() || value !== value.trim()))
+            throw new Error('Workflow module/publication authority is unavailable');
+        const token = NODICS.getInternalAuthToken(definition.tenant);
+        if (!token) throw new Error('Workflow internal authentication is unavailable');
         let connectionType = 'abstract';
         let nodeId = CONFIG.get('nodeId');
         if (definition.targetNodeId) {
@@ -66,15 +73,15 @@ module.exports = {
         return {
             connectionType: connectionType,
             nodeId: nodeId,
-            moduleName: CONFIG.get('workflowModuleName') || 'workflow',
-            targetAuthority: CONFIG.get('workflowTargetAuthority') || { runtimeRole: 'PROCESS' },
+            moduleName: CONFIG.get('workflowModuleName'),
+            targetAuthority: { ...authority },
             methodName: 'PUT',
             apiName: '/item/init',
             tenant: definition.tenant,
             requestBody: definition.requestBody,
             responseType: true,
             header: {
-                Authorization: 'Bearer ' + NODICS.getInternalAuthToken(definition.tenant)
+                Authorization: 'Bearer ' + token
             }
         };
     },
@@ -94,14 +101,13 @@ module.exports = {
      */
 
     publishToWorkflow: function (itemDetails, tenant) {
-        if (NODICS.isModuleActive('workflow')) {
+        const invocation = this.prepareInvocation({ tenant: tenant, requestBody: itemDetails });
+        if (SERVICE.DefaultModuleService.isLocalModuleActive('workflow') &&
+            SERVICE.DefaultModuleService.isCurrentRuntimeAuthority(invocation.targetAuthority)) {
             return this.initializeWorkflows({
-                items: itemDetails
+                tenant: tenant, items: itemDetails
             });
         }
-        return SERVICE.DefaultModuleService.invokeModule(this.prepareInvocation({
-            tenant: tenant,
-            requestBody: itemDetails
-        }));
+        return SERVICE.DefaultModuleService.invokeModule(invocation);
     }
 };

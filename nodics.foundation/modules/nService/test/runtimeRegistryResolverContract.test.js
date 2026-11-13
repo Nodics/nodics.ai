@@ -18,7 +18,7 @@ let selected = resolver.resolveFromOwners({
     connectionName: 'wcmsStaged',
     targetAuthority: {
         server: 'wcmsStagedServer',
-        runtimeRole: { code: 'WCMS_STAGED', publication: 'STAGED' }
+        publication: 'STAGED'
     }
 }, [
     { moduleName: 'system', instanceId: 'process-1', environment: 'kickoffLocal', server: 'processServer',
@@ -34,3 +34,32 @@ assert.strictEqual(selected.server, 'wcmsStagedServer');
 assert.strictEqual(selected.endpoint, 'http://localhost:4312/nodics/system');
 
 console.log('Runtime registry resolver contract validated');
+
+const hostedOwner = { moduleName: 'wallet', endpoint: 'http://localhost:4350/wallet',
+    runtimeRole: { code: 'COMMERCE', publication: 'OPERATIONAL' } };
+for(const targetAuthority of ['LOYALTY',{code:'LOYALTY'},{runtimeRole:{publication:'ONLINE'}},{server:'one'},{publication:'ONLINE',unknown:true},null]) {
+    assert.throws(()=>resolver.resolveFromOwners({moduleName:'wallet',targetAuthority},[]),/authority/);
+}
+assert.equal(resolver.ownerMatches({moduleName:'wallet',targetAuthority:{publication:'STAGED'}},hostedOwner),false);
+
+assert.throws(()=>resolver.resolveFromOwners({moduleName:'wallet'},[
+    {...hostedOwner,server:'one'}, {...hostedOwner,server:'two'}]),/Ambiguous/);
+assert.ok(resolver.resolveFromOwners({moduleName:'wallet'},[
+    {...hostedOwner,server:'one',instanceId:'replica1'}, {...hostedOwner,server:'one',instanceId:'replica2'}]));
+assert.throws(()=>resolver.resolveFromOwners({moduleName:'wallet'},[
+    {...hostedOwner,server:'one',runtimeRole:{code:'AUTHOR',publication:'STAGED'}},
+    {...hostedOwner,server:'two',runtimeRole:{code:'DELIVERY',publication:'ONLINE'}}]),/publication context/);
+
+
+const previousNodics = global.NODICS;
+try {
+    global.NODICS = {getRawModule: name => name === 'system' ? {metaData:require('../../nSystem/package.json')} : undefined};
+    const local = server => ({moduleName:'system',server,environment:'local',projectCode:'p',
+        runtimeRole:{publication:'OPERATIONAL'},endpoint:'http://localhost:4400/system',clientCallable:true});
+    assert.throws(()=>resolver.resolveFromOwners({moduleName:'system'},[local('one'),local('two')]),/explicit logical server/);
+    assert.equal(resolver.resolveFromOwners({moduleName:'system',targetAuthority:{server:'two',publication:'OPERATIONAL'}},[local('one'),local('two')]).server,'two');
+    const agent=require('../src/service/module/defaultModuleRegistrationAgentService');
+    const functional={moduleName:'wallet',ownershipScope:'runtimeLocal',runtime:{ownership:'runtimeLocal'}};
+    const coordinates={projectCode:'p',environment:'local',server:'one',runtimeRole:{publication:'ONLINE'}};
+    assert.equal(agent.getModuleOwnershipKey(coordinates,functional),agent.getModuleOwnershipKey({...coordinates,server:'two'},functional));
+} finally {global.NODICS=previousNodics;}

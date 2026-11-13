@@ -21,7 +21,8 @@ const path = require("path");
 const configurationInitializer = require("../../../../../nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService");
 const crypto = require("crypto");
 const readinessWork = require("../utils/applicationReadinessWork");
-const initializationDefaults = require("../../config/properties").backofficeApplicationInitialization;
+const initializationDefaults =
+  require("../../config/properties").backofficeApplicationInitialization;
 
 module.exports = {
   /** Executes the documented bounded module operation. */
@@ -125,7 +126,10 @@ module.exports = {
         order: item.order,
       })),
       dataPackages: dataPackages,
-      preparationSteps: preparationSteps.map(step => ({ ...step, publicationPlan: undefined })),
+      preparationSteps: preparationSteps.map((step) => ({
+        ...step,
+        publicationPlan: undefined,
+      })),
       setupPlan: this.setupPlan(profile),
       activationPolicy: Object.assign(
         {
@@ -152,16 +156,13 @@ module.exports = {
       value.alt.length > 200
     )
       return undefined;
-    let runtimeRole = target && target.runtimeRole;
-    if (
-      typeof runtimeRole !== "string" ||
-      !/^[A-Z][A-Z0-9_]{1,63}$/.test(runtimeRole)
-    )
+    const publication = target && target.publication;
+    if (!["STAGED", "ONLINE", "OPERATIONAL"].includes(publication))
       return undefined;
     return {
       mediaCode: value.mediaCode,
       alt: value.alt.trim(),
-      runtimeRole: runtimeRole,
+      publication: publication,
       active: active === true,
     };
   },
@@ -317,8 +318,7 @@ module.exports = {
                   (profile.target && profile.target.connectionName),
                 targetRuntimeRole:
                   pack.targetRuntimeRole ||
-                  (profile.target &&
-                    (profile.target.runtimeRole || "WCMS_STAGED")),
+                  (profile.target && profile.target.publication),
               },
               pack,
             ),
@@ -343,33 +343,62 @@ module.exports = {
   normalizePreparationStep: function (step, index) {
     if (!step || step.enabled === false) return undefined;
     let type = String(step.type || "DATA_RELEASE");
-    if (!["DATA_RELEASE", "MEDIA_ASSET_MANIFEST", "GOVERNED_PUBLICATIONS"].includes(type)) {
+    if (
+      ![
+        "DATA_RELEASE",
+        "MEDIA_ASSET_MANIFEST",
+        "GOVERNED_PUBLICATIONS",
+      ].includes(type)
+    ) {
       throw new CLASSES.NodicsError(
         "ERR_BOF_00081",
         "Application preparation step type is unsupported",
       );
     }
-    const configured = typeof CONFIG === "undefined" ? undefined : CONFIG.get("backofficeApplicationInitialization");
-    const boundaryDefault = configured?.preparationStepDefaults?.batchBoundaryBefore === undefined
-      ? initializationDefaults.preparationStepDefaults.batchBoundaryBefore
-      : configured.preparationStepDefaults.batchBoundaryBefore;
-    const batchBoundaryBefore = step.batchBoundaryBefore === undefined
-      ? type === "DATA_RELEASE" && boundaryDefault : step.batchBoundaryBefore;
-    if (typeof boundaryDefault !== "boolean" || typeof batchBoundaryBefore !== "boolean" ||
-        batchBoundaryBefore && type !== "DATA_RELEASE") {
-      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation batch boundary is invalid");
+    const configured =
+      typeof CONFIG === "undefined"
+        ? undefined
+        : CONFIG.get("backofficeApplicationInitialization");
+    const boundaryDefault =
+      configured?.preparationStepDefaults?.batchBoundaryBefore === undefined
+        ? initializationDefaults.preparationStepDefaults.batchBoundaryBefore
+        : configured.preparationStepDefaults.batchBoundaryBefore;
+    const batchBoundaryBefore =
+      step.batchBoundaryBefore === undefined
+        ? type === "DATA_RELEASE" && boundaryDefault
+        : step.batchBoundaryBefore;
+    if (
+      typeof boundaryDefault !== "boolean" ||
+      typeof batchBoundaryBefore !== "boolean" ||
+      (batchBoundaryBefore && type !== "DATA_RELEASE")
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application preparation batch boundary is invalid",
+      );
     }
     let code = String(step.code || "");
     const phase = step.phase === undefined ? "BEFORE_PUBLICATION" : step.phase;
-    if (!["BEFORE_PUBLICATION", "AFTER_PUBLICATION"].includes(phase) ||
-        (type === "MEDIA_ASSET_MANIFEST" && phase !== "BEFORE_PUBLICATION") ||
-        (type === "GOVERNED_PUBLICATIONS" && phase !== "AFTER_PUBLICATION")) {
-      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation phase is invalid");
+    if (
+      !["BEFORE_PUBLICATION", "AFTER_PUBLICATION"].includes(phase) ||
+      (type === "MEDIA_ASSET_MANIFEST" && phase !== "BEFORE_PUBLICATION") ||
+      (type === "GOVERNED_PUBLICATIONS" && phase !== "AFTER_PUBLICATION")
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application preparation phase is invalid",
+      );
     }
-    if (step.operatorEnterpriseCode !== undefined &&
-        (phase !== "AFTER_PUBLICATION" || typeof step.operatorEnterpriseCode !== "string" ||
-          !/^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$/.test(step.operatorEnterpriseCode))) {
-      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation operator scope is invalid");
+    if (
+      step.operatorEnterpriseCode !== undefined &&
+      (phase !== "AFTER_PUBLICATION" ||
+        typeof step.operatorEnterpriseCode !== "string" ||
+        !/^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$/.test(step.operatorEnterpriseCode))
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application preparation operator scope is invalid",
+      );
     }
     let dataType = String(
       step.dataType || (type === "MEDIA_ASSET_MANIFEST" ? "media" : ""),
@@ -423,7 +452,10 @@ module.exports = {
       manifestPath: type === "MEDIA_ASSET_MANIFEST" ? manifestPath : undefined,
       manifestModule:
         type === "MEDIA_ASSET_MANIFEST" ? manifestModule : undefined,
-      publicationPlan: type === "GOVERNED_PUBLICATIONS" ? structuredClone(step.publicationPlan) : undefined,
+      publicationPlan:
+        type === "GOVERNED_PUBLICATIONS"
+          ? structuredClone(step.publicationPlan)
+          : undefined,
       folderCode: step.folderCode ? String(step.folderCode) : undefined,
       businessPurpose: step.businessPurpose
         ? String(step.businessPurpose)
@@ -434,19 +466,42 @@ module.exports = {
   },
   /** Validates a bounded single-stage selection; configured scope restricts dispatch and never grants owner permission. */
   afterPublicationSelection: function (profile, request) {
-    const steps = this.preparationSteps(profile).filter(step => step.phase === "AFTER_PUBLICATION" && step.required !== false);
+    const steps = this.preparationSteps(profile).filter(
+      (step) => step.phase === "AFTER_PUBLICATION" && step.required !== false,
+    );
     const code = request.applicationInitialization?.afterPublicationStepCode;
-    const scoped = steps.some(step => step.operatorEnterpriseCode !== undefined);
+    const scoped = steps.some(
+      (step) => step.operatorEnterpriseCode !== undefined,
+    );
     if (!scoped && code === undefined) return undefined;
-    if (!scoped || steps.length > 256 || new Set(steps.map(step => step.code)).size !== steps.length ||
-        steps.some(step => !step.operatorEnterpriseCode) ||
-        (code !== undefined && (typeof code !== "string" ||
-          !/^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(code) ||
-          !steps.some(step => step.code === code)))) {
-      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application after-publication selection is invalid");
+    if (
+      !scoped ||
+      steps.length > 256 ||
+      new Set(steps.map((step) => step.code)).size !== steps.length ||
+      steps.some((step) => !step.operatorEnterpriseCode) ||
+      (code !== undefined &&
+        (typeof code !== "string" ||
+          !/^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(
+            code,
+          ) ||
+          !steps.some((step) => step.code === code)))
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application after-publication selection is invalid",
+      );
     }
-    if (code !== undefined && !this.isPreparationOperator(steps.find(step => step.code === code), request)) {
-      throw new CLASSES.NodicsError("ERR_BOF_00082", "The selected stage requires its signed human operator");
+    if (
+      code !== undefined &&
+      !this.isPreparationOperator(
+        steps.find((step) => step.code === code),
+        request,
+      )
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00082",
+        "The selected stage requires its signed human operator",
+      );
     }
     return { steps, code };
   },
@@ -454,37 +509,88 @@ module.exports = {
   assertInitiationScope: function (selection, request) {
     const groups = request.authData?.userGroups || [];
     if (!Array.isArray(groups))
-      throw new CLASSES.NodicsError("ERR_BOF_00082", "Authenticated setup groups are unavailable");
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00082",
+        "Authenticated setup groups are unavailable",
+      );
     if (!groups.length) return;
     const security = SERVICE.DefaultSecuredRequestPipelineService;
     if (typeof security?.getEffectiveUserGroupCodes !== "function")
-      throw new CLASSES.NodicsError("ERR_BOF_00082", "Authenticated setup groups are unavailable");
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00082",
+        "Authenticated setup groups are unavailable",
+      );
     const effective = security.getEffectiveUserGroupCodes(groups);
     if (!Array.isArray(effective))
-      throw new CLASSES.NodicsError("ERR_BOF_00082", "Authenticated setup groups are unavailable");
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00082",
+        "Authenticated setup groups are unavailable",
+      );
     if (effective.includes("runtimeConfigAdminUserGroup")) return;
-    if (effective.some(group => ["commerceSetupPublisherUserGroup", "commerceCouponIssuerUserGroup"].includes(group)) &&
-        (!selection?.code || !this.isPreparationOperator(selection.steps.find(step => step.code === selection.code), request)))
-      throw new CLASSES.NodicsError("ERR_BOF_00082", "Commerce setup requires one selected signed operator stage");
+    if (
+      effective.some((group) =>
+        [
+          "commerceSetupPublisherUserGroup",
+          "commerceCouponIssuerUserGroup",
+        ].includes(group),
+      ) &&
+      (!selection?.code ||
+        !this.isPreparationOperator(
+          selection.steps.find((step) => step.code === selection.code),
+          request,
+        ))
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00082",
+        "Commerce setup requires one selected signed operator stage",
+      );
   },
   /** Checks original access-token tenant/enterprise aliases without creating Profile identity, scopes or permission. */
   isPreparationOperator: function (step, request) {
-    const auth = request.authData || {}, headers = request.httpRequest?.headers || {};
+    const auth = request.authData || {},
+      headers = request.httpRequest?.headers || {};
     const enterprise = step.operatorEnterpriseCode;
-    if (!enterprise || auth.principalType !== "human" || auth.tokenType !== "access" || auth.isSystem ||
-        !(auth.principalId || auth.loginId || auth.code) || !auth.tenant || request.tenant !== auth.tenant ||
-        (auth.enterpriseCode || auth.entCode) !== enterprise ||
-        [auth.enterpriseCode, auth.entCode, request.enterpriseCode, request.entCode,
-          headers.enterpriseCode, headers["x-enterprise-code"]].some(value => value !== undefined && value !== enterprise) ||
-        [auth.tenantCode, request.tenantCode, headers.tenant, headers["x-tenant-code"]]
-          .some(value => value !== undefined && value !== auth.tenant)) return false;
+    if (
+      !enterprise ||
+      auth.principalType !== "human" ||
+      auth.tokenType !== "access" ||
+      auth.isSystem ||
+      !(auth.principalId || auth.loginId || auth.code) ||
+      !auth.tenant ||
+      request.tenant !== auth.tenant ||
+      (auth.enterpriseCode || auth.entCode) !== enterprise ||
+      [
+        auth.enterpriseCode,
+        auth.entCode,
+        request.enterpriseCode,
+        request.entCode,
+        headers.enterpriseCode,
+        headers["x-enterprise-code"],
+      ].some((value) => value !== undefined && value !== enterprise) ||
+      [
+        auth.tenantCode,
+        request.tenantCode,
+        headers.tenant,
+        headers["x-tenant-code"],
+      ].some((value) => value !== undefined && value !== auth.tenant)
+    )
+      return false;
     const bearer = headers.authorization || headers.Authorization;
-    return typeof bearer === "string" && bearer.length <= 65536 && /^Bearer [A-Za-z0-9._~+/-]+=*$/i.test(bearer);
+    return (
+      typeof bearer === "string" &&
+      bearer.length <= 65536 &&
+      /^Bearer [A-Za-z0-9._~+/-]+=*$/i.test(bearer)
+    );
   },
   /** Keeps required stages visible without querying another operator's owners or exposing retained source plans. */
   pendingAfterPublicationSteps: function (selection, request) {
-    return selection.steps.map(step => ({ ...step, publicationPlan: undefined,
-      status: this.isPreparationOperator(step, request) ? "DEFERRED" : "AUTHORITY_PENDING" }));
+    return selection.steps.map((step) => ({
+      ...step,
+      publicationPlan: undefined,
+      status: this.isPreparationOperator(step, request)
+        ? "DEFERRED"
+        : "AUTHORITY_PENDING",
+    }));
   },
   /** Classifies setup packages for readiness and operator guidance without becoming an import authority. */
   dataPackageClassification: function (step) {
@@ -714,13 +820,18 @@ module.exports = {
   resolveProfile: function (profile) {
     const configuration =
       CONFIG.get("backofficeApplicationInitialization") || {};
-    return Object.assign({}, profile, {
-      target: Object.assign(
-        {},
-        configuration.target || {},
-        profile.target || {},
-      ),
-    });
+    const target = Object.assign(
+      {},
+      configuration.target || {},
+      profile.target || {},
+    );
+    if (target.runtimeRole !== undefined || target.publication !== "STAGED") {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application initialization requires STAGED publication, not a runtime role",
+      );
+    }
+    return Object.assign({}, profile, { target });
   },
   /** Requires a human principal for initiation while allowing authenticated status reads. */
   /** Executes the documented bounded module operation. */
@@ -788,7 +899,7 @@ module.exports = {
       {
         targetModule: profile.target.moduleName,
         targetConnection: profile.target.connectionName,
-        targetRuntimeRole: profile.target.runtimeRole || "WCMS_STAGED",
+        targetRuntimeRole: profile.target.publication,
       },
     );
     const diagnostic = {
@@ -799,7 +910,7 @@ module.exports = {
       baselineCode: profile.baselineCode,
       targetModule: profile.target.moduleName,
       targetConnection: profile.target.connectionName,
-      targetRuntimeRole: profile.target.runtimeRole || "WCMS_STAGED",
+      targetRuntimeRole: profile.target.publication,
       phase: runtimeInvocationDiagnostic && runtimeInvocationDiagnostic.phase,
       failureCode:
         runtimeInvocationDiagnostic && runtimeInvocationDiagnostic.failureCode,
@@ -850,7 +961,7 @@ module.exports = {
     );
   },
   /** Resolves declared deployment aliases without treating a connection name as server authority. */
-  applicationTargetBinding: function (connectionName, runtimeRole, moduleName) {
+  applicationTargetBinding: function (connectionName, moduleName) {
     const context =
       configurationInitializer.getPropertyBindingContext(__filename);
     const servers = configurationInitializer.discoverDeploymentServers(context);
@@ -891,34 +1002,79 @@ module.exports = {
         );
       }
     }
+    const publication = context.readRuntimeProperty(server, [
+      "runtimeRole",
+      "publication",
+    ]);
+    if (!["OPERATIONAL", "STAGED", "ONLINE"].includes(publication)) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application target requires a declared publication context",
+      );
+    }
     return {
       connectionName: server,
-      targetAuthority: { server, runtimeRole: { code: runtimeRole } },
+      targetAuthority: { server, publication },
     };
+  },
+  /** Binds a baseline operation only to the configured publication context. */
+  applicationPublicationTargetBinding: function (target, moduleName) {
+    const binding = this.applicationTargetBinding(
+      target.connectionName,
+      moduleName,
+    );
+    if (
+      target.runtimeRole !== undefined ||
+      target.publication !== "STAGED" ||
+      binding.targetAuthority.publication !== target.publication
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application publication target context differs from its declared server",
+      );
+    }
+    return binding;
   },
   /** Invokes one governed data-release validation or installation with the initiating human context. */
   invokeDataReleaseOperation: function (mode, group, request) {
-    const scoped = group.steps.filter(step => step.operatorEnterpriseCode !== undefined);
-    if (scoped.length && (group.steps.length !== 1 || !this.isPreparationOperator(scoped[0], request) ||
-        (mode === "execute" && request.applicationInitialization?.afterPublicationStepCode !== scoped[0].code))) {
-      throw new CLASSES.NodicsError("ERR_BOF_00082", "Scoped preparation requires one selected signed operator stage");
+    const scoped = group.steps.filter(
+      (step) => step.operatorEnterpriseCode !== undefined,
+    );
+    if (
+      scoped.length &&
+      (group.steps.length !== 1 ||
+        !this.isPreparationOperator(scoped[0], request) ||
+        (mode === "execute" &&
+          request.applicationInitialization?.afterPublicationStepCode !==
+            scoped[0].code))
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00082",
+        "Scoped preparation requires one selected signed operator stage",
+      );
     }
     let suffix = mode === "preflight" ? "validate" : "install";
     const authorization = this.authorizationHeader(request, true);
-    const configuredTimeout = (CONFIG.get("backofficeApplicationInitialization") || {}).dataReleaseTimeoutMs;
-    const timeoutMs = configuredTimeout === undefined ? 120000 : configuredTimeout;
-    if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1000 || timeoutMs > 600000) {
-      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application data release timeout is invalid");
+    const configuredTimeout = (
+      CONFIG.get("backofficeApplicationInitialization") || {}
+    ).dataReleaseTimeoutMs;
+    const timeoutMs =
+      configuredTimeout === undefined ? 120000 : configuredTimeout;
+    if (
+      !Number.isSafeInteger(timeoutMs) ||
+      timeoutMs < 1000 ||
+      timeoutMs > 600000
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application data release timeout is invalid",
+      );
     }
     return SERVICE.DefaultModuleService.invokeModule({
       moduleName: "import",
       // These operations intentionally use the governed HTTP import route, even in a consolidated runtime.
       local: false,
-      ...this.applicationTargetBinding(
-        group.targetServer,
-        group.targetRuntimeRole,
-        "import",
-      ),
+      ...this.applicationTargetBinding(group.targetServer, "import"),
       connectionType: "abstract",
       methodName: "POST",
       apiName: "/" + group.dataType + "/" + suffix,
@@ -926,6 +1082,10 @@ module.exports = {
         dataType: group.dataType,
         releaseCodes: group.steps.map((step) => step.code),
         expectedReleases: group.expectedReleases,
+        ...(mode === "execute" &&
+        request.applicationInitialization?.continuation === true
+          ? { continuation: true, executionCode: group.executionCode }
+          : {}),
       },
       timeoutMs,
       maxAttempts: 1,
@@ -949,8 +1109,14 @@ module.exports = {
       .sort((left, right) => left.order - right.order)
       .filter((step) => step.required !== false && step.type === "DATA_RELEASE")
       .forEach((step) => {
-        if (step.batchBoundaryBefore !== undefined && typeof step.batchBoundaryBefore !== "boolean") {
-          throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation batch boundary is invalid");
+        if (
+          step.batchBoundaryBefore !== undefined &&
+          typeof step.batchBoundaryBefore !== "boolean"
+        ) {
+          throw new CLASSES.NodicsError(
+            "ERR_BOF_00081",
+            "Application preparation batch boundary is invalid",
+          );
         }
         let key = [
           step.targetServer,
@@ -964,7 +1130,8 @@ module.exports = {
           group.targetServer !== step.targetServer ||
           group.targetRuntimeRole !== step.targetRuntimeRole ||
           group.dataType !== step.dataType ||
-          step.operatorEnterpriseCode !== undefined || group.steps.some(item => item.operatorEnterpriseCode !== undefined)
+          step.operatorEnterpriseCode !== undefined ||
+          group.steps.some((item) => item.operatorEnterpriseCode !== undefined)
         ) {
           group = {
             targetServer: step.targetServer,
@@ -976,7 +1143,9 @@ module.exports = {
               ":prepare:" +
               key +
               ":" +
-              (step.operatorEnterpriseCode !== undefined ? step.code + ":" : "") +
+              (step.operatorEnterpriseCode !== undefined
+                ? step.code + ":"
+                : "") +
               String(
                 correlationId ||
                   (request.authData && request.authData.principalId) ||
@@ -1014,8 +1183,13 @@ module.exports = {
     if (error && error.code === "ERR_RTR_00004")
       return this.targetFailureMessage("ERR_RTR_00004", "");
     if (this.preparationValidationDenied(error)) {
-      const count = group && Array.isArray(group.steps) ? group.steps.length : 1;
-      return "The selected setup group (" + count + " releases) is held by the import owner's prerequisite or release validation. This does not identify a failure in every member. Review releases individually in the import workbench; no failed import or runtime outage has been established.";
+      const count =
+        group && Array.isArray(group.steps) ? group.steps.length : 1;
+      return (
+        "The selected setup group (" +
+        count +
+        " releases) is held by the import owner's prerequisite or release validation. This does not identify a failure in every member. Review releases individually in the import workbench; no failed import or runtime outage has been established."
+      );
     }
     let rawMessage = String(
       (error && (error.remoteMessage || error.message)) || "",
@@ -1051,9 +1225,13 @@ module.exports = {
   preparationValidationDenied: function (error) {
     const remote = error && error.metadata && error.metadata.remoteHttpFailure;
     const code = remote ? remote.code : error && error.code;
-    const status = remote ? remote.httpStatus : error && (error.status || error.responseCode);
-    return (code === "ERR_IMP_00003" && Number(status) === 400) ||
-      (code === "ERR_IMP_00004" && Number(status) === 404);
+    const status = remote
+      ? remote.httpStatus
+      : error && (error.status || error.responseCode);
+    return (
+      (code === "ERR_IMP_00003" && Number(status) === 400) ||
+      (code === "ERR_IMP_00004" && Number(status) === 404)
+    );
   },
   /** Summarizes blocked preparation without leaking target runtime exception text. */
   preparationBlockedMessage: function (preparation) {
@@ -1413,13 +1591,14 @@ module.exports = {
             : approvalDiagnostic.status === "TASK_NOT_ACTIONABLE"
               ? "APPROVAL_TASK_UNACTIONABLE"
               : "APPROVAL_IN_PROGRESS";
-      let repair = code !== "APPROVAL_TASK_MISSING"
-        ? this.capabilityRepairProjection("APPROVAL_IN_PROGRESS", {
-            owner: publication.code || projection.releaseCode,
-          })
-        : this.capabilityRepairProjection("APPROVAL_TASK_MISSING", {
-            owner: publication.code || projection.releaseCode,
-          });
+      let repair =
+        code !== "APPROVAL_TASK_MISSING"
+          ? this.capabilityRepairProjection("APPROVAL_IN_PROGRESS", {
+              owner: publication.code || projection.releaseCode,
+            })
+          : this.capabilityRepairProjection("APPROVAL_TASK_MISSING", {
+              owner: publication.code || projection.releaseCode,
+            });
       blockers.push({
         blockerCode: code,
         code: code,
@@ -1474,9 +1653,11 @@ module.exports = {
   capabilityBlockerDisabledReason: function (code, step) {
     let target = step && (step.targetServer || step.targetRuntimeRole);
     if (code === "AUTHORITY_PENDING")
-      return "An authorized human operator for " +
+      return (
+        "An authorized human operator for " +
         String(step?.operatorEnterpriseCode || "the owning enterprise") +
-        " must sign in to that enterprise and select its required setup stage. This session cannot execute foreign enterprise stages; refresh after the operator completes the work.";
+        " must sign in to that enterprise and select its required setup stage. This session cannot execute foreign enterprise stages; refresh after the operator completes the work."
+      );
     return (
       {
         MODULE_INACTIVE:
@@ -1529,7 +1710,8 @@ module.exports = {
         READINESS_UNKNOWN: "Refresh readiness",
         READINESS_RATE_LIMITED: "Wait and refresh readiness",
         READINESS_VALIDATION_BLOCKED: "Review setup prerequisites",
-        AUTHORITY_PENDING: "Continue setup as the authorized enterprise operator",
+        AUTHORITY_PENDING:
+          "Continue setup as the authorized enterprise operator",
       }[code] || "Review capability readiness"
     );
   },
@@ -1656,7 +1838,11 @@ module.exports = {
         requiresConfirmation: false,
       },
       IMPORT_FAILED: {
-        available: !!(context && context.historyHandoff && context.historyHandoff.available === true),
+        available: !!(
+          context &&
+          context.historyHandoff &&
+          context.historyHandoff.available === true
+        ),
         label: "Review import history",
         action: "REVIEW_IMPORT_HISTORY",
         owner: "import",
@@ -1664,7 +1850,8 @@ module.exports = {
           "Review the owning runtime's import history; exact-runtime history navigation is not qualified by this setup contract.",
         idempotent: true,
         requiresConfirmation: false,
-        route: context && context.historyHandoff && context.historyHandoff.route,
+        route:
+          context && context.historyHandoff && context.historyHandoff.route,
         handoff: context && context.historyHandoff,
       },
       APPROVAL_TASK_MISSING: {
@@ -1857,41 +2044,49 @@ module.exports = {
   capabilityDependencies: function (profile, projection) {
     let dependencies = [];
     let target = (profile && profile.target) || {};
-    if (target.connectionName || target.runtimeRole) {
+    if (target.connectionName) {
       let server;
       try {
         server = this.applicationTargetBinding(
           target.connectionName,
-          target.runtimeRole || "WCMS_STAGED",
           target.moduleName,
         ).connectionName;
       } catch (_) {
         // Unresolved aliases do not establish runtime authority.
       }
       const steps = [].concat(
-        (projection && projection.preparation && projection.preparation.steps) || [],
+        (projection &&
+          projection.preparation &&
+          projection.preparation.steps) ||
+          [],
       );
-      const answered = server && (
-        (projection && projection.publicationTargetResponded === true) ||
-        steps.some(step =>
-          [target.connectionName, server].includes(step.targetServer) &&
-          step.targetRuntimeRole === (target.runtimeRole || "WCMS_STAGED") &&
-          ((step.type === "DATA_RELEASE" && [
-            "CURRENT", "SOURCE_READY", "NOT_INSTALLED", "UPDATE_AVAILABLE",
-            "DOWNGRADE_AVAILABLE", "INVALID_RELEASE", "RUNNING", "FAILED",
-          ].includes(step.status)) ||
-          (step.type === "MEDIA_ASSET_MANIFEST" && step.status === "SOURCE_READY")),
-        )
-      );
+      const answered =
+        server &&
+        ((projection && projection.publicationTargetResponded === true) ||
+          steps.some(
+            (step) =>
+              [target.connectionName, server].includes(step.targetServer) &&
+              ((step.type === "DATA_RELEASE" &&
+                [
+                  "CURRENT",
+                  "SOURCE_READY",
+                  "NOT_INSTALLED",
+                  "UPDATE_AVAILABLE",
+                  "DOWNGRADE_AVAILABLE",
+                  "INVALID_RELEASE",
+                  "RUNNING",
+                  "FAILED",
+                ].includes(step.status)) ||
+                (step.type === "MEDIA_ASSET_MANIFEST" &&
+                  step.status === "SOURCE_READY")),
+          ));
       dependencies.push({
         kind: "RUNTIME",
-        code: String(server || target.connectionName || target.runtimeRole || "target"),
+        code: String(server || target.connectionName || "target"),
         label: "Publication target runtime",
         required: true,
         server: server,
-        runtimeRole: target.runtimeRole
-          ? String(target.runtimeRole)
-          : "WCMS_STAGED",
+        publication: target.publication,
         status: answered ? "AVAILABLE" : "UNKNOWN",
       });
     }
@@ -2226,8 +2421,6 @@ module.exports = {
           typeof instance.endpoint === "string" &&
           instance.environment === environment &&
           instance.server === target.targetServer &&
-          instance.runtimeRole &&
-          instance.runtimeRole.code === target.targetRuntimeRole &&
           ["UP", "DEGRADED"].includes(instance.state),
       );
       if (routes.length !== 1 || instances.length !== 1) return unavailable;
@@ -2262,19 +2455,45 @@ module.exports = {
     }
   },
   /** Reads one preparation phase without writes; invoke alone gates AFTER_PUBLICATION on fresh CMS/Media evidence. */
-  preparationStatus: async function (profile, request, phase = "BEFORE_PUBLICATION", options = {}) {
-    if (phase === "BEFORE_PUBLICATION" && options.sharedObservation !== false && this.hasSetupObservation(profile))
+  preparationStatus: async function (
+    profile,
+    request,
+    phase = "BEFORE_PUBLICATION",
+    options = {},
+  ) {
+    if (
+      phase === "BEFORE_PUBLICATION" &&
+      options.sharedObservation !== false &&
+      this.hasSetupObservation(profile)
+    )
       return this.sharedPreparationObservation(profile, request);
     let steps = this.preparationSteps(profile).filter(
       (step) => (step.phase || "BEFORE_PUBLICATION") === phase,
     );
-    let functionalModuleSteps = phase === "BEFORE_PUBLICATION"
-      ? await this.functionalModulePreparationStatus(profile, request) : [];
+    let functionalModuleSteps =
+      phase === "BEFORE_PUBLICATION"
+        ? await this.functionalModulePreparationStatus(profile, request)
+        : [];
     if (!steps.length && !functionalModuleSteps.length)
       return { status: "CURRENT", steps: [] };
-    let projected = steps.filter(step => step.required !== false && step.operatorEnterpriseCode !== undefined &&
-      !this.isPreparationOperator(step, request)).map(step => ({ ...step, publicationPlan: undefined, status: "AUTHORITY_PENDING" }));
-    steps = steps.filter(step => step.operatorEnterpriseCode === undefined || this.isPreparationOperator(step, request));
+    const executions = [];
+    let projected = steps
+      .filter(
+        (step) =>
+          step.required !== false &&
+          step.operatorEnterpriseCode !== undefined &&
+          !this.isPreparationOperator(step, request),
+      )
+      .map((step) => ({
+        ...step,
+        publicationPlan: undefined,
+        status: "AUTHORITY_PENDING",
+      }));
+    steps = steps.filter(
+      (step) =>
+        step.operatorEnterpriseCode === undefined ||
+        this.isPreparationOperator(step, request),
+    );
     let groups = this.preparationGroups(profile, request, steps);
     for (let group of groups) {
       try {
@@ -2291,43 +2510,82 @@ module.exports = {
           releases.map((release) => [release.releaseCode, release]),
         );
         const evidence = (result && result.data) || result || {};
+        if (evidence.execution)
+          executions.push({
+            ...evidence.execution,
+            targetServer: group.targetServer,
+          });
         const contributionPlans = evidence.contributionPlans;
-        const plans = Array.isArray(contributionPlans) ? contributionPlans.slice(0, group.steps.length) : [];
+        const plans = Array.isArray(contributionPlans)
+          ? contributionPlans.slice(0, group.steps.length)
+          : [];
         const customReleases = releases.filter((release) => release.installer);
-        const validationBlocked = evidence.validation?.ready === false ||
-          (evidence.validation?.ready !== undefined && typeof evidence.validation.ready !== "boolean") ||
-          (contributionPlans !== undefined && !Array.isArray(contributionPlans)) ||
-          (Array.isArray(contributionPlans) && contributionPlans.length > group.steps.length) ||
-          plans.some((plan) => !plan || plan.ready !== true ||
-            !group.steps.some((step) => step.code === plan.releaseCode)) ||
-          new Set(plans.map((plan) => plan && plan.releaseCode)).size !== plans.length ||
-          customReleases.some((release) => evidence.validation?.ready !== true ||
-            !plans.some((plan) => plan.releaseCode === release.releaseCode && plan.ready === true));
+        const validationBlocked =
+          evidence.validation?.ready === false ||
+          (evidence.validation?.ready !== undefined &&
+            typeof evidence.validation.ready !== "boolean") ||
+          (contributionPlans !== undefined &&
+            !Array.isArray(contributionPlans)) ||
+          (Array.isArray(contributionPlans) &&
+            contributionPlans.length > group.steps.length) ||
+          plans.some(
+            (plan) =>
+              !plan ||
+              plan.ready !== true ||
+              !group.steps.some((step) => step.code === plan.releaseCode),
+          ) ||
+          new Set(plans.map((plan) => plan && plan.releaseCode)).size !==
+            plans.length ||
+          customReleases.some(
+            (release) =>
+              evidence.validation?.ready !== true ||
+              !plans.some(
+                (plan) =>
+                  plan.releaseCode === release.releaseCode &&
+                  plan.ready === true,
+              ),
+          );
         group.steps.forEach((step) => {
           let release = byCode[step.code] || {};
-          const plan = plans.find((item) => item && item.releaseCode === step.code);
-          const ownerCode = plan && plan.ready === false && plan.blocker && plan.blocker.code;
-          const ownerBlocker = validationBlocked ? {
-            owner: step.code,
-            code: typeof ownerCode === "string" && /^ERR_[A-Z0-9_]{1,64}$/.test(ownerCode)
-              ? ownerCode : "READINESS_VALIDATION_BLOCKED",
-            message: "Selected contribution prerequisites require owner review.",
-          } : undefined;
+          const plan = plans.find(
+            (item) => item && item.releaseCode === step.code,
+          );
+          const ownerCode =
+            plan && plan.ready === false && plan.blocker && plan.blocker.code;
+          const ownerBlocker = validationBlocked
+            ? {
+                owner: step.code,
+                code:
+                  typeof ownerCode === "string" &&
+                  /^ERR_[A-Z0-9_]{1,64}$/.test(ownerCode)
+                    ? ownerCode
+                    : "READINESS_VALIDATION_BLOCKED",
+                message:
+                  "Selected contribution prerequisites require owner review.",
+              }
+            : undefined;
           projected.push(
             Object.assign({}, step, {
-              status: validationBlocked ? "VALIDATION_BLOCKED" :
-                phase === "AFTER_PUBLICATION" && release.status === "SOURCE_READY" ? "UNKNOWN" : [
-                "CURRENT",
-                "SOURCE_READY",
-                "NOT_INSTALLED",
-                "UPDATE_AVAILABLE",
-                "DOWNGRADE_AVAILABLE",
-                "INVALID_RELEASE",
-                "RUNNING",
-                "FAILED",
-              ].includes(release.status)
-                ? release.status
-                : "UNKNOWN",
+              status: validationBlocked
+                ? "VALIDATION_BLOCKED"
+                : phase === "AFTER_PUBLICATION" &&
+                    release.status === "SOURCE_READY"
+                  ? "UNKNOWN"
+                  : [
+                        "CURRENT",
+                        "SOURCE_READY",
+                        "NOT_INSTALLED",
+                        "UPDATE_AVAILABLE",
+                        "DOWNGRADE_AVAILABLE",
+                        "INVALID_RELEASE",
+                        "RUNNING",
+                        "FAILED",
+                      ].includes(release.status)
+                    ? release.status
+                    : "UNKNOWN",
+              ...(evidence.continuationSupported === true
+                ? { continuationSupported: true }
+                : {}),
               version: release.version,
               installedVersion: release.installedVersion,
               description: release.description,
@@ -2351,13 +2609,13 @@ module.exports = {
               runtimeDiagnostic: this.preparationValidationDenied(error)
                 ? undefined
                 : this.runtimeInvocationDiagnostic(error, {
-                phase: "preparation",
-                targetServer: group.targetServer,
-                targetRuntimeRole: group.targetRuntimeRole,
-                targetModule: "import",
-                suggestedAction:
-                  "Start the target import runtime or repair its runtime registration and service credential.",
-              }),
+                    phase: "preparation",
+                    targetServer: group.targetServer,
+                    targetRuntimeRole: group.targetRuntimeRole,
+                    targetModule: "import",
+                    suggestedAction:
+                      "Start the target import runtime or repair its runtime registration and service credential.",
+                  }),
             }),
           ),
         );
@@ -2408,6 +2666,7 @@ module.exports = {
             ? "CURRENT"
             : "ACTION_REQUIRED",
       steps: projected.sort((left, right) => left.order - right.order),
+      ...(executions.length ? { executions } : {}),
     };
   },
   /** Reads one fresh persisted CURRENT metadata aggregate; routine status never verifies bytes or publishes. */
@@ -2416,52 +2675,89 @@ module.exports = {
       const manifestPath = this.safeManifestPath(step);
       delete require.cache[require.resolve(manifestPath)];
       const assets = require(manifestPath);
-      if (!Array.isArray(assets) || assets.length === 0 || assets.length > 100) {
+      if (
+        !Array.isArray(assets) ||
+        assets.length === 0 ||
+        assets.length > 100
+      ) {
         return {
           ...step,
           status: "FAILED",
           description: "Media asset manifest is empty or unavailable",
         };
       }
-      const descriptors = assets.map(asset =>
-        this.describeMediaAsset(step, asset, request).descriptor);
-      if (new Set(descriptors.map(asset => asset.mediaCode)).size !== descriptors.length) {
+      const descriptors = assets.map(
+        (asset) => this.describeMediaAsset(step, asset, request).descriptor,
+      );
+      if (
+        new Set(descriptors.map((asset) => asset.mediaCode)).size !==
+        descriptors.length
+      ) {
         throw new Error("Ambiguous Media manifest");
       }
       const startedAt = Date.now();
       const response = await SERVICE.DefaultModuleService.invokeModule({
-        moduleName: "media", local: false, tenant: request.tenant,
-        ...this.applicationTargetBinding(step.targetServer, step.targetRuntimeRole, "media"),
-        methodName: "POST", apiName: "/storage/readiness", maxAttempts: 1,
+        moduleName: "media",
+        local: false,
+        tenant: request.tenant,
+        ...this.applicationTargetBinding(step.targetServer, "media"),
+        methodName: "POST",
+        apiName: "/storage/readiness",
+        maxAttempts: 1,
         header: {
-          Authorization: this.authorizationHeader(request, true), tenant: request.tenant,
-          "x-enterprise-code": request.enterpriseCode || (request.authData && request.authData.entCode),
+          Authorization: this.authorizationHeader(request, true),
+          tenant: request.tenant,
+          "x-enterprise-code":
+            request.enterpriseCode ||
+            (request.authData && request.authData.entCode),
           Origin: this.operatorOrigin(request),
         },
         requestBody: { assets: descriptors },
       });
       const aggregate = response && response.data;
       const checkedAt = aggregate && Date.parse(aggregate.checkedAt);
-      if (!aggregate || typeof aggregate.checkedAt !== "string" || aggregate.checkedAt.length > 64 ||
-          aggregate.contractVersion !== 1 || aggregate.owner !== "media" ||
-          aggregate.evidenceKind !== "PERSISTED_CURRENT_METADATA" || !Number.isFinite(checkedAt) ||
-          checkedAt < startedAt - 1000 || checkedAt > Date.now() + 1000 ||
-          !Array.isArray(aggregate.items) || aggregate.items.length !== descriptors.length) {
+      if (
+        !aggregate ||
+        typeof aggregate.checkedAt !== "string" ||
+        aggregate.checkedAt.length > 64 ||
+        aggregate.contractVersion !== 1 ||
+        aggregate.owner !== "media" ||
+        aggregate.evidenceKind !== "PERSISTED_CURRENT_METADATA" ||
+        !Number.isFinite(checkedAt) ||
+        checkedAt < startedAt - 1000 ||
+        checkedAt > Date.now() + 1000 ||
+        !Array.isArray(aggregate.items) ||
+        aggregate.items.length !== descriptors.length
+      ) {
         throw new Error("Unconfirmed Media aggregate");
       }
       const evidence = aggregate.items;
-      const evidenceFields = ["mediaCode", "checksum", "versionId", "exists", "metadataMatched", "storedBytesVerified"];
+      const evidenceFields = [
+        "mediaCode",
+        "checksum",
+        "versionId",
+        "exists",
+        "metadataMatched",
+        "storedBytesVerified",
+      ];
       evidence.forEach((item, index) => {
         const descriptor = descriptors[index];
-        if (!item || Object.keys(item).some(key => !evidenceFields.includes(key)) ||
-            item.mediaCode !== descriptor.mediaCode || item.checksum !== descriptor.checksum ||
-            typeof item.exists !== "boolean" || typeof item.metadataMatched !== "boolean" || item.storedBytesVerified !== false ||
-            (item.versionId !== null && (!Number.isSafeInteger(item.versionId) || item.versionId < 0)) ||
-            (item.metadataMatched && (!item.exists || item.versionId === null))) {
+        if (
+          !item ||
+          Object.keys(item).some((key) => !evidenceFields.includes(key)) ||
+          item.mediaCode !== descriptor.mediaCode ||
+          item.checksum !== descriptor.checksum ||
+          typeof item.exists !== "boolean" ||
+          typeof item.metadataMatched !== "boolean" ||
+          item.storedBytesVerified !== false ||
+          (item.versionId !== null &&
+            (!Number.isSafeInteger(item.versionId) || item.versionId < 0)) ||
+          (item.metadataMatched && (!item.exists || item.versionId === null))
+        ) {
           throw new Error("Invalid Media aggregate");
         }
       });
-      const current = evidence.every(item => item.metadataMatched);
+      const current = evidence.every((item) => item.metadataMatched);
       return {
         ...step,
         status: current
@@ -2665,7 +2961,7 @@ module.exports = {
     return parsed.origin;
   },
   /** Resolves a runtime registry owner into the module's HTTP base URL. */
-  moduleBaseUrl: async function (serverCode, moduleName, runtimeRole) {
+  moduleBaseUrl: async function (serverCode, moduleName) {
     const resolver = SERVICE.DefaultBackofficeRegistryService;
     if (!resolver || typeof resolver.resolveRuntimeOwner !== "function") {
       throw new CLASSES.NodicsError(
@@ -2673,11 +2969,7 @@ module.exports = {
         "Application preparation runtime registry is unavailable",
       );
     }
-    const binding = this.applicationTargetBinding(
-      serverCode,
-      runtimeRole,
-      moduleName,
-    );
+    const binding = this.applicationTargetBinding(serverCode, moduleName);
     const owner = await resolver.resolveRuntimeOwner({
       moduleName,
       ...binding,
@@ -2776,8 +3068,12 @@ module.exports = {
   },
   /** Explicit preparation reads exact current bytes before upload reuse or CAS replacement. */
   inspectMediaAsset: async function (step, asset, request) {
-    const { form, headers, checksum, descriptor } = this.describeMediaAsset(step, asset, request);
-    const baseUrl = await this.moduleBaseUrl(step.targetServer, 'media', step.targetRuntimeRole);
+    const { form, headers, checksum, descriptor } = this.describeMediaAsset(
+      step,
+      asset,
+      request,
+    );
+    const baseUrl = await this.moduleBaseUrl(step.targetServer, "media");
     const inspectionResponse = await fetch(
       baseUrl + "/media/v0/storage/upload/inspect",
       {
@@ -2889,17 +3185,27 @@ module.exports = {
     return uploaded;
   },
   /** Uses existing nImport for one phase; deferred callers must first qualify CMS/Media and refresh authority afterward. */
-  prepareApplication: async function (profile, request, currentPreparation, phase = "BEFORE_PUBLICATION") {
+  prepareApplication: async function (
+    profile,
+    request,
+    currentPreparation,
+    phase = "BEFORE_PUBLICATION",
+  ) {
     let preparation =
-      currentPreparation || (await this.preparationStatus(profile, request, phase));
+      currentPreparation ||
+      (await this.preparationStatus(profile, request, phase));
     if (preparation.status === "BLOCKED") {
       throw new CLASSES.NodicsError(
         "ERR_BOF_00085",
         this.preparationBlockedMessage(preparation),
       );
     }
-    if (phase === "BEFORE_PUBLICATION") await this.prepareMediaAssets(profile, request);
-    const selection = phase === "AFTER_PUBLICATION" ? this.afterPublicationSelection(profile, request) : undefined;
+    const selection =
+      phase === "AFTER_PUBLICATION"
+        ? this.afterPublicationSelection(profile, request)
+        : undefined;
+    const continuation =
+      request.applicationInitialization?.continuation === true;
     let groups = this.preparationGroups(profile, request, preparation.steps)
       .map((group) =>
         Object.assign({}, group, {
@@ -2913,16 +3219,49 @@ module.exports = {
             );
             return (
               current &&
-              ["NOT_INSTALLED", "UPDATE_AVAILABLE", "FAILED"].includes(
-                current.status,
-              )
+              (continuation
+                ? [
+                    "CURRENT",
+                    "NOT_INSTALLED",
+                    "UPDATE_AVAILABLE",
+                    "RUNNING",
+                    "FAILED",
+                  ]
+                : ["NOT_INSTALLED", "UPDATE_AVAILABLE", "FAILED"]
+              ).includes(current.status)
             );
           }),
         }),
       )
-      .filter((group) => group.steps.length > 0);
+      .filter(
+        (group) =>
+          group.steps.length > 0 &&
+          (!continuation ||
+            group.steps.some((step) => step.status !== "CURRENT")),
+      );
+    if (
+      continuation &&
+      groups.some((group) =>
+        group.steps.some((step) => step.continuationSupported !== true),
+      )
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00085",
+        "The selected import runtime must support recorded preparation before continuing",
+      );
+    if (phase === "BEFORE_PUBLICATION")
+      await this.prepareMediaAssets(profile, request);
     const groupReceipts = [];
     for (let group of groups) {
+      if (continuation)
+        group.executionCode = preparation.executions?.find(
+          (execution) =>
+            execution.targetServer === group.targetServer &&
+            execution.dataType === group.dataType &&
+            group.steps.every((step) =>
+              execution.steps.some((item) => item.releaseCode === step.code),
+            ),
+        )?.code;
       group.expectedReleases = Object.fromEntries(
         group.steps
           .map((step) => {
@@ -2949,7 +3288,9 @@ module.exports = {
           request,
         );
         const result =
-          (response && (response.data || response.result || response)) || {};
+          response?.data ||
+          (Array.isArray(response?.releases) ? response : response?.result) ||
+          {};
         const selected = new Set(receipt.releaseCodes);
         const releases = Array.isArray(result.releases)
           ? result.releases
@@ -2958,13 +3299,18 @@ module.exports = {
           : [];
         groupReceipts.push({
           ...receipt,
+          ...(result.execution ? { execution: result.execution } : {}),
           status:
             releases.length === selected.size &&
             releases.every((release) => release.status === "CURRENT")
               ? "COMPLETE"
-              : "UNCONFIRMED",
+              : result.execution &&
+                  ["READY", "RUNNING"].includes(result.execution.status)
+                ? "IN_PROGRESS"
+                : "UNCONFIRMED",
           releases,
         });
+        if (continuation) break;
       } catch (error) {
         const code = error && error.code;
         const failureCode =
@@ -2972,18 +3318,24 @@ module.exports = {
             ? code
             : "OWNER_OPERATION_FAILED";
         groupReceipts.push({ ...receipt, status: "FAILED", failureCode });
-        const refreshed = phase === "AFTER_PUBLICATION" ? {
-          status: "BLOCKED",
-          steps: preparation.steps.map((step) => ({ ...step, status: "UNAVAILABLE" })),
-        } : await this.preparationStatus(profile, request, phase).catch(
-          () => ({
-            status: "BLOCKED",
-            steps: preparation.steps.map((step) => ({
-              ...step,
-              status: "UNAVAILABLE",
-            })),
-          }),
-        );
+        const refreshed =
+          phase === "AFTER_PUBLICATION"
+            ? {
+                status: "BLOCKED",
+                steps: preparation.steps.map((step) => ({
+                  ...step,
+                  status: "UNAVAILABLE",
+                })),
+              }
+            : await this.preparationStatus(profile, request, phase).catch(
+                () => ({
+                  status: "BLOCKED",
+                  steps: preparation.steps.map((step) => ({
+                    ...step,
+                    status: "UNAVAILABLE",
+                  })),
+                }),
+              );
         const releases = refreshed.steps
           .filter(
             (step) =>
@@ -3020,17 +3372,33 @@ module.exports = {
             message:
               "Data preparation failed. Review the owning runtime's import receipt before attempting another preparation.",
             automaticRetry: false,
-            historyHandoff: refreshed.steps.find(step =>
-              step.status === "FAILED" && step.targetServer === group.targetServer &&
-              step.targetRuntimeRole === group.targetRuntimeRole && receipt.releaseCodes.includes(step.code))?.historyHandoff,
+            historyHandoff: refreshed.steps.find(
+              (step) =>
+                step.status === "FAILED" &&
+                step.targetServer === group.targetServer &&
+                step.targetRuntimeRole === group.targetRuntimeRole &&
+                receipt.releaseCodes.includes(step.code),
+            )?.historyHandoff,
           },
         };
       }
     }
     return {
       // The caller must recheck CMS/Media before another deferred owner preflight.
-      ...(phase === "AFTER_PUBLICATION" ? preparation : await this.preparationStatus(profile, request, phase)),
+      ...(phase === "AFTER_PUBLICATION"
+        ? preparation
+        : await this.preparationStatus(profile, request, phase)),
       groupReceipts,
+      ...(continuation
+        ? {
+            executions: groupReceipts
+              .filter((item) => item.execution)
+              .map((item) => ({
+                ...item.execution,
+                targetServer: item.targetServer,
+              })),
+          }
+        : {}),
     };
   },
   /** Returns the target baseline operation used for one BackOffice application operation. */
@@ -3073,16 +3441,18 @@ module.exports = {
         : previousPublication.code
           ? String(previousPublication.code)
           : undefined,
-      message: repairedDiagnostic.status === "WAITING_REVIEWER"
-        ? "Publication approval workflow was reconciled. Review the Process task for decision."
-        : "Publication approval could not be reconciled automatically. Review Process workflow state.",
+      message:
+        repairedDiagnostic.status === "WAITING_REVIEWER"
+          ? "Publication approval workflow was reconciled. Review the Process task for decision."
+          : "Publication approval could not be reconciled automatically. Review Process workflow state.",
     };
   },
   /** Builds a bounded proof bundle for approval reconciliation requests. */
   approvalRepairBinding: function (status) {
     let publication = (status && status.publication) || {};
     let diagnostic = publication.approvalDiagnostic || {};
-    if (!publication.code || !Number.isInteger(publication.revision)) return undefined;
+    if (!publication.code || !Number.isInteger(publication.revision))
+      return undefined;
     return {
       source: "PUBLICATION_APPROVAL",
       publicationCode: publication.code ? String(publication.code) : undefined,
@@ -3095,18 +3465,34 @@ module.exports = {
   },
   /** Runs only profile-owned setup preparation, then returns the refreshed readiness projection. */
   prepareCapability: async function (profileCode, request) {
-    if (request.applicationInitialization?.afterPublicationStepCode !== undefined)
-      throw new CLASSES.NodicsError("ERR_BOF_00081", "After-publication selection is only valid for initialization");
+    if (
+      request.applicationInitialization?.afterPublicationStepCode !== undefined
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "After-publication selection is only valid for initialization",
+      );
     let profile = this.profile(profileCode);
     const selection = this.afterPublicationSelection(profile, request);
     this.human(request);
-    let initialPreparation = await this.preparationStatus(profile, request, "BEFORE_PUBLICATION", {
-      sharedObservation: false,
-    });
+    let initialPreparation = await this.preparationStatus(
+      profile,
+      request,
+      "BEFORE_PUBLICATION",
+      {
+        sharedObservation: false,
+      },
+    );
     if (initialPreparation.status === "BLOCKED") {
-      if (selection) initialPreparation = { ...initialPreparation,
-        steps: initialPreparation.steps.concat(this.pendingAfterPublicationSteps(selection, request)),
-        selectionRequired: false, selectableStepCodes: [] };
+      if (selection)
+        initialPreparation = {
+          ...initialPreparation,
+          steps: initialPreparation.steps.concat(
+            this.pendingAfterPublicationSteps(selection, request),
+          ),
+          selectionRequired: false,
+          selectableStepCodes: [],
+        };
       return Object.assign(
         this.blockedProjection(profile, initialPreparation),
         {
@@ -3125,9 +3511,14 @@ module.exports = {
       initialPreparation,
     );
     if (prepared.status === "BLOCKED") {
-      if (selection) Object.assign(prepared, {
-        steps: prepared.steps.concat(this.pendingAfterPublicationSteps(selection, request)),
-        selectionRequired: false, selectableStepCodes: [] });
+      if (selection)
+        Object.assign(prepared, {
+          steps: prepared.steps.concat(
+            this.pendingAfterPublicationSteps(selection, request),
+          ),
+          selectionRequired: false,
+          selectableStepCodes: [],
+        });
       return {
         ...this.blockedProjection(profile, prepared),
         preparationOperation: this.prepareCapabilityEvidence(
@@ -3142,6 +3533,7 @@ module.exports = {
     refreshed.preparation = {
       ...refreshed.preparation,
       groupReceipts: prepared.groupReceipts,
+      ...(prepared.executions ? { executions: prepared.executions } : {}),
     };
     return Object.assign(refreshed, {
       preparationOperation: this.prepareCapabilityEvidence(
@@ -3184,118 +3576,290 @@ module.exports = {
   },
   /** Observation is opt-in per exact profile; missing or malformed policy never manufactures authority. */
   hasSetupObservation: function (profile) {
-    const policy = typeof CONFIG === "undefined" ? undefined : CONFIG.get("publish")?.setup?.observation;
-    return policy?.enabled === true && typeof policy.profilePlans?.[profile.code] === "string";
+    const policy =
+      typeof CONFIG === "undefined"
+        ? undefined
+        : CONFIG.get("publish")?.setup?.observation;
+    return (
+      policy?.enabled === true &&
+      typeof policy.profilePlans?.[profile.code] === "string"
+    );
   },
   /** Reads a reviewed local plan on every call and checks its full current effective profile. */
   setupObservationPlan: function (profile, request) {
     const owner = SERVICE.DefaultPublicationSetupObservationService;
-    const code = CONFIG.get("publish")?.setup?.observation?.profilePlans?.[profile.code];
-    if (!this.hasSetupObservation(profile) || !owner || typeof owner.resolvePlan !== "function")
+    const code =
+      CONFIG.get("publish")?.setup?.observation?.profilePlans?.[profile.code];
+    if (
+      !this.hasSetupObservation(profile) ||
+      !owner ||
+      typeof owner.resolvePlan !== "function"
+    )
       throw new CLASSES.NodicsError("ERR_BOF_00082");
     const resolved = owner.resolvePlan(code);
-    if (resolved.plan.tenant !== request.tenant || resolved.plan.profileCode !== profile.code ||
-        resolved.reference?.moduleName !== profile.owner ||
-        resolved.plan.baselineCode !== profile.baselineCode || owner.digest(profile) !== resolved.plan.profileDigest)
+    if (
+      resolved.plan.tenant !== request.tenant ||
+      resolved.plan.profileCode !== profile.code ||
+      resolved.reference?.moduleName !== profile.owner ||
+      resolved.plan.baselineCode !== profile.baselineCode ||
+      owner.digest(profile) !== resolved.plan.profileDigest
+    )
       throw new CLASSES.NodicsError("ERR_BOF_00081");
-    if (resolved.plan.baseline && (resolved.plan.baseline.server !== this.applicationTargetBinding(
-        profile.target.connectionName, profile.target.runtimeRole, "publish").connectionName ||
-        resolved.plan.baseline.runtimeRole !== profile.target.runtimeRole))
+    if (
+      resolved.plan.baseline &&
+      (resolved.plan.baseline.server !==
+        this.applicationTargetBinding(profile.target.connectionName, "publish")
+          .connectionName ||
+        this.applicationTargetBinding(resolved.plan.baseline.server, "publish")
+          .targetAuthority.publication !== profile.target.publication)
+    )
       throw new CLASSES.NodicsError("ERR_BOF_00081");
-    const steps = this.preparationSteps(profile).filter(step => step.required !== false);
-    if (steps.length !== resolved.plan.stages.length || steps.some(step =>
-      !resolved.plan.stages.some(stage => stage.code === step.code &&
-        owner.digest(stage.descriptor) === owner.digest(owner.stepIdentity(step)) &&
-        stage.server === this.applicationTargetBinding(step.targetServer, step.targetRuntimeRole, "publish").connectionName)))
+    const steps = this.preparationSteps(profile).filter(
+      (step) => step.required !== false,
+    );
+    if (
+      steps.length !== resolved.plan.stages.length ||
+      steps.some(
+        (step) =>
+          !resolved.plan.stages.some(
+            (stage) =>
+              stage.code === step.code &&
+              owner.digest(stage.descriptor) ===
+                owner.digest(owner.stepIdentity(step)) &&
+              stage.server ===
+                this.applicationTargetBinding(step.targetServer, "publish")
+                  .connectionName,
+          ),
+      )
+    )
       throw new CLASSES.NodicsError("ERR_BOF_00081");
     return { ...resolved, owner };
   },
   /** Uses the actual signed deployment token and fixed route, never the initiating human's token or claims. */
   setupObservation: async function (profile, request, step, mode, operations) {
     const before = this.setupObservationPlan(profile, request);
-    const stage = mode === "BASELINE" ? before.plan.baseline : before.plan.stages.find(item => item.code === step.code);
-    const target = mode === "TARGET" ? stage?.online : mode === "BASELINE" ? stage :
-      { server: stage?.server, runtimeRole: stage?.descriptor.targetRuntimeRole };
+    const stage =
+      mode === "BASELINE"
+        ? before.plan.baseline
+        : before.plan.stages.find((item) => item.code === step.code);
+    const target =
+      mode === "TARGET"
+        ? stage?.online
+        : mode === "BASELINE"
+          ? stage
+          : {
+              server: stage?.server,
+              runtimeRole: stage?.descriptor.targetRuntimeRole,
+            };
     const token = NODICS.getInternalAuthToken(request.tenant);
-    if (!token || !stage || !target?.server || !target.runtimeRole) throw new CLASSES.NodicsError("ERR_BOF_00082");
-    const body = { contractVersion: 1, planCode: before.plan.code, revision: before.plan.revision,
-      checksum: before.checksum, stageCode: mode === "BASELINE" ? profile.baselineCode : step.code, mode };
+    if (!token || !stage || !target?.server || !target.runtimeRole)
+      throw new CLASSES.NodicsError("ERR_BOF_00082");
+    const body = {
+      contractVersion: 1,
+      planCode: before.plan.code,
+      revision: before.plan.revision,
+      checksum: before.checksum,
+      stageCode: mode === "BASELINE" ? profile.baselineCode : step.code,
+      mode,
+    };
     if (mode === "TARGET") body.operations = operations;
     const response = await SERVICE.DefaultModuleService.invokeModule({
-      moduleName: "publish", local: false, tenant: request.tenant,
-      ...this.applicationTargetBinding(target.server, target.runtimeRole, "publish"),
-      connectionType: "abstract", methodName: "POST", apiName: "/publications/setup/observe",
-      requestBody: body, header: { Authorization: "Bearer " + token, tenant: request.tenant },
-      timeoutMs: profile.target.timeoutMs, maxAttempts: 1,
+      moduleName: "publish",
+      local: false,
+      tenant: request.tenant,
+      ...this.applicationTargetBinding(target.server, "publish"),
+      connectionType: "abstract",
+      methodName: "POST",
+      apiName: "/publications/setup/observe",
+      requestBody: body,
+      header: { Authorization: "Bearer " + token, tenant: request.tenant },
+      timeoutMs: profile.target.timeoutMs,
+      maxAttempts: 1,
     });
     const evidence = response?.data || response?.result || response;
     const after = this.setupObservationPlan(profile, request);
-    if (before.checksum !== after.checksum || before.owner.digest(before.plan) !== after.owner.digest(after.plan) ||
-        !evidence || evidence.contractVersion !== 1 || typeof evidence.ready !== "boolean" ||
-        ["planCode", "revision", "checksum", "stageCode", "mode"].some(key => evidence[key] !== body[key]) ||
-        evidence.profileCode !== profile.code || evidence.baselineCode !== profile.baselineCode ||
-        evidence.tenant !== request.tenant || evidence.enterpriseCode !== stage.enterpriseCode ||
-        evidence.server !== target.server || evidence.runtimeRole !== target.runtimeRole)
+    if (
+      before.checksum !== after.checksum ||
+      before.owner.digest(before.plan) !== after.owner.digest(after.plan) ||
+      !evidence ||
+      evidence.contractVersion !== 1 ||
+      typeof evidence.ready !== "boolean" ||
+      ["planCode", "revision", "checksum", "stageCode", "mode"].some(
+        (key) => evidence[key] !== body[key],
+      ) ||
+      evidence.profileCode !== profile.code ||
+      evidence.baselineCode !== profile.baselineCode ||
+      evidence.tenant !== request.tenant ||
+      evidence.enterpriseCode !== stage.enterpriseCode ||
+      evidence.server !== target.server ||
+      evidence.runtimeRole !== target.runtimeRole
+    )
       throw new CLASSES.NodicsError("ERR_BOF_00081");
     return evidence;
   },
   /** Exposes only fixed local failure codes, never remote diagnostics or authentication data. */
   setupObservationReasonCode: function (error) {
-    return ["ERR_BOF_00081", "ERR_BOF_00082", "ERR_BOF_00083", "ERR_PUB_SETUP_OBSERVATION",
-      "ERR_AUTH_00002", "ERR_AUTH_00003", "ERR_RTR_00004", "ERR_TNT_00002", "ERR_TNT_00003"]
-      .includes(error?.code) ? error.code : "ERR_BOF_00083";
+    return [
+      "ERR_BOF_00081",
+      "ERR_BOF_00082",
+      "ERR_BOF_00083",
+      "ERR_PUB_SETUP_OBSERVATION",
+      "ERR_AUTH_00002",
+      "ERR_AUTH_00003",
+      "ERR_RTR_00004",
+      "ERR_TNT_00002",
+      "ERR_TNT_00003",
+    ].includes(error?.code)
+      ? error.code
+      : "ERR_BOF_00083";
   },
   /** Aggregate-only foreign evidence cannot create selection authority or authorize an owner command. */
   observeForeignPreparation: async function (profile, request, step) {
-    const pending = { ...step, publicationPlan: undefined, status: "AUTHORITY_PENDING" };
+    const pending = {
+      ...step,
+      publicationPlan: undefined,
+      status: "AUTHORITY_PENDING",
+    };
     if (!this.hasSetupObservation(profile)) return pending;
     try {
       if (step.type === "GOVERNED_PUBLICATIONS") {
-        const source = await this.setupObservation(profile, request, step, "SOURCE");
+        const source = await this.setupObservation(
+          profile,
+          request,
+          step,
+          "SOURCE",
+        );
         const intended = step.publicationPlan.items;
         // Exact reviewed absence is pending foreign work, not an owner validation refusal.
-        const isNotCurrent = evidence => evidence.ready === false && Array.isArray(evidence.items) &&
-          evidence.items.length === intended.length && evidence.items.some(item => item?.status === "NOT_CURRENT") &&
-          intended.every(item => evidence.items.filter(actual => actual?.code === item.code &&
-            ["CURRENT", "NOT_CURRENT"].includes(actual.status)).length === 1);
+        const isNotCurrent = (evidence) =>
+          evidence.ready === false &&
+          Array.isArray(evidence.items) &&
+          evidence.items.length === intended.length &&
+          evidence.items.some((item) => item?.status === "NOT_CURRENT") &&
+          intended.every(
+            (item) =>
+              evidence.items.filter(
+                (actual) =>
+                  actual?.code === item.code &&
+                  ["CURRENT", "NOT_CURRENT"].includes(actual.status),
+              ).length === 1,
+          );
         if (source.ready !== true)
-          return isNotCurrent(source) ? pending : { ...pending, status: "VALIDATION_BLOCKED" };
-        if (!Array.isArray(source.items) || source.items.length !== intended.length ||
-            intended.some(item => source.items.filter(actual => ["code", "domain", "rootType", "rootCode", "sourceVersion"]
-              .every(key => actual[key] === item[key]) && actual.status === "CURRENT").length !== 1))
+          return isNotCurrent(source)
+            ? pending
+            : { ...pending, status: "VALIDATION_BLOCKED" };
+        if (
+          !Array.isArray(source.items) ||
+          source.items.length !== intended.length ||
+          intended.some(
+            (item) =>
+              source.items.filter(
+                (actual) =>
+                  [
+                    "code",
+                    "domain",
+                    "rootType",
+                    "rootCode",
+                    "sourceVersion",
+                  ].every((key) => actual[key] === item[key]) &&
+                  actual.status === "CURRENT",
+              ).length !== 1,
+          )
+        )
           throw new CLASSES.NodicsError("ERR_BOF_00081");
-        const target = await this.setupObservation(profile, request, step, "TARGET",
-          source.items.map(item => ({ code: item.code, operationKey: item.operationKey })));
-        const final = await this.setupObservation(profile, request, step, "SOURCE");
+        const target = await this.setupObservation(
+          profile,
+          request,
+          step,
+          "TARGET",
+          source.items.map((item) => ({
+            code: item.code,
+            operationKey: item.operationKey,
+          })),
+        );
+        const final = await this.setupObservation(
+          profile,
+          request,
+          step,
+          "SOURCE",
+        );
         const owner = SERVICE.DefaultPublicationSetupObservationService;
-        if (owner.digest(source) !== owner.digest(final)) throw new CLASSES.NodicsError("ERR_BOF_00081");
+        if (owner.digest(source) !== owner.digest(final))
+          throw new CLASSES.NodicsError("ERR_BOF_00081");
         if (target.ready !== true)
-          return isNotCurrent(target) ? pending : { ...pending, status: "VALIDATION_BLOCKED" };
-        if (!Array.isArray(target.items) || target.items.length !== source.items.length ||
-            source.items.some(item => target.items.filter(actual => ["code", "domain", "rootType", "rootCode", "sourceVersion",
-              "targetVersion", "operationKey", "previousOnlineVersion"].every(key => actual[key] === item[key]) &&
-                actual.status === "CURRENT").length !== 1)) throw new CLASSES.NodicsError("ERR_BOF_00081");
-        return { ...pending, status: source.ready && target.ready ? "CURRENT" : "VALIDATION_BLOCKED",
-          evidenceKind: "EXACT_PLAN_OWNER_OBSERVATION", publications: source.items };
+          return isNotCurrent(target)
+            ? pending
+            : { ...pending, status: "VALIDATION_BLOCKED" };
+        if (
+          !Array.isArray(target.items) ||
+          target.items.length !== source.items.length ||
+          source.items.some(
+            (item) =>
+              target.items.filter(
+                (actual) =>
+                  [
+                    "code",
+                    "domain",
+                    "rootType",
+                    "rootCode",
+                    "sourceVersion",
+                    "targetVersion",
+                    "operationKey",
+                    "previousOnlineVersion",
+                  ].every((key) => actual[key] === item[key]) &&
+                  actual.status === "CURRENT",
+              ).length !== 1,
+          )
+        )
+          throw new CLASSES.NodicsError("ERR_BOF_00081");
+        return {
+          ...pending,
+          status:
+            source.ready && target.ready ? "CURRENT" : "VALIDATION_BLOCKED",
+          evidenceKind: "EXACT_PLAN_OWNER_OBSERVATION",
+          publications: source.items,
+        };
       }
-      const evidence = await this.setupObservation(profile, request, step, "INSTALLATION");
-      if (evidence.ready === false && evidence.status === "NOT_CURRENT") return pending;
-      return { ...pending, status: evidence.ready === true && evidence.status === "CURRENT" ? "CURRENT" : "VALIDATION_BLOCKED",
-        installedVersion: evidence.version, evidenceKind: "EXACT_PLAN_INSTALLED_RELEASE" };
-    } catch (error) { return { ...pending, reasonCode: this.setupObservationReasonCode(error) }; }
+      const evidence = await this.setupObservation(
+        profile,
+        request,
+        step,
+        "INSTALLATION",
+      );
+      if (evidence.ready === false && evidence.status === "NOT_CURRENT")
+        return pending;
+      return {
+        ...pending,
+        status:
+          evidence.ready === true && evidence.status === "CURRENT"
+            ? "CURRENT"
+            : "VALIDATION_BLOCKED",
+        installedVersion: evidence.version,
+        evidenceKind: "EXACT_PLAN_INSTALLED_RELEASE",
+      };
+    } catch (error) {
+      return { ...pending, reasonCode: this.setupObservationReasonCode(error) };
+    }
   },
   /** Maps typed read-only owner evidence without treating an absent installation as a validation refusal. */
   sharedPreparationObservationStatus: function (step, evidence) {
     if (step.type === "DATA_RELEASE") {
-      if (evidence.ready === true && evidence.status === "CURRENT") return "CURRENT";
-      if (evidence.ready === false && evidence.status === "NOT_CURRENT") return "NOT_INSTALLED";
+      if (evidence.ready === true && evidence.status === "CURRENT")
+        return "CURRENT";
+      if (evidence.ready === false && evidence.status === "NOT_CURRENT")
+        return "NOT_INSTALLED";
       return "VALIDATION_BLOCKED";
     }
     if (step.type === "MEDIA_ASSET_MANIFEST") {
-      const items = evidence.evidenceKind === "PERSISTED_CURRENT_METADATA" && Array.isArray(evidence.items)
-        ? evidence.items : undefined;
+      const items =
+        evidence.evidenceKind === "PERSISTED_CURRENT_METADATA" &&
+        Array.isArray(evidence.items)
+          ? evidence.items
+          : undefined;
       if (!items) return "VALIDATION_BLOCKED";
-      const current = items.every(item => item && item.metadataMatched === true);
+      const current = items.every(
+        (item) => item && item.metadataMatched === true,
+      );
       if (evidence.ready === true && current) return "SOURCE_READY";
       if (evidence.ready === false && !current) return "FAILED";
       return "VALIDATION_BLOCKED";
@@ -3304,56 +3868,120 @@ module.exports = {
   },
   /** Settles shared BEFORE reads under the owner worker policy without multiplying outer composition fanout. */
   sharedPreparationObservation: async function (profile, request) {
-    const pending = this.preparationSteps(profile).filter(item => item.phase === "BEFORE_PUBLICATION");
+    const pending = this.preparationSteps(profile).filter(
+      (item) => item.phase === "BEFORE_PUBLICATION",
+    );
     const steps = new Array(pending.length);
     let cursor = 0;
     const workers = readinessWork.stageWorkers(request);
-    await Promise.all(Array.from({ length: Math.min(workers, pending.length) }, async () => {
-      while (cursor < pending.length) {
-        const index = cursor++;
-        const step = pending[index];
-        if (step.required === false) { steps[index] = { ...step, status: "OPTIONAL" }; continue; }
-        try {
-          const evidence = await this.setupObservation(profile, request, step,
-            step.type === "MEDIA_ASSET_MANIFEST" ? "MEDIA" : "INSTALLATION");
-          steps[index] = { ...step, status: this.sharedPreparationObservationStatus(step, evidence),
-            evidenceKind: step.type === "MEDIA_ASSET_MANIFEST" ? evidence.evidenceKind : "EXACT_PLAN_INSTALLED_RELEASE",
-            installedVersion: evidence.version };
-        } catch (error) { steps[index] = { ...step, status: "AUTHORITY_PENDING", reasonCode: this.setupObservationReasonCode(error) }; }
-      }
-    }));
-    const functional = await this.functionalModulePreparationStatus(profile, request);
+    await Promise.all(
+      Array.from({ length: Math.min(workers, pending.length) }, async () => {
+        while (cursor < pending.length) {
+          const index = cursor++;
+          const step = pending[index];
+          if (step.required === false) {
+            steps[index] = { ...step, status: "OPTIONAL" };
+            continue;
+          }
+          try {
+            const evidence = await this.setupObservation(
+              profile,
+              request,
+              step,
+              step.type === "MEDIA_ASSET_MANIFEST" ? "MEDIA" : "INSTALLATION",
+            );
+            steps[index] = {
+              ...step,
+              status: this.sharedPreparationObservationStatus(step, evidence),
+              evidenceKind:
+                step.type === "MEDIA_ASSET_MANIFEST"
+                  ? evidence.evidenceKind
+                  : "EXACT_PLAN_INSTALLED_RELEASE",
+              installedVersion: evidence.version,
+            };
+          } catch (error) {
+            steps[index] = {
+              ...step,
+              status: "AUTHORITY_PENDING",
+              reasonCode: this.setupObservationReasonCode(error),
+            };
+          }
+        }
+      }),
+    );
+    const functional = await this.functionalModulePreparationStatus(
+      profile,
+      request,
+    );
     steps.push(...functional);
-    const required = steps.filter(step => step.required !== false);
-    return { status: required.some(step => ["INVALID_RELEASE", "DOWNGRADE_AVAILABLE", "UNAVAILABLE",
-      "READINESS_RATE_LIMITED", "VALIDATION_BLOCKED", "UNKNOWN", "AUTHORITY_PENDING", "NOT_REGISTERED",
-      "NOT_ACTIVE", "RUNTIME_OFFLINE"].includes(step.status)) ? "BLOCKED" :
-      required.some(step => step.status === "RUNNING") ? "RUNNING" :
-        required.every(step => ["CURRENT", "SOURCE_READY"].includes(step.status)) ? "CURRENT" : "ACTION_REQUIRED", steps };
+    const required = steps.filter((step) => step.required !== false);
+    return {
+      status: required.some((step) =>
+        [
+          "INVALID_RELEASE",
+          "DOWNGRADE_AVAILABLE",
+          "UNAVAILABLE",
+          "READINESS_RATE_LIMITED",
+          "VALIDATION_BLOCKED",
+          "UNKNOWN",
+          "AUTHORITY_PENDING",
+          "NOT_REGISTERED",
+          "NOT_ACTIVE",
+          "RUNTIME_OFFLINE",
+        ].includes(step.status),
+      )
+        ? "BLOCKED"
+        : required.some((step) => step.status === "RUNNING")
+          ? "RUNNING"
+          : required.every((step) =>
+                ["CURRENT", "SOURCE_READY"].includes(step.status),
+              )
+            ? "CURRENT"
+            : "ACTION_REQUIRED",
+      steps,
+    };
   },
   /** Checks or submits configured publication intents through the secured remote owner, using the resolved application timeout. Failures expose only fixed stages and bounded codes; they never qualify readiness. */
   publicationPreparation: async function (profile, request, submit) {
     const selection = this.afterPublicationSelection(profile, request);
-    const steps = this.preparationSteps(profile).filter(step => step.type === "GOVERNED_PUBLICATIONS" && step.required !== false);
+    const steps = this.preparationSteps(profile).filter(
+      (step) =>
+        step.type === "GOVERNED_PUBLICATIONS" && step.required !== false,
+    );
     const projected = [];
     for (const step of steps) {
       if (selection && !this.isPreparationOperator(step, request)) {
-        projected.push(await this.observeForeignPreparation(profile, request, step));
+        projected.push(
+          await this.observeForeignPreparation(profile, request, step),
+        );
         continue;
       }
       let phase = "configuration";
       try {
-        if (step.targetRuntimeRole !== "COMMERCE_STAGED" || !step.publicationPlan) throw new CLASSES.NodicsError("ERR_BOF_00081");
+        if (
+          step.targetRuntimeRole !== "COMMERCE_STAGED" ||
+          !step.publicationPlan
+        )
+          throw new CLASSES.NodicsError("ERR_BOF_00081");
         phase = "targetBinding";
-        const binding = this.applicationTargetBinding(step.targetServer, step.targetRuntimeRole, "publish");
+        const binding = this.applicationTargetBinding(
+          step.targetServer,
+          "publish",
+        );
         phase = "authorization";
         const authorization = this.authorizationHeader(request, true);
         phase = "invocation";
         const response = await SERVICE.DefaultModuleService.invokeModule({
-          moduleName: "publish", local: false,
+          moduleName: "publish",
+          local: false,
           ...binding,
-          connectionType: "abstract", methodName: "POST",
-          apiName: "/publications/setup/" + (submit && (!selection || selection.code === step.code) ? "submit" : "status"),
+          connectionType: "abstract",
+          methodName: "POST",
+          apiName:
+            "/publications/setup/" +
+            (submit && (!selection || selection.code === step.code)
+              ? "submit"
+              : "status"),
           requestBody: step.publicationPlan,
           header: { Authorization: authorization },
           timeoutMs: profile.target.timeoutMs,
@@ -3362,89 +3990,220 @@ module.exports = {
         phase = "evidence";
         const evidence = response?.data || response?.result || response;
         const intended = step.publicationPlan.items;
-        const valid = evidence?.contractVersion === 1 && Array.isArray(intended) && Array.isArray(evidence.items) &&
-          evidence.items.length === intended.length && intended.every(item => evidence.items.filter(actual =>
-            actual.domain === item.domain && actual.rootCode === item.rootCode).length === 1);
-        if (!valid || typeof evidence.ready !== "boolean" ||
-            evidence.ready !== evidence.items.every(item => item.status === "CURRENT")) throw new CLASSES.NodicsError("ERR_BOF_00081");
-        projected.push({ ...step, publicationPlan: undefined,
-          status: evidence.ready ? "CURRENT" : evidence.items.some(item => item.status === "REVIEW_REQUIRED") ? "VALIDATION_BLOCKED" :
-            evidence.items.some(item => ["NOT_REQUESTED", "SUBMISSION_REQUIRED"].includes(item.status)) ? "NOT_INSTALLED" : "RUNNING",
-          publications: evidence.items.map(item => ({ code: item.code, domain: item.domain, rootCode: item.rootCode,
-            status: item.status, state: item.state, revision: item.revision, workflowRef: item.workflowRef })),
+        const valid =
+          evidence?.contractVersion === 1 &&
+          Array.isArray(intended) &&
+          Array.isArray(evidence.items) &&
+          evidence.items.length === intended.length &&
+          intended.every(
+            (item) =>
+              evidence.items.filter(
+                (actual) =>
+                  actual.domain === item.domain &&
+                  actual.rootCode === item.rootCode,
+              ).length === 1,
+          );
+        if (
+          !valid ||
+          typeof evidence.ready !== "boolean" ||
+          evidence.ready !==
+            evidence.items.every((item) => item.status === "CURRENT")
+        )
+          throw new CLASSES.NodicsError("ERR_BOF_00081");
+        projected.push({
+          ...step,
+          publicationPlan: undefined,
+          status: evidence.ready
+            ? "CURRENT"
+            : evidence.items.some((item) => item.status === "REVIEW_REQUIRED")
+              ? "VALIDATION_BLOCKED"
+              : evidence.items.some((item) =>
+                    ["NOT_REQUESTED", "SUBMISSION_REQUIRED"].includes(
+                      item.status,
+                    ),
+                  )
+                ? "NOT_INSTALLED"
+                : "RUNNING",
+          publications: evidence.items.map((item) => ({
+            code: item.code,
+            domain: item.domain,
+            rootCode: item.rootCode,
+            status: item.status,
+            state: item.state,
+            revision: item.revision,
+            workflowRef: item.workflowRef,
+          })),
         });
       } catch (error) {
-        const transport = phase === "invocation" &&
+        const transport =
+          phase === "invocation" &&
           SERVICE.DefaultModuleService.classifyTransportFailure?.(error);
-        projected.push({ ...step, publicationPlan: undefined, status: "VALIDATION_BLOCKED",
+        projected.push({
+          ...step,
+          publicationPlan: undefined,
+          status: "VALIDATION_BLOCKED",
           message: "Required governed publication setup needs owner review.",
-          runtimeDiagnostic: { phase, targetModule: "publish",
-            failureCode: transport?.code || (typeof error?.code === "string" && /^ERR_[A-Z0-9_]{1,64}$/.test(error.code)
-              ? error.code : "ERR_BOF_00081") },
+          runtimeDiagnostic: {
+            phase,
+            targetModule: "publish",
+            failureCode:
+              transport?.code ||
+              (typeof error?.code === "string" &&
+              /^ERR_[A-Z0-9_]{1,64}$/.test(error.code)
+                ? error.code
+                : "ERR_BOF_00081"),
+          },
         });
       }
     }
-    return { ready: projected.every(step => step.status === "CURRENT"), steps: projected };
+    return {
+      ready: projected.every((step) => step.status === "CURRENT"),
+      steps: projected,
+    };
   },
   /** Observes every required stage and executes at most the explicit local stage after fresh owner publication evidence. */
   scopedAfterPublicationPreparation: async function (profile, request, submit) {
     const selection = this.afterPublicationSelection(profile, request);
-    const publications = await this.publicationPreparation(profile, request, submit);
+    const publications = await this.publicationPreparation(
+      profile,
+      request,
+      submit,
+    );
     const operatorPublicationsReady = publications.steps
-      .filter(step => this.isPreparationOperator(step, request)).every(step => step.status === "CURRENT");
-    let preparation = operatorPublicationsReady ? await this.preparationStatus(profile, request, "AFTER_PUBLICATION") : {
-      status: "BLOCKED",
-      steps: this.pendingAfterPublicationSteps(selection, request).filter(step => step.type !== "GOVERNED_PUBLICATIONS"),
-    };
-    const selected = preparation.steps.find(step => step.code === selection.code);
+      .filter((step) => this.isPreparationOperator(step, request))
+      .every((step) => step.status === "CURRENT");
+    let preparation = operatorPublicationsReady
+      ? await this.preparationStatus(profile, request, "AFTER_PUBLICATION")
+      : {
+          status: "BLOCKED",
+          steps: this.pendingAfterPublicationSteps(selection, request).filter(
+            (step) => step.type !== "GOVERNED_PUBLICATIONS",
+          ),
+        };
+    const selected = preparation.steps.find(
+      (step) => step.code === selection.code,
+    );
     let receipts = [];
-    if (submit && operatorPublicationsReady && selected?.type === "DATA_RELEASE" &&
-        ["NOT_INSTALLED", "UPDATE_AVAILABLE", "FAILED"].includes(selected.status)) {
-      const installed = await this.prepareApplication(profile, request,
-        { status: "ACTION_REQUIRED", steps: [selected] }, "AFTER_PUBLICATION");
+    if (
+      submit &&
+      operatorPublicationsReady &&
+      selected?.type === "DATA_RELEASE" &&
+      ["NOT_INSTALLED", "UPDATE_AVAILABLE", "FAILED"].includes(selected.status)
+    ) {
+      const installed = await this.prepareApplication(
+        profile,
+        request,
+        { status: "ACTION_REQUIRED", steps: [selected] },
+        "AFTER_PUBLICATION",
+      );
       receipts = installed.groupReceipts || [];
       // A fresh full invocation rechecks CMS/Media before any further deferred observation.
-      return { refreshRequired: true, groupReceipts: receipts, operationFailure: installed.operationFailure };
+      return {
+        refreshRequired: true,
+        groupReceipts: receipts,
+        operationFailure: installed.operationFailure,
+      };
     }
-    if (operatorPublicationsReady) preparation.steps = await Promise.all(preparation.steps.map(step =>
-      step.status === "AUTHORITY_PENDING" && step.type === "DATA_RELEASE"
-        ? this.observeForeignPreparation(profile, request, step) : step));
-    const steps = preparation.steps.filter(step => step.type !== "GOVERNED_PUBLICATIONS")
-      .concat(publications.steps).sort((left, right) => left.order - right.order);
-    const selectableStepCodes = steps.filter(step => this.isPreparationOperator(step, request) &&
-      ["NOT_INSTALLED", "UPDATE_AVAILABLE", "FAILED"].includes(step.status) &&
-      (step.type === "GOVERNED_PUBLICATIONS" || operatorPublicationsReady)).map(step => step.code);
-    return { status: steps.some(step => ["AUTHORITY_PENDING", "VALIDATION_BLOCKED", "UNAVAILABLE", "UNKNOWN",
-      "INVALID_RELEASE", "DOWNGRADE_AVAILABLE", "READINESS_RATE_LIMITED"].includes(step.status)) ? "BLOCKED" :
-      steps.some(step => step.status === "RUNNING") ? "RUNNING" :
-        steps.every(step => step.status === "CURRENT") ? "CURRENT" : "ACTION_REQUIRED",
-      steps, selectableStepCodes, selectionRequired: true, groupReceipts: receipts };
+    if (operatorPublicationsReady)
+      preparation.steps = await Promise.all(
+        preparation.steps.map((step) =>
+          step.status === "AUTHORITY_PENDING" && step.type === "DATA_RELEASE"
+            ? this.observeForeignPreparation(profile, request, step)
+            : step,
+        ),
+      );
+    const steps = preparation.steps
+      .filter((step) => step.type !== "GOVERNED_PUBLICATIONS")
+      .concat(publications.steps)
+      .sort((left, right) => left.order - right.order);
+    const selectableStepCodes = steps
+      .filter(
+        (step) =>
+          this.isPreparationOperator(step, request) &&
+          ["NOT_INSTALLED", "UPDATE_AVAILABLE", "FAILED"].includes(
+            step.status,
+          ) &&
+          (step.type === "GOVERNED_PUBLICATIONS" || operatorPublicationsReady),
+      )
+      .map((step) => step.code);
+    return {
+      status: steps.some((step) =>
+        [
+          "AUTHORITY_PENDING",
+          "VALIDATION_BLOCKED",
+          "UNAVAILABLE",
+          "UNKNOWN",
+          "INVALID_RELEASE",
+          "DOWNGRADE_AVAILABLE",
+          "READINESS_RATE_LIMITED",
+        ].includes(step.status),
+      )
+        ? "BLOCKED"
+        : steps.some((step) => step.status === "RUNNING")
+          ? "RUNNING"
+          : steps.every((step) => step.status === "CURRENT")
+            ? "CURRENT"
+            : "ACTION_REQUIRED",
+      steps,
+      selectableStepCodes,
+      selectionRequired: true,
+      groupReceipts: receipts,
+    };
   },
   /** Invokes CMS and every declared owner publication before operational initialization. */
   invoke: async function (operation, profileCode, request) {
     let profile = this.profile(profileCode);
     const selection = this.afterPublicationSelection(profile, request);
-    if (operation === "initiate") this.assertInitiationScope(selection, request);
+    if (operation === "initiate")
+      this.assertInitiationScope(selection, request);
     if (selection) {
-      if (selection.code !== undefined && !["status", "initiate"].includes(operation))
-        throw new CLASSES.NodicsError("ERR_BOF_00081", "After-publication selection is only valid for initialization");
+      if (
+        selection.code !== undefined &&
+        !["status", "initiate"].includes(operation)
+      )
+        throw new CLASSES.NodicsError(
+          "ERR_BOF_00081",
+          "After-publication selection is only valid for initialization",
+        );
       const originalRequest = request;
-      request = { ...request, authData: { ...request.authData },
-        applicationInitialization: { ...request.applicationInitialization, afterPublicationStepCode: selection.code },
-        httpRequest: { ...request.httpRequest, headers: { ...request.httpRequest?.headers } } };
+      request = {
+        ...request,
+        authData: { ...request.authData },
+        applicationInitialization: {
+          ...request.applicationInitialization,
+          afterPublicationStepCode: selection.code,
+        },
+        httpRequest: {
+          ...request.httpRequest,
+          headers: { ...request.httpRequest?.headers },
+        },
+      };
       readinessWork.inherit(originalRequest, request);
     }
     const deferredSteps = this.preparationSteps(profile).filter(
       (step) => step.phase === "AFTER_PUBLICATION" && step.required !== false,
     );
     let principal = operation === "status" ? undefined : this.human(request);
-    let initialPreparation = await this.preparationStatus(profile, request, "BEFORE_PUBLICATION", {
-      sharedObservation: operation === "status" || operation === "initiate" && selection?.code !== undefined,
-    });
+    let initialPreparation = await this.preparationStatus(
+      profile,
+      request,
+      "BEFORE_PUBLICATION",
+      {
+        sharedObservation:
+          operation === "status" ||
+          (operation === "initiate" && selection?.code !== undefined),
+      },
+    );
     if (initialPreparation.status === "BLOCKED") {
-      if (selection) initialPreparation = { ...initialPreparation,
-        steps: initialPreparation.steps.concat(this.pendingAfterPublicationSteps(selection, request)),
-        selectionRequired: false, selectableStepCodes: [] };
+      if (selection)
+        initialPreparation = {
+          ...initialPreparation,
+          steps: initialPreparation.steps.concat(
+            this.pendingAfterPublicationSteps(selection, request),
+          ),
+          selectionRequired: false,
+          selectableStepCodes: [],
+        };
       return this.blockedProjection(profile, initialPreparation);
     }
     let preparationChanged =
@@ -3468,8 +4227,8 @@ module.exports = {
             reason: input.reason,
             correlationId: correlationId,
             forceRefresh:
-              operation !== "reconcileApproval" && (input.forceRefresh === true ||
-              preparationChanged)
+              operation !== "reconcileApproval" &&
+              (input.forceRefresh === true || preparationChanged)
                 ? true
                 : undefined,
             mediaCodes: mediaCodes.length ? mediaCodes : undefined,
@@ -3481,9 +4240,8 @@ module.exports = {
       repairBefore = await SERVICE.DefaultModuleService.invokeModule({
         moduleName: profile.target.moduleName,
         local: false,
-        ...this.applicationTargetBinding(
-          profile.target.connectionName,
-          profile.target.runtimeRole || "WCMS_STAGED",
+        ...this.applicationPublicationTargetBinding(
+          profile.target,
           profile.target.moduleName,
         ),
         connectionType: profile.target.connectionType || "abstract",
@@ -3493,21 +4251,23 @@ module.exports = {
         timeoutMs: profile.target.timeoutMs,
         maxAttempts: profile.target.maxAttempts,
         header: { Authorization: "Bearer " + token },
-      })
-        .then(
-          (response) =>
-            (response && (response.data || response.result || response)) || {},
-        );
+      }).then(
+        (response) =>
+          (response && (response.data || response.result || response)) || {},
+      );
       let binding = this.approvalRepairBinding(repairBefore);
-      if (!binding) throw new CLASSES.NodicsError("ERR_BOF_00081", "Retained publication identity is required for approval recovery");
+      if (!binding)
+        throw new CLASSES.NodicsError(
+          "ERR_BOF_00081",
+          "Retained publication identity is required for approval recovery",
+        );
       body.approvalRepairBinding = binding;
     }
     const baselineRequest = {
       moduleName: profile.target.moduleName,
       local: false,
-      ...this.applicationTargetBinding(
-        profile.target.connectionName,
-        profile.target.runtimeRole || "WCMS_STAGED",
+      ...this.applicationPublicationTargetBinding(
+        profile.target,
         profile.target.moduleName,
       ),
       connectionType: profile.target.connectionType || "abstract",
@@ -3530,36 +4290,78 @@ module.exports = {
       header: { Authorization: "Bearer " + token },
     };
     let responsePromise;
-    if ((operation === "status" || selection?.code !== undefined) && this.hasSetupObservation(profile)) {
-      responsePromise = this.setupObservation(profile, request, undefined, "BASELINE")
-        .then(evidence => ({ data: evidence.authority }));
+    if (
+      (operation === "status" || selection?.code !== undefined) &&
+      this.hasSetupObservation(profile)
+    ) {
+      responsePromise = this.setupObservation(
+        profile,
+        request,
+        undefined,
+        "BASELINE",
+      ).then((evidence) => ({ data: evidence.authority }));
     }
     if (!responsePromise && selection?.code !== undefined) {
-      responsePromise = SERVICE.DefaultModuleService.invokeModule({ ...baselineRequest,
-        methodName: "GET", requestBody: undefined, idempotencyKey: undefined,
-        apiName: "/publication/baselines/" + encodeURIComponent(profile.baselineCode) });
+      responsePromise = SERVICE.DefaultModuleService.invokeModule({
+        ...baselineRequest,
+        methodName: "GET",
+        requestBody: undefined,
+        idempotencyKey: undefined,
+        apiName:
+          "/publication/baselines/" + encodeURIComponent(profile.baselineCode),
+      });
     }
-    if (!responsePromise && operation === "initiate" && deferredSteps.length && preparation.status === "CURRENT") {
+    if (
+      !responsePromise &&
+      operation === "initiate" &&
+      deferredSteps.length &&
+      preparation.status === "CURRENT"
+    ) {
       // An already Online baseline needs owner setup, not another approval request.
       const observed = await SERVICE.DefaultModuleService.invokeModule({
-        ...baselineRequest, methodName: "GET", requestBody: undefined, idempotencyKey: undefined,
-        apiName: "/publication/baselines/" + encodeURIComponent(profile.baselineCode),
-      }).catch((error) => { throw this.targetDiagnostic(error, profile, request); });
-      const authority = (observed && (observed.data || observed.result || observed)) || {};
-      if (authority.readiness === "READY" && authority.publication?.state === "ONLINE" &&
-          authority.releaseStatus === "CURRENT" && input.forceRefresh !== true &&
-          ![].concat(authority.mediaDependencies?.dependencies || []).some((item) => item.status === "VERSION_UNPINNED"))
+        ...baselineRequest,
+        methodName: "GET",
+        requestBody: undefined,
+        idempotencyKey: undefined,
+        apiName:
+          "/publication/baselines/" + encodeURIComponent(profile.baselineCode),
+      }).catch((error) => {
+        throw this.targetDiagnostic(error, profile, request);
+      });
+      const authority =
+        (observed && (observed.data || observed.result || observed)) || {};
+      if (
+        authority.readiness === "READY" &&
+        authority.publication?.state === "ONLINE" &&
+        authority.releaseStatus === "CURRENT" &&
+        input.forceRefresh !== true &&
+        ![]
+          .concat(authority.mediaDependencies?.dependencies || [])
+          .some((item) => item.status === "VERSION_UNPINNED")
+      )
         responsePromise = Promise.resolve(observed);
     }
     if (!responsePromise) {
-      if (operation === "initiate") preparation = await this.prepareApplication(profile, request, preparation);
+      if (operation === "initiate")
+        preparation = await this.prepareApplication(
+          profile,
+          request,
+          preparation,
+        );
       if (preparation.status === "BLOCKED") {
-        if (selection) preparation = { ...preparation,
-          steps: preparation.steps.concat(this.pendingAfterPublicationSteps(selection, request)),
-          selectionRequired: false, selectableStepCodes: [] };
+        if (selection)
+          preparation = {
+            ...preparation,
+            steps: preparation.steps.concat(
+              this.pendingAfterPublicationSteps(selection, request),
+            ),
+            selectionRequired: false,
+            selectableStepCodes: [],
+          };
         return this.blockedProjection(profile, preparation);
       }
-      responsePromise = SERVICE.DefaultModuleService.invokeModule(baselineRequest);
+      responsePromise =
+        SERVICE.DefaultModuleService.invokeModule(baselineRequest);
     }
     return responsePromise
       .then(async (response) => {
@@ -3585,75 +4387,166 @@ module.exports = {
                   "Media publication dependency evidence is not available from the CMS owner.",
               }
             : undefined);
-        let deferredActionable = false, publicationActionable = false;
+        let deferredActionable = false,
+          publicationActionable = false;
         let deferredObserved = false;
-        if (deferredSteps.length && authority.readiness === "READY" &&
-            authority.publication?.state === "ONLINE" && mediaDependencies?.qualified === true &&
-            authority.releaseStatus !== "INVALID_RELEASE" && (!selection || preparation.status === "CURRENT")) {
+        if (
+          deferredSteps.length &&
+          authority.readiness === "READY" &&
+          authority.publication?.state === "ONLINE" &&
+          mediaDependencies?.qualified === true &&
+          authority.releaseStatus !== "INVALID_RELEASE" &&
+          (!selection || preparation.status === "CURRENT")
+        ) {
           deferredObserved = true;
           if (selection) {
             const deferred = ["status", "initiate"].includes(operation)
-              ? await this.scopedAfterPublicationPreparation(profile, request, operation === "initiate")
-              : { status: "BLOCKED", steps: this.pendingAfterPublicationSteps(selection, request), selectableStepCodes: [] };
+              ? await this.scopedAfterPublicationPreparation(
+                  profile,
+                  request,
+                  operation === "initiate",
+                )
+              : {
+                  status: "BLOCKED",
+                  steps: this.pendingAfterPublicationSteps(selection, request),
+                  selectableStepCodes: [],
+                };
             if (deferred.refreshRequired) {
-              const refreshed = await this.invoke("status", profileCode, request);
-              refreshed.preparation.groupReceipts = [].concat(preparation.groupReceipts || [], deferred.groupReceipts || []);
-              if (deferred.operationFailure) refreshed.preparation.operationFailure = deferred.operationFailure;
+              const refreshed = await this.invoke(
+                "status",
+                profileCode,
+                request,
+              );
+              refreshed.preparation.groupReceipts = [].concat(
+                preparation.groupReceipts || [],
+                deferred.groupReceipts || [],
+              );
+              if (deferred.operationFailure)
+                refreshed.preparation.operationFailure =
+                  deferred.operationFailure;
               return refreshed;
             }
             deferredActionable = deferred.selectableStepCodes.length > 0;
-            preparation = { ...preparation, status: deferred.status,
+            preparation = {
+              ...preparation,
+              status: deferred.status,
               steps: preparation.steps.concat(deferred.steps),
-              selectableStepCodes: deferred.selectableStepCodes, selectionRequired: true,
-              groupReceipts: [].concat(preparation.groupReceipts || [], deferred.groupReceipts || []) };
+              selectableStepCodes: deferred.selectableStepCodes,
+              selectionRequired: true,
+              groupReceipts: [].concat(
+                preparation.groupReceipts || [],
+                deferred.groupReceipts || [],
+              ),
+            };
           } else {
-          const publicationSetup = ["status", "initiate"].includes(operation)
-            ? await this.publicationPreparation(profile, request, operation === "initiate")
-            : { ready: false, steps: [] };
-          let deferred = ["status", "initiate"].includes(operation) && publicationSetup.ready
-            ? await this.preparationStatus(profile, request, "AFTER_PUBLICATION")
-            : publicationSetup.steps.length ? {
-              status: publicationSetup.steps.some(step => step.status === "VALIDATION_BLOCKED") ? "BLOCKED" :
-                publicationSetup.steps.some(step => step.status === "NOT_INSTALLED") ? "ACTION_REQUIRED" : "RUNNING",
-              steps: deferredSteps.filter(step => step.type !== "GOVERNED_PUBLICATIONS").map(step => ({
-                ...step, status: "DEFERRED", message: "Waiting for all required governed publications.",
-              })),
-            }
-            : { status: "BLOCKED", steps: deferredSteps.map((step) => ({
-              ...step, status: "UNKNOWN", message: "Refresh application readiness to inspect deferred setup.",
-            })) };
-          deferred.steps.push(...publicationSetup.steps);
-          publicationActionable = deferred.status === "ACTION_REQUIRED" && publicationSetup.steps.some(
-            step => step.status === "NOT_INSTALLED",
-          );
-          deferredActionable = publicationSetup.ready && deferred.status === "ACTION_REQUIRED" && deferred.steps.some(
-            (step) => ["NOT_INSTALLED", "UPDATE_AVAILABLE", "FAILED"].includes(step.status),
-          );
-          if (operation === "initiate" && deferredActionable) {
-            deferred = await this.prepareApplication(profile, request, deferred, "AFTER_PUBLICATION");
-            if (deferred.status !== "BLOCKED") {
-              // GET rechecks CMS, Media and every required receipt after the existing nImport operation.
-              const refreshed = await this.invoke("status", profileCode, request);
-              refreshed.preparation.groupReceipts = [].concat(
-                preparation.groupReceipts || [], deferred.groupReceipts || [],
+            const publicationSetup = ["status", "initiate"].includes(operation)
+              ? await this.publicationPreparation(
+                  profile,
+                  request,
+                  operation === "initiate",
+                )
+              : { ready: false, steps: [] };
+            let deferred =
+              ["status", "initiate"].includes(operation) &&
+              publicationSetup.ready
+                ? await this.preparationStatus(
+                    profile,
+                    request,
+                    "AFTER_PUBLICATION",
+                  )
+                : publicationSetup.steps.length
+                  ? {
+                      status: publicationSetup.steps.some(
+                        (step) => step.status === "VALIDATION_BLOCKED",
+                      )
+                        ? "BLOCKED"
+                        : publicationSetup.steps.some(
+                              (step) => step.status === "NOT_INSTALLED",
+                            )
+                          ? "ACTION_REQUIRED"
+                          : "RUNNING",
+                      steps: deferredSteps
+                        .filter((step) => step.type !== "GOVERNED_PUBLICATIONS")
+                        .map((step) => ({
+                          ...step,
+                          status: "DEFERRED",
+                          message:
+                            "Waiting for all required governed publications.",
+                        })),
+                    }
+                  : {
+                      status: "BLOCKED",
+                      steps: deferredSteps.map((step) => ({
+                        ...step,
+                        status: "UNKNOWN",
+                        message:
+                          "Refresh application readiness to inspect deferred setup.",
+                      })),
+                    };
+            deferred.steps.push(...publicationSetup.steps);
+            publicationActionable =
+              deferred.status === "ACTION_REQUIRED" &&
+              publicationSetup.steps.some(
+                (step) => step.status === "NOT_INSTALLED",
               );
-              return refreshed;
+            deferredActionable =
+              publicationSetup.ready &&
+              deferred.status === "ACTION_REQUIRED" &&
+              deferred.steps.some((step) =>
+                ["NOT_INSTALLED", "UPDATE_AVAILABLE", "FAILED"].includes(
+                  step.status,
+                ),
+              );
+            if (operation === "initiate" && deferredActionable) {
+              deferred = await this.prepareApplication(
+                profile,
+                request,
+                deferred,
+                "AFTER_PUBLICATION",
+              );
+              if (deferred.status !== "BLOCKED") {
+                // GET rechecks CMS, Media and every required receipt after the existing nImport operation.
+                const refreshed = await this.invoke(
+                  "status",
+                  profileCode,
+                  request,
+                );
+                refreshed.preparation.groupReceipts = [].concat(
+                  preparation.groupReceipts || [],
+                  deferred.groupReceipts || [],
+                );
+                return refreshed;
+              }
             }
-          }
-          preparation = {
-            ...preparation,
-            status: [preparation.status, deferred.status].includes("BLOCKED") ? "BLOCKED" :
-              [preparation.status, deferred.status].includes("RUNNING") ? "RUNNING" :
-                preparation.status === "CURRENT" && deferred.status === "CURRENT" ? "CURRENT" : "ACTION_REQUIRED",
-            steps: preparation.steps.concat(deferred.steps),
-            groupReceipts: [].concat(preparation.groupReceipts || [], deferred.groupReceipts || []),
-            operationFailure: deferred.operationFailure || preparation.operationFailure,
-          };
+            preparation = {
+              ...preparation,
+              status: [preparation.status, deferred.status].includes("BLOCKED")
+                ? "BLOCKED"
+                : [preparation.status, deferred.status].includes("RUNNING")
+                  ? "RUNNING"
+                  : preparation.status === "CURRENT" &&
+                      deferred.status === "CURRENT"
+                    ? "CURRENT"
+                    : "ACTION_REQUIRED",
+              steps: preparation.steps.concat(deferred.steps),
+              groupReceipts: [].concat(
+                preparation.groupReceipts || [],
+                deferred.groupReceipts || [],
+              ),
+              operationFailure:
+                deferred.operationFailure || preparation.operationFailure,
+            };
           }
         }
-        if (selection && !deferredObserved) preparation = { ...preparation,
-          steps: preparation.steps.concat(this.pendingAfterPublicationSteps(selection, request)),
-          selectableStepCodes: [], selectionRequired: false };
+        if (selection && !deferredObserved)
+          preparation = {
+            ...preparation,
+            steps: preparation.steps.concat(
+              this.pendingAfterPublicationSteps(selection, request),
+            ),
+            selectableStepCodes: [],
+            selectionRequired: false,
+          };
         let readiness =
           preparation.status === "BLOCKED" ? "BLOCKED" : authority.readiness;
         if (
@@ -3663,14 +4556,28 @@ module.exports = {
         ) {
           readiness = "MEDIA_DEPENDENCIES_PENDING";
         }
-        if (deferredSteps.length && readiness === "READY" &&
-            (preparation.status !== "CURRENT" || !deferredSteps.every((required) => preparation.steps.some(
-              (step) => step.phase === "AFTER_PUBLICATION" && step.code === required.code &&
-                step.dataType === required.dataType &&
-                step.targetServer === required.targetServer && step.targetRuntimeRole === required.targetRuntimeRole &&
-                step.status === "CURRENT",
-            )))) readiness = deferredActionable || publicationActionable ? "IMPORTED" :
-              preparation.status === "RUNNING" ? "IMPORTING" : "BLOCKED";
+        if (
+          deferredSteps.length &&
+          readiness === "READY" &&
+          (preparation.status !== "CURRENT" ||
+            !deferredSteps.every((required) =>
+              preparation.steps.some(
+                (step) =>
+                  step.phase === "AFTER_PUBLICATION" &&
+                  step.code === required.code &&
+                  step.dataType === required.dataType &&
+                  step.targetServer === required.targetServer &&
+                  step.targetRuntimeRole === required.targetRuntimeRole &&
+                  step.status === "CURRENT",
+              ),
+            ))
+        )
+          readiness =
+            deferredActionable || publicationActionable
+              ? "IMPORTED"
+              : preparation.status === "RUNNING"
+                ? "IMPORTING"
+                : "BLOCKED";
         let preparationUpdateAvailable =
           preparation.status !== "CURRENT" &&
           preparation.status !== "RUNNING" &&
@@ -3679,9 +4586,14 @@ module.exports = {
         let updateAvailable =
           readiness === "READY" &&
           ["UPDATE_AVAILABLE", "FAILED"].includes(authority.releaseStatus);
-        const fallbackRelease = this.blockedReleaseIdentity(profile, preparation);
-        const releaseCode = authority.releaseCode || fallbackRelease.releaseCode;
-        const releaseVersion = authority.releaseVersion || fallbackRelease.releaseVersion;
+        const fallbackRelease = this.blockedReleaseIdentity(
+          profile,
+          preparation,
+        );
+        const releaseCode =
+          authority.releaseCode || fallbackRelease.releaseCode;
+        const releaseVersion =
+          authority.releaseVersion || fallbackRelease.releaseVersion;
         let projection = {
           readiness: readiness,
           publicationTargetResponded: true,
@@ -3706,32 +4618,40 @@ module.exports = {
           siteCode: profile.siteCode,
           profile: this.describe(profile, projection),
           allowedActions:
-            selection && deferredActionable ? ["INITIALIZE"] :
-            preparation.status === "BLOCKED" || (deferredSteps.length && readiness === "BLOCKED")
-              ? []
-              : deferredSteps.length && readiness === "IMPORTED" && authority.publication?.state === "ONLINE"
-                ? deferredActionable || publicationActionable ? ["INITIALIZE"] : []
-              : readiness === "READY" ||
-                  readiness === "MEDIA_DEPENDENCIES_PENDING"
-                ? [].concat(
-                    updateAvailable ||
-                      preparationUpdateAvailable ||
-                      (mediaDependencies &&
-                        []
-                          .concat(mediaDependencies.dependencies || [])
-                          .some((item) => item.status === "VERSION_UNPINNED"))
-                      ? ["INITIALIZE"]
-                      : [],
-                    authority.publication &&
-                      authority.publication.previousOnlineVersion
-                      ? ["ROLLBACK"]
-                      : [],
-                    ["RETIRE"],
-                  )
-                : releaseInvalid ||
-                    ["IMPORTING", "PUBLICATION_PENDING"].includes(readiness)
-                  ? []
-                  : ["INITIALIZE"],
+            selection && deferredActionable
+              ? ["INITIALIZE"]
+              : preparation.status === "BLOCKED" ||
+                  (deferredSteps.length && readiness === "BLOCKED")
+                ? []
+                : deferredSteps.length &&
+                    readiness === "IMPORTED" &&
+                    authority.publication?.state === "ONLINE"
+                  ? deferredActionable || publicationActionable
+                    ? ["INITIALIZE"]
+                    : []
+                  : readiness === "READY" ||
+                      readiness === "MEDIA_DEPENDENCIES_PENDING"
+                    ? [].concat(
+                        updateAvailable ||
+                          preparationUpdateAvailable ||
+                          (mediaDependencies &&
+                            []
+                              .concat(mediaDependencies.dependencies || [])
+                              .some(
+                                (item) => item.status === "VERSION_UNPINNED",
+                              ))
+                          ? ["INITIALIZE"]
+                          : [],
+                        authority.publication &&
+                          authority.publication.previousOnlineVersion
+                          ? ["ROLLBACK"]
+                          : [],
+                        ["RETIRE"],
+                      )
+                    : releaseInvalid ||
+                        ["IMPORTING", "PUBLICATION_PENDING"].includes(readiness)
+                      ? []
+                      : ["INITIALIZE"],
           readiness: readiness,
           releaseCode: releaseCode,
           releaseVersion: releaseVersion,
@@ -3756,12 +4676,11 @@ module.exports = {
               code: profile.baselineCode,
               required: true,
               status: "READINESS_RATE_LIMITED",
-              targetServer: this.applicationTargetBinding(
-                profile.target.connectionName,
-                profile.target.runtimeRole || "WCMS_STAGED",
+              targetServer: this.applicationPublicationTargetBinding(
+                profile.target,
                 profile.target.moduleName,
               ).connectionName,
-              targetRuntimeRole: profile.target.runtimeRole || "WCMS_STAGED",
+              targetRuntimeRole: profile.target.publication,
               message: this.targetFailureMessage("ERR_RTR_00004", ""),
             }),
           });
@@ -3771,8 +4690,13 @@ module.exports = {
   },
   /** Reads or installs the profile-owned content pack through its fixed Staged target. */
   invokeContentPack: function (operation, profileCode, request) {
-    if (request.applicationInitialization?.afterPublicationStepCode !== undefined)
-      throw new CLASSES.NodicsError("ERR_BOF_00081", "After-publication selection is only valid for initialization");
+    if (
+      request.applicationInitialization?.afterPublicationStepCode !== undefined
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "After-publication selection is only valid for initialization",
+      );
     let profile = this.profile(profileCode);
     if (profile.type !== "DOCUMENTATION_BUNDLE" || !profile.contentPackCode) {
       throw new CLASSES.NodicsError(
@@ -3780,27 +4704,34 @@ module.exports = {
         "Application profile does not own a documentation content pack",
       );
     }
-    if (operation === "install") this.human(request);
+    const principal = operation === "install" ? this.human(request) : undefined;
     let token = NODICS.getInternalAuthToken(request.tenant);
     if (!token)
       throw new CLASSES.NodicsError(
         "ERR_BOF_00083",
         "Application initialization service authentication is unavailable",
       );
+    const targetModule = operation === "install" ? "cms" : "system";
     return SERVICE.DefaultModuleService.invokeModule({
-      moduleName: "system",
+      moduleName: targetModule,
       local: false,
-      ...this.applicationTargetBinding(
-        profile.target.connectionName,
-        profile.target.runtimeRole || "WCMS_STAGED",
-        "system",
-      ),
+      ...this.applicationPublicationTargetBinding(profile.target, targetModule),
       connectionType: profile.target.connectionType || "abstract",
       methodName: operation === "status" ? "GET" : "POST",
       apiName:
-        "/internal/content-packs/" +
-        encodeURIComponent(profile.contentPackCode) +
-        (operation === "install" ? "/imports" : ""),
+        operation === "install"
+          ? "/publication/baselines/" +
+            encodeURIComponent(profile.baselineCode) +
+            "/content-pack/imports"
+          : "/internal/content-packs/" +
+            encodeURIComponent(profile.contentPackCode),
+      requestBody:
+        operation === "install"
+          ? {
+              requestedBy: principal,
+              correlationId: request.correlationId || request.requestId,
+            }
+          : undefined,
       timeoutMs: profile.target.timeoutMs,
       maxAttempts: profile.target.maxAttempts,
       idempotencyKey:
@@ -3826,28 +4757,60 @@ module.exports = {
   installContentPack: function (profileCode, request) {
     return this.invokeContentPack("install", profileCode, request);
   },
+  /** Filters lifecycle presentation using current canonical route admission; owner execution stays independent. */
+  projectActorActions: function (status, request) {
+    const routes = require('../router/routers').backoffice.applicationInitialization;
+    const security = SERVICE.DefaultBackofficeAdministrativeSecurityService;
+    const commands = { INITIALIZE: routes.initiateApplicationInitialization,
+      ROLLBACK: routes.rollbackApplicationInitialization, RETIRE: routes.retireApplicationInitialization };
+    const allowedActions = (status.allowedActions || []).filter(action => {
+      if (security?.allowsRouteAction?.(request, commands[action]) !== true) return false;
+      if (action === 'INITIALIZE') {
+        const code = status.preparation?.selectionRequired ? status.preparation.selectableStepCodes?.[0] : undefined;
+        try { this.assertInitiationScope({ code, steps: status.preparation?.steps || [] }, request); }
+        catch (_) { return false; }
+      }
+      return true;
+    });
+    const repairRoutes = {
+      'applicationInitialization.prepareCapability': routes.prepareApplicationCapability,
+      'applicationInitialization.reconcileApproval': routes.reconcileApplicationApproval,
+    };
+    const projectRepair = repair => {
+      const route = repairRoutes[repair?.operation];
+      if (!route || !repair.available || security?.allowsRouteAction?.(request, route) === true) return repair;
+      return { ...repair, available: false, eligibility: 'NOT_AVAILABLE',
+        unavailableReason: 'This action requires an authorized operator. Review remains available.' };
+    };
+    const capability = status.capability ? { ...status.capability,
+      blockers: (status.capability.blockers || []).map(blocker => ({ ...blocker,
+        ...(blocker.repair ? { repair: projectRepair(blocker.repair) } : {}) })),
+      ...(status.capability.repairActions ? { repairActions: status.capability.repairActions.map(projectRepair) } : {}),
+    } : undefined;
+    return { ...status, allowedActions, ...(capability ? { capability } : {}) };
+  },
   /** Executes the documented bounded module operation. */
   status: function (profileCode, request) {
-    return this.invoke("status", profileCode, request);
+    return this.invoke("status", profileCode, request).then(status => this.projectActorActions(status, request));
   },
   /** Prepares profile-owned setup data and media without submitting publication approval. */
   prepare: function (profileCode, request) {
-    return this.prepareCapability(profileCode, request);
+    return this.prepareCapability(profileCode, request).then(status => this.projectActorActions(status, request));
   },
   /** Executes the documented bounded module operation. */
   initiate: function (profileCode, request) {
-    return this.invoke("initiate", profileCode, request);
+    return this.invoke("initiate", profileCode, request).then(status => this.projectActorActions(status, request));
   },
   /** Executes governed approval reconciliation through the owning Staged baseline authority. */
   reconcileApproval: function (profileCode, request) {
-    return this.invoke("reconcileApproval", profileCode, request);
+    return this.invoke("reconcileApproval", profileCode, request).then(status => this.projectActorActions(status, request));
   },
   /** Executes the documented bounded module operation. */
   rollback: function (profileCode, request) {
-    return this.invoke("rollback", profileCode, request);
+    return this.invoke("rollback", profileCode, request).then(status => this.projectActorActions(status, request));
   },
   /** Executes the documented bounded module operation. */
   retire: function (profileCode, request) {
-    return this.invoke("retire", profileCode, request);
+    return this.invoke("retire", profileCode, request).then(status => this.projectActorActions(status, request));
   },
 };

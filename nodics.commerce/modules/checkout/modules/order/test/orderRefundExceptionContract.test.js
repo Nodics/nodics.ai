@@ -55,7 +55,7 @@ function fixture() {
   const pin = { tenant: "t", enterpriseCode: "market", ownerId: "buyer", orderCode: order.code, caseCode: row.code,
     amount: "50", currency: "POINTS", entitlementCode: unit.code, couponCode: coupon.code };
   const state = { row, order, unit, coupon, capture, pin, writes: [], revokes: 0, payments: 0, profileReads: 0,
-    environment: "LOCAL", environmentName: "testLocal", role: "COMMERCE",
+    environment: "LOCAL", environmentName: "testLocal", role: { code: "COMMERCE", publication: "OPERATIONAL" },
     config: { enabled: true, environmentNames: ["testLocal"], approvals: [pin] },
     permissions: ["commerce.dispute.review", "commerce.refund.exception.adjudicate", "commerce.refund.execute"],
     scope: { principalCode: "reviewer", scopes: [{ scopeType: "ENTERPRISE", scopeCode: "market" }], deniedScopes: [] } };
@@ -92,7 +92,7 @@ function fixture() {
     DefaultPaymentTransactionEntryService: store("captures"), DefaultDigitalCommerceEntitlementService: entitlement,
     DefaultDigitalCommerceRefundService: digital, DefaultExactAmountService: exact,
     DefaultLoggerService: { assertSensitiveRequest: () => {} },
-    DefaultModuleService: { invokeModule: async () => { state.profileReads++; return state.profileResponse || { data: copy(state.scope) }; } },
+    DefaultModuleService: {isLocalModuleActive: moduleName => ["order"].includes(moduleName),  invokeModule: async () => { state.profileReads++; return state.profileResponse || { data: copy(state.scope) }; } },
     DefaultSecuredRequestPipelineService: { getGrantedPermissions: () => state.permissions, isPermissionGranted: (p, grants) => grants.includes(p) },
     DefaultPromotionOperationService: { ...promotion, requireOperationalRuntime: () => {}, commitLifecycleCoupon: async (r, previous, next) => {
       assert.equal(previous.revision, coupon.revision); Object.assign(coupon, copy(next)); state.revokes++; return copy(coupon);
@@ -209,7 +209,7 @@ test("existing refund orchestration consumes exact private adjudication, preserv
 
 for (const [name, change] of Object.entries({
   "disabled": f => { f.state.config.enabled = false; },
-  "Docker sibling": f => { f.state.environmentName = "testDockerLocal"; }, "wrong runtime": f => { f.state.role = "PLATFORM"; },
+  "Docker sibling": f => { f.state.environmentName = "testDockerLocal"; }, "wrong runtime": f => { f.state.role.publication = "STAGED"; },
   "partial pin": f => { delete f.state.pin.couponCode; }, "duplicate pin": f => { f.state.config.approvals.push(copy(f.state.pin)); },
   "wrong case pin": f => { f.state.pin.caseCode = "OTHER"; }, "wrong buyer pin": f => { f.state.pin.ownerId = "other"; },
   "wrong amount pin": f => { f.state.pin.amount = "49"; }, "wrong currency pin": f => { f.state.pin.currency = "POINT"; },

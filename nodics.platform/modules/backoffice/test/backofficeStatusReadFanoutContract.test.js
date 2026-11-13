@@ -18,6 +18,7 @@
  * @owner backoffice
  * @override Inert owner fixtures must retain exact-request identity, bounded reads and readiness contracts.
  */
+const { describe, it, beforeEach, afterEach } = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
 const application = require("../src/service/defaultBackofficeApplicationInitializationService");

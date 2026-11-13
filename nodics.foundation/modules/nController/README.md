@@ -107,3 +107,18 @@ Avoid:
 - losing tenant, enterprise, auth, or trace context during request mapping;
 - accepting arbitrary operation names from request payloads;
 - editing generated controllers manually when schema definitions should be regenerated.
+
+## Preserve placement during generated updates
+
+`DefaultSchemaUtilityService.buildGeneratedMutationModel` receives a trusted
+create/update operation from the controller. Creation may inject authenticated
+`tenant` and `enterpriseCode` defaults. Update normalization excludes these
+placement fields and does not inject current-actor placement or fixed scope values.
+The existing record retains its placement; authenticated request scope still
+controls access, provider routing and attribution. This is not a migration API.
+Body fields cannot select the normalization operation. Preserve original domain
+counters and verify `schemaMutationScopePreservation.test.js` plus generated
+mutation parity and Workbench contracts.
+
+Every generated mutation, including removal by query, ID or code, rejects an
+explicit enterprise header that contradicts the signed actor before dispatch.

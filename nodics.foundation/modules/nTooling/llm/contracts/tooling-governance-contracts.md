@@ -40,6 +40,11 @@ Named setup/publication composition may reference owner init/core releases
 without owning or implicitly importing those releases. Never expand a policy
 allowlist or allow an entire capability namespace to make a reference pack pass.
 
+Application artwork belongs to the consumed profile's `presentation.visual`.
+An unused top-level visual alias is not a reference property contract and is
+rejected by the existing reference ownership gate. Keep actual customer media
+identities in the profile; do not promote branding into Framework defaults.
+
 Only parsed receipt envelopes under `config/setup-observation/*.json` and its
 `history/*.json` child are inert setup evidence. JavaScript, malformed envelopes,
 unrelated configuration JSON and importing receipts into configuration remain
@@ -96,6 +101,13 @@ file presence alone never qualifies live encryption or private capture.
 
 ## Reference Change Preparation
 
+Documentation catalogue reads validate route delivery states against the existing
+CMS route schema. Source documentation lifecycle `STAGED` cannot be substituted
+for CMS route `DRAFT`. Keep omitted values eligible for CMS defaults; reject
+invalid explicit states with the existing documentation validation status before
+import. Later source-tooling customization retains the target owner's contract;
+passing source validation never proves publication or runtime qualification.
+
 The existing data-manifest owner exposes `preflightReferenceChanges` for a supplied
 counted owner snapshot and reference-only reviewed changes. It rejects duplicate or
 missing codes, inconsistent counts/revisions and noncanonical enterprise references,
@@ -117,6 +129,12 @@ operations. Never add a parallel customer runner or automatically erase security
 caches on start. Physical destruction remains a separately approved operator task.
 
 ### Exact Local Reset Maintenance Preflight
+
+The configuration projection is asynchronous and already loads effective
+maintenance services. Await it before inspecting Local admission or invoking an
+owner, and do not reload its services. The maintenance context must retain its
+registries through projection and inspection settlement, restoring them on both
+success and rejection. Loader completion never grants destructive admission.
 
 #### Optional Physical Search Scope
 
@@ -189,8 +207,12 @@ It uses existing `Tenant.properties.database.tenantNamespaceBindings`; no databa
 name is reconstructed, and neither a prefix nor a CLI marker proves ownership.
 Every retained deployment/server pin must match a fresh candidate from that
 runtime's effective database owner, including every module/master/test destination,
-base identity and provider-owned credential-free endpoint fingerprint. Missing,
-foreign, extra, changed or unsupported bindings refuse before effects.
+base identity and provider-owned credential-free endpoint fingerprint. A configured
+runtime without a retained scope contributes no registered destinations: partial
+preparation never permits reconstruction of an unretained name. Every retained
+scope and channel must be accounted for by a validated selected runtime before
+selection admission. Missing or malformed retained provenance, foreign, extra,
+changed or unsupported bindings refuse before effects.
 
 Projection honors the explicit calling environment plus declared runtime launch
 environment, with existing private credential bindings as defaults. It never
@@ -633,6 +655,14 @@ an operation. Resolve runtime choices by an explicit server or a unique semantic
 enabled initialization profile by explicit code or a unique template match; missing
 and ambiguous selections fail before acceptance operations. Keep actual customer
 journey choices and deployment container/URL differences in their existing layers.
+For an explicitly configured container environment, nTooling supplies the default
+Compose path, generated directory, environment filename and Platform acceptance
+command from its properties. The default paths resolve from the selected
+environment. Actual path and command changes remain deployment overrides.
+Use the selected-server `build --source-only` option for immutable source
+images that are assembled without a runtime database. It generates from authored
+schemas. A normal selected-server build also reads persisted runtime schemas.
+Runtime startup still validates the generated artifacts required by its effective schemas.
 
 Acceptance runners must expose a capability-oriented matrix rather than asking
 developers to remember scattered scripts. Matrix rows should identify the
@@ -680,6 +710,13 @@ dependency-ordered selections. Startup, status and smoke share nSystem's
 processes; lifecycle execution is an explicit separate operation.
 Qualification evidence mechanics accept a caller-owned plan and environment;
 they do not choose customer scenarios or assert production approval.
+
+Topology startup defaults to a 90000ms readiness budget in the Framework owner.
+An actual environment server may override only that deployment sizing through
+`nodics.runtimeTooling.readinessTimeoutMs`, a positive safe integer in milliseconds.
+Invalid values fail before process launch. The selected deadline applies to the
+existing readiness loop; it does not alter probes, terminal failure handling,
+ownership, startup rollback or post-start isolation.
 
 Topology readiness stops polling only when a DOWN response includes the exact
 required DOWN `backofficeRegistration` check with reason
@@ -794,3 +831,32 @@ limits are bounded; missing tasks or failed claims fail closed. It does not
 choose an approval, broaden identity permissions or bypass Process APIs.
 Regression coverage includes `toolingContributionSyntax.test.js`,
 `configurationOwnershipRestrictions.test.js` and `projectWorkflowAcceptance.test.mjs`.
+
+
+## Ordinary deployment overrides after role-profile retirement
+
+The configuration source audit rejects `runtimeRoleProfiles` and
+`runtimeRole.roles` in authored configuration. Actual server/node overrides use
+ordinary implementing-owner namespaces; namespace presence alone is not a reason
+to reject an override or require an obsolete profile. Explicit release contribution
+selections may live on the destination runtime. Reusable installer definitions
+remain module-owned; runtime tooling topology remains server package metadata.
+
+Reference demos may define ordinary named initialization/setup/publication
+composition descriptors through their existing bounded configurationPaths. This
+permits references to governed owner releases, not access definitions, credential
+bindings, reusable domain policy or an owned initialization release. The tests
+retain negative fixtures for these distinctions. Customer root default namespace,
+secret, knowledge-inventory, empty override and derived-topology checks remain.
+
+This static syntax gate does not prove that every deployment leaf is a genuine
+value delta against effective defaults. The separate configuration ownership and
+source review remains required; passing this gate is not full deployment readiness.
+
+
+Authored credential-map `value`/`token` literals and nonempty binding fallbacks
+are rejected by the existing configuration source audit without evaluating code
+or including values in diagnostics. Use a private deployment binding or the
+secured encrypted runtime configuration owner. A null unconfigured entry remains
+allowed; logical reference identifiers do not become credentials. Preserve existing
+persisted values during source cleanup and use owner APIs for any required save.

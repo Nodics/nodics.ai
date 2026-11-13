@@ -78,6 +78,7 @@ function fixture(extra = {}) {
       base: () => ({ input: (value) => value }),
       assignment: async () => ({ item, enterprise }),
       administrator: async () => calls.push("admit"),
+      verifyAdministrator: async () => calls.push("admit"),
       write: async (_old, patch) => {
         calls.push("write");
         item = { ...item, ...patch, revision: item.revision + 1 };

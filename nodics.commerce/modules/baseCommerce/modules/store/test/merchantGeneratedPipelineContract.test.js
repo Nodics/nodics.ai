@@ -77,7 +77,7 @@ function fixture(t) {
         generateUniqueCode: () => 'fixture-only' };
     global.CONFIG = { get: key => ({ schemaPolicies: properties.schemaPolicies,
         accessPoints: { readAccessPoint: 1, writeAccessPoint: 2, removeAccessPoint: 3, fullAccessPoint: 10 },
-        runtimeRole: 'COMMERCE', cache: { enabled: false }, promotion: {},
+        runtimeRole: { code: 'COMMERCE', publication: 'OPERATIONAL' }, cache: { enabled: false }, promotion: {},
         digitalCore: { merchantRedemption: { enabled: true, storeScope: { enabled: true, qualified: true },
             presentation: { storeLabel: 'Outlet' } } } }[key]) };
     global.PIPELINE = { ...require(foundation + 'nPipeline/src/pipelines/pipelines'),
@@ -112,7 +112,7 @@ function fixture(t) {
         DefaultDatabaseConfigurationService: { getSchemaInterceptors: () => ({}), getSchemaValidators: () => ({}) },
         DefaultSecuredRequestPipelineService: { getGrantedPermissions: () => ['commerce.coupon.pos.redeem'],
             isPermissionGranted: (permission, granted) => granted.includes(permission) },
-        DefaultModuleService: { invokeModule: async request => {
+        DefaultModuleService: { isLocalModuleActive: name => ['digitalCore', 'store'].includes(name), invokeModule: async request => {
             assert.equal(request.apiName, '/identity/scopes/me');
             assert.equal(request.header.Authorization, 'Bearer fixture-only');
             assert.equal(request.header['X-Enterprise-Code'], 'issuer');

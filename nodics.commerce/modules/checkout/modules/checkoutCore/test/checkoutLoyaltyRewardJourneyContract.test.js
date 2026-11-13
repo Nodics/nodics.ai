@@ -34,6 +34,7 @@ test('digital reservation selects the authenticated persisted Cart Store before 
     const before = structuredClone(request), calculation = { entries: [] }, calls = [];
     let cart = { code: 'cartA', storeCode: 'saved-store' };
     global.SERVICE = {
+      DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) },
         DefaultCartOperationService: { cartSnapshot: async context => {
             assert.equal(context.cartCode, 'cartA'); assert.equal(context.ownerId, 'buyer-login');
             assert.equal(context.authData, request.authData); return cart;
@@ -67,6 +68,7 @@ test('promotion commitment uses the persisted Cart Store and rejects unavailable
         payload: { cartCode: 'cart-1', storeCode: 'untrusted-body-store' } };
     let cart = { code: 'cart-1', storeCode: 'saved-store' };
     global.SERVICE = {
+      DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) },
         DefaultCartOperationService: { cartSnapshot: async selected => {
             assert.equal(selected.cartCode, 'cart-1');
             assert.equal(selected.ownerId, 'buyer');
@@ -153,6 +155,7 @@ async function setup(overrides) {
         loyalty: { ...loyaltyCoreDefaults.loyalty, ...loyaltyReservationDefaults.loyalty } });
     global.CONFIG = { get: key => defaults[key] };
     global.SERVICE = {
+      DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) },
         DefaultExactAmountService: exact,
         DefaultLoyaltyAmountService: loyaltyAmount,
         DefaultCheckoutPlacementPortsService: portsService,

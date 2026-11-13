@@ -174,6 +174,39 @@ test('lost claim or final acknowledgement never invokes the owner twice', async 
     }
 });
 
+test('a property owner stale refusal closes the exact claim and cannot replay', async (t) => {
+    const f = fixture(t);
+    await owner.createActivationRequest({
+        ...f.request,
+        activationRequest: {
+            code: 'request',
+            configurationType: 'propertyConfiguration',
+            configuration: { feature: { level: 2 } },
+        },
+    });
+    await f.approve();
+    let attempts = 0;
+    SERVICE.DefaultConfigurationService = {
+        applyPropertyConfiguration: async () => {
+            attempts += 1;
+            throw new CLASSES.NodicsError('ERR_DYN_PROPERTY_STALE');
+        },
+    };
+    await assert.rejects(() => owner.activateApprovedRequest(f.request), {
+        code: 'ERR_DYN_PROPERTY_STALE',
+    });
+    const row = f.rows.get('tenant:request');
+    assert.equal(row.status, 'STALE');
+    assert.equal(row.approvalStatus, 'APPROVED');
+    assert.deepEqual(row.lifecycle.map((entry) => entry.status), [
+        'REQUESTED', 'APPROVED', 'ACTIVATING', 'STALE',
+    ]);
+    await assert.rejects(() => owner.activateApprovedRequest(f.request), {
+        code: 'ERR_DYN_PROPERTY_STALE',
+    });
+    assert.equal(attempts, 1);
+});
+
 test('future activation, foreign tenant and legacy records fail before dispatch', async (t) => {
     const f = fixture(t);
     for (const invalid of [

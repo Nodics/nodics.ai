@@ -1,8 +1,8 @@
 # Store Agent Contract
 
-Store owns the semantic COMMERCE placement-read role profile. It does not enable
-the endpoint or select callers. Projects supply explicit enablement, qualified
-capture and exact caller/placement scope; do not copy the role mapping into servers.
+Store placement reads require local Store ownership through DefaultModuleService
+and explicit OPERATIONAL runtime publication. Display role code grants no authority.
+Projects supply explicit enablement, qualified capture and exact caller/placement scope.
 
 Fixed HTTP controllers must support nRouter's callback dispatch as well as direct
 Promise callers. A returned Promise alone does not complete the HTTP pipeline.

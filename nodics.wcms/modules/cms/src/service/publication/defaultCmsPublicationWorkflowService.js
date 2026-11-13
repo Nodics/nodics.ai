@@ -49,8 +49,9 @@ module.exports = {
         let publication = (CONFIG.get('cms') || {}).publication || {};
         let workflow = publication.workflow || {};
         let target = workflow.target || {};
-        if (publication.runtimeRole !== 'STAGED') throw new CLASSES.NodicsError('CMS_PUBLICATION_SOURCE_ROLE_INVALID', 'Approval can start only from CMS Staged');
-        if (!target.moduleName || !target.connectionName || target.connectionName === 'default') {
+        if (publication.runtimeRole !== 'STAGED' || !SERVICE.DefaultModuleService?.isLocalModuleActive('cms') ||
+            !SERVICE.DefaultModuleService.isCurrentRuntimeAuthority({ publication: 'STAGED' })) throw new CLASSES.NodicsError('CMS_PUBLICATION_SOURCE_ROLE_INVALID', 'Approval can start only from CMS Staged');
+        if (target.moduleName !== 'workflow' || target.publication !== 'OPERATIONAL' || !target.connectionName || target.connectionName === 'default') {
             throw new CLASSES.NodicsError('CMS_PUBLICATION_WORKFLOW_UNAVAILABLE', 'CMS publication Process target is unavailable');
         }
         let token = NODICS.getInternalAuthToken(request.tenant);
@@ -72,7 +73,7 @@ module.exports = {
         if (requestedBy) payload.requestedBy = requestedBy;
         return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
             connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
-            targetAuthority: { runtimeRole: target.runtimeRole || 'PROCESS' },
+            targetAuthority: { publication: target.publication }, local: false,
             methodName: 'POST',
             apiName: '/instances/publication-approval', requestBody: payload, timeoutMs: target.timeoutMs,
             maxAttempts: target.maxAttempts, idempotencyKey: publicationRequest.code + ':' + publicationRequest.revision,
@@ -80,12 +81,32 @@ module.exports = {
             responseSelector: response => response && (response.result || response.data || response)
         });
     },
+    /** Reads native Process task authority as the original employee, without service-token elevation. */
+    readReviewInstance: function (instanceCode, request) {
+        const target = ((CONFIG.get('cms') || {}).publication || {}).workflow?.target || {};
+        if (target.moduleName !== 'workflow' || target.publication !== 'OPERATIONAL' ||
+            !target.connectionName || target.connectionName === 'default') {
+            throw new CLASSES.NodicsError('ERR_CMS_00115');
+        }
+        return SERVICE.DefaultModuleService.invokeModule({
+            moduleName: target.moduleName, connectionName: target.connectionName,
+            connectionType: target.connectionType || 'abstract',
+            targetAuthority: { publication: target.publication }, local: false,
+            tenant: request.tenant, methodName: 'GET',
+            apiName: '/instances/' + encodeURIComponent(instanceCode) + '/detail',
+            timeoutMs: target.timeoutMs, maxAttempts: 1,
+            header: { Authorization: request.authorization, tenant: request.tenant,
+                'x-enterprise-code': request.authData.entCode || request.authData.enterpriseCode },
+            responseSelector: response => response?.code === 'SUC_PROCESS_00000' ? response.data : undefined
+        });
+    },
     /** Reads Process-owned approval diagnostics for one CMS publication without repairing runtime state. */
     diagnoseApproval: function (publicationRequest, request) {
         let publication = (CONFIG.get('cms') || {}).publication || {};
         let workflow = publication.workflow || {};
         let target = workflow.target || {};
-        if (publication.runtimeRole !== 'STAGED' || !target.moduleName || !target.connectionName ||
+        if (publication.runtimeRole !== 'STAGED' || !SERVICE.DefaultModuleService?.isLocalModuleActive('cms') ||
+            !SERVICE.DefaultModuleService.isCurrentRuntimeAuthority({ publication: 'STAGED' }) || target.moduleName !== 'workflow' || target.publication !== 'OPERATIONAL' || !target.connectionName ||
             target.connectionName === 'default') return undefined;
         let token = NODICS.getInternalAuthToken(request.tenant);
         if (!token) return undefined;
@@ -96,7 +117,7 @@ module.exports = {
         };
         return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
             connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
-            targetAuthority: { runtimeRole: target.runtimeRole || 'PROCESS' },
+            targetAuthority: { publication: target.publication }, local: false,
             methodName: 'POST',
             apiName: '/instances/publication-approval/diagnose', requestBody: payload, timeoutMs: target.timeoutMs,
             maxAttempts: target.maxAttempts, idempotencyKey: payload.workflowRef,

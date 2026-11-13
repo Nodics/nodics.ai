@@ -1,7 +1,8 @@
 # nExport Module
 
-**Maturity: Guarded capability.** The shared boundary and fail-closed default
-are implemented, but the format writers and delivery providers remain
+**Maturity: Guarded capability.** Runtime-local CSV/JSON generation uses shared
+schema, safe-query, export-policy and Media owners. HTTP generation is disabled
+by default. Other formats and production delivery-provider qualification remain
 incomplete and must not be presented as production exporters.
 
 `nExport` is the data export module family under `nData`. It defines the export capability boundary, the shared executable export engine, and the format-specific adapter modules used to move governed Nodics data out of the platform.
@@ -45,7 +46,10 @@ A typical export flow should follow this shape:
 5. The selected format adapter renders CSV, Excel, JSON, JavaScript-driven output, or another project-owned format.
 6. Delivery behavior writes to the governed destination, records diagnostics, and exposes traceable results.
 
-The current base `DataExportService.export` intentionally rejects until an active module provides implementation behavior. This prevents accidental data leakage through a partially configured exporter.
+HTTP generation stays disabled until a deployment intentionally enables its
+`dataExport` exposure category. The shared engine still requires its configured
+formats and runtime collaborators. Read-only workspace availability does not
+activate generation or qualify a production delivery provider.
 
 The detailed shared engine contract is documented in
 Export Process Framework (canonical documentation: `capability.data-exchange.technical-reference`).

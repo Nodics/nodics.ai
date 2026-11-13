@@ -96,7 +96,7 @@ module.exports = {
         connectionName: p.connectionName,
         tenant: r.tenant,
         request: privateRequest,
-        targetAuthority: { runtimeRole: "COMMERCE" },
+        targetAuthority: { publication: "OPERATIONAL" },
         methodName: "POST",
         apiName: "/internal/merchant/priced-transaction",
         requestBody: {

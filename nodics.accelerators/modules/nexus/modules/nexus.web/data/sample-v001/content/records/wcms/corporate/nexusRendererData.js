@@ -12,6 +12,7 @@
 /** @module nexus.web/data/nexusRendererData @description Logical Nexus renderer mappings for governed WCMS Staged import. @owner nexus.web @layer data */
 module.exports = {
   record0: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusCorporateHomePageType",
     renderer: "nexus.page.home",
     contractVersion: 0,
@@ -19,6 +20,7 @@ module.exports = {
     active: true,
   },
   record1: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusCorporateStandardPageType",
     renderer: "nexus.page.standard",
     contractVersion: 0,
@@ -26,6 +28,7 @@ module.exports = {
     active: true,
   },
   record2: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusPageHeroType",
     renderer: "nexus.component.page-hero",
     contractVersion: 0,
@@ -33,6 +36,7 @@ module.exports = {
     active: true,
   },
   record3: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusBannerCarouselType",
     renderer: "nexus.component.banner-carousel",
     contractVersion: 0,
@@ -40,6 +44,7 @@ module.exports = {
     active: true,
   },
   record4: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusBannerSlideType",
     renderer: "nexus.component.banner-slide",
     contractVersion: 0,
@@ -47,6 +52,7 @@ module.exports = {
     active: true,
   },
   record5: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusContentSectionType",
     renderer: "nexus.component.content",
     contractVersion: 0,
@@ -54,6 +60,7 @@ module.exports = {
     active: true,
   },
   record6: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusCardGridType",
     renderer: "nexus.component.cards",
     contractVersion: 0,
@@ -61,6 +68,7 @@ module.exports = {
     active: true,
   },
   record7: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusTechnologyType",
     renderer: "nexus.component.technology",
     contractVersion: 0,
@@ -68,6 +76,7 @@ module.exports = {
     active: true,
   },
   record8: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusGithubType",
     renderer: "nexus.component.github",
     contractVersion: 0,
@@ -75,6 +84,7 @@ module.exports = {
     active: true,
   },
   record9: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusTestimonialsType",
     renderer: "nexus.component.testimonials",
     contractVersion: 0,
@@ -82,6 +92,7 @@ module.exports = {
     active: true,
   },
   record10: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusNewsCarouselType",
     renderer: "nexus.component.news-carousel",
     contractVersion: 0,
@@ -89,6 +100,7 @@ module.exports = {
     active: true,
   },
   record11: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusBlogCarouselType",
     renderer: "nexus.component.blog-carousel",
     contractVersion: 0,
@@ -96,6 +108,7 @@ module.exports = {
     active: true,
   },
   record12: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusContactType",
     renderer: "nexus.component.contact",
     contractVersion: 0,
@@ -103,6 +116,7 @@ module.exports = {
     active: true,
   },
   record13: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusEditorialListingType",
     renderer: "nexus.editorial.listing",
     contractVersion: 0,
@@ -110,6 +124,7 @@ module.exports = {
     active: true,
   },
   record14: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusEditorialCardType",
     renderer: "nexus.editorial.card",
     contractVersion: 0,
@@ -117,6 +132,7 @@ module.exports = {
     active: true,
   },
   record15: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusEditorialDetailType",
     renderer: "nexus.editorial.detail",
     contractVersion: 0,
@@ -124,6 +140,7 @@ module.exports = {
     active: true,
   },
   record16: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusEditorialFeaturedType",
     renderer: "nexus.editorial.featured",
     contractVersion: 0,
@@ -131,6 +148,7 @@ module.exports = {
     active: true,
   },
   record17: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusEditorialLatestType",
     renderer: "nexus.editorial.latest",
     contractVersion: 0,
@@ -138,6 +156,7 @@ module.exports = {
     active: true,
   },
   record18: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusEditorialTaxonomyType",
     renderer: "nexus.editorial.taxonomy",
     contractVersion: 0,
@@ -145,6 +164,7 @@ module.exports = {
     active: true,
   },
   record19: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusEditorialAuthorType",
     renderer: "nexus.editorial.author",
     contractVersion: 0,
@@ -152,6 +172,7 @@ module.exports = {
     active: true,
   },
   record20: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusEditorialRelatedType",
     renderer: "nexus.editorial.related",
     contractVersion: 0,
@@ -159,6 +180,7 @@ module.exports = {
     active: true,
   },
   record21: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusEditorialSeriesType",
     renderer: "nexus.editorial.series",
     contractVersion: 0,
@@ -166,6 +188,7 @@ module.exports = {
     active: true,
   },
   record22: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusCorporateSiteHeaderType",
     renderer: "nexus.component.site-header",
     contractVersion: 0,
@@ -173,6 +196,7 @@ module.exports = {
     active: true,
   },
   record23: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusCorporateSiteFooterType",
     renderer: "nexus.component.site-footer",
     contractVersion: 0,
@@ -180,6 +204,7 @@ module.exports = {
     active: true,
   },
   record24: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusProductPortfolioType",
     renderer: "nexus.component.product-portfolio",
     contractVersion: 0,
@@ -187,6 +212,7 @@ module.exports = {
     active: true,
   },
   record25: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusProductStoryType",
     renderer: "nexus.component.product-story",
     contractVersion: 0,
@@ -194,6 +220,7 @@ module.exports = {
     active: true,
   },
   record26: {
+    authoringScope: {"enterpriseCode":"default","catalogCode":"nexusContentCatalog"},
     code: "nexusSolutionsType",
     renderer: "nexus.component.solutions",
     channels: ["web"],

@@ -71,7 +71,7 @@ module.exports = {
                 target?.connectionName || '',
             ) ||
             target.connectionName === 'default' ||
-            !/^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(target.runtimeRole || '') ||
+            target.publication !== 'OPERATIONAL' ||
             !Number.isSafeInteger(target.timeoutMs) ||
             target.timeoutMs < 1 ||
             target.timeoutMs > 30000
@@ -141,7 +141,7 @@ module.exports = {
             const response = await SERVICE.DefaultModuleService.invokeModule({
                 moduleName: 'workflow',
                 connectionName: target.connectionName,
-                targetAuthority: { runtimeRole: target.runtimeRole },
+                targetAuthority: { publication: target.publication },
                 local: false,
                 tenant: request.tenant,
                 header: { tenant: request.tenant },

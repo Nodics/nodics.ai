@@ -122,7 +122,7 @@ global.SERVICE = {
       alerts: [],
     }),
     publishAssessment: () => Promise.resolve(false),
-    startupValidationReport: () => ({
+    startupValidationWithEvidence: () => ({
       state: "READY",
       checkedAt: "2026-07-27T00:00:00.000Z",
       source: "backoffice.operationalReadiness",
@@ -215,6 +215,10 @@ global.SERVICE = {
     removeInstance: () => true,
   },
   DefaultBackofficeDiscoveryService: {
+    isDiscoveryEligible: function (registration) {
+      return require('../src/service/discovery/defaultBackofficeDiscoveryService').isDiscoveryEligible.call(
+        { getConfiguration: () => ({ enabled: true }) }, registration);
+    },
     scheduleDiscovery: (registration, authData) => {
       discoveryAuthData.push(authData);
       return Promise.resolve(true);
@@ -336,6 +340,7 @@ async function run() {
     userGroups: ["serviceAccountUserGroup"],
   };
   let first = await service.register({
+    _runtimeCoordinates: { runtimeRole: { code: "WCMS", publication: "ONLINE" } },
     body: registration,
     authData: identity,
   });
@@ -343,7 +348,7 @@ async function run() {
   assert.strictEqual(first.data.backoffice.capabilityId, "content-management");
   let resolvedOwner = await service.resolveRuntimeOwner({
     moduleName: "cms",
-    targetAuthority: { server: "wcmsOnlineServer" },
+    targetAuthority: { server: "wcmsOnlineServer", publication: "ONLINE" },
   });
   assert.strictEqual(resolvedOwner.server, identity.runtimeScope.serverCode, "Signed deployment scope supplies canonical coordinates for direct registrations");
   const beforeRejection = store._instances.size;
@@ -355,11 +360,11 @@ async function run() {
   await service.register({
     body: registration,
     authData: identity,
-    _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsOnlineServer", node: "default" },
+    _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsOnlineServer", node: "default", runtimeRole: { code: "WCMS", publication: "ONLINE" } },
   });
   resolvedOwner = await service.resolveRuntimeOwner({
     moduleName: "cms",
-    targetAuthority: { server: "wcmsOnlineServer" },
+    targetAuthority: { server: "wcmsOnlineServer", publication: "ONLINE" },
   });
   assert.strictEqual(resolvedOwner.endpoint, "http://cms:3040/nodics/cms");
   assert.strictEqual(resolvedOwner.server, "wcmsOnlineServer");
@@ -413,6 +418,7 @@ async function run() {
   );
   await assert.rejects(
     service.register({
+    _runtimeCoordinates: { runtimeRole: { code: "WCMS", publication: "ONLINE" } },
       body: {
         moduleName: "cms",
         instanceId: "bad",
@@ -429,6 +435,7 @@ async function run() {
   );
   await assert.rejects(
     service.register({
+    _runtimeCoordinates: { runtimeRole: { code: "WCMS", publication: "ONLINE" } },
       body: {
         moduleName: "cms",
         instanceId: "bad",
@@ -446,6 +453,7 @@ async function run() {
   );
   await assert.rejects(
     service.register({
+    _runtimeCoordinates: { runtimeRole: { code: "WCMS", publication: "ONLINE" } },
       body: registration,
       authData: {
         tokenType: "service",
@@ -476,7 +484,7 @@ async function run() {
   await service.register({
     body: registration,
     authData: identity,
-    _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsOnlineServer", node: "default" },
+    _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsOnlineServer", node: "default", runtimeRole: { code: "WCMS", publication: "ONLINE" } },
   });
   let profileRegistration = {
     moduleName: "profile",
@@ -489,6 +497,7 @@ async function run() {
     leaseTtlMs: 1000,
   };
   await service.register({
+    _runtimeCoordinates: { runtimeRole: { code: "WCMS", publication: "ONLINE" } },
     body: profileRegistration,
     authData: {
       tokenType: "service",
@@ -499,6 +508,7 @@ async function run() {
     },
   });
   await service.register({
+    _runtimeCoordinates: { runtimeRole: { code: "WCMS", publication: "ONLINE" } },
     body: {
       moduleName: "engagementApi",
       displayName: "Engagement API",
@@ -529,7 +539,7 @@ async function run() {
       }],
     }),
     authData: Object.assign({}, identity, { runtimeInstanceId: "cms-staged-1", runtimeScope: { ...identity.runtimeScope, instanceCode: "cms-staged-1", serverCode: "wcmsStagedServer" } }),
-    _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsStagedServer", node: "default" },
+    _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsStagedServer", node: "default", runtimeRole: { code: "WCMS", publication: "STAGED" } },
   });
   let publicBootstrap = await service.publicBootstrap({
     headers: { "x-nodics-client-contract-version": "1" },
@@ -560,9 +570,9 @@ async function run() {
       headers: { "x-nodics-client-contract-version": "2" },
     }),
   );
-  store._instances.delete("engagementApi:engagement-1");
-  store._instances.delete("profile:profile-1");
-  store._instances.delete("cms:cms-staged-1");
+  store._instances.delete(JSON.stringify(["default", "kickoffLocal", "platformServer", "engagementApi", "engagement-1"]));
+  store._instances.delete(JSON.stringify(["default", "kickoffLocal", "platformServer", "profile", "profile-1"]));
+  store._instances.delete(JSON.stringify(["default", "kickoffLocal", "wcmsStagedServer", "cms", "cms-staged-1"]));
   const setupBootstrap = await service.publicBootstrap({
     headers: { "x-nodics-client-contract-version": "1" },
   });
@@ -582,17 +592,19 @@ async function run() {
       missingRequiredModules: ["profile"],
     },
   );
-  store._instances.get("cms:cms-1").expiresAt = Date.now() - 1;
+  store._instances.get(JSON.stringify(["default", "kickoffLocal", "wcmsOnlineServer", "cms", "cms-1"])).expiresAt = Date.now() - 1;
   await service.expireStale();
   assert.strictEqual(store._instances.size, 0);
   assert.strictEqual(service._metrics.expirations, 1);
 
   let batch = await service.register({
+    _runtimeCoordinates: { runtimeRole: { code: "WCMS", publication: "ONLINE" } },
     body: {
       instanceId: "runtime-1",
       environment: "local",
       server: "cms-server",
       node: "cms-node",
+      runtimeRole: { code: "WCMS", publication: "ONLINE" },
       registrations: [
         {
           moduleName: "nodics.wcms",
@@ -674,9 +686,9 @@ async function run() {
   assert.strictEqual(batch.data.registeredModules, 5);
   assert.deepStrictEqual(
     {
-      environment: store._instances.get("cms:runtime-1").environment,
-      server: store._instances.get("cms:runtime-1").server,
-      node: store._instances.get("cms:runtime-1").node,
+      environment: store._instances.get(JSON.stringify(["default", "local", "cms-server", "cms", "runtime-1"])).environment,
+      server: store._instances.get(JSON.stringify(["default", "local", "cms-server", "cms", "runtime-1"])).server,
+      node: store._instances.get(JSON.stringify(["default", "local", "cms-server", "cms", "runtime-1"])).node,
     },
     { environment: "local", server: "cms-server", node: "cms-node" },
     "runtime coordinates must remain available for sanitized telemetry",
@@ -1152,6 +1164,7 @@ async function run() {
     ),
   );
 
+  store.clear();
   let duplicateAuthorityRegistration = Object.assign({}, registration, {
     instanceId: "cms-authority-owner-1",
     leaseTtlMs: 10000,
@@ -1171,7 +1184,7 @@ async function run() {
       modules: ["cms"],
       userGroups: ["serviceAccountUserGroup"],
     },
-    _runtimeCoordinates: { environment: "kickoffLocal", server: "authorityOwnerServer", node: "default" },
+    _runtimeCoordinates: { environment: "kickoffLocal", server: "authorityOwnerServer", node: "default", runtimeRole: { code: "WCMS", publication: "ONLINE" } },
   });
   await assert.rejects(() =>
     service.register({
@@ -1183,7 +1196,7 @@ async function run() {
         modules: ["cms"],
         userGroups: ["serviceAccountUserGroup"],
       },
-      _runtimeCoordinates: { environment: "kickoffLocal", server: "otherWcmsServer", node: "default" },
+      _runtimeCoordinates: { environment: "kickoffLocal", server: "otherWcmsServer", node: "default", runtimeRole: { code: "WCMS", publication: "ONLINE" } },
     }),
     /ERR_BOF_00000/,
     "unrelated runtimes must not claim the same schema authority context",
@@ -1207,7 +1220,7 @@ async function run() {
     _store: sharedStore,
     _metrics: Object.assign({}, service._metrics),
   });
-  await replicaOne.register({ body: registration, authData: identity });
+  await replicaOne.register({ body: registration, authData: identity, _runtimeCoordinates: { runtimeRole: { code: "WCMS", publication: "ONLINE" } } });
   assert.strictEqual(
     (
       await replicaTwo.list({

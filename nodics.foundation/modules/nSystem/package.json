@@ -39,7 +39,8 @@
     "runtime": {
       "router": true,
       "publish": false,
-      "web": false
+      "web": false,
+      "ownership": "runtimeLocal"
     },
     "displayName": "System Operations"
   }

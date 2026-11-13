@@ -22,6 +22,7 @@ const os = require('os');
 const path = require('path');
 
 const importService = require('../src/service/import/defaultImportService');
+const fileWriter = require('../../../dataCore/src/service/proc/writer/defaultFileWriterProcessService');
 
 /**
  * Validates finalized media import validation reports and validate-only import failure projection.
@@ -139,6 +140,7 @@ async function main() {
                         errorPath: path.join(workspace, 'error')
                     },
                     mediaSource: { mediaCode: 'tenant-upload' },
+                    genericSchemaImport: true,
                     importDefinition: { code: 'tenantCsv' },
                     stagedFile: { fileName: 'tenantData.csv' }
                 });
@@ -173,6 +175,28 @@ async function main() {
     assert.strictEqual(mediaValidation.validationReport.invalidRecords, 2);
     assert.strictEqual(mediaValidation.validationReport.rows[1].status, 'INVALID');
     assert.strictEqual(mediaValidation.importRun.status, 'FAILED');
+
+    // The production writer used to collapse byte-identical rows before validation.
+    const finalized = {
+        header: { options: { genericSchemaImport: true, moduleName: 'profile', schemaName: 'tenant' }, query: { code: '$code' } },
+        models: [{ code: 'repeated' }, { code: 'repeated' }, { code: 'repeated', active: false }]
+    };
+    global.UTILS = { generateHash: text => require('crypto').createHash('sha256').update(text).digest('hex') };
+    fileWriter.generateDataKey.call({ LOG: { debug() {} } }, finalized, {}, {
+        nextSuccess() {},
+        error(_request, _response, error) { throw error; }
+    });
+    assert.strictEqual(Object.keys(finalized.finalData).length, 3);
+    fs.writeFileSync(path.join(dataPath, 'tenantData.js'), 'module.exports = ' +
+        JSON.stringify({ header: finalized.header, models: finalized.finalData }));
+    const duplicate = await service.importMediaData({ tenant: 'default', options: { validateOnly: true } });
+    assert.strictEqual(duplicate.validationReport.totalRecords, 3);
+    assert.strictEqual(duplicate.validationReport.invalidRecords, 2);
+    assert.strictEqual(duplicate.validationReport.rows[1].technicalCode, 'ERR_IMP_VALIDATE_00011');
+    global.CLASSES = { DataImportError: class extends Error {
+        constructor(code, message) { super(message); this.code = code; }
+    } };
+    await assert.rejects(service.importMediaData({ tenant: 'default' }), { code: 'ERR_IMP_VALIDATE_00000' });
 }
 
 main().catch(error => {

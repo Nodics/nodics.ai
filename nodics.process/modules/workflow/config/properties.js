@@ -37,6 +37,7 @@ module.exports = {
   },
 
   process: {
+    remoteCronTriggers: {},
     taskQueue: {
       defaultPageSize: 25,
       maximumPageSize: 100,
@@ -84,7 +85,7 @@ module.exports = {
           remote: {
             target: "editorial",
             moduleName: "editorial",
-            runtimeRole: "WCMS_STAGED",
+            targetAuthority: { publication: "STAGED" },
             apiName: "/workflow/actions/applyDecision",
             requiresCompletedTask: true,
           },
@@ -95,7 +96,7 @@ module.exports = {
           remote: {
             target: "editorial",
             moduleName: "editorial",
-            runtimeRole: "WCMS_STAGED",
+            targetAuthority: { publication: "STAGED" },
             apiName: "/workflow/actions/publishApproved",
           },
         },
@@ -105,7 +106,7 @@ module.exports = {
           remote: {
             target: "rulesApi",
             moduleName: "rulesApi",
-            runtimeRole: "WASTE",
+            targetAuthority: { publication: "OPERATIONAL" },
             apiName: "/workflow/actions/applyDecision",
             requiresCompletedTask: true,
           },
@@ -135,6 +136,7 @@ module.exports = {
     },
     publicationDecisionCallback: {
       target: {
+        targetAuthority: { publication: "STAGED" },
         moduleName: "cms",
         connectionType: "abstract",
         timeoutMs: 10000,
@@ -165,12 +167,8 @@ module.exports = {
 
   data: {
     dataReleases: {
-      runtimeRoleProfiles: {
-        PROCESS: {
-          installers: {
-            PROCESS_DEFINITION: "DefaultProcessDefinitionContributionService",
-          },
-        },
+      installers: {
+        PROCESS_DEFINITION: "DefaultProcessDefinitionContributionService",
       },
     },
   },

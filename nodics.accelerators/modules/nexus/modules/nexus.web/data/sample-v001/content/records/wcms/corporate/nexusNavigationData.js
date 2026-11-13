@@ -24,6 +24,7 @@
 /** @description Nexus corporate navigation. */
 module.exports = {
   record0: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNavHome",
     site: "nexusCorporateSite",
     name: "Home",
@@ -37,6 +38,7 @@ module.exports = {
     active: true,
   },
   record1: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNavAbout",
     site: "nexusCorporateSite",
     name: "About",
@@ -50,6 +52,7 @@ module.exports = {
     active: true,
   },
   record2: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNavFeatures",
     site: "nexusCorporateSite",
     name: "Features",
@@ -63,6 +66,7 @@ module.exports = {
     active: true,
   },
   record3: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNavProducts",
     site: "nexusCorporateSite",
     name: "Products",
@@ -76,6 +80,7 @@ module.exports = {
     active: true,
   },
   record4: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNavSupport",
     site: "nexusCorporateSite",
     name: "Support",
@@ -89,6 +94,7 @@ module.exports = {
     active: true,
   },
   record5: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNavBlogs",
     site: "nexusCorporateSite",
     name: "Blogs",
@@ -102,6 +108,7 @@ module.exports = {
     active: true,
   },
   record6: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNavContact",
     site: "nexusCorporateSite",
     name: "Contact",
@@ -115,6 +122,7 @@ module.exports = {
     active: true,
   },
   record7: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNavSolutions",
     site: "nexusCorporateSite",
     name: "Solutions",

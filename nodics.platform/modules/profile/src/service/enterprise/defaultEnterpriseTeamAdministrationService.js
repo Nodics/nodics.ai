@@ -1144,6 +1144,7 @@ module.exports = {
   },
   /** Builds the current enterprise's authorized team task without exposing canonical locators or operation hashes. @param {Object} request Fresh human access request. @returns {Promise<Object>} Bounded inert presentation, rows and recovery state. */
   workspace: async function (request) {
+    if (!this.memberships().enabled()) return this.invitationWorkspace(request);
     this.policy();
     const m = this.memberships();
     m.base().input(request.query || {}, []);
@@ -1235,6 +1236,46 @@ module.exports = {
   /** Returns the effective existing membership owner. @returns {Object} Profile owner. */
   memberships: function () {
     return SERVICE.DefaultEnterpriseMembershipService;
+  },
+  /** Requires independently selected unused-invitation administration and serialization qualification; disabling signup or membership never prevents withdrawal. @returns {void} Refuses unqualified selections. */
+  withdrawalPolicy: function () {
+    const p = (CONFIG.get("enterpriseManagement") || {}).teamAdministration;
+    if (p?.enabled !== true || p.serializedWritesQualified !== true || p.invitationWithdrawalQualified !== true)
+      this.fail("UNAVAILABLE");
+  },
+  /** Reuses fresh canonical human, stamp, permission and exact-enterprise proof without enabling optional membership switching. @param {Object} request Admitted request. @param {string} code Target enterprise. @returns {Promise<Object>} Current actor. */
+  withdrawalAdministrator: function (request, code) {
+    return this.memberships().verifyAdministrator(request, code);
+  },
+  /** Publishes the existing Team renderer with only unused-invitation actions when membership administration is not selected. @param {Object} request Fresh administrator request. @returns {Promise<Object>} Bounded native invitation task, no credential or membership authority. */
+  invitationWorkspace: async function (request) {
+    this.withdrawalPolicy();
+    const m = this.memberships(), code = request.authData?.entCode;
+    m.base().input(request.query || {}, []);
+    await this.withdrawalAdministrator(request, code);
+    const target = await this.enterpriseForAccess(code), enterprise = target.enterprise;
+    const response = await SERVICE.DefaultEnterpriseAccessAssignmentService.get({
+      tenant: m.authority(), authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+      query: { enterpriseCode: code, active: true }, options: { recursive: false, skipItemCache: true },
+      searchOptions: { pageSize: 101, pageNumber: 1, sort: { code: 1 } } });
+    const rows = m.rows(response);
+    if (rows.length > 100) this.fail("UNAVAILABLE");
+    if (response.count !== undefined && (!Number.isSafeInteger(response.count) || response.count !== rows.length))
+      this.fail("UNAVAILABLE");
+    const items = [];
+    for (const row of rows) {
+      const { item, enterprise: current } = await this.assignment(row.code, true);
+      if (current.code !== code || item.tenantCode !== target.tenantCode) this.fail("CONFLICT");
+      const designated = enterprise.defaultAdminAssignmentCode === item.code;
+      const unused = !designated && item.active === true && ["PENDING", "ACTIVE"].includes(item.status) &&
+        !item.registration && !item.membership && !item.identityClaimed;
+      items.push({ ...(await m.project(item, current)), email: item.normalizedEmail, designated,
+        actions: unused ? ["WITHDRAW"] : [] });
+    }
+    return { contractVersion: 1, owner: "profile", renderer: "axis.enterprise-team", enterpriseCode: code,
+      enterpriseName: typeof enterprise.name === "string" ? enterprise.name : enterprise.name?.en || code,
+      presentation: CONFIG.get("enterpriseManagement").teamAdministration.presentation, items,
+      operation: enterprise.teamOperation ? { id: enterprise.teamOperation.id, phase: enterprise.teamOperation.phase } : null };
   },
   /** Raises a stable redacted lifecycle rejection. @param {string} suffix Error suffix. @returns {never} Throws. */
   fail: function (suffix) {
@@ -1377,8 +1418,13 @@ module.exports = {
         this.fail("UNAVAILABLE");
       actor = await setup.authorizeSerializedSetup(request, input, code);
     } else {
-      this.policy();
-      actor = await m.administrator(request, code);
+      if (operation === "WITHDRAW") {
+        this.withdrawalPolicy();
+        actor = await this.withdrawalAdministrator(request, code);
+      } else {
+        this.policy();
+        actor = await m.administrator(request, code);
+      }
     }
     if (
       typeof input.operationId !== "string" ||
@@ -1543,7 +1589,8 @@ module.exports = {
       this.fail("CONFLICT");
     const digest = m.digest(item);
     await m.registerMembership(item);
-    await m.administrator(request, enterprise.code);
+    if (operation.operation === "WITHDRAW") await this.withdrawalAdministrator(request, enterprise.code);
+    else await m.administrator(request, enterprise.code);
     const verified = await this.assignment(
       operation.input.assignmentCode,
       true,
@@ -2017,7 +2064,7 @@ module.exports = {
         enterprise.defaultAdminAssignmentCode === item.code
       )
         this.fail("CONFLICT");
-      await m.administrator(request, item.enterpriseCode);
+      await this.withdrawalAdministrator(request, item.enterpriseCode);
     } catch (error) {
       await this.finish(lease, {
         errorCode: error.code || "ERR_PROFILE_TEAM_CONFLICT",

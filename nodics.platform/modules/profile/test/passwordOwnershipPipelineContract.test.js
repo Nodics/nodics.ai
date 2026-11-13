@@ -396,6 +396,9 @@ async function importStartupGuest(f, execute, tenant = "default") {
         require(foundation + "nData/nImport/import/config/properties").data.dataReleases,
       ),
     }),
+    // This historical import transport supplies its already selected immutable plan.
+    isDestinationCompatible: () => true,
+    startupSourceReview: async () => null,
     discoverReleases: () => [
       {
         moduleName: "profile", releaseCode: "profile:init-v001",
@@ -1501,6 +1504,7 @@ test("fresh framework Init Employee and Customer records save distinct credentia
         ? lodash.merge(
             {},
             require(foundation + "nAuth/config/properties").authSecurity,
+            {bootstrapIdentity: require("../config/properties").authSecurity.bootstrapIdentity},
             { compatibility: { allowLocalBootstrapIdentity: true } },
           )
         : originalGet(name);
@@ -1656,12 +1660,12 @@ test("fresh framework Init Employee and Customer records save distinct credentia
     assert.equal(result.success, true, name + " Init failed");
     assert.equal(result.result.length, records.length);
   }
-  assert.equal(f.state.employees.length, 6);
+  assert.equal(f.state.employees.length, 2);
   assert.equal(f.state.customers.length, 1);
-  assert.equal(f.state.credentials.length, 7);
-  assert.equal(new Set(f.state.credentials.map((row) => row._id)).size, 7);
-  assert.equal(new Set(f.state.credentials.map((row) => row.loginId)).size, 7);
-  assert.equal(f.state.hashes, 7);
+  assert.equal(f.state.credentials.length, 3);
+  assert.equal(new Set(f.state.credentials.map((row) => row._id)).size, 3);
+  assert.equal(new Set(f.state.credentials.map((row) => row.loginId)).size, 3);
+  assert.equal(f.state.hashes, 3);
   for (const person of [...f.state.employees, ...f.state.customers]) {
     const credential = f.state.credentials.find(
       (row) => row._id === person.password,

@@ -465,12 +465,15 @@ test("real publication orchestration replaces shortened and deleted content and 
       };
     },
   };
+  // Domain orchestration uses the manifest boundary; Discovery separately qualifies routing and owner CAS.
+  SERVICE.DefaultDiscoveryGenerationTransportService = SERVICE.DefaultDiscoveryGenerationService;
   const matches = (model, query) =>
     query.bool.filter.every((filter) => {
       const [key, value] = Object.entries(filter.term)[0];
-      if (key.startsWith("payload."))
-        return model.payload[key.split(".")[1]] === value;
-      return model[key] === value;
+      // Elasticsearch indexes these keyword subfields without adding them to _source.
+      const sourcePath = key.replace(/\.keyword$/u, "").split(".");
+      const indexedValue = sourcePath.reduce((entry, field) => entry?.[field], model);
+      return indexedValue === value;
     });
   SERVICE.DefaultDiscoveryDocumentProjectionService.doSearch = async (r) => ({
     code: "SUC_SEARCH",

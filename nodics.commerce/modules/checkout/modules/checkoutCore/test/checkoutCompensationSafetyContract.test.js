@@ -25,7 +25,8 @@ function fixture(captured = true) {
   state.response = { code: "reverse", tenant: "t", ownerId: "buyer", orderCode: "order", idempotencyKey: "placement:payment:" + (captured ? "refund" : "void"),
     status: captured ? "REFUND_SUCCEEDED" : "VOIDED", providerReference: "confirmed-reversal", totalAmount: "12.00", currency: "USD" };
   global.SERVICE = {
-    DefaultStripeSandboxAdapterService: { code: "stripe-sandbox" },
+      DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) },
+    DefaultStripeSandboxAdapterService: { code: "stripe-sandbox", execute: async () => { throw new Error("Provider dispatch is isolated by this compensation fixture"); } },
     DefaultPaymentExecutionService: { execute: async r => { state.calls++; state.financialRequest = r; if (state.response instanceof Error) throw state.response; return structuredClone(state.response); } },
     DefaultInventoryReservationOperationService: { release: async () => { state.releases++; return { status: "RELEASED" }; } },
     DefaultCheckoutCheckpointService: {

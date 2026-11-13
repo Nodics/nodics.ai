@@ -26,7 +26,23 @@
         "init-v001/records/identity/digitalCoreParticipantTransactionGroupData.js": "ef170bb89ea4e8b0acd1e94302e9e8dc8a0f29d4fb390e2afb9f0c3e1a69b208",
         "init-v001/headers/identity/020_digitalCoreParticipantTransactionRoleHeader.js": "da8187d1c9eae3d06c3c93d121c8662b7353281d2421f8d5796341e7aa9d1c7d",
         "init-v001/records/identity/digitalCoreParticipantTransactionRoleData.js": "35ebe48b03a89bcd0f54542d6cfb4201c1fc9b06d48eaad07868deed17434e7f"
-      }
+      },
+      "prerequisites": [
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "bundleParticipantPermissions",
+          "version": "0.0.1",
+          "checksum": "cefeccf352ca72d3fd91b90497869e0dc76fadcb52b516dfb4e8272d22d6cea9",
+          "partition": "DEFAULT"
+        }
+      ]
     },
     "giftExpirySchedule": {
       "kind": "DATA_RELEASE",
@@ -128,8 +144,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7",
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660",
           "partition": "DEFAULT"
         },
         {
@@ -144,7 +160,7 @@
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "digitalCore permissionCatalogue",
       "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "digitalCore",
@@ -168,7 +184,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "digitalCore accessGroups",
       "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "digitalCore",
@@ -192,20 +208,20 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
+          "version": "0.0.1",
+          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
         },
         {
           "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
@@ -221,7 +237,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "digitalCore enterpriseRoles",
       "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "digitalCore",
@@ -245,8 +261,8 @@
         {
           "moduleName": "digitalCore",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "3f83909885dfa658d2f50405849a24b87ef3e4f1ee7ddef9d6269c831357050c"
+          "version": "0.0.1",
+          "checksum": "47dbf8c23fa445e116f32742d35c6cd9b9ee945b5919a321b0ddea889ec67a29"
         }
       ]
     },
@@ -254,7 +270,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "digitalCore",
-      "version": "0.0.3",
+      "version": "0.0.4",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -276,16 +292,16 @@
       "pages": 2,
       "components": 2,
       "routes": 2,
-      "releaseChecksum": "95ec558d567645fa17adfbe6b35e0233b02fc8de74bccfc416833937019ef280",
+      "releaseChecksum": "ff427e2b698f9d92312cf127bcbb3aafaef87d51a9cf0870aea91d17584e5a23",
       "generatedHashes": {
         "docs-v001/records/documentation/digitalCoreDocumentationRelease003NodeData.js": "bee395fa1f3b7d21460220136c6c431b75b5aa5e44c00d8bfb48921d52236864",
-        "docs-v001/records/documentation/digitalCoreDocumentationRelease003PageMetadataData.js": "4010b2539fb43a8a45d708042e02ea2c6f31a6233f845c2cd5ee35e85a7ee97f",
-        "docs-v001/records/documentation/digitalCoreDocumentationRelease003SearchMetadataData.js": "bf457042cd67520c3cd3cb41ec0c2dca7ebc6b1fa090fece294a88dd58fc4fc0",
-        "docs-v001/records/documentation/digitalCoreDocumentationRelease003ComponentData.js": "aeded643ef92c5293f7cce21ee10912d8a9d51313fda71a9f86368c7ffd42f19",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease004PageMetadataData.js": "64ce72caa852009e0a4310efb437242313f3395c8e977f1b161c8d465807630b",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003SearchMetadataData.js": "4f89fe2a6475fdb9647fabc08ad93d23c79af579e543279dd1205cc04595f948",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease004ComponentData.js": "c615478e02bc8e45498283622f3f50f0dd82ef8738f1ea01fb2219fe7387157d",
         "docs-v001/records/documentation/digitalCoreDocumentationRelease003PageData.js": "9f2485cdb58717e2dca9f43db0be0f1f789a4a0a074391e9efeabc26b3585b0e",
-        "docs-v001/records/documentation/digitalCoreDocumentationRelease003RouteData.js": "35a9c5f624afad6ba75341cc6348f1736109ca2a792714cb7095313136a134a4",
-        "docs-v001/records/documentation/digitalCoreDocumentationRelease003PublicationStateData.js": "fd95030d564caf5268934efab3ef23b4926b5c11d82f73318f2e0f3a12c7ca41",
-        "docs-v001/headers/100_digitalCoreDocumentationRelease003ContentPackHeader.js": "eefe405174cdf5d1de99e5e7946702da132bb08447a07e7df1f43608076280b3"
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease003RouteData.js": "bf6efa7ab943430ed7d4b9d6e79ff8fe3679d978449ad4524f42b4edd84415fb",
+        "docs-v001/records/documentation/digitalCoreDocumentationRelease004PublicationStateData.js": "4c5cc8beaad209ced073c01f88a914565241c906dd522d744083da1f2482c4c4",
+        "docs-v001/headers/100_digitalCoreDocumentationRelease004ContentPackHeader.js": "dfde019ea15ac3fd80b46ba11f791b87b143bcbe65d5abf6f0b3a1f793884c1e"
       },
       "includes": [
         {
@@ -390,7 +406,7 @@
         {
           "moduleName": "digitalCore",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "5d7626014d06296a0e33e00e4a22d18fa8a6e52d48bb41e8daaecbe787e49ae1",
           "partition": "DEFAULT"
         },
@@ -405,7 +421,7 @@
           "moduleName": "digitalCore",
           "sectionCode": "participantTransactionAccess",
           "version": "0.0.1",
-          "checksum": "f890a4d787906ab195a5cc888db7935729d78c5b4a8af50e44fd37e825890713",
+          "checksum": "103528acd20fc28aeecf14b217f1656e2937cf5a84cd3f275343e0e71303e688",
           "partition": "DEFAULT"
         },
         {
@@ -446,6 +462,90 @@
       "files": {
         "init-v001/headers/identity/010_digitalEnterpriseParticipationPermissionHeader.js": "ec618e55fb3680c14f9b3608f8c9c33f16d372e8e143694537ebb4c7754e09e2",
         "init-v001/records/identity/digitalEnterpriseParticipationPermissionData.js": "278a8a35c622f54d700784c7d65f09c882025926e6a271fbc99b263b2cb54ed8"
+      }
+    },
+    "couponReminderWorkflow": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Coupon expiry reminder workflow",
+      "description": "Check opted-in fixed-expiry coupon purchases for eligible recipients.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "OPERATIONAL_VERSIONED",
+      "destinationRole": "PROCESS",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "installer": "PROCESS_DEFINITION",
+      "files": {
+        "init-v001/records/process/digitalCouponExpiryReminderDefinitionData.js": "f068d9be284610dfc7d0df15a498f1e27437aae3c82736b08b46a64910de3d88"
+      },
+      "sourceRoot": "init-v001",
+      "selectionPolicy": "EXPLICIT",
+      "capability": {
+        "code": "digitalCouponReminders",
+        "displayName": "Coupon expiry reminders"
+      }
+    },
+    "couponReminderTrigger": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Coupon expiry reminder trigger",
+      "description": "Explicit inactive trigger for the Digital reminder workflow.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PROCESS",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/jobs/digitalCouponExpiryReminderTriggerData.js": "7696495e9dd2fb384703a054fe5f85ad5b7ca6c9e9a8445ca7fb74510f2c37ba",
+        "init-v001/headers/jobs/digitalCouponExpiryReminderTriggerHeader.js": "0ec24d318d344be0faec9cc8dbadf35e85c8aa8a219f1f59be13752c27632221"
+      },
+      "capability": {
+        "code": "digitalCouponReminders",
+        "displayName": "Coupon expiry reminders"
+      }
+    },
+    "couponReminderSchedule": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Coupon expiry reminder sweep",
+      "description": "Explicit inactive job for the Digital reminder workflow.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "CRON",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/jobs/digitalCouponExpiryReminderJobData.js": "6179a379f7f479b322bebf1ed909add1f9ef240e9b4286f5ea2bc11ca2b51852",
+        "init-v001/headers/jobs/digitalCouponExpiryReminderJobHeader.js": "f15290eeb4bdb6b80b471fad7d4ab96c8575f0ffb273b42a445ba48497886f98"
+      },
+      "capability": {
+        "code": "digitalCouponReminders",
+        "displayName": "Coupon expiry reminders"
       }
     }
   }

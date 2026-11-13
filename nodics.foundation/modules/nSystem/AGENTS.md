@@ -37,3 +37,11 @@ Route-category defaults belong to this capability; deployments supply only inten
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
 
 Secured service-registry API exposure defaults to enabled for runtime registration/contract retrieval. Exposure never bypasses service-token, grant or route permissions. Standalone deployments can explicitly disable the category.
+
+## Runtime ownership
+
+The canonical package declares `nodics.runtime.ownership: "runtimeLocal"`.
+Process health/readiness, local configuration activation, event listeners and interceptors describe the selected runtime; they are not a shared business owner.
+Registration retains callable endpoints and schema/service claims. The shared
+nService ownership key includes the logical server for this explicit scope; no
+Foundation-wide exemption or caller-supplied classification is permitted.

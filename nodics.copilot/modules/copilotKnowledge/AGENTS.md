@@ -1,11 +1,14 @@
 # copilotKnowledge Agents
 
 Knowledge owns its startup dispatch: postInit registers the supported Discovery
-providers, then awaits ingestOnStart. Do not require application/server hooks or
-duplicate the trigger. Both ingestion gates default off; preserve source policy,
-bounded authority and error propagation. Deployment selections remain layered
-properties, not copied ingestion code. Cover lifecycle ordering and disabled
-gates in copilotKnowledgeStartupContract and registration fixtures.
+providers and prepares the central runtime ready contributor. Ingestion runs only
+after Framework internal authentication and listener initialization. Do not add
+application/server hooks or duplicate the trigger. Both ingestion gates default
+off. Selected startup holds its required health check DOWN until acknowledged;
+failure or timeout stays DOWN, with no automatic retry or late-success promotion.
+Preserve source policy and authenticated Discovery owner writes. Timeout defaults
+belong to Framework; deployment selections remain layered properties. Cover
+lifecycle ordering, disabled gates and uncertain completion in startup contracts.
 
 Read [runtime knowledge configuration](llm/contracts/runtime-knowledge-configuration-contract.md).
 Keep source defaults empty and discover candidates through nConfig's active graph.
@@ -196,3 +199,27 @@ Unknown process-local status is not an empty durable index. Follow the source
 inventory/preview section of the secure ingestion contract and its Studio guide.
 
 Repository ingestion excludes standard server-generated service/controller/facade `gen` directories and `generated` output before counting files. These are derived copies, not authored repository knowledge. Preserve the existing classification, secret inspection and file/byte bounds; a generated build must not exhaust a source partition budget.
+
+Physical migration declaration now carries the original transient `authToken`,
+bounded source scope and fingerprint, never callbacks. The internal authority
+port independently validates that signed token, exact tenant, employee admission
+and current plan/source permissions on every owner check. Replacement identity
+uses Discovery's opaque model descriptor and returned replica pins. Preserve the
+source credential's transient-only handling, disabled migration defaults and no
+fallback for missing index authority qualification. See the migration transport
+contract; no live grants or index operations follow from source configuration.
+
+Published sources must preserve exact CMS public Online scope/digest proof before
+and after indexed retrieval. Never fall back to a repository or private CMS API.
+See [the publication contract](llm/contracts/secure-ingestion-and-retrieval-contract.md#published-customer-guidance).
+
+Public CMS proof reads use the existing `requireInternalAuth: false` transport
+option so startup does not depend on an unissued internal token. The endpoint
+still enforces public Online proof; never reuse this mode for private content.
+
+Published content uses the Framework `knowledge.publishedContent.connectionName`
+default `cmsOnline` through nService. Deployment aliases retain their own host and
+port mapping; source records and caller input cannot choose an arbitrary endpoint.
+The public proof endpoint and explicit Online authority remain fixed.
+
+Legacy source refresh must await the existing Discovery/nSearch visibility acknowledgement before reporting PROJECTED. A rejected, missing or failed-shard refresh remains unconfirmed; never retry writes automatically. Governed Discovery projections default to uncached reads so a cached empty or prior result cannot override refreshed source or generation evidence. Source policy and published Online digest checks still run before and after retrieval.

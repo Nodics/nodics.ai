@@ -162,3 +162,7 @@ module.exports = {
         },
     },
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.publish.publicationRequest.backoffice = Object.assign({ description: "Publication requests with their current approval and execution evidence. Use the owning publication commands to change lifecycle state." }, module.exports.publish.publicationRequest.backoffice);
+module.exports.publish.publicationAudit.backoffice = Object.assign({ description: "Retained publication transition history. Audit rows are evidence, not publication commands." }, module.exports.publish.publicationAudit.backoffice);

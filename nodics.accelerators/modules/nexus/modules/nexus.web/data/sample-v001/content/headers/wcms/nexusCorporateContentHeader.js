@@ -28,12 +28,13 @@ module.exports = {
     },
     cms: {
         nexusSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'nexusSiteData' }, query: { code: '$code' } },
-        nexusTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'nexusTypeCodeData' }, query: { code: '$code' } },
+        nexusTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: '010_nexusTypeCodeData' }, query: { code: '$code' } },
         nexusRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'nexusRendererData' }, query: { code: '$code' } },
         nexusComponentTypeGroupData: { options: { enabled: true, schemaName: 'cmsComponentTypeGroup', operation: 'saveAll', dataFilePrefix: 'nexusComponentTypeGroupData' }, query: { code: '$code' } },
         nexusSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'nexusSlotData' }, query: { code: '$code' } },
         nexusTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nexusTemplateData' }, query: { code: '$code' } },
         nexusComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'nexusComponentData' }, query: { code: '$code' } },
+        nexusComponentLocalizationData: { options: { enabled: true, schemaName: 'cmsComponentLocalization', operation: 'saveAll', dataFilePrefix: 'nexusComponentLocalizationData' }, query: { code: '$code' } },
         nexusPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'nexusPageData' }, query: { code: '$code' } },
         nexusRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'nexusRouteData' }, query: { code: '$code' } },
         nexusNavigationData: { options: { enabled: true, schemaName: 'cmsNavigationNode', operation: 'saveAll', dataFilePrefix: 'nexusNavigationData' }, query: { code: '$code' } }

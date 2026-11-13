@@ -17,6 +17,22 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+  /** Employee creation uses the invitation owner and removal uses its governed lifecycle; ordinary public record endpoints retain history. */
+  guardPublicCreation: function (request) {
+    const auth = request.authData || {};
+    if (request.httpRequest?.method === "PUT" && auth.tokenType === "access" && auth.principalType === "human" && !auth.isSystem)
+      throw new CLASSES.NodicsError("ERR_AUTH_00003", "Create employee access through an enterprise invitation, not direct identity record creation");
+    return true;
+  },
+  /** Refuses physical public Employee removal independently of optional Team membership qualification. */
+  guardPublicRemoval: function (request) {
+    const auth = request.authData || {};
+    if (request.httpRequest?.method === "DELETE" && auth.tokenType === "access" && auth.principalType === "human" && !auth.isSystem)
+      throw new CLASSES.NodicsError("ERR_AUTH_00003", "Employee history is retained. Change ordinary account status or use the governed Team lifecycle instead");
+    return true;
+  },
+  /** Reuses Profile lifecycle authority before ordinary public employee patches reach stamp or persistence hooks. */
+  guardPublicUpdate: function (request) { return SERVICE.DefaultEnterpriseManagementService.prepareLifecycleUpdate(request, "employee"); },
   /**
    * Executes employee pre update behavior.
    *

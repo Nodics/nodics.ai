@@ -10,8 +10,7 @@
  */
 
 /** @module media/data/backoffice/mediaLibraryWorkspaceData @description Defines Media-owned library and publication workspace presentation. @layer data @owner media */
-module.exports = {
-  workspace: {
+const libraryWorkspace = {
     contractVersion: 1,
     ownerSelector: {
       runtimeRoleCode: "WCMS_STAGED",
@@ -84,7 +83,10 @@ module.exports = {
         ],
       },
     ],
-  },
+  };
+
+module.exports = {
+  workspace: libraryWorkspace,
   publicationWorkspace: {
     contractVersion: 1,
     renderer: "axis.workspace.backend-operations",
@@ -93,8 +95,10 @@ module.exports = {
       publicationRole: "STAGED",
     },
     title: "Media Publication",
-    defaultTab: "request",
+    description: "Choose an asset, inspect its current version, and request publication approval.",
+    defaultTab: "library",
     tabs: [
+      { id: "library", label: "Choose an asset", sections: libraryWorkspace.tabs[0].sections },
       {
         id: "request",
         label: "Request Approval",
@@ -106,6 +110,13 @@ module.exports = {
             submitLabel: "Request Approval",
             successMessage:
               "Publication request recorded. Approval and Online activation remain governed.",
+            resultSummary: [
+              { field: "state", label: "Publication status" },
+              { field: "publicationCode", label: "Publication reference" },
+              { field: "mediaCode", label: "Asset" },
+              { field: "versionId", label: "Source version" }
+            ],
+            resultNavigation: { label: "Review this approval", route: "/process/tasks", parameters: { instanceCode: "workflowRef" } },
             endpoint: {
               method: "POST",
               path: "/nodics/media/v0/library/publications",

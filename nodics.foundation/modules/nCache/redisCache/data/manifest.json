@@ -6,7 +6,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "redisCache",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -28,16 +28,16 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "b1b396d4ff20052965a6ce2f16f1a70cca3384c0f7666106f209ede15fe5a7c3",
+      "releaseChecksum": "d43039332bfe5f5e601a45b5c38f8ca370bad2f5352191f3948224b2f25e63ef",
       "generatedHashes": {
-        "docs-v001/records/documentation/redisCacheDocumentationComponentData.js": "13cb13e6ab7ca62d428046df1e4587ab857fa0bfad20421c2c00494b5ae9745e",
-        "docs-v001/records/documentation/redisCacheDocumentationPageMetadataData.js": "5da5e73639011f2593ae0fcc672bfd708106eae6d6fd40e4e1361e78411338be",
         "docs-v001/records/documentation/redisCacheDocumentationNodeData.js": "5f5cdc81cab9ac11abfca806d32ab89286902ba32adea62510ca4419da91fe5b",
         "docs-v001/records/documentation/redisCacheDocumentationPageData.js": "df55939471949c2c1a98d45864e954022161512af804a5d4fd9984077ce7c437",
         "docs-v001/records/documentation/redisCacheDocumentationRouteData.js": "67ee0be97619856c01d14c6286cb9ebcdb325f15699ff93b05c84b1fa603bef0",
-        "docs-v001/records/documentation/redisCacheDocumentationSearchMetadataData.js": "3fcc65fe4531a1e48d506f0649d2e93d5bb3e5a365301b67004a208f9f6efa61",
-        "docs-v001/records/documentation/redisCacheDocumentationPublicationStateData.js": "8fb9b409b5587be01d2810ff246985ff4333a0ec266b82f258ece27ca094566a",
-        "docs-v001/headers/100_redisCacheDocumentationContentPackHeader.js": "fb8fd450ac0670aa9157e0323b5cbf236cdd5bbbcde6eab8713f29c90b918519"
+        "docs-v001/records/documentation/redisCacheDocumentationRelease002ComponentData.js": "69a13b2a0948979f78a1abe4d20f2bb6c2b96857c215be6b8247cd1012c27d41",
+        "docs-v001/records/documentation/redisCacheDocumentationRelease002PageMetadataData.js": "a8d836bf808f4565619e164cde1e1f59ba2b36e6b089d61d87948db2cb1f90d2",
+        "docs-v001/records/documentation/redisCacheDocumentationRelease002SearchMetadataData.js": "0ed4492cc82c9c3a7884d5ca3b6b8c11aa5a9828f88f545e6df1531b6135ffb5",
+        "docs-v001/records/documentation/redisCacheDocumentationRelease002PublicationStateData.js": "daac9e860bec91203cb2cb6566e59993d8a051af9a5c9685543493bc6c08b8bc",
+        "docs-v001/headers/100_redisCacheDocumentationRelease002ContentPackHeader.js": "f6f09e966fece1431e77a892c89b74c6011857c82b1b7809af79c0f9f14cadf5"
       },
       "includes": [
         {

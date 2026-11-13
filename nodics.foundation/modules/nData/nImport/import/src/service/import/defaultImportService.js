@@ -272,21 +272,31 @@ module.exports = {
                         mediaSource: prepared.mediaSource,
                         importDefinition: prepared.importDefinition
                     };
-                    if (request.options.validateOnly || request.validationOnly || success && success.validationOnly) {
+                    const validationOnly = request.options.validateOnly || request.validationOnly || success && success.validationOnly;
+                    if (validationOnly || prepared.genericSchemaImport === true) {
                         let validationErrors = this.validatePreparedFinalizedImport(request);
                         let validationReport = this.createPreparedFinalizedValidationReport(request, validationErrors);
-                        request.importRun.validationOnly = true;
-                        request.importRun.validationReport = validationReport;
-                        this.finalizeImportRun(request, validationErrors.length > 0 ? 'FAILED' : 'VALIDATED');
-                        resolve(Object.assign({
-                            code: 'SUC_IMP_00000',
-                            validationOnly: true,
-                            validationPassed: validationErrors.length === 0,
-                            validationErrorCount: validationErrors.length,
-                            validationErrors: validationErrors,
-                            validationReport: validationReport
-                        }, result));
-                        return;
+                        if (!validationOnly && validationErrors.length > 0) {
+                            request.importRun.validationReport = validationReport;
+                            this.finalizeImportRun(request, 'FAILED');
+                            reject(new CLASSES.DataImportError('ERR_IMP_VALIDATE_00000',
+                                'The file contains invalid records. Validate the file to review the rows before installing.'));
+                            return;
+                        }
+                        if (validationOnly) {
+                            request.importRun.validationOnly = true;
+                            request.importRun.validationReport = validationReport;
+                            this.finalizeImportRun(request, validationErrors.length > 0 ? 'FAILED' : 'VALIDATED');
+                            resolve(Object.assign({
+                                code: 'SUC_IMP_00000',
+                                validationOnly: true,
+                                validationPassed: validationErrors.length === 0,
+                                validationErrorCount: validationErrors.length,
+                                validationErrors: validationErrors,
+                                validationReport: validationReport
+                            }, result));
+                            return;
+                        }
                     }
                     this.processImportData({
                         tenant: request.tenant || CONFIG.get('defaultTenant') || 'default',
@@ -386,8 +396,31 @@ module.exports = {
         let queryRequiredProperties = new Set(this.extractRequiredQueryProperties(header.query || {}));
         let requiredProperties = this.requiredSchemaProperties(definition)
             .filter(propertyName => !queryRequiredProperties.has(propertyName));
+        const identityFields = [...queryRequiredProperties];
+        const identityRows = new Map();
         Object.keys(models).forEach((recordKey, index) => {
             let model = models[recordKey] || {};
+            const identity = identityFields.map(field => this.resolveModelValue(model, field));
+            if (identity.length > 0 && identity.every(value =>
+                (typeof value === 'string' && value !== '') || typeof value === 'number')) {
+                const identityKey = JSON.stringify(identity);
+                const firstRow = identityRows.get(identityKey);
+                if (firstRow !== undefined) {
+                    errors.push(this.createFinalizedValidationError({
+                        code: 'ERR_IMP_VALIDATE_00011',
+                        message: 'This record has the same import identity as row ' + firstRow + '.',
+                        fileName: fileName,
+                        recordKey: recordKey,
+                        schemaName: options.schemaName,
+                        operation: options.operation,
+                        propertyName: identityFields.join(', '),
+                        rowNumber: index + 1,
+                        tenant: request && request.tenant
+                    }));
+                } else {
+                    identityRows.set(identityKey, index + 1);
+                }
+            }
             Object.keys(model).forEach(propertyName => {
                 if (!allowedProperties.has(propertyName)) {
                     errors.push(this.createFinalizedValidationError({
@@ -397,6 +430,18 @@ module.exports = {
                         recordKey: recordKey,
                         schemaName: options.schemaName,
                         indexName: options.indexName,
+                        operation: options.operation,
+                        propertyName: propertyName,
+                        rowNumber: index + 1,
+                        tenant: request && request.tenant
+                    }));
+                } else if (definition[propertyName]?.readOnly === true) {
+                    errors.push(this.createFinalizedValidationError({
+                        code: 'ERR_IMP_VALIDATE_00012',
+                        message: 'The selected model manages "' + propertyName + '".',
+                        fileName: fileName,
+                        recordKey: recordKey,
+                        schemaName: options.schemaName,
                         operation: options.operation,
                         propertyName: propertyName,
                         rowNumber: index + 1,
@@ -441,7 +486,10 @@ module.exports = {
     },
 
     /**
-     * Returns required user-editable schema properties for generic imports.
+     * Returns required source properties without materializing persistence defaults.
+     * Declared defaults, including provider references, remain the normal save
+     * lifecycle's responsibility. Validation must not ask operators to author
+     * audit timestamps or duplicate those providers during a dry run.
      *
      * @param {Object} definition Raw schema definition.
      * @returns {string[]} Required property names.
@@ -449,7 +497,9 @@ module.exports = {
     requiredSchemaProperties: function (definition) {
         return Object.keys(definition || {}).filter(propertyName => {
             let property = definition[propertyName] || {};
-            return property.required === true && property.readOnly !== true;
+            let hasDefault = Object.prototype.hasOwnProperty.call(property, 'default') &&
+                property.default !== undefined && property.default !== null && property.default !== '';
+            return property.required === true && property.readOnly !== true && !hasDefault;
         });
     },
 
@@ -649,6 +699,12 @@ module.exports = {
      * @returns {string} Repair hint.
      */
     createValidationHowToFix: function (error) {
+        if (error && error.code === 'ERR_IMP_VALIDATE_00011') {
+            return 'Remove the duplicate row or give it a distinct record identity.';
+        }
+        if (error && error.code === 'ERR_IMP_VALIDATE_00012') {
+            return 'Remove "' + error.propertyName + '" so the owner can set it.';
+        }
         if (error && error.code === 'ERR_IMP_VALIDATE_00009' && error.propertyName) {
             return 'Remove "' + error.propertyName + '" from the file or choose a schema that defines this property.';
         }

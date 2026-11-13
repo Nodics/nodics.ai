@@ -251,3 +251,11 @@ Runtime model preparation requires the selected server's generated services.
 already composed custom methods. It must not recreate a service from a copied
 runtime CRUD implementation. Missing baseline/service errors require rebuilding
 the selected server, including newly introduced runtime model definitions.
+
+### Generated public read provenance
+
+SafeQuery retains the exact generated HTTP read in SchemaReadAccessPolicy's private, call-scoped provenance map. It forwards translated query/options and the original actor/tenant, never the Express request body. Copies, request flags, changed actor/tenant and expired calls confer no provenance. Missing policy fails closed for HTTP translation; private owner reads keep their existing admission. Profile uses this origin only to apply its own Enterprise query scope, not as permission. Prepare that scope before the provider/cache guard, then retain it through preGet. Run generatedHttpReadProvenance and Profile employeeEnterpriseReadScope regressions. Later modules may extend these existing owners while preserving exact lifetime, translated selectors, independent record/privacy guards and private-owner compatibility.
+
+## Independently inspectable schemas with disabled record APIs
+
+An authorized effective schema remains inspectable when its explicit `router.enabled` or `router.groups.schemaOperations` is false. The shared descriptor emits `recordApi: {available:false, reason:"SCHEMA_ROUTERS_DISABLED", message}` and no record operations; mutation mode and authoring become read-only, with no aggregate/bulk execution. This is derived from the effective owning schema, never a browser flag or permission grant. It does not enable a domain internal API. Consumers preserve fields, show the bounded owner notice, withhold counts/search/create and retain Schema inspection. Missing optional status keeps the existing enabled-router contract. Partner schema/router overrides remain subject to ordinary authorization and routing. Run `test/schemaUtilityContract.test.js`.

@@ -44,6 +44,12 @@ preserving a clean split from BackOffice API authority.
 
 ## Data lifecycle
 
+Documentation route records use CMS `deliveryState: DRAFT` before publication.
+`STAGED` identifies publication placement and documentation lifecycle, but is not
+a valid CMS route delivery state. Keep route target seals and the documentation
+manifest hashes aligned; `test/documentationForwardPackaging.test.js` checks the
+actual CMS route enum so source packaging cannot hide a runtime schema rejection.
+
 `axisBaseline` installs the current dashboard experience into WCMS Staged:
 Framework Overview, Applications, and Technical tabs are delivered by one closed
 CMS component graph rooted at `axisFrameworkDashboardWorkspaceComponent`.
@@ -75,3 +81,63 @@ when that exact review projection is absent or mismatched.
 ```bash
 npm test
 ```
+
+
+## Explicit release source selection
+
+Axis declares its two existing sections in ordinary
+`data.dataReleases.contributions`, using the existing keyed collection operator.
+`axis:axisBaseline` is Init; `axis:core-v001` is Core. The immutable headers target
+CMS and Catalog models. Both releases require explicit STAGED publication context,
+and the existing administrator publication workflow remains separate. Merely
+loading this declaration does not activate Axis, import either release, or publish.
+
+When Axis configuration is not already inherited, a selected server may use the
+existing package selector `{ "moduleName": "axis", "namespace": "data" }` in
+`nodics.runtimeConfigurationContributions`, with `nodics.platform` included in its
+existing discovery roots. Keep Axis inactive on the CMS runtime. Preserve the
+server's other metadata. nConfig permits one selected owner per namespace; do not
+add multiple `data` namespace selectors to aggregate unrelated groups.
+
+Alternatively, customer-owned properties may explicitly select only the required
+source sections through the existing list, without loading other Axis namespaces:
+
+```js
+data: {
+  dataReleases: {
+    contributions: {
+      $config: 'keyed',
+      key: 'moduleName',
+      entries: [{
+        moduleName: 'axis',
+        sections: { $config: 'replace', value: ['axisBaseline'] }
+      }],
+      remove: []
+    }
+  }
+}
+```
+
+This is a deployment source selection, not a new framework property definition.
+The source must be discoverable in the selected roots. If the owner contribution
+is already inherited, supply only intentional narrowing/removal, not a duplicate.
+Use both section names only when both are wanted; never put `core-v001` in an
+Init-only startup selection. Validation/installation remains a separate authorized
+nImport request, for example `{ dataType: 'init', releaseCodes: ['axis:axisBaseline'] }`.
+The existing `axisDocumentationFoundation` template stays inert until explicitly
+selected. Runtime-local receipts and history remain on the selected runtime.
+
+Offline evidence: `test/axisReleaseContributionContract.test.js` and the cross-group
+`nodics.commerce/test/frameworkReleaseContributionComposition.test.js`.
+
+The Framework baseline explicitly shares the published static `/dashboard`,
+`/lock-screen` and `/schema-workbench` composition with authorized employees in
+their own enterprises. CMS privately reads only the project pointer and pinned
+manifest. Schema discovery and business-record APIs preserve the original signed
+realm, permissions and owner guards. Extend exact paths through the baseline
+property; do not copy pages, change grants or introduce a default-tenant record
+fallback. See CMS `test/cmsEmployeeCompositionDelivery.test.js`.
+
+Axis owns inert `axisAccessDefinitions` and `axisContentAccessDefinitions` initialization templates for its employee-onboarding prerequisites. They select the existing Axis/CMS implementing-owner releases; those owners and Profile retain group, role and assignment authority. A deployment selects a named profile using only `{template: "axisAccessDefinitions"}` or `{template: "axisContentAccessDefinitions"}` and its explicit startup profile selection. Templates never select themselves, replay installed records, grant rights or install business content. Keep reusable copy/steps here, and only deployment choices in Kickoff. The Local fresh-bootstrap and guided-initialization owner tests cover effective plans.
+
+Standard workflow copy belongs to this module in `src/service/localization/workflowMessages.json`. Its contribution exposes stable public-safe UI labels only, never records, permissions or internal errors. English definitions and Arabic reference values use the Localization contribution, draft, review, approval and release APIs; loading the module does not approve or publish translations. Later project layers may supply intentional scoped translations through the same owner workflow. Preserve exact message parameters, authorization and uncertainty guidance.

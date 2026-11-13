@@ -316,7 +316,7 @@ module.exports = {
         let header = request.fileData.header;
         let models = batch.map(entry => entry.model);
         let suppressRetryErrorLog = !this.shouldRecordImportFailure(request);
-        return SERVICE.DefaultPipelineService.start('processModelImportPipeline', {
+        const modelRequest = {
             tenant: options.tenant,
             authData: {
                 userGroups: header.options.userGroups
@@ -327,7 +327,9 @@ module.exports = {
             sourceDataFile: request.sourceDataFile,
             inputPath: request.inputPath,
             suppressRetryErrorLog: suppressRetryErrorLog
-        }, {}).then(success => {
+        };
+        return SERVICE.DefaultPipelineService.start('processModelImportPipeline', modelRequest, {}).then(success => {
+            try { SERVICE.DefaultModelImportProcessService?.takeModelFailureStage?.(modelRequest); } catch {}
             if (SERVICE.DefaultImportDiagnosticsService) {
                 SERVICE.DefaultImportDiagnosticsService.increment(request, 'recordsDispatched', batch.length);
                 SERVICE.DefaultImportDiagnosticsService.increment(request, 'recordsSucceeded', batch.length);
@@ -336,6 +338,19 @@ module.exports = {
             this.markImportBatchProcessed(request, batch);
             return true;
         }).catch(error => {
+            let stage;
+            try { stage = SERVICE.DefaultModelImportProcessService?.takeModelFailureStage?.(modelRequest); } catch {}
+            // Only terminal owner denials gain a fixed boundary diagnostic; proved dependency retries remain unchanged.
+            if (error?.code === 'ERR_AUTH_00003') {
+                const known = ['REQUEST', 'SCHEMA', 'MEDIA', 'ACCESS', 'SCHEMA_REFERENCES', 'SEARCH_REFERENCES', 'PERSIST'];
+                try {
+                    const diagnostic = new CLASSES.DataImportError('ERR_IMP_MODEL_' + (known.includes(stage) ? stage : 'STAGE_UNAVAILABLE'));
+                    if (typeof diagnostic.add === 'function') {
+                        diagnostic.add(error);
+                        error = diagnostic;
+                    }
+                } catch {}
+            }
             this.recordImportBatchFailure(request, options, batch, error);
             if (this.shouldStopImportOnFailure(request)) {
                 return Promise.reject(error);

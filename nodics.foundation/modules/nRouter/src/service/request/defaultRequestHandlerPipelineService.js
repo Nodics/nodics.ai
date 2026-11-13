@@ -100,6 +100,8 @@ module.exports = {
 
   /**
    * Checks whether an API exposure category is enabled for the active runtime.
+   * Neutral owner declarations may retain unknown-category policy without
+   * turning registration into enablement. Explicit category values win.
    *
    * @param {string} category Exposure category.
    * @returns {boolean} True when the category is exposed.
@@ -122,9 +124,25 @@ module.exports = {
       }
       return false;
     }
-    let categoryConfig = exposure.categories[category] || {};
+    let categoryConfig = exposure.categories[category];
+    if (!categoryConfig || typeof categoryConfig !== "object" || Array.isArray(categoryConfig)) {
+      return false;
+    }
     if (Object.prototype.hasOwnProperty.call(categoryConfig, "enabled")) {
       return categoryConfig.enabled === true;
+    }
+    if (
+      Object.prototype.hasOwnProperty.call(categoryConfig, "inheritUnknown") &&
+      typeof categoryConfig.inheritUnknown !== "boolean"
+    ) {
+      return false;
+    }
+    if (
+      categoryConfig.inheritUnknown === true &&
+      exposure.unknown &&
+      Object.prototype.hasOwnProperty.call(exposure.unknown, "enabled")
+    ) {
+      return exposure.unknown.enabled === true;
     }
     if (Object.prototype.hasOwnProperty.call(defaultConfig, "enabled")) {
       return defaultConfig.enabled === true;

@@ -34,22 +34,6 @@ module.exports = {
   httpHardening: {
     enabled: true,
     trustProxy: false,
-    runtimeRoleProfiles: {
-      PROCESS: {
-        cors: {
-          originEndpointOverrides: {
-            nexus: false,
-          },
-        },
-      },
-      WCMS_STAGED: {
-        cors: {
-          originEndpointOverrides: {
-            nexus: false,
-          },
-        },
-      },
-    },
     body: {
       urlencoded: {
         extended: true,
@@ -94,6 +78,7 @@ module.exports = {
         "Content-Type",
         "Authorization",
         "Idempotency-Key",
+        "If-None-Match",
         "X-CSRF-Token",
         "X-Request-Id",
         "X-Correlation-Id",
@@ -128,6 +113,7 @@ module.exports = {
   },
 
   responseHandler: {
+    publicJsonCompression: { enabled: true, minimumBytes: 1024, maximumBytes: 8388608, level: 6 },
     jsonResponseHandler: "DefaultJsonResponseHandlerService",
     textResponseHandler: "DefaultTextResponseHandlerService",
     fileDownloadResponseHandler: "DefaultFileDownloadResponseHandlerService",

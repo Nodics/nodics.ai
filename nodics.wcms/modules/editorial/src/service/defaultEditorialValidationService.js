@@ -11,6 +11,13 @@
 
 /** @module editorial/service/DefaultEditorialValidationService @description Validates Editorial authoring records without starting workflow or publication. @layer service @owner editorial @override Later modules may add validation rules while preserving the result contract. */
 module.exports = {
+    /** Distinguishes incomplete draft copy from a complete ready localization without granting workflow authority. */
+    localizationComplete: function (item) {
+        if (!item || ['articleCode', 'localeCode', 'title', 'slug'].some(field => typeof item[field] !== 'string' || !item[field].trim())) return false;
+        const body = item.body;
+        return typeof body === 'string' ? Boolean(body.trim()) : Boolean(body && typeof body === 'object' &&
+            (Array.isArray(body.blocks) && body.blocks.length > 0 || typeof body.markdown === 'string' && body.markdown.trim()));
+    },
     /** Validates an article and its supplied localization contributions. */
     validate: function (article, localizations, policy) {
         article = article || {};
@@ -25,9 +32,15 @@ module.exports = {
         let requiredLocales = Array.isArray(policy.requiredLocaleCodes) ? policy.requiredLocaleCodes : [];
         let readyLocales = localizations.filter(item => item && item.status === 'READY' && item.localeCode).map(item => item.localeCode);
         requiredLocales.filter(locale => readyLocales.indexOf(locale) < 0).forEach(locale => errors.push({ code: 'MISSING_LOCALE', field: 'localizations', localeCode: locale, message: 'A ready localization is required for ' + locale }));
-        localizations.forEach((item, index) => {
+        localizations.filter(item => item && item.status === 'READY').forEach((item, index) => {
             ['articleCode', 'localeCode', 'title', 'body', 'slug'].forEach(field => { if (!item || !item[field]) errors.push({ code: 'INVALID_LOCALIZATION', field: 'localizations[' + index + '].' + field, message: field + ' is required' }); });
+            if (!this.localizationComplete(item)) errors.push({ code: 'INCOMPLETE_READY_LOCALIZATION', field: 'localizations[' + index + ']', message: 'Ready localized copy requires a title, URL slug and nonempty story' });
         });
-        return { valid: errors.length === 0, errors: errors, warnings: [], checkedAt: new Date().toISOString() };
+        if (!readyLocales.length) errors.push({ code: 'REQUIRED_READY_LOCALIZATION', field: 'localizations', message: 'At least one complete ready localization is required' });
+        return { valid: errors.length === 0, errors: errors,
+            warnings: localizations.filter(item => item && item.status === 'DRAFT').map(item => ({
+                code: 'DRAFT_LOCALIZATION_EXCLUDED', localeCode: item.localeCode,
+                message: 'Draft localized copy is retained and will not be published'
+            })), checkedAt: new Date().toISOString() };
     }
 };

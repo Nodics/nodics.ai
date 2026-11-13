@@ -36,7 +36,7 @@ function fixture(t, overrides = {}) {
     const previous = Object.fromEntries(['CONFIG', 'SERVICE', 'CLASSES', 'NODICS', 'UTILS'].map(key => [key, global[key]]));
     t.after(() => Object.assign(global, previous));
     const settings = structuredClone(defaults.promotion);
-    global.CONFIG = { get: key => key === 'promotion' ? settings : key === 'runtimeRole' ? { code: 'COMMERCE', publication: 'ONLINE' } :
+    global.CONFIG = { get: key => key === 'promotion' ? settings : key === 'runtimeRole' ? { code: 'UNRELATED', publication: 'OPERATIONAL' } :
         key === 'databaseTransactions' ? { enabled: true, failClosed: true, maximumCommitTimeMs: 1000 } : undefined };
     global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
     const ref = code => ({ moduleName: 'profile', schemaName: 'enterprise', code });
@@ -50,6 +50,7 @@ function fixture(t, overrides = {}) {
     global.UTILS = { createModelName: name => name };
     global.NODICS = { getModels: () => models };
     global.SERVICE = {
+        DefaultModuleService: { isLocalModuleActive: name => name === "promotion" },
         DefaultCouponOfferService: offer, DefaultCouponOfferAllocationService: allocation,
         DefaultCouponAcquisitionPersistenceService: persistence, DefaultCouponRedeemerParticipationService: participation,
         DefaultCouponAcquisitionReportingService: reporting,

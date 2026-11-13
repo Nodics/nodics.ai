@@ -223,8 +223,7 @@ module.exports = {
     if (
       !configuration ||
       !configuration.jwt ||
-      !configuration.compatibility ||
-      !configuration.bootstrapIdentity
+      !configuration.compatibility
     ) {
       throw new Error(
         "Layered authentication security configuration is incomplete",
@@ -242,7 +241,8 @@ module.exports = {
    */
   validateBootstrapIdentity: function (config) {
     const security = this.getSecurityConfiguration(config);
-    const policy = security.bootstrapIdentity || {};
+    const policy = security.bootstrapIdentity;
+    if (!policy) throw new Error("Profile bootstrap identity policy is required");
     const identity = this.read(config, "bootstrapIdentity") || {};
     if (policy.required === false && !identity.source) {
       return identity;

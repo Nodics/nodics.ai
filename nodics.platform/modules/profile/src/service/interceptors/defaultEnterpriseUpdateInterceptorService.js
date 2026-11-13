@@ -17,6 +17,15 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    /** Retains Enterprise history; public physical removal cannot bypass session retirement and the governed lifecycle. */
+    guardPublicRemoval: function (request) {
+        const auth = request.authData || {};
+        if (request.httpRequest?.method === "DELETE" && auth.tokenType === "access" && auth.principalType === "human" && !auth.isSystem)
+            throw new CLASSES.NodicsError("ERR_AUTH_00003", "Enterprise history is retained. Use the governed status lifecycle instead of physical removal");
+        return true;
+    },
+    /** Reuses Profile lifecycle authority before ordinary public enterprise patches reach resource/event hooks. */
+    guardPublicUpdate: function (request) { return SERVICE.DefaultEnterpriseManagementService.prepareLifecycleUpdate(request, "enterprise"); },
 
     // Enterprise Save Events
     /**
@@ -198,12 +207,21 @@ module.exports = {
             if ((isRemoved || !enterprise.active || !enterprise.tenant.active) && NODICS.getActiveTenants().includes(enterprise.tenant.code)) {
                 SERVICE.DefaultEnterpriseService.get({
                     tenant: defaultTenant,
+                    authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+                    options: { recursive: false, skipItemCache: true },
+                    searchOptions: { pageNumber: 1, pageSize: 1 },
                     query: {
                         tenant: enterprise.tenant.code,
                         active: true
                     }
                 }).then(success => {
-                    if (!success.result || success.result.length <= 0) {
+                    // This is an internal existence check after persistence, not
+                    // an unauthenticated public read or cached inventory.
+                    if (!success || !/^SUC_/.test(success.code || '') || success.error || success.success === false ||
+                        (success.errors && (!Array.isArray(success.errors) || success.errors.length)) || !Array.isArray(success.result)) {
+                        throw new CLASSES.NodicsError('ERR_PROFILE_TENANT_PROVISIONING_HELD');
+                    }
+                    if (success.result.length === 0) {
                         SERVICE.DefaultTenantHandlerService.removeTenants([enterprise.tenant.code]).then(success => {
                             NODICS.removeInternalAuthToken(enterprise.tenant.code);
                             NODICS.removeActiveEnterprise(enterprise.code);

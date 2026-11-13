@@ -155,3 +155,34 @@ test('task pages preserve generated-owner scope, filters and exact count beyond 
   global.SERVICE.DefaultProcessTaskService.get = async () => { throw new Error('Denied'); };
   await assert.rejects(() => inspection.listTasks({ tenant: 'tenant-one', authData, query: {} }), /Denied/);
 });
+
+test('trigger relationship reads separate list controls from filters and preserve real empty/error evidence', async (t) => {
+  const previous = { SERVICE: global.SERVICE, CLASSES: global.CLASSES, CONFIG: global.CONFIG };
+  t.after(() => Object.assign(global, previous));
+  global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
+  const calls = [];
+  const row = { code: 'scheduled-review', definitionCode: 'review', status: 'DRAFT', triggerType: 'CRON' };
+  let response = { code: 'SUC_FIND_00000', count: 1, result: [row] };
+  global.SERVICE = { DefaultProcessTriggerService: { get: async request => { calls.push(request); return response; } } };
+  const authData = { loginId: 'reviewer', entCode: 'enterprise-one' };
+  const request = { tenant: 'tenant-one', authData, query: { limit: '25', definitionCode: 'review', status: 'DRAFT', unsafe: { $ne: null } } };
+  assert.deepEqual((await inspection.listTriggers(request)).data, [row]);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].authData, authData);
+  assert.equal(calls[0].tenant, 'tenant-one');
+  assert.deepEqual(calls[0].query, { definitionCode: 'review', status: 'DRAFT' });
+  assert.deepEqual(calls[0].searchOptions, { pageSize: 25, pageNumber: 1, sort: { code: 1 } });
+  assert.equal(request.query.limit, '25');
+  response = { code: 'SUC_FIND_00000', count: 0, result: [] };
+  assert.deepEqual((await inspection.listTriggers(request)).data, []);
+  for (const invalid of [undefined, {result: []}, {code: 'ERR_FIND_00000', result: []},
+    {code: 'SUC_FIND_00000', success: false, result: []}, {code: 'SUC_FIND_00000', result: [row, row]},
+    {code: 'SUC_FIND_00000', result: [{...row, definitionCode: 'foreign'}]},
+    {code: 'SUC_FIND_00000', count: 0, result: [row]}, {code: 'SUC_FIND_00000', result: {code: 'not-an-array'}},
+    {code: 'SUC_FIND_00000', result: Array.from({length: 26}, (_, i) => ({...row, code: `trigger-${i}`}))}]) {
+    response = invalid;
+    await assert.rejects(() => inspection.listTriggers(request), error => error.code === 'ERR_PROCESS_00014');
+  }
+  delete global.SERVICE.DefaultProcessTriggerService;
+  await assert.rejects(() => inspection.listTriggers(request), error => error.code === 'ERR_PROCESS_00014');
+});

@@ -228,3 +228,9 @@ Order/Cart and V1 dispatch payment key. Do not require code=Order, create anothe
 checkpoint, rewrite history or weaken typed owner/actor/merchant checks. This is
 read-only recognition of the existing permanent journal contract. Preserve the
 real generated insert/CAS/BSON completed-journal read regressions.
+
+Payment-method routing tests also pass the original typed owner/actor, retained
+phase sequence and placement results through real journal claim/readback. Assert
+that the provider observes the retained original intent, missing checkpoints
+never dispatch, and duplicate insertion cannot redispatch. Completion fixtures
+use the placement results object; omitting it does not model a valid checkpoint.

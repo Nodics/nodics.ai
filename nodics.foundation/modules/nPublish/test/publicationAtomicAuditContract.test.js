@@ -68,6 +68,15 @@ const repository = require('../src/service/defaultPublicationRepositoryService')
     assert.strictEqual((await repository.get('shared-code', { tenant: 'tenant-a' })).tenantEvidence, 'tenant-a');
     assert.strictEqual((await repository.get('shared-code', { tenant: 'tenant-b' })).tenantEvidence, 'tenant-b');
 
+    const exact = { code: 'home', domain: 'cms', rootType: 'pageRoute',
+        rootCode: 'home', sourceVersion: '0', siteCode: 'site-a', catalogCode: 'catalog-a' };
+    SERVICE.DefaultPublicationRequestService.get = async () => ({ result: [exact] });
+    assert.strictEqual(await repository.create({ ...exact }), exact);
+    await assert.rejects(repository.create({ ...exact, siteCode: 'site-b' }), { code: 'ERR_PUB_00004' });
+    await assert.rejects(repository.create({ ...exact, catalogCode: 'catalog-b' }), { code: 'ERR_PUB_00004' });
+    const { siteCode, ...olderRequest } = exact;
+    assert.strictEqual(await repository.create(olderRequest), exact);
+
     const databaseModel = require('../../nDatabase/mongodb/src/schemas/model').default;
     global.UTILS = { isBlank: value => value === undefined || value === null ||
         (typeof value === 'object' && !Object.keys(value).length) };

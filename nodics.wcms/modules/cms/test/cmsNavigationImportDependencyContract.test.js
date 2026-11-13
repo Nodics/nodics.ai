@@ -146,3 +146,21 @@ test('invalid navigation remains terminal and absent owner is not a retryable de
     await assert.rejects(validation.validateNavigationNode({ tenant: 'default', model: { nodeType: 'ROUTE', targetRoute: 'x' } }),
         error => !retry.canRetry(error));
 });
+
+test('every CMS source in the canonical Nexus header has sealed Staged release admission while generic writes remain denied', () => {
+    const schemas = require('../src/schemas/schemas').cms;
+    const authoring = require(foundation + 'nDatabase/database/src/service/schema/defaultSchemaAuthoringPolicyService');
+    const previous = global.CONFIG;
+    try {
+        global.CONFIG = { get: key => key === 'runtimeRole' ? { publication: 'STAGED' } : undefined };
+        for (const header of Object.values(headers)) {
+            const schema = schemas[header.options.schemaName];
+            const policy = authoring.describe(schema);
+            assert.equal(policy.authoringAllowed, false, header.options.schemaName);
+            assert.equal(policy.stagedSourceOperation, 'saveAll', header.options.schemaName);
+        }
+        global.CONFIG = { get: key => key === 'runtimeRole' ? { publication: 'ONLINE' } : undefined };
+        assert.equal(authoring.describe(schemas.cmsNavigationNode).stagedSourceOperation, undefined);
+        assert.equal(authoring.describe(schemas.cmsNavigationNode).authoringAllowed, false);
+    } finally { global.CONFIG = previous; }
+});

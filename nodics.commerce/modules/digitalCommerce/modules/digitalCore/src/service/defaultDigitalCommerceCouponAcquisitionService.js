@@ -73,7 +73,7 @@ module.exports = {
     try {
       const policy = structuredClone(CONFIG.get("digitalCore")?.couponAcquisition?.sourceProof);
       const role = CONFIG.get("runtimeRole"), logger = SERVICE.DefaultLoggerService;
-      if (policy?.enabled !== true || (role?.code || role) !== policy.runtimeRole ||
+      if (policy?.enabled !== true || SERVICE.DefaultModuleService?.isLocalModuleActive?.("digitalCore") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL" ||
           logger?.hasPrivateCaptureProtection?.(request) !== true ||
           !input || Object.keys(input).sort().join(",") !== "certificateCodes,contractVersion,enterpriseCode,entryCode,idempotencyKey,operationKey,orderCode,ownerId,ownerRef,phase,productCode,promotionCode,requirements" ||
           input.contractVersion !== 1 || input.idempotencyKey !== input.operationKey ||
@@ -139,7 +139,7 @@ module.exports = {
       if (await SERVICE.DefaultCouponSecureIssuanceService.assertAcquisitionIssuance(request, r, currentCoupon, row.evidence.campaign) !== true) this.fail();
       if (!same(current, row) || !same(before, { auth: request.authData, input, tenant: request.tenant,
           enterpriseCode: request.enterpriseCode, entCode: request.entCode, headers: request.httpRequest?.headers, tenantCode: request.tenantCode }) ||
-          !same(currentCoupon, coupon) || !same(role, CONFIG.get("runtimeRole")) ||
+          !same(currentCoupon, coupon) || SERVICE.DefaultModuleService?.isLocalModuleActive?.("digitalCore") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL" || !same(role, CONFIG.get("runtimeRole")) ||
           !same(policy, CONFIG.get("digitalCore")?.couponAcquisition?.sourceProof) ||
           logger.hasPrivateCaptureProtection(request) !== true || SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "digitalCore") !== request.authData ||
           NODICS.getSelectedEnvironmentName() !== auth.runtimeScope.environmentCode) this.fail();

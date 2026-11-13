@@ -31,7 +31,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "wcmsExperience",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -53,16 +53,16 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "43df725552c75ba5c2891c5d957e1ccf48735ffd9281af081522b0c3f0aabdfc",
+      "releaseChecksum": "06efaf0cafdd976fdaeb181db42738851cb5b564a80bb8547a60e0ce5d0515ad",
       "generatedHashes": {
-        "docs-v001/records/documentation/wcmsExperienceDocumentationComponentData.js": "58a97043fa54d5b4d422c72948afc6b90eb24b5bed41418ef4f3c56192046d16",
-        "docs-v001/records/documentation/wcmsExperienceDocumentationPageMetadataData.js": "2e28d94130984210e7f193360fe98b26c9ff4fc4b15e5151673514e2ed0be119",
         "docs-v001/records/documentation/wcmsExperienceDocumentationNodeData.js": "2975b1d38b39772306287d462efb4c44e8f9c172de82e169c2484858df5b64b3",
         "docs-v001/records/documentation/wcmsExperienceDocumentationPageData.js": "220d37039dee35a08326802655391a703055e5fb4f7a02a76b1ddb0437565139",
         "docs-v001/records/documentation/wcmsExperienceDocumentationRouteData.js": "f574cdc37ceed5e9bd55e4d4ea09319d37a7c25ee038e8fd4126779e6d28b8fd",
-        "docs-v001/records/documentation/wcmsExperienceDocumentationSearchMetadataData.js": "b761a619b45737a850614c36b05ab2e6f71a8ee84243a354a4610ae17d2d44ea",
-        "docs-v001/records/documentation/wcmsExperienceDocumentationPublicationStateData.js": "a88ceb23c2efb35af6a944b0c88b57a31fe672b2f95bdad6aed221a9b62152f2",
-        "docs-v001/headers/100_wcmsExperienceDocumentationContentPackHeader.js": "56f892987e01bdd4e47ad27aafc376d2785bee444b0e381344b352a43330b917"
+        "docs-v001/records/documentation/wcmsExperienceDocumentationRelease003ComponentData.js": "e48a84483ee85936d0f321860473ec3cbfe5fbed96c1a05cec36347db00084ef",
+        "docs-v001/records/documentation/wcmsExperienceDocumentationRelease003PageMetadataData.js": "c22c9cc3f3729228e145901b1ce33b0a1a63b13bcdd521c15fa2dc8702f49c73",
+        "docs-v001/records/documentation/wcmsExperienceDocumentationRelease003SearchMetadataData.js": "9d470f523203667b609b30d29ad37bad6f7fb7427ac7fccd73417c2b0dc1564f",
+        "docs-v001/records/documentation/wcmsExperienceDocumentationRelease003PublicationStateData.js": "7d9db07ca626cfd14b4c9440652801cf47d8f996a7f25cc714343222f129b40d",
+        "docs-v001/headers/100_wcmsExperienceDocumentationRelease003ContentPackHeader.js": "92ec3c4c809f3c7e21333751452b9ceefcdcd037ae8357bb71a3493b678297eb"
       },
       "includes": [
         {
@@ -73,6 +73,115 @@
             "manifestPath": "nodics.docs/data/manifest.json",
             "manifestSection": "foundation"
           }
+        }
+      ]
+    },
+    "authoringPermissions": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Experience authoring permissions",
+      "description": "Registers the split Experience owner permission vocabulary.",
+      "owningDomain": "wcmsExperience",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/wcmsExperienceAuthoringPermissionHeader.js": "462613ad0456dbb8cdfdd0a4b232e4549b2d579aa700a6fc00351f7e23951ad0",
+        "init-v001/records/identity/wcmsExperienceAuthoringPermissionData.js": "6f7edef66188b44ea1ba27e724b2408a29aced0348be73970d97ad282eb3f795"
+      }
+    },
+    "previewAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Experience preview access groups",
+      "description": "Defines enterprise access to Experience preview and index status.",
+      "owningDomain": "wcmsExperience",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/wcmsExperiencePreviewAccessGroupHeader.js": "665cb0d7b5552da9f62fd66e3b8e42af2467d212896b6cff234455adfcce372e",
+        "init-v001/records/identity/wcmsExperiencePreviewAccessGroupData.js": "d533451f88b4979a4fd9a6d31b8f8fd6c60e6db36ac7cce4b3c792ddfaf857ec"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.1",
+          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wcmsExperience",
+          "sectionCode": "authoringPermissions",
+          "version": "0.0.1",
+          "checksum": "4c5eb104ec71f45e71f7df0bcdd16cabc3c1704a524c66864c0ece3f61f44a63",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "media",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "10b6487eedd8bc49a00db63d16c3ab0f2901c4aeb223558b2652f679c85b47ef",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "previewAccessRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Experience preview enterprise role",
+      "description": "Makes read-only Experience preview access assignable to enterprise employees.",
+      "owningDomain": "wcmsExperience",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/wcmsExperiencePreviewAccessRoleHeader.js": "3ce743348b543de48725ddc778375502506ba7d5df287d3e72a0a8e028780f66",
+        "init-v001/records/identity/wcmsExperiencePreviewAccessRoleData.js": "d94c1862c2f66e5d70f4c93d87f86360d7070f75eb789c080fe3314f0d24a5b9"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "wcmsExperience",
+          "sectionCode": "previewAccessGroups",
+          "version": "0.0.1",
+          "checksum": "a961437bd9e133e9ccaa532c7fabbf087f12e3505c9e546bea3d28356d825780"
         }
       ]
     }

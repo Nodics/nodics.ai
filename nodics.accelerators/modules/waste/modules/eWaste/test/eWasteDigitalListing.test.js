@@ -116,7 +116,7 @@ function pendingFixture(t) {
   const f = fixture(t), asset = f.rows.wasteAsset[0], h = SERVICE.DefaultEWasteListingHandoffService;
   f.config.applicationCode = "partner";
   f.config.marketplace.listingHandoff = { enabled: true };
-  f.config.targetAuthorities = { commerceStaged: { runtimeRole: "COMMERCE_STAGED" } };
+  f.config.targetAuthorities = { commerceStaged: { publication: "STAGED" } };
   f.p.expectedAssetRevision = 1; f.p.idempotencyKey = "c".repeat(64); asset.revision = 1; asset.assetStatus = "LISTING_REQUESTED";
   const context = { storeContext: { code: "store", enterpriseCode: "e", revision: 1 },
     authoringContext: { catalogVersion: "catalog", locales: ["ar", "en"] } };

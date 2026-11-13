@@ -14,13 +14,14 @@
 /** @module nodics.waste/test/platformDataReleaseCompositionContract @description Verifies Platform source-catalogue placement for Waste-owned participant access groups without activating Waste capabilities. @layer test @owner nodics.waste */
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const properties = require("../config/properties");
+const bindings = require("../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService");
+const properties = bindings.merge({}, require("../config/properties"));
 const path = require("node:path");
 const releaseService = require("../../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService");
 
 test("Waste exposes Carbon and Material participant groups to Platform authority", () => {
   const contributions =
-    properties.data.dataReleases.runtimeRoleProfiles.PLATFORM.contributions;
+    properties.data.dataReleases.contributions;
   assert(contributions.some((entry) =>
     entry.moduleName === "wasteCarbon" &&
     entry.sections.includes("participantAccessGroups")));
@@ -42,10 +43,10 @@ test("inactive Carbon exposes its explicit finalization permission through stand
   const owner = { name: "wasteCarbon", path: path.resolve(__dirname, "../modules/wasteCarbon") };
   global.NODICS = { getActiveModules: () => ["profile"], getRawModule: name => name === owner.name ? owner : undefined };
   const service = Object.create(releaseService);
-  service.configuration = () => ({ contributions: properties.data.dataReleases.runtimeRoleProfiles.PLATFORM.contributions });
+  service.configuration = () => ({ contributions: properties.data.dataReleases.contributions });
   service.error = (code, message) => Object.assign(new Error(message), { code });
   const release = service.discoverManifestRelease({ moduleName: owner.name, sectionCode: "transferFinalizationPermission" }, "init");
-  assert.equal(release.version, "0.0.2");
+  assert.equal(release.version, "0.0.1");
   assert.equal(release.destinationRole, "PLATFORM");
   assert.equal(release.selectionPolicy, "EXPLICIT");
   assert.notEqual(service.discoveryOwners().find(item => item.moduleName === owner.name).active, true);

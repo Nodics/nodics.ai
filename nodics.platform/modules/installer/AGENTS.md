@@ -20,13 +20,15 @@
   preflight, support-bundle, repair, and other governed local-workspace
   operations after Nodics already exists locally.
 - Current APIs are active only for read-only discovery, workspace readiness,
-  dry-run setup planning, and redacted evidence reads.
+  dry-run setup planning, and redacted evidence reads by default. The scoped
+  Local generation/reversal workflow requires its explicit selection and
+  separate permission in the API scope contract.
 - This module does not own npm package identity, `npx` bootstrap behavior,
   repository download before first clone, framework runtime loading, Axis
   frontend source, or customer project customization.
 - Mutating operation APIs must remain disabled until permission checks,
   workspace allowlists, evidence writing, secret redaction, audit events, and
-  vendor-repository protections are implemented and tested.
+  vendor-repository protections are implemented and tested for each operation.
 
 ## Axis Boundary
 
@@ -51,3 +53,7 @@
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Use the current qualification corrections in the scope contract. Preserve relative router keys, canonical human permission resolution, typed non-success errors, layered configuration, canonical filesystem containment and bounded redaction. No executable build operation may be inferred from a plan or mutation flag.
+
+Native read-only navigation uses READ/VERIFY intents. The operation catalogue has a separate PLAN intent; never copy that value into Axis navigation metadata. Protect this distinction with the Installer native-navigation regression and the typed Axis action fixture.

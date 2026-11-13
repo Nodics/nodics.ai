@@ -17,6 +17,8 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  workflowModuleName: "workflow",
+  workflowTargetAuthority: { publication: "OPERATIONAL" },
   defaultErrorCodes: {
     workflowError: "ERR_WF_00000",
   },

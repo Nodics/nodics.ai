@@ -33,3 +33,10 @@ existing group `config/properties.js` contribution. Carbon's explicit
 access group without activating Carbon on Platform. Do not repair missing standard
 section wiring with customer copies; source-root visibility remains deployment
 topology. Catalogue discovery never installs permissions or grants assignments.
+
+
+Keep release discovery in the existing ordinary `data.dataReleases.contributions`
+list using keyed module identities and explicit section replacement. Do not
+restore role profiles, duplicate source owners, alter manifest activation policy,
+or install definitions from configuration. Qualify actual owner/publication
+admission and preserve unselected sources. See the local release composition contract.

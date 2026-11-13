@@ -1,5 +1,11 @@
 # nRouter
 
+Secured requests in selected tenant-provisioning deployments await nService's
+exact enterprise preparation after route admission and before dispatch. This
+keeps first use of a new tenant independent of a server restart without adding
+router-owned provisioning or authorization. Failure and unselected-deployment
+coverage lives in `test/liveTenantPipelineContract.test.js`.
+
 nRouter owns Nodics route metadata, generated CRUD routes, API exposure, request context, route registration, and HTTP governance.
 
 ## Responsibility
@@ -81,7 +87,7 @@ application service initialization hooks: static generation must not start runti
 resources or require operational API-key proof. Runtime startup retains all of its
 credential checks. Persisted-schema reads remain an explicit generation option.
 
-Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Route-category defaults belong to this capability; deployments supply only intentional overrides. Previously unknown owner categories can use `inheritUnknown: true` to preserve an existing unknown-category denial while declaring ownership.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](llm/contracts/README.md#capability-owned-exposure-defaults).
 
 OpenAPI options retain the canonical environment/server returned by nTooling runtime metadata resolution, including short aliases. Resolve before populating runtime E/S arguments; never pass an unresolved alias into nConfig. Invalid selected servers must fail rather than fall back to a different graph.
@@ -102,3 +108,9 @@ nRouter supplies the framework browser origins, Axis 3100 and Nexus 3200. Custom
 Outbound routing resolves package API prefixes for explicitly declared remote
 modules through existing metadata-only source discovery when they are not loaded
 locally. This does not activate the target or grant service access.
+
+## Public JSON transfer
+
+The existing JSON response handler negotiates gzip for admitted, public GET success responses between 1 KiB and 8 MiB. Standard enablement, size bounds and compression level belong to `responseHandler.publicJsonCompression` in nRouter; projects supply only intentional overrides. Authenticated, cookie-bearing, sensitive, error, non-JSON and no-transform responses are excluded. Compression failure returns identical ordinary JSON; it never retries a domain operation or changes publication, access or cache authority. See `test/publicJsonCompressionContract.test.js` for successful, excluded and recovery cases.
+
+Browser clients may revalidate published resources with `If-None-Match`; nRouter includes this standard header in its Framework CORS default and exposes `ETag`. Origin admission and owner authorization remain unchanged. Later deployments can remove it through `allowedHeaderOverrides` without copying the baseline header list.

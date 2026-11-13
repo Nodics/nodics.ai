@@ -92,4 +92,30 @@ assert.throws(() => registry.selectMetadata('product', [{ backoffice: roleLocal 
 assert.throws(() => registry.buildCatalogue({ first: [{ backoffice: capability('first', [item('duplicate', undefined, undefined, 'read')]) }],
     second: [{ backoffice: capability('second', [item('duplicate', undefined, undefined, 'read')]) }] }, 1, { permissions: ['*'] }),
     /Duplicate BackOffice navigation id/);
+// Optional action state has the same ACTIVE default as Axis's admitted navigation contract.
+for (const [state, expected] of [[undefined, 'ACTIVE'], ['PREVIEW', 'PREVIEW'], ['DISABLED', 'DISABLED'], ['HIDDEN', 'HIDDEN']]) {
+    const metadata = structuredClone(roleLocal);
+    if (state === undefined) delete metadata.navigation[0].lifecycleActions[0].featureState;
+    else metadata.navigation[0].lifecycleActions[0].featureState = state;
+    const before = structuredClone(metadata);
+    const projected = registry.selectMetadata('product', [{ backoffice: metadata }]);
+    assert.equal(projected.navigation[0].lifecycleActions[0].featureState, expected);
+    assert.deepEqual(metadata, before, 'action state aggregation must not mutate provider authority');
+    assert.equal(registry.authorizeNavigation(projected.navigation, ['catalog.read']).flatMap(row => row.lifecycleActions || []).length, 0,
+        'a default or preview state must never grant its action permission');
+}
+const originalServices = global.SERVICE;
+try {
+    global.SERVICE = Object.assign({}, originalServices, { DefaultBackofficeCapabilityDefinitionService:
+        require('../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService') });
+    const metadata = require('../../../../nodics.wcms/modules/editorial/src/service/defaultEditorialBackofficeCapabilityService').getCapability();
+    const projected = registry.selectMetadata('editorial', [{ backoffice: metadata }]);
+    const operator = registry.authorizeNavigation(projected.navigation, ['*']);
+    assert.equal(operator.find(row => row.id === 'editorial-content').lifecycleActions.length, 7,
+        'the real Editorial owner contribution must retain all admitted actions');
+    assert(operator.find(row => row.id === 'editorial-content').lifecycleActions.every(action => action.featureState === 'ACTIVE'));
+    assert.equal(operator.find(row => row.id === 'article-editor').featureState, 'DISABLED', 'unfinished workspaces remain explicitly disabled');
+    assert.equal(registry.authorizeNavigation(projected.navigation, ['editorial.backoffice.read'])
+        .find(row => row.id === 'editorial-content').lifecycleActions.length, 0);
+} finally { global.SERVICE = originalServices; }
 console.log('BackOffice capability registry service validated');

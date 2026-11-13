@@ -16,13 +16,13 @@ necessarily replace an inherited array. See
 [the inheritance contract](llm/contracts/configuration-inheritance-contract.md)
 and [the smallest override example](llm/examples/minimal-configuration.md).
 
-Declared runtime roots may contribute selected data-release role profiles without
-activating their modules. Their `contributions` selectors accumulate with loaded
-role profiles, unlike ordinary positional arrays. See the
-[role-profile contract](llm/contracts/configuration-inheritance-contract.md#capability-role-profiles).
+Release contributions and initialization selections remain explicit governed
+configuration. Runtime roots establish source discovery, not installer selection
+or authorization. Retired role profiles are rejected; see the
+[owner-default contract](llm/contracts/configuration-inheritance-contract.md#capability-owned-defaults).
 
-Servers may also explicitly select an inactive owner's bounded capability role
-profile as configuration defaults, without loading its services or widening
+Servers may also explicitly select an inactive owner's bounded ordinary
+namespace as configuration defaults, without loading its services or widening
 runtime grants. See the [deployment selector example](llm/contracts/configuration-inheritance-contract.md#explicit-inactive-owner-configuration).
 
 For explicit data prerequisites outside selected runtime roots, nConfig can return
@@ -60,7 +60,7 @@ resolution, not permission to import or execute the owner. See the
 
 Deep documentation lives in:
 
-- `nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js`
+- `nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationRelease002ComponentData.js`
 
 ## Verification
 
@@ -99,9 +99,8 @@ method without exposing its source text. nDynamo governance reports consume the
 same loader metadata. See the [diagnostics contract](llm/contracts/configuration-inheritance-contract.md#effective-behavior-diagnostics).
 
 Use explicit collection replacement/keyed changes and preserve ordinary-array compatibility, reference timing and tenant isolation. See the configuration-inheritance contract.
-Top-level capability role profiles defer explicit collection operations until
-projection against the complete base namespace. A keyed deployment addition does
-not replace inherited entries merely because its contribution loads first.
+Owner defaults load before deployment overrides. Explicit collection operations
+apply through the ordinary binding flow; there is no deferred role projection.
 
 Use existing layered properties and `runtime`/`ref` projections. Do not read or
 regenerate an environment descriptor. Preserve contribution timing and bounded
@@ -113,3 +112,40 @@ project/environment/server/node contributions through the same binding and merge
 sequence. This preserves explicit replacement/keyed semantics for framework-owned
 tooling defaults; never merge defaults back into already-resolved collections.
 This projection does not activate modules or alter runtime startup authority.
+
+Missing active dependencies are resolved through canonical installed-source discovery
+and admitted transactionally to the existing raw registry. Parent group metadata
+does not implicitly activate its members. Inactive import source lookup stays
+read-only; see the installed active dependency discovery contract.
+
+Documentation provenance release 0.0.2 preserves article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](data/manifest.json) selects it; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.
+
+The canonical offline deployment projection binds explicit environment/server
+coordinates over ambient selector variables and clears inherited node selection.
+Its direct `resolve` API is asynchronous; await its completed owner graph before
+using global configuration or schema metadata. The isolated `read` adapter
+remains synchronous. See the configuration inheritance contract and
+`test/deploymentProjectionCoordinates.test.js`. No projection starts providers
+or grants runtime or data mutation authority.
+
+
+Existing runtime projections accept unique declared deployment aliases and expose
+canonical topology identity from the same metadata authority. This replaces
+customer helper properties that merely duplicate target server/role facts.
+Missing/ambiguous aliases and conflicting identity coordinates fail closed;
+projection never supplies instance authority or starts a peer. See
+[projection rules](llm/contracts/configuration-inheritance-contract.md#runtime-and-property-projections)
+and `test/runtimePropertyProjectionContract.test.js`.
+
+
+Early composition discovery loads Framework/module definitions below explicit
+project, environment, server and node selections. A discovered default must not
+overwrite the selected server's value or force a customer to copy definitions.
+The existing binding owner and normal merge semantics remain the only authority;
+`bootstrapCompositionDefaultOwnership` tests real file roots and discovered
+module defaults, including a later node override.
+
+Retain validated running build identity through the existing Infra service; never
+recompute it from later disk edits. See the [inheritance contract](llm/contracts/configuration-inheritance-contract.md) and generated-artifact regression.
+
+Runtime identity references project the selected environment/server/node property layers over server metadata. A node may supply its instance identifier and bounded remote selections; canonical project/environment/server/node coordinates still reject contradictions.

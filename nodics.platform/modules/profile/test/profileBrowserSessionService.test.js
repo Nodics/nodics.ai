@@ -216,7 +216,8 @@ function request(headers) {
     let missingRestoreResult = await service.restore(missingRestore);
     assert.strictEqual(missingRestoreResult.restored, false);
     assert.strictEqual(missingRestoreResult.reason, 'BROWSER_SESSION_UNAVAILABLE');
-    assert(missingRestore.responseHeaders['Set-Cookie'].every(cookie => cookie.includes('Max-Age=0')));
+    assert.strictEqual(missingRestore.responseHeaders['Set-Cookie'], undefined);
+    assert.strictEqual(missingRestore.responseHeaders['Cache-Control'], 'no-store');
 
     await assert.rejects(async () => service.restore(request({
         origin: 'https://axis.example.com',

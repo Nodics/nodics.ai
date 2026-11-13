@@ -116,3 +116,30 @@ test('secure acquisition inspection requires original private provenance and ref
   } };
   await assert.rejects(changed.assertAcquisitionIssuance(f.sourceRequest, f.r, observed, f.allocation.evidence.campaign));
 });
+
+
+test('private source proof rechecks local ownership and publication without changing the exact signed caller grant', async t => {
+  const f = await fixture(t, 'reserve');
+  const dms = require('../../../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService');
+  const invokeModule = SERVICE.DefaultModuleService.invokeModule;
+  let remoteOnly = false, active = true, publication = 'OPERATIONAL';
+  const get = CONFIG.get;
+  CONFIG.get = key => key === 'runtimeRole' ? { code: 'UNRELATED', publication } : get(key);
+  NODICS.isModuleActive = moduleName => moduleName === 'digitalCore' && active;
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly }) }) };
+  SERVICE.DefaultModuleService = { ...dms, invokeModule };
+  await acquisition.sourceProof(f.sourceRequest, f.body);
+  for (const value of ['STAGED', 'ONLINE', undefined]) {
+    publication = value; await assert.rejects(acquisition.sourceProof(f.sourceRequest, f.body));
+  }
+  publication = 'OPERATIONAL'; remoteOnly = true;
+  await assert.rejects(acquisition.sourceProof(f.sourceRequest, f.body));
+  remoteOnly = false; active = false;
+  await assert.rejects(acquisition.sourceProof(f.sourceRequest, f.body));
+  active = true;
+  const proof = SERVICE.DefaultCouponSecureIssuanceService.assertAcquisitionIssuance;
+  SERVICE.DefaultCouponSecureIssuanceService.assertAcquisitionIssuance = async function (...args) {
+    const result = await proof.apply(this, args); remoteOnly = true; return result;
+  };
+  await assert.rejects(acquisition.sourceProof(f.sourceRequest, f.body));
+});

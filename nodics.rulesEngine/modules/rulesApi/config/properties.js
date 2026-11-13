@@ -16,8 +16,8 @@ module.exports = {
     rulesEngine: {
         approval: {
             definitionCode: 'rulesPolicyApproval',
-            processTarget: {},
-            actionAuthority: {}
+            processTarget: { connectionName: null, connectionType: 'abstract', targetAuthority: { publication: 'OPERATIONAL' } },
+            actionAuthority: { connectionName: null, connectionType: 'abstract', targetAuthority: { publication: 'OPERATIONAL' } }
         }
     },
     process: {
@@ -29,6 +29,7 @@ module.exports = {
                     remote: {
                         target: 'rulesApi',
                         moduleName: 'rulesApi',
+                        targetAuthority: { publication: 'OPERATIONAL' },
                         apiName: '/workflow/actions/applyDecision',
                         requiresCompletedTask: true
                     }

@@ -102,7 +102,7 @@
     "specialAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Opening Inventory Group",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "inventory",
@@ -126,8 +126,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
         },
         {
           "moduleName": "inventory",
@@ -141,7 +141,7 @@
     "specialAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "Opening Inventory Role",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "inventory",
@@ -165,8 +165,8 @@
         {
           "moduleName": "inventory",
           "sectionCode": "specialAccessGroups",
-          "version": "0.0.2",
-          "checksum": "e008e48771ebded0d9dbb11f34ec6a8ebdf6fd14cd968110ce45336b4fce5679"
+          "version": "0.0.1",
+          "checksum": "795a9bc1d80cd3973dd15bf7f88d5095bd6dc4be57c30efae54ba87154e04245"
         }
       ]
     }

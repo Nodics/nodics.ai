@@ -13,6 +13,46 @@
 /** @module copilotKnowledge/src/service/defaultCopilotKnowledgeRuntimeService @description Exposes loader-visible governed ingestion and authorization-scoped Discovery retrieval over runtime-managed sources. @layer service @owner copilotKnowledge @override Deployment layers may customize transport and limits; source selection uses runtime governance without bypassing policy or Discovery. */
 module.exports = {
   state: { reports: new Map(), lastRefreshAt: null },
+  startupState: null,
+  startupPromise: null,
+  /** Registers selected indexing after authentication and listeners, with readiness held until acknowledgement. */
+  prepareStartup: function () {
+    const ingestion=this.configuration().knowledge?.ingestion || {};
+    if (ingestion.enabled !== true || ingestion.ingestOnStart !== true) return Promise.resolve(true);
+    if (this.startupState) return Promise.resolve(true);
+    const timeoutMs=ingestion.startup?.timeoutMs;
+    if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 600000 ||
+        !SERVICE.DefaultRuntimeLifecycleService?.registerContributor || !SERVICE.DefaultHealthService?.registerReadinessContributor)
+      throw new Error('COPILOT_KNOWLEDGE_STARTUP_CONFIGURATION_REQUIRED');
+    this.startupState={status:'PENDING'};
+    SERVICE.DefaultHealthService.registerReadinessContributor('copilotKnowledgeStartup', {
+      order:800, required:true, description:'Selected knowledge startup indexing must be acknowledged',
+      check:()=>({status:this.startupState.status==='READY'?'UP':'DOWN',reasonCode:'KNOWLEDGE_STARTUP_'+this.startupState.status})
+    });
+    SERVICE.DefaultRuntimeLifecycleService.registerContributor('copilotKnowledgeStartup', {
+      order:800, timeoutMs:timeoutMs+1000, ready:()=>this.runStartup(timeoutMs)
+    });
+    return Promise.resolve(true);
+  },
+  /** Executes once; a timeout or failure keeps readiness down even if an original writer finishes late. */
+  runStartup: function (timeoutMs) {
+    if (this.startupPromise) return this.startupPromise;
+    this.startupState.status='RUNNING';
+    this.startupPromise=(async()=>{
+      let timer;
+      try {
+        await Promise.race([Promise.resolve().then(()=>this.ingestOnStart()),new Promise((_,reject)=>{
+          timer=setTimeout(()=>reject(new Error('COPILOT_KNOWLEDGE_STARTUP_TIMEOUT')),timeoutMs);
+        })]);
+        this.startupState.status='READY';
+        return true;
+      } catch(error) {
+        this.startupState.status='FAILED';
+        throw error;
+      } finally { clearTimeout(timer); }
+    })();
+    return this.startupPromise;
+  },
   /** Resolves effective Copilot configuration. @returns {Object} Configuration. */
   configuration: function () {
     return CONFIG.get("copilot") || {};

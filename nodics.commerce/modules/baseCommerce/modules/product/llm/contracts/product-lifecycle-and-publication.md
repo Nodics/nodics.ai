@@ -542,8 +542,13 @@ never the human bearer or an enterprise header. The configured source owner must
 authorize its narrow intent-read capability for that deployment; Product does
 not prescribe a domain permission or acquire completion, transfer or financial
 authority through this proof.
-The default binding has null module/connection/role and does not execute.
-Configure only reviewed module/connection/role metadata in the later layer.
+The default binding has null module/connection/targetAuthority and does not execute.
+The selected intentSource uses targetAuthority `{publication:"OPERATIONAL"}` with
+optional exact `server` and `environment` coordinates. Missing/wrong publication,
+physical role strings and obsolete intentSource.runtimeRole refuse. Product remains
+a STAGED authoring receiver; the proof source is an OPERATIONAL functional owner.
+An inactive owner namespace may supply its logical module and publication descriptor;
+the deployment must still select its reviewed connection and independent grants.
 HTTPS verification and redirects-off are mandatory; an exact loopback exception
 requires the explicit later-layer `allowInsecureLoopback` selection.
 

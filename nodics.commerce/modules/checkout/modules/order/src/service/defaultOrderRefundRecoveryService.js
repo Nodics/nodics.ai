@@ -36,9 +36,7 @@ module.exports = {
   },
   /** Reuses Order's current Profile staff-scope checks and requires operational Commerce. */
   context: async function (input) {
-    const role = CONFIG.get("runtimeRole"),
-      code = typeof role === "string" ? role : role?.code;
-    if (!this.policy().enabled || code !== "COMMERCE")
+    if (!this.policy().enabled || SERVICE.DefaultModuleService?.isLocalModuleActive?.("order") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL")
       throw new Error("Refund execution is unavailable in this runtime");
     return SERVICE.DefaultOrderDisputeService.staff(input);
   },

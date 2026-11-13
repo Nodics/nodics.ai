@@ -39,13 +39,13 @@ function fixture() {
         categoryLocalization: ['leaf', 'parent'].map(code => ({ code: code + '-en', categoryCode: code, tenant: request.tenant,
             versionId: 0, locale: 'en', status: 'READY', name: code }))
     };
-    const configuration = { product: { publication: { target: { runtimeRole: 'COMMERCE' }, maximumDependencies: 20, maximumActiveProducts: 20, maximumActivationReceipts: 20 },
+    const configuration = { product: { publication: { target: { publication: 'OPERATIONAL' }, maximumDependencies: 20, maximumActiveProducts: 20, maximumActivationReceipts: 20 },
         localization: { supportedLocales: ['en'], requiredLocales: ['en'] }, discovery: {} }, runtimeRole: { publication: 'STAGED' } };
     global.CONFIG = { get: name => configuration[name] };
     global.UTILS = { createModelName: name => name[0].toUpperCase() + name.slice(1) + 'Model' };
-    global.NODICS = { getModels: () => Object.fromEntries(Object.keys(rows).map(name => [UTILS.createModelName(name), { versioned: true, rawSchema: { versionedReadMode: 'CURRENT' } }])) };
+    global.NODICS = { isModuleActive: name => name === 'product', getModels: () => Object.fromEntries(Object.keys(rows).map(name => [UTILS.createModelName(name), { versioned: true, rawSchema: { versionedReadMode: 'CURRENT' } }])) };
     const calls = [];
-    global.SERVICE = { DefaultProductPublicationTargetService: target, DefaultProductPublicationGraphService: graph, DefaultProductLocalizationPolicyService: localization,
+    global.SERVICE = { DefaultModuleService: require("../../../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService"), DefaultProductPublicationTargetService: target, DefaultProductPublicationGraphService: graph, DefaultProductLocalizationPolicyService: localization,
         DefaultProductLocalizedProjectionBuilderService: builder };
     for (const [schema, name] of Object.entries(graph.services())) SERVICE[name] = { get: async input => {
         calls.push(input);
@@ -178,48 +178,68 @@ test('target facade rejects token-only publication authority and callback domain
 
 test('transport uses explicit nModule authorities and runtime token, never caller bearer or local fallback', async () => {
     const f = fixture();
-    f.configuration.product.publication.target = { moduleName: 'product', connectionName: 'online', connectionType: 'abstract', runtimeRole: 'COMMERCE' };
+    f.configuration.product.publication.target = { moduleName: 'product', connectionName: 'online', connectionType: 'abstract', publication: 'OPERATIONAL' };
     global.NODICS.getInternalAuthToken = () => 'runtime-token';
     let call;
-    SERVICE.DefaultModuleService = { invokeModule: async input => { call = input; return {}; } };
+    SERVICE.DefaultModuleService = { ...SERVICE.DefaultModuleService, invokeModule: async input => { call = input; return {}; } };
     f.request.httpRequest = { headers: { authorization: 'Bearer caller-token' } };
     await transport.deploy({ operationKey: 'op' }, f.request);
     assert.equal(call.local, false); assert.equal(call.header.Authorization, 'Bearer runtime-token');
-    assert.equal(call.targetAuthority.runtimeRole, 'COMMERCE');
+    assert.equal(call.targetAuthority.publication, 'OPERATIONAL');
     f.configuration.product.publication.target.connectionName = 'default';
     assert.throws(() => transport.deploy({}, f.request), /authority/);
+});
+
+test('Product transport rejects loaded nonowners and retired physical role selectors', () => {
+    const f = fixture();
+    f.configuration.product.publication.target = { moduleName: 'product', connectionName: 'online', connectionType: 'abstract', publication: 'OPERATIONAL' };
+    NODICS.getInternalAuthToken = () => 'runtime-token';
+    let calls = 0;
+    SERVICE.DefaultModuleService = { ...SERVICE.DefaultModuleService, invokeModule: () => { calls++; } };
+    f.configuration.product.publication.target.runtimeRole = 'COMMERCE';
+    assert.throws(() => transport.deploy({}, f.request), /authority/);
+    delete f.configuration.product.publication.target.runtimeRole;
+    NODICS.isModuleActive = () => false;
+    assert.throws(() => transport.deploy({}, f.request), /authority/);
+    assert.equal(calls, 0);
 });
 
 test('canonical operational Commerce serves Product while Staged and wrong authorities reject', async () => {
     const f = fixture();
     f.configuration.runtimeRole = { code: 'COMMERCE', publication: 'OPERATIONAL' };
     assert.doesNotThrow(() => target.assertOnline());
-    f.configuration.product.publication.source = { moduleName: 'product', connectionName: 'staged', connectionType: 'abstract', runtimeRole: 'COMMERCE_STAGED' };
+    f.configuration.product.publication.source = { moduleName: 'product', connectionName: 'staged', connectionType: 'abstract', publication: 'STAGED' };
     NODICS.getInternalAuthToken = () => 'runtime-token';
     let call;
-    SERVICE.DefaultModuleService = { invokeModule: async input => { call = input; return {}; } };
+    SERVICE.DefaultModuleService = { ...SERVICE.DefaultModuleService, invokeModule: async input => { call = input; return {}; } };
     await transport.authorize({ operationKey: 'op' }, f.request);
-    assert.equal(call.targetAuthority.runtimeRole, 'COMMERCE_STAGED');
+    assert.equal(call.targetAuthority.publication, 'STAGED');
     assert.equal(f.configuration.runtimeRole.publication, 'OPERATIONAL');
     assert.throws(() => transport.getStatus({}, f.request), /authority/);
     f.configuration.runtimeRole.publication = 'STAGED';
     assert.throws(() => target.assertOnline(), /authority/);
     f.configuration.runtimeRole = { code: 'OTHER', publication: 'OPERATIONAL' };
-    assert.throws(() => target.assertOnline(), /authority/);
+    assert.doesNotThrow(() => target.assertOnline());
     f.configuration.product.publication.target.runtimeRole = 'OTHER';
     assert.doesNotThrow(() => target.assertOnline());
-    f.configuration.product.publication.target.runtimeRole = '';
+    SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly: true }) }) };
+    assert.throws(() => target.assertOnline(), /authority/);
+    delete SERVICE.DefaultRouterService;
+    delete f.configuration.runtimeRole.publication;
     assert.throws(() => target.assertOnline(), /authority/);
 });
 
-test('governed routes and provider selections are disabled pending migration; fixed workflow is explicitly installable', () => {
-    const routes = require('../src/router/routers').product.operator, properties = require('../config/properties');
+test('governed routes remain disabled and providers follow explicit publication context; workflow is explicitly installable', () => {
+    const routes = require('../src/router/routers').product.operator, properties = publicationDefaults('ONLINE');
     for (const key of ['createGoverned', 'applyPublicationDecision', 'targetDeploy', 'targetStatus', 'targetRollback', 'targetWithdraw', 'authorizeTarget']) {
         assert.equal(routes[key].active, true); assert.equal(routes[key].secured, true);
         assert.equal(properties.apiExposure.categories[routes[key].apiExposure].enabled, false);
     }
     assert.equal(properties.publish.providers.domainAdapters.product, null);
-    assert.equal(properties.product.discovery.activationService, null);
+    assert.equal(properties.product.discovery.activationService, 'DefaultProductPublicationTargetService');
+    const staged = publicationDefaults('STAGED');
+    assert.equal(staged.publish.providers.domainAdapters.product, 'DefaultProductPublicationAdapterService');
+    assert.equal(staged.product.discovery.activationService, null);
     const release = require('../data/manifest.json').sections.productPublicationWorkflow;
     assert.equal(release.selectionPolicy, 'EXPLICIT');
     assert.equal(release.sourceRoot, 'init-v001');
@@ -524,8 +544,10 @@ test('target records reuse managed concurrency and only six qualified sources se
         assert.equal(schemas[name].router.enabled, false);
         assert.equal(schemas[name].backoffice.mutationMode, 'READ_ONLY');
     }
-    const policy = require('../config/properties').schemaPolicies.product.catalogueVersioned;
-    assert.deepEqual(policy, { isVersionedEnabled: false });
+    for (const context of ['STAGED', 'ONLINE']) {
+        const policy = publicationDefaults(context).schemaPolicies.product.catalogueVersioned;
+        assert.deepEqual(policy, { isVersionedEnabled: true, versionedReadMode: 'CURRENT' });
+    }
     for (const name of Object.keys(graph.services())) assert(schemas[name].schemaPolicies.includes('catalogueVersioned'));
     for (const name of ['productPublication', 'productSearchProjection', 'productPublicationManifest', 'productPublicationPointer']) {
         assert(!schemas[name].schemaPolicies.includes('catalogueVersioned'));
@@ -752,3 +774,14 @@ test('concurrent activations cannot both claim the same expected pointer and cap
     await assert.rejects(target.switchVersion({ scope: manifest.scope, version: manifest.version, expectedVersion: manifest.version,
         operation: 'ROLLBACK', operationKey: 'third', publicationCode: 'pub', sourceVersion: '0' }, f.request), /capacity/);
 });
+
+/** Resolve real owner bindings for the explicitly selected publication context. */
+function publicationDefaults(publication) {
+    const bindings = require('../../../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService');
+    return bindings.resolve(require('../config/properties'), {}, {
+        readRuntimeProperty: (_server, path) => {
+            if (path.join('.') !== 'runtimeRole.publication') throw new Error('Unexpected fixture context read');
+            return publication;
+        },
+    });
+}

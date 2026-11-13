@@ -30,10 +30,19 @@ module.exports = {
 
     /** Resolves the requested storefront experience. @param {Object} request Nodics request. @param {Function} callback Callback. @returns {Promise|undefined} Operation when no callback is supplied. */
     resolve: function (request, callback) {
-        request.experience = Object.assign({}, this.readBody(request), { previewMode: false });
+        request.experience = Object.assign({}, this.readContext(request), { previewMode: false });
         let operation = FACADE.DefaultWcmsExperienceDeliveryFacade.resolve(request);
         if (!callback) return operation;
         operation.then(success => callback(null, this.success(success))).catch(error => callback(error));
+    },
+
+    /** Accepts inert journey fields only. HTTP callers cannot change the clock,
+     * tenant, identity or trusted customer-segment membership.
+     * @param {Object} request HTTP request. @returns {Object} Allowed context.
+     */
+    readContext: function (request) {
+        const body = this.readBody(request);
+        return Object.fromEntries(['site', 'pageType', 'targetType', 'targetCode', 'locale', 'channel', 'device', 'region'].filter(key => Object.hasOwn(body, key)).map(key => [key, body[key]]));
     },
 
     /** Reads request body from Nodics request shapes. @param {Object} request Nodics request. @returns {Object} Body. */

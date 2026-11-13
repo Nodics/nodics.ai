@@ -374,12 +374,13 @@ module.exports = {
 
     /**
      * Converts a missing browser refresh session into a normal unauthenticated
-     * browser state. This can happen after a local/server restart when the
-     * browser still has cookies but the in-memory refresh cache is gone.
+     * browser state without overwriting a concurrent rotation's cookies.
+     * The same miss can represent expiry, restart or another request consuming
+     * the proof. Only explicit logout owns cookie cleanup on this stale result.
      */
     handleMissingRefreshSession: function (request, config, error) {
         if (error && error.code === 'ERR_CACHE_00001') {
-            this.clear(request, config);
+            request.httpResponse.setHeader('Cache-Control', 'no-store');
             return {
                 restored: false,
                 reason: 'BROWSER_SESSION_UNAVAILABLE',

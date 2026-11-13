@@ -11,7 +11,7 @@
 
 /** @module nAuth/test/integration/authRuntimeRedisWorker @description Runs actual JWT, cache, revocation and operational-admission owners in an isolated process with an independent Redis client. @layer test @owner nAuth */
 const { performance } = require('node:perf_hooks');
-const { createClient } = require('redis');
+const liveRedisClientFactory = require('../../../nCache/redisCache/test/support/liveRedisClientFactory');
 let client, channel, token, settings;
 class ContractError extends Error {
     constructor(error, message) { super(message || error && error.message || String(error)); this.code = typeof error === 'string' ? error : error && error.code; }
@@ -19,14 +19,14 @@ class ContractError extends Error {
 /** Composes production service definitions against an explicit disposable cache namespace. */
 async function initialize(input) {
     settings = input;
-    client = createClient({ url: input.url, disableOfflineQueue: true, socket: { reconnectStrategy: false } });
+    client = liveRedisClientFactory.create(input.url, { disableOfflineQueue: true, socket: { reconnectStrategy: false }, sentinel: input.sentinel });
     client.on('error', () => {});
     await client.connect();
     const authSecurity = structuredClone(require('../../config/properties').authSecurity);
     authSecurity.jwt.secret = input.secret;
     global.CONFIG = { get: key => ({ authSecurity, runtimeIdentity: { instanceCode: input.instance }, profileModuleName: 'profile' })[key] };
     global.CLASSES = { CacheError: ContractError, NodicsError: ContractError };
-    const redisDefinition = require('../../../nCache/cache/config/properties').cache.default.engines.redis;
+    const redisDefinition = require('lodash/merge')({}, require('../../../nCache/cache/config/properties'), require('../../../nCache/redisCache/config/properties')).cache.default.engines.redis;
     channel = { channelName: 'auth', channelOptions: { ttl: 30 }, engineOptions: { ...redisDefinition, enabled: true, options: { prefix: input.prefix } }, client };
     global.NODICS = {
         getEnvironmentName: () => 'runtime.test', getSelectedEnvironmentName: () => 'test', getServerName: () => 'worker',
@@ -75,6 +75,10 @@ async function execute(action, input) {
         samples.sort((a, b) => a - b);
         return { samples: samples.length, durationMs: performance.now() - started, p95Ms: samples[Math.ceil(samples.length * .95) - 1],
             p99Ms: samples[Math.ceil(samples.length * .99) - 1], cpuMicros: process.cpuUsage(cpu), rssBytes: process.memoryUsage().rss, rssDeltaBytes: process.memoryUsage().rss - beforeRss, cacheReads: reads() - beforeReads };
+    }
+    if (action === 'cleanup') {
+        for (const tenant of input.tenants) await SERVICE.DefaultRedisCacheService.flushByPrefix({ tenant, channel });
+        return true;
     }
     if (action === 'stop') { if (client.isOpen) await client.quit(); return true; }
     throw new Error('Unsupported integration operation');

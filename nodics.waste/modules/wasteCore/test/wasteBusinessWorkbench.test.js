@@ -351,3 +351,19 @@ test('conflicting tenant aliases and malformed group ancestry fail before Profil
     }
     assert.equal(f.calls.length, 0); assert.equal(f.scopeCalls.length, 0);
 });
+
+test('Profile scope routing retains the employee bearer and rejects retired authority before dispatch', async t => {
+    const f=fixture(t,'view');
+    const original=structuredClone(f.request.authData);
+    const target=f.config.waste.operations.profileTarget;
+    for (const authority of [{runtimeRole:'PLATFORM'},{publication:'ONLINE'},{publication:'OPERATIONAL',server:''}]) {
+        target.targetAuthority=authority;
+        await assert.rejects(operational.context({...f.request},true));
+        assert.equal(f.scopeCalls.length,0);
+    }
+    target.targetAuthority={publication:'OPERATIONAL',server:'combined',environment:'selected'};
+    await operational.context({...f.request},true);
+    assert.deepEqual(f.scopeCalls[0].targetAuthority,target.targetAuthority);
+    assert.equal(f.scopeCalls[0].header.Authorization,f.request.authorization);
+    assert.deepEqual(f.request.authData,original);
+});

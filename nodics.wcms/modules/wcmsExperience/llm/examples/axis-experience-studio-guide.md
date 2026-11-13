@@ -144,8 +144,6 @@ Locale
 Channel
 Device
 Region
-Customer segment
-Preview date/time
 ```
 
 The preview API must force:
@@ -225,3 +223,9 @@ flowchart LR
   G --> H[Check index status]
   H --> I[Verify storefront]
 ```
+
+## Explicit private preparation before publication
+
+Select the Site, page and journey dimensions, then choose **Prepare private preview**. This explicit employee action requires PREVIEW permission plus persisted CMS Site/Catalog access. It prepares only the private Staged generation; it does not approve or publish Online. After a complete receipt, choose **Run preview** to inspect the resolved slots. Changed context retires old results. A failed or uncertain preparation stays held: inspect current status, then explicitly retire only the exact pending generation when needed. There is no automatic command retry. A user with review, approve and publish rights may perform every authorized stage. Online publication remains an independent governed action.
+
+Fixed owner operations are `GET /authoring/preparation`, `POST /authoring/preparation`, and `POST /authoring/preparation/abandon`. The latter requires the inspected revision and pending token. Browsers submit journey selectors only; they never submit projections, identity, provider commands or clock overrides. Frame defaults live under `wcmsExperience.stagedPreview`; project config may contain only intentional overrides.

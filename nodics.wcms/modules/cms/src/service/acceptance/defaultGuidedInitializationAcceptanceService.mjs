@@ -22,7 +22,7 @@ export async function runGuidedInitializationAcceptance({
 } = {}) {
   if (!execute || !approvePublications) throw new Error('Explicit --execute --approve-publications is required for mutating acceptance');
   const environmentProfile = configuration || readProjectEnvironmentConfiguration(projectRoot, environment.ENV || '');
-  const config = acceptance || projectRuntimeAcceptance(projectRoot, environmentProfile, { role: 'PLATFORM' }).guidedInitialization || {};
+  const config = acceptance || projectRuntimeAcceptance(projectRoot, environmentProfile, { role: 'WCMS_STAGED' }).guidedInitialization || {};
   const requestTimeoutMs = boundedTimeout(config.requestTimeoutMs, 30000);
   const initializationTimeoutMs = boundedTimeout(config.initializationTimeoutMs, 360000);
   const platformUrl = environment.NODICS_PLATFORM_URL || projectEndpointUrl(environmentProfile, { role: 'PLATFORM' });
@@ -31,7 +31,8 @@ export async function runGuidedInitializationAcceptance({
   const enterpriseCode = environment.AXIS_ENTERPRISE_CODE || 'default';
   const loginId = environment.AXIS_LOGIN_ID || 'admin';
   const password = environment.AXIS_PASSWORD || environment.NODICS_BOOTSTRAP_ADMIN_PASSWORD;
-  const profileCode = projectInitializationProfile(projectRuntime(environmentProfile, config.runtime), environment.NODICS_INITIALIZATION_PROFILE || config.profileCode, config.profileTemplate);
+  const authoringRuntime = projectRuntime(environmentProfile, config.runtime);
+  const profileCode = projectInitializationProfile(authoringRuntime, environment.NODICS_INITIALIZATION_PROFILE || config.profileCode, config.profileTemplate);
   let mediaUrl;
   const mediaPublicationEvidence = [];
   const capabilityPreparationEvidence = [];
@@ -183,7 +184,7 @@ export async function runGuidedInitializationAcceptance({
   let headers = await authenticateHeaders();
   const bootstrap = await request(`${platformUrl}/nodics/backoffice/v0/bootstrap`, { headers });
   const imports = bootstrap.modules?.import || [];
-  const staged = imports.find(item => item.runtimeRole?.publication === 'STAGED');
+  const staged = imports.find(item => item.runtimeRole?.publication === 'STAGED' && item.server === authoringRuntime.server);
   const online = imports.find(item => item.runtimeRole?.publication === 'ONLINE');
   assert(staged, 'Authenticated bootstrap does not advertise a semantic STAGED import connection');
   assert(online, 'Authenticated bootstrap does not advertise a semantic ONLINE import connection');
@@ -193,7 +194,7 @@ export async function runGuidedInitializationAcceptance({
   let profiles = await request(catalogueUrl, { headers });
   let profile = profiles.find(item => item.profileCode === profileCode);
   assert(profile, `Initialization profile is unavailable: ${profileCode}`);
-  assert(profile.destinationRole === staged.runtimeRole.code,
+  assert(profile.publicationContext === staged.runtimeRole.publication,
     `Initialization profile is not bound to the ${staged.runtimeRole.code} destination`);
   assert(profile.steps.map(item => item.dataType).join(',') === 'init,core', 'Initialization step order drifted');
 
@@ -239,7 +240,7 @@ export async function runGuidedInitializationAcceptance({
   assert(delivery.page, 'Application Online delivery is unavailable after governed publication');
 
   const evidence = {
-    profileCode, status: profile.status, destinationRole: profile.destinationRole,
+    profileCode, status: profile.status, publicationContext: profile.publicationContext,
     steps: profile.steps.map(step => ({ dataType: step.dataType, releases: step.releases.length })),
     validationMode: validation.mode, repeatedInstall: 'SKIPPED_CURRENT',
     historyRuns: history.length, onlineDataImport: 'DISABLED',

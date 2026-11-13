@@ -40,6 +40,7 @@ function fixture(rows) {
     },
     administrators: async () => rows.filter((item) => item.admin),
     memberships: () => ({
+      enabled: () => true,
       base: () => ({ input: (value) => assert.deepEqual(value, {}) }),
       administrator: async (request, code) => {
         assert.equal(request.authData.entCode, code);

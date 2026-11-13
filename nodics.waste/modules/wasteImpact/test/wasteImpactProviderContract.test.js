@@ -70,6 +70,46 @@ test('ordered providers fall back after invalid output and preserve the successf
     assert.deepEqual(result.metadata.impactProvider.attempts.map(item => item.status), ['FAILED', 'SUCCEEDED']);
 });
 
+test('an owner profile supplies the complete provider chain only when selected', async () => {
+    const providerProfile = {
+        providerService: 'Primary',
+        fallbackProviderServices: ['Secondary'],
+        timeoutMs: 1200,
+        failureMode: 'RESULT'
+    };
+    CONFIG.setProperties(_.merge({}, CONFIG.getProperties(), {
+        wasteImpact: { providerProfiles: { environmental: providerProfile } }
+    }));
+    assert.equal(impact.settings().providerService, 'DefaultWasteImpactMockProviderService');
+
+    settings({ providerProfile: 'environmental' });
+    SERVICE.Primary = { calculate: async () => ({ metrics: [] }) };
+    SERVICE.Secondary = { calculate: async (_, context) => {
+        assert.equal(context.settings.timeoutMs, 1200);
+        assert.equal(context.settings.failureMode, 'RESULT');
+        return providerResponse();
+    } };
+    const result = await impact.calculate(request());
+    assert.equal(result.metadata.impactProvider.service, 'Secondary');
+    assert.deepEqual(result.metadata.impactProvider.attempts.map(item => item.status), ['FAILED', 'SUCCEEDED']);
+
+    CONFIG.setProperties(_.merge({}, CONFIG.getProperties(), {
+        wasteImpact: { providerProfiles: { environmental: { timeoutMs: 2400 } } }
+    }));
+    assert.equal(impact.settings().timeoutMs, 2400);
+    assert.deepEqual(impact.settings().fallbackProviderServices, ['Secondary']);
+});
+
+test('an unknown or incomplete selected profile fails before trying a provider', async () => {
+    settings({ providerProfile: 'unknown' });
+    await assert.rejects(impact.calculate(request()), error => error.code === 'ERR_WASTE_IMPACT_CONFIGURATION_INVALID');
+
+    CONFIG.setProperties(_.merge({}, CONFIG.getProperties(), {
+        wasteImpact: { providerProfiles: { unknown: { fallbackProviderServices: [] } } }
+    }));
+    await assert.rejects(impact.calculate(request()), error => error.code === 'ERR_WASTE_IMPACT_CONFIGURATION_INVALID');
+});
+
 test('valid primary skips fallback; timed-out primary cancels before fallback', async () => {
     let fallbackCalls = 0, aborted = false;
     SERVICE.Primary = { calculate: async () => providerResponse() };

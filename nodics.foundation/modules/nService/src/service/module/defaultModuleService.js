@@ -214,9 +214,7 @@ module.exports = {
   buildInvocationDiagnostic: function (options, phase, extra) {
     options = options || {};
     extra = extra || {};
-    let targetAuthority = options.targetAuthority || {};
-    if (typeof targetAuthority === "string")
-      targetAuthority = { runtimeRole: targetAuthority };
+    const targetAuthority = this.normalizeTargetAuthority(options.targetAuthority);
     let current = this.getCurrentRuntimeAuthority();
     let request = options.request || options.requestBody || {};
     return CLASSES.NodicsError.cleanContext({
@@ -232,9 +230,7 @@ module.exports = {
       targetModule: options.moduleName,
       targetConnection: this.getModuleConnectionName(options),
       targetServer: targetAuthority.server,
-      targetRuntimeRole:
-        targetAuthority.runtimeRole &&
-        (targetAuthority.runtimeRole.code || targetAuthority.runtimeRole),
+      targetPublication: targetAuthority.publication,
       targetEnvironment: targetAuthority.environment,
       targetNode: targetAuthority.node,
       apiName: options.apiName,
@@ -369,6 +365,8 @@ module.exports = {
     const router = SERVICE.DefaultRouterService;
     if (!router || typeof router.getModuleServerConfig !== "function")
       return true;
+    const owner = router.getModuleServerConfig(moduleName);
+    if (owner.getOptions().remoteOnly === true) return false;
     const topology = router.getModuleServerConfig(connectionName || moduleName);
     return topology.getOptions().remoteOnly !== true;
   },
@@ -395,62 +393,38 @@ module.exports = {
     };
   },
 
-  /** Normalizes runtime role metadata into comparable uppercase tokens. */
-  runtimeRoleTokens: function (role) {
-    let tokens = [];
-    if (!role) return tokens;
-    if (typeof role === "string") {
-      tokens.push(role);
-    } else if (typeof role === "object" && !Array.isArray(role)) {
-      ["code", "publication", "runtimeRole"].forEach((key) => {
-        if (role[key]) tokens.push(role[key]);
-      });
+  /** Validates the single explicit module-owner authority selector.
+   * @param {Object|undefined} targetAuthority Publication and optional deployment pins.
+   * @returns {Object} Independent canonical selector; omission means no selector.
+   * @throws {Error} For retired role selectors, unknown fields or missing publication.
+   */
+  normalizeTargetAuthority: function (targetAuthority) {
+    if (targetAuthority === undefined) return {};
+    if (!targetAuthority || typeof targetAuthority !== "object" || Array.isArray(targetAuthority) ||
+        Object.keys(targetAuthority).some(key => !["publication","environment","server","node"].includes(key)) ||
+        !["STAGED","ONLINE","OPERATIONAL"].includes(targetAuthority.publication)) {
+      throw new Error("Module target authority requires explicit publication and only environment/server/node pins");
     }
-    return tokens.map((token) => String(token).toUpperCase()).filter(Boolean);
+    const result = {publication:targetAuthority.publication};
+    for (const key of ["environment","server","node"]) {
+      if (Object.prototype.hasOwnProperty.call(targetAuthority,key)) {
+        if (typeof targetAuthority[key] !== "string" || !/^[A-Za-z0-9_.-]{1,128}$/.test(targetAuthority[key])) throw new Error("Invalid module target authority pin: " + key);
+        result[key]=targetAuthority[key];
+      }
+    }
+    return result;
   },
 
-  /**
-   * Returns true when a requested target authority is served by this runtime.
-   *
-   * `targetAuthority` describes the intended owner, such as WCMS Online or
-   * Process. Runtime Registry will eventually make this comparison lease-backed;
-   * for now it uses current runtime coordinates and configured runtime role.
+  /** Checks local ownership against explicit publication and deployment pins.
+   * @param {Object|undefined} targetAuthority Canonical selector.
+   * @returns {boolean} Whether the selected local runtime matches.
+   * @throws {Error} If the selector is malformed or retired.
    */
   isCurrentRuntimeAuthority: function (targetAuthority) {
-    if (!targetAuthority) return true;
-    let authority =
-      typeof targetAuthority === "string"
-        ? { runtimeRole: targetAuthority }
-        : targetAuthority;
-    let current = this.getCurrentRuntimeAuthority();
-    if (
-      authority.environment &&
-      String(authority.environment) !== String(current.environment || "")
-    )
-      return false;
-    if (
-      authority.server &&
-      String(authority.server) !== String(current.server || "")
-    )
-      return false;
-    if (authority.node && String(authority.node) !== String(current.node || ""))
-      return false;
-    if (authority.runtimeRole || authority.code || authority.publication) {
-      let requestedTokens = this.runtimeRoleTokens(
-        authority.runtimeRole || authority,
-      );
-      if (authority.code)
-        requestedTokens = requestedTokens.concat(
-          this.runtimeRoleTokens({ code: authority.code }),
-        );
-      if (authority.publication)
-        requestedTokens = requestedTokens.concat(
-          this.runtimeRoleTokens({ publication: authority.publication }),
-        );
-      let currentTokens = this.runtimeRoleTokens(current.runtimeRole);
-      return requestedTokens.some((token) => currentTokens.includes(token));
-    }
-    return true;
+    const authority=this.normalizeTargetAuthority(targetAuthority);
+    const current=this.getCurrentRuntimeAuthority();
+    if (authority.publication && authority.publication!==current.runtimeRole?.publication) return false;
+    return ["environment","server","node"].every(key=>authority[key]===undefined || authority[key]===current[key]);
   },
 
   /**
@@ -636,6 +610,7 @@ module.exports = {
    * @returns {Promise<*>} Remote response.
    */
   invokeRemoteModule: function (options) {
+    this.normalizeTargetAuthority(options.targetAuthority);
     if (!options.apiName) {
       throw new CLASSES.NodicsError(
         "ERR_TNT_00003",
@@ -738,6 +713,7 @@ module.exports = {
           "Module invocation requires moduleName",
         );
       }
+      this.normalizeTargetAuthority(options.targetAuthority);
       if (
         this.isLocalModuleActive(
           options.moduleName,

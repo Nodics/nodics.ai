@@ -13,7 +13,8 @@ For implementation rules, read this module `AGENTS.md` after the root-to-leaf an
 
 Map configuration is shared across applications and administered through Axis.
 Provider choice, viewport, controls, marker categories and wheel interaction come
-from the same Location-owned record. See the [shared configuration contract](llm/contracts/shared-map-configuration.md)
+from the Location-owned resolution of framework, project and application settings.
+With no saved selection the framework serves OSM HOT without a token. See the [shared configuration contract](llm/contracts/shared-map-configuration.md)
 for operator setup, public consumption, safe customization and validation.
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
@@ -21,3 +22,5 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Documentation provenance release 0.0.2 preserves article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](data/manifest.json) selects it; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.

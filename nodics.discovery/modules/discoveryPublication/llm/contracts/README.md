@@ -95,3 +95,50 @@ accept only an object or null in the generated database validator. Optionality
 alone permits absence, not null. Identity and revision remain required and typed.
 Run `test/discoveryGenerationSchema.test.js` and the authenticated Copilot runtime
 acceptance test to cover schema compilation and actual provider writes.
+
+## Publication owner transport
+
+Generation orchestration uses `DefaultDiscoveryGenerationTransportService` for
+three fixed operations: exact read, canonical empty initialization and validated
+revision advance. `DefaultModuleService` selects the unique `discoveryPublication`
+owner using the module-owned `discovery.publication.targetAuthority` default,
+whose publication binds to explicit runtime context. It never selects by role.
+Required-module declarations identify source dependencies; Publication's index
+follows Runtime because exact count interpretation uses its response parser.
+
+The source domain retains its fresh eligibility callbacks immediately before
+its effects. Callbacks are not serialized. The persistence owner reconstructs
+scope and code, fixes read limits and insert-only behavior, rereads the current
+manifest, validates both sides of a bounded transition, prohibits guarded-writer
+downgrade and commits through generated exact-revision CAS. No new database
+adapter, generic manifest CRUD, source eligibility authority or replay protocol
+is introduced. An uncertain acknowledgement remains uncertain to the caller.
+
+Only fixed service-token routes are exposed, requiring module admission and
+`discovery.generation.read` or `discovery.generation.write`. Their bodies cannot
+supply generated-service names, arbitrary predicates, persistence flags or actor
+identity. These source contracts do not install grants or run initialization.
+Existing deployments need their governed caller assignments qualified separately.
+
+Physical retirement/erasure now uses the fixed Projection command owner while
+this module retains the original private receipt schema. Public facade methods
+are preview/execute/inspect/previewErasure/erase/inspectErasure; inspection returns
+minimized status directly, not private evidence or a model handle. Projection
+performs fresh source-owner decisions and native model checks. Publication's fixed
+read/claim/complete/claimErasure/completeErasure commands reconstruct bounded
+scope, prohibit arbitrary predicates, retain unique insertion and original scalar
+CAS, and never manufacture provider acknowledgement. See
+`discoveryProjection/llm/contracts/README.md` for authority qualification and
+credential handling. No schemas, stored receipts or physical data are migrated.
+
+Run generation routing plus generation publication regressions for owner selection,
+concurrent CAS, protocol downgrade, lost acknowledgement and bounded admission.
+The tests are offline and do not qualify native index retirement or live grants.
+
+
+Internal routes declare their `moduleInternal` exposure default here with neutral
+`inheritUnknown: true` policy. Registration preserves nRouter's existing unknown
+category denial or common default; it never enables a service, grants permissions
+or qualifies a provider. Later explicit category overrides remain supported.
+See nRouter's capability-owned exposure contract and
+`apiExposureOwnershipContract.test.js` for default, denied and override evidence.

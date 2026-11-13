@@ -240,6 +240,7 @@ for (const [origin, additions, exposed] of [
     const res = createResponse();
     assert.strictEqual(service.applyCors({ method: 'OPTIONS', headers: { origin } }, res, cors), true);
     assert.strictEqual(res.statusCode, 204);
+    assert(res.headers['Access-Control-Allow-Headers'].includes('If-None-Match'), 'Allowed browser origins must revalidate published resources using ETag');
     assert(res.headers['Access-Control-Allow-Headers'].includes(Object.keys(additions)[0]));
     assert.strictEqual(res.headers['Access-Control-Allow-Credentials'], 'true');
     assert(res.headers['Access-Control-Expose-Headers'].includes(Object.keys(exposed)[0]));
@@ -272,6 +273,24 @@ const dynamicCors = {
 };
 const originalDynamic = structuredClone(dynamicCors);
 const bindings = require('../../nConfig/src/service/defaultConfigurationBindingService');
+// Deployment restrictions are ordinary layered overrides, independent of host roles.
+assert.strictEqual(Object.hasOwn(defaultPolicy, 'runtimeRoleProfiles'), false);
+const restrictedCors = bindings.merge(defaultPolicy.cors, bindings.resolve({
+    originEndpointOverrides: { nexus: false }
+}, defaultPolicy.cors));
+assert.strictEqual(service.resolveAllowedOrigin('http://localhost:3100', restrictedCors), 'http://localhost:3100');
+assert.strictEqual(service.resolveAllowedOrigin('http://localhost:3200', restrictedCors), undefined);
+const restrictedResponse = createResponse();
+service.applyCors({ method: 'OPTIONS', headers: { origin: 'http://localhost:3200' } }, restrictedResponse, restrictedCors);
+assert.strictEqual(restrictedResponse.statusCode, 403);
+const relocatedRestrictedCors = bindings.merge(restrictedCors, bindings.resolve({
+    originEndpoints: { nexus: { protocol: 'https', host: 'editor.customer.example', port: 443 } },
+    allowedOrigins: ['https://editor.customer.example']
+}, restrictedCors));
+assert.strictEqual(service.resolveAllowedOrigin('https://editor.customer.example', relocatedRestrictedCors), undefined,
+    'Deployment denial must follow the application endpoint and defeat an additive allow');
+assert.deepStrictEqual(defaultPolicy.cors.originEndpointOverrides, {}, 'Layering must not mutate framework defaults');
+
 const replacementCors = bindings.merge(dynamicCors, bindings.resolve({
     originEndpoints: { $config: 'replace', value: { app: { protocol: 'https', host: 'app.customer.example', port: 443 } } },
     originEndpointOverrides: { $config: 'replace', value: {} },
@@ -288,7 +307,7 @@ const emptyCors = bindings.merge(replacementCors, bindings.resolve({
 assert.deepStrictEqual(service.resolveCorsOrigins(emptyCors), { allowedOrigins: [], deniedOrigins: [] });
 assert.strictEqual(service.resolveAllowedOrigin('https://app.customer.example', emptyCors), undefined);
 assert.strictEqual(service.resolveAllowedOrigin('http://172.20.10.2:4400', dynamicCors), undefined);
-for (const header of ['Authorization', 'X-Tenant-Code', 'Tenant']) {
+for (const header of ['Authorization', 'If-None-Match', 'X-Tenant-Code', 'Tenant']) {
     assert(service.resolveCorsHeaderList(defaultPolicy.cors.allowedHeaders, {}).includes(header));
 }
 assert(service.resolveCorsHeaderList(defaultPolicy.cors.exposedHeaders, {}).includes('ETag'));

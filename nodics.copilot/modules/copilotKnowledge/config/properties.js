@@ -17,6 +17,8 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  // Declare ownership without overriding existing unknown-category exposure policy.
+  apiExposure: { categories: { moduleInternal: { inheritUnknown: true } } },
   runtimePropertyGovernance: {
     publicMetadataLiterals: [
       {
@@ -29,6 +31,10 @@ module.exports = {
     knowledge: {
       writerRecovery: { enabled: false, minimumPendingAgeMs: 300000 },
       legacyMigration: {
+        // Source authority descriptor for the existing qualified nSearch retirement definition.
+        authorityBinding: {
+          moduleName: 'copilotKnowledge', serviceName: 'DefaultCopilotKnowledgeMigrationService'
+        },
         enabled: false,
         erasureEnabled: false,
         plans: {},
@@ -65,7 +71,7 @@ module.exports = {
         assignments: [],
         actionAuthority: {
           connectionName: null,
-          runtimeRole: null,
+          publication: "OPERATIONAL",
           timeoutMs: 10000,
         },
       },
@@ -251,11 +257,13 @@ module.exports = {
       maximumEvidenceItems: 20,
       requireCitations: true,
       generationPublication: { enabled: false, incrementalEnabled: false },
+      publishedContent: { connectionName: "cmsOnline" },
       ingestion: {
         enabled: false,
         ingestOnStart: false,
         indexTenant: "default",
         startup: {
+          timeoutMs: 120000,
           sourceProject: null,
           serviceId: "copilot-knowledge-startup",
           locale: "en",

@@ -21,8 +21,8 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 ## Authentication And Authorization Rules
 
 - Keep `identityGovernance.migration.runtimeDeploymentBootstrapEnabled` default
-  false and limited to provisioning admission. Persisted Profile assignments own
-  runtime permission ceilings; migration properties never define or restore them.
+  false and limited to provisioning admission. The authenticated shared Profile principal owns
+  internal service permissions; migration properties never define or restore them.
   Do not infer grants or principal classification from account names, restore
   retired-key fallbacks, rewrite retained grant identities, or repair installed
   credentials/groups/lockouts on startup in any environment.
@@ -112,3 +112,11 @@ Scoped runtime route admission recognizes `userGroup` and
 groups or expand permissions. nRouter still enforces the approved module, explicit
 action permission, accepted token type and deployment exposure. Administrator and
 human-only groups remain ineligible; later deployment policy may narrow the list.
+
+Profile issues short-lived internal service tokens only after native apiAdmin API-key
+proof in the requested tenant and enterprise. nConfig derives exact placement
+and active/remote module scope from installed topology. Keep named permissions,
+empty JWT groups, security stamps, namespace pins and domain caller checks.
+The signed assignmentCode is a stable placement identifier for existing caller
+pins. Startup and renewal do not consult per-runtime assignment rows. Profile
+Init includes admin, apiAdmin and the existing authority-tenant guest Customer.

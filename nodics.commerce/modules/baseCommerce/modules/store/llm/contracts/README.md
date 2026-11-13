@@ -2,7 +2,7 @@
 
 ## Deployment-bound Placement Reads
 
-Store master releases are operational `COMMERCE` references, not Product
+Store master releases are operational Store references, not Product
 publication graph members. A Staged authoring runtime must not duplicate those
 records or assume its local generated Store service owns them.
 
@@ -17,14 +17,15 @@ The original service principal needs its signed `store` module claim and exact
 capture, the enabled `storePlacementRead` exposure category and
 `store.placementRead` policy.
 
-The selected runtime role code must match the policy and its publication kind
-must be `OPERATIONAL`. Store reference reads are not Product/Pricing publication:
-do not relabel the shared Commerce role `ONLINE` to enable this operation.
+The receiver must locally own Store according to `DefaultModuleService.isLocalModuleActive("store")`
+and explicitly declare runtime publication `OPERATIONAL`. Display role code is not
+authority. Store reference reads retain their separate module publication semantics;
+STAGED and ONLINE runtimes do not acquire operational read authority.
 
 Framework defaults are inert:
 
 ```js
-placementRead: { enabled: false, runtimeRole: null, callers: [] }
+placementRead: { enabled: false, callers: [] }
 ```
 
 Each caller supplies exactly `tenant`, `principalEnterpriseCode`, `serviceId`,
@@ -186,3 +187,5 @@ Shopping List resolve this service through the normal service registry.
 
 Test the Commerce foundation and Cart/Shopping List customer API contracts,
 including missing context, mismatches, independent stores and persisted IDs.
+
+Placement admission and missing or inconsistent Store evidence return the canonical authorization refusal (HTTP 403). Malformed exact selectors return canonical validation failure (HTTP 400). Provider transport failures retain their own failure; callers never see a success-shaped fallback or retry a denied read with broader authority.

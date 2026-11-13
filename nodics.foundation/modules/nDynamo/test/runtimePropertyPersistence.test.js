@@ -163,7 +163,8 @@ function fixture(t) {
             },
         },
     };
-    global.NODICS = { getActiveTenants: () => ['tenant', 'other'] };
+    global.NODICS = { getActiveTenants: () => ['tenant', 'other'], getEnvironmentName:()=> 'project', getSelectedEnvironmentName:()=> 'local', getServerName:()=> 'runtime' };
+    SERVICE.DefaultDatabaseConfigurationService = require('../../nDatabase/database/src/service/config/defaultDatabaseConfigurationService');
     t.after(() => Object.assign(global, old));
     const request = {
         tenant: 'tenant',
@@ -366,7 +367,7 @@ test('atomic commit excludes a fence acquired after its policy refresh', async (
     };
     await assert.rejects(
         f.owner.commit(f.request, patch, reviewed),
-        /stale or uncertain/,
+        { code: 'ERR_DYN_PROPERTY_STALE' },
     );
     assert.ok(held);
     assert.equal(f.current().tenant.feature.level, 2);
@@ -473,7 +474,7 @@ test('uncertain insert does not apply locally or retry; authoritative refresh re
     f.lose();
     await assert.rejects(
         () => f.owner.commit(f.request, patch, reviewed),
-        /unknown acknowledgement/,
+        { code: 'ERR_DYN_PROPERTY_RECOVERY_UNCONFIRMED' },
     );
     assert.equal(f.writes(), 1);
     assert.equal(f.current().tenant.feature.level, 1);
@@ -871,6 +872,55 @@ test('evidence-only recovery closes a committed claim without replay and rejects
     );
 });
 
+test('recovery retires only a provably superseded claim without commit evidence', async (t) => {
+    const f = fixture(t);
+    const requests = require('../src/service/audit/defaultRuntimeConfigurationActivationRequestService');
+    const patch = { feature: { level: 3 } };
+    const activation = {
+        code: 'older-claim',
+        configurationType: 'propertyConfiguration',
+        configuration: patch,
+        configurationDigest: requests.createConfigurationDigest(patch),
+        preview: await f.prepare(patch),
+        status: 'ACTIVATING',
+        approvalStatus: 'APPROVED',
+        approvedBy: 'reviewer',
+        activatedBy: 'operator',
+        revision: 2,
+    };
+    const service = {
+        ...requests,
+        resolveActivationRequest: async () => _.cloneDeep(activation),
+        updateRequestState: async (request, current, change) => {
+            assert.equal(current.revision, 2);
+            Object.assign(activation, change, { revision: 3 });
+            return _.cloneDeep(activation);
+        },
+        activateConfiguration: async () => assert.fail('Recovery must never replay'),
+    };
+    const recovery = { ...f.request, authData: { code: 'recovery-operator' } };
+    await assert.rejects(() => service.reconcilePropertyActivation(recovery), {
+        code: 'ERR_DYN_PROPERTY_RECOVERY_UNCONFIRMED',
+    });
+    const otherPatch = { feature: { level: 2 } };
+    await f.owner.commit(f.request, otherPatch, await f.prepare(otherPatch));
+    activation.preview.persistenceRevision = 'f'.repeat(64);
+    await assert.rejects(() => service.reconcilePropertyActivation(recovery), {
+        code: 'ERR_DYN_PROPERTY_RECOVERY_UNCONFIRMED',
+    });
+    assert.equal(activation.status, 'ACTIVATING');
+    activation.preview.persistenceRevision = null;
+    const closed = await service.reconcilePropertyActivation(recovery);
+    assert.deepEqual(closed.data, {
+        activationRequestCode: activation.code,
+        status: 'STALE',
+        revision: 3,
+        replayed: false,
+    });
+    assert.deepEqual(await service.reconcilePropertyActivation(recovery), closed);
+    assert.equal(f.writes(), 1);
+});
+
 test('two runtime application watermarks restore tombstones and reject out-of-order refreshes', async (t) => {
     const f = fixture(t);
     const otherNode = { ...source, appliedRevisions: new Map() };
@@ -885,4 +935,49 @@ test('two runtime application watermarks restore tombstones and reject out-of-or
     assert.throws(() => otherNode.apply(f.request, stale), /obsolete/);
     assert.equal(Object.hasOwn(f.current().tenant, 'feature'), false);
     assert.equal(f.writes(), 2);
+});
+
+
+test('durable property identity uses canonical logical runtime scope and rejects missing identity',t=>{
+ const f=fixture(t);const first=f.owner.scope({tenant:'tenant'});
+ NODICS.getServerName=()=> 'second';const second=f.owner.scope({tenant:'tenant'});
+ assert.notEqual(first.code,second.code);
+ NODICS.getServerName=()=> 'runtime';assert.deepEqual(f.owner.scope({tenant:'tenant'}),first);
+ NODICS.getSelectedEnvironmentName=()=> 'other';assert.notEqual(f.owner.scope({tenant:'tenant'}).code,first.code);
+ NODICS.getSelectedEnvironmentName=()=>undefined;
+ assert.throws(()=>f.owner.scope({tenant:'tenant'}),/Stable deployment/);
+});
+
+test('two logical runtimes sharing a generated store cannot read or overwrite each others property row',async t=>{
+ const f=fixture(t),patch={feature:{level:2}};
+ await f.owner.commit(f.request,patch,await f.prepare(patch));
+ const first=await f.owner.read(f.request);
+ NODICS.getServerName=()=> 'second';f.restart();
+ assert.equal(await f.owner.read(f.request),null);
+ const other={feature:{level:3}};
+ await f.owner.commit(f.request,other,await f.prepare(other));
+ const second=await f.owner.read(f.request);
+ assert.notEqual(first.code,second.code);assert.equal(f.rows.size,2);
+ NODICS.getServerName=()=> 'runtime';f.restart();
+ assert.deepEqual(await f.owner.read(f.request),first);
+});
+
+
+test('replica acknowledgement observes durable revision without repairing stale or missing local adoption', async t => {
+ const f=fixture(t), initial=await f.owner.acknowledgement(f.request);
+ assert.equal(initial.state,'NOT_CONFIGURED');assert.equal(initial.clusterAcknowledged,false);
+ const patch={feature:{level:2}};await f.owner.commit(f.request,patch,await f.prepare(patch));
+ const peer={...source,appliedRevisions:new Map()};
+ assert.equal((await peer.acknowledgement(f.request)).state,'NOT_APPLIED');
+ await peer.refresh(f.request);const first=await peer.acknowledgement(f.request);assert.equal(first.state,'CURRENT');
+ const next={feature:{level:3}};await f.owner.commit(f.request,next,await f.prepare(next));const writes=f.writes();
+ peer.apply=()=>{throw Error('Diagnostic must not adopt state');};
+ const stale=await peer.acknowledgement(f.request);
+ assert.equal(stale.state,'STALE');assert.equal(stale.appliedRevision,first.expectedRevision);assert.notEqual(stale.expectedRevision,stale.appliedRevision);assert.equal(stale.adoptionConfirmed,false);assert.equal(f.writes(),writes);
+ assert.equal(JSON.stringify(stale).includes('feature'),false);
+ peer.appliedRevisions.set('other',{sequence:99,revision:'a'.repeat(64)});
+ assert.equal((await peer.acknowledgement(f.request)).state,'STALE');
+ peer.apply=source.apply;await peer.refresh(f.request);assert.equal((await peer.acknowledgement(f.request)).state,'CURRENT');
+ f.rows.clear();assert.equal((await peer.acknowledgement(f.request)).state,'MISSING');
+ f.config.persistence.enabled=false;assert.equal((await peer.acknowledgement(f.request)).state,'DISABLED');
 });

@@ -112,3 +112,12 @@ reverse intents before lifecycle lookup/save, including unused/redeemed/expired
 coupons; clear advertised refund/return methods and financial preview. Preserve
 bundle policy ordering, original Profile authority and APPEAL review separation.
 Missing/malformed coupon policy fails closed; never infer it from caller flags.
+
+Identity and cross-owner commands route through existing DMS with explicit logical
+module and `targetAuthority.publication`, never physical role codes. Operational
+identity, Store, scheduler, payment and notification owners use OPERATIONAL;
+Product/Pricing authoring references use STAGED. Optional server/environment pins
+remain exact. Reject missing publication and obsolete role selectors. Preserve
+original actor or internal credentials as specified by each API, signed caller
+grants, tenant/business binding, enablement and qualification. Routing descriptors
+do not activate owners or providers. Tests must express these boundaries explicitly.

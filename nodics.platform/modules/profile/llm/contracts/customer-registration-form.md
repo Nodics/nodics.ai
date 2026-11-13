@@ -29,6 +29,18 @@ The response is only
 `registered: true`; shared browser sign-in remains a separate Profile operation.
 The existing structured `/customer/signup` contract remains compatible.
 
+Anonymous browser consumers use `POST /customer/browser/register`, never the
+service-authenticated form route or an embedded service credential. The existing
+Customer browser controller enforces its exact credentialed origin policy and
+no-store response. `profileCustomerRegistrationForm.browser.enabled` defaults to
+false. Deployments may opt in; request and identity rate bounds remain Profile
+defaults and always use the distributed limiter. The server fixes placement to
+the configured default Tenant and Enterprise, rejects foreign selectors and
+rechecks active placement, policy and origin before its existing signup pipeline.
+Account creation issues no session and does not verify a contact address.
+Lost acknowledgements are reconciled through normal sign-in, without automatic
+registration replay. Both browser and service routes strip caller privilege fields.
+
 `profileCustomerRegistrationForm` owns form limits. Email is trimmed/lowercased;
 full name is whitespace-normalized and mononyms remain supported. Overlong name
 parts are rejected rather than silently truncated. Passwords are never trimmed.

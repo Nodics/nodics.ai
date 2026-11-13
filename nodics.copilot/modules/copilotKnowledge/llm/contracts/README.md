@@ -19,7 +19,7 @@ fresh source/replacement authority and nSearch-qualified historical writer
 decommissioning. Discovery owns the one-shot claim on the original private
 receipt; uncertain outcomes remain inspection-only. Never infer completed erasure
 from absence alone or send physical index/key identities to Axis. See the
-[operator guide](../../data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js#permanently-remove-a-retired-index).
+[operator guide](../../data/docs-v001/records/documentation/copilotKnowledgeDocumentationRelease002ComponentData.js#permanently-remove-a-retired-index).
 
 Migration permission definitions live in Knowledge's identity data pack; Profile
 owns their persisted catalogue and asynchronously validates fresh active records.
@@ -59,3 +59,27 @@ Readiness payloads must remain operator-safe:
 
 Provider secrets, API keys, private prompts, raw evidence documents, and
 unauthorized source paths must never be returned in readiness.
+
+
+## Workflow transport ownership
+
+Workflow calls use `DefaultModuleService`, logical module `workflow` and explicit
+`targetAuthority.publication: OPERATIONAL`; a physical Process role label is not
+a routing or authorization requirement. Preserve selected connections, original
+caller/tenant/Enterprise binding, scoped runtime authentication, exact published
+definition/version, instance and execution handles, one-use claims and receipt
+validation. This change enables no workflow, grants no permissions and permits
+no retry of uncertain starts, claims or retirement commands.
+
+Copilot owns `copilot.knowledge.workflowRefresh.actionAuthority.publication` with
+an `OPERATIONAL` default. Deployments select `connectionName`; workflow/manual
+refresh stays disabled until explicitly qualified. Remove obsolete `runtimeRole`
+selectors rather than copying the publication default into customer properties.
+
+
+Internal routes declare their `moduleInternal` exposure default here with neutral
+`inheritUnknown: true` policy. Registration preserves nRouter's existing unknown
+category denial or common default; it never enables a service, grants permissions
+or qualifies a provider. Later explicit category overrides remain supported.
+See nRouter's capability-owned exposure contract and
+`apiExposureOwnershipContract.test.js` for default, denied and override evidence.

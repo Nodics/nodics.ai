@@ -9,50 +9,58 @@
 
  */
 
-/** @module nodics.waste/config/properties @description Defines reusable Waste data-release placement for core reference, profile-address and location sample contributions. @layer config @owner waste @override Later layers may add deployment/project waste releases while keeping schemas and lifecycle authority in Waste modules. */
+/** @module nodics.waste/config/properties @description Defines reusable Waste data-release placement for Location vocabulary and Platform access contributions. @layer config @owner waste @override Later layers may add deployment/project waste releases while keeping schemas and lifecycle authority in Waste modules. */
 module.exports = {
+  backofficeFunctionalModuleActivationData: {
+    modules: {
+      "nodics.waste": {
+        dataPackages: {
+          $config: "keyed",
+          key: "code",
+          entries: [
+            { code: "wasteCore:enterpriseRoles", required: true, trigger: "ACTIVATION", targetModule: "profile" },
+            { code: "wasteCore:businessAccessRoles", required: true, trigger: "ACTIVATION", targetModule: "profile" },
+          ],
+        },
+      },
+    },
+  },
   "data": {
     "dataReleases": {
-      "runtimeRoleProfiles": {
-        "PLATFORM": {
-          "contributions": [
-            {
-              "moduleName": "wasteCore",
-              "sections": [
-                "core-reference"
+      "contributions": {
+        "$config": "keyed",
+        "key": "moduleName",
+        "entries": [
+          {
+            "moduleName": "wasteCollection",
+            "sections": {
+              "$config": "replace",
+              "value": [
+                "collection-capabilities"
               ]
-            },
-            {
-              "moduleName": "wasteCollection",
-              "sections": [
-                "sample-profile-addresses"
-              ]
-            },
-            {
-              "moduleName": "wasteCarbon",
-              "sections": [
+            }
+          },
+          {
+            "moduleName": "wasteCarbon",
+            "sections": {
+              "$config": "replace",
+              "value": [
                 "participantAccessGroups",
                 "transferFinalizationPermission"
               ]
-            },
-            {
-              "moduleName": "wasteReward",
-              "sections": [
+            }
+          },
+          {
+            "moduleName": "wasteReward",
+            "sections": {
+              "$config": "replace",
+              "value": [
                 "participantAccessGroups"
               ]
             }
-          ]
-        },
-        "LOCATION": {
-          "contributions": [
-            {
-              "moduleName": "wasteCollection",
-              "sections": [
-                "sample-locations"
-              ]
-            }
-          ]
-        }
+          }
+        ],
+        "remove": []
       }
     }
   }

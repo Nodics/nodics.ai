@@ -18,7 +18,7 @@
  */
 const mutations = new WeakMap();
 const privateReads = new WeakSet();
-const referenceCreates = new WeakSet();
+const referenceCreates = new WeakMap();
 module.exports = {
   /** Admits authority-partition administrative operations; enterprise-local administrators cannot edit shared roles. */
   authorize: async function (request) {
@@ -70,12 +70,26 @@ module.exports = {
   createReference: async function (service, request) {
     await this.authorizeSeed(request, service);
     if (request.options?.insertOnly !== true || request.query) SERVICE.DefaultIdentityCatalogueService.fail();
-    referenceCreates.add(request);
+    referenceCreates.set(request, Object.freeze({ service, tenant: request.tenant, code: request.model?.code }));
     try { return await service.save(request); } finally { referenceCreates.delete(request); }
   },
   /** Allows only the held insert-only reference create or a freshly verified Platform operator to mutate groups. */
   authorizeGroupMutation: async function (request) {
-    if (referenceCreates.has(request) && request.options?.insertOnly === true && !request.query) return true;
+    const reference = referenceCreates.get(request);
+    if (reference) {
+      // The generated save query builder adds the declared primary identity
+      // before preSave. Admit only that exact selector under the original
+      // private insert-only operation; copied requests carry no capability.
+      const query = request.query;
+      const exactQuery = query === undefined || query && typeof query === "object" &&
+        Object.getPrototypeOf(query) === Object.prototype && Reflect.ownKeys(query).length === 1 &&
+        Object.hasOwn(query, "code") &&
+        query.code === reference.code;
+      if (reference.service !== SERVICE.DefaultUserGroupService || request.tenant !== reference.tenant ||
+          typeof reference.code !== "string" || !reference.code || request.model?.code !== reference.code ||
+          request.options?.insertOnly !== true || !exactQuery) SERVICE.DefaultIdentityCatalogueService.fail();
+      return true;
+    }
     return this.authorize(request);
   },
   /** Reads existing generated owner records, retaining complete inventory guarantees. */

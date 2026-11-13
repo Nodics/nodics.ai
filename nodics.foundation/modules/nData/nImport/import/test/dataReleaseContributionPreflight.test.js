@@ -32,7 +32,7 @@ function fixture() {
     let current = false, reads = 0;
     global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
     global.CONFIG = { get: name => ({ data: { dataReleases: policy }, process: processPolicy,
-        runtimeRole: { code: 'PROCESS' }, environment: { class: 'LOCAL' } })[name] };
+        runtimeRole: { code: 'PROCESS', publication: 'OPERATIONAL' }, environment: { class: 'LOCAL' } })[name] };
     global.NODICS = { getActiveModules: () => [], getRawModule: name => name === 'editorial' ? owner : undefined,
         getSelectedEnvironmentName: () => 'isolated' };
     const service = { ...releaseService, activeExecutions: new Map(), getInstallations: async () => current ? [{
@@ -103,7 +103,7 @@ test('existing authorized Init validate path returns evidence, blocked authority
 test('missing hook, corrupted immutable evidence and unexpected service failures reject controller preflight', async () => {
     const f = fixture();
     SERVICE.DefaultProcessDefinitionContributionService = { installContribution: () => { throw Error('must never execute'); } };
-    await assert.rejects(f.validate(), /preflight is unavailable/);
+    await assert.rejects(f.validate(), /installer is unavailable/);
     SERVICE.DefaultProcessDefinitionContributionService = contribution;
     f.versions[0].checksum = 'b'.repeat(64);
     await assert.rejects(f.validate(), /published version/);

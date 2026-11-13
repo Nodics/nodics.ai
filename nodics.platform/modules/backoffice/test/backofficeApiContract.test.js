@@ -231,7 +231,11 @@ assert(contracts.bootstrapData.required.includes("axisPolicy"));
 assert(contracts.bootstrapData.required.includes("tenantCode"));
 assert(contracts.bootstrapData.required.includes("documentationSources"));
 assert(contracts.bootstrapData.required.includes("startupValidation"));
-assert(contracts.bootstrapData.required.includes("operationalReadiness"));
+assert.deepStrictEqual(contracts.bootstrapData.oneOf, [
+  { required: ["operationalReadiness"] }, { required: ["operationalReadinessObservation"] },
+]);
+assert.strictEqual(contracts.bootstrapData.properties.operationalReadinessObservation.additionalProperties, false);
+assert.strictEqual(routers.registryDiscovery.bootstrap.help.parameters.find(parameter => parameter.name === "includeOperationalReadiness").schema.default, true);
 assert.deepStrictEqual(
   contracts.operationalReadinessReport.properties.state.enum,
   ["READY", "NEEDS_ATTENTION", "NOT_READY"],
@@ -1102,3 +1106,21 @@ assert.strictEqual(
   false,
 );
 console.log("BackOffice API and module catalogue contracts validated");
+
+// Runtime role code is display metadata; publication is explicit. The retired roles field is rejected.
+for (const publication of ["STAGED", "ONLINE", "OPERATIONAL"]) {
+  assert.equal(service.validateRegistrationBatch({ instanceId: "runtime-1",
+    runtimeRole: { code: "ANY_DISPLAY_LABEL", publication }, registrations: [registration] }, 10), true);
+}
+for (const roles of [["COMMERCE"], ["COMMERCE", "LOYALTY"], [], undefined]) {
+  assert.equal(service.validateRegistrationBatch({ instanceId: "runtime-1",
+    runtimeRole: { code: "COMMERCE", roles, publication: "OPERATIONAL" },
+    registrations: [registration] }, 10), false);
+}
+for (const publication of [undefined, "", "UNKNOWN"]) {
+  assert.equal(service.validateRegistrationBatch({ instanceId: "runtime-1",
+    runtimeRole: { code: "COMMERCE", publication }, registrations: [registration] }, 10), false);
+}
+assert.deepEqual(contracts.registrationBatch.properties.runtimeRole.required, ["code", "publication"]);
+assert.deepEqual(Object.keys(contracts.registrationBatch.properties.runtimeRole.properties).sort(), ["code", "publication"]);
+assert.deepEqual(contracts.registrationBatch.properties.runtimeRole.properties.publication.enum, ["STAGED", "ONLINE", "OPERATIONAL"]);

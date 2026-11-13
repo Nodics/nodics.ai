@@ -469,6 +469,19 @@ module.exports = {
     }
     return require("../../config/properties").enterpriseManagement || {};
   },
+  /** Observes the existing invited-registration policy without enabling it or granting access. */
+  invitedRegistrationAvailable: function () {
+    if (typeof CONFIG === "undefined" || !CONFIG || typeof CONFIG.get !== "function" ||
+        typeof SERVICE === "undefined" ||
+        typeof SERVICE.DefaultEnterpriseRegistrationService?.policy !== "function") return false;
+    try {
+      if (CONFIG.get("apiExposure")?.categories?.profileRegistration?.enabled !== true) return false;
+      return !!SERVICE.DefaultEnterpriseRegistrationService.policy();
+    } catch (_) {
+      // Public discovery exposes only availability, never private policy failures.
+      return false;
+    }
+  },
   /** Registers this module BackOffice capability provider. */
   init: function () {
     SERVICE.DefaultModuleRegistrationAgentService.registerBackofficeCapabilityProvider(
@@ -484,6 +497,14 @@ module.exports = {
   /** Returns this module owned BackOffice capability contract. */
   getCapability: function () {
     let effective = JSON.parse(JSON.stringify(capability));
+    const directory = typeof SERVICE !== "undefined" && SERVICE.DefaultProfileParticipantDirectoryService;
+    const customerWorkspace = typeof directory?.buildCustomerWorkspace === "function"
+      ? directory.buildCustomerWorkspace() : undefined;
+    effective.navigation.forEach(item => {
+      if (!["customer-workspace", "customers-profiles", "customers"].includes(item.id)) return;
+      item.featureState = customerWorkspace ? "ACTIVE" : "DISABLED";
+      if (customerWorkspace) item.backendWorkspace = JSON.parse(JSON.stringify(customerWorkspace));
+    });
     const configuration = this.getEnterpriseManagementConfig();
     let workspace;
     if (configuration.workspace) {
@@ -496,25 +517,25 @@ module.exports = {
         );
       workspace = owner.buildAccessWorkspace({ publicOnly: false });
     }
-    if (
-      workspace &&
-      (configuration.applications?.enabled === true ||
-        configuration.applications?.review?.enabled === true) &&
-      configuration.applications.reviewWorkspace
-    ) {
-      workspace.tabs = (workspace.tabs || []).concat(
-        JSON.parse(JSON.stringify(configuration.applications.reviewWorkspace)),
-      );
-    }
     if (workspace) {
       effective.navigation.forEach((item) => {
         if (item.id !== "enterprises") return;
         item.featureState = "ACTIVE";
-        item.backendWorkspace = workspace;
+        // Registration metadata is inert; current role choices come from the authenticated task read.
+        item.backendWorkspace = {
+          contractVersion: 1,
+          renderer: "axis.workspace.native",
+          workspaceCode: "profile.enterpriseManagement",
+          viewCode: "administration",
+          title: workspace.title,
+          description: workspace.description,
+        };
         item.requiredPermissions = Array.from(
           new Set(
             (item.requiredPermissions || ["profile.backoffice.view"]).concat([
               "profile.enterprise.search",
+              // The aggregate also renders creation; read vocabulary alone cannot admit its form.
+              "profile.enterprise.create",
               "profile.enterpriseAccess.search",
               "profile.enterpriseAccess.assign",
             ]),
@@ -541,6 +562,7 @@ module.exports = {
     effective.publicFeatureAvailability = {
       contractVersion: 1,
       features: {
+        invitedEmployeeRegistration: this.invitedRegistrationAvailable(),
         enterpriseMembershipDiscovery: membershipsQualified,
         enterpriseMembershipSwitch:
           membershipsQualified && configuration.memberships.browserContextSwitchQualified === true,
@@ -571,8 +593,11 @@ module.exports = {
         },
       });
     }
+    const teamExposure = CONFIG.get("apiExposure")?.categories?.profileTeam?.enabled === true;
+    const invitationWithdrawalQualified = teamExposure &&
+      configuration.teamAdministration?.invitationWithdrawalQualified === true;
     if (
-      membershipsQualified &&
+      teamExposure && (membershipsQualified || invitationWithdrawalQualified) &&
       configuration.teamAdministration?.enabled === true &&
       configuration.teamAdministration.serializedWritesQualified === true
     ) {

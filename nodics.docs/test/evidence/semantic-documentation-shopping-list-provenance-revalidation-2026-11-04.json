@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-11-04",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "COMPLETED_BOUNDED_SOURCE_EDITORIAL_REVIEW",
+  "boundary": "Exact current Shopping List ownership explanation and one illustrative store identifier revalidation only. No shipping content/code changes, account grants, imports or live customer API qualification. Forward provenance 0.0.3 changes source metadata and selected filename only; exact article blocks and all six inspected source files match the bounded 130 review. No broader editorial or live acceptance is implied.",
+  "items": [
+    {
+      "item": "Shopping List Commerce boundary",
+      "backlogPriority": "P1",
+      "requestedAction": "Document why shopping-intent lists belong to Base Commerce and what Profile owns.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "shoppingIntentBaseCommerceOwnership": "COVERED",
+        "profileOwnership": "COVERED"
+      },
+      "rationale": "The guide directly answers the requested boundary: wishlists, compare and save-for-later carry product/SKU/store shopping intent and belong to Base Commerce; Profile owns customer identity, authentication and enterprise access rather than a second list store. It explains stable owner/tenant keys, explicit store context, Commerce permission ownership, migration without dual authority and customer-safe service access. The current source enforces owner-scoped routes and operations. The pass is for that exact ownership request, not a blanket endorsement of every customization example in the article. Final source-citation rereview: the Profile group source formerly named in the guide is absent. Current owner init-v001/records/identity/profileUserGroupData.js contains commerce.shoppingList.own in the genuine customerUserGroup. Replaced only that citation and its source-map table cell in a new 0.0.2/docs-v002 successor. Exact structured comparison proves all other blocks, headings, routes and source evidence unchanged; all previously reviewed controller/service/router hashes still match. Profile remains permission authority, Shopping List remains shopping-intent owner, and no installed groups or permissions changed. Prior bounded customization limitation remains explicit. Bounded current-source revalidation on 2026-11-04: the active v001 article differs from the frozen citation-corrected predecessor only at code block14, replacing illustrative storeCode agoraMainStore with agoraApparelStore. All45blocks, existing headings and other examples are otherwise preserved. Inspected the native customer router, HTTP mapping, authenticated facade, complete operation service, customer-owned schemas and Store context owner. Request/payload/query/persisted store references must be nonblank, trimmed and equal; the code is used in the tenant/owner/list-type identity with no default-store fallback. This identifier example does not prove Store existence, selling eligibility, installation, access assignment or live customer acceptance. Ten in-memory owner tests pass. The existing per-type customization/schema limitation remains outside the bounded ownership explanation and is not endorsed by this revalidation.",
+      "evidence": [
+        {
+          "documentId": "commerce.shopping-list-commerce-boundary",
+          "anchors": [
+            "commerceShoppingListCommerceBoundary-2-ownership-model",
+            "commerceShoppingListCommerceBoundary-3-contract",
+            "commerceShoppingListCommerceBoundary-8-migration-principle",
+            "commerceShoppingListCommerceBoundary-10-store-context-and-upgrade-behavior"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/routers.js",
+        "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/controller/defaultShoppingListCustomerController.js",
+        "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/facade/defaultShoppingListCustomerFacade.js",
+        "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/service/defaultShoppingListOperationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/schemas/schemas.js",
+        "nodics.commerce/modules/baseCommerce/modules/store/src/service/defaultStoreContextService.js"
+      ],
+      "sourceFindings": [
+        "Customer routes require commerce.shoppingList.own and the owning customer controller, not generic Profile CRUD.",
+        "Operation queries scope lists and entries by tenant and owner, list type and explicit store context; list policy remains a Commerce concern.",
+        "limit handles COMPARE and SAVE_FOR_LATER specially; all other types use maximumWishlistItems.",
+        "Current illustrative store identifier is agoraApparelStore; only this code-block value changed beyond the historical citation correction.",
+        "Store resolveStoreCode validates nonempty trimmed agreement only; Store master-data access and eligibility remain separate.",
+        "Customer-owned list schemas still enumerate the three standard types; new list types need schema extension as well as policy/service work."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Nonblocking to the requested ownership explanation: the extra outfit/gift customization example suggests per-type maximumOutfitIdeaItems/maximumGiftIdeaItems settings. limit does not consume those keys. Correct that example or explain the required operation-service override; setting those properties alone does not enforce those limits.",
+        "Additional bounded limitation: the schema enums still list WISHLIST, COMPARE and SAVE_FOR_LATER. The extra outfit/gift configuration example also needs project schema extension; policy configuration alone does not make those types persistable."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": null,
+      "reviewedAt": "2026-11-04"
+    }
+  ],
+  "canonicalDocuments": {
+    "commerce.shopping-list-commerce-boundary": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/shoppingList",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/shoppingList/data/docs-v001/records/documentation/shoppingListDocumentationRelease003ComponentData.js",
+      "articleBlocksSha256": "2bed7aeaf1cfbfc07e0bb0d523fdc1d2490936006b3dbcdcf7d0439cb7ace129",
+      "sections": [
+        {
+          "anchor": "commerceShoppingListCommerceBoundary-2-ownership-model",
+          "title": "Ownership model"
+        },
+        {
+          "anchor": "commerceShoppingListCommerceBoundary-3-contract",
+          "title": "Contract"
+        },
+        {
+          "anchor": "commerceShoppingListCommerceBoundary-8-migration-principle",
+          "title": "Migration principle"
+        },
+        {
+          "anchor": "commerceShoppingListCommerceBoundary-10-store-context-and-upgrade-behavior",
+          "title": "Store context and upgrade behavior"
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/routers.js": "1e3725794649b34cc17bbd3a53f8878b5facd7b08cdd874552911871f1c54a91",
+    "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/controller/defaultShoppingListCustomerController.js": "64c5f64215227937599197017be15aee55243e9424ef7601c610a7dea33c8f40",
+    "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/facade/defaultShoppingListCustomerFacade.js": "7a2d24fbe5af5a769537425bc69eb1891d030f8f767fbd8788029cbf8f96a3a1",
+    "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/service/defaultShoppingListOperationService.js": "42f3d84587f5fd781498bbd6f0f088ac6d8663b8f9097ed83f2a0e88cc400a71",
+    "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/schemas/schemas.js": "341e00298f55c495060d11d54e5575a3fe43aeb5bb3d98db393c8a722dcfdacd",
+    "nodics.commerce/modules/baseCommerce/modules/store/src/service/defaultStoreContextService.js": "47aa52c6c42b382d294adc57981c55bad54732425e496babf43c70f46e943aed"
+  },
+  "semanticDelta": {
+    "blockIndex": 14,
+    "from": "storeCode: 'agoraMainStore'",
+    "to": "storeCode: 'agoraApparelStore'",
+    "otherBlocksUnchanged": true
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED",
+    "boundary": "Owner tests use in-memory fixtures; native documentation publication is separate evidence."
+  },
+  "provenanceRevalidation": {
+    "previousReview": "semantic-documentation-shopping-list-example-revalidation-2026-11-04.json",
+    "articleBlocksUnchanged": true,
+    "inspectedSourceBytesUnchanged": true,
+    "releaseVersion": "0.0.3",
+    "reviewedAt": "2026-11-04T16:24:47.466Z"
+  }
+}

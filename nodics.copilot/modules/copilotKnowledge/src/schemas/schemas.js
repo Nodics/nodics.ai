@@ -100,3 +100,6 @@ module.exports = {
     },
   },
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.copilotKnowledge.copilotKnowledgeMaintenance.backoffice = Object.assign({ description: "Private Knowledge maintenance authorisation and completion evidence. Use Knowledge inspection and reviewed owner commands; generic record operations are unavailable." }, module.exports.copilotKnowledge.copilotKnowledgeMaintenance.backoffice);

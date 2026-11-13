@@ -76,8 +76,9 @@ test('the full library composes canonical capability records rather than retaini
         const article = families.Component.records.find(record =>
             record.properties?.code === item.code && Array.isArray(record.properties.blocks));
         assert(article, item.code + ': navigation must resolve to the canonical selected article');
-        for (const field of ['searchText', 'maturityState', 'implementationState', 'summary', 'title', 'lifecycleState'])
-            assert.equal(item[field], article.properties[field], item.code + ': stale navigation ' + field);
+        // The shared scaffold retains identity and order; CMS derives the reader's
+        // labels, states and search text from the selected article at publication.
+        assert.equal(item.route, article.properties.route, item.code + ': stale navigation route');
     }
     for (const page of metadata.records) {
         const owner = metadata.origins.get(page.code).root;
@@ -187,7 +188,7 @@ test('source-reviewed guides are staged with usable routes and no fabricated Onl
         for (const state of states.records.filter(state => states.origins.get(state.code).root === root)) {
             assert.equal(state.lifecycleState, 'STAGED');
             assert.equal(state.onlineVersion, undefined);
-            assert.equal(state.approver, '');
+            assert(state.approver === undefined || state.approver === '', 'Staged review must not record an approver');
         }
     }
 });

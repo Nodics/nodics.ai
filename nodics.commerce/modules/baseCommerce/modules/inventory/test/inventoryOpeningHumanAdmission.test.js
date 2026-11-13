@@ -30,12 +30,12 @@ function fixture(t, policies = config.schemaPolicies) {
   const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, NODICS: global.NODICS, UTILS: global.UTILS, CLASSES: global.CLASSES };
   t.after(() => Object.assign(global, previous));
   global.CONFIG = { get: key => ({ schemaPolicies: policies, accessPoints: points,
-    runtimeRole: { code: 'COMMERCE', publication: 'ONLINE' }, inventory: { publication: { runtimeRole: 'ONLINE' } } })[key] };
+    runtimeRole: { code: 'UNRELATED', publication: 'OPERATIONAL' }, inventory: { publication: { runtimeRole: 'ONLINE' } } })[key] };
   global.UTILS = { isBlank: value => !value || Object.keys(value).length === 0 };
   global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
   const schemas = schemaHandler.applyNamedSchemaPolicies('inventory', structuredClone(rawSchemas));
   global.NODICS = { getModule: () => ({ rawSchema: schemas }) };
-  global.SERVICE = { DefaultSchemaAccessHandlerService: access,
+  global.SERVICE = { DefaultModuleService: { isLocalModuleActive: moduleName => ["inventory"].includes(moduleName), }, DefaultSchemaAccessHandlerService: access,
     DefaultRecordOwnershipPolicyService: database('access/defaultRecordOwnershipPolicyService'),
     DefaultSecuredRequestPipelineService: {
       getGrantedPermissions: request => request.authData.permissions || [],

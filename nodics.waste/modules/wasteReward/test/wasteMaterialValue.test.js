@@ -156,7 +156,7 @@ beforeEach(() => {
         PaymentFixtureService: { readPayment: async () => structuredClone(payment) },
         DefaultModuleService: { invokeModule: async input => {
             assert.equal(input.tenant, 'T'); assert.equal(input.moduleName, 'loyaltyApi');
-            assert.deepEqual(input.targetAuthority, { runtimeRole: 'LOYALTY' });
+            assert.deepEqual(input.targetAuthority, { publication: 'OPERATIONAL' });
             const body = input.requestBody;
             if (input.apiName === '/wallets') return { data: { code: body.ownerType + ':' + body.ownerCode } };
             assert.equal(input.apiName, '/reward-earnings'); creditCalls.push(structuredClone(body));

@@ -9,8 +9,6 @@
 
  */
 
-const _ = require('lodash');
-
 /**
  * @module service/tenant/DefaultTenantHandlerService
  * @description Deactivates tenants from the runtime node by removing tenant
@@ -53,47 +51,29 @@ module.exports = {
      * Removes runtime state for a list of tenants.
      *
      * @param {string[]} tenants Tenant codes to deactivate from this node.
-     * @returns {Promise<Object>} Tenant deactivation response.
+     * @returns {Promise<Object>} Acknowledgement after every selected resource has completed.
+     * @throws Propagates owner cleanup failure, retaining the active marker for inspection; completed resource effects are not rolled back.
      * @sideEffects Mutates tenant, job, database, model, and search registries.
      */
-    removeTenants: function (tenants) {
-        let _self = this;
-        return new Promise((resolve, reject) => {
-            try {
-                if (tenants && tenants.length > 0) {
-                    tenants.forEach(tenant => {
-                        NODICS.removeActiveTenant(tenant);
-                        if (SERVICE.DefaultCronJobService) {
-                            SERVICE.DefaultCronJobService.getCronJobRuntimeService().removeAllJobs([tenant]).then(success => {
-                                _self.LOG.info('All job removed successfully for thenant: ' + tenant);
-                            }).catch(error => {
-                                _self.LOG.error('Failed removing jobs for tenant: ' + tenant);
-                            });
-                        }
-                        _.each(NODICS.getModules(), (moduleObject, moduleName) => {
-                            SERVICE.DefaultDatabaseConnectionHandlerService.removeTenantDatabase(moduleName, tenant).then(success => {
-                                SERVICE.DefaultDatabaseModelHandlerService.removeModelsForTenant(moduleName, tenant).then(success => {
-                                    if (NODICS.isModuleActive('search')) {
-                                        SERVICE.DefaultSearchConfigurationService.removeTenantSearchEngine(moduleName, tenant);
-                                        SERVICE.DefaultSearchConfigurationService.removeTenantRawSearchSchema(moduleName, tenant);
-                                        if (moduleObject.searchModels[tenant]) delete moduleObject.searchModels[tenant];
-                                    }
-                                    resolve({
-                                        code: 'SUC_SYS_00000',
-                                        message: 'Tenant successfully deactivated'
-                                    });
-                                }).catch(error => {
-                                    reject(error);
-                                });
-                            }).catch(error => {
-                                reject(error);
-                            });
-                        });
-                    });
-                }
-            } catch (error) {
-                reject(error);
+    removeTenants: async function (tenants = []) {
+        if (!Array.isArray(tenants)) throw new TypeError('Tenant cleanup requires a list');
+        for (const tenant of new Set(tenants)) {
+            // Resource owners validate an active tenant. Retire that marker only
+            // after every required cleanup has completed, never on first success.
+            if (SERVICE.DefaultCronJobService) {
+                await SERVICE.DefaultCronJobService.getCronJobRuntimeService().removeAllJobs([tenant]);
             }
-        });
+            for (const [moduleName, moduleObject] of Object.entries(NODICS.getModules())) {
+                await SERVICE.DefaultDatabaseConnectionHandlerService.removeTenantDatabase(moduleName, tenant);
+                await SERVICE.DefaultDatabaseModelHandlerService.removeModelsForTenant(moduleName, tenant);
+                if (NODICS.isModuleActive('search')) {
+                    await SERVICE.DefaultSearchConfigurationService.removeTenantSearchEngine(moduleName, tenant);
+                    await SERVICE.DefaultSearchConfigurationService.removeTenantRawSearchSchema(moduleName, tenant);
+                    if (moduleObject.searchModels) delete moduleObject.searchModels[tenant];
+                }
+            }
+            NODICS.removeActiveTenant(tenant);
+        }
+        return { code: 'SUC_SYS_00000', message: 'Tenant successfully deactivated' };
     }
 };

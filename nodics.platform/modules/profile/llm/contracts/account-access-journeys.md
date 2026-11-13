@@ -51,12 +51,44 @@ proof expiry, unchanged COMPLETE and absence of provisioning side effects using
 controlled owner fixtures. These tests do not establish installed BFT/browser
 acceptance or authorize activation/restart.
 
+## Public invitation entry observation
+
+Profile contributes `publicFeatureAvailability.features.invitedEmployeeRegistration`
+through its existing BackOffice capability registration. The boolean is true only
+when `apiExposure.categories.profileRegistration.enabled` is explicitly true and
+the actual `DefaultEnterpriseRegistrationService.policy()` admits the existing
+PASSWORD registration configuration. Missing service, disabled/unqualified policy
+or policy failure returns false without publishing private failure details. This
+observation does not enable registration, qualify a provider, send email, identify
+an invitee or grant employee access.
+
+BackOffice retains its existing agreeing-current-lease projection. Axis may use
+the observation only to discover the existing public registration workspace from
+the configured Profile endpoint. That fresh owner read remains authoritative and
+supplies `presentation.title` as entry copy. A denied, unavailable or incompatible
+workspace must not produce an entry. The entry opens the existing Axis registration
+route; it never invokes start, resend, verification or provisioning on mount.
+Public discovery retains the configured project's enterprise context rather than
+an employee sign-in hint. Registration itself retains its exact origin, rate,
+inventory, invitation, verification and credential checks.
+
+Customize existing registration policy and `presentation.title` through normal
+Profile configuration. Do not enable qualification flags as a copy change or
+publish arbitrary destinations. `test/invitedRegistrationAvailability.test.js`
+uses the actual registration policy for positive, disabled, unqualified, invalid,
+unexposed and absent-service observations. Public feature registration and
+agreement tests remain in BackOffice; live UI entry acceptance is separate.
+
 ## Authenticated enterprise navigation
 
-The Profile BackOffice provider obtains enterprise workspace metadata through
-the selected `DefaultEnterpriseManagementService.getAccessWorkspace` owner with
-`publicOnly: false`, including later-layer configuration. Public-only sections
-are excluded without changing retained configuration. Public registration remains
+The Profile BackOffice provider registers only the inert native
+`profile.enterpriseManagement` / `administration` descriptor. The secured no-store
+GET `/enterprises/workspace` delegates controller → facade →
+`DefaultEnterpriseManagementService.getManagementWorkspace` → the selected
+`getAccessWorkspace` owner. Original signed Enterprise scope is mandatory; query
+selectors and public aliases refuse. The owner reads fresh persisted role choices,
+including later-layer configuration. Public-only sections are excluded without
+changing retained configuration. Public registration remains
 the separate verified-continuation registration owner; raw enterprise/mailbox/
 password forms must not be republished as authenticated administration tasks.
 
@@ -117,7 +149,10 @@ inherited. It reads existing private runtime inputs without ensuring/regeneratin
 credentials, resolves the selected nConfig graph in an isolated worker, and
 loads maintenance services/schema metadata without lifecycle hooks or Init.
 Only reviewed native loopback MongoDB and the default assignment owner are
-supported; custom/later provider combinations require their own qualification.
+supported; custom/later provider combinations require their own qualification. The worker
+awaits nConfig's asynchronous deployment projection before reading its resolved
+module inventory or loading maintenance services; a pending projection is not a
+resolved runtime context. This sequencing grants no provider or registration authority.
 
 From the framework root, with an existing human operator access token supplied
 privately in `NODICS_PROFILE_INSTALLED_OPERATOR_TOKEN` (never a CLI argument,
@@ -233,6 +268,22 @@ must reject all unapproved recipients and have no external relay. Run browser
 OTP/provisioning/reset acceptance before claiming end-to-end or release readiness.
 
 ## Application tasks
+
+When original enterprise command recording is enabled, creation first reuses the
+native receipt owner's current human, Platform, permission and descriptor admission,
+then reads the existing default-administrator policy. Missing or invalid reference
+evidence returns `503 ERR_PROFILE_ENTERPRISE_SETUP_NOT_READY` before any journal
+claim or native dispatch. Prepare the existing `profile:enterpriseRoles` pack and
+its prerequisites through nImport, then explicitly submit the retained draft.
+When command recording is disabled, the ordinary native creation path applies
+the same fixed refusal while resolving its administrator nomination, after its
+human/Platform, writable descriptor and idempotency checks and before any tenant,
+enterprise or assignment write. Receipt enablement is not required for this
+pre-write guidance. Later setup or inspection calls retain their existing errors.
+This code is reserved for that pre-write refusal; later overrides must never emit
+it after dispatch. Native setup repeats fresh checks after recording. Old unknown
+receipts, generic identity errors and provisioning failures remain unknown and
+must not be replayed or relabelled as definite failures.
 
 1. Open `/enterprise-access/register` using the discovered Profile connection.
 2. Enter the mailbox and verify its current code. Before proof, responses remain
@@ -374,6 +425,27 @@ The six fixed recovery routes live in Profile's existing router under
 service policy, exact-origin admission, shared cache, distributed rate limits,
 verification purpose, credential writes and internal Communication grants remain
 required. Routing source alone does not enable this feature.
+Recovery's Framework-owned password help supports the two fixed length-policy
+placeholders `{{minimumPasswordLength}}` and `{{maximumPasswordLength}}`. Workspace
+discovery substitutes its effective bounds into a copy, keeping custom wording
+and the configured presentation unchanged. Axis renders that owner-provided hint;
+it does not invent password requirements or copy their defaults.
+The existing shared verification transport retains its Framework connection, mode
+and bounds. A server-admitted recovery context selects recovery enablement and
+purpose independently of registration verification enablement. Copied context
+fields or browser payloads cannot select this authority.
+Several Enterprises may share one tenant. Recovery selects exactly one through
+the existing authentication owner's native binding or registration-session
+eligibility check. It does not infer a business Enterprise from tenant uniqueness,
+guess a default for an unbound foreign identity or treat an owner failure as absence.
+Resolve generated native credential IDs and populated references with the existing
+Password ownership validator before reading the exact linked credential. Plain
+objects and query operators cannot become identifiers. The private verification
+adapter retains only fixed rate/state/conflict codes; recovery maps them to its
+own loaded retry/verify-again/conflict vocabulary without requiring foreign
+Communication status definitions in Profile. Distributed admission and resend
+cooldown denials use HTTP 429. Provider messages, causes, metadata and proofs
+remain private; other transport failures keep the generic unavailable response.
 
 Recovery fixtures compose the real nAuth authorization-policy validator and the
 existing principal-stamp owner. Principal writer acknowledgements must include

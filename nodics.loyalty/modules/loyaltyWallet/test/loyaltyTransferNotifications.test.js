@@ -83,6 +83,20 @@ function fixture(t, enterpriseSender = false) {
     DefaultProfileTransferNotificationRecipientService: profile, DefaultProfileCommerceNotificationRecipientService: unwrap,
     DefaultProfileNotificationRecipientService: recipientSelector,
     DefaultEnterpriseMembershipService: {
+      ...require(root + "nodics.platform/modules/profile/src/service/enterprise/defaultEnterpriseMembershipService"),
+      anchor: async identity => {
+        assert.equal(identity.tenantCode, "tenant"); assert.equal(identity.recordKind, "EMPLOYEE");
+        const person = db.Employee.find(row => row._id === identity.recordId);
+        assert.ok(person, "native identity must exist"); return { identity, person };
+      },
+      read: async (service, tenant, query) => {
+        assert.equal(service, "DefaultEnterpriseAccessAssignmentService"); assert.equal(tenant, "authority");
+        assert.ok(["E1", "E2"].includes(query.enterpriseCode));
+        assert.equal(query["membership.identity.tenantCode"], "tenant");
+        assert.equal(query["membership.identity.recordKind"], "EMPLOYEE");
+        assert.ok(db.Employee.some(row => row._id === query["membership.identity.recordId"]));
+        return undefined;
+      },
       resolve: async (person, tenant, kind) => { assert.equal(kind, person.principalType === "human" ? "EMPLOYEE" : "CUSTOMER"); return { identity: { recordId: person._id, tenantCode: tenant, recordKind: kind }, person }; },
       inventory: async () => [], authority: () => "authority",
     },
@@ -163,6 +177,7 @@ function fixture(t, enterpriseSender = false) {
         ? { contractVersion: 1, tenant: "tenant", enterpriseCode: "E0", customer: { loginId: "actor", code: "C1" } }
         : { principalCode: "actor", scopes: [{ scopeType: "ENTERPRISE", scopeCode: "E1" }], deniedScopes: [] };
     }
+    assert.deepEqual(call.targetAuthority, { publication: "OPERATIONAL" });
     assert.equal(call.requireInternalAuth, true);
     assert.equal(call.header, undefined); assert.deepEqual(call.request, { tenant: "tenant" });
     assert.equal(call.authData, undefined); assert.equal(call.maxAttempts, 1);

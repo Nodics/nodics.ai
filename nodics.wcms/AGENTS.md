@@ -23,3 +23,10 @@
   bootstraps WCMS-owned capability rather than Axis product experience.
 - Do not hardcode project, server, tenant, or customer behavior into reusable
   WCMS modules. Use layered configuration and project overrides.
+
+
+Keep release discovery in the existing ordinary `data.dataReleases.contributions`
+list using keyed module identities and explicit section replacement. Do not
+restore role profiles, duplicate source owners, alter manifest activation policy,
+or install definitions from configuration. Qualify actual owner/publication
+admission and preserve unselected sources. See the local release composition contract.

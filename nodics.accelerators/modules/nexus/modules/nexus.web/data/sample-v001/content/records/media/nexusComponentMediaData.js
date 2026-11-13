@@ -64,6 +64,7 @@ const media = function (reference, index) {
     code,
     tenant: 'default',
     componentMediaCode: code,
+    authoringScope: { enterpriseCode: 'default', catalogCode: 'nexusContentCatalog' },
     componentCode: reference.componentCode,
     mediaCode: reference.mediaCode,
     mediaType: 'IMAGE',

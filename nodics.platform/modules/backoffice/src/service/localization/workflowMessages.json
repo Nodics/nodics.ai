@@ -1,0 +1,1997 @@
+{
+  "formatVersion": 1,
+  "ownerModule": "backoffice",
+  "entries": [
+    {
+      "namespace": "backoffice",
+      "key": "ui.backoffice-connection-is-unavailable",
+      "defaultMessage": "BackOffice connection is unavailable.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اتصال المكتب الخلفي غير متاح."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.initialize-governed-documentation-and-project-accelerators-then-publish-",
+      "defaultMessage": "Initialize governed documentation and project accelerators, then publish Staged packages to Online with approval.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جهّز الوثائق ومسرّعات المشروع الخاضعة للحوكمة، ثم انشر حزم الإعداد إلى البيئة العامة بعد الموافقة."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.setup-accelerators",
+      "defaultMessage": "Setup & Accelerators",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإعداد والمسرّعات"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.all-applications",
+      "defaultMessage": "All applications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جميع التطبيقات"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.authenticated-bootstrap-did-not-include-any-application-initialization-p",
+      "defaultMessage": "Authenticated bootstrap did not include any application-initialization profiles. Setup & Accelerators is backend-published, so project or environment configuration must contribute profiles before Axis can initialize Nexus, Agora, documentation, or future accelerators.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تتضمن بيانات بدء الجلسة أي ملفات إعداد للتطبيقات. تأتي خيارات الإعداد والمسرّعات من الخادم؛ يجب أن يحدد المشروع أو البيئة ملفات الإعداد قبل تهيئة التطبيقات أو الوثائق."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.setup-profile-summary",
+      "defaultMessage": "Setup profile summary",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ملخص ملفات الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.online",
+      "defaultMessage": "Online",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منشور"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.pending-approval",
+      "defaultMessage": "Pending approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بانتظار الموافقة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.setup-options",
+      "defaultMessage": "Setup options",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "خيارات الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.loading-status",
+      "defaultMessage": "Loading status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل الحالة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.status-unavailable",
+      "defaultMessage": "Status unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحالة غير متاحة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.find-a-setup",
+      "defaultMessage": "Find a setup",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "البحث عن إعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.application-or-documentation",
+      "defaultMessage": "Application or documentation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تطبيق أو وثائق"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.view",
+      "defaultMessage": "View",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "العرض"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.needs-action",
+      "defaultMessage": "Needs action",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يتطلب إجراءً"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.all-profiles",
+      "defaultMessage": "All profiles",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جميع ملفات الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.approval-queue",
+      "defaultMessage": "Approval Queue",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قائمة الموافقات"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.open-publishing",
+      "defaultMessage": "Open Publishing",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح النشر"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.matching-setup",
+      "defaultMessage": "matching setup",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعداد مطابق"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.clear-search",
+      "defaultMessage": "Clear search",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسح البحث"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.publishing-recovery-path",
+      "defaultMessage": "Publishing recovery path",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسار استعادة النشر"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.follow-these-backend-owned-blockers-in-order-before-expecting-online-pag",
+      "defaultMessage": "Follow these backend-owned blockers in order before expecting Online pages, documentation, or storefront content to appear.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عالج هذه العوائق المحددة من الخدمات المختصة بالترتيب قبل توقع ظهور الصفحات أو الوثائق أو محتوى المتجر للعموم."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.loading-status-dbb3a4",
+      "defaultMessage": "Loading status...",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل الحالة…"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.review-import-history",
+      "defaultMessage": "Review import history",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة سجل الاستيراد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.setup-stage",
+      "defaultMessage": "Setup stage",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مرحلة الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.select-setup-stage",
+      "defaultMessage": "Select setup stage",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختيار مرحلة الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.profile-status-is-unavailable",
+      "defaultMessage": "Profile status is unavailable.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حالة ملف الإعداد غير متاحة."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.preparing",
+      "defaultMessage": "Preparing...",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التجهيز…"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.repairing",
+      "defaultMessage": "Repairing...",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ الإصلاح…"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.working",
+      "defaultMessage": "Working...",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ العمل…"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.module-registry",
+      "defaultMessage": "Module Registry",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سجل الوحدات"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.review-media-prerequisites",
+      "defaultMessage": "Review Media prerequisites",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة متطلبات الوسائط"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.review-publication",
+      "defaultMessage": "Review publication",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة النشر"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.dependency-details-are-unavailable-because-the-owning-status-read-failed",
+      "defaultMessage": "Dependency details are unavailable because the owning status read failed. Refresh status to inspect the prerequisites.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تفاصيل التبعيات غير متاحة بسبب تعذّر قراءة حالتها من الخدمة المختصة. حدّث الحالة لفحص المتطلبات."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.dependency-details-are-loading",
+      "defaultMessage": "Dependency details are loading.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل تفاصيل التبعيات."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.required-runtime",
+      "defaultMessage": "Required runtime",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بيئة التشغيل المطلوبة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.of",
+      "defaultMessage": "of",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "من"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.release-stages-prepared-on",
+      "defaultMessage": "release stages prepared on",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراحل الإصدار المجهّزة في"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.receipt",
+      "defaultMessage": "Receipt:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإيصال:"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.version",
+      "defaultMessage": "· Version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· النسخة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.installed",
+      "defaultMessage": "· Installed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· المثبت"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.current-run-evidence-unavailable",
+      "defaultMessage": " · Current run evidence unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· أدلة التنفيذ الحالي غير متاحة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.preparation-evidence",
+      "defaultMessage": "Preparation evidence",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أدلة التجهيز"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.last-preparation-operation",
+      "defaultMessage": "Last preparation operation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "آخر عملية تجهيز"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.changed-readiness",
+      "defaultMessage": "Changed readiness",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تغيّرت الجاهزية"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.no-readiness-change",
+      "defaultMessage": "No readiness change",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تتغير الجاهزية"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.publication-evidence",
+      "defaultMessage": "Publication evidence",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أدلة النشر"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.workflow",
+      "defaultMessage": "Workflow",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سير العمل"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.confirm",
+      "defaultMessage": "Confirm",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تأكيد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.operation",
+      "defaultMessage": "operation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عملية"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.this-can-change-the-online-accelerator-state-confirm-only-after-checking",
+      "defaultMessage": "This can change the Online accelerator state. Confirm only after checking the current Online version, rollback candidate, audit evidence, and expected browser verification path.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قد يغيّر هذا الإجراء حالة المسرّع المنشورة. لا تؤكد قبل فحص النسخة الحالية والنسخة المرشحة للاستعادة وأدلة التدقيق ومسار التحقق في المتصفح."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.required-this-reason-is-sent-to-the-backend-publication-authority-and-sh",
+      "defaultMessage": "Required. This reason is sent to the backend publication authority and should explain the evidence and business intent.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مطلوب. يُرسل هذا السبب إلى خدمة النشر ويجب أن يوضح الأدلة والغرض التجاري."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.operator-reason",
+      "defaultMessage": "Operator reason",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سبب المشغّل"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.cancel",
+      "defaultMessage": "Cancel",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إلغاء"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.submitting",
+      "defaultMessage": "Submitting...",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ الإرسال…"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.repair",
+      "defaultMessage": "repair",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إصلاح"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.axis-will-invoke-the-governed-backend-repair-operation-declared-by-readi",
+      "defaultMessage": "Axis will invoke the governed backend repair operation declared by readiness. Source, runtime, and publishing-only repairs remain guidance until their owning backend exposes an executable operation.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سيستدعي Axis عملية الإصلاح الخاضعة للحوكمة التي تحددها الجاهزية. تبقى إصلاحات المصدر وبيئة التشغيل والنشر إرشادات إلى أن توفر الخدمة المختصة عملية قابلة للتنفيذ."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.confirm-repair",
+      "defaultMessage": "Confirm repair",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تأكيد الإصلاح"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.initialize",
+      "defaultMessage": "Initialize",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تهيئة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.prepare-setup",
+      "defaultMessage": "Prepare setup",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تجهيز الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.repair-approval",
+      "defaultMessage": "Repair approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إصلاح الموافقة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.rollback",
+      "defaultMessage": "Rollback",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استعادة النسخة السابقة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.retire",
+      "defaultMessage": "Retire",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إيقاف النشر"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.required-setup-needs-repair-before-go-live",
+      "defaultMessage": "Required setup needs repair before go-live.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتاج الإعداد المطلوب إلى إصلاح قبل الإطلاق."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.register-and-activate-value0-in-module-registry-before-go-live",
+      "defaultMessage": "Register and activate {value0} in Module Registry before go-live.",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سجّل {value0} وفعّله في سجل الوحدات قبل الإطلاق."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-needs-developer-repair-before-go-live",
+      "defaultMessage": "{value0} needs developer repair before go-live.",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتاج {value0} إلى إصلاح من المطوّر قبل الإطلاق."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-needs-attention-before-go-live",
+      "defaultMessage": "{value0} needs attention before go-live.",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يتطلب {value0} معالجة قبل الإطلاق."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.submit-for-review",
+      "defaultMessage": "Submit for review",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إرسال للمراجعة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.update-staged",
+      "defaultMessage": "Update staged",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.activation",
+      "defaultMessage": "activation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التفعيل"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.user-triggered",
+      "defaultMessage": "user triggered",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "شغّله المستخدم"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.not-initialized",
+      "defaultMessage": "Not initialized",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "غير مهيأ"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.preparing-staged",
+      "defaultMessage": "Preparing Staged",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تجهيز بيئة الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.approval-in-progress",
+      "defaultMessage": "Approval in progress",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموافقة قيد التنفيذ"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.media-publication-required",
+      "defaultMessage": "Media publication required",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يلزم نشر الوسائط"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.setup-blocked",
+      "defaultMessage": "Setup blocked",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإعداد محظور"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.online-ready",
+      "defaultMessage": "Online ready",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النشر جاهز"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.rolled-back",
+      "defaultMessage": "Rolled back",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استُعيدت النسخة السابقة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.failed",
+      "defaultMessage": "Failed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فشل"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.rejected",
+      "defaultMessage": "Rejected",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مرفوض"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.not-prepared",
+      "defaultMessage": "Not prepared",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "غير مجهّز"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.preparing-cf1aa6",
+      "defaultMessage": "Preparing",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التجهيز"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.prepared-staged",
+      "defaultMessage": "Prepared staged",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مجهّز في بيئة الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.approval-required",
+      "defaultMessage": "Approval required",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموافقة مطلوبة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.approved",
+      "defaultMessage": "Approved",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معتمد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.needs-attention",
+      "defaultMessage": "Needs attention",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يتطلب معالجة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.retired",
+      "defaultMessage": "Retired",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أُوقف نشره"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.source-ready",
+      "defaultMessage": "Source ready",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المصدر جاهز"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.authority-pending",
+      "defaultMessage": "Authority pending",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الصلاحية قيد الانتظار"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.current",
+      "defaultMessage": "Current",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حالي"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.not-installed",
+      "defaultMessage": "Not installed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "غير مثبت"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.register-required",
+      "defaultMessage": "Register required",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التسجيل مطلوب"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.activate-required",
+      "defaultMessage": "Activate required",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التفعيل مطلوب"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.runtime-offline",
+      "defaultMessage": "Runtime offline",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بيئة التشغيل غير متصلة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.update-available",
+      "defaultMessage": "Update available",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يتوفر تحديث"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.unavailable",
+      "defaultMessage": "Unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "غير متاح"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.optional",
+      "defaultMessage": "Optional",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختياري"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-current",
+      "defaultMessage": "Staged current",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإعداد محدّث"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-update-available",
+      "defaultMessage": "Staged update available",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يتوفر تحديث للإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-not-installed",
+      "defaultMessage": "Staged not installed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإعداد غير مثبت"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-importing",
+      "defaultMessage": "Staged importing",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ استيراد الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-invalid-release",
+      "defaultMessage": "Staged invalid release",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إصدار الإعداد غير صالح"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-value0",
+      "defaultMessage": "Staged {value0}",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإعداد: {value0}"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-checking",
+      "defaultMessage": "Staged checking",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ فحص الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.required-setup-stages-remain-pending",
+      "defaultMessage": "Required setup stages remain pending.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ما زالت مراحل الإعداد المطلوبة معلّقة."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.required-setup-data-needs-preparation",
+      "defaultMessage": "Required setup data needs preparation.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحتاج بيانات الإعداد المطلوبة إلى التجهيز."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-has-a-newer-package-available",
+      "defaultMessage": "Staged has a newer package available.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تتوفر حزمة أحدث في بيئة الإعداد."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.release-version-update-required-before-this-can-be-initialized",
+      "defaultMessage": "Release version update required before this can be initialized.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يجب تحديث نسخة الإصدار قبل التهيئة."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.online-channel-is-available",
+      "defaultMessage": "Online channel is available.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قناة النشر العام متاحة."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.waiting-for-reviewer-decision",
+      "defaultMessage": "Waiting for reviewer decision.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بانتظار قرار المراجع."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-setup-is-running-status-refreshes-automatically",
+      "defaultMessage": "Staged setup is running; status refreshes automatically.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإعداد قيد التنفيذ؛ تُحدّث الحالة تلقائياً."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.last-attempt-failed-retry-after-fix",
+      "defaultMessage": "Last attempt failed; retry after fix.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فشلت المحاولة الأخيرة؛ أعد المحاولة بعد الإصلاح."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.ready-to-initialize",
+      "defaultMessage": "Ready to initialize.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جاهز للتهيئة."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-import-needs-review",
+      "defaultMessage": "{value0}: import needs review",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: الاستيراد يحتاج إلى مراجعة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-status-unavailable",
+      "defaultMessage": "{value0}: status unavailable",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: الحالة غير متاحة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.refresh-setup-status-before-taking-publication-action",
+      "defaultMessage": "Refresh setup status before taking publication action.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حدّث حالة الإعداد قبل اتخاذ إجراء نشر."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-release-needs-repair",
+      "defaultMessage": "{value0}: release needs repair",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: الإصدار يحتاج إلى إصلاح"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.the-source-release-manifest-or-descriptor-is-invalid-repair-the-owning-m",
+      "defaultMessage": "The source release manifest or descriptor is invalid. Repair the owning module release, rebuild, and refresh before installing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بيان الإصدار المصدر أو وصفه غير صالح. أصلح إصدار الوحدة المختصة وأعد البناء، ثم حدّث البيانات قبل التثبيت."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.open-data-releases",
+      "defaultMessage": "Open Data Releases",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح إصدارات البيانات"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-setup-prerequisites-need-review",
+      "defaultMessage": "{value0}: setup prerequisites need review",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: متطلبات الإعداد تحتاج إلى مراجعة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-required-setup-stages",
+      "defaultMessage": "{value0}: required setup stages",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: مراحل الإعداد المطلوبة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.review-setup-stages",
+      "defaultMessage": "Review setup stages",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة مراحل الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-value1",
+      "defaultMessage": "{value0}: {value1}",
+      "parameters": [
+        "value0",
+        "value1"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: {value1}"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-setup-is-current-submit-its-publication-for-normal-review-before-",
+      "defaultMessage": "Staged setup is current. Submit its publication for normal review before Online delivery.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإعداد محدّث. أرسل طلب نشره للمراجعة المعتادة قبل التسليم العام."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.use-the-profile-action-to-install-the-governed-setup-data-before-publica",
+      "defaultMessage": "Use the profile action to install the governed setup data before publication.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدم إجراء ملف الإعداد لتثبيت البيانات الخاضعة للحوكمة قبل النشر."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-setup-blocked",
+      "defaultMessage": "{value0}: setup blocked",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: الإعداد محظور"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.open-module-registry",
+      "defaultMessage": "Open Module Registry",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح سجل الوحدات"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-needs-attention",
+      "defaultMessage": "{value0}: needs attention",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: يتطلب معالجة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.resolve-the-backend-owned-readiness-blocker-before-continuing-publicatio",
+      "defaultMessage": "Resolve the backend-owned readiness blocker before continuing publication.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عالج عائق الجاهزية الذي حددته الخدمة المختصة قبل متابعة النشر."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.open-process-tasks",
+      "defaultMessage": "Open Process Tasks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح مهام العمليات"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-prepare-staged-setup",
+      "defaultMessage": "{value0}: prepare staged setup",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: تجهيز بيئة الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.install-or-update-required-staged-setup-data-before-requesting-online-ap",
+      "defaultMessage": "Install or update required staged setup data before requesting Online approval.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ثبّت بيانات الإعداد المطلوبة أو حدّثها قبل طلب الموافقة على النشر العام."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-approval-required",
+      "defaultMessage": "{value0}: approval required",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: الموافقة مطلوبة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-content-is-prepared-request-or-reconcile-the-governed-publication",
+      "defaultMessage": "Staged content is prepared. Request or reconcile the governed publication approval before Online publication.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المحتوى مجهّز. اطلب موافقة النشر الخاضعة للحوكمة أو طابق حالتها قبل النشر العام."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-review-approval-task",
+      "defaultMessage": "{value0}: review approval task",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: مراجعة مهمة الموافقة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.publication-approval-is-in-progress-review-the-actionable-process-task-a",
+      "defaultMessage": "Publication approval is in progress. Review the actionable Process task, assignee, queue, and permissions.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموافقة على النشر قيد التنفيذ. راجع المهمة القابلة للإجراء والمكلّف وقائمة الانتظار والصلاحيات."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.open-approval-queue",
+      "defaultMessage": "Open Approval Queue",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح قائمة الموافقات"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-publish-online",
+      "defaultMessage": "{value0}: publish Online",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: النشر العام"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.publication-approval-is-complete-continue-through-governed-publishing-to",
+      "defaultMessage": "Publication approval is complete. Continue through governed publishing to make the channel Online.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اكتملت موافقة النشر. تابع إجراءات النشر الخاضعة للحوكمة لإتاحة القناة للعموم."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-online-ready",
+      "defaultMessage": "{value0}: Online ready",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: النشر جاهز"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.online-channel-is-available-use-browser-validation-or-the-public-applica",
+      "defaultMessage": "Online channel is available. Use browser validation or the public application to verify the published experience.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القناة العامة متاحة. استخدم المتصفح أو التطبيق العام للتحقق من التجربة المنشورة."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.value0-initialize-staged-baseline",
+      "defaultMessage": "{value0}: initialize staged baseline",
+      "parameters": [
+        "value0"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{value0}: تهيئة الأساس في بيئة الإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.initialize-the-governed-baseline-then-follow-staged-setup-approval-and-o",
+      "defaultMessage": "Initialize the governed baseline, then follow staged setup, approval, and Online publication.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "هيّئ الأساس الخاضع للحوكمة، ثم تابع التجهيز والموافقة والنشر العام."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.fix-first",
+      "defaultMessage": "Fix first",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أصلح أولاً"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.prepare",
+      "defaultMessage": "Prepare",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تجهيز"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.approval",
+      "defaultMessage": "Approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "موافقة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.verify",
+      "defaultMessage": "Verify",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقق"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.next",
+      "defaultMessage": "Next",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التالي"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.selected-source-publication-history",
+      "defaultMessage": "Selected source publication history",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سجل نشر حزمة المصدر المحددة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.source-history-not-delivery",
+      "defaultMessage": "This history belongs to the selected source package. An Online receipt can be historical; inspect Publishing and the delivered page to verify the current Online revision.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يخص هذا السجل حزمة المصدر المحددة. قد يكون إيصال النشر سابقًا؛ راجع مساحة النشر والصفحة المعروضة للتحقق من المراجعة المنشورة الحالية."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.staged-source-older",
+      "defaultMessage": "Selected source is older than installed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المصدر المحدد أقدم من الإصدار المثبّت"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.ready-to-submit",
+      "defaultMessage": "ready to submit",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جاهز للإرسال"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.ready-to-prepare",
+      "defaultMessage": "ready to prepare",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جاهز للإعداد"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.refresh-profile-status",
+      "defaultMessage": "Refresh {profile} status",
+      "parameters": [
+        "profile"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث حالة {profile}"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.refreshing-profile-status",
+      "defaultMessage": "Refreshing {profile} status",
+      "parameters": [
+        "profile"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحديث حالة {profile}"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.loading-profile-status",
+      "defaultMessage": "Loading {profile} status",
+      "parameters": [
+        "profile"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل حالة {profile}"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.show-profile-details",
+      "defaultMessage": "Show {profile} details",
+      "parameters": [
+        "profile"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عرض تفاصيل {profile}"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.hide-profile-details",
+      "defaultMessage": "Hide {profile} details",
+      "parameters": [
+        "profile"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إخفاء تفاصيل {profile}"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "category.application",
+      "defaultMessage": "Applications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التطبيقات"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "category.accelerator",
+      "defaultMessage": "Accelerators",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المسرّعات"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "category.documentation",
+      "defaultMessage": "Documentation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الوثائق"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "category.customization",
+      "defaultMessage": "Customizations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التخصيصات"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.active-steps",
+      "defaultMessage": "{count, plural, one {# active step} other {# active steps}}",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{count, plural, one {خطوة نشطة واحدة} two {خطوتان نشطتان} few {# خطوات نشطة} many {# خطوة نشطة} other {# خطوة نشطة}}"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.preparation-blocked",
+      "defaultMessage": "Preparation blocked",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإعداد محظور"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.refresh-readiness",
+      "defaultMessage": "Refresh readiness",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث الجاهزية"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.online-approval-required",
+      "defaultMessage": "Online approval required",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموافقة على النشر مطلوبة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.online-approval-not-required",
+      "defaultMessage": "Online approval not required",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموافقة على النشر غير مطلوبة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "ui.matching-setups",
+      "defaultMessage": "{count, plural, one {# matching setup} other {# matching setups}}",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{count, plural, zero {لا توجد إعدادات مطابقة} one {إعداد مطابق واحد} two {إعدادان مطابقان} few {# إعدادات مطابقة} many {# إعدادًا مطابقًا} other {# إعداد مطابق}}"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.openlabel",
+      "defaultMessage": "Inspect readiness",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص الجاهزية"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.openlabel.source",
+      "defaultMessage": "Inspect readiness",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Inspect readiness"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.title",
+      "defaultMessage": "Operational readiness",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الجاهزية التشغيلية"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.title.source",
+      "defaultMessage": "Operational readiness",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Operational readiness"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.description",
+      "defaultMessage": "Compare the same owner-reported state while working in any workspace. This view does not grant permission to run an action.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قارن الحالة التي تؤكدها الخدمات المختصة من أي مساحة عمل. لا يمنح هذا العرض صلاحية تنفيذ الإجراءات."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.description.source",
+      "defaultMessage": "Compare the same owner-reported state while working in any workspace. This view does not grant permission to run an action.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Compare the same owner-reported state while working in any workspace. This view does not grant permission to run an action."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.refreshlabel",
+      "defaultMessage": "Refresh readiness",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث الجاهزية"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.refreshlabel.source",
+      "defaultMessage": "Refresh readiness",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Refresh readiness"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.closelabel",
+      "defaultMessage": "Close",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إغلاق"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.closelabel.source",
+      "defaultMessage": "Close",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Close"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.loadingmessage",
+      "defaultMessage": "Checking readiness with the owning services…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التحقق من الجاهزية لدى الخدمات المختصة…"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.loadingmessage.source",
+      "defaultMessage": "Checking readiness with the owning services…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Checking readiness with the owning services…"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.errormessage",
+      "defaultMessage": "Readiness could not be loaded. Refresh to try again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذر تحميل الجاهزية. حدّث للمحاولة مجددًا."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.errormessage.source",
+      "defaultMessage": "Readiness could not be loaded. Refresh to try again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Readiness could not be loaded. Refresh to try again."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.checkedatlabel",
+      "defaultMessage": "Checked at",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "وقت التحقق"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.checkedatlabel.source",
+      "defaultMessage": "Checked at",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Checked at"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.receiptlabel",
+      "defaultMessage": "Evidence receipt",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إيصال الأدلة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.receiptlabel.source",
+      "defaultMessage": "Evidence receipt",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Evidence receipt"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.buildlabel",
+      "defaultMessage": "Running build",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإصدار قيد التشغيل"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.buildlabel.source",
+      "defaultMessage": "Running build",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Running build"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.statelabel",
+      "defaultMessage": "Status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحالة"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.statelabel.source",
+      "defaultMessage": "Status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Status"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.nextactionlabel",
+      "defaultMessage": "Next action",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإجراء التالي"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.nextactionlabel.source",
+      "defaultMessage": "Next action",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Next action"
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.historicalmessage",
+      "defaultMessage": "Previous observations are historical evidence. Actions always recheck current owner permissions and prerequisites.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الملاحظات السابقة أدلة تاريخية. تتحقق الإجراءات دائمًا مجددًا من الصلاحيات والمتطلبات الحالية لدى الخدمة المختصة."
+      }
+    },
+    {
+      "namespace": "backoffice",
+      "key": "readiness.historicalmessage.source",
+      "defaultMessage": "Previous observations are historical evidence. Actions always recheck current owner permissions and prerequisites.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "Previous observations are historical evidence. Actions always recheck current owner permissions and prerequisites."
+      }
+    }
+  ]
+}

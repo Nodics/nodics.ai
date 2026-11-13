@@ -196,7 +196,7 @@ test('Commerce publisher admission retains granular human permissions and exclud
         validate: 'validate', requestApproval: 'requestApproval' };
     for (const [operation, permission] of Object.entries(expected)) {
         const router = lifecycle[operation];
-        assert.deepEqual(router.accessGroups, ['runtimeConfigAdminUserGroup', 'commerceSetupPublisherUserGroup']);
+        assert.deepEqual(router.accessGroups, [...(operation === 'get' ? ['adminGroup'] : []), 'runtimeConfigAdminUserGroup', 'commerceSetupPublisherUserGroup']);
         assert.equal(router.permission, 'publish.lifecycle.' + permission);
         assert.deepEqual(router.authTokenTypes, ['access']);
         const request = { router, authData: { tokenType: 'access', userGroups: ['commerceSetupPublisherUserGroup'], permissions: [] } };
@@ -209,7 +209,7 @@ test('Commerce publisher admission retains granular human permissions and exclud
     }
     for (const operation of ['approve', 'reject', 'activate', 'retry', 'rollback', 'withdraw']) {
         const router = lifecycle[operation];
-        assert.deepEqual(router.accessGroups, ['runtimeConfigAdminUserGroup']);
+        assert.deepEqual(router.accessGroups, operation === 'rollback' ? ['adminGroup', 'runtimeConfigAdminUserGroup'] : ['runtimeConfigAdminUserGroup']);
         assert.equal(security.hasAccessGroup({ router, authData: { userGroups: ['commerceSetupPublisherUserGroup'], permissions: ['*'] } }), false);
     }
     for (const operation of ['approve', 'reject', 'activate'])

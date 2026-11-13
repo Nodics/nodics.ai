@@ -38,7 +38,7 @@ async function delegated(t, grant = true) {
         isPermissionGranted: (permission, granted) => f.state.allowed && granted.includes(permission),
     };
     const scope = { tenantCode: f.request.tenant, scopeType: 'ENTERPRISE', scopeCode: 'issuerA' };
-    SERVICE.DefaultModuleService = { invokeModule: async request => {
+    SERVICE.DefaultModuleService = {isLocalModuleActive: moduleName => ["promotion"].includes(moduleName),  invokeModule: async request => {
         assert.equal(request.tenant, f.request.tenant);
         if (f.state.onProfile) await f.state.onProfile(request);
         if (request.apiName === '/identity/scopes/me') {

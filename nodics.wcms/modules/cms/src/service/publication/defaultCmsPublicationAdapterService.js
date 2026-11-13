@@ -36,19 +36,38 @@ module.exports = {
     },
     /** Normalizes generated-service results. */
     items: function (response) { return response && Array.isArray(response.result) ? response.result : []; },
+    /** Requires the declared destination Site and Catalog to agree with the frozen CMS root. */
+    assertRootScope: function (publication, root) {
+        const siteCode = publication.rootType === 'site' ? root.code : root.site;
+        const catalogCode = root.authoringScope?.catalogCode;
+        if ((publication.siteCode !== undefined && publication.siteCode !== siteCode) ||
+            (publication.catalogCode !== undefined && catalogCode !== undefined && publication.catalogCode !== catalogCode))
+            throw this.error('ERR_CMS_00114', 'Choose the website and content catalog that own this saved revision');
+        if (publication.rootType === 'pageRoute' && String(root.versionId) !== String(publication.sourceVersion))
+            throw this.error('CMS_PUBLICATION_VERSION_NOT_FOUND', 'CMS source version was not found');
+    },
     /** Loads an exact immutable CMS version. */
     getVersion: async function (publication, request) {
         let descriptor = this.descriptor(publication.rootType);
-        if (String(publication.sourceVersion) === '0') {
+        // Site baseline requests retain their legacy default source selection.
+        // Page-route revision zero is a real immutable revision.
+        if (publication.rootType === 'site' && String(publication.sourceVersion) === '0') {
             let latest = await this.loadLatest(descriptor.service, request, { code: publication.rootCode });
             let version = latest[0];
             if (!version) throw this.error('CMS_PUBLICATION_VERSION_NOT_FOUND', 'CMS source version was not found');
+            this.assertRootScope(publication, version);
             return version;
         }
+        const versionId = Number(publication.sourceVersion);
+        if (!Number.isSafeInteger(versionId) || versionId < 0 || String(versionId) !== String(publication.sourceVersion))
+            throw this.error('CMS_PUBLICATION_VERSION_NOT_FOUND', 'CMS source version was not found');
         let response = await this.service(descriptor.service).get({ tenant: request.tenant, authData: request.authData,
-            query: { code: publication.rootCode, versionId: Number(publication.sourceVersion), active: true }, searchOptions: { limit: 1 } });
-        let version = this.items(response)[0];
-        if (!version) throw this.error('CMS_PUBLICATION_VERSION_NOT_FOUND', 'CMS source version was not found');
+            query: { code: publication.rootCode, versionId, active: true }, searchOptions: { limit: 2 } });
+        const versions = this.items(response);
+        const version = versions[0];
+        if (versions.length !== 1 || version.code !== publication.rootCode || version.versionId !== versionId || version.active !== true)
+            throw this.error('CMS_PUBLICATION_VERSION_NOT_FOUND', 'CMS source version was not found');
+        this.assertRootScope(publication, version);
         return version;
     },
     /** Selects the latest version for each stable code from generated-service results. */
@@ -127,6 +146,7 @@ module.exports = {
             let slots = templates.length ? await this.loadLatest('DefaultCmsSlotDefinitionService', request, { template: templates[0].code }) : [];
             slots.forEach(model => dependencies.push(this.identity('cmsSlotDefinition', model)));
         }
+        if (SERVICE.DefaultWcmsExperiencePublicationSourceService) dependencies.push(...await SERVICE.DefaultWcmsExperiencePublicationSourceService.freeze(rootVersion, dependencies, request));
         if (dependencies.length > max) throw this.error('CMS_PUBLICATION_DEPENDENCY_EXCEEDED', 'CMS publication graph exceeds configured size');
         return Array.from(dependencies.reduce((result, item) => {
             result.set(item.schema + ':' + item.code + ':' + item.version, item); return result;
@@ -165,6 +185,10 @@ module.exports = {
         let keys = (dependencies || []).map(item => item.schema + ':' + item.code + ':' + item.version);
         if (!keys.length || keys.length !== new Set(keys).size) return { valid: false, reason: 'DEPENDENCY_IDENTITY_INVALID' };
         for (let identity of dependencies) {
+            if (identity.schema === 'cmsExperiencePlacement') {
+                SERVICE.DefaultWcmsExperiencePublicationSourceService.load(identity);
+                continue;
+            }
             let serviceNames = { cmsSite: 'DefaultCmsSiteService', cmsPageRoute: 'DefaultCmsPageRouteService', cmsPage: 'DefaultCmsPageService',
                 cmsComponentDetail: 'DefaultCmsComponentDetailService', cmsComponent: 'DefaultCmsComponentService',
                 cmsComponentLocalization: 'DefaultCmsComponentLocalizationService', cmsComponentMedia: 'DefaultCmsComponentMediaService',
@@ -182,6 +206,25 @@ module.exports = {
         return { valid: publication.rootType === 'site' ? Boolean(rootVersion.code) :
             Boolean(rootVersion.code && rootVersion.page && rootVersion.site && rootVersion.path),
             rootVersion: rootVersion.versionId, routeCount: routes.length, dependencyCount: keys.length };
+    },
+    /** Admits read and rollback for an employee whose exact published route belongs to their current Site and Catalog. */
+    authorizeScopedOperator: async function (operation, publication, request) {
+        const access = SERVICE.DefaultCmsDesignerAccessService;
+        const permission = operation === 'get' ? 'publish.lifecycle.view' : 'publish.lifecycle.rollback';
+        const versionId = Number(publication.sourceVersion);
+        if (!['get', 'rollback'].includes(operation) || CONFIG.get('runtimeRole')?.publication !== 'STAGED' ||
+            publication.rootType !== 'pageRoute' || !Number.isSafeInteger(versionId) || versionId < 0 ||
+            String(versionId) !== String(publication.sourceVersion)) access.deny();
+        const headers = request.httpRequest?.headers || {};
+        const original = { ...request, authorization: headers.authorization || headers.Authorization,
+            body: undefined, cmsDesigner: undefined };
+        const lookup = { ...original };
+        access.authorize(lookup, permission);
+        const routes = await access.records('DefaultCmsPageRouteService', lookup, { code: publication.rootCode, versionId });
+        if (routes.length !== 1 || routes[0].site !== routes[0].authoringScope?.siteCode) access.deny();
+        const { siteCode, catalogCode } = routes[0].authoringScope;
+        const scope = await access.scope({ ...original, cmsDesigner: { siteCode, catalogCode } }, permission);
+        if (!access.matches(routes[0], scope, 'DefaultCmsPageRouteService')) access.deny();
     },
     /** Invalidates locally only when this runtime also owns the publication target. */
     invalidateLocalTarget: function (request) {

@@ -307,3 +307,15 @@ flag-only behavior; add a real signed-token policy before enabling it.
 ```
 
 This must be rejected. Caller-provided storage keys are not authoritative unless an internal trusted service explicitly opts into a governed override.
+
+
+## Inspect the exact asset in a publication review
+
+A Process task supplies its declared Media publication/root/source identity. Read
+`GET /library/publications/<publicationCode>/review?localeCode=en`, require exact
+identity equality, and display the captured asset name/version/type/size. Only an
+explicit preview action requests the secured `/review/image` endpoint. Check its
+MIME, byte count and SHA-256 against the captured DTO before rendering as an image.
+If the working asset changes, this review must retain the original captured copy.
+Denial or failure offers read-only refresh/owner inspection, never current/public
+bytes, another publication or automatic approval. Process alone rechecks decisions.

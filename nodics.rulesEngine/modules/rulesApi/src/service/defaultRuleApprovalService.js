@@ -27,8 +27,14 @@ module.exports = {
     },
 
     /** Implements processTarget as an overrideable service operation. */
-    processTarget: function () {
-        return this.settings().processTarget || {};
+    processTarget: function (name = 'processTarget') {
+        const target = this.settings()[name] || {}, authority = target.targetAuthority;
+        if (!['processTarget', 'actionAuthority'].includes(name) || !target.connectionName || target.connectionName === 'default' ||
+            Object.hasOwn(target, 'runtimeRole') || !authority || authority.publication !== 'OPERATIONAL' ||
+            Object.keys(authority).some(key => !['publication', 'server', 'environment'].includes(key)) ||
+            Object.values(authority).some(value => typeof value !== 'string' || !value.trim() || value !== value.trim()))
+            throw new Error('Rules Process authority is unavailable');
+        return target;
     },
 
     /** Implements actor as an overrideable service operation. */
@@ -39,22 +45,14 @@ module.exports = {
 
     /** Implements startProcess as an overrideable service operation. */
     startProcess: function (request, runtimeOperation) {
-        if (typeof SERVICE !== 'undefined' &&
-            SERVICE.DefaultProcessRuntimeLifecycleService &&
-            SERVICE.DefaultProcessRuntimeLifecycleService.startInstance) {
-            return SERVICE.DefaultProcessRuntimeLifecycleService.startInstance(
-                Object.assign({}, request, { runtimeOperation: runtimeOperation })
-            );
-        }
-        let target = this.processTarget();
-        if (!target.connectionName || target.connectionName === 'default') {
-            throw new Error('Rules Process approval target is unavailable');
-        }
+        const target = this.processTarget();
+        if (typeof request.authorization !== 'string' || !/^Bearer \S+$/.test(request.authorization))
+            throw new Error('Rules approval requires the original authenticated requester');
         return SERVICE.DefaultModuleService.invokeModule({
             moduleName: 'workflow',
             connectionName: target.connectionName,
             connectionType: target.connectionType || 'abstract',
-            targetAuthority: { runtimeRole: target.runtimeRole || 'PROCESS' },
+            targetAuthority: { ...target.targetAuthority },
             local: false,
             tenant: request.tenant,
             methodName: 'POST',
@@ -71,6 +69,7 @@ module.exports = {
     submit: async function (request) {
         let lifecycle = SERVICE.DefaultRuleDefinitionLifecycleService;
         let ruleSet = await lifecycle.requireRuleSet(request, request.ruleSetCode);
+        lifecycle.assertExpectedDraft(request, ruleSet);
         if (ruleSet.status !== 'DRAFT') throw new Error('Only a draft rule set can be submitted for approval');
         await lifecycle.validateRuleSetDraft(Object.assign({}, request, { ruleSetCode: ruleSet.code }));
         await lifecycle.assertCurrentSimulation(request, ruleSet);
@@ -87,6 +86,7 @@ module.exports = {
             instanceCode: instanceCode,
             name: 'Rules policy review: ' + ruleSet.code,
             context: {
+                enterpriseCode: request.authData && request.authData.entCode,
                 ruleSetCode: ruleSet.code,
                 draftRevision: draftRevision,
                 consumerModule: ruleSet.consumerModule,

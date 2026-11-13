@@ -38,6 +38,10 @@ test('project build resolves the selected server graph and leaves environment se
         assert.equal(result.options.CUSTOM_HOME, projectRoot);
         assert.equal(result.options.defaultServer, 'capabilityServer');
         assert.equal(result.options.defaultEnvironment, 'chosen');
+        assert.equal(result.options.sourceOnly, undefined);
+        const sourceBuild = await runtime.runCli(['--lifecycle=buildAll', '--server=capability', '--environment=chosen', '--source-only'], environment);
+        assert.equal(sourceBuild.options.sourceOnly, true);
+        assert.throws(() => runtime.runCli(['--lifecycle=cleanAll', '--server=capability', '--source-only'], environment), /requires a selected-server build/);
         assert.deepEqual(result.options.MODULE_ROOTS, [path.join(frameworkRoot, 'nodics.foundation'), path.join(frameworkRoot, 'arbitrary.capability'), projectRoot]);
         const originalHomes = { NODICS_HOME: process.env.NODICS_HOME, NODICS_FRAMEWORK_ROOT: process.env.NODICS_FRAMEWORK_ROOT };
         try {

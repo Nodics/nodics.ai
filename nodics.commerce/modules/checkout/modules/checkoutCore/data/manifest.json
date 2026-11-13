@@ -31,7 +31,7 @@
     "enterpriseSpendingAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Purchase-limit access groups",
       "description": "Explicit business-area definition only. No employee assignments or runtime activation.",
       "owningDomain": "checkoutCore",
@@ -55,14 +55,14 @@
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "checkoutCore",
           "sectionCode": "enterpriseSpendingPermission",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "72fd14ff78a816913788b75bc0cfa914fe8c87c5f30919fc941bd581f6a97a4c",
           "partition": "DEFAULT"
         }
@@ -71,7 +71,7 @@
     "enterpriseSpendingAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Purchase-limit access roles",
       "description": "Explicit business-area definition only. No employee assignments or runtime activation.",
       "owningDomain": "checkoutCore",
@@ -95,8 +95,8 @@
         {
           "moduleName": "checkoutCore",
           "sectionCode": "enterpriseSpendingAccessGroups",
-          "version": "0.0.2",
-          "checksum": "62e00eef23286153cdaf25a7ed74b9a035c3f4416d14344adc9f8d44c06ed2a9",
+          "version": "0.0.1",
+          "checksum": "36f240fcbeec3cab456b4232c97405704d6a64d48ffa193acb36ae91975b63c5",
           "partition": "DEFAULT"
         }
       ]
@@ -159,7 +159,7 @@
     "enterpriseSpendingPermission": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Enterprise purchase limit permission",
       "description": "Defines spending administration permission only; no employee grants or operational activation.",
       "owningDomain": "checkoutCore",

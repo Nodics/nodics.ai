@@ -64,8 +64,8 @@ const capability = {
             },
             "help": {
                 "summary": "Manage WCMS authoring attention, websites, pages, templates, components, navigation, visibility rules, readiness, and publishing handoff.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "what-is-the-web-content-management-model"
+                "documentationRoute": "/docs/framework/wcms-overview",
+                "documentationFragment": "wcmsOverview-2-business-perspective"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -96,8 +96,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Guide business users through site, page, template, slot, component, media, route, and publishing composition without bypassing WCMS ownership.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-designer"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -129,8 +129,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned content-attention summary for websites, pages, invalid content, review queues, publishing readiness, broken routes, and quick links.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "content-workspace"
+                "documentationRoute": "/docs/framework/wcms-overview",
+                "documentationFragment": "wcmsOverview-2-business-perspective"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -162,8 +162,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned summary of recently changed, draft, and invalid content records.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "content-workspace"
+                "documentationRoute": "/docs/framework/wcms-overview",
+                "documentationFragment": "wcmsOverview-2-business-perspective"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -195,8 +195,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned review and approval queue summary sourced from authoritative workflow/publishing contracts.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "content-workspace"
+                "documentationRoute": "/docs/framework/wcms-overview",
+                "documentationFragment": "wcmsOverview-2-business-perspective"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -228,8 +228,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned readiness summary for publishable content and live content with staged changes.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "content-workspace"
+                "documentationRoute": "/docs/framework/wcms-overview",
+                "documentationFragment": "wcmsOverview-2-business-perspective"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -261,8 +261,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned diagnostic summary for broken routes, missing targets, unsafe navigation, and inactive content links.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "content-workspace"
+                "documentationRoute": "/docs/framework/wcms-overview",
+                "documentationFragment": "wcmsOverview-2-business-perspective"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -294,8 +294,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned authorized authoring shortcuts for create, designer, preview, and readiness review.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "content-workspace"
+                "documentationRoute": "/docs/framework/wcms-overview",
+                "documentationFragment": "wcmsOverview-2-business-perspective"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -327,8 +327,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Preview designer step for choosing the governed authoring context.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-designer"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -360,8 +360,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Preview designer step for composing governed slots, sections, components, and component content.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-designer"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -393,8 +393,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Preview designer step for linking content composition to media, routes, navigation, and visibility.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-designer"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -426,8 +426,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Preview designer step for validation, preview, draft save, and publishing-readiness review.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-designer"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -458,8 +458,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Manage the website and content catalog containers that establish WCMS authoring scope.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "websites"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -490,8 +490,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Manage templates, slots, sections, and preview structures that govern how pages are composed.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-and-component-types"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-2-component-contract"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -522,8 +522,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Manage pages, route assignment, conflicts, missing targets, and page readiness by website, template, locale, and channel.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "pages"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -554,8 +554,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Manage reusable and page-specific components, business content fields, placement, and media association.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "components"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-2-component-contract"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -586,8 +586,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Manage WCMS navigation workspaces, menu trees, nodes, ordering, and validation.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "navigation-nodes"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -618,8 +618,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Manage restrictions, audience context rules, and diagnostics for visible pages, components, slots, routes, and navigation.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "restrictions"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -650,8 +650,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Manage page/component type codes, component type groups, renderer mappings, and compatibility diagnostics.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-and-component-types"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-2-component-contract"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -682,8 +682,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned governed workspace for brand identity, tokens, theme assignment, preview, accessibility validation, and history.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "themes-and-branding"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -714,8 +714,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned governed workspace for experience preview, content validation, and publishing readiness review.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "content-preview-and-readiness"
+                "documentationRoute": "/docs/framework/wcms-cms-source-map-authoring-contract",
+                "documentationFragment": "wcmsCmsSourceMapAuthoringContract-4-publication-and-delivery"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -746,8 +746,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned governed workspace for change timeline, activity, usage, references, validation, publishing outcomes, and analytics where supported.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "content-history-and-insights"
+                "documentationRoute": "/docs/framework/wcms-overview",
+                "documentationFragment": "wcmsOverview-2-business-perspective"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -779,8 +779,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned content-catalog administration for purpose, ownership, status, website assignment, and staged/online context.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "content-catalogs"
+                "documentationRoute": "/docs/framework/wcms-content-catalog-model",
+                "documentationFragment": "wcmsContentCatalogModel-4-operator-view"
             },
             "workbenchTarget": {
                 "moduleName": "catalog",
@@ -839,8 +839,8 @@ const capability = {
             },
             "help": {
                 "summary": "Manage CMS websites that group authoring and delivery context for a storefront, brand site, or enterprise experience.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "websites"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -872,8 +872,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned guided website creation flow for catalog, website, default template, initial pages, navigation, validation, preview, and publishing handoff.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "website-designer"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -909,8 +909,8 @@ const capability = {
             },
             "help": {
                 "summary": "Review CMS page and component type codes that connect backend content models with Axis renderer contracts.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-and-component-types"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-2-component-contract"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -946,8 +946,8 @@ const capability = {
             },
             "help": {
                 "summary": "Group CMS component types so authors and administrators can organize reusable content building blocks.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "component-type-groups"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-2-component-contract"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -983,8 +983,8 @@ const capability = {
             },
             "help": {
                 "summary": "Map CMS type codes to approved Axis renderers and contract versions without allowing executable frontend content.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "renderer-mappings"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-2-component-contract"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1020,8 +1020,8 @@ const capability = {
             },
             "help": {
                 "summary": "Manage page templates that define the governed layout structure and allowed content slots for CMS pages.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-templates"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1057,8 +1057,8 @@ const capability = {
             },
             "help": {
                 "summary": "Manage reusable slot definitions that decide where CMS components can appear inside templates and pages.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "slot-definitions"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1090,8 +1090,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned page-section workspace for template sections and governed layout composition.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-sections"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -1123,8 +1123,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned template preview workspace for validating slot structure and authoring behavior before use.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "template-preview"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -1160,8 +1160,8 @@ const capability = {
             },
             "help": {
                 "summary": "Manage CMS pages, their templates, content slots, components, restrictions, and delivery state.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "pages"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1197,8 +1197,8 @@ const capability = {
             },
             "help": {
                 "summary": "Manage reusable CMS components that render page content through approved Axis renderer mappings.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "components"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-2-component-contract"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1230,8 +1230,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned component-content workspace for business fields, links, references, nested content, locale variants, and validation.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "component-content"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-2-component-contract"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -1263,8 +1263,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned placement workspace for assigned pages, sections, slots, reuse locations, and ordering.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "component-placement"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-2-component-contract"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -1300,8 +1300,8 @@ const capability = {
             },
             "help": {
                 "summary": "Manage references between CMS components and governed media assets owned by media.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "component-media"
+                "documentationRoute": "/docs/framework/wcms-media-management",
+                "documentationFragment": "wcmsMediaManagement-2-business-perspective"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1337,8 +1337,8 @@ const capability = {
             },
             "help": {
                 "summary": "Manage browser route mappings that resolve safe URLs to CMS pages through backend-owned routing contracts.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-routes"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1370,8 +1370,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned page-variant workspace for locale, channel, audience variants, and completeness.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "page-variants"
+                "documentationRoute": "/docs/framework/wcms-page-designer-components",
+                "documentationFragment": "wcmsPageDesignerComponents-1-authoring-journey"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -1403,8 +1403,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned business navigation workspace for menu health, changed trees, broken targets, and next actions.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "navigation-workspace"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -1436,8 +1436,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned navigation-tree workspace for header, footer, contextual, and hierarchical menus.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "navigation-trees"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -1473,8 +1473,8 @@ const capability = {
             },
             "help": {
                 "summary": "Manage CMS navigation tree entries and their page, route, or approved external targets.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "navigation-nodes"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1506,8 +1506,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned navigation validation for cycles, unsafe URLs, missing targets, inactive targets, and excessive depth.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "navigation-validation"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -1543,8 +1543,8 @@ const capability = {
             },
             "help": {
                 "summary": "Review restriction type definitions used to govern when pages, components, or navigation entries are visible.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "restriction-types"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1580,8 +1580,8 @@ const capability = {
             },
             "help": {
                 "summary": "Manage configured restrictions that control CMS visibility for users, channels, catalogs, or business contexts.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "restrictions"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1613,8 +1613,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned audience/context rule workspace for authentication, segment, organisation, locale, channel, and experience context.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "audience-context-rules"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -1646,8 +1646,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned diagnostics for explaining why a page, component, slot, route, or navigation entry is visible or hidden.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "restriction-diagnostics"
+                "documentationRoute": "/docs/framework/wcms-site-publication-visibility",
+                "documentationFragment": "wcmsSitePublicationVisibility-4-operator-view"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -1679,8 +1679,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Planned compatibility diagnostics for type-code, renderer, channel, and frontend contract alignment.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "rendering-compatibility"
+                "documentationRoute": "/docs/framework/wcms-cms-source-map-authoring-contract",
+                "documentationFragment": "wcmsCmsSourceMapAuthoringContract-4-publication-and-delivery"
             },
             "featureState": "DISABLED",
             "requiredPermissions": [
@@ -1715,8 +1715,8 @@ const capability = {
             },
             "help": {
                 "summary": "Review which CMS content has an active staged-to-online publication pointer for delivery.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "staged-to-online-status"
+                "documentationRoute": "/docs/framework/wcms-publishing-lifecycle",
+                "documentationFragment": "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1751,8 +1751,8 @@ const capability = {
             },
             "help": {
                 "summary": "Inspect generated publication manifests that describe exactly what content was prepared for delivery.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "publication-manifests"
+                "documentationRoute": "/docs/framework/wcms-publishing-lifecycle",
+                "documentationFragment": "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -1787,8 +1787,8 @@ const capability = {
             },
             "help": {
                 "summary": "Inspect publication deployment receipts and historical evidence from completed publishing operations.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "publishing-history"
+                "documentationRoute": "/docs/framework/wcms-publishing-lifecycle",
+                "documentationFragment": "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [

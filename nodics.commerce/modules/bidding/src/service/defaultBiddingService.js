@@ -54,9 +54,7 @@ module.exports = {
   participantContext: async function (request) {
     if (!this.policy().enabled)
       this.fail("Bidding is not enabled for this deployment");
-    const runtime = CONFIG.get("runtimeRole"),
-      role = typeof runtime === "string" ? runtime : runtime?.code;
-    if (this.policy().runtimeRoles?.[role] !== true)
+    if (SERVICE.DefaultModuleService?.isLocalModuleActive?.("bidding") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL")
       throw new CLASSES.NodicsError(
         "ERR_BIDDING_RUNTIME_FORBIDDEN",
         "Bidding requires its configured operational Commerce runtime",

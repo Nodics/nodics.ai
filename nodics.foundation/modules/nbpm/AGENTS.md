@@ -23,3 +23,9 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 This capability contributes an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
 Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.
+
+Route Workflow by logical module and explicit OPERATIONAL publication through
+nService/DMS. Reject retired physical-role selectors and missing credentials.
+Preserve exact APIs, signed request/claim scopes and one-use execution evidence;
+local service presence never proves selected owner authority. See owner routing
+in llm/contracts/README.md; no implicit installation or migration.

@@ -176,3 +176,16 @@ Capture, like release, returns the verified transaction-local balance document,
 never a generated update acknowledgement. Preserve all expected balance fields
 and valid framework updated timestamp; corrupt readback rolls back the complete
 capture. Keep real initializer/timestamp/Mongo acknowledgement and replay coverage.
+
+Local evidence/credit admission requires `DefaultModuleService.isLocalModuleActive("loyaltyWallet")`
+and explicit `runtimeRole.publication: OPERATIONAL`. Physical role codes and role
+membership do not establish ownership. A loaded remote-only module must refuse.
+Retain independent permissions, tenant/Enterprise scope, signed deployment pins,
+private capture and policy revalidation. Recheck ownership around owner reads;
+cohosting grants no authority and changes no database ownership.
+
+Capability transport selects logical module plus explicit OPERATIONAL publication,
+with optional exact server/environment pins. Reject physical-role selectors.
+Preserve original bearer for participant reads and internal authentication for
+settlement/evidence. See the relocatable transport contract; do not infer grants
+from cohosting or rewrite persisted transaction evidence.

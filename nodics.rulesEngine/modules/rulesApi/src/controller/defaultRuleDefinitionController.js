@@ -16,6 +16,9 @@ module.exports = {
     /** Implements invoke as an overrideable service operation. */
     invoke: function (operation, request, callback) {
         let httpRequest = request.httpRequest || {};
+        // Process admission must receive the original transport credential, never model/query fields.
+        if (request.httpRequest)
+            request.authorization = httpRequest.headers?.authorization || httpRequest.headers?.Authorization;
         request.ruleSetCode = httpRequest.params && httpRequest.params.ruleSetCode || request.ruleSetCode;
         request.bandSetCode = httpRequest.params && httpRequest.params.bandSetCode || request.bandSetCode;
         request.propertyProviderCode = httpRequest.params && httpRequest.params.propertyProviderCode || request.propertyProviderCode;

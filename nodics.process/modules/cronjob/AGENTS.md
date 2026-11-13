@@ -51,3 +51,5 @@ timing defaults here; projects supply only reviewed schedule selections and
 runtime operator sessions. Use the canonical lifecycle, run and persisted job
 APIs. Never create schedules, call domain work directly or treat an HTTP run
 acknowledgement as execution evidence.
+
+Manual run admission must reuse the existing pooled wrapper. Never restore a temporary manual timer or allow replacement/removal of a running wrapper. Preserve safe failure and timing evidence and the single-node SKIP/no-replay boundary. See the execution failure and overlap contract.

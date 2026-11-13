@@ -29,7 +29,9 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_EDT_00001', 'Editorial process execution handle is invalid');
         }
         const target = ((CONFIG.get('editorial') || {}).workflow || {}).actionAuthority || {};
-        if (!target.connectionName || target.connectionName === 'default') {
+        if (target.publication !== 'OPERATIONAL' || !target.connectionName || target.connectionName === 'default' ||
+            !SERVICE.DefaultModuleService?.isLocalModuleActive('editorial') ||
+            !SERVICE.DefaultModuleService.isCurrentRuntimeAuthority({ publication: 'STAGED' })) {
             throw new CLASSES.NodicsError(
                 'ERR_EDT_00003',
                 'Editorial Process action authority is unavailable',
@@ -39,7 +41,7 @@ module.exports = {
             moduleName: 'workflow',
             connectionName: target.connectionName,
             connectionType: target.connectionType,
-            targetAuthority: { runtimeRole: target.runtimeRole },
+            targetAuthority: { publication: target.publication },
             local: false,
             tenant: request.tenant,
             header: { tenant: request.tenant },

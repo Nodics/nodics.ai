@@ -54,8 +54,8 @@ const capability = {
             },
             "help": {
                 "summary": "Review ready-for-review changes, validation/approval required, scheduled/publishing, failed/partial, live-with-new-changes, recently completed, withdrawn, and rollback states.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "publishing"
+                "documentationRoute": "/docs/framework/wcms-publishing-lifecycle",
+                "documentationFragment": "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -90,8 +90,8 @@ const capability = {
             },
             "help": {
                 "summary": "Create and inspect publication requests that move approved content toward online delivery.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "publishing-requests"
+                "documentationRoute": "/docs/framework/wcms-publishing-lifecycle",
+                "documentationFragment": "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -120,8 +120,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Review human workflow tasks that approve or reject governed publication requests.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "publishing-approval-tasks"
+                "documentationRoute": "/docs/framework/wcms-publishing-lifecycle",
+                "documentationFragment": "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -156,8 +156,8 @@ const capability = {
             },
             "help": {
                 "summary": "Review publishing audit records for operational traceability and content governance evidence.",
-                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
-                "documentationFragment": "publishing-audit"
+                "documentationRoute": "/docs/framework/wcms-publishing-lifecycle",
+                "documentationFragment": "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -356,5 +356,16 @@ module.exports = {
     /** Completes provider lifecycle initialization. */
     postInit: function () { return Promise.resolve(true); },
     /** Returns this module owned BackOffice capability contract. */
-    getCapability: function () { return JSON.parse(JSON.stringify(capability)); }
+    getCapability: function () {
+        const result = JSON.parse(JSON.stringify(capability));
+        result.navigation.find(item => item.id === 'publishing-requests').lifecycleActions = [
+            { id: 'retry', label: 'Retry original operation', intent: 'RETRY', permission: 'publish.lifecycle.retry', ownerModule: 'publish',
+                operationRoute: '/publications/:publicationCode/retry', httpMethod: 'POST', targetStatuses: ['FAILED'], featureState: 'ACTIVE', order: 10 },
+            { id: 'rollback', label: 'Restore previous version', intent: 'UPDATE', permission: 'publish.lifecycle.rollback', ownerModule: 'publish',
+                operationRoute: '/publications/:publicationCode/rollback', httpMethod: 'POST', targetStatuses: ['ONLINE', 'ROLLING_BACK'], featureState: 'ACTIVE', order: 20 },
+            { id: 'withdraw', label: 'Resume original withdrawal', intent: 'UPDATE', permission: 'publish.lifecycle.withdraw', ownerModule: 'publish',
+                operationRoute: '/publications/:publicationCode/withdraw', httpMethod: 'POST', targetStatuses: ['WITHDRAWING'], featureState: 'ACTIVE', order: 30 }
+        ];
+        return result;
+    }
 };

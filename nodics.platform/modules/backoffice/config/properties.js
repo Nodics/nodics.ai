@@ -61,15 +61,11 @@ module.exports = {
   },
 
   backofficeApplicationInitialization: {
-    runtimeRoleProfiles: {
-      PLATFORM: {
-        projectCode: {
-          $config: "env", name: "NODICS_PROJECT_CODE",
-          fallback: { $config: "context", name: "projectCode" },
-        },
-        projectRoot: { $config: "path", base: "project", relative: "" },
-      },
+    projectCode: {
+      $config: "env", name: "NODICS_PROJECT_CODE",
+      fallback: { $config: "context", name: "projectCode" },
     },
+    projectRoot: { $config: "path", base: "project", relative: "" },
     dataReleaseTimeoutMs: 120000,
     preparationStepDefaults: { batchBoundaryBefore: false },
     readinessWorkers: 4,
@@ -84,7 +80,7 @@ module.exports = {
     target: {
       moduleName: "cms",
       connectionType: "abstract",
-      runtimeRole: "WCMS_STAGED",
+      publication: "STAGED",
       timeoutMs: 120000,
       maxAttempts: 1,
     },
@@ -125,6 +121,10 @@ module.exports = {
     recentNavigationLimit: 12,
     minimumRecentNavigationLimit: 1,
     maximumRecentNavigationLimit: 24,
+    sessionRecoveryPresentation: {
+      lockedMessage: "After unlocking, saved records and explicitly retained checkpoints can be recovered. Other unsaved edits may be lost. Actions already submitted may still complete; inspect their status before trying again.",
+      expiredMessage: "Your session has expired. Sign in again to inspect saved records and retained checkpoints. Other unsaved edits may be lost. Submitted actions may have completed; inspect their status before trying again.",
+    },
   },
   backofficeLocalReset: {
     enabled: false,
@@ -137,6 +137,7 @@ module.exports = {
     },
   },
   backofficeRegistry: {
+    documentationReaderSource: "framework",
     enabled: true,
     leaseTtlMs: 30000,
     operationalStateTtlMs: 30000,
@@ -147,6 +148,7 @@ module.exports = {
       moduleName: "backoffice",
       engineName: "redis",
       keyPrefix: "registry:lease:",
+      maximumDecodedBytes: 16777216, // Derived immutable bytes only; every provider read remains fresh.
     },
     modulePermissions: {},
     compatibility: {
@@ -277,6 +279,33 @@ module.exports = {
         storeErrors: 1,
         conditionalDeleteConflicts: 10,
         refreshThrottles: 1,
+      },
+      repair: {
+        providerCapabilityTtlMs: 30000,
+        maximumIntentBytes: 16384,
+      },
+      evidence: {
+        presentation: {
+                "openLabel": "Inspect readiness",
+                "title": "Operational readiness",
+                "description": "Compare the same owner-reported state while working in any workspace. This view does not grant permission to run an action.",
+                "refreshLabel": "Refresh readiness",
+                "closeLabel": "Close",
+                "loadingMessage": "Checking readiness with the owning services…",
+                "errorMessage": "Readiness could not be loaded. Refresh to try again.",
+                "checkedAtLabel": "Checked at",
+                "receiptLabel": "Evidence receipt",
+                "buildLabel": "Running build",
+                "stateLabel": "Status",
+                "nextActionLabel": "Next action",
+                "historicalMessage": "Previous observations are historical evidence. Actions always recheck current owner permissions and prerequisites."
+        },
+
+        snapshotRetentionMs: 604800000,
+        acknowledgementValidityMs: 86400000,
+        maximumAcknowledgements: 256,
+        snapshotBlockerLimit: 512,
+        timelineLimit: 20,
       },
       startupValidation: {
         enabled: true,

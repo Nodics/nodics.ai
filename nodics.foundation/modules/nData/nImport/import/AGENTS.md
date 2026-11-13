@@ -191,3 +191,24 @@ keep catalogue readiness non-CURRENT/actionable. Missing/uncertain authority and
 manual checksum guards remain fail-closed. Do not require a customer startup-skip
 override to expose administrator review of this case. See the retained startup
 source-review section in `llm/contracts/import-release-contracts.md`.
+
+Destination admission uses selected immutable headers and active effective module/schema
+owners, never runtime role labels or membership. Require explicit
+`runtimeRole.publication`; publishable sources require STAGED and effective schema
+authoring admission. Custom installers and index validators remain explicitly
+selected capability owners. Startup profile selections use exact environment/server
+coordinates. Reject retired role allowances/selectors; never reconstruct role profiles
+or broaden manifests, sections, prerequisites, tenant scope or permissions.
+See [destination ownership](llm/contracts/import-release-contracts.md#selected-destination-ownership-and-startup-selection).
+
+## Runtime ownership
+
+The canonical package declares `nodics.runtime.ownership: "runtimeLocal"`.
+Installation receipts, import definitions and import runs describe imports executed at the selected destination runtime. Destination, section, prerequisite and permission checks remain mandatory.
+Registration retains callable endpoints and schema/service claims. The shared
+nService ownership key includes the logical server for this explicit scope; no
+Foundation-wide exemption or caller-supplied classification is permitted.
+
+Catalogue `allowedActions` is transient original-actor presentation metadata derived from actual nRouter command routes. Profile install also checks its existing type-specific permissions. Do not persist actions in release integrity/receipts or derive grants from catalogue visibility. Cover reader, validator, installer, missing actor/evaluator and mixed profile requirements.
+
+Checkpointed operator release preparation belongs to nImport and its protected generated dataReleaseExecutionRecord service. Preserve the private execution binding, exact plan and native actor scope, insert-only begin, managed-revision claims, and exact installation readback. Unknown effects are inspection-only, including across restart. Do not turn this owner operation into a parallel cross-domain workflow engine. See [continuation contract](llm/contracts/release-execution-continuation.md).

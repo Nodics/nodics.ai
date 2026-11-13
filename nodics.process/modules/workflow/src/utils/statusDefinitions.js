@@ -64,3 +64,6 @@ module.exports = {
 
 module.exports.ERR_PROCESS_00028 = { code: '403', message: 'Runtime-owned process start is unavailable or not authorised.' };
 module.exports.ERR_PROCESS_00029 = { code: '403', message: 'This reviewer or decision is not authorised for the task.' };
+
+module.exports.ERR_PROCESS_00030 = { code: '503', message: 'The review decision is recorded, but CMS has not acknowledged its publication callback. Inspect the original workflow incident and CMS availability before retrying that action.' };
+module.exports.ERR_PROCESS_00031 = { code: '409', message: 'CMS returned no matching completion receipt for this review decision. Inspect the original publication and workflow before retrying; do not submit another decision.' };

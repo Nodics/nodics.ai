@@ -201,6 +201,7 @@ module.exports = {
         let pointer = await this.pointer(mediaCode, request);
         if (!pointer || pointer.active !== true || pointer.status !== 'ACTIVE') throw this.manifests().invalid('Media is not activated');
         let manifest = await this.manifests().load(pointer.manifestCode, mediaCode, request);
-        return { media: manifest.artifacts.asset, buffer: await this.manifests().readBytes(manifest, request) };
+        return { media: manifest.artifacts.asset, manifestCode: manifest.code,
+            buffer: await this.manifests().readBytes(manifest, request) };
     }
 };

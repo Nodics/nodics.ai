@@ -15,6 +15,16 @@ const os = require('os');
 const path = require('path');
 const service = require('../src/service/defaultApplicationDocumentationContractService');
 
+// Source validation must catch the lifecycle/delivery collision before any import.
+assert.doesNotThrow(() => service.validateCmsRouteDeliveryStates([
+    { code: 'draft', deliveryState: 'DRAFT' },
+    { code: 'published', deliveryState: 'ONLINE' },
+    { code: 'ownerDefault' }
+]));
+assert.throws(() => service.validateCmsRouteDeliveryStates([
+    { code: 'invalidRoute', deliveryState: 'STAGED' }
+]), error => error.code === 'ERR_TOOL_DOC_00005' && error.message.includes('invalidRoute'));
+
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-app-docs-'));
 fs.mkdirSync(path.join(root, 'docs/pages'), { recursive: true });
 fs.writeFileSync(path.join(root, 'docs/pages/overview.md'), '# Overview\n\n## Verification\n\nSafe application documentation.\n');

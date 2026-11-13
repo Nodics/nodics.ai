@@ -87,12 +87,70 @@ perform no acceptance operations. Independent-project and failure tests live in
 - Framework capability help must link to framework documentation routes. Use
   Axis-only documentation only for concepts that are truly Axis-client specific.
 
+## Atomic Functional Module Ownership
+
+Within one signed project/environment, a module has at most one logical server
+owner per explicit publication context. One STAGED owner and one ONLINE owner
+may coexist; two distinct STAGED servers or two distinct ONLINE servers may not.
+OPERATIONAL is a third explicit context, never a fallback for missing publication.
+The batch runtime descriptor is exactly `{ code, publication }`: code is a single
+display label, not ownership evidence. The removed `roles` field is rejected by
+both executable validation and the closed schema, with no migration fallback.
+Replicas of the same logical server are allowed, regardless of role labels.
+Role codes, cohosting role membership and schema authority-context labels cannot
+split or evade this module ownership boundary.
+
+Reuse nService registration-agent `isOwningRegistration(registration)` and
+`getModuleOwnershipKey(coordinates, registration)`. Only `clientCallable: true`
+or validated, nonempty materialized `authorityClaims` establishes ownership.
+Loaded source, capabilities labels and empty claims alone do not. Owning reports
+without explicit project, environment or STAGED/ONLINE/OPERATIONAL publication
+fail admission. Registration producers supply the explicit runtime publication
+through the existing batch envelope; do not infer it from server or role names.
+The existing signed service identity, approved runtime scope, module allowlist,
+endpoint and claim validation remain required before admission. Schema-claim
+collisions between different logical servers remain rejected within the signed
+project/environment/publication context. Identical default schema/service claims
+(e.g. `cms.cmsPage`) may coexist on separate STAGED and ONLINE owners.
+`authorityContext` is a semantic label, whether defaulted or explicitly configured;
+the registration contract carries no physical database namespace or shared-storage
+proof. Do not interpret equal labels as cross-publication physical ownership.
+Physical namespace sharing/collision checks remain with nDatabase's existing
+configuration and acquisition contracts, not an inferred BackOffice authority.
+
+The existing registry store `set(key, lease, ttlMs, validate)` is the atomic
+admission boundary. Its optional synchronous pure validator receives the current
+`[{ key, value }]` lease snapshot and may throw; it must be safe to retry. Memory
+validation and write have no intervening await. Distributed writes use the existing
+nCache client EVAL boundary: every write advances one store revision and owning
+writes compare that revision atomically with writing the lease and its bounded
+TTL. No secondary ownership registry, reservation lock, service or role configuration
+is introduced. Revision metadata is excluded from lease enumeration. Providers
+without atomic EVAL support fail closed. Later-layer store overrides must preserve
+this atomic validator contract; an async scan followed by an unconditional set
+is not a conforming override.
+
+Expired observations never reserve ownership. Concurrent-write retries cannot
+extend the original lease deadline. Existing atomic expiry compare-and-delete
+protects renewals; provider expiry and deletions only remove ownership, so do not
+need to advance the admission revision. Persisted revision metadata has no lease
+or independent owner meaning. Storage keys include signed project/environment/server
+plus module and instance; graceful drain filters the same signed scope and module
+grants. A reused instance ID in another scope cannot overwrite or remove a lease.
+This is a source migration: all registry writers must adopt this contract together;
+there is no compatibility admission path for previous unconditional writers.
+
+Isolated regression coverage is in `test/backofficeRegistryOwnership.test.js`
+(memory and distributed-provider double), alongside registry, distributed-store,
+batch-snapshot and performance contracts. These tests start no server and do not
+prove live Redis or deployment acceptance.
+
 ## Batched Lease Snapshot Work
 
 Only `registerBatch` sets the existing private request-wrapper
 `_batchRegistration: true` after validating the approved service identity and
 bounded batch contract. It suppresses per-item Runtime Registry snapshot refresh,
-not per-item validation, authority-claim scans, persistence, discovery or
+not per-item validation, atomic ownership admission, persistence, discovery or
 availability scheduling. HTTP bodies must never map this flag onto the wrapper;
 unknown body fields remain rejected. Standalone registration still refreshes its
 snapshot independently, even while another batch is running. No global suppression
@@ -128,9 +186,34 @@ Measurement must preserve original errors, synchronous dispatch, snapshot orderi
 authority reads and acknowledgements. It introduces no scheduler, timeout or cache.
 The same regression suite qualifies pending phase visibility and failure cleanup.
 
-The claim-free 72-module registration and renewal budget is one store scan and
-one snapshot refresh per batch. Authority-bearing items retain their required
-independent scans; this optimization does not eliminate those security checks.
+Secured diagnostics also expose `metrics.bootstrapTiming` through the same
+numeric measurement implementation. Fixed phases are `registry`,
+`catalogueEligibility`, `documentation`, `axisPolicy`, `applicationStatus`,
+`operationalReadiness` and `baselineAdmission`; the operational report additionally
+measures `operational.imports`, `operational.media`, `operational.acceptance` and
+`operational.assistant`. The latter four are included in operational readiness's
+elapsed time and must not be summed with it. Optional absent work has no sample.
+These runtime-wide counters cannot identify a principal or correlate concurrent
+requests. A settled operation is not evidence that a policy or readiness gate
+passed. Each fresh request retains the original order, owner reads and decisions.
+
+Customize the existing mergeable `measureBootstrapPhase` wrapper only as
+content-free observation: execute the supplied operation exactly once, preserve
+its result/error and retain fixed numeric labels. Default unsupported labels
+execute unmeasured, preventing dynamic identifiers from becoming diagnostic keys.
+Never retain the operation callback, request, payload or exception in metrics;
+never cache authority, defer a gate or retry work to improve a timing. The
+`bootstrapReadTiming` and existing batch snapshot tests cover result/error
+identity, overlapping counters, synchronous failure and unsupported-label privacy.
+Live diagnosis requires a controlled owner request followed by secured diagnostics;
+unit measurements do not establish an application latency improvement.
+
+The memory-store registration and renewal budget retains one external store scan
+and one snapshot refresh per batch. Owning items validate the in-memory snapshot
+synchronously inside the store write. Distributed owning writes read a revision
+and snapshot, then atomically compare-and-set through nCache, retrying on concurrent
+writes. Source-only writes need no ownership scan but still advance the revision.
+These admission checks cannot be removed to satisfy a scan budget.
 Run `node nodics.platform/modules/backoffice/test/backofficeRegistryBatchSnapshot.test.js`
 and `node nodics.platform/modules/backoffice/test/backofficePerformanceContract.test.js`.
 These isolated structural budgets do not prove native latency, throughput or the
@@ -206,6 +289,43 @@ BackOffice schema rights. Preserve source-instance evidence and existing bounded
 normalization, compatibility classification, approval and revision checks. Human
 contract decisions retain their authenticated actor and permission gates.
 
+### Explicit module health refresh
+
+The secured registry `POST /registry/admin/modules/:moduleName/refresh` reuses
+availability observations for every observed callable runtime of that module.
+Discovery is a separate optional observation: `isDiscoveryEligible` is shared
+with scheduled discovery and requires enabled policy plus an advertised discovery
+descriptor. Refresh selects an advertised registration rather than synthesizing
+a System/OpenAPI path for a module that never contributed one. The acknowledgement
+reports `discoveryRequested: false` when none is selected. It does not assert
+expected cluster membership or healthy readiness from the completion of a check.
+
+Advertised malformed paths, denied hosts, discovery failures and unavailable
+contracts still reject. Preserve original human administrative permission,
+tenant consistency, per-principal/module throttling and idempotency, exact-origin
+transport, bounded responses, compatibility classification and approval. No
+fallback endpoint, discovery enablement or automatic command retry is permitted.
+Later-loaded discovery owners retain this shared eligibility seam and the native
+URL checks. Run `backofficeHealthRefreshDiscovery`, `backofficeRegistryService`,
+`backofficeDiscoveryService` and `backofficeAdministrativeSecurityService` tests.
+
+## Unchanged observation writes
+
+Functional observations always retain their fresh canonical/legacy record reads.
+When the effective metadata and desired decision are unchanged, renewal persists
+only `lastObservedAt` under the existing `catalogueRevision` predicate. Rewriting
+the previous full snapshot could otherwise erase a different runtime's newer
+observed servers or technical-module membership, which intentionally does not
+advance the independent administrator decision revision. A CAS miss still rereads
+and reconciles current state; it never restores an earlier enabled decision.
+
+Changed metadata follows the existing complete reconciliation path and source
+package comparison. One local pure comparison can serve both changed/decision
+checks; it is not an authority cache. Do not change lease/request timing, skip
+fresh reads or infer installed data or activation from a heartbeat. Later-loaded
+reconcilers must preserve this boundary. Run the heartbeat, functional catalogue,
+registration group/batch snapshot, tenant scope and administrative security suites.
+
 ## Inherited application targets and observed package facts
 
 BackOffice owns `backofficeApplicationInitialization.target` technical defaults (`cms`, abstract transport, bounded timeout, one attempt). A deployment selects its connection name once; `profiles.<code>.target` supplies genuine exceptions. Resolve the target when consuming the final configuration so node changes apply. Missing destinations and profiles with `enabled: false` are rejected before initiation. Product-owned profiles may be inert until the customer enables them. Human initiation, Staged authority, exact-release review and publication confirmations remain mandatory.
@@ -213,6 +333,16 @@ BackOffice owns `backofficeApplicationInitialization.target` technical defaults 
 Functional-module data package descriptors reuse the owning registration manifest. `backofficeFunctionalModuleActivationData.modules.<identity>.dataPackages` may supply routing-only deltas by code. Observed required/sample/trigger/type facts are retained; an unavailable owner is not replaced with an invented descriptor. Preserve explicit multi-runtime destinations and target-scoped completion receipts. A missing/running/failed required import cannot be called complete.
 
 The Local reset coordinator owns `providerDefaults.moduleName: 'system'`; deployments still select every provider, connection and target authority. Defaults never enable reset, choose targets or remove environment, human/service-token, confirmation and required-model checks.
+Each selected provider requires `targetAuthority.server` (exact logical server)
+and explicit `publication` (`STAGED`, `ONLINE` or `OPERATIONAL`). Optional exact
+`environment` and `node` pins are retained. Reject role-code selectors, missing
+coordinates, wildcards and unknown authority keys before credential acquisition
+or dispatch. Runtime-local reset infrastructure must target the chosen runtime,
+not an arbitrary functional owner sharing a publication context. This descriptor
+validation grants no reset permission or provider qualification; existing human
+confirmation, environment allowlist, scoped service token, required-model and
+provider acknowledgement checks remain mandatory. Offline tests stub transport;
+they neither invoke a real provider nor authorize any reset execution.
 
 BackOffice owns inert capability-registry acceptance defaults. Resolve observed
 server coordinates from the selected deployment rather than a reference-project
@@ -345,6 +475,12 @@ startup validation, runtime communication, import release readiness, publication
 Process approval, documentation, media, search/discovery, assistant knowledge,
 and customer application parity through stable `sections`.
 
+The default bootstrap retains that complete aggregate. An explicit diagnostic
+projection can omit it only while retaining every fresh admission gate; see
+[projection and admission](capability-registry-contract.md#diagnostic-projection-and-admission).
+Its inert on-demand capability is not READY evidence. Technical observation uses
+the full existing secured bootstrap; it does not create another readiness owner.
+
 Each section must carry `key`, `title`, `businessStatus`, `ownerModule`,
 `source`, `route`, `summary`, `blockers`, and `nextAction`. Blockers use the
 same guided recovery shape as capability readiness: stable `blockerCode`/`code`,
@@ -353,6 +489,20 @@ evidence, and bounded `repair` metadata. Axis and nTooling may render this
 aggregate and link to owning pages, but must not recompute import, publishing,
 approval, media, search, assistant, or application readiness from page-local
 state when a backend section is available.
+
+Media inventory counters require an explicitly available owning subprovider and
+an actual nonnegative safe-integer measurement. `mediaObjectCount`, incomplete
+metadata and missing physical counts use the object provider; reference counts
+use the reference provider; cleanup candidates use the cleanup provider.
+Unavailable, omitted or invalid measurements are `null`, while an actual measured
+zero remains zero. Application manifest readiness cannot establish inventory,
+and a missing local aggregate provider does not authorize a foreign owner read.
+Profile `READY` and `NOT_REQUIRED` states both count as ready/not required; the
+retained `READY_OR_NOT_REQUIRED` state remains supported. Customize Media's
+existing provider and summary projection rather than adding another inventory
+reader, observer grant or readiness authority. Regression coverage is in
+`test/backofficeMediaSummaryEvidence.test.js`, including absent/failed/partial
+providers, invalid counts, measured zeros and current profile states.
 
 Documentation readiness is an aggregate over documentation sources and their
 publication/indexing state. Implementing modules own their documentation packs;
@@ -531,6 +681,12 @@ authorized owner workspace supports that handoff. Catalogue `lastRunId` is
 historical evidence, not proof of the current failed attempt; BackOffice must not
 invent a new run identity when nImport did not persist it.
 
+Import-history navigation binds the authorized Import instance to the exact
+environment and target server. Runtime role labels are descriptive and do not
+grant or block that read-only handoff. Ambiguous instances, missing navigation,
+unavailable owners and denied history access remain unavailable; this handoff
+never imports data or retries a failed operation.
+
 An old CMS release without an asset version pin exposes `VERSION_UNPINNED`.
 Its bounded repair is a confirmed `applicationInitialization.initiate`. CMS
 detects the unpinned prior Online release and submits a fresh normal review
@@ -638,3 +794,103 @@ roles. These are runtime registry coordinates, distinct from business publicatio
 state. Keep schema and registration validation aligned; preserve exact matching
 and reject unknown roles without aliases or fallbacks. The actual Promotion
 capability registration regression covers the `COMMERCE/OPERATIONAL` report.
+
+
+### Explicit runtime-local infrastructure
+
+The nService registration helper resolves `nodics.runtime.ownership` from trusted
+installed source metadata. `runtimeLocal` adds logical server scope to module
+ownership and repeated mechanical schema/service claims. Atomic admission skips
+cross-server claim collision only for the same canonically runtime-local module;
+all functional owners retain default module/context uniqueness and claim checks.
+Incoming ownershipScope/runtime fields cannot grant this classification. Unknown
+modules remain functional; invalid source declarations fail closed. Claims and
+endpoints remain visible. This does not alter data namespace allocation, token
+permissions, destination admission or runtime-local lifecycle behavior.
+
+## Source-owned session recovery guidance
+
+`backofficeAxisPolicy.sessionRecoveryPresentation` supplies bounded inert
+`lockedMessage` and `expiredMessage` text through the effective Axis policy. The
+Framework defaults distinguish saved records and explicit checkpoints from
+unretained edits, and explain that an already submitted action may complete.
+Axis must hide protected data during lock/expiry, retain only the admitted return
+context and never replay a write after reauthentication. The presentation is
+resolved from layered source configuration, not copied into persisted policy
+updates. Older policy snapshots may omit it; malformed supplied text fails closed.
+Later layers may customize wording without changing authentication authority.
+
+
+## Durable readiness observations and startup review
+
+BackOffice stores actor-bound compact readiness snapshots and time-bounded startup
+acknowledgements through its generated schema services. Generic CRUD routes remain
+disabled. The existing authenticated bootstrap revalidates owner state on every
+request; stored observations are historical evidence, never admission or repair
+authority. The previous snapshot is returned only within the same tenant, deployment
+and observer authorization context. A changed build remains visible in that history.
+
+Default-risk acknowledgements bind the active warning contract, tenant, deployment
+and nConfig-validated running build. They expire after the Framework-owned period
+and never suppress the warning or waive credential/grant validation. Failed reads
+or unconfirmed writes expose an explicit evidence blocker. No process-memory
+acknowledgement may substitute for the persisted receipt. External audit delivery
+retains its own configured failure policy.
+
+The evidence retention and bounded-read defaults live in
+`backofficeRegistry.operations.evidence`. Customer layers contain intentional
+overrides only. Operator acceptance guidance uses the existing
+`tooling.acceptance.platformCommand` selection, not a fixed Docker command.
+
+Run `node --test nodics.platform/modules/backoffice/test/backofficeReadinessEvidence.test.js`
+for restart, tenant/actor/build isolation, expiry, unavailable persistence and
+unconfirmed-write checks. Runtime acceptance additionally verifies generated
+persistence, an actual restart and Axis readback; unit fixtures do not replace it.
+
+## Selected runtime readiness
+
+Use `DefaultDeploymentModuleOwnershipService.runtimePlacements()` as the selected deployment inventory. Compare exact environment, logical server and instance identity with current registered observations; do not infer the expected inventory from surviving registrations. An unavailable graph or missing selected owner blocks readiness. A foreign instance or environment cannot fill the gap. Approval readiness also requires the currently selected Process owner to be available, even when prior publication decisions are approved. These checks are observations only and grant no authority. `backofficeSelectedRuntimeReadiness.test.js` covers deregistration, wrong identity, recovery and unavailable graph.
+
+## Durable repair intents and receipts
+
+The dispatcher checks the current owner permission before every preview,
+execution or receipt replay. Executable providers implement
+`authorizeRepair(repair, request)`; a missing admission method refuses execution.
+Only an owner result with `completionVerified: true` can close an execution.
+This flag is a service result, never client-supplied authority.
+
+BackOffice persists its intent and target claim through the generated
+`backofficeRepairReceipt` and `backofficeRepairTarget` services. Both use the
+existing database transaction owner. The binding includes the authenticated
+tenant, actor and logical deployment; the target fence is shared between actors.
+The request digest covers the exact operation, target and context. Reusing a key
+for changed intent is a conflict. Generated metadata is not part of that digest.
+
+A create-only READY claim precedes a conditional RUNNING transition. Only its
+winner invokes the provider. A verified result and target release commit
+atomically. Restart, timeout and another idempotency key cannot take over a
+RUNNING or UNCERTAIN target. Repeating the original request may invoke the
+provider's optional `reconcileRepair`, which may inspect and acknowledge exact
+owner evidence but must never dispatch another business mutation. Without
+confirmed evidence the repair remains RECONCILIATION_REQUIRED.
+
+nImport uses its existing immutable release-plan continuation and installation
+receipts. A queued, running, uncertain or malformed response is never completion.
+Partial preparation directs the operator to Data Releases for the remaining
+owner-controlled steps. The generic cross-owner batch remains disabled; this
+does not disable nImport's already governed sequential release plan. No new
+approval or rollback authority is created.
+
+The owner defaults are `backofficeRegistry.operations.repair`:
+`maximumIntentBytes: 16384` and `providerCapabilityTtlMs: 30000`. The receipt
+has no expiry that could enable replay. Customer projects add only intentional
+overrides; they do not supply persistence scripts or duplicated repair defaults.
+The existing in-process attempt counters are diagnostics, not durable evidence.
+
+Run the durable repair and operational readiness tests, then qualify competing
+requests, restart, owner acknowledgement loss and original-intent reconciliation
+through the secured owner API. Test doubles do not qualify deployed transactions.
+
+## Fresh lease decoding
+
+Derived immutable parsing reuse must compare the entire serialized record from each fresh provider read. Never serve retained values after missing records, expiry or provider failure; preserve atomic revision admission and current employee authorization. Bound memory through the implementing Framework store policy, isolate store instances and clear the derived cache on shutdown. This is not an authority or readiness cache.

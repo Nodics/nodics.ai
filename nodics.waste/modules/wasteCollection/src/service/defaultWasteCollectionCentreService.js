@@ -116,7 +116,7 @@ module.exports = {
                 locationCode: code
             },
             responseSelector: response => this.records(response)[0]
-        }))).then(locations => locations.filter(Boolean));
+        }).then(response => this.records(response)[0]))).then(locations => locations.filter(Boolean));
     },
 
     /** Resolves Profile-owned records through DefaultModuleService. */

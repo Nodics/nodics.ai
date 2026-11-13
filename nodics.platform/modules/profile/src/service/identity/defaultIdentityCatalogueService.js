@@ -107,45 +107,67 @@ module.exports = {
   },
   /** Imports reference definitions insert-only through existing generated owners, preserving all installed Axis decisions. */
   ensureReferenceAll: async function (service, request) {
-    const models = request?.models;
-    if (!request?.tenant || !request.authData || !Array.isArray(models) || models.length > 1000 ||
-        ![SERVICE.DefaultPermissionService, SERVICE.DefaultEnterpriseRoleService, SERVICE.DefaultUserGroupService].includes(service) ||
-        typeof service?.get !== "function" || typeof service?.save !== "function") this.fail();
-    this.codes(models.map(model => model?.code), true, service === SERVICE.DefaultPermissionService);
-    await SERVICE.DefaultIdentityCatalogueGovernanceService.authorizeSeed(request, service);
-    const result = [];
-    for (const model of models) {
-      if (!model || Object.getPrototypeOf(model) !== Object.prototype || model._id ||
-          Object.keys(model).some(key => key.startsWith("$") || key.includes("."))) this.fail();
-      const read = async () => {
-        const response = await SERVICE.DefaultIdentityCatalogueGovernanceService.read(service, { tenant: request.tenant, authData: request.authData,
-          query: { code: model.code }, options: { recursive: false, skipItemCache: true },
-          searchOptions: { pageSize: 2, pageNumber: 1 } });
-        if (!/^SUC_/.test(response?.code || "") ||
-            response.success !== undefined && response.success !== true ||
-            response.acknowledged !== undefined && response.acknowledged !== true || response.error ||
-            response.errors && (!Array.isArray(response.errors) || response.errors.length) ||
-            !Array.isArray(response.result) || response.count !== response.result.length || response.result.length > 1 ||
-            response.result.some(row => row.code !== model.code || !row._id)) this.fail();
-        return response.result;
-      };
-      const existing = await read();
-      if (existing.length) {
-        if (model.ownerModule && existing[0].ownerModule !== model.ownerModule) this.fail();
-      } else {
-        // No update query or upsert: concurrent seed attempts cannot overwrite a winner.
-        const saved = await SERVICE.DefaultIdentityCatalogueGovernanceService.createReference(service, {
-          tenant: request.tenant, authData: request.authData, model: structuredClone(model), options: { insertOnly: true },
-        });
-        if (!/^SUC_/.test(saved?.code || "") ||
-            saved.success !== undefined && saved.success !== true ||
-            saved.acknowledged !== undefined && saved.acknowledged !== true ||
-            saved.result?.acknowledged !== undefined && saved.result.acknowledged !== true || saved.error ||
-            saved.errors && (!Array.isArray(saved.errors) || saved.errors.length)) this.fail();
-        if ((await read()).length !== 1) this.fail();
+    let stage = "REQUEST";
+    try {
+      const models = request?.models;
+      if (!request?.tenant || !request.authData || !Array.isArray(models) || models.length > 1000 ||
+          ![SERVICE.DefaultPermissionService, SERVICE.DefaultEnterpriseRoleService, SERVICE.DefaultUserGroupService].includes(service) ||
+          typeof service?.get !== "function" || typeof service?.save !== "function") this.fail();
+      this.codes(models.map(model => model?.code), true, service === SERVICE.DefaultPermissionService);
+      stage = "SOURCE_ADMISSION";
+      await SERVICE.DefaultIdentityCatalogueGovernanceService.authorizeSeed(request, service);
+      const result = [];
+      for (const model of models) {
+        stage = "MODEL";
+        if (!model || Object.getPrototypeOf(model) !== Object.prototype || model._id ||
+            Object.keys(model).some(key => key.startsWith("$") || key.includes("."))) this.fail();
+        const read = async (readStage = "READ_REFERENCE") => {
+          stage = readStage;
+          const response = await SERVICE.DefaultIdentityCatalogueGovernanceService.read(service, { tenant: request.tenant, authData: request.authData,
+            query: { code: model.code }, options: { recursive: false, skipItemCache: true },
+            searchOptions: { pageSize: 2, pageNumber: 1 } });
+          if (!/^SUC_/.test(response?.code || "") ||
+              response.success !== undefined && response.success !== true ||
+              response.acknowledged !== undefined && response.acknowledged !== true || response.error ||
+              response.errors && (!Array.isArray(response.errors) || response.errors.length) ||
+              !Array.isArray(response.result) || response.count !== response.result.length || response.result.length > 1 ||
+              response.result.some(row => row.code !== model.code || !row._id)) this.fail();
+          return response.result;
+        };
+        const existing = await read();
+        if (existing.length) {
+          stage = "PRESERVE_REFERENCE";
+          if (model.ownerModule && existing[0].ownerModule !== model.ownerModule) this.fail();
+        } else {
+          // No update query or upsert: concurrent seed attempts cannot overwrite a winner.
+          stage = "CREATE_REFERENCE";
+          const saved = await SERVICE.DefaultIdentityCatalogueGovernanceService.createReference(service, {
+            tenant: request.tenant, authData: request.authData, model: structuredClone(model), options: { insertOnly: true },
+          });
+          stage = "WRITE_ACKNOWLEDGEMENT";
+          if (!/^SUC_/.test(saved?.code || "") ||
+              saved.success !== undefined && saved.success !== true ||
+              saved.acknowledged !== undefined && saved.acknowledged !== true ||
+              saved.result?.acknowledged !== undefined && saved.result.acknowledged !== true || saved.error ||
+              saved.errors && (!Array.isArray(saved.errors) || saved.errors.length)) this.fail();
+          if ((await read("READBACK")).length !== 1) this.fail();
+        }
+        result.push({ code: model.code });
       }
-      result.push({ code: model.code });
+      return { result };
+    } catch (error) {
+      // Fixed owner stages contain no record, actor, tenant, provider or source-path details.
+      try { error?.addContext?.({ owner: "profile", operation: "REFERENCE_SEED", stage }); } catch {}
+      // The router exposes only one aggregate level. A fixed stage wrapper keeps
+      // private context server-side and retains the original refusal as its child.
+      if (error?.code !== "ERR_AUTH_00003") throw error;
+      let diagnostic;
+      try {
+        diagnostic = new CLASSES.NodicsError("ERR_PROFILE_REFERENCE_SEED_" + stage);
+        if (typeof diagnostic.add !== "function") diagnostic = undefined;
+        else diagnostic.add(error);
+      } catch { diagnostic = undefined; }
+      throw diagnostic || error;
     }
-    return { result };
   },
 };

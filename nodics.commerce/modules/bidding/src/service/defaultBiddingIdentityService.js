@@ -31,7 +31,7 @@ module.exports = {
     const allowed = ['moduleName', 'connectionName', 'targetAuthority', 'apiVersion', 'timeoutMs', 'maxAttempts', 'followRedirects', 'rejectUnauthorized'];
     if (!p || Object.keys(p).some(key => !allowed.includes(key)) || p.moduleName !== 'profile' ||
         typeof p.connectionName !== 'string' || !/^[A-Za-z][A-Za-z0-9_.-]{0,191}$/.test(p.connectionName) ||
-        p.targetAuthority?.runtimeRole !== 'PLATFORM' || Object.keys(p.targetAuthority).length !== 1 ||
+        (p.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(p.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
         typeof p.apiVersion !== 'string' || !/^v\d+$/.test(p.apiVersion) ||
         !Number.isSafeInteger(p.timeoutMs) || p.timeoutMs < 1 || p.timeoutMs > 2147483647 ||
         !Number.isSafeInteger(p.maxAttempts) || p.maxAttempts < 1 ||

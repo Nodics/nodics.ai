@@ -124,12 +124,17 @@ durable owner protocol; no new configuration or permissions are required.
 Validation: `test/communicationRuntime.test.js` exercises replay, conflicting payloads, concurrency, retry timing, suppression, uncertain sends and explicit reconciliation. Actual Telegram client acceptance is a deployment test.
 
 
-## Remote eligibility owners
+## Module-routed eligibility owners
 
-A domain may contribute an inert `{moduleName, connectionName, runtimeRole,
-apiName}` entry instead of a local service name in `dispatchEligibilityOwners`.
-These are two explicit topology selections, never a catch/fallback chain. Remote
-checks use the existing module transport and internal service authentication,
+A domain may contribute an inert `{moduleName, serviceName, targetAuthority,
+apiName}` entry in `dispatchEligibilityOwners`. The targetAuthority requires
+`publication: OPERATIONAL` and may pin a reviewed server/environment. The local
+operation is fixed to `isDispatchEligible`; the remote API remains domain-owned.
+DMS chooses the actual local owner or remote functional owner through its ordinary
+module connection. No domain host alias, physical role profile or publication
+switch selects the implementation. A loaded remote-only service cannot run locally,
+and local failure never falls back remotely. Local invocation retains the original
+cloned actor and frozen metadata. Remote checks use internal service authentication,
 exact frozen metadata only, one attempt, no redirects and a bounded reply. The
 shared `communication.sourceEligibilityTransport` owns secure defaults, timeout
 bounds and `maxResponseBytes`. Its `validation.responseBytes` range validates the
@@ -138,5 +143,10 @@ inline default. Later layers may override owner-defined values while preserving
 internal authentication, single attempt, redirect refusal and exact proof binding. Domain endpoints independently admit the selected caller and reread source
 and recipient proof; an unavailable or foreign reply refuses/suppresses through
 existing intent handling. Templates, contacts, original tokens and rendered content
-never enter the check. Optional owner role contributions may supply this metadata
-without activating that domain's schemas/services on the delivery runtime.
+never enter the remote request body. Optional inactive owner namespace contributions
+may supply this metadata without activating domain schemas/services on the delivery
+runtime. Existing service-name entries for other local-only owners remain unchanged.
+The DigitalCore coupon-expiry descriptor uses moduleName digitalCore, serviceName
+DefaultDigitalCouponReminderDeliveryService and the exact API
+`/internal/coupons/reminder-dispatch-eligibility`; it enables neither reminders
+nor a Communication provider.

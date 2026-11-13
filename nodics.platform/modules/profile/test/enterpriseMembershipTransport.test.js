@@ -63,7 +63,7 @@ test("membership exposure defaults off and team commands require explicit permis
     const route = routes[name];
     assert.equal(route.secured, true);
     assert.deepEqual(route.authTokenTypes, ["access"]);
-    assert.equal(route.apiExposure, "profileMembership");
+    assert.equal(route.apiExposure, name === "enterpriseTeamWorkspace" ? "profileTeam" : "profileMembership");
     assert.equal(route.controller, "DefaultEnterpriseManagementController");
     assert.equal(route.operation, name);
     assert.equal(route.cache.enabled, false);

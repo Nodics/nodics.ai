@@ -58,7 +58,7 @@ module.exports = {
     validation: { purchaseValiditySeconds: { minimum: 1, maximum: 31536000 } } },
     bundleRecovery: { leaseMs: 60000 },
     participantSpend: { perPurchaseLimit: null,
-      profile: { connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, timeoutMs: 10000 } } },
+      profile: { connectionName: "profile", targetAuthority: { publication: "OPERATIONAL" }, timeoutMs: 10000 } } },
   schemaPolicies: {
     checkoutCore: {
       operational: {

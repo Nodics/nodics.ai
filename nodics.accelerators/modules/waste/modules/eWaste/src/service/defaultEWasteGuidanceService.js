@@ -31,12 +31,13 @@ module.exports = {
     )
       message =
         "Do not put a damaged or swollen battery into a general bin. Ask collection-centre staff for their handling instructions. A photo cannot establish that an item is safe.";
+    else if (/privacy|retain|delet|who\s+(?:can\s+)?(?:see|view|access)/i.test(text))
+      message =
+        "Your photo is attached to your customer submission and is available to authorized reviewers. Refer to the published privacy policy for retention and deletion terms. I cannot promise a retention period or delete a record from this conversation.";
     else if (/photo|camera|upload/i.test(text) && /\?|how|can|why/i.test(text))
       message =
         "At the collection centre, take a photo or upload one from your device. Keep the whole item visible. We identify supported details automatically, then you can correct them and confirm once. If analysis fails, your saved photo remains available for retry or essential manual details.";
-    else if (/privacy|retain|delete|who sees/i.test(text))
-      message =
-        "Your photo is attached to your customer submission and is available to authorized reviewers. Refer to the published privacy policy for retention and deletion terms. I cannot promise a retention period or delete a record from this conversation.";
+
     return message;
   },
 };

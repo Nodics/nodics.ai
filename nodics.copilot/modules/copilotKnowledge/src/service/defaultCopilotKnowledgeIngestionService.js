@@ -129,7 +129,8 @@ module.exports = {
     if (!request.dryRun) {
       if (
         !dependencies.discoveryProjectionService ||
-        typeof dependencies.discoveryProjectionService.doSave !== "function"
+        typeof dependencies.discoveryProjectionService.doSave !== "function" ||
+        (request.publicationEnabled !== true && typeof dependencies.discoveryProjectionService.doRefresh !== "function")
       )
         throw new Error("COPILOT_DISCOVERY_PROJECTION_SERVICE_REQUIRED");
       if (
@@ -190,6 +191,21 @@ module.exports = {
           request,
           claimed,
         );
+      else if (!publication) {
+        await request.assertCurrent?.();
+        const refreshed = await dependencies.discoveryProjectionService.doRefresh({
+          tenant: request.indexTenant, authData: request.authData,
+          indexName: configuration.indexName || "discoveryDocumentProjection"
+        });
+        const result = refreshed?.result?.body || refreshed?.result;
+        if (!/^SUC_/.test(refreshed?.code || "") || refreshed.error ||
+            refreshed.success === false || refreshed.acknowledged === false ||
+            (refreshed.errors !== undefined && (!Array.isArray(refreshed.errors) || refreshed.errors.length)) ||
+            !result?._shards || result._shards.failed !== 0 ||
+            !Number.isSafeInteger(result._shards.successful) || result._shards.successful < 1)
+          throw new Error("COPILOT_KNOWLEDGE_VISIBILITY_UNCONFIRMED");
+        await request.assertCurrent?.();
+      }
     }
     return policy.deepFreeze({
       sourceCode: source.code,

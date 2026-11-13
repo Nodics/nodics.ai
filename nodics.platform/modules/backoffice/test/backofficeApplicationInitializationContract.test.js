@@ -42,6 +42,7 @@ global.CONFIG = {
   get: (key) =>
     key === "backofficeApplicationInitialization"
       ? {
+          target: require("../config/properties").backofficeApplicationInitialization.target,
           projectCode: "example.project",
           operatorOrigin: "https://operator.example.test",
           profiles: {
@@ -157,9 +158,9 @@ global.CONFIG = {
 };
 global.NODICS = { getInternalAuthToken: () => "service-token" };
 // Routing integration is covered separately against the canonical deployment alias owner.
-service.applicationTargetBinding = (connectionName, runtimeRole) => ({
+service.applicationTargetBinding = (connectionName) => ({
   connectionName,
-  targetAuthority: { server: connectionName, runtimeRole: { code: runtimeRole } },
+  targetAuthority: { server: connectionName, publication: "STAGED" },
 });
 let moduleInvocationHandler = async (request) => ({
   data: {
@@ -182,7 +183,10 @@ let functionalModuleRecords = {
     runtimeState: "ACTIVE",
   },
 };
+const actor = { principalId: "admin", principalType: "human", tokenType: "access", tenant: "default", entCode: "default", userGroups: ["runtimeConfigAdminUserGroup"], permissions: ["backoffice.application.initialization.initiate", "backoffice.application.initialization.rollback", "backoffice.application.initialization.retire", "backoffice.application.initialization.reconcileApproval"] };
 global.SERVICE = {
+  DefaultBackofficeAdministrativeSecurityService: require('../src/service/security/defaultBackofficeAdministrativeSecurityService'),
+  DefaultSecuredRequestPipelineService: require('../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService'),
   DefaultModuleService: {
     invokeModule: (request) => request.apiName === '/storage/readiness' ? Promise.resolve({ data: {
       contractVersion: 1, owner: 'media', evidenceKind: 'PERSISTED_CURRENT_METADATA', checkedAt: new Date().toISOString(),
@@ -217,7 +221,7 @@ global.fetch = async (url, options) => {
 
 (async () => {
   const importGroup = { targetServer: "wcmsStaged", targetRuntimeRole: "WCMS_STAGED", dataType: "sample", steps: [{ code: "example:sample" }] };
-  const operator = { tenant: "default", authData: { principalId: "admin" }, httpRequest: { headers: { authorization: "Bearer operator-token" } } };
+  const operator = { tenant: "default", authData: { ...actor }, httpRequest: { headers: { authorization: "Bearer operator-token" } } };
   const executed = await service.invokeDataReleaseOperation("execute", importGroup, operator);
   assert.equal(executed.request.header.Authorization, "Bearer operator-token");
   const checked = await service.invokeDataReleaseOperation("preflight", importGroup, operator);
@@ -247,7 +251,7 @@ global.fetch = async (url, options) => {
   );
   let status = await service.status("nexus", {
     tenant: "default",
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(status.owner, "nexus.web");
@@ -309,11 +313,11 @@ global.fetch = async (url, options) => {
       forceRefresh: true,
       reason: "Replay current development baseline",
     },
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.deepStrictEqual(initiateRequest.targetAuthority, {
-    server: "wcmsStaged", runtimeRole: { code: "WCMS_STAGED" },
+    server: "wcmsStaged", publication: "STAGED",
   });
   assert.strictEqual(initiateRequest.requestBody.forceRefresh, true);
   assert.strictEqual(
@@ -367,7 +371,7 @@ global.fetch = async (url, options) => {
     };
   };
   const missingTaskStatus = await service.status("nexus", {
-    tenant: "default", authData: { principalId: "admin" },
+    tenant: "default", authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert(missingTaskStatus.capability.blockers.some(blocker => blocker.code === "APPROVAL_TASK_MISSING" &&
@@ -380,7 +384,7 @@ global.fetch = async (url, options) => {
       reason: "Repair missing approval task",
       correlationId: "repair-corr-1",
     },
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(
@@ -455,7 +459,7 @@ global.fetch = async (url, options) => {
     applicationInitialization: {
       reason: "Initialize complete Agora Apparel application bundle",
     },
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.deepStrictEqual(
@@ -542,7 +546,7 @@ global.fetch = async (url, options) => {
   let blockedAgora = await service.status("agoraapparel", {
     tenant: "default",
     requestId: "request-agora-blocked",
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(
@@ -651,7 +655,7 @@ global.fetch = async (url, options) => {
   const offlineCommerceStatus = await service.status("agoraapparel", {
     tenant: "default",
     requestId: "request-agora-runtime-offline",
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert(
@@ -692,7 +696,7 @@ global.fetch = async (url, options) => {
   let blockedBySetupData = await service.status("agoraapparel", {
     tenant: "default",
     requestId: "request-agora-release-blocked",
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(blockedBySetupData.readiness, "BLOCKED");
@@ -747,7 +751,7 @@ global.fetch = async (url, options) => {
     applicationInitialization: {
       reason: "Initialize complete Agora Apparel application bundle",
     },
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(blockedInitiateBySetupData.readiness, "BLOCKED");
@@ -776,7 +780,7 @@ global.fetch = async (url, options) => {
     (
       await service.contentPackStatus("frameworkdocs", {
         tenant: "default",
-        authData: { principalId: "admin" },
+        authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
       })
     ).state,
@@ -785,7 +789,7 @@ global.fetch = async (url, options) => {
   assert.strictEqual(contentPackRequest.local, false);
   assert.strictEqual(contentPackRequest.connectionName, "wcmsStaged");
   assert.deepStrictEqual(contentPackRequest.targetAuthority, {
-    server: "wcmsStaged", runtimeRole: { code: "WCMS_STAGED" },
+    server: "wcmsStaged", publication: "STAGED",
   });
   assert.strictEqual(contentPackRequest.moduleName, "system");
   assert.strictEqual(
@@ -795,13 +799,15 @@ global.fetch = async (url, options) => {
   await service.installContentPack("frameworkdocs", {
     tenant: "default",
     requestId: "request-1",
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(contentPackRequest.methodName, "POST");
+  assert.strictEqual(contentPackRequest.moduleName, "cms");
+  assert.deepStrictEqual(contentPackRequest.requestBody, { requestedBy: "admin", correlationId: "request-1" });
   assert.strictEqual(
     contentPackRequest.apiName,
-    "/internal/content-packs/nodicsDocumentation/imports",
+    "/publication/baselines/frameworkdocs/content-pack/imports",
   );
   assert.throws(
     () =>
@@ -831,7 +837,7 @@ global.fetch = async (url, options) => {
     (
       await service.status("nexus", {
         tenant: "default",
-        authData: { principalId: "admin" },
+        authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
       })
     ).allowedActions,
@@ -850,7 +856,7 @@ global.fetch = async (url, options) => {
     (
       await service.status("nexus", {
         tenant: "default",
-        authData: { principalId: "admin" },
+        authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
       })
     ).allowedActions,
@@ -868,7 +874,7 @@ global.fetch = async (url, options) => {
   });
   const pendingDocsStatus = await service.status("frameworkdocs", {
     tenant: "default",
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.deepStrictEqual(
@@ -957,7 +963,7 @@ global.fetch = async (url, options) => {
   });
   const ownerDiagnosticStatus = await service.status("frameworkdocs", {
     tenant: "default",
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(
@@ -1020,7 +1026,7 @@ global.fetch = async (url, options) => {
   });
   const failedPublicationStatus = await service.status("frameworkdocs", {
     tenant: "default",
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert(
@@ -1044,7 +1050,7 @@ global.fetch = async (url, options) => {
   });
   const readyWithoutReceipt = await service.status("nexus", {
     tenant: "default",
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(readyWithoutReceipt.capability.businessStatus, "NEEDS_ATTENTION");
@@ -1075,7 +1081,7 @@ global.fetch = async (url, options) => {
     (
       await service.status("nexus", {
         tenant: "default",
-        authData: { principalId: "admin" },
+        authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
       })
     ).allowedActions,
@@ -1094,7 +1100,7 @@ global.fetch = async (url, options) => {
     (
       await service.status("frameworkdocs", {
         tenant: "default",
-        authData: { principalId: "admin" },
+        authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
       })
     ).allowedActions,
@@ -1129,7 +1135,7 @@ global.fetch = async (url, options) => {
   };
   let readyButMissingSetup = await service.status("nexusneedssetup", {
     tenant: "default",
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.deepStrictEqual(
@@ -1207,7 +1213,7 @@ global.fetch = async (url, options) => {
   const preparedOnly = await service.prepare("nexusneedssetup", {
     tenant: "default",
     requestId: "request-prepare-only",
-    authData: { principalId: "admin" },
+    authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(preparedOnly.preparation.status, "CURRENT");
@@ -1245,7 +1251,7 @@ global.fetch = async (url, options) => {
     service.initiate("nexus", {
       tenant: "default",
       requestId: "request-2",
-      authData: { principalId: "admin" },
+      authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
     }),
     (error) => {
@@ -1281,7 +1287,7 @@ global.fetch = async (url, options) => {
     service.initiate("nexus", {
       tenant: "default",
       requestId: "request-running",
-      authData: { principalId: "admin" },
+      authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
     }),
     (error) => {
@@ -1310,7 +1316,7 @@ global.fetch = async (url, options) => {
     service.initiate("nexus", {
       tenant: "default",
       requestId: "request-3",
-      authData: { principalId: "admin" },
+      authData: { ...actor },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
     }),
     (error) => {

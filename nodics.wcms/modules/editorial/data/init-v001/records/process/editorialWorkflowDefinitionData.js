@@ -26,6 +26,7 @@ module.exports = {
             description: 'Default News and Blog business review.',
             category: 'content',
             ownerModule: 'editorial',
+            policy: { requireReasonOnReject: true },
             graph: {
                 nodes: [
                     { code: 'start', type: 'START', name: 'Start' },

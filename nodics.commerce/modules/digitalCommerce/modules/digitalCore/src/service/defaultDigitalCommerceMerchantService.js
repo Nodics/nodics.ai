@@ -197,9 +197,7 @@ module.exports = {
       this.fail("Merchant redemption is unavailable");
     if (customer && auth.principalType !== "customer")
       this.fail("Please sign in as a customer");
-    const runtime = CONFIG.get("runtimeRole"),
-      role = typeof runtime === "string" ? runtime : runtime?.code;
-    if (role !== "COMMERCE")
+    if (SERVICE.DefaultModuleService?.isLocalModuleActive?.("digitalCore") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL")
       this.fail("Merchant fulfillment requires operational Commerce");
     return {
       ...input,
@@ -321,7 +319,7 @@ module.exports = {
           local: false,
           moduleName: "profile",
           connectionName: "profile",
-          targetAuthority: { runtimeRole: "PLATFORM" },
+          targetAuthority: { publication: "OPERATIONAL" },
           tenant: r.tenant,
           request: { tenant: r.tenant },
           apiName: "/references/read",
@@ -530,7 +528,7 @@ module.exports = {
       local: false,
       moduleName: "profile",
       connectionName: "profile",
-      targetAuthority: { runtimeRole: "PLATFORM" },
+      targetAuthority: { publication: "OPERATIONAL" },
       apiName: "/identity/scopes/me",
       methodName: "GET",
       tenant: request.tenant,

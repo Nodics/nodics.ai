@@ -27,7 +27,8 @@ test('Enterprise spending uses the authoritative total and original signed parti
     const calculation = { totalAmount: '9007199254740993.01', currency: 'POINTS' };
     const events = [];
     let outcome = { confirmed: true, policyRevision: 3 };
-    global.SERVICE = { DefaultCommerceParticipantSpendService: { enforce: async (context, terms) => {
+    global.SERVICE = {
+      DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) }, DefaultCommerceParticipantSpendService: { enforce: async (context, terms) => {
         events.push('admit'); assert.equal(context, request);
         assert.deepEqual(terms, { ownerRef: request.ownerRef, actorRef: request.actorRef,
             amount: calculation.totalAmount, currency: calculation.currency });
@@ -61,9 +62,10 @@ test('Checkout derives bound offline capture only from reviewed server policy, n
     t.after(() => { global.CONFIG = previous.CONFIG; global.SERVICE = previous.SERVICE; });
     let policy = { enabled: true, sandboxOnly: true, liveQualified: false, maturity: 'OFFLINE_CONFORMANCE' };
     let role = 'COMMERCE', captured;
-    const adapter = { code: 'stripe-sandbox' };
+    const adapter = { code: 'stripe-sandbox', execute: async () => { throw new Error('Payment execution is isolated in this routing fixture'); } };
     global.CONFIG = { get: key => key === 'runtimeRole' ? role : key === 'stripeProvider' ? policy : {} };
-    global.SERVICE = { DefaultStripeSandboxAdapterService: adapter,
+    global.SERVICE = {
+      DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) }, DefaultStripeSandboxAdapterService: adapter,
         DefaultPaymentExecutionService: { execute: async request => { captured = request; return request; } } };
     const owner = { ...placementPorts, paymentRepository: () => ({}) }, ports = owner.create();
     const request = { tenant: 't', enterpriseCode: 'e', ownerId: 'buyer', authData: { entCode: 'e' },

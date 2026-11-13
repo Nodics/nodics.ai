@@ -111,6 +111,37 @@ module.exports = {
     },
 
     /**
+     * Completes selected subject preparation after route authentication and
+     * authorization, before business dispatch. The signed context selects only
+     * an exact fresh inventory entry; headers never supply tenant properties.
+     * Reuses startup preparation and its in-flight tenant lock, without polling,
+     * creation replay, event transport or granting caller authority.
+     * @param {Object} request Admitted secured request with verified authData.
+     * @returns {Promise<boolean>} True only after canonical runtime readiness.
+     */
+    ensureAuthenticatedEnterprise: async function (request) {
+        if (CONFIG.get('profileTenantProvisioning')?.enabled !== true) return true;
+        try {
+            const auth = request.authData;
+            if (typeof auth?.tenant !== 'string' || !auth.tenant ||
+                typeof auth.entCode !== 'string' || !auth.entCode || request.tenant !== auth.tenant) throw new Error();
+            if (auth.tenant === (CONFIG.get('defaultTenant') || 'default')) return true;
+            const identity = { code: auth.entCode, active: true, tenant: { code: auth.tenant, active: true } };
+            if (this.isEnterpriseRuntimeReady(identity)) return true;
+            const inventory = await this.fetchEnterprise();
+            const matches = inventory.filter(item => item.code === auth.entCode && item.active === true &&
+                item.tenant?.code === auth.tenant && item.tenant.active === true);
+            if (matches.length !== 1) throw new Error();
+            await this.buildEnterprise(matches);
+            if (!this.isEnterpriseRuntimeReady(matches[0])) throw new Error();
+            return true;
+        } catch {
+            // Provider/inventory errors may contain private configuration or proof.
+            throw new CLASSES.NodicsError('ERR_TNT_PROVISIONING_HELD');
+        }
+    },
+
+    /**
      * Builds selected tenants sequentially and awaits their owning resource services.
      * Cron owns scheduling; tenant initialization requests job creation once.
      * Provisional tenant addressability is not readiness. Failed preparation is

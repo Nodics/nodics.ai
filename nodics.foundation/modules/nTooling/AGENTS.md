@@ -2,7 +2,7 @@
 
 Unreleased shipping data uses owner-specific v001 with no retained-root snapshots.
 `DefaultProjectDataManifestService.validateUnreleasedBaseline` owns reusable
-read-only checks for framework and customer roots. Preserve semantic versions,
+read-only checks for framework and customer roots. Require 0.0.1 for Release 0 Init/Core/Sample,
 canonical checksum/prerequisite validation and isolated versioning fixtures.
 
 Reference packs explicitly marked `nodics.referenceDemo: true` are demo-only.
@@ -213,6 +213,10 @@ an operation. Resolve runtime choices by an explicit server or a unique semantic
 enabled initialization profile by explicit code or a unique template match; missing
 and ambiguous selections fail before acceptance operations. Keep actual customer
 journey choices and deployment container/URL differences in their existing layers.
+For opted-in containers, inherit the standard Compose path, generated directory,
+environment filename and Platform acceptance command from nTooling properties.
+Use the explicit selected-server `build --source-only` option when assembling
+an immutable source image without a runtime database.
 
 nAuth owns `bootstrapIdentity` bindings. Customer-project validation rejects
 direct administrator bootstrap literals in authored source; deployment layers
@@ -285,3 +289,11 @@ Register extracted owner tests in the existing `tooling.testSuites` graph and
 guard basic/full reachability in `fullTestSuiteCoverageContract.test.js`.
 Files present on disk or passing direct invocations are not release-gate adoption.
 Keep customer CI revision selection and application test aliases project-owned.
+
+
+Reject retired role-profile configuration. Ordinary capability leaf overrides
+belong to actual deployment layers; do not require profiles or prohibit a whole
+namespace merely because it appears in a server. Retain demo-composition, secret,
+root-default and installer-owner checks. Static placement success alone is not
+proof of effective default ownership or deployment readiness; see the tooling
+contract's ordinary deployment override section.

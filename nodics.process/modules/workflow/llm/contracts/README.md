@@ -93,6 +93,41 @@ Pricing definition; `processRemoteActionAdapter.test.js` exercises decision and
 claim propagation with the existing isolated Editorial target. These are owner
 regressions, not live Pricing publication or HTTP authentication evidence.
 
+## Native Command Capability Projection
+
+GET `/operations/capabilities` is a private, uncached version-1 read requiring
+`process.backoffice.view`, an employee access token and the existing runtime
+configuration administrator group. It returns only `contractVersion`,
+`newRecording` (`ENABLED|DISABLED|UNAVAILABLE`) and the four `triggerCommands`
+(`create|update|archive|execute`). Each command has `authorization` and
+`receiptInspection` (`AUTHORIZED|DENIED|UNAVAILABLE`). No actor identifiers,
+credentials, record contents, command bodies or executable URLs are returned.
+
+Workflow resolves effective native route metadata through the existing router
+configuration owner, then reuses the real exposure and secured access guards.
+Missing, inactive, changed-version/path or contradictory evidence is unavailable.
+The projection supports the existing canonical v0 client coordinates; a partner
+route migration requires a matching typed client deployment. Permission/group
+and exposure overrides remain in their existing owners, never another permission
+registry. Native command state, CAS, current permissions and domain admission are
+still checked on submission. This advisory read grants no execution or approval.
+
+Original-receipt inspection independently retains its native permission and
+inspection-route checks. Disabling new recording or a command route does not
+remove otherwise authorized history inspection. The configured recording flag
+does not claim that storage or a particular original receipt is healthy/present;
+inspection can still be unavailable or unknown. Reads never initialize journals,
+enable recording, claim work or retry a command. A denied/unavailable projection
+must not become cached authority after scope replacement or a failed refresh.
+
+Projects customize grants, route exposure and `commandReceipts` through normal
+layered configuration. Preserve the private generated journal and original
+actor/input/key protocol when extending presentation. The focused
+`test/processCommandCapabilities.test.js` exercises real native permission,
+token, group and exposure guards, changed/missing authority, legacy admission and
+recording shutdown. Installed-runtime, browser and non-admin role acceptance are
+separate gates.
+
 ## Trigger Command Receipts
 
 `DefaultProcessTriggerCommandReceiptService` wraps only create, update, archive
@@ -114,7 +149,7 @@ fresh persisted state before success/audit. A failed envelope, zero match,
 foreign readback or duplicate creation cannot become a successful receipt.
 Scheduling remains in Cron. Executing an active trigger delegates to the
 existing Workflow start authority; start acknowledgement is not downstream
-business completion. See the [Copilot trigger guide](../../data/docs-v001/records/documentation/workflowDocumentationComponentData.js)
+business completion. See the [scheduled automation guide](../../data/docs-v001/records/documentation/workflowDocumentationRelease002ComponentData.js)
 and the composed/native-live trigger tests in copilotWorkbench.
 
 ## Human Task Command Receipts
@@ -143,7 +178,7 @@ Assignment now matches inspected status, instance, node and prior assignee;
 zero-match, failed/unacknowledged persistence and readback drift cannot produce
 success or assignment audit. Transition readback uses generated pageSize/pageNumber,
 not raw limit. Run task transition tests plus Copilot Process action/native runtime
-tests. See the [full usage and customization guide](../../data/docs-v001/records/documentation/workflowDocumentationComponentData.js).
+tests. See the [full usage and customization guide](../../data/docs-v001/records/documentation/workflowDocumentationRelease002ComponentData.js).
 
 ## Inspection Pagination
 
@@ -258,3 +293,41 @@ after a terminal failure. Do not turn this into a blanket remote replay policy.
 Run both `processRemoteActionAdapter.test.js` and
 `processRemoteActionInspection.test.js`, including lost create/claim/terminal
 acknowledgements, foreign scope, multiple attempts and historical versions.
+
+## Module and publication routing
+
+Remote declarations select `moduleName`, the existing exact `apiName`, a deployment
+connection alias in `target`, and `targetAuthority: { publication: "STAGED" }`
+for publication decisions or `OPERATIONAL` for business commands. Optional exact
+`server` and `environment` strings live in `targetAuthority`. Only STAGED, ONLINE
+and OPERATIONAL are valid publication contexts; physical role codes do not grant
+ownership. Retired `remote.runtimeRole`, unknown fields and absent/malformed
+publication selectors reject before credential lookup or execution-handle creation.
+Declared actions remain inert until explicitly allowlisted; discovery does not
+activate a module or select an action.
+
+Dispatch uses existing nService/DMS module ownership resolution. It preserves the
+exact POST API, single attempt, scoped runtime bearer, tenant and signed enterprise.
+The current allowlist's module/API/target/publication selector is rechecked before
+creating an expiring handle. Callbacks receive only instanceCode/executionCode;
+claims still bind the stored action, source instance, deployment, completed task,
+actor and decision. Claim CAS and terminal handle retirement remain mandatory.
+No retries, automatic migrations or rewritten signed identity are introduced.
+
+The separate CMS `publicationDecisionCallback.target` uses the same explicit
+STAGED selector and fixed CMS API `/publication/process/decision`; its existing
+payload contract remains unchanged. It is not the opaque remote-action protocol.
+It has no WCMS_STAGED fallback. Missing explicit connection or wrong publication
+fails before dispatch. Configure the existing target's `targetAuthority`, never a
+new role profile. Connection defaults do not enable an action or import a graph.
+
+Trigger list controls are separate from record filters. The runtime list delegate
+uses `DefaultProcessOperationsInspectionService.listTriggers`, which preserves the
+original tenant/authData, existing bounded `listLimit`, `pageNumber`/`pageSize` and
+stable code sort. Only `code`, `definitionCode`, `triggerType`, `cronJobCode` and
+`status` text filters are projected. `limit` is not a stored field predicate.
+A genuine positive empty array remains empty. Missing services/envelopes,
+negative or contradictory responses, foreign filtered rows, duplicate identities
+and oversized/inconsistent results fail with `ERR_PROCESS_00014`; no read starts,
+creates, updates or replays a trigger. Current list output is bounded retrieved
+metadata, independently of the Cron scheduler and Process runtime admission.

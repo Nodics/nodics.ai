@@ -153,3 +153,15 @@ partition and the purchasing Enterprise are separate concepts.
 
 Run `node --test nodics.commerce/modules/payment/modules/paymentCore/test/paymentParticipantContextContract.test.js`
 for typed-owner propagation, private-field stripping and conflicting replay.
+
+## Provider selection
+
+Payment Core owns `providerSelection` and `providerBindings`. CARD/WALLET default
+to the existing offline `stripe-sandbox` adapter; LOYALTY_REWARD selects the Loyalty
+provider. These defaults do not activate a provider or qualify real settlement.
+Projects may select an implemented provider through explicit configuration overrides.
+Unknown providers, unavailable adapters and unsupported method bindings fail closed.
+Checkout delegates selection to Payment and preserves the original provider code
+for capture and compensation after configuration changes. Offline labels, activation
+gates and original-capture refund authority remain unchanged. Run
+`test/paymentProviderSelectionContract.test.js` and the Checkout payment regressions.

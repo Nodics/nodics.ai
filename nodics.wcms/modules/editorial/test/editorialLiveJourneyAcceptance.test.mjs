@@ -51,11 +51,30 @@ function fixture(t, change = (_route, body) => body, deny = '') {
         else if (route.endsWith('/versions')) body = [{ version: 1, contributionChecksum: 'fixture-checksum', graph }];
         else if (request.method === 'PUT') {
           body = JSON.parse(request.body);
-          if (route.endsWith('/editorialarticle')) article = body;
-          if (route.endsWith('/editorialarticlelocalization')) localization = body;
+          assert.ok(route.endsWith('/editorialauthor') || route.endsWith('/editorialtaxonomyterm'));
+        } else if (route.endsWith('/authoring/articles/create')) {
+          assert.ok(request.headers['Idempotency-Key'].startsWith('editorial-create-'));
+          const input = JSON.parse(request.body);
+          assert.equal(input.model.status, undefined);
+          assert.equal(input.model.revision, undefined);
+          assert.equal(input.model.accessGroups, undefined);
+          article = { ...input.model, revision: 1, status: 'DRAFT' };
+          body = article;
+        } else if (route.endsWith('/authoring/articles/save')) {
+          const input = JSON.parse(request.body);
+          assert.equal(input.expectedRevision, 1);
+          assert.equal(input.articleCode, article.code);
+          assert.deepEqual(input.changes, {});
+          assert.equal(input.localization.localeCode, 'en');
+          article = { ...article, revision: 2 };
+          localization = { ...input.localization.changes, code: article.code + '-en',
+            articleCode: article.code, localeCode: 'en', revision: 2, status: 'READY' };
+          body = { contractVersion: 1, outcome: 'SAVED_DRAFT', commandId: request.headers['Idempotency-Key'],
+            fromRevision: 1, toRevision: 2, article, localizations: [localization] };
         } else if (route.endsWith('/validate')) body = { valid: true, article: { ...article, status: 'READY' } };
         else if (route.endsWith('/submit')) {
-          assert.equal(JSON.parse(request.body).article.status, 'READY');
+          assert.equal(JSON.parse(request.body).article.revision, 2);
+          assert.equal(JSON.parse(request.body).localizations, undefined);
           body = { workflowInstanceCode: 'partner-instance' };
         } else if (route.endsWith('/tasks')) {
           assert.equal(parsed.searchParams.get('instanceCode'), 'partner-instance');
@@ -68,9 +87,9 @@ function fixture(t, change = (_route, body) => body, deny = '') {
         } else if (route.includes('/editorialarticle/code/')) body = { ...article, status: 'APPROVED' };
         else if (route.endsWith('/publish')) {
           assert.equal(JSON.parse(request.body).article.workflowInstanceCode, 'partner-instance');
-          body = { state: 'ONLINE', code: `editorial-${article.code}-r1`, revision: 1 };
+          body = { state: 'ONLINE', code: `editorial-${article.code}-r2`, revision: 1 };
         } else if (route.endsWith('/withdraw')) {
-          assert.deepEqual(JSON.parse(request.body), { publicationCode: `editorial-${article.code}-r1`, expectedRevision: 1 });
+          assert.deepEqual(JSON.parse(request.body), { publicationCode: `editorial-${article.code}-r2`, expectedRevision: 1 });
           withdrawn = true;
           body = { state: 'WITHDRAWN' };
         } else if (route.includes('/delivery/')) {
@@ -102,7 +121,10 @@ test('both mutation flags require literal true before any I/O', async () => {
 test('independent fixture exercises all authoring, Process, publishing and Online projections', async t => {
   const f = fixture(t);
   await run(f.options);
-  assert.equal(f.calls.filter(c => c.request.method === 'PUT').length, 4);
+  assert.equal(f.calls.filter(c => c.request.method === 'PUT').length, 2);
+  assert.equal(f.calls.filter(c => c.route.endsWith('/authoring/articles/create')).length, 1);
+  assert.equal(f.calls.filter(c => c.route.endsWith('/authoring/articles/save')).length, 1);
+  assert.ok(!f.calls.some(c => c.request.method === 'PATCH' || c.route.endsWith('/editorialarticlelocalization')));
   assert.equal(f.calls.filter(c => c.route.endsWith('/claim')).length, 1);
   assert.equal(f.calls.filter(c => c.route.endsWith('/complete')).length, 1);
   assert.equal(f.calls.filter(c => c.route.endsWith('/withdraw')).length, 1);
@@ -124,6 +146,13 @@ test('each provenance and journey assertion rejects incorrect success evidence',
     ['/versions', body => [{ ...body[0], graph: {} }]],
     ['/versions', body => [{ ...body[0], version: 2 }]],
     ['/authenticate', () => ({})],
+    ['/authoring/articles/create', body => ({ ...body, code: 'foreign' })],
+    ['/authoring/articles/create', body => ({ ...body, revision: 2 })],
+    ['/authoring/articles/save', body => ({ ...body, commandId: 'foreign' })],
+    ['/authoring/articles/save', body => ({ ...body, outcome: 'UNKNOWN' })],
+    ['/authoring/articles/save', body => ({ ...body, toRevision: 3 })],
+    ['/authoring/articles/save', body => ({ ...body, localizations: [] })],
+    ['/authoring/articles/save', body => ({ ...body, localizations: [{ ...body.localizations[0], revision: 1 }] })],
     ['/validate', () => ({ valid: false })],
     ['/validate', () => ({ valid: true, article: { status: 'DRAFT' } })],
     ['/submit', () => ({})],

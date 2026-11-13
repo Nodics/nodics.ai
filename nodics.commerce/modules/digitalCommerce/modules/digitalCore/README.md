@@ -180,3 +180,5 @@ The explicit [Enterprise capability definitions](llm/contracts/enterprise-partic
 retain internal settings groups without adding a selectable profile. Permission
 vocabulary is a pinned Init prerequisite, not dependent on record filename order.
 Installing its definitions assigns nobody and does not enable business policies.
+
+Documentation provenance release 0.0.4 preserves article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](data/manifest.json) selects it; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.

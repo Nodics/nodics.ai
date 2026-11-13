@@ -53,3 +53,17 @@ test("Digital owns an explicit participant permission and access-group release",
         file,
       );
 });
+
+test("participant transactions declare their permission vocabulary before group creation", () => {
+  const source = require("../../../../../../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService");
+  const owner = { ...source, configuration: () => ({}) };
+  for (const sectionCode of ["permissionCatalogue", "bundleParticipantPermissions"]) {
+    const target = manifest.sections[sectionCode];
+    const reference = (manifest.sections.participantTransactionAccess.prerequisites || [])
+      .find(value => value.moduleName === "digitalCore" && value.sectionCode === sectionCode);
+    assert.ok(reference, sectionCode);
+    assert.equal(reference.version, target.version);
+    assert.equal(reference.checksum, owner.releaseFileChecksum(target.files, owner.validatePrerequisites(target.prerequisites)));
+    assert.equal(reference.partition, "DEFAULT");
+  }
+});

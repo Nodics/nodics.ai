@@ -28,7 +28,7 @@ const capability = {
         "contractVersion": 0
     },
     "requiredPermissions": [
-        "media.storage.policy.view"
+        "media.content.read"
     ],
     "navigation": [
         {
@@ -52,8 +52,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Review governed media overview, upload entry points, recent uploads, attention states, provider health, usage alerts, and lifecycle signals.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "what-media-means-in-nodics"
+                "documentationRoute": "/docs/framework/wcms-media-management",
+                "documentationFragment": "wcmsMediaManagement-2-business-perspective"
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
@@ -81,8 +81,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Search, filter, upload, preview, inspect, download, retire, restore, and classify governed media assets.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "current-implementation-scope"
+                "documentationRoute": "/docs/framework/wcms-media-operations-runbook",
+                "documentationFragment": "wcmsMediaOperationsRunbook-5-publication-and-dr"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -286,8 +286,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Upload, preview, search, select, and inspect media records while media owns storage, metadata, and delivery policy.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "current-implementation-scope"
+                "documentationRoute": "/docs/framework/wcms-media-operations-runbook",
+                "documentationFragment": "wcmsMediaOperationsRunbook-5-publication-and-dr"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -316,8 +316,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Review and manage purpose-based media folder policy, upload constraints, storage routing, and lifecycle boundaries.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "storage-provider-configuration"
+                "documentationRoute": "/docs/framework/wcms-media-operations-runbook",
+                "documentationFragment": "wcmsMediaOperationsRunbook-4-storage-and-provider-model"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -346,8 +346,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Manage ordered media sets such as galleries while callers reference media-set identity instead of duplicating file metadata.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "how-product-galleries-should-use-media-sets"
+                "documentationRoute": "/docs/framework/wcms-media-management",
+                "documentationFragment": "wcmsMediaManagement-2-business-perspective"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -375,8 +375,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Manage allowed media formats, MIME policy, extensions, and conversion or delivery expectations through media configuration.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "core-schemas"
+                "documentationRoute": "/docs/framework/wcms-media-management",
+                "documentationFragment": "wcmsMediaManagement-2-business-perspective"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -405,8 +405,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Inspect which business records reference media items or media sets without transferring ownership away from the caller module.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "reference-lookup-for-caller-modules"
+                "documentationRoute": "/docs/framework/wcms-media-management",
+                "documentationFragment": "wcmsMediaManagement-2-business-perspective"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -434,8 +434,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Inspect physical placement evidence for logical media across active production and replication locations without exposing raw storage keys.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "active-and-replication-media-location-model"
+                "documentationRoute": "/docs/framework/wcms-media-operations-runbook",
+                "documentationFragment": "wcmsMediaOperationsRunbook-4-storage-and-provider-model"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -464,8 +464,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Track failed, scheduled, escalated, and synchronized media replication obligations for production and DR targets.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "failed-replication-trigger"
+                "documentationRoute": "/docs/framework/wcms-media-operations-runbook",
+                "documentationFragment": "wcmsMediaOperationsRunbook-5-publication-and-dr"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -482,7 +482,7 @@ const capability = {
             "group": { "id": "media-management", "label": "Media Management", "order": 300 },
             "perspectives": ["operations"],
             "contexts": ["environment", "tenant", "enterprise"],
-            "help": { "summary": "Review generic physical artifact identity, lifecycle, publishability, owner evidence, and provider placement without exposing raw storage keys.", "documentationRoute": "/docs/reference/media", "documentationFragment": "physical-artifact-model" },
+            "help": { "summary": "Review generic physical artifact identity, lifecycle, publishability, owner evidence, and provider placement without exposing raw storage keys.", "documentationRoute": "/docs/framework/wcms-media-operations-runbook", "documentationFragment": "wcmsMediaOperationsRunbook-4-storage-and-provider-model" },
             "featureState": "PREVIEW",
             "requiredPermissions": ["media.storage.policy.view"],
             "workbenchTarget": { "moduleName": "media", "schemaName": "mediaPhysicalArtifact" }
@@ -496,7 +496,7 @@ const capability = {
             "group": { "id": "media-management", "label": "Media Management", "order": 300 },
             "perspectives": ["operations"],
             "contexts": ["environment", "tenant", "enterprise"],
-            "help": { "summary": "Review physical transfer manifests that bind publishable business data to required media artifacts for Staged, Online, and DR movement.", "documentationRoute": "/docs/reference/media", "documentationFragment": "transfer-manifest" },
+            "help": { "summary": "Review physical transfer manifests that bind publishable business data to required media artifacts for Staged, Online, and DR movement.", "documentationRoute": "/docs/framework/wcms-media-operations-runbook", "documentationFragment": "wcmsMediaOperationsRunbook-5-publication-and-dr" },
             "featureState": "PREVIEW",
             "requiredPermissions": ["media.storage.policy.view"],
             "workbenchTarget": { "moduleName": "media", "schemaName": "mediaTransferManifest" }
@@ -510,7 +510,7 @@ const capability = {
             "group": { "id": "media-management", "label": "Media Management", "order": 300 },
             "perspectives": ["operations"],
             "contexts": ["environment", "tenant", "enterprise"],
-            "help": { "summary": "Review target import, audit, replication, cleanup, and rollback receipts for physical media artifacts.", "documentationRoute": "/docs/reference/media", "documentationFragment": "publication-receipts" },
+            "help": { "summary": "Review target import, audit, replication, cleanup, and rollback receipts for physical media artifacts.", "documentationRoute": "/docs/framework/wcms-media-operations-runbook", "documentationFragment": "wcmsMediaOperationsRunbook-5-publication-and-dr" },
             "featureState": "PREVIEW",
             "requiredPermissions": ["media.storage.policy.view"],
             "workbenchTarget": { "moduleName": "media", "schemaName": "mediaPublicationReceipt" }
@@ -526,8 +526,8 @@ const capability = {
             "contexts": ["environment", "tenant", "enterprise"],
             "help": {
                 "summary": "Review media cleanup candidates before passive marking or approved physical deletion across Staged, Online, and DR locations.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "media-cleanup-lifecycle"
+                "documentationRoute": "/docs/framework/wcms-media-operations-runbook",
+                "documentationFragment": "wcmsMediaOperationsRunbook-6-operations"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": ["media.cleanup.view"],
@@ -544,8 +544,8 @@ const capability = {
             "contexts": ["environment", "tenant", "enterprise"],
             "help": {
                 "summary": "Operate cleanup scans, passive retention jobs, approval evidence, and cleanup audit outcomes through governed Media APIs.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "media-cleanup-jobs"
+                "documentationRoute": "/docs/framework/wcms-media-operations-runbook",
+                "documentationFragment": "wcmsMediaOperationsRunbook-6-operations"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": ["media.cleanup.view"],
@@ -572,8 +572,8 @@ const capability = {
             ],
             "help": {
                 "summary": "Review storage providers, access URLs, delivery, downloads, and private/public media behavior without exposing provider secrets or raw paths.",
-                "documentationRoute": "/docs/reference/media",
-                "documentationFragment": "delivering-media-safely"
+                "documentationRoute": "/docs/framework/wcms-media-storage-delivery",
+                "documentationFragment": "wcmsMediaStorageDelivery-1-delivery-flow"
             },
             "featureState": "PREVIEW",
             "requiredPermissions": [
@@ -585,8 +585,8 @@ const capability = {
 
 const defaultMediaHelp = {
     summary: "Review governed media lifecycle operations through the nMedia-owned storage, policy, reference, publication, and delivery contracts.",
-    documentationRoute: "/docs/reference/media",
-    documentationFragment: "current-implementation-scope"
+    documentationRoute: "/docs/framework/wcms-media-operations-runbook",
+    documentationFragment: "wcmsMediaOperationsRunbook-5-publication-and-dr"
 };
 
 module.exports = {

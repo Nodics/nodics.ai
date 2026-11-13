@@ -32,7 +32,7 @@ module.exports = {
   /** Reads exact committed accounting evidence through existing runtime-credential transport, never service flags. */
   source: async function (scope, body, p) {
     const invocation = { local: false, moduleName: "loyaltyApi", connectionName: p.sourceConnectionName,
-      targetAuthority: { runtimeRole: "LOYALTY" }, apiName: "/internal/transfers/notification-source", methodName: "POST",
+      targetAuthority: { publication: "OPERATIONAL" }, apiName: "/internal/transfers/notification-source", methodName: "POST",
       tenant: scope.tenant, request: { tenant: scope.tenant }, requestBody: { ...body.source, channel: body.channel },
       requireInternalAuth: true, timeoutMs: p.timeoutMs, maxAttempts: 1, maxResponseBytes: p.maxResponseBytes, followRedirects: false,
       secureTransport: { required: true, allowInsecureLoopback: p.allowInsecureLoopback } };

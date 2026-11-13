@@ -88,9 +88,18 @@ module.exports = {
         this.LOG.debug('Generating unique hash key');
         try {
             request.finalData = {};
+            let rowNumber = 0;
             do {
                 let data = request.models.shift();
-                request.finalData[UTILS.generateHash(JSON.stringify(data))] = data;
+                rowNumber++;
+                const key = UTILS.generateHash(JSON.stringify(data));
+                // The governed file validator needs every source row, including
+                // byte-identical rows. Keep legacy release finalization unchanged.
+                const recordKey = request.header?.options?.genericSchemaImport === true &&
+                    Object.prototype.hasOwnProperty.call(request.finalData, key)
+                    ? key + ':' + rowNumber
+                    : key;
+                request.finalData[recordKey] = data;
             } while (request.models.length > 0);
             if (SERVICE.DefaultImportDiagnosticsService) {
                 SERVICE.DefaultImportDiagnosticsService.increment(request, 'recordsFinalized', Object.keys(request.finalData).length);

@@ -38,7 +38,12 @@ function fixture(t, { schemaName = 'permission', operation = 'ensureReferenceAll
             versioningPolicy: 'NONE', publicationPolicy: 'NONE', initialPublicationPolicy: 'NONE', removalPolicy: 'RETAIN',
             files: Object.fromEntries(Object.entries(sources).map(([file, source]) => [file, crypto.createHash('sha256').update(source).digest('hex')])) }
     } }));
-    const state = require('./helpers/releaseExecution')({ modules: { seedOwner: { name: 'seedOwner', path: root } }, runtimeRole: 'PLATFORM' });
+    const modules = {
+        seedOwner: { name: 'seedOwner', path: root },
+        profile: { name: 'profile', path: path.join(root, 'profile'), rawSchema: { [schemaName]: { model: true } } }
+    };
+    const state = require('./helpers/releaseExecution')({ modules, runtimeRole: 'PLATFORM' });
+    state.publication = 'OPERATIONAL';
     const service = state.service;
     SERVICE.DefaultDataReleaseService = service;
     const targetName = 'Default' + schemaName[0].toUpperCase() + schemaName.slice(1) + 'Service';

@@ -176,7 +176,7 @@ module.exports = {
         if (!this.identifier(storeCode)) throw new Error('Explicit Store code is invalid');
         const policy = structuredClone(CONFIG.get('cart')?.merchantScope?.storeTarget), snapshot = this.state(r);
         if (!this.identifier(policy?.connectionName) || !policy.targetAuthority || typeof policy.targetAuthority !== 'object' ||
-            Array.isArray(policy.targetAuthority) || !this.identifier(policy.targetAuthority.runtimeRole) ||
+            Array.isArray(policy.targetAuthority) || (policy.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(policy.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
             !Number.isSafeInteger(policy.timeoutMs) || policy.timeoutMs < 1)
             throw new Error('Store placement transport is unavailable');
         const token = NODICS.getInternalAuthToken(r.tenant);

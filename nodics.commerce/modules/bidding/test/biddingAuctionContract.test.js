@@ -237,7 +237,7 @@ test.beforeEach(() => {
   product = { productCode: "bundle", variantCodes: ["unit"], price: { currency: "POINTS", unitAmount: "10" },
     startDate: new Date(clock - 1000).toISOString(), endDate: new Date(clock + 10000).toISOString(),
     localizedAttributes: { commerceBidding: { enabled: true, mode: "AUCTION", publicationCode: "publication-1", sellerRef: ref("seller") } } };
-  global.CONFIG = { get: (key) => key === "bidding" ? policy : key === "runtimeRole" ? "COMMERCE" : undefined };
+  global.CONFIG = { get: (key) => key === "bidding" ? policy : key === "runtimeRole" ? { code: "COMMERCE", publication: "OPERATIONAL" } : undefined };
   global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
   global.SERVICE = {
     DefaultBiddingService: negotiations, DefaultBiddingIdentityService: identities, DefaultBiddingOfferService: offers,
@@ -252,7 +252,7 @@ test.beforeEach(() => {
     DefaultExactAmountService: exact, DefaultNegotiatedPriceService: pricing,
     DefaultProductDiscoveryService: { detail: async () => ({ product: structuredClone(product) }) },
     DefaultSecuredRequestPipelineService: { getGrantedPermissions: () => grants, isPermissionGranted: (p, g) => g.includes(p) },
-    DefaultModuleService: { invokeModule: async (r) => r.apiName === "/customer/identity"
+    DefaultModuleService: {isLocalModuleActive: moduleName => ["bidding", "profile"].includes(moduleName),  invokeModule: async (r) => r.apiName === "/customer/identity"
       ? { data: { contractVersion: 1, tenant: r.tenant, enterpriseCode: r.header["X-Enterprise-Code"],
         customer: { code: r.header.Authorization.slice(7), loginId: r.header.Authorization.slice(7) } } }
       : { data: { principalCode: r.header.Authorization.slice(7), scopes: grants.map((p) => ({ permissionCode: p,
@@ -262,7 +262,7 @@ test.beforeEach(() => {
   SERVICE.DefaultModuleService.invokeModule = async call => {
     if (call.apiName !== '/internal/auctions/close-due') return invoke(call);
     assert.equal(call.header.Authorization, 'Bearer runtime');
-    assert.equal(call.targetAuthority.runtimeRole, 'COMMERCE');
+    assert.equal(call.targetAuthority.publication, 'OPERATIONAL');
     return require('../src/controller/defaultBiddingController').closeDueAuctions({ ...scheduler(),
       httpRequest: { body: call.requestBody, headers: { authorization: call.header.Authorization } } });
   };
@@ -462,7 +462,18 @@ test('real Profile auction resolver and shared recipient authority compose with 
     return structuredClone(db[service]?.find(row => row.code === query.code));
   } };
   SERVICE.DefaultEnterpriseMembershipService = { resolve: async row => ({ identity: { recordId: row._id }, person: { loginId: row.loginId } }),
-    inventory: async () => [], authority: () => 'authority' };
+    locator: (tenant, kind, row) => {
+      assert.equal(tenant, 'test'); assert.equal(kind, 'EMPLOYEE');
+      return { tenantCode: tenant, recordKind: kind, recordId: row._id };
+    },
+    anchor: async identity => ({ identity, person: structuredClone(db.DefaultEmployeeService[0]) }),
+    read: async (service, tenant, query) => {
+      assert.equal(service, 'DefaultEnterpriseAccessAssignmentService'); assert.equal(tenant, 'authority');
+      assert.deepEqual(query, { enterpriseCode: 'buyer-enterprise', 'membership.identity.recordId': 'recipient-id',
+        'membership.identity.tenantCode': 'test', 'membership.identity.recordKind': 'EMPLOYEE' });
+      return undefined;
+    },
+    inventory: async () => { throw new Error('Native identity must use exact assignment lookup'); }, authority: () => 'authority' };
   SERVICE.DefaultIdentityCatalogueService = { codes: codes => assert.ok(Array.isArray(codes)), requirePermissions: async codes => assert.deepEqual(codes, ['commerce.bid.participate']) };
   SERVICE.DefaultUserGroupGovernanceService = { validateGraph: rows => assert.equal(rows.length, 1), validatePermissions: async rows => assert.equal(rows[0].permissions[0], 'commerce.bid.participate') };
   SERVICE.DefaultSecuredRequestPipelineService.getRouteActionAuthorizationConfig = () => ({});

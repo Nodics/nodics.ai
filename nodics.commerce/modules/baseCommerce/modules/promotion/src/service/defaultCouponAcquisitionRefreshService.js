@@ -35,7 +35,7 @@ module.exports = {
             p.startNode !== 'DefaultCouponAcquisitionRefreshService.run' ||
             p.target?.moduleName !== 'promotion' || p.target.apiName !== '/internal/acquisition-report/refresh' ||
             typeof p.target.connectionName !== 'string' || !p.target.connectionName || p.target.apiVersion !== 'v0' ||
-            !same(p.target.targetAuthority, { runtimeRole: 'COMMERCE' }) ||
+            (p.target.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(p.target.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
             !this.integer(p.target.timeoutMs, p.validation.timeoutMs) || p.target.maxAttempts !== 1) this.fail();
         const keys = ['tenant', 'principalEnterpriseCode', 'serviceId', 'projectCode', 'environmentCode', 'serverCode', 'instanceCode', 'assignmentCode'];
         if (p.callers.some(c => !c || Object.keys(c).length !== keys.length || keys.some(key => typeof c[key] !== 'string' || !c[key]))) this.fail();

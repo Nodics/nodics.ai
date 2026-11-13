@@ -286,6 +286,7 @@ module.exports = {
                     tenant: request.tenant,
                     definitions: jobs
                 }).then(success => {
+                    if (success.result.length === 0 && success.failed.length === 1 && success.failed[0]?.code === 'ERR_JOB_00006') { reject(success.failed[0]); return; }
                     let code = 'SUC_JOB_00000';
                     if (success.result.length > 0 && success.failed.length > 0) {
                         code = 'SUC_JOB_00001';

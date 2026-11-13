@@ -56,6 +56,11 @@ module.exports = {
     /** Validates and normalizes one supported policy value set. */
     normalize: function (policy) {
         let configuration = this.getConfiguration();
+        const presentation = configuration.sessionRecoveryPresentation;
+        if (!presentation || !['lockedMessage', 'expiredMessage'].every(key =>
+            typeof presentation[key] === 'string' && presentation[key].trim() && presentation[key].length <= 1024)) {
+            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Axis session recovery presentation is incomplete');
+        }
         let minimum = Number(configuration.minimumIdleTimeoutSeconds || 60);
         let maximum = Number(configuration.maximumIdleTimeoutSeconds || 86400);
         let timeout = Number(policy.idleTimeoutSeconds);
@@ -73,7 +78,11 @@ module.exports = {
             contractVersion: Number(configuration.contractVersion !== undefined ? configuration.contractVersion : 1),
             screenLockEnabled: policy.screenLockEnabled,
             idleTimeoutSeconds: timeout,
-            recentNavigationLimit: recentLimit
+            recentNavigationLimit: recentLimit,
+            sessionRecoveryPresentation: {
+                lockedMessage: presentation.lockedMessage,
+                expiredMessage: presentation.expiredMessage
+            }
         };
     },
     /** Returns the configured fail-safe policy when no persistent override exists. */
@@ -130,6 +139,8 @@ module.exports = {
             updatedAt: new Date(),
             updatedBy: actor
         });
+        // Presentation is source-owned configuration, never a copied persistent policy default.
+        delete model.sessionRecoveryPresentation;
         let store = this.getStore();
         let persistenceRequest = {
             tenant: this.getTenant(request),

@@ -19,7 +19,7 @@
 module.exports = {
     RuntimeActivationState: {
         _options: { name: 'RuntimeActivationState', separator: '|', endianness: 'BE', ignoreCase: false, freez: false },
-        definition: ['ACTIVATING']
+        definition: ['ACTIVATING', 'STALE']
     },
     ClassType: {
         _options: {

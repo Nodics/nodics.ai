@@ -46,6 +46,20 @@ global.SERVICE = {
     assert.equal((await operations.sideBySide(request))[0].values.ar.state, 'REVIEW');
     assert.deepEqual((await operations.analytics(request)).transitionCounts, { APPROVED: 1, DRAFT: 1, REVIEW: 1 });
 
+    assert.deepEqual(await operations.memory(request), { enabled: true, entries: [
+        { namespace: 'common', key: 'welcome', source: 'Welcome', locale: 'en', translation: 'Welcome', scope: 'STANDARD' }
+    ] });
+    await assert.rejects(operations.memory({ ...request, locales: [{ $ne: null }] }), { code: 'ERR_LOC_00002' });
+    repository.listReleases = async input => {
+        assert.deepEqual([input.tenant, input.scopeCode, input.channel], ['tenant-a', 'sample', 'web']);
+        return [{ version: 'a1', locale: 'en', createdAt: '2026-01-01T00:00:00Z', entries: { internal: true } }];
+    };
+    repository.getOnline = async (scope, input) => scope === 'sample' && input.locale === 'en' ? { version: 'a1' } : undefined;
+    assert.deepEqual(await operations.releases({ ...request, scopeCode: 'sample', channel: 'web' }), [
+        { version: 'a1', locale: 'en', createdAt: '2026-01-01T00:00:00Z', active: true }
+    ]);
+    await assert.rejects(operations.releases({ ...request, scopeCode: 'sample', channel: { $ne: null } }), { code: 'ERR_LOC_00002' });
+
     assert.throws(() => overrides.validate({ tenant: 'tenant-a', scopeType: 'TENANT' }, keys[1]), error => error.code === 'ERR_LOC_00002' || error.code === 'ERR_LOC_00006');
     assert.deepEqual(overrides.validate({ tenant: 'tenant-a', scopeType: 'TENANT', authData: { groups: ['localizationProtectedAdminUserGroup'] } },
         Object.assign({}, keys[1], { overrideScopes: ['STANDARD', 'TENANT'] })), { scopeType: 'TENANT', scopeCode: 'tenant-a' });

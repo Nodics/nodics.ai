@@ -37,7 +37,7 @@ const rules = [
     {
         code: 'agoraWomenRanking',
         tenant: 'default',
-        storeCode: 'agoraMainStore',
+        storeCode: 'agoraApparelStore',
         locale: 'en',
         scopeType: 'CATEGORY',
         categoryCode: 'agoraWomen',
@@ -78,7 +78,7 @@ test('Commerce Search schemas own rules versions and projections', () => {
 test('Commerce Search ranks pinned boosted and buried products for a category scope', async () => {
     let result = await ranking.rank({
         tenant: 'default',
-        storeCode: 'agoraMainStore',
+        storeCode: 'agoraApparelStore',
         locale: 'en',
         query: { categoryCode: 'agoraWomen' },
         authData: { groups: ['customerUserGroup'] }
@@ -91,7 +91,7 @@ test('Commerce Search ranks pinned boosted and buried products for a category sc
         'agoraSilkScarf'
     ]);
     assert.deepEqual(ruleRequests[0].authData.groups, ['serviceAccountUserGroup']);
-    assert.deepEqual(ruleRequests[0].query.storeCode, 'agoraMainStore');
+    assert.deepEqual(ruleRequests[0].query.storeCode, 'agoraApparelStore');
 });
 
 test('Commerce Search ignores unpublished non-matching or expired rules and preserves original order', async () => {
@@ -103,7 +103,7 @@ test('Commerce Search ignores unpublished non-matching or expired rules and pres
 
     let result = await ranking.rank({
         tenant: 'default',
-        storeCode: 'agoraMainStore',
+        storeCode: 'agoraApparelStore',
         locale: 'en',
         now: '2026-08-15T00:00:00.000Z',
         query: { categoryCode: 'agoraWomen' }
@@ -171,10 +171,10 @@ test('indexed ranking composes locale scope through the real Elastic adapter', a
     };
     elastic.defineDefaultDoSearch(model);
     SERVICE.DefaultCommerceSearchRuleProjectionService = { doSearch: request => model.doSearch(request) };
-    const request = { tenant: 'default', storeCode: 'agoraMainStore', locale: 'en', query: {} };
+    const request = { tenant: 'default', storeCode: 'agoraApparelStore', locale: 'en', query: {} };
     assert.deepEqual((await ranking.loadRules(request)).map(row => row.code), ['exact', 'missing', 'null']);
     assert.deepEqual(queries[0], { bool: { filter: [
-        { term: { tenant: 'default' } }, { term: { storeCode: 'agoraMainStore' } },
+        { term: { tenant: 'default' } }, { term: { storeCode: 'agoraApparelStore' } },
         { term: { status: 'CURRENT' } }, { bool: { should: [
             { term: { locale: 'en' } }, { bool: { must_not: [{ exists: { field: 'locale' } }] } }
         ], minimum_should_match: 1 } }
@@ -186,6 +186,6 @@ test('indexed ranking composes locale scope through the real Elastic adapter', a
 });
 
 test('generated model lookup retains model locale operators', async () => {
-    await ranking.loadRules({ tenant: 'default', storeCode: 'agoraMainStore', locale: 'en', query: {} });
+    await ranking.loadRules({ tenant: 'default', storeCode: 'agoraApparelStore', locale: 'en', query: {} });
     assert.deepEqual(ruleRequests[0].query.$or, [{ locale: 'en' }, { locale: { $exists: false } }, { locale: null }]);
 });

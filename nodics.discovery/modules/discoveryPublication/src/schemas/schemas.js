@@ -201,3 +201,6 @@ module.exports = {
     },
   },
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.discoveryPublication.discoveryGeneration.backoffice = Object.assign({ description: "Private generation publication and pending-writer evidence. Inspect through Discovery owners; a pending generation is not active content." }, module.exports.discoveryPublication.discoveryGeneration.backoffice);

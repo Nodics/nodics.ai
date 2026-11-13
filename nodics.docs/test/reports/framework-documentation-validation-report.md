@@ -1,7 +1,7 @@
 # Documentation Validation Readiness Report
 
 Generated At: 2026-08-26T00:00:00.000Z
-Release: 0.0.2
+Release: 0.0.4
 Source: nodics.docs/data/manifest.json
 Owner: nodics.docs
 
@@ -35,4 +35,4 @@ No blocking or advisory issues were found.
 
 ## Integrity
 
-Checksum: fd5e32f440616baa4150e0c00fe53418795dc5bb1bac49ea0f8e8099134dbdcd
+Checksum: 0c1b8618e41ae004441eb93b0a8eb1322abd17326d019ea81db33c52848da3f5

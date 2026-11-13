@@ -64,12 +64,12 @@ global.CONFIG = { get: key => ({
 }[key]) };
 global.NODICS = {
     getActiveModules: () => ['cms', 'utility', 'remoteProfile'],
+    getModule: name => ({rawSchema: name === 'cms' ? {
+        cmsPage: {model:true, service:{enabled:true}, authorityContext:'wcms.content'},
+        cmsHelper: {model:false,service:{enabled:false}}
+    } : {}}),
     getRawModule: name => ({ parent: 'nodics.wcms', canonicalIdentity: 'nodics.wcms/modules/' + name,
         path: name === 'cms' ? fixtureModuleRoot : undefined,
-        rawSchema: name === 'cms' ? {
-            cmsPage: { model: true, service: { enabled: true }, authorityContext: 'wcms.content' },
-            cmsHelper: { model: false, service: { enabled: false } }
-        } : {},
         metaData: { version: '0.0.0', prefix: name === 'cms' ? 'content' : undefined, nodics: Object.assign({
             runtime: { router: name === 'cms' }, owns: ['router']
         }, name === 'cms' ? { displayName: 'Content Management' } : {}) } }),

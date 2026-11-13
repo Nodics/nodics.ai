@@ -164,3 +164,11 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Publication defaults use nConfig's explicit publication-context binding in this
+module's ordinary properties, not runtime role profiles. Keep Staged source and
+Online target behavior isolated when changing runtime placement. Connections,
+installed qualification and approvals remain independently required. Run
+`nodics.wcms/test/wcmsPublicationConfiguration.test.js` from Framework root.
+
+Cross-owner image readiness belongs to `DefaultMediaDependencyReadinessService`; do not duplicate its pointer/immutable-version/byte checks in consumers. The legacy `cmsMedia_` publication identity remains unchanged. Consumer selection and source-revision checks remain with their domain owner.

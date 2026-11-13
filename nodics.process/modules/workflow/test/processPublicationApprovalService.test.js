@@ -82,7 +82,7 @@ const request = { tenant: 'default', publicationApproval: { publicationCode: 'ho
     assert.strictEqual(definition, undefined, 'release drift must not be bypassed');
     installError = undefined;
     await service.ensureDefinition(request);
-    existing = { code: service.instanceCode('home-v2', 4), status: 'WAITING' };
+    existing = { code: service.instanceCode('home-v2', 4), status: 'WAITING', definitionCode: 'cmsPublicationApproval', context: { publicationCode: 'home-v2', publicationRevision: 4 } };
     let replay = await service.start(request);
     assert.strictEqual(replay.data.replay, true);
     let diagnostic = await service.diagnose({ tenant: 'default', authData: {}, runtimeOperation: {
@@ -96,7 +96,18 @@ const request = { tenant: 'default', publicationApproval: { publicationCode: 'ho
     tasks = [{ code: 'approval-task', status: 'COMPLETED' }];
     diagnostic = await service.diagnose({ tenant: 'default', authData: {}, runtimeOperation: {
         publicationCode: 'home-v2', publicationRevision: 4 } });
-    assert.strictEqual(diagnostic.data.status, 'TASK_NOT_ACTIONABLE');
+    assert.strictEqual(diagnostic.data.status, 'DECISION_EVIDENCE_MISSING');
+    for (const approved of [true, false]) {
+        tasks = [{ code: 'approval-task', status: 'COMPLETED', decision: { approved } }];
+        for (const status of ['FAILED', 'WAITING', 'RUNNING', 'COMPLETED']) {
+            existing.status = status;
+            diagnostic = await service.diagnose({ tenant: 'default', runtimeOperation: { workflowRef: existing.code } });
+            assert.strictEqual(diagnostic.data.status, status === 'COMPLETED' ? (approved ? 'APPROVED' : 'REJECTED') : 'DECISION_CALLBACK_PENDING');
+        }
+    }
+    await assert.rejects(service.diagnose({ tenant: 'default', runtimeOperation: {
+        workflowRef: existing.code, publicationCode: 'different' } }), /identity does not match/);
+    existing.status = 'WAITING';
     tasks = [];
     diagnostic = await service.diagnose({ tenant: 'default', authData: {}, runtimeOperation: {
         publicationCode: 'home-v2', publicationRevision: 4 } });

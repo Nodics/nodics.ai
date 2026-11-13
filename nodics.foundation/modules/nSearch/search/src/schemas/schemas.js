@@ -279,3 +279,9 @@ module.exports = {
         },
     }
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.search.search.backoffice = Object.assign({ description: "Search settings for this runtime. Provider readiness and indexing are separate operations." }, module.exports.search.search.backoffice);
+module.exports.search.index.backoffice = Object.assign({ description: "Search index definitions and schema bindings for this runtime." }, module.exports.search.index.backoffice);
+module.exports.search.indexer.backoffice = Object.assign({ description: "Indexing job definitions for loading owner-approved records into search." }, module.exports.search.indexer.backoffice);
+module.exports.search.indexerLog.backoffice = Object.assign({ description: "Recorded indexing runs and their outcomes. A run record alone does not prove current index readiness." }, module.exports.search.indexerLog.backoffice);

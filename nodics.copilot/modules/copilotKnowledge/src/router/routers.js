@@ -19,3 +19,9 @@
 module.exports = {
 
 };
+
+module.exports.copilotKnowledge={retirementAuthority:{validate:{
+    secured:true,authTokenTypes:['service'],accessGroups:['serviceAccountUserGroup'],permission:'copilot.knowledge.migration.authority',
+    apiExposure:'moduleInternal',cache:{enabled:false},key:'/internal/discovery/retirement-authority',method:'POST',
+    controller:'DefaultCopilotRetirementAuthorityController',operation:'validate'
+}}};

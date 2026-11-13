@@ -53,7 +53,7 @@ function fixture(approved = true) {
     });
     const process = clone(defaults);
     process.actionAdapters.allowedActions = ['cms.applyPublicationDecision'];
-    process.publicationDecisionCallback = { target: { moduleName: 'cms', connectionName: 'cmsStaged' } };
+    process.publicationDecisionCallback = { target: { ...process.publicationDecisionCallback.target, moduleName: 'cms', connectionName: 'cmsStaged' } };
     state.process = process;
     global.CONFIG = { get: key => key === 'process' ? process : key === 'defaultTenant' ? 'default' : undefined };
     global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message || code); this.code = code; } } };

@@ -142,20 +142,11 @@ module.exports = {
     );
   },
 
-  /** Returns deployment coordinates, not an authorization grant. */
-  getSelectedEnvironmentCode: function () {
-    if (typeof NODICS !== "undefined" &&
-        typeof NODICS.getSelectedEnvironmentName === "function") {
-      return NODICS.getSelectedEnvironmentName();
-    }
-    return process.env.ENV || process.env.E || "";
-  },
-
   /** Selects tenant provisioning admission only; existing proof and persisted deployment grants remain independently required. */
   isRuntimeDeploymentBootstrapEnabled: function (tenant) {
     if (CONFIG.get("identityGovernance")?.migration?.runtimeDeploymentBootstrapEnabled !== true) return false;
     const credentials = CONFIG.get("defaultAuthDetail", tenant) || {};
-    const apiKey = credentials.apiKey || process.env.NODICS_RUNTIME_API_KEY;
+    const apiKey = credentials.apiKey;
     return typeof apiKey === "string" && apiKey.length >= 32;
   },
 
@@ -194,26 +185,8 @@ module.exports = {
     });
   },
 
-  /** Validates a complete fresh inventory through existing Profile owners, without comparing it with configured permissions. */
-  validateRetainedRuntimeDeploymentGrants: async function (request) {
-    const tenant = request.tenant || CONFIG.get("defaultTenant") || "default";
-    const assignments = await SERVICE.DefaultPrincipalSecurityStampGovernanceService.inventory(
-      SERVICE.DefaultPrincipalScopeAssignmentService, tenant,
-      { scopeType: "RUNTIME_DEPLOYMENT" },
-    );
-    for (const assignment of assignments) {
-      if (assignment.tenantCode !== tenant || assignment.scopeType !== "RUNTIME_DEPLOYMENT") {
-        throw new CLASSES.NodicsError("ERR_AUTH_00003", "Retained runtime grant has invalid tenant placement");
-      }
-      // Revocation is retained history, not a request to repair or reactivate it.
-      if (assignment.active !== true || assignment.status !== "ACTIVE" || assignment.effect !== "ALLOW") continue;
-      SERVICE.DefaultRuntimeAuthorizationService.validateAssignment(assignment);
-    }
-  },
-
-  /** Startup is read-only after Init: Axis removals, scoped grants, credentials and lockouts survive in every environment. */
-  reconcile: async function (request) {
-    await this.validateRetainedRuntimeDeploymentGrants(request);
+  /** First-install seeds own the two principals. Restart never rewrites installed identity. */
+  reconcile: async function () {
     return {
       status: "NO_CHANGES",
       createdGroups: [],

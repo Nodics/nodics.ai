@@ -10,15 +10,80 @@
  */
 'use strict';
 /** @module localizationApi/controller/DefaultLocalizationApiController @description Maps bounded HTTP localization inputs to the secured facade. @layer controller @owner localizationApi @override Controllers may adapt transport details without trusting browser tenant or site scope. */
+// Map owner-defined business inputs separately from identity and HTTP context.
+const operationsInputs = ['namespaces', 'locales', 'fallbackLocales', 'scopeType', 'scopeCode', 'channel', 'projectCode'];
+const valueInputs = ['namespace', 'key', 'locale', 'scopeType', 'scopeCode', 'projectCode', 'expectedRevision', 'reason'];
+const inputs = Object.freeze({
+    coverage: operationsInputs, queue: operationsInputs, sideBySide: operationsInputs, memory: ['namespaces', 'locales'],
+    releases: ['scopeCode', 'channel', 'locales'], analytics: operationsInputs,
+    saveDraft: [...valueInputs, 'message', 'provenance'],
+    submitReview: valueInputs, approve: valueInputs,
+    suggest: [...valueInputs, 'sourceLocale', 'parameters'],
+    buildRelease: ['locale', 'namespaces', 'scopeCode', 'channel', 'projectCode', 'defaultLocale', 'fallbackLocales', 'version'],
+    publishRelease: ['scopeCode', 'channel', 'locale', 'publicationCode', 'reason'],
+    rollbackRelease: ['expectedRevision', 'reason']
+});
+
 module.exports = {
-    /** Maps transport filters and invokes one facade operation; tenant remains trusted server context and only published public values are addressable. */ invoke: function (operation, request, callback) { let http = request.httpRequest || {}; let params = http.params || {}; let query = http.query || {}; request.locale = params.locale || request.locale; request.namespaces = typeof query.namespaces === 'string' ? query.namespaces.split(',').filter(Boolean) : request.namespaces; request.scopeCode = typeof query.scopeCode === 'string' ? query.scopeCode : request.scopeCode; request.channel = typeof query.channel === 'string' ? query.channel : request.channel || 'web'; request.ifNoneMatch = (http.headers || {})['if-none-match']; request.acceptsGzip = /gzip/.test((http.headers || {})['accept-encoding'] || ''); request.payload = http.body || request.payload; let promise = Promise.resolve(FACADE.DefaultLocalizationApiFacade[operation](request)); if (!callback) return promise; promise.then(value => callback(null, value)).catch(callback); },
-    /** Handles runtime bundle retrieval. */ getRuntimeBundle: function (request, callback) { return this.invoke('getRuntimeBundle', request, callback); },
-    /** Handles contribution import. */ importContribution: function (request, callback) { return this.invoke('importContribution', request, callback); },
-    /** Handles translation package export. */ exportPackage: function (request, callback) { return this.invoke('exportPackage', request, callback); }
-    ,/** Maps a secured management body without accepting tenant identity from the browser. */ management: function (operation, request, callback) { let body = Object.assign({}, (request.httpRequest || {}).body || {}); delete body.tenant; Object.assign(request, body); let params = (request.httpRequest || {}).params || {}; if (params.version) request.version = params.version; if (params.publicationCode) request.publicationCode = params.publicationCode; let promise = Promise.resolve(FACADE.DefaultLocalizationApiFacade[operation](request)); if (!callback) return promise; promise.then(value => callback(null, value)).catch(callback); },
+    /** Translates the owner bundle into the ordinary router success contract and honors conditional reads. */
+    getRuntimeBundle: function (request, callback) {
+        const { params = {}, query = {}, headers = {}, res } = request.httpRequest || {};
+        const input = { ...request, locale: params.locale || request.locale,
+            namespaces: typeof query.namespaces === 'string' ? query.namespaces.split(',').filter(Boolean) : request.namespaces,
+            scopeCode: typeof query.scopeCode === 'string' ? query.scopeCode : request.scopeCode,
+            channel: typeof query.channel === 'string' ? query.channel : request.channel || 'web',
+            ifNoneMatch: headers['if-none-match'], acceptsGzip: false };
+        const result = Promise.resolve().then(() => FACADE.DefaultLocalizationApiFacade.getRuntimeBundle(input)).then(bundle => {
+            res?.set?.('ETag', bundle.etag);
+            res?.vary?.('X-Tenant-Code');
+            res?.vary?.('X-Enterprise-Code');
+            if (bundle.cacheControl) res?.set?.('Cache-Control', bundle.cacheControl);
+            return bundle.notModified ? { code: 'SUC_LAPI_00001' } :
+                { code: 'SUC_LAPI_00000', result: { bundle: bundle.bundle } };
+        });
+        return this.respond(result, callback);
+    },
+    /** Delegates governed contribution import while keeping body data separate from verified request context. */
+    importContribution: function (request, callback) {
+        return this.managementResult('importContribution', {
+            ...request, payload: request.httpRequest?.body || request.payload
+        }, callback);
+    },
+    /** Delegates translation export with the exact route locale and trusted owner context. */
+    exportPackage: function (request, callback) {
+        const body = request.httpRequest?.body || {};
+        const selected = Object.fromEntries(operationsInputs.filter(key => Object.hasOwn(body, key)).map(key => [key, body[key]]));
+        return this.managementResult('exportPackage', {
+            ...request, ...selected, locale: request.httpRequest?.params?.locale || request.locale
+        }, callback);
+    },
+    /** Preserves Promise and callback entry points used by the normal router. */
+    respond: function (promise, callback) {
+        if (!callback) return promise;
+        promise.then(value => callback(null, value)).catch(callback);
+    },
+    /** Wraps owner DTOs with a registered status code, leaving failures to the router. */
+    managementResult: function (operation, request, callback) {
+        return this.respond(Promise.resolve().then(() => FACADE.DefaultLocalizationApiFacade[operation](request))
+            .then(result => ({ code: 'SUC_LAPI_00002', result })), callback);
+    },
+    /** Selects approved business inputs while retaining the original authorization and HTTP metadata. */
+    management: function (operation, request, callback) {
+        const body = request.httpRequest?.body || {};
+        const params = request.httpRequest?.params || {};
+        const selected = Object.fromEntries(inputs[operation].filter(key => Object.hasOwn(body, key)).map(key => [key, body[key]]));
+        const input = { ...request, ...selected };
+        if (params.version) input.version = params.version;
+        if (params.publicationCode) input.publicationCode = params.publicationCode;
+        return this.managementResult(operation, input, callback);
+    },
     /** Returns localized coverage for the authorized scope. */ coverage: function (request, callback) { return this.management('coverage', request, callback); },
     /** Returns the authorized translation work queue. */ queue: function (request, callback) { return this.management('queue', request, callback); },
     /** Returns bounded values for side-by-side authoring. */ sideBySide: function (request, callback) { return this.management('sideBySide', request, callback); },
+    /** Returns immutable release metadata and Online status within the authorized scope. */
+    releases: function (request, callback) { return this.management('releases', request, callback); },
+    /** Returns approved, reusable translation pairs for the caller's tenant. */
+    memory: function (request, callback) { return this.management('memory', request, callback); },
     /** Returns content-free localization lifecycle analytics. */ analytics: function (request, callback) { return this.management('analytics', request, callback); },
     /** Saves one translation draft. */ saveDraft: function (request, callback) { return this.management('saveDraft', request, callback); },
     /** Submits one translation draft for review. */ submitReview: function (request, callback) { return this.management('submitReview', request, callback); },

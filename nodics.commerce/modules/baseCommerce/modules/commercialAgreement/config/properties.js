@@ -34,7 +34,7 @@ module.exports = {
         enterpriseReference: {
             connectionName: 'profile',
             apiVersion: 'v0',
-            targetAuthority: { runtimeRole: 'PLATFORM' },
+            targetAuthority: { publication: 'OPERATIONAL' },
             timeoutMs: 30000,
             validation: { timeoutMs: { minimum: 1, maximum: 60000 } }
         },
@@ -44,7 +44,7 @@ module.exports = {
             mode: 'LOCAL',
             connectionName: 'commerceStaged',
             apiVersion: 'v0',
-            targetAuthority: { runtimeRole: 'COMMERCE_STAGED' },
+            targetAuthority: { publication: 'STAGED' },
             timeoutMs: 30000,
             validation: { timeoutMs: { minimum: 1, maximum: 60000 } }
         },

@@ -58,10 +58,10 @@ function fixture(t) {
     installers: { PARTNER_RECEIPT: "PartnerReceiptService" },
     maximumContributionBytes: 8192, maximumContributionPayloadBytes: 1024,
   };
-  const context = { runtimeRole: { code: "COMMERCE" }, environment: { class: "LOCAL" } };
+  const context = { runtimeRole: { code: "COMMERCE", publication: "OPERATIONAL" }, environment: { class: "LOCAL" } };
   global.CONFIG = { get: (name) => name === "data" ? { dataReleases: policy } : context[name] };
   global.NODICS = { getActiveModules: () => [], getRawModule: (name) => name === owner.name ? owner : undefined };
-  global.SERVICE = {};
+  global.SERVICE = { PartnerReceiptService: { preflightContribution() { throw Error("not invoked"); }, installContribution() { throw Error("not invoked"); } } };
   const service = Object.create(base);
   const discover = () => service.discoverReleases("init")[0];
   const contribution = discover();
@@ -101,7 +101,10 @@ test("forged exact metadata, installer, basename and destination/environment ref
   }
   await f.rejects(f.read(f.contribution, "OTHER_INSTALLER"));
   f.context.runtimeRole.code = "PROCESS";
+  assert.ok(await f.read());
+  delete f.context.runtimeRole.publication;
   await f.rejects(f.read());
+  f.context.runtimeRole.publication = "OPERATIONAL";
   f.context.runtimeRole.code = "COMMERCE";
   f.context.environment.class = "PRODUCTION";
   await f.rejects(f.read());

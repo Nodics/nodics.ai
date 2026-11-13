@@ -26,7 +26,7 @@ class NodicsError extends Error {
 }
 global.CLASSES = { NodicsError: NodicsError };
 global.CONFIG = { get: key => key === 'axis' ? { initialization: { baselineCode: 'axis', target: {
-    moduleName: 'cms', connectionName: 'wcmsStaged', connectionType: 'abstract', timeoutMs: 1000, maxAttempts: 2
+    ...require('../config/properties').axis.initialization.target, timeoutMs: 1000, maxAttempts: 2
 } } } : undefined };
 global.NODICS = { getInternalAuthToken: tenant => tenant === 'default' ? 'internal-token' : undefined };
 let descriptor;
@@ -45,7 +45,7 @@ const request = { tenant: 'default', authData: { principalId: 'admin', tokenType
     correlationId: 'correlation-1', initialization: { reason: 'Initialize Axis' } };
 (async () => {
     assert.strictEqual((await service.status(request)).readiness, 'NOT_IMPORTED');
-    assert.deepStrictEqual(descriptor.targetAuthority, { runtimeRole: 'WCMS_STAGED' });
+    assert.deepStrictEqual(descriptor.targetAuthority, { publication: 'STAGED' });
     assert.strictEqual(descriptor.connectionName, 'wcmsStaged');
     assert.strictEqual(descriptor.apiName, '/publication/baselines/axis');
     assert.strictEqual(descriptor.header.Authorization, 'Bearer internal-token');
@@ -55,6 +55,21 @@ const request = { tenant: 'default', authData: { principalId: 'admin', tokenType
     assert.strictEqual(descriptor.requestBody.requestedBy, 'admin');
     assert.strictEqual(descriptor.requestBody.reason, 'Initialize Axis');
     const configured = CONFIG.get;
+    const ordinary = configured('axis');
+    CONFIG.get = key => key === 'axis' ? { initialization: { ...ordinary.initialization, target: {
+        ...ordinary.initialization.target, connectionName: 'editorialAuthoring',
+        targetAuthority: { publication: 'STAGED', server: 'customAuthoringServer' }
+    } } } : configured(key);
+    await service.status(request);
+    assert.strictEqual(descriptor.connectionName, 'editorialAuthoring');
+    assert.deepStrictEqual(descriptor.targetAuthority, { publication: 'STAGED', server: 'customAuthoringServer' });
+    for (const invalid of [{ publication: 'ONLINE' }, { runtimeRole: 'WCMS_STAGED' },
+        { publication: 'STAGED', runtimeRole: 'WCMS_STAGED' }]) {
+        CONFIG.get = key => key === 'axis' ? { initialization: { ...ordinary.initialization,
+            target: { ...ordinary.initialization.target, targetAuthority: invalid } } } : configured(key);
+        assert.throws(() => service.status(request), error => error.code === 'AXIS_INITIALIZATION_TARGET_UNAVAILABLE');
+    }
+    CONFIG.get = configured;
     const tokenReader = NODICS.getInternalAuthToken;
     const tokenReads = [];
     const refreshes = [];

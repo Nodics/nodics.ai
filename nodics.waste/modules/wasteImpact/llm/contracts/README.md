@@ -8,6 +8,14 @@ Provider selection is trusted CONFIG, never caller facts. An empty list retains 
 single-provider contract. Optional bounded `metricEvidence` preserves ranges, source
 URLs and explanations in the saved assessment; references do not establish certification.
 
+The runtime may select a module-owned provider profile through
+`wasteImpact.calculation.providerProfile`. Its default is null, which keeps the
+direct calculation settings. A selected entry in `wasteImpact.providerProfiles`
+supplies the primary service, ordered fallback list, timeout and failure mode as
+a unit. Override an intentional deployment difference under that named entry.
+An unknown or incomplete selection fails before dispatch. Declaring a profile
+does not select it, load services, configure credentials or qualify a provider.
+
 Waste Impact owns metric/profile/result envelopes and provider execution.
 
 The service-only `DefaultWasteImpactAssessmentService.evidenceForCarbon`

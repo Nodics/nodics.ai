@@ -17,10 +17,10 @@ const crypto = require('node:crypto');
 module.exports = {
     /** Rejects operational writes on the policy runtime without changing ordinary Online ownership. @returns {boolean} Runtime admission. @override Preserve stock/policy separation. */
     requireOperationalRuntime: function () {
-        const role = CONFIG.get('runtimeRole');
-        if ((typeof role === 'string' ? role : role?.code) === 'COMMERCE_STAGED' ||
-            CONFIG.get('inventory')?.publication?.runtimeRole === 'STAGED')
-            throw new Error('Inventory operational mutation is forbidden on Staged policy runtime');
+        if (SERVICE.DefaultModuleService?.isLocalModuleActive?.('inventory') !== true ||
+            CONFIG.get('runtimeRole')?.publication !== 'OPERATIONAL' ||
+            CONFIG.get('inventory')?.publication?.runtimeRole !== 'ONLINE')
+            throw new Error('Inventory operational mutation requires local ownership, OPERATIONAL runtime and ONLINE serving policy');
         return true;
     },
     /** Checks immutable release targets without granting stock authority. Live balances are derived through owner operations, not operational snapshot imports. @param {Object} request Trusted target metadata. @returns {boolean} Admission. @override Additional owner admission must retain stock provenance and runtime guards. */

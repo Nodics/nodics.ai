@@ -63,5 +63,29 @@ global.SERVICE = {
     let remote = await service.validate({ tenant: 't1', authData: { tokenType: 'service' }, body: { referenceType: 'MEDIA_SET', referenceCode: 'phone-primary-set' } });
     assert.strictEqual(remote.code, 'SUC_MED_00003');
     assert.strictEqual(remote.data.code, 'phone-primary-set');
+    const retry = require('../../../../nodics.foundation/modules/nData/nImport/import/src/service/process/init/defaultImportRetryPolicyService');
+    const cms = require('../../cms/src/service/validation/defaultCmsContractValidationService');
+    SERVICE.DefaultMediaReferenceLookupService = service;
+    const originalGet = SERVICE.DefaultMediaService.get;
+    const query = { code: 'later-asset', status: { $in: properties.media.referenceLookup.activeMediaStatuses } };
+    const empty = { code: 'SUC_FIND_00000', query, count: 0, result: [] };
+    SERVICE.DefaultMediaService.get = async () => structuredClone(empty);
+    await assert.rejects(cms.validateNMediaReference({ tenant: 't1', authData: {} }, 'MEDIA', 'later-asset'),
+        error => error.code === 'ERR_MED_00008' && retry.canRetry(error));
+    for (const response of [
+        { result: [] }, { ...empty, code: 'ERR_FIND_00000' }, { ...empty, responseCode: 403 },
+        { ...empty, query: { code: 'foreign' } }, { ...empty, count: 1 },
+        { ...empty, total: 1 }, { ...empty, success: false }, { ...empty, acknowledged: false },
+        { ...empty, error: true }, { ...empty, errors: [{ code: 'ERR_AUTH_00003' }] },
+        { ...empty, count: 2, result: [{ code: 'later-asset', status: 'READY' }, { code: 'later-asset', status: 'READY' }] },
+    ]) {
+        SERVICE.DefaultMediaService.get = async () => structuredClone(response);
+        await assert.rejects(cms.validateNMediaReference({ tenant: 't1', authData: {} }, 'MEDIA', 'later-asset'),
+            error => error.code === 'ERR_MED_00008' && !retry.canRetry(error));
+    }
+    SERVICE.DefaultMediaService.get = async () => ({ code: 'SUC_FIND_00000', query, count: 1,
+        result: [{ code: 'later-asset', status: 'READY' }] });
+    assert.equal(await cms.validateNMediaReference({ tenant: 't1', authData: {} }, 'MEDIA', 'later-asset'), true);
+    SERVICE.DefaultMediaService.get = originalGet;
     console.log('media reference lookup contract validated');
 })().catch(error => { console.error(error); process.exit(1); });

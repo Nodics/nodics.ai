@@ -15,40 +15,16 @@ const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const { merge } = require('lodash');
 const schemas = require('../src/schemas/schemas').store;
-const points = require('../data/core-v001/records/store/baseCommercePointOfServiceData');
-const stores = require('../data/core-v001/records/store/baseCommerceStoreData');
-const channels = require('../data/core-v001/records/store/baseCommerceSalesChannelData');
+const point = { code: 'test-online', tenant: 'default', storeCode: 'test-store',
+    name: 'Test online', status: 'ACTIVE', timezone: 'UTC' };
 
-test('Store declares its own operational release independently of the Base Commerce group', () => {
+test('Store delegates all business sample records to projects and revision to CRUD', () => {
     const manifest = require('../data/manifest.json');
-    assert.equal(manifest.module, 'store');
-    assert.equal(manifest.sections['core-reference'].kind, 'DATA_RELEASE');
-    assert.equal(manifest.sections['core-reference'].destinationRole, 'COMMERCE');
-    assert.equal(Object.keys(manifest.sections['core-reference'].files).length, 4);
-    assert.equal(require('node:fs').existsSync(require('node:path').join(__dirname, '../../../data')), false);
-});
-
-test('Store core data leaves technical revision ownership to generated CRUD', () => {
-    for (const [name, records] of [['store', stores], ['salesChannel', channels], ['pointOfService', points]]) {
+    assert.equal(Object.values(manifest.sections).some(section => section.dataType === 'core' || section.dataType === 'sample'), false);
+    for (const name of ['store', 'salesChannel', 'pointOfService']) {
         assert.deepEqual(schemas[name].backoffice.concurrency, { field: 'revision', managed: true });
         assert.equal(schemas[name].definition.revision.default, 1);
-        for (const record of Object.values(records)) assert.equal(record.revision, undefined);
     }
-});
-
-test('Commerce core records supply all locally required Store properties without Location', () => {
-    for (const [name, records] of [['store', stores], ['salesChannel', channels], ['pointOfService', points]]) {
-        for (const record of Object.values(records)) {
-            for (const [property, definition] of Object.entries(schemas[name].definition)) {
-                if (definition.required && definition.default === undefined) assert.notEqual(record[property], undefined, name + '.' + property);
-                if (record[property] !== undefined && definition.enum) {
-                    assert.ok(definition.enum.includes(record[property]), name + '.' + property);
-                }
-            }
-        }
-    }
-    assert.equal(points.record0.locationRef, undefined);
-    assert.equal(schemas.pointOfService.definition.locationRef.required, false);
 });
 
 test('optional location remains a typed reference rather than unrestricted text', () => {
@@ -63,8 +39,8 @@ test('optional location remains a typed reference rather than unrestricted text'
 test('a physical-only project can strengthen the existing property without changing the framework', () => {
     const effective = merge({}, schemas.pointOfService, { definition: { locationRef: { required: true } } });
     const required = Object.entries(effective.definition).filter(([, value]) => value.required && value.default === undefined).map(([key]) => key);
-    assert.deepEqual(required.filter(key => points.record0[key] === undefined), ['locationRef']);
-    const physical = { ...points.record0, locationRef: { code: 'project-physical-place' } };
+    assert.deepEqual(required.filter(key => point[key] === undefined), ['locationRef']);
+    const physical = { ...point, locationRef: { code: 'project-physical-place' } };
     assert.deepEqual(required.filter(key => physical[key] === undefined), []);
     assert.deepEqual(effective.refSchema, schemas.pointOfService.refSchema);
     assert.equal(schemas.pointOfService.definition.locationRef.required, false);

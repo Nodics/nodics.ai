@@ -334,6 +334,22 @@ without creating a new version of the capability. If yes, it probably belongs
 in properties or governed runtime configuration. If no, it may belong in code,
 schema, route metadata, status definitions, or a generator contract.
 
+## Deployment relocation review
+
+Enforce [deployment independence](nodics-principles.md#deployment-independence-of-functional-owners)
+and [module-aware database inheritance](customer-config-classification-contract.md#deployment-and-database-configuration).
+Supported customer topology changes require zero framework source edits. Treat a
+domain guard tied to a physical runtime label, duplicated dependency/role wiring,
+or a direct intermodule routing shortcut as an architectural finding. Preserve
+independent authorization and publication checks while correcting it through the
+existing owner and `DefaultModuleService`. Verify module/schema ownership and
+explicit destination failure behavior; configuration edits are not data migration.
+Review runtime-local health, configuration, token and import-history mechanics
+separately from functional state. Prove local scope, not a blanket Foundation
+exception. Product, Wallet and Discovery retain one functional owner per
+module/publication context. Shared implementation loading and local mechanics
+must neither create a second owner nor introduce another role/profile registry.
+
 ## Layered Properties Discipline
 
 The owning framework module exclusively defines each reusable property,

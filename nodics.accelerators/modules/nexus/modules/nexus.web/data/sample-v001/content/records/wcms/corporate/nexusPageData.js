@@ -24,6 +24,7 @@
 /** @description Nexus corporate CMS pages. */
 module.exports = {
   record0: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusHomePage",
     name: "Nodics Nexus Home",
     active: true,
@@ -33,18 +34,21 @@ module.exports = {
     renderer: "nexus.page.home",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         code: "nexusHomePage2NexusHomeHero",
         target: "nexusHomeBannerCarousel",
         slot: "main",
@@ -52,72 +56,84 @@ module.exports = {
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeAbout",
         slot: "main",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeWhy",
         slot: "main",
         index: 2,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeProducts",
         slot: "main",
         index: 3,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeSolutions",
         slot: "main",
         index: 4,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeTechnology",
         slot: "main",
         index: 5,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeSupport",
         slot: "main",
         index: 6,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeTestimonials",
         slot: "main",
         index: 7,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeBlogs",
         slot: "main",
         index: 8,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeNews",
         slot: "main",
         index: 9,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeGithub",
         slot: "main",
         index: 10,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeEcosystem",
         slot: "main",
         index: 11,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusHomeContact",
         slot: "main",
         index: 12,
@@ -126,6 +142,7 @@ module.exports = {
     ],
   },
   record1: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusAboutPage",
     name: "About Nodics",
     active: true,
@@ -134,42 +151,49 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusAboutHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusAboutContent",
         slot: "main",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusAboutPrinciples",
         slot: "main",
         index: 2,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusAboutMvpScale",
         slot: "main",
         index: 3,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusAboutPromise",
         slot: "main",
         index: 4,
@@ -178,6 +202,7 @@ module.exports = {
     ],
   },
   record2: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusFeaturesPage",
     name: "Nodics Features",
     active: true,
@@ -186,54 +211,63 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusFeaturesHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusFeaturesContent",
         slot: "main",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusFeaturesPillars",
         slot: "main",
         index: 2,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusFeaturesArchitecture",
         slot: "main",
         index: 3,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusFeaturesCapabilities",
         slot: "main",
         index: 4,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusFeaturesMvpScale",
         slot: "main",
         index: 5,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusFeaturesJourney",
         slot: "main",
         index: 6,
@@ -242,6 +276,7 @@ module.exports = {
     ],
   },
   record3: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusProductsPage",
     name: "Nodics Products",
     active: true,
@@ -250,24 +285,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusProductsHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusProductsDashboard",
         slot: "main",
         index: 1,
@@ -276,6 +315,7 @@ module.exports = {
     ],
   },
   record4: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusSupportPage",
     name: "Nodics Support",
     active: true,
@@ -284,48 +324,56 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusSupportHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusSupportContent",
         slot: "main",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusSupportPaths",
         slot: "main",
         index: 2,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusSupportResponseModel",
         slot: "main",
         index: 3,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusSupportRequestChecklist",
         slot: "main",
         index: 4,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusSupportBoundaries",
         slot: "main",
         index: 5,
@@ -334,6 +382,7 @@ module.exports = {
     ],
   },
   record5: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusInvestorsPage",
     name: "Nodics Investors",
     active: true,
@@ -342,24 +391,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusInvestorsHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusInvestorsContent",
         slot: "main",
         index: 1,
@@ -368,6 +421,7 @@ module.exports = {
     ],
   },
   record6: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusDonatePage",
     name: "Support Nodics",
     active: true,
@@ -376,24 +430,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusDonateHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusDonateContent",
         slot: "main",
         index: 1,
@@ -402,6 +460,7 @@ module.exports = {
     ],
   },
   record7: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusPlatformPage",
     name: "Nodics Platform",
     active: true,
@@ -410,24 +469,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusPlatformHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusPlatformContent",
         slot: "main",
         index: 1,
@@ -436,6 +499,7 @@ module.exports = {
     ],
   },
   record8: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusDevelopersPage",
     name: "Developer Experience",
     active: true,
@@ -444,42 +508,49 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusDevelopersHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusDevelopersContent",
         slot: "main",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusDevelopersLocalJourney",
         slot: "main",
         index: 2,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusDevelopersAiAssisted",
         slot: "main",
         index: 3,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusDevelopersOwnership",
         slot: "main",
         index: 4,
@@ -488,6 +559,7 @@ module.exports = {
     ],
   },
   record9: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusEcosystemPage",
     name: "Nodics Ecosystem",
     active: true,
@@ -496,42 +568,49 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusEcosystemHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusEcosystemContent",
         slot: "main",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusEcosystemRoles",
         slot: "main",
         index: 2,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusEcosystemContribution",
         slot: "main",
         index: 3,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusEcosystemJourney",
         slot: "main",
         index: 4,
@@ -540,6 +619,7 @@ module.exports = {
     ],
   },
   record11: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusContactPage",
     name: "Contact Nodics",
     active: true,
@@ -548,24 +628,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusContactHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusContactContent",
         slot: "main",
         index: 1,
@@ -574,6 +658,7 @@ module.exports = {
     ],
   },
   record12: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusPrivacyPage",
     name: "Privacy Policy",
     active: true,
@@ -582,24 +667,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusPrivacyHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusPrivacyContent",
         slot: "main",
         index: 1,
@@ -608,6 +697,7 @@ module.exports = {
     ],
   },
   record13: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusTermsPage",
     name: "Terms of Use",
     active: true,
@@ -616,24 +706,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusTermsHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusTermsContent",
         slot: "main",
         index: 1,
@@ -642,6 +736,7 @@ module.exports = {
     ],
   },
   record14: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusCookiesPage",
     name: "Cookie Policy",
     active: true,
@@ -650,24 +745,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCookiesHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCookiesContent",
         slot: "main",
         index: 1,
@@ -676,6 +775,7 @@ module.exports = {
     ],
   },
   record15: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusEditorialListingPage",
     name: "News and Blogs",
     active: true,
@@ -684,24 +784,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusEditorialListingHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusEditorialListing",
         slot: "main",
         index: 1,
@@ -710,6 +814,7 @@ module.exports = {
     ],
   },
   record16: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusEditorialDetailPage",
     name: "Editorial Article",
     active: true,
@@ -718,24 +823,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusEditorialDetailHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusEditorialDetail",
         slot: "main",
         index: 1,
@@ -744,6 +853,7 @@ module.exports = {
     ],
   },
   record17: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNewsListingPage",
     name: "Nodics News",
     active: true,
@@ -752,24 +862,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusNewsListingHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusNewsListing",
         slot: "main",
         index: 1,
@@ -778,6 +892,7 @@ module.exports = {
     ],
   },
   record18: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNewsPublicExperiencePage",
     name: "Nexus public experience governed by WCMS",
     active: true,
@@ -786,24 +901,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusNewsPublicExperienceHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusNewsPublicExperienceDetail",
         slot: "main",
         index: 1,
@@ -812,6 +931,7 @@ module.exports = {
     ],
   },
   record19: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNewsAxisBusinessJourneyPage",
     name: "Axis business journeys align with runtime capability",
     active: true,
@@ -820,24 +940,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusNewsAxisBusinessJourneyHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusNewsAxisBusinessJourneyDetail",
         slot: "main",
         index: 1,
@@ -846,6 +970,7 @@ module.exports = {
     ],
   },
   record20: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNewsEngagementPublicApiPage",
     name: "Engagement APIs power Nexus journeys",
     active: true,
@@ -854,24 +979,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusNewsEngagementPublicApiHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusNewsEngagementPublicApiDetail",
         slot: "main",
         index: 1,
@@ -880,6 +1009,7 @@ module.exports = {
     ],
   },
   record21: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusNewsEditorialReleaseFlowPage",
     name: "Editorial release flow validates publishing",
     active: true,
@@ -888,24 +1018,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusNewsEditorialReleaseFlowHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusNewsEditorialReleaseFlowDetail",
         slot: "main",
         index: 1,
@@ -914,6 +1048,7 @@ module.exports = {
     ],
   },
   record22: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusBlogListingPage",
     name: "Nodics Blogs",
     active: true,
@@ -922,24 +1057,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusBlogListingHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusBlogListing",
         slot: "main",
         index: 1,
@@ -948,6 +1087,7 @@ module.exports = {
     ],
   },
   record23: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusBlogEngagementFrameworkPage",
     name: "Building customer engagement as an enterprise capability",
     active: true,
@@ -956,24 +1096,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusBlogEngagementFrameworkHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusBlogEngagementFrameworkDetail",
         slot: "main",
         index: 1,
@@ -982,6 +1126,7 @@ module.exports = {
     ],
   },
   record24: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusBlogEditorialPublicationPage",
     name: "Editorial publication without frontend data ownership",
     active: true,
@@ -990,24 +1135,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusBlogEditorialPublicationHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusBlogEditorialPublicationDetail",
         slot: "main",
         index: 1,
@@ -1016,6 +1165,7 @@ module.exports = {
     ],
   },
   record25: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusBlogRuntimeDiscoveryPage",
     name: "Why runtime discovery beats hardcoded service URLs",
     active: true,
@@ -1024,24 +1174,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusBlogRuntimeDiscoveryHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusBlogRuntimeDiscoveryDetail",
         slot: "main",
         index: 1,
@@ -1050,6 +1204,7 @@ module.exports = {
     ],
   },
   record26: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusBlogAxisBusinessOperationsPage",
     name: "Designing Axis for clean business operations",
     active: true,
@@ -1058,24 +1213,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusBlogAxisBusinessOperationsHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusBlogAxisBusinessOperationsDetail",
         slot: "main",
         index: 1,
@@ -1084,6 +1243,7 @@ module.exports = {
     ],
   },
   record27: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusProductWastePage",
     name: "Waste Management",
     active: true,
@@ -1092,24 +1252,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusProductWasteHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusProductWasteStory",
         slot: "main",
         index: 1,
@@ -1118,6 +1282,7 @@ module.exports = {
     ],
   },
   record28: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusProductApparelPage",
     name: "Agora Apparel",
     active: true,
@@ -1126,24 +1291,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusProductApparelHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusProductApparelStory",
         slot: "main",
         index: 1,
@@ -1152,6 +1321,7 @@ module.exports = {
     ],
   },
   record29: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusProductElectronicsPage",
     name: "Agora Electronics",
     active: true,
@@ -1160,24 +1330,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusProductElectronicsHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusProductElectronicsStory",
         slot: "main",
         index: 1,
@@ -1186,6 +1360,7 @@ module.exports = {
     ],
   },
   record30: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusProductTelcoPage",
     name: "Agora Telco",
     active: true,
@@ -1194,24 +1369,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusProductTelcoHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusProductTelcoStory",
         slot: "main",
         index: 1,
@@ -1220,6 +1399,7 @@ module.exports = {
     ],
   },
   record31: {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
     code: "nexusSolutionsPage",
     name: "Nodics Solutions",
     active: true,
@@ -1228,24 +1408,28 @@ module.exports = {
     template: "nexusCorporatePageTemplate",
     cmsComponents: [
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteHeader",
         slot: "shell",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusCorporateSiteFooter",
         slot: "shell",
         index: 1,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusSolutionsHero",
         slot: "main",
         index: 0,
         active: true,
       },
       {
+    authoringScope: {"enterpriseCode":"default","siteCode":"nexusCorporateSite","catalogCode":"nexusContentCatalog"},
         target: "nexusSolutionsContent",
         slot: "main",
         index: 1,

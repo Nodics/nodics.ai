@@ -32,3 +32,11 @@ Editorial owns neutral publication target module/transport defaults. Deployments
 select the actual connection and provider explicitly. Shared defaults do not
 activate publication or transfer workflow contribution provenance; installed
 definitions require an owner-checked migration before relocation.
+
+Publication defaults use nConfig's explicit publication-context binding in this
+module's ordinary properties, not runtime role profiles. Keep Staged source and
+Online target behavior isolated when changing runtime placement. Connections,
+installed qualification and approvals remain independently required. Run
+`nodics.wcms/test/wcmsPublicationConfiguration.test.js` from Framework root.
+
+Featured-image qualification uses `DefaultEditorialFeaturedMediaService` for the saved reference and `DefaultMediaDependencyReadinessService` for retained bytes and publication identity. Preserve original request authority, exact reference correlation and fresh pre-publication checks. No automatic dependency approval or additional two-person rule. Presentation defaults live in `editorial.authoring.featuredMedia`.

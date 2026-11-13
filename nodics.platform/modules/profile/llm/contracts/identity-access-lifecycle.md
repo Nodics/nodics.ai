@@ -97,10 +97,22 @@ not a public bypass flag. Ordinary backend registration builds static metadata
 without database access; the existing `/enterprise-access/workspace` returns
 fresh role selections. Consumers must refresh that owner response for selections.
 
-Initial installation imports explicitly selected owner permission packs before
-Profile Init groups, then access groups and enterprise roles. Inactive-owner
-discovery and ordering belong to nImport's prerequisite plan, not a Profile
-loader. Upgrades select forward releases and retain existing Init receipts.
+On a fresh installation, `profile:init-v001` pins 57 owner
+`permissionCatalogue` releases in the default authority partition, including
+Waste Carbon and Waste Reward. Five separately named permission releases supply
+Digital bundle runtime, Pricing merchant evidence, Profile runtime evidence,
+Waste Carbon transfer finalization and Communication Verification execute
+permissions. Commercial Agreement's permission catalogue remains an explicit
+capability selection.
+
+The only bootstrap group packs are `profile:accessGroups` (base identity
+groups) and `config:accessGroups` (runtime configuration groups). They follow
+the requested tenant partition. A capability that needs business, participant
+or specialist groups or enterprise roles selects its owner releases explicitly
+during setup. Installing definitions makes them available to Profile. Assigning
+a group or role to a principal requires a separate governed operation.
+nImport resolves exact prerequisites and orders installation, including when a
+source module is inactive on the destination. Upgrades select forward releases and retain existing Init receipts.
 `ensureReferenceAll` on the three generated owners creates missing records using
 `options.insertOnly: true`. Re-import preserves existing narrowing, deactivation
 and credentials. Concurrent insertion failure never becomes an update or blind
@@ -113,6 +125,30 @@ confer no authority. Permission and role seeds remain authority-partition-only.
 User groups seed into each exact admitted tenant; their permissions still validate
 against the authority catalogue. Public flags, copied services and another
 tenant's active import cannot authorize those creates.
+
+The generated save query builder adds the declared primary-code selector before
+Profile preSave governance. Private reference-group creation therefore retains
+a non-serializable snapshot of the exact service, tenant and group code for that
+awaited save. Its guard admits either the original absent query or exactly the
+derived `{code}` selector, with unchanged identity and `insertOnly: true`.
+Extra fields, operators, dotted selectors, altered tenant/code, copied requests
+and expired operations refuse. Generated atomic insertion still owns persistence
+and a concurrent winner can never be overwritten.
+
+Reference failures preserve the original error and carry a fixed
+`{owner:"profile", operation:"REFERENCE_SEED", stage}` context. Stages identify
+request validation, source admission, model validation, reference read,
+preservation, create, acknowledgement or readback. They contain no record,
+actor, tenant, provider, credentials or source-path values and confer no
+authority. Failed diagnostic enrichment must not replace the original refusal.
+For terminal `ERR_AUTH_00003` refusals, a registered
+`ERR_PROFILE_REFERENCE_SEED_<STAGE>` wrapper retains the fixed stage through
+nRouter's actual one-level public aggregate projection. The original refusal is
+kept unchanged as its child for server-side diagnostics and conservative retry
+classification. Other errors retain their original shape. Enrichment failure
+returns the original error. Neither the wrapper nor its context asserts a
+pre-write outcome, qualifies retry or permits replay of an uncertain seed.
+Private nested diagnostics remain excluded by the existing router contract.
 
 Permission `active` means available vocabulary for new governed definitions; it
 is not a global runtime kill switch. Referenced permission retirement is held
@@ -175,9 +211,9 @@ enterprise actors or derive it from startup discovery.
 ### Existing Administrator Adoption
 
 Existing-account adoption is explicit, never Init replay or startup repair.
-Select Profile `permissionCatalogue` and `accessGroups` successor version
-`0.0.2`, Profile runtime-evidence permissions `0.0.1`, and Profile `init-v001`
-version `0.0.8`, through the existing reviewed
+Select Profile `permissionCatalogue` and `accessGroups` Release 0 version
+`0.0.1`, Profile runtime-evidence permissions `0.0.1`, and Profile `init-v001`
+version `0.0.1`, through the existing reviewed
 nImport plan after the coordinated prerequisite pins are finalized. Keep the
 `init-v001` folder and retained installed receipts. These insert-only definitions
 preserve installed narrowing and inactivity. Installed Employees keep all their
@@ -253,7 +289,7 @@ maintenance migration using nImport, not startup reconciliation:
 
 1. Retain installed receipts, credentials, current groups and role/grant decisions.
    Inventory the authority tenant and each existing tenant requiring Profile Init.
-2. Select `profile:init-v001`, version `0.0.8`, in the existing Init release workflow.
+2. Select `profile:init-v001`, version `0.0.1`, in the existing Init release workflow.
    Its exact prerequisites include the Profile-owned customer-reference and
    tenant-binding definitions plus the Pricing and Communication Verification
    permissions consumed by reviewed runtime assignments. These releases define
@@ -276,6 +312,12 @@ not evidence that an installed deployment completed these steps. No migration is
 performed by this implementation batch.
 
 ## Current Customer Identity
+
+The standard customer session lifecycle runs through native registration,
+authentication, refresh rotation and secured token logout. The logout route
+must use the secured controller pipeline so Profile revokes the authenticated
+access token as well as the supplied refresh token. Duplicate native
+registration returns a conflict; failed existence reads never prove absence.
 
 `GET /nodics/profile/v0/customer/identity` resolves the signed customer's own
 business reference. It requires an access token and Customer group, sensitive
@@ -380,6 +422,13 @@ check does not prove every business journey has the permissions it needs.
   service calls, and cross-module API calls must continue to use secured API-key
   or internal-token flows.
 
+The authenticated management workspace projects Platform-only enterprise creation
+only in the original Platform administrator context, using the same admission
+predicate as the command. Scoped enterprise administrators retain their registry
+and employee-invitation tasks. This presentation boundary grants no authority
+and the API independently repeats its original checks. Project-specific labels
+remain overrides of Profile-owned presentation defaults.
+
 ## Enterprise management search
 
 Enterprise setup obtains effective writable fields from the existing
@@ -406,6 +455,12 @@ utility so generated and domain consumers receive one contract.
 - Assistant policy may reference this operation by logical identity, but must
   rediscover its current method, path, and permission through BackOffice before
   every call and forward the employee bearer to Profile.
+
+New or explicitly refreshed invitation commands require an expiry strictly in
+the future, checked by the owning Profile command before persistence. Invalid
+or already elapsed input is rejected without changing an assignment. Existing
+invitations may naturally expire; registration continues to recheck their saved
+deadline before every operation. Historical expired records are retained.
 
 ## Enterprise access assignments
 
@@ -939,6 +994,15 @@ erase a concurrently issued session. A remaining cookie (including an empty
 cookie), supplied stale proof or malformed cookie still follows strict CSRF
 validation. Revocation errors are not successful logout.
 
+A consumed or missing refresh proof returns the existing unauthenticated
+`restored:false` result with `Cache-Control:no-store` and no `Set-Cookie` writes.
+Expiry, restart and a concurrent successful rotation can all produce that miss;
+a delayed losing response must not erase a newer session's cookies. This grants
+no replacement credentials. Axis rejects the result as a restored identity and
+retains normal sign-in recovery. Explicit Origin/CSRF-protected logout remains
+the cookie cleanup owner. The Employee and Customer race regressions live in
+`profileBrowserLogoutRecovery.test.js`.
+
 Employee browser cookies are shared by clients using the same host, name and
 path; ports do not partition them. Axis and Circa Employee mode therefore may
 replace or end the same browser refresh session on localhost. Customer cookies
@@ -1154,3 +1218,77 @@ The service-scope command derives its native-proof envelope using
 already admitted original request. Object spreading cannot carry the logger's
 private object identity. Keep original command/actor binding checks and never
 replace this derivation with caller flags or relaxed capture qualification.
+
+### Local delegated evidence ownership
+
+`profileRuntimeEnterpriseResolution` and `profileCustomerEvidence` retain their
+explicit enablement and exact signed caller grants. Their former local `runtimeRole`
+selectors are removed. Admission and revalidation instead require DMS local
+`profile` ownership plus explicit OPERATIONAL publication. Loaded source and
+physical role names/membership do not authorize Profile persistence. Preserve
+original service proof, permissions, tenant/Enterprise binding, policy pins and
+private capture; no cohosting label widens any grant. The focused customer-evidence
+and runtime-enterprise tests cover unrelated physical labels, remoteOnly refusal,
+missing/wrong publication, and existing permission/scope failures without providers.
+
+## Same-tenant Employee read isolation
+
+A shared tenant is not permission to read every Enterprise's staff. Generated
+Employee reads by non-Platform human actors intersect their original selector
+with the signed Enterprise: native `enterpriseCode` / `metadata.enterpriseCode`
+bindings must agree, and registered assignment references must belong to that
+Enterprise and tenant in the existing bounded assignment owner. Unbound legacy
+native rows are eligible only in the configured default Enterprise. Body or
+header selectors, system flags and query expressions cannot replace signed
+placement. Failed or incomplete assignment inventory never becomes an unscoped
+fallback. The original native Platform full-access and authorized mechanical
+service paths retain their existing independent admission.
+
+The ordinary Employee preGet hook prepares the scoped query before cache/provider
+access. The shared protected-schema provider callback requires the same prepared
+request and retained scope constraint for human reads, including export/provider
+entry. Copied requests, removed constraints, changed actor/tenant or an unprepared
+provider call fail closed. No new identity store, customer role catalogue or
+qualification flag is introduced, and this does not enable the separate optional
+administrator-mutation or membership rollout guards.
+
+Use `employeeEnterpriseReadScope.test.js`, protected-provider and current
+Business-access/registration/recovery owner regressions, followed by live
+same-tenant own/foreign Employee reads and retained staff workspace checks.
+
+Public generated Employee scope is prepared at the provider boundary, before cache access and before preGet. SafeQuery retains original HTTP provenance privately in the existing Database read-policy owner; raw HTTP keeps its original request. Neither path may forward the original body over translated selectors. Private business-owner reads retain independent admission even when carrying human claims augmented with system context. Preparation is idempotent and refuses changed actor/tenant during assignment resolution.
+
+## Ordinary native identity editing
+
+Generated human PATCH requests use the existing Profile management and update
+interceptor owners. Employee edits compare the original `authVersion`; Enterprise
+edits compare `updated`. Both counters remain domain-owned (`managed: false`).
+The Framework `enterpriseManagement.lifecycle` policy declares the ordinary
+editable fields and bounded principal/group inventory. Kickoff selects deployment
+inputs only. Login identity, grants, placement and security stamps are read-only;
+Employee creation uses the invitation owner; Enterprise creation retains its
+declared aggregate. Public physical removal of either retains history and refuses.
+
+An ordinary operator status change uses current persisted actor and group ancestry.
+Self-disable and native administrator status changes require their governed owner.
+Enterprise deactivation requires fresh Platform authority and an exclusive,
+nondefault native tenant. Complete preflight precedes normal generated session-stamp
+updates for Employees and Customers. Shared/default or linked contexts refuse.
+This is conservative ordered retirement, not a multi-record transaction: a partial
+failure can retire sessions while leaving the Enterprise active. Inspect state
+before another intent; never automatically retry or revive credentials.
+
+Generated command receipts use the existing private Profile journal when explicitly
+selected. They attribute the original actor/input and support inspection, not
+replay. Local qualification must separately verify allowed edits, protected/self/
+foreign/stale refusals, session retirement and normal access after reactivation.
+Run `publicIdentityLifecycleContract.test.js` with native session, scope and receipt
+regressions. Source tests alone do not qualify installed or distributed behavior.
+
+Public lifecycle preUpdate admission runs before the existing historical/private selector fences. It validates the original exact identity and CAS, then those existing owners add their atomic retirement/provenance predicates. Do not move it after the historical selector wrapper or remove that wrapper. Fresh Employee target reads reuse DefaultEmployeeGetInterceptorService with the genuine originating HTTP request and signed actor, so shared-tenant enterprise boundaries cannot be lost during private validation. Missing scope ownership refuses. Preserve the actual lifecycle/historical composition regression.
+
+Employee and Enterprise `backoffice.updateFields` reference the existing lifecycle configuration lists. The shared utility projects update-only field protection; required Enterprise creation identity and initial nomination remain available to the aggregate form. Axis must not offer ordinary edits to fields that this native lifecycle refuses. Domain guards and shared normalization remain independent.
+
+### Inspect-only credential and lockout schemas
+
+Profile exposes Credential metadata and Account lockout status for authorised inspection only. Their generated HTTP schemas admit search/read and refuse create/update/delete before persistence. These internal records have no public primary reference suitable for ordinary Workbench edits, and credential values remain excluded. Authentication, recovery, lockout and private credential-retirement owners retain their native persistence paths; this is not a new reset, unlock, import or grant mechanism. Customise labels through owner schema metadata, preserving this authority boundary. The publicIdentityLifecycleContract uses the actual authoring gate to protect it; live acceptance additionally checks visible controls and API refusals.

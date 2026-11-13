@@ -69,7 +69,7 @@ module.exports = {
       const proof = await logger.runSensitiveOperation(input, () => SERVICE.DefaultAuthenticationProviderService.authenticateAPIKey(input));
       const principal = proof.person || {};
       const request = { tenant: defaultTenant, authData: { person: principal, tenant: proof.tenant,
-        entCode: proof.enterprise?.code, permissions: [...new Set([...(principal.apiKeyScopes || []), ...(principal.userGroupPermissions || [])])] },
+        entCode: proof.enterprise?.code, permissions: [...new Set([...(principal.apiKeyScopes || []), ...(principal.userGroupPermissions || (principal.userGroups?.length ? UTILS.getUserGroupPermissions(principal.userGroups) : []))])] },
         headers: { "x-nodics-project": scope.projectCode, "x-nodics-environment": scope.environmentCode,
           "x-nodics-server": scope.serverCode, "x-nodics-runtime-instance": scope.instanceCode,
           "x-nodics-modules": scope.modules.join(",") } };
@@ -126,25 +126,12 @@ module.exports = {
       const enterpriseCode = CONFIG.get("defaultAuthDetail", defaultTenant)?.entCode;
       const permission = CONFIG.get("profileTenantProvisioning")?.permission;
       if (!enterpriseCode || !permission) this.fail();
-      const envelope = await SERVICE.DefaultPrincipalScopeAssignmentService.get({
-        tenant: defaultTenant, authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
-        query: { scopeType: "RUNTIME_DEPLOYMENT", tenantCode: defaultTenant, enterpriseCode,
-          "runtimeScope.projectCode": projectCode, "runtimeScope.environmentCode": environmentCode },
-        options: { recursive: false, skipItemCache: true, limit: 513 },
-        searchOptions: { pageSize: 513, pageNumber: 1 }
-      });
-      if (!/^SUC_/.test(envelope?.code || "") || envelope.success === false || envelope.error || envelope.errors?.length ||
-          !Array.isArray(envelope.result) || envelope.result.length > 512) this.fail();
-      const scopes = {}, now = Date.now();
-      for (const assignment of envelope.result) {
-        SERVICE.DefaultRuntimeAuthorizationService.validateAssignment(assignment);
-        const scope = assignment.runtimeScope;
-        if (assignment.scopeType !== "RUNTIME_DEPLOYMENT" || assignment.tenantCode !== defaultTenant ||
-            assignment.enterpriseCode !== enterpriseCode || scope.projectCode !== projectCode || scope.environmentCode !== environmentCode) this.fail();
-        if (assignment.status !== "ACTIVE" || assignment.effect !== "ALLOW" ||
-            (assignment.effectiveFrom && new Date(assignment.effectiveFrom).getTime() > now) ||
-            (assignment.effectiveTo && new Date(assignment.effectiveTo).getTime() <= now) ||
-            !scope.permissions.includes(permission) || !scope.modules.includes(CONFIG.get("profileModuleName") || "profile")) continue;
+      const placements = SERVICE.DefaultDeploymentModuleOwnershipService.runtimePlacements();
+      if (!Array.isArray(placements) || !placements.length || placements.length > 512) this.fail();
+      const scopes = {};
+      for (const scope of placements) {
+        if (scope.projectCode !== projectCode || scope.environmentCode !== environmentCode ||
+            !Array.isArray(scope.modules) || !scope.modules.includes(CONFIG.get("profileModuleName") || "profile")) continue;
         const stable = { projectCode: scope.projectCode, environmentCode: scope.environmentCode, serverCode: scope.serverCode };
         const scopeKey = "deployment_" + crypto.createHash("sha256")
           .update(JSON.stringify([stable.projectCode, stable.environmentCode, stable.serverCode])).digest("hex");
@@ -270,14 +257,9 @@ module.exports = {
     const permission = inventory ? policy.inventoryPermission : policy.permission;
     if (!permission || !Array.isArray(auth.permissions) || !auth.permissions.includes(permission)) this.fail();
     const scope = auth.runtimeScope;
-    const approved = await SERVICE.DefaultRuntimeAuthorizationService.authorize({
-      tenant: defaultTenant, authData: auth, requireExactModules: true,
-      headers: { "x-nodics-project": scope.projectCode, "x-nodics-environment": scope.environmentCode,
-        "x-nodics-server": scope.serverCode, "x-nodics-runtime-instance": scope.instanceCode,
-        "x-nodics-modules": [...new Set([CONFIG.get("profileModuleName") || "profile", ...modules])].join(",") }
-    });
-    if (approved.serviceId !== auth.serviceId || approved.runtimeScope.assignmentCode !== scope.assignmentCode ||
-        !approved.permissions.includes(permission)) this.fail();
+    if (auth.serviceId !== "apiAdmin" || auth.entCode !== CONFIG.get("defaultAuthDetail", defaultTenant)?.entCode ||
+        modules.some(name => !auth.modules.includes(name))) this.fail();
+    SERVICE.DefaultRuntimeAuthorizationService.deployment(scope, auth.modules);
     return scope;
   },
 

@@ -13,7 +13,9 @@ const _ = require('lodash');
 
 // Only wrappers constructed by this owner can persist scheduler bookkeeping.
 const ownedJobs = new WeakMap();
-const runtimeFields = new Set(['state', 'status', 'activeTime', 'startTime', 'lastEndTime', 'endTime', 'stopTime', 'log']);
+// Wrapper identities being replaced/removed cannot admit new work during async lifecycle pipelines.
+const retiringJobs = new WeakSet();
+const runtimeFields = new Set(['state', 'status', 'activeTime', 'startTime', 'lastEndTime', 'endTime', 'stopTime', 'log', 'lastSkippedAt']);
 
 /**
  * @module cronjob/service/cronjob/DefaultCronJobRuntimeService
@@ -218,8 +220,11 @@ module.exports = {
                 });
             } else {
                 let cronJob = this.jobPool[definition.tenant][definition.code];
+                if (cronJob.isRunning() || retiringJobs.has(cronJob)) { reject(new CLASSES.NodicsError('ERR_JOB_00006')); return; }
                 let active = cronJob.isActive();
+                retiringJobs.add(cronJob);
                 cronJob.stopJob().then(success => {
+                    if (this.jobPool[definition.tenant][definition.code] !== cronJob) throw new CLASSES.NodicsError('ERR_JOB_00006');
                     delete this.jobPool[definition.tenant][definition.code];
                     this.createJob(authToken, definition).then(success => {
                         if (active) {
@@ -235,6 +240,7 @@ module.exports = {
                         reject(error);
                     });
                 }).catch(error => {
+                    retiringJobs.delete(cronJob);
                     _self.LOG.error(error);
                     reject(new CLASSES.NodicsError(error, 'Job: ' + definition.code + ' failed to stop it to update on tenant: ' + definition.tenant, 'ERR_JOB_00000'));
                 });
@@ -278,52 +284,21 @@ module.exports = {
     /**
      * Schedules one eligible runtime job for immediate execution.
      */
-    runJob: function (authToken, definition) {
-        return new Promise((resolve, reject) => {
-            try {
-                let currentDate = new Date();
-                if (UTILS.isBlank(definition)) {
-                    reject(new CLASSES.NodicsError('ERR_JOB_00002'));
-                } else if (UTILS.isBlank(definition.tenant)) {
-                    reject(new CLASSES.NodicsError('ERR_JOB_00007'));
-                } else if (UTILS.isBlank(definition.trigger)) {
-                    reject(new CLASSES.NodicsError('ERR_JOB_00003'));
-                } else if (definition.start > currentDate) {
-                    reject(new CLASSES.NodicsError('ERR_JOB_00004'));
-                } else if (definition.end && definition.end < currentDate) {
-                    reject(new CLASSES.NodicsError('ERR_JOB_00005'));
-                } else if (definition.end && definition.end < currentDate) {
-                    reject(new CLASSES.NodicsError('ERR_JOB_00005'));
-                } else if (this.jobPool[definition.tenant] &&
-                    this.jobPool[definition.tenant][definition.code] &&
-                    this.jobPool[definition.tenant][definition.code].isRunning()) {
-                    reject(new CLASSES.NodicsError('ERR_JOB_00006'));
-                } else {
-                    let _active = false;
-                    if (this.jobPool[definition.tenant] &&
-                        this.jobPool[definition.tenant][definition.code] &&
-                        this.jobPool[definition.tenant][definition.code].isActive()) {
-                        _active = this.jobPool[definition.tenant][definition.code].isActive();
-                        this.jobPool[definition.tenant][definition.code].pauseJob(true);
-                    }
-                    if (!definition.runOnNode || CONFIG.get('nodeId') === definition.runOnNode) {
-                        let tmpCronJob = new CLASSES.CronJob(definition, definition.trigger);
-                        ownedJobs.set(tmpCronJob, Object.freeze({ tenant: definition.tenant, code: definition.code, runOnNode: definition.runOnNode }));
-                        tmpCronJob.LOG = SERVICE.DefaultLoggerService.createLogger('CronJob-' + definition.code);
-                        tmpCronJob.validate();
-                        tmpCronJob.setAuthToken(authToken);
-                        tmpCronJob.setJobPool(this.jobPool);
-                        tmpCronJob.init(true);
-                        if (_active) {
-                            this.jobPool[definition.tenant][definition.code].resumeJob(true);
-                        }
-                    }
-                    resolve('Job: ' + definition.code + ' run successfully on tenant: ' + definition.tenant);
-                }
-            } catch (error) {
-                reject(new CLASSES.NodicsError(error, null, 'ERR_JOB_00000'));
-            }
-        });
+    runJob: async function (authToken, definition) {
+        if (UTILS.isBlank(definition)) throw new CLASSES.NodicsError('ERR_JOB_00002');
+        if (UTILS.isBlank(definition.tenant)) throw new CLASSES.NodicsError('ERR_JOB_00007');
+        if (UTILS.isBlank(definition.trigger)) throw new CLASSES.NodicsError('ERR_JOB_00003');
+        if (new Date(definition.start) > new Date()) throw new CLASSES.NodicsError('ERR_JOB_00004');
+        if (definition.end && new Date(definition.end) < new Date()) throw new CLASSES.NodicsError('ERR_JOB_00005');
+        if (CONFIG.get('nodeId') !== definition.runOnNode && CONFIG.get('nodeId') !== definition.tempNode)
+            throw new CLASSES.NodicsError('ERR_JOB_00000', 'Job belongs to another execution node');
+        // createJob registers its wrapper synchronously. Concurrent admissions converge on
+        // the same pool identity; runOnce claims its running flag before any async work.
+        if (!this.jobPool[definition.tenant]?.[definition.code]) await this.createJob(authToken, definition);
+        const job = this.jobPool[definition.tenant][definition.code];
+        if (retiringJobs.has(job)) throw new CLASSES.NodicsError('ERR_JOB_00006');
+        job.runOnce(definition);
+        return 'Job: ' + definition.code + ' admitted for one execution on tenant: ' + definition.tenant;
     },
 
     /**
@@ -413,6 +388,7 @@ module.exports = {
             if (!this.jobPool[tenant] || !this.jobPool[tenant][jobCode]) {
                 resolve('Job: ' + jobCode + ' is not available in ready to run pool, please create this job on tenant: ' + tenant);
             } else {
+                if (retiringJobs.has(this.jobPool[tenant][jobCode])) { reject(new CLASSES.NodicsError('ERR_JOB_00006')); return; }
                 this.jobPool[tenant][jobCode].startJob().then(success => {
                     resolve(success);
                 }).catch(error => {
@@ -559,19 +535,26 @@ module.exports = {
             if (!this.jobPool[tenant] || !this.jobPool[tenant][jobCode]) {
                 resolve('Job: ' + jobCode + ' is not available in ready to run pool, please create this job');
             } else {
-                this.jobPool[tenant][jobCode].stopJob().then(success => {
-                    let definition = this.jobPool[tenant][jobCode].getDefinition();
+                if (this.jobPool[tenant][jobCode].isRunning() || retiringJobs.has(this.jobPool[tenant][jobCode])) { reject(new CLASSES.NodicsError('ERR_JOB_00006')); return; }
+                const original = this.jobPool[tenant][jobCode];
+                retiringJobs.add(original);
+                original.stopJob().then(success => {
+                    if (this.jobPool[tenant][jobCode] !== original) throw new CLASSES.NodicsError('ERR_JOB_00006');
+                    let definition = original.getDefinition();
                     SERVICE.DefaultPipelineService.start('defaultCronJobRemovedHandlerPipeline', {
                         tenant: tenant,
-                        job: this.jobPool[tenant][jobCode],
+                        job: original,
                         definition: definition
                     }, {}).then(success => {
+                        if (this.jobPool[tenant][jobCode] !== original) throw new CLASSES.NodicsError('ERR_JOB_00006');
                         delete this.jobPool[tenant][jobCode];
                         resolve('Job: ' + definition.code + ' removed successfully');
                     }).catch(error => {
+                        retiringJobs.delete(original);
                         reject(new CLASSES.NodicsError(error, 'Job: ' + definition.code + ' has issue while removing', 'ERR_JOB_00000'));
                     });
                 }).catch(error => {
+                    retiringJobs.delete(original);
                     reject(error);
                 });
             }
@@ -681,6 +664,7 @@ module.exports = {
             if (!this.jobPool[tenant] || !this.jobPool[tenant][jobCode]) {
                 resolve('Job: ' + jobCode + ' is not available in ready to run pool, please create this job on tenant: ' + tenant);
             } else {
+                if (retiringJobs.has(this.jobPool[tenant][jobCode])) { reject(new CLASSES.NodicsError('ERR_JOB_00006')); return; }
                 this.jobPool[tenant][jobCode].resumeJob().then(success => {
                     resolve(success);
                 }).catch(error => {

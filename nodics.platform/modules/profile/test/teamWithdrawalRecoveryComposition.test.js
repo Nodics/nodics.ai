@@ -305,6 +305,21 @@ async function committedWithdrawal() {
   return f;
 }
 
+test("native unused invitation withdrawal and exact replay do not activate optional membership features", async () => {
+  const f = fixture();
+  Object.assign(f.configuration.memberships, { enabled: false, inventoryQualified: false,
+    sessionBindingQualified: false, assignmentClaimIndexQualified: false, browserContextSwitchQualified: false });
+  const result = await f.team.withdrawInvitation(f.original);
+  assert.equal(result.status, "REVOKED");
+  assert.equal(f.assignment.active, false);
+  assert.equal(f.assignment.membership, undefined);
+  const writes = f.calls.assignmentWrites.length;
+  assert.deepEqual(await f.team.withdrawInvitation(f.original), result);
+  assert.equal(f.calls.assignmentWrites.length, writes);
+  await assert.rejects(f.team.changeMembership(f.original, "REVOKE"), { code: "ERR_PROFILE_MEMBERSHIP_UNAVAILABLE" });
+  assert.equal(f.configuration.memberships.enabled, false);
+});
+
 test("operator finalizes committed withdrawal after original actor loss without a second assignment write", async () => {
   const f = await committedWithdrawal();
   const view = await f.inspect();

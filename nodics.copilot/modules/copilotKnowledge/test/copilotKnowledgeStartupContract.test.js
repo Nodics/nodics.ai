@@ -22,7 +22,7 @@ const policyDefaults = require("../../copilotPolicy/config/properties").copilot
   .policy;
 const statuses = require("../src/utils/statusDefinitions");
 
-test("module lifecycle registers sources before awaiting startup and propagates failure", async (t) => {
+test("module lifecycle registers sources before preparing authenticated startup and propagates setup failure", async (t) => {
   const descriptor = Object.getOwnPropertyDescriptor(global, "SERVICE");
   t.after(() => {
     if (descriptor) Object.defineProperty(global, "SERVICE", descriptor);
@@ -43,9 +43,10 @@ test("module lifecycle registers sources before awaiting startup and propagates 
       },
     },
     DefaultCopilotRepositoryKnowledgeSourceProviderService: provider,
+    DefaultCopilotPublishedKnowledgeSourceProviderService: provider,
     DefaultCopilotKnowledgeRuntimeService: {
-      ingestOnStart: () => {
-        calls.push("INGEST");
+      prepareStartup: () => {
+        calls.push("PREPARE");
         return pending;
       },
     },
@@ -62,7 +63,8 @@ test("module lifecycle registers sources before awaiting startup and propagates 
     "SOURCE_CODE",
     "CUSTOMER_PROJECT",
     "CURATED_MEMORY",
-    "INGEST",
+    "PUBLISHED_DOCUMENTATION",
+    "PREPARE",
   ]);
   assert.equal(
     result,
@@ -72,7 +74,7 @@ test("module lifecycle registers sources before awaiting startup and propagates 
   complete(true);
   assert.equal(await result, true);
   const failure = new Error("owner startup refused");
-  SERVICE.DefaultCopilotKnowledgeRuntimeService.ingestOnStart = async () => {
+  SERVICE.DefaultCopilotKnowledgeRuntimeService.prepareStartup = async () => {
     throw failure;
   };
   await assert.rejects(lifecycle.postInit(), (error) => error === failure);
@@ -326,4 +328,33 @@ test("provider failure propagates and later sources are not attempted", async (t
     "FAILED",
   );
   assert.deepEqual(f.logs, []);
+});
+
+function startupFixture(t) {
+ const f=fixture(t), hooks={},checks={};
+ Object.assign(SERVICE,{DefaultRuntimeLifecycleService:{registerContributor:(name,value)=>hooks[name]=value},DefaultHealthService:{registerReadinessContributor:(name,value)=>checks[name]=value}});
+ f.service.startupState=null;f.service.startupPromise=null;
+ return {...f,hooks,checks};
+}
+test('authenticated ready hook starts once and readiness waits for the original ingestion acknowledgement',async t=>{
+ const f=startupFixture(t);let token=false,finish,calls=0;const pending=new Promise(r=>finish=r);
+ f.service.ingestOnStart=()=>{calls++;assert.equal(token,true);return pending};
+ await f.service.prepareStartup();assert.equal(calls,0);assert.equal(f.checks.copilotKnowledgeStartup.check().status,'DOWN');
+ token=true;const first=f.hooks.copilotKnowledgeStartup.ready(),second=f.hooks.copilotKnowledgeStartup.ready();assert.equal(first,second);
+ await Promise.resolve();assert.equal(calls,1);assert.equal(f.checks.copilotKnowledgeStartup.check().status,'DOWN');
+ finish(true);await first;assert.equal(f.checks.copilotKnowledgeStartup.check().status,'UP');
+});
+test('disabled startup registers no lifecycle or readiness work; invalid deadline fails closed',async t=>{
+ const f=startupFixture(t);f.ingestion.ingestOnStart=false;await f.service.prepareStartup();assert.deepEqual(f.hooks,{});assert.deepEqual(f.checks,{});
+ f.ingestion.ingestOnStart=true;f.ingestion.startup.timeoutMs=0;assert.throws(()=>f.service.prepareStartup(),/CONFIGURATION_REQUIRED/);
+});
+test('selected startup failure remains unready and does not automatically retry',async t=>{
+ const f=startupFixture(t);let calls=0;f.service.ingestOnStart=async()=>{calls++;throw Error('owner unavailable')};await f.service.prepareStartup();
+ await assert.rejects(f.hooks.copilotKnowledgeStartup.ready(),/owner unavailable/);await assert.rejects(f.hooks.copilotKnowledgeStartup.ready(),/owner unavailable/);
+ assert.equal(calls,1);assert.equal(f.checks.copilotKnowledgeStartup.check().reasonCode,'KNOWLEDGE_STARTUP_FAILED');
+});
+test('timed-out original ingestion cannot change readiness on late completion',async t=>{
+ const f=startupFixture(t);let finish;f.ingestion.startup.timeoutMs=5;f.service.ingestOnStart=()=>new Promise(r=>finish=r);await f.service.prepareStartup();
+ await assert.rejects(f.hooks.copilotKnowledgeStartup.ready(),/STARTUP_TIMEOUT/);finish(true);await new Promise(r=>setImmediate(r));
+ assert.equal(f.checks.copilotKnowledgeStartup.check().status,'DOWN');assert.equal(f.service.startupState.status,'FAILED');
 });

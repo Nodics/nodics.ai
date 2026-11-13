@@ -218,3 +218,36 @@ Route-category defaults belong to this capability; deployments supply only inten
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
 
 Secured service-registry API exposure defaults to enabled for runtime registration/contract retrieval. Exposure never bypasses service-token, grant or route permissions. Standalone deployments can explicitly disable the category.
+
+## Complete runtime schema admission
+
+Runtime configuration discovery and value access require a complete module-owned
+schema: stable schema/owner identities, unique field codes, supported scalar
+types and declared target paths. Partial deployment overrides do not create
+contracts for an inactive owner. Explicit credential references and credential
+paths must remain sensitive; missing sensitivity rejects before value lookup,
+masking, readiness or persistence. Startup validates declared schemas before
+persisted-value inspection. Invalid contracts use the existing ERR_SYS_00002
+without including credential values.
+
+Declare reusable schemas with their implementing module. Apply only intentional
+credential selectors in runtimes that actually load that owner. Preserve normal
+configuration inheritance, original permissions, encryption prerequisites,
+first-present value precedence and tenant scope. Do not copy field defaults into
+an unrelated runtime or label an incomplete credential schema NOT_REQUIRED.
+
+Axis rejects malformed transport metadata without rendering fields or requesting
+effective values, retains the runtime selector for recovery, and drops sensitive
+value material before presentation. This is defensive parsing, not an encryption
+or configuration authority. Ordinary false/zero values remain visible.
+`runtimeConfigurationSchemaAdmission.test.js` proves refusal before secret reads
+and persistence; existing configuration, path, encryption and restore contracts
+remain required.
+
+
+The configuration registries inherit empty nSystem defaults. Active owners supply
+complete schemas; deployments supply only their selected values/credential
+references. Empty defaults never invent credentials or enable a provider. See
+[registry ownership](llm/contracts/README.md#empty-registry-defaults) and
+`test/runtimeConfigurationDefaults.test.js` for masking, sensitivity and later
+configuration-override evidence.

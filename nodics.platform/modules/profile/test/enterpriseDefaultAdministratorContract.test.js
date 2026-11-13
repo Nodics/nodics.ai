@@ -306,6 +306,26 @@ for (const email of ["invalid", ["admin@example.test"], null, {}, 99]) {
   );
 }
 
+test("missing administrator catalogue has a pre-write refusal with command recording disabled", async () => {
+  const f = fixture();
+  assert.equal(CONFIG.get("commandReceipts"), undefined);
+  let reads = 0;
+  SERVICE.DefaultIdentityCatalogueService.role = async () => {
+    reads++;
+    throw new CLASSES.NodicsError("ERR_AUTH_00003", "private catalogue details");
+  };
+  await assert.rejects(
+    f.owner.createFromModel(f.request({ adminEmail: "admin@example.test" })),
+    { code: "ERR_PROFILE_ENTERPRISE_SETUP_NOT_READY" },
+  );
+  assert.equal(reads, 1);
+  assert.deepEqual(f.count, { enterprises: 0, assignments: 0, tenants: 0, activations: 0 });
+  const denied = f.request({ adminEmail: "admin@example.test" });
+  denied.authData = { tokenType: "service", principalType: "service", isSystem: true };
+  await assert.rejects(f.owner.createFromModel(denied));
+  assert.equal(reads, 1);
+});
+
 test("missing administrator/contact is rejected before any provisioning", async () => {
   const f = fixture();
   await assert.rejects(
@@ -563,7 +583,7 @@ test("non-enterprise default roles are refused before tenant/enterprise creation
   f.configuration.accessAssignments.roles.ENTERPRISE_ADMIN.scopeType = "GLOBAL";
   await assert.rejects(
     f.owner.createFromModel(f.request({ adminEmail: "admin@example.test" })),
-    /delegable enterprise/,
+    { code: "ERR_PROFILE_ENTERPRISE_SETUP_NOT_READY" },
   );
   assert.equal(f.count.tenants, 0);
 });

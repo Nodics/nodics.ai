@@ -15,6 +15,11 @@ const crypto = require('node:crypto');
 
 /** @module rulesDefinition/src/service/defaultRuleDefinitionLifecycleService @description Owns governed rule-set and score-band draft, validation, immutable publication and next-draft preparation. @layer service @owner rulesDefinition */
 module.exports = {
+    /** Reports expected domain failures without exposing internal exception details. */
+    inputError: function (message, code = 'ERR_RULE_DEF_00001') {
+        return typeof CLASSES !== 'undefined' && CLASSES.NodicsError
+            ? new CLASSES.NodicsError(code, message) : new Error(message);
+    },
     /** Implements tenant as an overrideable service operation. */
     tenant: function (request) {
         return request && request.tenant || (typeof CONFIG !== 'undefined' && CONFIG.get && CONFIG.get('defaultTenant')) || 'default';
@@ -175,13 +180,29 @@ module.exports = {
         return { code: 'RULE_SET_CREATED', data: response.result || response };
     },
 
+    /** Rejects a stale explicitly reviewed draft before validation or any lifecycle write. */
+    assertExpectedDraft: function (request, current) {
+        const expected = this.modelOf(request).expectedDraftRevision;
+        if (expected !== undefined && (!Number.isSafeInteger(expected) || expected < 1 || expected !== Number(current.draftRevision || 1)))
+            throw this.inputError('The draft revision changed. Reload and review it before continuing.', 'ERR_RULE_DEF_00002');
+    },
+
+    /** Requires an acknowledged single-record compare-and-set; no replay is inferred. */
+    assertDraftWrite: function (response) {
+        const result = response && (response.result || response.data || response);
+        if (!result || Number(result.modifiedCount === undefined ? result.nModified : result.modifiedCount) !== 1)
+            throw this.inputError('The draft write could not be confirmed. Reload its current revision before continuing.', 'ERR_RULE_DEF_00002');
+    },
+
     /** Implements updateRuleSetDraft as an overrideable service operation. */
     updateRuleSetDraft: async function (request) {
         let current = await this.requireRuleSet(request, request.ruleSetCode);
+        this.assertExpectedDraft(request, current);
         if (current.status !== 'DRAFT') throw new Error('Only draft rule sets can be updated');
         if (current.approval && current.approval.status === 'PENDING')
             throw new Error('This draft is awaiting approval and cannot be edited');
         let patch = Object.assign({}, this.modelOf(request));
+        delete patch.expectedDraftRevision;
         ['code','status','currentVersion','createdBy','createdAt','publishedAt'].forEach(key => delete patch[key]);
         let validation = this.validationService().validateDefinition({
             definition: patch.definition || current.definition,
@@ -190,12 +211,12 @@ module.exports = {
         });
         patch.validation = validation;
         patch.draftRevision = Number(current.draftRevision || 1) + 1;
-        patch.lastSimulation = null;
-        patch.approval = null;
-        await this.ruleSetService().update(this.serviceRequest(request, {
-            query: { code: current.code, status: 'DRAFT' },
-            model: { $set: patch }
-        }));
+        delete patch.lastSimulation;
+        delete patch.approval;
+        this.assertDraftWrite(await this.ruleSetService().update(this.serviceRequest(request, {
+            query: { code: current.code, status: 'DRAFT', draftRevision: Number(current.draftRevision || 1) },
+            model: { $set: patch, $unset: { lastSimulation: 1, approval: 1 } }
+        })));
         await this.auditService().record(request, {
             ruleSetCode: current.code,
             draftRevision: patch.draftRevision,
@@ -209,6 +230,7 @@ module.exports = {
     /** Implements validateRuleSetDraft as an overrideable service operation. */
     validateRuleSetDraft: async function (request) {
         let current = await this.requireRuleSet(request, request.ruleSetCode);
+        this.assertExpectedDraft(request, current);
         let validation = this.validationService().validateDefinition({
             definition: current.definition,
             propertyProviderCode: current.propertyProviderCode,
@@ -222,7 +244,7 @@ module.exports = {
             model: { $set: { validation: validation } }
         }));
         if (!validation.valid) {
-            let error = new Error('Rule set validation failed');
+            let error = this.inputError('Correct the conditions shown in the saved draft validation before continuing.');
             error.issues = validation.issues;
             throw error;
         }
@@ -248,6 +270,7 @@ module.exports = {
     /** Implements publishRuleSetDraft as an overrideable service operation. */
     publishRuleSetDraft: async function (request) {
         let current = await this.requireRuleSet(request, request.ruleSetCode);
+        this.assertExpectedDraft(request, current);
         if (current.status !== 'DRAFT') throw new Error('Only draft rule sets can be published');
         await this.validateRuleSetDraft(Object.assign({}, request, { ruleSetCode: current.code }));
         let bandVersion = await this.assertCurrentSimulation(request, current);
@@ -310,6 +333,7 @@ module.exports = {
     /** Implements prepareNextRuleSetDraft as an overrideable service operation. */
     prepareNextRuleSetDraft: async function (request) {
         let current = await this.requireRuleSet(request, request.ruleSetCode);
+        this.assertExpectedDraft(request, current);
         if (current.status === 'DRAFT') return { code: 'RULE_SET_DRAFT_READY', data: current };
         if (Number(current.currentVersion || 0) < 1) throw new Error('Published rule-set version is required');
         let response = await this.ruleSetVersionService().get(this.serviceRequest(request, {
@@ -336,11 +360,8 @@ module.exports = {
                 effectiveFrom: version.effectiveFrom,
                 effectiveTo: version.effectiveTo,
                 draftRevision: draftRevision,
-                preparedFromVersion: version.version,
-                validation: null,
-                lastSimulation: null,
-                approval: null
-            } }
+                preparedFromVersion: version.version
+            }, $unset: { validation: 1, lastSimulation: 1, approval: 1 } }
         }));
         await this.auditService().record(request, {
             ruleSetCode: current.code,
@@ -373,31 +394,34 @@ module.exports = {
     /** Implements updateBandSetDraft as an overrideable service operation. */
     updateBandSetDraft: async function (request) {
         let current = await this.requireBandSet(request, request.bandSetCode);
+        this.assertExpectedDraft(request, current);
         if (current.status !== 'DRAFT') throw new Error('Only draft score band sets can be updated');
         let patch = Object.assign({}, this.modelOf(request));
+        delete patch.expectedDraftRevision;
         ['code','status','currentVersion'].forEach(key => delete patch[key]);
         let bands = patch.bands || current.bands;
         let gapBehavior = patch.gapBehavior || current.gapBehavior;
         let validation = this.validationService().validateBands(bands, gapBehavior);
         patch.validation = validation;
         patch.draftRevision = Number(current.draftRevision || 1) + 1;
-        await this.bandSetService().update(this.serviceRequest(request, {
-            query: { code: current.code, status: 'DRAFT' },
+        this.assertDraftWrite(await this.bandSetService().update(this.serviceRequest(request, {
+            query: { code: current.code, status: 'DRAFT', draftRevision: Number(current.draftRevision || 1) },
             model: { $set: patch }
-        }));
+        })));
         return { code: 'SCORE_BAND_SET_UPDATED', data: { code: current.code, draftRevision: patch.draftRevision, validation: validation } };
     },
 
     /** Implements publishBandSetDraft as an overrideable service operation. */
     publishBandSetDraft: async function (request) {
         let current = await this.requireBandSet(request, request.bandSetCode);
+        this.assertExpectedDraft(request, current);
         if (current.status !== 'DRAFT') throw new Error('Only draft score band sets can be published');
         let validation = this.validationService().validateBands(current.bands, current.gapBehavior);
         let dateValidation = this.validationService().validateDates(current.effectiveFrom, current.effectiveTo);
         validation.issues = validation.issues.concat(dateValidation.issues);
         validation.valid = validation.issues.length === 0;
         if (!validation.valid) {
-            let error = new Error('Score band validation failed');
+            let error = this.inputError('Correct the score band ranges: they must not overlap and must follow the configured gap policy.');
             error.issues = validation.issues;
             throw error;
         }
@@ -440,6 +464,7 @@ module.exports = {
     /** Implements prepareNextBandSetDraft as an overrideable service operation. */
     prepareNextBandSetDraft: async function (request) {
         let current = await this.requireBandSet(request, request.bandSetCode);
+        this.assertExpectedDraft(request, current);
         if (current.status === 'DRAFT') return { code: 'SCORE_BAND_SET_DRAFT_READY', data: current };
         if (Number(current.currentVersion || 0) < 1) throw new Error('Published score-band version is required');
         let response = await this.bandSetVersionService().get(this.serviceRequest(request, {
@@ -459,9 +484,8 @@ module.exports = {
                 gapBehavior: version.gapBehavior,
                 effectiveFrom: version.effectiveFrom,
                 effectiveTo: version.effectiveTo,
-                draftRevision: draftRevision,
-                validation: null
-            } }
+                draftRevision: draftRevision
+            }, $unset: { validation: 1 } }
         }));
         await this.auditService().record(request, {
             bandSetCode: current.code,

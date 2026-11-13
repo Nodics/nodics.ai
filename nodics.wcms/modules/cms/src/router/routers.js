@@ -39,9 +39,18 @@ module.exports = {
             controller: 'DefaultCmsDocumentationGovernanceController', operation: 'migrationPlan' }
     },
     cmsDesignerComposition: {
+        listDraftPages: { secured: true, accessGroups: ['userGroup'], permission: 'cms.backoffice.view',
+            apiExposure: 'cmsAuthoring', key: '/designer/composition/pages', method: 'GET',
+            controller: 'DefaultCmsDesignerCompositionController', operation: 'listDraftPages' },
+        getDraftComposition: { secured: true, accessGroups: ['userGroup'], permission: 'cms.backoffice.view',
+            apiExposure: 'cmsAuthoring', key: '/designer/composition/draft', method: 'GET',
+            controller: 'DefaultCmsDesignerCompositionController', operation: 'getDraftComposition' },
         getAuthoringModel: { secured: true, accessGroups: ['userGroup'], permission: 'cms.backoffice.view',
             apiExposure: 'cmsAuthoring', key: '/designer/composition/model', method: 'GET',
             controller: 'DefaultCmsDesignerCompositionController', operation: 'getAuthoringModel' },
+        getDocumentationDraftModel: { secured: true, accessGroups: ['userGroup'], permission: 'cms.authoring.write',
+            apiExposure: 'cmsAuthoring', key: '/designer/composition/documentation-model', method: 'GET',
+            controller: 'DefaultCmsDesignerCompositionController', operation: 'getDocumentationDraftModel' },
         validateDraftComposition: { secured: true, accessGroups: ['userGroup'], permission: 'cms.backoffice.manage',
             apiExposure: 'cmsAuthoring', key: '/designer/composition/validate', method: 'POST',
             controller: 'DefaultCmsDesignerCompositionController', operation: 'validateDraftComposition' },
@@ -97,6 +106,14 @@ module.exports = {
         rollbackMigration: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'cms.migration.rollback', key: '/migration/rollback', method: 'POST', controller: 'DefaultCmsMigrationController', operation: 'rollbackMigration' }
     },
     cmsDelivery: {
+        publishedKnowledge: { secured: false, publicAccess: true, accessGroups: ['userGroup'],
+            key: '/delivery/knowledge', method: 'GET', controller: 'DefaultCmsDeliveryController',
+            operation: 'publishedKnowledge', cache: { enabled: false } },
+        documentationGuides: {
+            secured: true, accessGroups: ['userGroup'], permissionConfig: 'cms.delivery.authenticatedPermission',
+            key: '/delivery/documentation/guides', method: 'GET', controller: 'DefaultCmsDeliveryController',
+            operation: 'documentationGuides', cache: { enabled: false }
+        },
         resolvePublicPage: {
             secured: false,
             publicAccess: true,
@@ -217,6 +234,14 @@ module.exports = {
         }
     },
     cmsPublicationProcess: {
+        review: {
+            secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+            permission: 'cms.publication.approve', apiExposure: 'cmsAuthoring',
+            cache: { enabled: false },
+            key: '/publication/reviews/:instanceCode/tasks/:taskCode', method: 'GET',
+            controller: 'DefaultCmsPublicationProcessController', operation: 'review',
+            responses: { '200': { description: 'Read-only frozen CMS evidence for an exact pending Process task' } }
+        },
         applyDecision: {
             secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
             permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
@@ -266,6 +291,19 @@ module.exports = {
                     correlationId: { type: 'string', maxLength: 256 },
                     catalogCode: { type: 'string', maxLength: 128 },
                     forceRefresh: { type: 'boolean' }
+                }
+            } } } }
+        },
+        installContentPack: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+            permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+            key: '/publication/baselines/:baselineCode/content-pack/imports', method: 'POST',
+            controller: 'DefaultCmsPublicationBaselineController', operation: 'installContentPack',
+            requestBody: { required: true, content: { 'application/json': { schema: {
+                type: 'object', additionalProperties: false, required: ['requestedBy'], properties: {
+                    requestedBy: { type: 'string', minLength: 1, maxLength: 256 },
+                    reason: { type: 'string', maxLength: 1000 },
+                    correlationId: { type: 'string', maxLength: 256 }
                 }
             } } } }
         },

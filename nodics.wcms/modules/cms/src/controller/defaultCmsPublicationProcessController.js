@@ -11,6 +11,13 @@
 
 /** @module cms/controller/DefaultCmsPublicationProcessController @description Maps the authenticated Process decision callback to the Staged CMS publication authority. */
 module.exports = {
+    /** Returns a private review projection without running a decision or authoring command. */
+    review: function (request, callback) {
+        request.httpResponse?.setHeader('Cache-Control', 'no-store');
+        let promise = SERVICE.DefaultCmsPublicationReviewService.inspect(request);
+        if (!callback) return promise;
+        promise.then(result => callback(null, { code: 'SUC_CMS_00000', result })).catch(callback);
+    },
     /** Executes the documented bounded module operation. */
     applyDecision: function (request, callback) {
         request.publicationDecision = request.httpRequest && request.httpRequest.body || request.publicationDecision || {};

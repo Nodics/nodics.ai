@@ -133,6 +133,30 @@ export function assertNativeEndpoint(uri, protocol) {
   return parsed.origin;
 }
 
+/** Checks complete retained scope/channel coverage without issuing private observation or execution authority. */
+export function assertRegisteredScopeCoverage(receipt, scopes) {
+  const derived = scopes.flatMap(scope => scope.databases.filter(target => target.tenantCode));
+  const seenScopes = new Set(derived.map(target => JSON.stringify([target.tenantCode, target.candidate.scopeKey])));
+  const seen = new Set(derived.map(target => JSON.stringify([
+    target.tenantCode, target.candidate.scopeKey, target.moduleName, target.channel,
+  ])));
+  for (const tenant of receipt.tenants) {
+    const bindings = tenant.properties?.database?.tenantNamespaceBindings;
+    if (!bindings || Object.getPrototypeOf(bindings) !== Object.prototype || !Object.keys(bindings).length)
+      throw refusal('RESET_TENANT_SCOPE_INCOMPLETE');
+    for (const [scopeKey, binding] of Object.entries(bindings)) {
+      if (!seenScopes.has(JSON.stringify([tenant.code, scopeKey])))
+        throw refusal('RESET_TENANT_SCOPE_INCOMPLETE');
+      for (const [moduleName, module] of Object.entries(binding.modules)) {
+        for (const channel of Object.keys(module.channels)) {
+          if (!seen.has(JSON.stringify([tenant.code, scopeKey, moduleName, channel])))
+            throw refusal('RESET_TENANT_SCOPE_INCOMPLETE');
+        }
+      }
+    }
+  }
+}
+
 /** Uses actual database/cache configuration consumers in serial, restoring globals even after partial discovery failure. No provider initialization is called. */
 export async function consumeRuntime(snapshot, registration, searchBindings) {
   const previous = { CONFIG: global.CONFIG, NODICS: global.NODICS, CLASSES: global.CLASSES };
@@ -165,8 +189,15 @@ export async function consumeRuntime(snapshot, registration, searchBindings) {
         handler: configuration.options.connectionHandler, moduleName: name };
     });
     for (const tenant of tenants) {
+      const bindings = tenant.properties?.database?.tenantNamespaceBindings;
+      if (!bindings || Object.getPrototypeOf(bindings) !== Object.prototype || !Object.keys(bindings).length)
+        throw refusal('RESET_TENANT_PIN_CHANGED');
+      const { scopeKey } = selectedOwner.getTenantNamespaceBindingScope();
+      // A never-prepared runtime owns no registered destinations; do not derive new ones for reset.
+      if (!Object.hasOwn(bindings, scopeKey)) continue;
       const current = selectedOwner.buildTenantNamespaceBinding(tenant.code);
-      const storedBinding = tenant.properties.database.tenantNamespaceBindings[current.scopeKey];
+      if (current.scopeKey !== scopeKey) throw refusal('RESET_TENANT_PIN_CHANGED');
+      const storedBinding = bindings[scopeKey];
       const stale = !isDeepStrictEqual(current.binding, storedBinding);
       if (stale && registration.options.retireStaleRegisteredBindings !== true)
         throw refusal('RESET_TENANT_PIN_CHANGED');
@@ -525,14 +556,12 @@ export async function withMaintenanceRuntimeContext(operation) {
 }
 
 /** Resolves one explicitly selected launch environment and loads only maintenance services, restoring the caller context afterwards. */
-async function withRuntime(options, projectRoot, runtime, variables, operation) {
+export async function withRuntime(options, projectRoot, runtime, variables, operation) {
   const frameworkRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../../../..');
   return withMaintenanceRuntimeContext(async () => {
-    const snapshot = probe.resolve({ projectRoot, frameworkRoot, environment: options.environment,
+    const snapshot = await probe.resolve({ projectRoot, frameworkRoot, environment: options.environment,
       server: runtime.server, variables: { ...variables, ...(runtime.env || {}) } });
     if (snapshot.properties.environment?.class !== 'LOCAL') throw refusal('RESET_LOCAL_ENVIRONMENT_REQUIRED');
-    const initializer = require(path.join(frameworkRoot, 'nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService'));
-    await initializer.loadMaintenanceServices();
     return await operation(snapshot);
   });
 }
@@ -583,18 +612,7 @@ export async function readSelection(options, projectRoot) {
   }
   const selected = { deployment, scopes, ...(registration ? { registeredObservation: registration.receipt } : {}) };
   if (registration) {
-    const seen = new Set(scopes.flatMap(scope => scope.databases.filter(target => target.tenantCode)
-      .map(target => JSON.stringify([target.tenantCode, target.candidate.scopeKey, target.moduleName, target.channel]))));
-    for (const tenant of registration.receipt.tenants) {
-      for (const [scopeKey, binding] of Object.entries(tenant.properties.database.tenantNamespaceBindings)) {
-        for (const [moduleName, module] of Object.entries(binding.modules)) {
-          for (const channel of Object.keys(module.channels)) {
-            if (!seen.has(JSON.stringify([tenant.code, scopeKey, moduleName, channel])))
-              throw refusal('RESET_TENANT_SCOPE_INCOMPLETE');
-          }
-        }
-      }
-    }
+    assertRegisteredScopeCoverage(registration.receipt, scopes);
     registeredSelections.set(selected, registration);
   }
   freezeSelection(selected);

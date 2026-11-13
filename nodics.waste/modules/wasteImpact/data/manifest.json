@@ -5,7 +5,7 @@
     "carbonEvidencePermission": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "wasteImpact capability permissions",
       "description": "Explicit owner permission definitions; preserve existing Profile-managed assignments.",
       "owningDomain": "wasteImpact",
@@ -76,7 +76,7 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "e3df9c072c1b7d90273bc9ef746ebe5ab895d56bd3051872d1fe31df3c5ea3ba",
+      "releaseChecksum": "9d424f33f78d071ac21cd96aad2155d939c3dec66664c5750e48381aec333361",
       "generatedHashes": {
         "docs-v001/records/documentation/wasteImpactDocumentationComponentData.js": "a96b0ba90c1777da5b4d55f4ffcaaf34be113ecb9847dc8e914177564498c4fa",
         "docs-v001/records/documentation/wasteImpactDocumentationNodeData.js": "dfeb974054c516a129f0224bb430131894c3f00ede6d429b8fc5330c1c74227b",
@@ -84,7 +84,7 @@
         "docs-v001/records/documentation/wasteImpactDocumentationPageMetadataData.js": "834e4cbee4150f6b8dcf671ca480b2fa518e99d9c0cc28979563f02e20750034",
         "docs-v001/records/documentation/wasteImpactDocumentationSearchMetadataData.js": "7212522ae413fbce36bef384441951fc5e087a5aa3dc8822cfa6dd4bef277703",
         "docs-v001/records/documentation/wasteImpactDocumentationPublicationStateData.js": "93d93b371960d636de92a081bb87e9266daef4dc5220578cd6c951240c14948b",
-        "docs-v001/records/documentation/wasteImpactDocumentationRouteData.js": "5708c2f4ffb079ab4781d6fdb2748d8ee1f64433aa9ae1ecaa5bb77de8ef7fef",
+        "docs-v001/records/documentation/wasteImpactDocumentationRouteData.js": "2177f964cc1b4989ed0e51f5fe2c9689542ec04f5b91e56100f18bb3f36415f0",
         "docs-v001/headers/100_wasteImpactDocumentationContentPackHeader.js": "028bdd359dbb484f7ca6f5a4ce25b2c2f6dd06d95ba0c6243eb020f90de46ad8"
       },
       "includes": [

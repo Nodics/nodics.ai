@@ -185,3 +185,5 @@ Cache startup awaits configured event subscriptions. Subscriber clients belong
 to their channels and are closed by central shutdown, including failed runtime
 bootstrap. Redis closes a connection or subscriber that fails before registration
 so an unowned reconnect loop cannot keep a failed process alive.
+
+Sentinel clients expose live connection readiness and shutdown state to the shared cache lifecycle. Member loss cannot remain healthy merely because an adapter omits the status fields. Native failover qualification must use an explicit isolated deployment and preserve tenant namespaces and auth revocation through promotion.

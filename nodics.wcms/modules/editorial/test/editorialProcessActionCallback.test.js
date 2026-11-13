@@ -66,19 +66,32 @@ test('Online target uses internal persistence authority only after scoped Editor
     const groups = require('../config/properties').schemaPolicies.editorial.operational.accessGroups;
     let runtimeRole = 'ONLINE', reads = 0, authorityRequests = 0;
     global.UTILS = { isBlank: value => !value || !Object.keys(value).length };
-    global.CONFIG = { get: key => key === 'editorial' ? { publication: { runtimeRole } } :
+    const transactionContext = Object.freeze({}), publicationDefaults = require('../config/properties').editorial.publication;
+    const assertScoped = request => {
+        assert.ok(access.getAccessPoint(request.authData, groups) >= 10);
+        assert.equal(request.authData.serviceId, 'source');
+        assert.equal(request.tenant, 'tenantA');
+        assert.equal(request.transactionContext, transactionContext);
+    };
+    global.CONFIG = { get: key => key === 'editorial' ? { publication: { ...publicationDefaults, runtimeRole } } :
         key === 'identityGovernance' ? defaults.identityGovernance : undefined };
     global.SERVICE = {
         DefaultServiceTokenService: tokens,
         DefaultEditorialPublicationTargetService: targetService,
+        DefaultDatabaseTransactionService: {
+            capabilities: () => ({ multiRecordAtomic: true, contextPropagation: true }),
+            execute: async (context, work) => { assert.deepEqual(context, { moduleName: 'editorial', tenant: 'tenantA' }); return work(transactionContext); },
+        },
         DefaultIdentityGovernanceService: { getSystemAuthData: () => { authorityRequests++; return identity.getSystemAuthData(); } },
+        DefaultEditorialPublicationReceiptService: { get: async request => {
+            assertScoped(request);
+            return { code: 'SUC_FIND_00000', result: [] };
+        } },
         DefaultEditorialOnlineArticleService: { get: async request => {
-            assert.ok(access.getAccessPoint(request.authData, groups) >= 10);
-            assert.equal(request.authData.serviceId, 'source');
-            assert.equal(request.tenant, 'tenantA');
+            assertScoped(request);
             assert.deepEqual(request.query, { articleCode: 'article-one', status: 'CURRENT' });
             reads++;
-            return { result: [] };
+            return { code: 'SUC_FIND_00000', result: [] };
         } },
     };
     const authData = { tokenType: 'service', serviceId: 'source', entCode: 'enterpriseA', tenant: 'tenantA',
@@ -95,9 +108,39 @@ test('Online target uses internal persistence authority only after scoped Editor
     assert.equal(reads, 0);
     assert.equal(authorityRequests, 0);
     runtimeRole = 'ONLINE';
-    assert.equal(await target.status(request), null);
+    assert.deepEqual(await target.status(request), { version: null, revision: 0, projectionCodes: [], deployment: null });
     assert.equal(reads, 1);
     assert.equal(authorityRequests, 1);
     assert.equal(request.authData.userGroups, undefined);
     assert.equal(request.editorialPublicationTarget, undefined);
+});
+
+
+test('Editorial claims bind Workflow publication and reject remote or incompatible local context', async () => {
+    let local = true, publication = 'STAGED', destination = 'OPERATIONAL', calls = 0;
+    global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
+    global.CONFIG = { get: key => key === 'runtimeRole' ? { code: 'RENAMED_CONTENT', publication } :
+        key === 'editorial' ? { workflow: { actionAuthority: { connectionName: 'renamed-process', connectionType: 'abstract', publication: destination, timeoutMs: 1000 } } } : undefined };
+    global.NODICS = { isModuleActive: name => local && name === 'editorial' };
+    const body = { instanceCode: 'review', executionCode: '12345678-1234-1234-1234-123456789abc' };
+    const request = { tenant: 'tenantA', httpRequest: { body }, authData: {
+        tokenType: 'service', serviceId: 'process', entCode: 'enterpriseA', tenant: 'tenantA', modules: ['workflow'],
+        runtimeInstanceId: 'process-instance', runtimeScope: { instanceCode: 'process-instance', projectCode: 'project', environmentCode: 'test', serverCode: 'renamed-process', assignmentCode: 'grant' },
+    } };
+    global.SERVICE = { DefaultServiceTokenService: tokens, DefaultModuleService: {
+        ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'),
+        invokeModule: async call => {
+            calls++;
+            assert.equal(call.moduleName, 'workflow');
+            assert.deepEqual(call.targetAuthority, { publication: 'OPERATIONAL' });
+            assert.equal(call.local, false); assert.equal(call.tenant, 'tenantA'); assert.equal(call.maxAttempts, 1);
+            assert.deepEqual(call.requestBody, { executionCode: body.executionCode, actionKey: 'editorial.applyDecision', sourceRuntimeInstanceId: 'process-instance' });
+            return { claimed: true };
+        },
+    } };
+    assert.deepEqual(await controller.claimExecution('applyDecision', request), { claimed: true });
+    local = false; await assert.rejects(controller.claimExecution('applyDecision', request));
+    local = true; publication = 'ONLINE'; await assert.rejects(controller.claimExecution('applyDecision', request));
+    publication = 'STAGED'; destination = 'STAGED'; await assert.rejects(controller.claimExecution('applyDecision', request));
+    assert.equal(calls, 1);
 });

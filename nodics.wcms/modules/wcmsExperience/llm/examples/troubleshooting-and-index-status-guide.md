@@ -130,3 +130,24 @@ If experience resolution becomes slow, check these items first:
 - `wcmsExperiencePublicationIndexingContract` failure means document shape, idempotency, alias safety, or event handling changed.
 - `cmsPublicationOutboxExperienceConsumerContract` failure means after-commit outbox behavior changed.
 - `wcmsExperienceRouteSecurityContract` failure means public delivery or Axis preview permissions changed.
+
+## Implemented bounded observation
+
+ requires the same journey context (at least site/pageType).
+It performs one bounded Staged projection lookup, preserving trusted tenant and actor.
+EMPTY, OBSERVED and UNAVAILABLE are observations, never a CURRENT alias or publication
+certificate. documentCount is the bounded matching projection count; resolvedPlacementCount
+counts matching active placements. UNAVAILABLE has no invented zero count/version.
+A client must retire old evidence on actor, owner or journey changes and show the
+observation context. Do not import or publish merely to turn diagnostics green.
+
+The existing committed Online publication hook does not establish a Staged indexing
+lifecycle. A deployment must qualify a Staged projection path before claiming a
+successful indexed preview; fixture tests and raw authored rows are insufficient.
+
+
+The payload illustrated above is a future full-index diagnostic example, not the
+current bounded status guarantee. Use GET /authoring/index-status?site=yourSite&pageType=PRODUCT_LISTING&targetType=DEFAULT&targetCode=*&locale=en&channel=web.
+An imported placement remains Staged authoring data. If preview fails, inspect
+Discovery owner/access/index readiness; do not substitute fixtures or write an index
+from a browser/test helper. Retry the read explicitly after the owner is repaired.

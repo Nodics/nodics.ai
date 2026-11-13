@@ -164,7 +164,7 @@ module.exports = {
         const check = () => {
             if (!owner || !Number.isSafeInteger(ref.versionId) || ref.versionId < 0 ||
                 policy.mode !== 'REMOTE' || typeof policy.connectionName !== 'string' || !policy.connectionName ||
-                !/^v\d+$/.test(policy.apiVersion) || policy.targetAuthority?.runtimeRole !== 'COMMERCE_STAGED' ||
+                !/^v\d+$/.test(policy.apiVersion) || (policy.targetAuthority?.publication !== "STAGED" || Object.entries(policy.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
                 !Number.isSafeInteger(timeout?.minimum) || !Number.isSafeInteger(timeout?.maximum) ||
                 timeout.minimum < 1 || timeout.minimum > timeout.maximum ||
                 !Number.isSafeInteger(policy.timeoutMs) || policy.timeoutMs < timeout.minimum || policy.timeoutMs > timeout.maximum ||
@@ -248,7 +248,7 @@ module.exports = {
         const bound = () => {
             const timeout = policy?.validation?.timeoutMs;
             if (!policy || typeof policy.connectionName !== 'string' || !policy.connectionName ||
-                !/^v\d+$/.test(policy.apiVersion) || policy.targetAuthority?.runtimeRole !== 'PLATFORM' ||
+                !/^v\d+$/.test(policy.apiVersion) || (policy.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(policy.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
                 !Number.isSafeInteger(timeout?.minimum) || !Number.isSafeInteger(timeout?.maximum) ||
                 timeout.minimum < 1 || timeout.maximum < timeout.minimum ||
                 !Number.isSafeInteger(policy.timeoutMs) || policy.timeoutMs < timeout.minimum || policy.timeoutMs > timeout.maximum ||

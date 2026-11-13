@@ -29,7 +29,7 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
             assert.strictEqual(refreshes, 1);
             assert.strictEqual(descriptor.local, false);
             assert.strictEqual(descriptor.apiName, '/operations/local-reset');
-            assert.deepStrictEqual(descriptor.targetAuthority, { runtimeRole: 'OWNER' });
+            assert.deepStrictEqual(descriptor.targetAuthority, { server: 'ownerServer', publication: 'OPERATIONAL' });
             assert.strictEqual(descriptor.requestBody.resetScope, 'LOCAL_ACCEPTANCE');
             assert.strictEqual(descriptor.requestBody.reason, 'fresh acceptance verification');
             assert.strictEqual(descriptor.header.Authorization, 'Bearer service-token');
@@ -41,7 +41,27 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     await assert.rejects(service.execute({ localReset: {} }), error => error.code === 'ERR_BOF_00092');
     policy.enabled = true;
     assert.strictEqual((await service.status({})).reason, 'RESET_PROVIDERS_MISSING');
-    policy.providers = [{ code: 'owner', moduleName: 'system', connectionName: 'ownerRuntime', targetAuthority: { runtimeRole: 'OWNER' } }];
+    policy.providers = [{ code: 'owner', moduleName: 'system', connectionName: 'ownerRuntime', targetAuthority: { server: 'ownerServer', publication: 'OPERATIONAL' } }];
+    const qualified = structuredClone(policy.providers[0]);
+    for (const targetAuthority of [undefined, {}, { runtimeRole: 'OWNER' },
+        { publication: 'OPERATIONAL' }, { server: 'ownerServer' },
+        { server: 'ownerServer', publication: 'UNKNOWN' },
+        { server: 'ownerServer', publication: 'ONLINE', runtimeRole: 'OWNER' },
+        { server: '*', publication: 'ONLINE' },
+        { server: 'ownerServer', publication: 'ONLINE', environment: '' },
+        { server: 'ownerServer', publication: 'ONLINE', node: '*' }]) {
+        policy.providers = [{ ...qualified, targetAuthority }];
+        assert.throws(() => service.providers(), error => error.code === 'ERR_BOF_00091');
+    }
+    for (const publication of ['STAGED', 'ONLINE', 'OPERATIONAL']) {
+        const targetAuthority = { server: 'renamedOwner', publication, environment: 'isolatedLocal', node: 'nodeOne' };
+        policy.providers = [{ ...qualified, targetAuthority }];
+        const selected = service.providers()[0];
+        assert.deepStrictEqual(selected.targetAuthority, targetAuthority);
+        assert.notStrictEqual(selected.targetAuthority, targetAuthority);
+    }
+    assert.strictEqual(refreshes, 0, 'Descriptor validation must not acquire credentials or dispatch');
+    policy.providers = [qualified];
     await assert.rejects(service.execute({ authData: { tokenType: 'service', principalId: 'internal' },
         localReset: { confirmation: policy.confirmation, reason: 'fresh acceptance verification' } }),
     error => error.code === 'ERR_BOF_00093');

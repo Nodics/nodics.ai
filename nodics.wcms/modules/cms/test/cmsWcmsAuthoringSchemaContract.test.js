@@ -27,6 +27,13 @@ const validationService = require("../src/service/validation/defaultCmsContractV
 const interceptors = require("../src/interceptors/interceptors");
 const statusDefinitions = require("../src/utils/statusDefinitions");
 
+for (const schema of Object.values(schemas).filter(item => item.model === true)) {
+  assert.strictEqual(schema.accessGroups.cmsBusinessFullControlUserGroup, undefined);
+  assert.deepStrictEqual(schema.dataRelease?.stagedSourceWriterGroups,
+    schema.dataRelease?.stagedSourceOperation === "saveAll" ? ["cmsBusinessFullControlUserGroup"] : undefined);
+  assert(!schema.backoffice.operations.includes("create"));
+}
+
 [
   "cmsComponentTypeGroup",
   "cmsNavigationNode",

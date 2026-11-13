@@ -136,14 +136,14 @@ test("Digital Commerce releases Promotion-owned digital reservations during chec
 test("Digital Commerce creates entitlements records delivery and reveals only through secure provider boundary", async () => {
   const digitalCore = { maximumCouponUnitsPerCheckout: 100,
     couponAccess: { maximumOwnEntitlements: 100,
-      profile: { connectionName: 'profile', targetAuthority: 'profile', timeoutMilliseconds: 1000 } } };
-  global.CONFIG = { get: key => key === 'runtimeRole' ? 'COMMERCE' : digitalCore };
+      profile: { connectionName: 'profile', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMilliseconds: 1000 } } };
+  global.CONFIG = { get: key => key === 'runtimeRole' ? { publication: 'OPERATIONAL' } : digitalCore };
   const entitlements = [];
   const deliveries = [];
   global.SERVICE = {
     DefaultLoggerService: { hasPrivateCaptureProtection: () => true, inheritRequestPrivacy: () => {} },
     DefaultSecuredRequestPipelineService: { getGrantedPermissions: () => ['commerce.digital.own.reveal'], isPermissionGranted: () => true },
-    DefaultModuleService: { invokeModule: async () => ({ contractVersion: 1, tenant: 'default', enterpriseCode: 'enterpriseX',
+    DefaultModuleService: { isLocalModuleActive: name => name === 'digitalCore', invokeModule: async () => ({ contractVersion: 1, tenant: 'default', enterpriseCode: 'enterpriseX',
       customer: { code: 'customer-1', loginId: 'customer-1' } }) },
     DefaultDigitalEntitlementService: {
       save: async (request) => {
@@ -313,8 +313,8 @@ test("Digital Commerce customer APIs list owned entitlements and reveal through 
     constructor(code) { super(code); this.code = code; }
   } };
   const digitalCore = { couponAccess: { maximumOwnEntitlements: 100,
-    profile: { connectionName: 'profile', targetAuthority: 'profile', timeoutMilliseconds: 1000 } } };
-  global.CONFIG = { get: key => key === 'runtimeRole' ? 'COMMERCE' : digitalCore };
+    profile: { connectionName: 'profile', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMilliseconds: 1000 } } };
+  global.CONFIG = { get: key => key === 'runtimeRole' ? { publication: 'OPERATIONAL' } : digitalCore };
   const entitlements = [
     {
       code: "entitlement-1",
@@ -348,7 +348,7 @@ test("Digital Commerce customer APIs list owned entitlements and reveal through 
   global.SERVICE = {
     DefaultLoggerService: { hasPrivateCaptureProtection: () => true, inheritRequestPrivacy: () => {} },
     DefaultSecuredRequestPipelineService: { getGrantedPermissions: () => ['commerce.digital.own.reveal'], isPermissionGranted: () => true },
-    DefaultModuleService: { invokeModule: async () => ({ contractVersion: 1, tenant: 'default', enterpriseCode: 'default',
+    DefaultModuleService: { isLocalModuleActive: name => name === 'digitalCore', invokeModule: async () => ({ contractVersion: 1, tenant: 'default', enterpriseCode: 'default',
       customer: { code: 'customer-1', loginId: 'customer-1' } }) },
     DefaultDigitalCommerceEntitlementService: entitlementService,
     DefaultDigitalEntitlementService: {

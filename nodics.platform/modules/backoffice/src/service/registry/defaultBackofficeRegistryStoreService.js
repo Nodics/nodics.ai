@@ -16,6 +16,16 @@
  * @owner backoffice
  * @override Projects may replace store behavior while preserving asynchronous TTL, enumeration, diagnostics, and failure contracts.
  */
+const { randomUUID } = require("node:crypto");
+// Derived decoding only: never an authority cache, and never shared by store instances.
+const decodedStores = new WeakMap();
+function freezeLease(value) {
+    if (value && typeof value === "object" && !Object.isFrozen(value)) {
+        Object.values(value).forEach(freezeLease); Object.freeze(value);
+    }
+    return value;
+}
+
 module.exports = {
     _instances: new Map(),
     _metrics: { reads: 0, writes: 0, deletes: 0, conditionalDeletes: 0, conditionalDeleteConflicts: 0,
@@ -64,19 +74,80 @@ module.exports = {
     get: function (key) {
         return this.observe('reads', () => {
             if (!this.isDistributed()) return this._instances.get(key);
-            return this.getDistributedClient().get(this.getStorageKey(key)).then(value => value ? JSON.parse(value) : undefined);
+            return this.getDistributedClient().get(this.getStorageKey(key)).then(value => this.decodeLease(this.getStorageKey(key), value));
         });
     },
-    /** Creates or replaces one observed lease with a bounded provider TTL. */
-    set: function (key, value, ttlMs) {
-        return this.observe('writes', () => {
+    /** Reuses immutable decoding only when fresh provider bytes match; errors never reach this path. */
+    decodeLease: function (key, serialized) {
+        const maximum = this.getConfiguration().maximumDecodedBytes ?? 0;
+        if (!Number.isSafeInteger(maximum) || maximum < 0 || maximum > 67108864) throw new Error("Registry decoded byte budget is invalid");
+        let cache = decodedStores.get(this);
+        if (!cache || cache.maximum !== maximum) { cache = { values: new Map(), bytes: 0, maximum }; decodedStores.set(this, cache); }
+        const previous = cache.values.get(key);
+        if (serialized && previous?.serialized === serialized) return previous.value;
+        if (previous) { cache.values.delete(key); cache.bytes -= previous.bytes; }
+        if (!serialized) return undefined;
+        const value = freezeLease(JSON.parse(serialized));
+        const bytes = Buffer.byteLength(serialized, "utf8");
+        if (bytes <= maximum && maximum > 0) {
+            while (cache.bytes + bytes > maximum && cache.values.size) {
+                const oldest = cache.values.keys().next().value;
+                cache.bytes -= cache.values.get(oldest).bytes; cache.values.delete(oldest);
+            }
+            cache.values.set(key, { serialized, value, bytes }); cache.bytes += bytes;
+        }
+        return value;
+    },
+    /** Atomically validates a current lease snapshot and writes its replacement.
+     * The synchronous validator must be pure and rerunnable. Memory has no yield between
+     * validation and mutation; distributed admission retries a revision-guarded nCache write.
+     * All writes advance the same revision, including source-only observations. Provider
+     * expiry/removal only reduces ownership and therefore need not advance the revision.
+     */
+    set: function (key, value, ttlMs, validate) {
+        return this.serializeDistributedAdmission(() => this.observe('writes', async () => {
             if (!this.isDistributed()) {
+                if (validate) validate(Array.from(this._instances.entries()).map(([key, value]) => ({ key, value })));
                 this._instances.set(key, value);
                 return value;
             }
-            let duration = Math.max(1, Number(ttlMs || value.expiresAt - Date.now()));
-            return this.getDistributedClient().set(this.getStorageKey(key), JSON.stringify(value), { PX: duration }).then(() => value);
-        });
+            const client = this.getDistributedClient();
+            if (typeof client.eval !== 'function') throw new Error('Distributed registry store requires atomic admission support');
+            const revisionKey = this.getStorageKey('$revision');
+            const script = [
+                '-- backoffice-registry-admission',
+                'if ARGV[1] ~= "*" and (redis.call("GET", KEYS[2]) or "") ~= ARGV[1] then return 0 end',
+                'redis.call("SET", KEYS[1], ARGV[2], "PX", ARGV[3])',
+                'redis.call("SET", KEYS[2], ARGV[4])',
+                'return 1'
+            ].join('\n');
+            // A lease cannot be admitted after its original bounded expiry, including under contention.
+            const deadline = Math.min(value.expiresAt, Date.now() + Number(ttlMs || value.expiresAt - Date.now()));
+            while (Date.now() < deadline) {
+                const revision = validate ? (await client.get(revisionKey) || '') : '*';
+                if (validate) {
+                    const entries = await this.values();
+                    // Do not report a conflict from a snapshot already superseded by another admission.
+                    if ((await client.get(revisionKey) || '') !== revision) continue;
+                    validate(entries);
+                }
+                const duration = Math.ceil(deadline - Date.now());
+                if (duration <= 0) break;
+                const written = await client.eval(script, {
+                    keys: [this.getStorageKey(key), revisionKey],
+                    arguments: [revision, JSON.stringify(value), String(duration), randomUUID()]
+                });
+                if (Number(written) === 1) return value;
+            }
+            throw new Error('Registry admission lease expired during contention');
+        }));
+    },
+    /** Prevents same-member lease batches from repeatedly invalidating each other; provider CAS still arbitrates independent members. */
+    serializeDistributedAdmission: function (operation) {
+        if (!this.isDistributed()) return operation();
+        const admitted = (this._admissionTail || Promise.resolve()).then(operation);
+        this._admissionTail = admitted.catch(() => undefined);
+        return admitted;
     },
     /** Removes one observed lease. */
     delete: function (key) {
@@ -111,11 +182,13 @@ module.exports = {
             let client = this.getDistributedClient();
             let prefix = String(this.getConfiguration().keyPrefix || 'registry:lease:');
             let keys = [];
-            for await (let key of client.scanIterator({ MATCH: prefix + '*', COUNT: 100 })) keys.push(key);
+            for await (let key of client.scanIterator({ MATCH: prefix + '*', COUNT: 100 })) {
+                if (key !== this.getStorageKey('$revision')) keys.push(key);
+            }
             if (keys.length === 0) return [];
             let values = typeof client.mGet === 'function' ? await client.mGet(keys) : await Promise.all(keys.map(key => client.get(key)));
             return keys.map((key, index) => values[index] ? {
-                key: key.substring(prefix.length), value: JSON.parse(values[index])
+                key: key.substring(prefix.length), value: this.decodeLease(key, values[index])
             } : null).filter(Boolean);
         });
     },
@@ -134,5 +207,5 @@ module.exports = {
         return { mode: config.mode || 'memory', distributed: this.isDistributed(), available: available, metrics: Object.assign({}, this._metrics) };
     },
     /** Clears all process-local observed leases; intended for controlled shutdown and tests. */
-    clear: function () { this._instances.clear(); }
+    clear: function () { this._instances.clear(); decodedStores.delete(this); }
 };

@@ -47,5 +47,12 @@ module.exports = {
     ERR_CMS_00107: { code: '400', message: 'CMS locale is invalid or unsupported' },
     ERR_CMS_00108: { code: '422', message: 'CMS localized property declaration is invalid' },
     ERR_CMS_00109: { code: '422', message: 'CMS localized content is invalid' },
-    ERR_CMS_00110: { code: '422', message: 'CMS localization is missing a mandatory property' }
+    ERR_CMS_00110: { code: '422', message: 'CMS localization is missing a mandatory property' },
+    ERR_CMS_00111: { code: '409', message: 'CMS saved composition changed; reopen it before saving' },
+    ERR_CMS_00112: { code: '400', message: 'CMS website path is invalid' },
+    ERR_CMS_00113: { code: '400', message: 'CMS redirect path is invalid' },
+    ERR_CMS_00114: { code: '422', message: 'The publication target does not match the saved page or site' },
+    ERR_CMS_00115: { code: '503', message: 'Frozen CMS review evidence is temporarily unavailable' },
+    ERR_CMS_00117: { code: '409', message: 'Publication receipt is missing or does not match the original operation. Inspect owner evidence before retrying; no publication is confirmed.' },
+    ERR_CMS_00116: { code: '409', message: 'The Online route changed or has a different scope. Refresh Publishing and inspect its current release before restoring a version.' }
 };

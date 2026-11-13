@@ -1,5 +1,10 @@
 # nRouter Agent Contract
 
+Selected live tenant preparation follows secured route authentication and access
+checks, before cache/controller dispatch. Delegate to nService's existing owner;
+failure stops the pipeline. Public headers cannot select namespace preparation.
+Keep `test/liveTenantPipelineContract.test.js` aligned with pipeline ordering.
+
 Sensitive HTTP routes must follow the [request capture contract](llm/contracts/request-capture-privacy-contract.md).
 Bind trusted `requestPrivacy: { sensitive: true }` before parsers; preserve exact
 private admission on derived inputs, cache exclusion and generic failures.

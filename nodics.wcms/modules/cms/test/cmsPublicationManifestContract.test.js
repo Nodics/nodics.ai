@@ -12,7 +12,8 @@
 /** Validates exact-version CMS dependency, immutable manifest, Online pointer, delivery, and rollback contracts. */
 const assert = require('assert');
 const schemas = require('../src/schemas/schemas').cms;
-const properties = require('../config/properties');
+const properties = require('../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService').resolve(
+    require('../config/properties'), {}, { readRuntimeProperty: () => 'STAGED' });
 const routes = require('../src/router/routers').cms;
 
 class NodicsError extends Error {
@@ -22,6 +23,7 @@ global.CLASSES = { NodicsError: NodicsError };
 global._ = require('lodash');
 global.CONFIG = { get: key => {
     if (key === 'cms') return properties.cms;
+    if (key === 'runtimeRole') return { code: 'RENAMED_CONTENT', publication: properties.cms.publication.runtimeRole };
 } };
 
 ['cmsPageRoute', 'cmsPage', 'cmsComponentDetail', 'cmsComponent', 'cmsComponentLocalization', 'cmsComponentMedia',
@@ -89,7 +91,7 @@ const data = {
     manifests: [], pointers: [], receipts: [], outbox: [],
     experiencePlacements: [
         { code: 'site-a-home-hero-experience', active: true, site: 'site-a', pageType: 'PRODUCT_LISTING',
-            slot: 'hero', targetType: 'DEFAULT', targetCode: '*', component: 'hero', rendererKey: 'component.hero',
+            revision: 0, contractVersion: 1, slot: 'hero', targetType: 'DEFAULT', targetCode: '*', component: 'hero', rendererKey: 'component.hero',
             publicationStatus: 'STAGED', deliveryStatus: 'ACTIVE', locale: 'en', channel: 'web',
             created: '2026-08-31T00:00:00.000Z', updated: '2026-08-31T00:00:00.000Z' }
     ]
@@ -183,11 +185,13 @@ properties.cms.publication.targetTransportProvider = 'TestCmsTargetTransport';
 properties.cms.publication.runtimeRole = 'STAGED';
 
 const publication = { code: 'publish-home', domain: 'cms', rootType: 'pageRoute', rootCode: 'home-route',
-    sourceVersion: '0', mediaCodes: ['product-extra-media'] };
+    sourceVersion: '2', mediaCodes: ['product-extra-media'] };
 const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, correlationId: 'correlation-a' };
 
 (async () => {
     let root = await adapter.getVersion(publication, request);
+    await assert.rejects(adapter.getVersion({ ...publication, siteCode: 'another-site' }, request),
+        { code: 'ERR_CMS_00114' });
     let dependencies = await adapter.resolveDependencies(publication, root, request);
     assert(dependencies.some(item => item.schema === 'cmsPage' && item.code === 'home' && item.version === '3'));
     assert(dependencies.some(item => item.schema === 'cmsComponent' && item.code === 'hero' && item.version === '4'));
@@ -216,7 +220,17 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     await assert.rejects(adapter.getVersion(Object.assign({}, publication, { rootType: 'unknown' }), request),
         error => error.code === 'CMS_PUBLICATION_ROOT_UNSUPPORTED');
 
+    const frozenPlacement = {...data.experiencePlacements[0]};
+    delete frozenPlacement.created;delete frozenPlacement.updated;
+    SERVICE.DefaultCmsDeliveryService = require('../src/service/delivery/defaultCmsDeliveryService');
+    SERVICE.DefaultWcmsExperiencePublicationSourceService = require('../../wcmsExperience/src/service/defaultWcmsExperiencePublicationSourceService');
+    SERVICE.DefaultDiscoveryProjectionTransportService = require('../../../../nodics.discovery/modules/discoveryProjection/src/service/defaultDiscoveryProjectionTransportService');
+    SERVICE.DefaultWcmsExperienceResolverService = require('../../wcmsExperience/src/service/defaultWcmsExperienceResolverService');
+    dependencies.push({schema:'cmsExperiencePlacement',code:frozenPlacement.code,
+        version:SERVICE.DefaultWcmsExperiencePublicationSourceService.digest(frozenPlacement),snapshot:frozenPlacement});
     publication.dependencies = dependencies;
+    await assert.rejects(manifests.buildSnapshot({ ...publication, siteCode: 'another-site' }, request),
+        { code: 'ERR_CMS_00114' });
     let manifest = await manifests.persist(publication, request);
     assert.strictEqual(manifest.snapshot.page.components.length, 12,
         'publication manifest must freeze every active component detail beyond the default generated-service page size');
@@ -285,6 +299,30 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     assert.strictEqual(repaired.status, 'REPAIRED');
     assert.strictEqual(data.receipts.length, 1);
     assert.strictEqual(data.outbox.length, 1);
+    const exactReceipt = structuredClone(data.receipts[0]);
+    for (const change of [{ sourceVersion: 'wrong' }, { publicationCode: 'other' }, { targetVersion: 'other' }, { active: false }]) {
+        Object.assign(data.receipts[0], exactReceipt, change);
+        const mismatch = await provider.reconcile({ ...publication, targetVersion: manifest.code, revision: 4 }, { ...request, repairEvidence: true });
+        assert.strictEqual(mismatch.status, 'RECEIPT_MISMATCH');
+        assert.strictEqual(mismatch.repairRefused, true);
+        assert.strictEqual(data.receipts.length, 1, 'Conflicting evidence must not be overwritten or duplicated');
+    }
+    Object.assign(data.receipts[0], exactReceipt);
+    const receiptSaveForGap = SERVICE.DefaultCmsPublicationDeploymentReceiptService.save;
+    const receiptGetForGap = SERVICE.DefaultCmsPublicationDeploymentReceiptService.get;
+    SERVICE.DefaultCmsPublicationDeploymentReceiptService.get = async () => ({ result: [] });
+    SERVICE.DefaultCmsPublicationDeploymentReceiptService.save = async () => ({ code: 'SUC_SYS_00000' });
+    await assert.rejects(target.recordReceipt('DEPLOY', manifest, { version: manifest.code }, request), { code: 'ERR_CMS_00117' });
+    SERVICE.DefaultCmsPublicationDeploymentReceiptService.get = receiptGetForGap;
+    SERVICE.DefaultCmsPublicationDeploymentReceiptService.save = receiptSaveForGap;
+    const updateForRepair = SERVICE.DefaultCmsOnlinePublicationPointerService.update;
+    const missingReceipt = data.receipts.pop();
+    SERVICE.DefaultCmsOnlinePublicationPointerService.update = async () => ({ result: { modifiedCount: 0 } });
+    await assert.rejects(provider.reconcile({ ...publication, targetVersion: manifest.code, revision: 4 },
+        { ...request, repairEvidence: true }), { code: 'ERR_CMS_00116' });
+    assert.strictEqual(data.receipts.length, 0, 'A lost pointer fence must prevent receipt repair');
+    SERVICE.DefaultCmsOnlinePublicationPointerService.update = updateForRepair;
+    data.receipts.push(missingReceipt);
     let pointerManifest = data.pointers[0].manifestCode;
     data.pointers[0].manifestCode = 'unexpected-manifest';
     let refused = await provider.reconcile(Object.assign({}, publication, { targetVersion: manifest.code, revision: 5 }),
@@ -326,11 +364,26 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     let receiptCountBeforeLoss = data.receipts.length;
     let outboxCountBeforeLoss = data.outbox.length;
     let recoveredLoss = await provider.activate(lossPublication, request);
-    assert.strictEqual(recoveredLoss.version, 'publish-home-response-loss_0_1');
+    assert.strictEqual(recoveredLoss.version, 'publish-home-response-loss_2_1');
     assert.strictEqual(recoveredLoss.recovered, true, 'response-loss recovery must reconcile committed Online evidence');
     assert.strictEqual(data.pointers.length, pointerCountBeforeLoss, 'response-loss recovery must reuse the committed pointer');
     assert.strictEqual(data.receipts.length, receiptCountBeforeLoss + 1, 'response-loss recovery must reuse the committed receipt');
     assert.strictEqual(data.outbox.length, outboxCountBeforeLoss + 1, 'response-loss recovery must reuse the committed outbox event');
+    const originalKey = lossPublication.code + ':activate:1';
+    const retainedRetry = { ...lossPublication, revision: 9, activationOperation: { key: originalKey } };
+    const resumed = await provider.activate(retainedRetry, request);
+    assert.strictEqual(resumed.version, recoveredLoss.version, 'Recovery must retain the original manifest revision');
+    assert.strictEqual(data.receipts.length, receiptCountBeforeLoss + 1);
+    assert.strictEqual(data.outbox.length, outboxCountBeforeLoss + 1);
+    const exactStatus = SERVICE.TestCmsTargetTransport.getStatus;
+    SERVICE.TestCmsTargetTransport.getStatus = async (input, currentRequest) => {
+        const status = await exactStatus(input, currentRequest);
+        return { ...status, receipts: (status.receipts || []).map(item => ({ ...item, operationKey: 'different-operation' })) };
+    };
+    const originalFailure = new Error('Lost original response');
+    await assert.rejects(provider.recoverCommittedDeploy(retainedRetry,
+        { code: recoveredLoss.version }, request, originalFailure), error => error === originalFailure);
+    SERVICE.TestCmsTargetTransport.getStatus = exactStatus;
     SERVICE.TestCmsTargetTransport.deploy = originalTransportDeploy;
 
     properties.cms.publication.enabled = true;
@@ -348,7 +401,14 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
 
     let previous = Object.assign({}, manifest, { code: 'publish-home_1', sourceVersion: '0', contentHash: 'previous' });
     data.manifests.push(previous);
-    let rolledBack = await provider.rollback(publication, previous.code, request);
+    const currentManifestCode = data.pointers[0].manifestCode;
+    await assert.rejects(provider.assertRollbackTarget({ ...publication, targetVersion: previous.code }, request),
+        { code: 'ERR_CMS_00116' });
+    await assert.rejects(onTarget(() => target.rollback({ ...request, cmsPublicationTarget: {
+        manifestCode: previous.code, expectedCurrentManifestCode: previous.code
+    } })), { code: 'ERR_CMS_00116' });
+    assert.strictEqual(data.pointers[0].manifestCode, currentManifestCode, 'stale rollback must preserve the Online pointer');
+    let rolledBack = await provider.rollback({ ...publication, targetVersion: currentManifestCode }, previous.code, request);
     assert.strictEqual(rolledBack.version, previous.code);
     assert.strictEqual(data.pointers[0].manifestCode, previous.code);
     assert(data.receipts.some(receipt => receipt.operation === 'ROLLBACK' && receipt.manifestCode === previous.code));
@@ -420,6 +480,15 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     assert(concurrentReceipt.every(receipt => receipt.code === concurrentReceipt[0].code &&
         receipt.code.startsWith('DEPLOY_' + raceManifest.code + '_')),
         'concurrent identical receipt writes must converge on one deployment receipt');
+    raceReceipt = undefined;
+    SERVICE.DefaultCmsPublicationDeploymentReceiptService.get = async () => ({ result: raceReceipt ? [structuredClone(raceReceipt)] : [] });
+    SERVICE.DefaultCmsPublicationDeploymentReceiptService.save = async input => {
+        Object.assign(input.model, { _id: { generated: 'id' }, created: new Date(), accessGroups: ['systemUserGroup'] });
+        raceReceipt = structuredClone(input.model);
+        return { result: [structuredClone(raceReceipt)] };
+    };
+    assert.strictEqual((await target.recordReceipt('DEPLOY', raceManifest, { version: raceManifest.code }, request)).targetVersion,
+        raceManifest.code, 'Generated save metadata must not mutate the expected immutable receipt projection');
     SERVICE.DefaultCmsPublicationDeploymentReceiptService.get = originalReceiptGet;
     SERVICE.DefaultCmsPublicationDeploymentReceiptService.save = originalReceiptSave;
 
@@ -486,23 +555,91 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     assert(data.pointers.every(pointer => pointer.active === true));
     properties.cms.publication.siteBundleChunkThresholdBytes = originalChunkThreshold;
 
+    // A shared/default route is routing policy, not a BCP47 content language.
+    data.sites.push({ code: 'locale-site', versionId: 0, active: true });
+    data.routes.push({ code: 'locale-route', versionId: 0, active: true, site: 'locale-site', path: '/localized',
+        locale: 'default', channel: 'web', accessMode: 'PUBLIC', routeType: 'PAGE', page: 'locale-page' });
+    data.pages.push(Object.assign({}, data.pages[0], { code: 'locale-page', versionId: 0 }));
+    data.details.push({ code: 'locale-detail', versionId: 0, active: true, source: 'locale-page', target: 'locale-hero', slot: 'main', index: 0 });
+    data.components.push(Object.assign({}, data.components[0], { code: 'locale-hero', versionId: 0, properties: { title: 'Shared base' } }));
+    data.localizations.push({ code: 'locale-en', versionId: 0, active: true, componentCode: 'locale-hero', locale: 'en', properties: { title: 'Reviewed English' }, status: 'READY' },
+        { code: 'locale-ar', versionId: 0, active: true, componentCode: 'locale-hero', locale: 'ar', properties: { title: 'عنوان معتمد' }, status: 'READY' });
+    const localizedPublication = { code: 'publish-locales-zero', domain: 'cms', rootType: 'pageRoute', rootCode: 'locale-route', sourceVersion: '0', revision: 5 };
+    data.routes.push({ ...data.routes.find(route => route.code === 'locale-route'),
+        versionId: 1, path: '/unreviewed-edit' });
+    const localizedRoot = await provider.getVersion(localizedPublication, request);
+    assert.equal(localizedRoot.path, '/localized');
+    const previousConfigGet = CONFIG.get;
+    CONFIG.get = key => key === 'runtimeRole' ? { publication: 'STAGED' } : previousConfigGet(key);
+    SERVICE.DefaultCmsDesignerAccessService = {
+        deny: () => { throw new CLASSES.NodicsError('ERR_AUTH_00003'); },
+        authorize: () => true,
+        records: async (_service, _request, query) => {
+            assert.deepStrictEqual(query, { code: 'locale-route', versionId: 0 });
+            return [{ ...localizedRoot, authoringScope: { siteCode: 'locale-site', catalogCode: 'locale-catalog' } }];
+        },
+        scope: async request => request.cmsDesigner,
+        matches: (row, scope) => row.authoringScope.siteCode === scope.siteCode &&
+            row.authoringScope.catalogCode === scope.catalogCode,
+    };
+    try {
+        await adapter.authorizeScopedOperator('get', localizedPublication, request);
+        await assert.rejects(adapter.authorizeScopedOperator('get', { ...localizedPublication, sourceVersion: '00' }, request),
+            { code: 'ERR_AUTH_00003' });
+    } finally {
+        CONFIG.get = previousConfigGet;
+        delete SERVICE.DefaultCmsDesignerAccessService;
+    }
+    localizedPublication.dependencies = await adapter.resolveDependencies(localizedPublication, localizedRoot, request);
+    assert.equal((await adapter.validate(localizedPublication, localizedRoot, request, localizedPublication.dependencies)).valid, true);
+    assert.equal(await provider.getOnlineVersion(localizedPublication, request), undefined);
+    const frozenLocaleInputs = JSON.stringify(data.localizations.filter(item => item.componentCode === 'locale-hero'));
+    const localizedManifest = await manifests.persist(localizedPublication, request);
+    assert.equal(localizedManifest.snapshot.bundleType, 'SITE');
+    assert.deepEqual(localizedManifest.snapshot.routes.map(route => route.locale), ['en', 'ar']);
+    const activatedLocales = await provider.activate(localizedPublication, request);
+    assert.equal(activatedLocales.routeCount, 2);
+    assert.equal((await provider.getOnlineVersion(localizedPublication, request)).version, localizedManifest.code);
+    const localePointers = data.pointers.filter(pointer => pointer.site === 'locale-site');
+    assert.deepEqual(localePointers.map(pointer => pointer.locale), ['en', 'ar']);
+    properties.cms.publication.enabled = true;
+    for (const [locale, title] of [['en', 'Reviewed English'], ['ar', 'عنوان معتمد']]) {
+        const deliveredLocale = await onTarget(() => delivery.resolvePage({ ...request, router: { publicAccess: true },
+            delivery: { site: 'locale-site', path: '/localized', locale, channel: 'web' } }));
+        assert.equal(deliveredLocale.result.page.components[0].properties.title, title);
+        assert.equal(deliveredLocale.result.locale, locale);
+    }
+    properties.cms.publication.enabled = false;
+    assert.equal(JSON.stringify(data.localizations.filter(item => item.componentCode === 'locale-hero')), frozenLocaleInputs);
+    assert.equal(data.routes.find(route => route.code === 'locale-route').locale, 'default');
+    const beforeLocaleReplay = data.receipts.length;
+    await provider.activate(localizedPublication, request);
+    assert.equal(data.receipts.length, beforeLocaleReplay, 'same immutable locale deployment converges without another receipt');
+    localePointers[1].active = false;
+    await assert.rejects(provider.getOnlineVersion(localizedPublication, request), error => error.code === 'CMS_PUBLICATION_POINTER_CONFLICT');
+    localePointers[1].active = true;
+    const explicitLocale = { ...data.routes.find(route => route.code === 'locale-route'), code: 'explicit-en', locale: 'en' };
+    assert.equal(manifests.publicationRoutes([localizedRoot, explicitLocale]).find(route => route.locale === 'en').code, 'explicit-en');
+    assert.throws(() => manifests.publicationRoutes([explicitLocale, { ...explicitLocale, code: 'duplicate-en' }]), error => error.code === 'CMS_PUBLICATION_ROUTE_BOUNDARY');
+
     const transport = require('../src/service/publication/defaultCmsPublicationModuleTransportService');
     properties.cms.publication.runtimeRole = 'STAGED';
     properties.cms.publication.target = Object.assign({}, properties.cms.publication.target,
         { moduleName: 'cms', connectionName: 'cmsOnline' });
     let transportDescriptor;
     SERVICE.DefaultModuleService = {
+        ...require('../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService'),
         invokeModule: async options => {
             transportDescriptor = options;
             return options.responseSelector({ result: { version: 'target-v1' } });
         }
     };
-    global.NODICS = { getInternalAuthToken: () => undefined };
+    global.NODICS = { isModuleActive: name => name === 'cms', getInternalAuthToken: () => undefined };
     await assert.rejects(() => transport.deploy({ manifest: manifest }, request),
         error => error.code === 'CMS_PUBLICATION_INTERNAL_AUTH_UNAVAILABLE');
     NODICS.getInternalAuthToken = tenant => tenant === 'tenant-a' ? 'service-token' : undefined;
     assert.strictEqual((await transport.deploy({ manifest: manifest }, request)).version, 'target-v1');
-    assert.deepStrictEqual(transportDescriptor.targetAuthority, { runtimeRole: 'WCMS_ONLINE' });
+    assert.deepStrictEqual(transportDescriptor.targetAuthority, { publication: 'ONLINE' });
     assert.strictEqual(transportDescriptor.connectionName, 'cmsOnline');
     assert.strictEqual(transportDescriptor.requestBody.tenant, 'tenant-a');
     assert.strictEqual(transportDescriptor.requestBody.correlationId, 'correlation-a');

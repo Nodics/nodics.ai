@@ -19,6 +19,15 @@
 module.exports = {
 
     /**
+     * Delegates runtime availability observation to the export owner.
+     * @param {Object} request Secured runtime request.
+     * @returns {Promise<Object>} Owner availability envelope.
+     */
+    workspace: function (request) {
+        return SERVICE.DataExportService.workspace(request);
+    },
+
+    /**
 
      * Executes export behavior.
 

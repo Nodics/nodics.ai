@@ -43,7 +43,7 @@ async function fixture(t, options = {}) {
     f.settings.promotion.sellerAuthorization = { enabled: true, qualified: true, maximumSellers: 10 };
     SERVICE.DefaultSecuredRequestPipelineService = { getGrantedPermissions: () => ['commerce.promotion.manage', 'commerce.coupon.seller.manage'],
         isPermissionGranted: (permission, permissions) => permissions.includes(permission) };
-    SERVICE.DefaultModuleService = { invokeModule: async request => {
+    SERVICE.DefaultModuleService = {isLocalModuleActive: moduleName => ["promotion"].includes(moduleName),  invokeModule: async request => {
         if (request.apiName === '/identity/scopes/me') return { principalCode: 'operatorA',
             scopes: [{ scopeType: 'ENTERPRISE', scopeCode: 'issuerA', tenantCode: 'tenantA' }], deniedScopes: [] };
         assert.equal(request.apiName, '/references/read');

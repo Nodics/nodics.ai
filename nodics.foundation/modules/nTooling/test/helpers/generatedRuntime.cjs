@@ -36,6 +36,8 @@ module.exports = function verifyGeneratedRuntime(selection) {
             write(path.join(directory, 'config/properties.js'), 'module.exports = ' + JSON.stringify(properties));
         };
         boundary(root, 'independent.generation', 'application', '1000.00', {});
+        write(path.join(root, 'envs/package.json'), JSON.stringify({ name: 'generation.environments',
+            version: '1.0.0', private: true, nodics: { kind: 'group', runtimeModule: false } }));
         boundary(path.join(root, 'envs', 'quality'), 'quality', 'group', '1001.00', {});
         boundary(path.join(root, 'envs', 'quality', 'worker'), 'worker', 'server', '1002.00', {
             activeModules: { modules: ['nodics.foundation', ...selection.activeModules, 'independent.generation', 'quality', 'worker'] },

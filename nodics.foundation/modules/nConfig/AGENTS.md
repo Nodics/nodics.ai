@@ -1,5 +1,10 @@
 # nConfig Agent Contract
 
+Isolated deployment projection flushes its one private result and terminates
+the child despite module-level handles. Library projection must not terminate its
+caller. Child-process exceptions contain resolved secrets in stdout; replace them
+with bounded coordinate/error-code diagnostics before they reach tooling logs.
+
 Composition selects framework groups, shared modules and project packs only.
 Implementing owners contribute domain adapters through ordinary properties;
 do not restore a Product search-contributor mirror or another domain registry
@@ -44,15 +49,13 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 Apply [minimal configuration and effective inheritance](llm/contracts/configuration-inheritance-contract.md) before adding or relocating defaults. Validate the active owner and index order, and preserve array merge semantics and explicit operational gates.
 
-Top-level capability namespaces may declare `runtimeRoleProfiles` through the
-existing role-profile projection. Do not add accelerator/customer names to a
-Foundation allowlist to enable this mechanism. Profiles use only selected
-contributions and never activate modules or authorize imports. Preserve the
-existing profile merge precedence and remove unselected profile maps from CONFIG.
+Use ordinary owner namespaces for defaults and ordinary layered deployment
+values for intentional overrides. Reject retired `runtimeRoleProfiles` and
+`runtimeRole.roles`; do not restore role-derived activation or initialization.
 
 Explicit inactive-owner configuration uses selected-server metadata and the
 existing discovery/merge boundary, never arbitrary paths or module activation.
-Resolve only the selected role and preserve later collection replacement. Keep
+Resolve only the selected ordinary namespace and preserve later collection replacement. Keep
 offline projection independent of global runtime state. See
 [the selector contract](llm/contracts/configuration-inheritance-contract.md#explicit-inactive-owner-configuration).
 Selected inactive-owner defaults follow ordinary framework properties in the
@@ -96,9 +99,8 @@ and distinguish contributing server paths from canonical capability ownership.
 See the configuration-inheritance contract's effective behavior diagnostics.
 
 Use explicit collection replacement/keyed changes and preserve ordinary-array compatibility, reference timing and tenant isolation. See the configuration-inheritance contract.
-Top-level capability role collection operations must meet the complete base at
-role projection, not an empty role-local list during contribution loading.
-Preserve deferred operation ordering and never expose internal bookkeeping in CONFIG.
+Collection operations apply through ordinary contribution layering. Load owner
+defaults before intentional runtime overrides; no deferred role fold exists.
 
 Do not repeat the selected environment/server/node in additional capability activation lists. Inherit unchanged defaults and environment connections; preserve explicit policy pins and reference timing. Apply the [customer configuration rule](../nSetup/llm/contracts/customer-config-classification-contract.md#structural-facts-and-repeated-deployment-values) to generators, examples and review.
 
@@ -113,7 +115,7 @@ sequence. This preserves explicit replacement/keyed semantics for framework-owne
 tooling defaults; never merge defaults back into already-resolved collections.
 This projection does not activate modules or alter runtime startup authority.
 Projection fixtures must supply the selected owners' ordinary property contributions
-before testing role projection. Declared module roots contribute release selectors,
+before testing effective configuration. Declared module roots contribute release selectors,
 not missing domain installer defaults; never restore those defaults in nConfig.
 
 Reusable isolated composed-graph projection belongs to
@@ -121,3 +123,6 @@ Reusable isolated composed-graph projection belongs to
 configuration probe delegates to it. Runtime owners must not depend on the
 non-runtime tooling package or copy the canonical loader. Treat returned
 properties as private deployment input, not public metadata or approval proof.
+
+Retain validated running build identity through the existing Infra service; never
+recompute it from later disk edits. See the [inheritance contract](llm/contracts/configuration-inheritance-contract.md) and generated-artifact regression.

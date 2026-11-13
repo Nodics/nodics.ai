@@ -8,3 +8,5 @@ This module owns rulesEngine.limits used by definition validation, including
 definition depth. The functional group only composes cross-runtime releases.
 Evaluation's per-request depth contract remains separate; no unused simulation
 batch setting may imply an implemented batch API.
+
+Draft changes invalidate simulation and approval with `$unset`, not null object values. Preparing a successor also unsets validation; immutable published versions remain unchanged. Caller-supplied approval and simulation never survive a draft edit.

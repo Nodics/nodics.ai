@@ -1,0 +1,87 @@
+{
+  "reason": "Immutable pre-provenance correction selection; not installed-runtime proof",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "database",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 3,
+      "components": 3,
+      "routes": 3,
+      "releaseChecksum": "c4dc1c28bced984fc3c2f90567f6721a0c84fb4e6fbbbf0acf38e1cf6c842eeb",
+      "generatedHashes": {
+        "docs-v001/records/documentation/databaseDocumentationNodeData.js": "25f28490a6fb3b0fafe9164b78ece800842a84fc8e9a841a8e21467e08b96e1d",
+        "docs-v001/records/documentation/databaseDocumentationPageMetadataData.js": "110840fbc456ceb50118a25e6c60ecd70fbeb5f6600dca0f55fcb9ef21000028",
+        "docs-v001/records/documentation/databaseDocumentationPublicationStateData.js": "009715bceb7db2486fa9dd0ef1bad8f6b4f0561d076be62c47d7b810169fc706",
+        "docs-v001/records/documentation/databaseDocumentationSearchMetadataData.js": "be1491a33bdd4689e16113fa7bfe1a1b6bd4507a419d8c8ab73007bd637188bf",
+        "docs-v001/records/documentation/databaseDocumentationComponentData.js": "ee8ceaf8d3c15e71a4f955b612d60d3e87dcc4edec833877c929a4122ecec483",
+        "docs-v001/records/documentation/databaseDocumentationPageData.js": "ceed7041fc1b2fed42dec22eba924c936f3652c37578d0ccb48fb901d42bab24",
+        "docs-v001/records/documentation/databaseDocumentationRouteData.js": "d3b56074a590992ffe1bf6e89eceff1ca2a83dbc854db9f6089101d937fbf06c",
+        "docs-v001/headers/100_databaseDocumentationContentPackHeader.js": "ea81a19b69d8b77db666e219f52cc5fc2ecf1f9962731dbe58de8df7d6de9d2b"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  },
+  "successorVersion": "0.0.2",
+  "articles": [
+    {
+      "id": "schema.data-modeling-management",
+      "componentCode": "nodicsDocsComponentschemaDataModelingManagement",
+      "previousFile": "docs-v001/records/documentation/databaseDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/databaseDocumentationRelease002ComponentData.js",
+      "blocksSha256": "38a084530d6f7c4bf672532967dd43a439fa52fd8d4bab9488bdc494483816d9",
+      "digestMode": "titled",
+      "sourceChecksum": "42e7a5311f8ec5c273342a915a20195e11ba136feb25c32bc3521a475050693c",
+      "sourceWordCount": 4654
+    },
+    {
+      "id": "persistence.provider-data-access-layer",
+      "componentCode": "nodicsDocsComponentpersistenceProviderDataAccessLayer",
+      "previousFile": "docs-v001/records/documentation/databaseDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/databaseDocumentationRelease002ComponentData.js",
+      "blocksSha256": "a8fc21ce74c0ceacefb1de8033c26efaa24fd7c19b97c0f21f9e1cb1ba917f21",
+      "digestMode": "titled",
+      "sourceChecksum": "8f359deed9539b8976fec434992d1c35328dc96139bd4d8a0bdf8841933cd41f",
+      "sourceWordCount": 1202
+    },
+    {
+      "id": "foundation.database-provider-boundaries",
+      "componentCode": "nodicsDocsComponentfoundationDatabaseProviderBoundaries",
+      "previousFile": "docs-v001/records/documentation/databaseDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/databaseDocumentationRelease002ComponentData.js",
+      "blocksSha256": "f20833563e7fd09731aebe73132d43884b8a0c6e9bacdbbaf42cdf076852e04c",
+      "digestMode": "titled",
+      "sourceChecksum": "496a452735af73f49926ff8e1c68a031b6212f12203f9d48cded4c71047a7125",
+      "sourceWordCount": 967
+    }
+  ]
+}

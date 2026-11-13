@@ -44,12 +44,12 @@ module.exports = {
       maximumCommands: 10000,
       biddingEvidence: {
         moduleName: "bidding", connectionName: "commerce",
-        targetAuthority: { runtimeRole: "COMMERCE" }, apiVersion: "v0",
+        targetAuthority: { publication: "OPERATIONAL" }, apiVersion: "v0",
         apiName: "/auctions/funds-evidence", timeoutMs: 10000, maxAttempts: 1,
       },
       checkoutEvidence: {
         moduleName: "checkoutCore", connectionName: "commerce",
-        targetAuthority: { runtimeRole: "COMMERCE" }, apiVersion: "v0",
+        targetAuthority: { publication: "OPERATIONAL" }, apiVersion: "v0",
         apiName: "/checkout/auction-funds/evidence", timeoutMs: 10000, maxAttempts: 1,
       },
     },
@@ -78,7 +78,7 @@ module.exports = {
       timeZone: "UTC",
       identityTimeoutMs: 10000,
       platformAdministratorEvidencePath: "/identity/platform-administrator/evidence",
-      identityTarget: { moduleName: "profile", connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, apiVersion: "v0", maxAttempts: 1 },
+      identityTarget: { moduleName: "profile", connectionName: "profile", targetAuthority: { publication: "OPERATIONAL" }, apiVersion: "v0", maxAttempts: 1 },
       validation: { identityTimeoutMs: { minimum: 1, maximum: 60000 }, identityMaxAttempts: { minimum: 1, maximum: 1 } },
     },
     transactions: { enabled: false, moduleName: "loyaltyWallet" },

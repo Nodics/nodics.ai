@@ -10,8 +10,10 @@
  */
 
 const _ = require('lodash');
-// Provenance of opened default handles, not a second connection registry.
-const defaultConnectionConfigurations = new WeakMap();
+// Provenance of opened handles, not a second connection registry.
+const openedConnectionConfigurations = new WeakMap();
+// Failed closes of rejected acquisitions remain cleanup-only; never available to readers.
+const rejectedAcquisitionCleanup = new Map();
 
 /**
  * @module database/service/connection/DefaultDatabaseConnectionHandlerService
@@ -86,8 +88,24 @@ module.exports = {
     closeAllConnections: async function () {
         const scopes = SERVICE.DefaultDatabaseConfigurationService.getRetainedDatabaseScopesForCleanup();
         const closed = new Set();
-        const results = await Promise.allSettled(scopes.map(({ moduleName, tenant }) =>
-            this.closeConnection(moduleName, tenant, closed)));
+        const results = await Promise.allSettled([
+            ...scopes.map(({ moduleName, tenant }) => this.closeConnection(moduleName, tenant, closed)),
+            this.closeRejectedAcquisitions()
+        ]);
+        const failure = results.find(result => result.status === 'rejected');
+        if (failure) throw failure.reason;
+        return true;
+    },
+
+    /** Attempts every rejected acquisition close; failures remain available for shutdown retry. */
+    closeRejectedAcquisitions: async function () {
+        const results = await Promise.allSettled([...rejectedAcquisitionCleanup].map(async ([identity, entry]) => {
+            if (!entry.closing) entry.closing = Promise.resolve().then(() => entry.provider.closeConnection(entry.database));
+            try {
+                await entry.closing;
+                rejectedAcquisitionCleanup.delete(identity);
+            } finally { entry.closing = undefined; }
+        }));
         const failure = results.find(result => result.status === 'rejected');
         if (failure) throw failure.reason;
         return true;
@@ -127,15 +145,19 @@ module.exports = {
                     dbModules.splice(defaultIndex, 1);
                 }
                 // Admit the whole requested batch before even the default provider opens.
-                ['default', ...(!onlyDefault ? dbModules : [])].forEach(moduleName =>
-                    SERVICE.DefaultDatabaseConfigurationService.getDatabaseConfiguration(moduleName, tntCode));
+                const registry = SERVICE.DefaultDatabaseConfigurationService;
+                registry.getDatabaseConfiguration('default', tntCode);
+                const groups = [];
+                for (const moduleName of onlyDefault ? [] : dbModules) {
+                    const configuration = registry.getDatabaseConfiguration(moduleName, tntCode);
+                    const group = groups.find(item => _.isEqual(item.configuration, configuration));
+                    if (group) group.modules.push(moduleName);
+                    else groups.push({ configuration, modules: [moduleName] });
+                }
                 _self.createDatabase('default', tntCode).then(success => {
-                    let allModules = [];
-                    if (!onlyDefault) {
-                        dbModules.forEach(moduleName => {
-                            allModules.push(_self.createDatabase(moduleName, tntCode));
-                        });
-                    }
+                    const allModules = groups.map(async group => {
+                        for (const moduleName of group.modules) await _self.createDatabase(moduleName, tntCode);
+                    });
                     if (allModules.length > 0) {
                         Promise.all(allModules).then(success => {
                             resolve(true);
@@ -174,18 +196,53 @@ module.exports = {
                     const testEnabled = !!(testConfig && testConfig.enabled && testConfig.uTest && testConfig.uTest.enabled);
                     const configuration = _.cloneDeep(dbConfig);
                     const registry = SERVICE.DefaultDatabaseConfigurationService;
+                    if (registry.getRetainedTenantDatabaseForCleanup?.(moduleName, tntCode)) {
+                        registry.getTenantDatabase(moduleName, tntCode);
+                        return resolve();
+                    }
                     if (moduleName !== 'default') {
                         const existing = registry.getTenantDatabase('default', tntCode);
-                        const opened = existing?.master && defaultConnectionConfigurations.get(existing.master);
-                        if (opened && opened.tenant === tntCode && opened.testEnabled === testEnabled &&
-                            _.isEqual(opened.configuration, configuration) && (!testEnabled || existing.test)) {
-                            registry.addTenantDatabase(moduleName, tntCode, { master: existing.master, test: existing.test });
+                        const matches = handles => {
+                            const opened = handles?.master && openedConnectionConfigurations.get(handles.master);
+                            return opened?.tenant === tntCode && opened.testEnabled === testEnabled &&
+                                _.isEqual(opened.configuration, configuration) && (!testEnabled || handles.test);
+                        };
+                        const owner = !matches(existing) && registry.getRetainedDatabaseScopesForCleanup?.().find(scope =>
+                            scope.tenant === tntCode && matches(registry.getRetainedTenantDatabaseForCleanup(scope.moduleName, tntCode)));
+                        const shared = owner ? registry.getTenantDatabase(owner.moduleName, tntCode) : existing;
+                        if (matches(shared)) {
+                            registry.addTenantDatabase(moduleName, tntCode, { master: shared.master, test: shared.test });
                             return resolve();
                         }
                     }
-                    const register = handles => {
-                        registry.addTenantDatabase(moduleName, tntCode, handles);
-                        if (moduleName === 'default') defaultConnectionConfigurations.set(handles.master, {
+                    const provider = SERVICE[dbConfig.options.connectionHandler];
+                    const register = async handles => {
+                        try {
+                            registry.addTenantDatabase(moduleName, tntCode, handles, { tenant: tntCode, testEnabled, configuration });
+                        } catch (error) {
+                            // A first acquisition may already be retained for cleanup. A losing
+                            // replacement must close only its own clients, never shared/retained ones.
+                            const retained = new Set();
+                            for (const scope of registry.getRetainedDatabaseScopesForCleanup()) {
+                                const value = registry.getRetainedTenantDatabaseForCleanup(scope.moduleName, scope.tenant);
+                                for (const database of [value?.master, value?.test]) {
+                                    if (database) retained.add(database.getClient?.() || database);
+                                }
+                            }
+                            for (const database of [handles.master, handles.test]) {
+                                if (!database) continue;
+                                const identity = database.getClient?.() || database;
+                                if (!retained.has(identity)) rejectedAcquisitionCleanup.set(identity, {
+                                    database, provider
+                                });
+                            }
+                            try { await _self.closeRejectedAcquisitions(); }
+                            catch (cleanupError) {
+                                throw new AggregateError([error, cleanupError], 'Database registration rejected and acquisition cleanup failed');
+                            }
+                            throw error;
+                        }
+                        openedConnectionConfigurations.set(handles.master, {
                             tenant: tntCode, testEnabled, configuration
                         });
                     };
@@ -198,7 +255,7 @@ module.exports = {
                     if (SERVICE[dbConfig.options.connectionHandler] &&
                         SERVICE[dbConfig.options.connectionHandler].createConnection && typeof SERVICE[dbConfig.options.connectionHandler].createConnection === 'function') {
                         _self.LOG.info('Connecting database for tenant: ' + tntCode);
-                        SERVICE[dbConfig.options.connectionHandler].createConnection(dbConfig.master).then(success => {
+                        SERVICE[dbConfig.options.connectionHandler].createConnection(dbConfig.master).then(async success => {
                             masterDatabase.setConnection(success.connection);
                             masterDatabase.setCollections(success.collections);
                             masterDatabase.setClient(success.client);
@@ -210,12 +267,12 @@ module.exports = {
                                     testDatabase.setURI(dbConfig.test.URI);
                                     testDatabase.setOptions(dbConfig.options);
                                     masterDatabase.setConnectionOptions(dbConfig.test.options);
-                                    SERVICE[dbConfig.options.connectionHandler].createConnection(dbConfig.test).then(success => {
+                                    SERVICE[dbConfig.options.connectionHandler].createConnection(dbConfig.test).then(async success => {
                                         testDatabase.setConnection(success.connection);
                                         testDatabase.setCollections(success.collections);
                                         testDatabase.setClient(success.client);
                                         testDatabase.setCapabilities(success.capabilities);
-                                        register({
+                                        await register({
                                             master: masterDatabase,
                                             test: testDatabase
                                         });
@@ -229,14 +286,14 @@ module.exports = {
                                         _self.LOG.error('Default test database configuration not found. Please velidate database configuration');
                                         process.exit(CONFIG.get('errorExitCode'));
                                     }
-                                    register({
+                                    await register({
                                         master: masterDatabase,
                                         test: testDB
                                     });
                                     resolve();
                                 }
                             } else {
-                                register({
+                                await register({
                                     master: masterDatabase,
                                     test: testDatabase
                                 });

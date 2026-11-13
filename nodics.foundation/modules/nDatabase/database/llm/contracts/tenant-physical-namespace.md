@@ -6,9 +6,11 @@ The database connection contributor delegates to the selected database
 configuration owner's `areRequiredConnectionsReady` when provided. The owner
 checks the current whole-runtime durable binding once per tenant per synchronous
 observation, then preserves current per-module scope and isolation checks and
-inspects acquired master handles. It never creates connections, persists an
+inspects acquired master handles. Destination resolution is shared by the
+binding, peer isolation and handle checks only inside that synchronous call.
+A later observation resolves all destinations again, including after a failed check. It never creates connections, persists an
 approval, or caches a pin across observations. Ordinary `getTenantDatabase`
-and mutation admission remain unchanged. Layered configuration owners may
+and mutation admission continue to require fresh tenant binding and isolation. Layered configuration owners may
 override this boolean capability while preserving these checks. The default
 capability preserves the legacy per-handle path when either `getTenantDatabase`
 or `getDatabaseConfiguration` is customized. It uses existing loader member
@@ -26,6 +28,69 @@ still produce not-ready. Lease renewal and startup READY are not substitutes
 for fresh health evidence, and probe deadlines must not be raised to mask this
 work amplification. `tenantPhysicalNamespaceContract.test.js` covers this
 source composition without opening providers or changing runtime data.
+
+## Acquired Handle Admission
+
+`getTenantDatabase` and the optimized readiness observation use the same
+`getAdmittedTenantDatabase` selection after fresh scope/isolation/binding checks.
+An absent exact module/tenant registration can use that tenant's default handle
+ONLY when the full resolved adapter configuration equals the effective default.
+A configured different database, URI, provider, credentials, options or test
+channel cannot fall back. An unrelated tenant's module slot does not prevent
+legitimate same-tenant default inheritance. Missing matching handles return
+undefined; malformed configuration and stale/unregistered handles reject with
+`ERR_DBS_00003`; readiness returns false. Explicit malformed blocks, including
+null, false, arrays and undefined destinations, are not inheritance requests.
+Malformed configured active modules remain in readiness's required inventory.
+
+Registration captures private in-memory acquisition evidence: tenant, full
+resolved configuration and existing framework test-channel selection. This is
+not a new configuration authority or durable tenant binding. The connection owner
+passes the snapshot taken before provider dispatch; a concurrent configuration
+change rejects registration admission while retaining the acquired handle for
+cleanup. Direct/custom registration must use `addTenantDatabase`, capturing
+provider inputs before asynchronous work through its acquisition argument.
+Writing raw `dbs` entries supplies no acquisition proof and cannot grant access.
+During connection creation, modules with identical effective adapter configuration
+can register the same opened handle in their own module slots. Startup acquires
+each matching group in order. Reuse requires the same tenant, provider options
+and test-channel selection, plus a fresh admission of the existing handle. This
+lets one transaction span module schemas placed in the same explicit database.
+
+Both exact and shared handles must still match acquisition evidence on reads.
+Default-tenant handles are subject to the same stale-handle check. Destination,
+endpoint, credentials, provider options or test-channel selection changes do
+not silently reconnect, rebind or migrate an existing registration. Connection
+creation rejects stale retained registrations before opening a replacement.
+Cleanup still uses retained handles and their original closure providers.
+Repeated creation of an admitted exact registration does not open another client.
+`addTenantDatabase` refuses replacing an existing registration with another handle.
+The connection owner awaits closure of unretained clients from a rejected
+acquisition, excluding every retained/shared native client. Failed closes surface
+as an error and remain in cleanup-only pending work for shutdown retry; they
+never become readable registrations. Direct registration callers retain lifecycle
+responsibility for their own rejected handles.
+
+Fallback equality resolves default configuration through the selected layered
+`getDatabaseConfiguration`, including its current refresh/admission behavior;
+it must not bypass that override through a base resolver. The base implementation
+reads current `CONFIG` on each call and does not cache resolved destinations.
+`CONFIG.changeTenantProperties` refreshes inherited defaults while retaining
+explicit module overrides. Acquisition snapshots are immutable evidence, not a
+refreshable configuration cache: drift rejects access rather than updating them.
+Operators must separately plan any installed destination migration; this
+correction does not authorize one. Restoring the original configuration permits
+admission only if all current tenant/binding checks also pass.
+
+Later-layer getter/configuration overrides continue through the existing
+customized readiness path. Overrides of the selection helper must preserve
+full configuration equality, same-tenant acquisition evidence and fail-closed
+behavior. Tests use fake providers and wrappers only:
+`databaseSharedRegistrationContract.test.js` covers inheritance, explicit
+isolation, malformed destinations, stale handles, acquisition races, cleanup,
+generated-model transaction identity and customization;
+`tenantPhysicalNamespaceContract.test.js` covers durable pins and actual service
+loader/readiness composition. Neither test establishes live database acceptance.
 
 ## Qualification Boundary
 
@@ -72,10 +137,10 @@ mode, tenant binding and keys on resolution.
 `getDatabaseConfiguration(moduleName, tenant)` resolves without provider writes
 and checks configured active tenant peers across database modules and both
 master/test channels. `createDatabaseConnection` preflights the entire requested
-module batch BEFORE the first provider dispatch. Non-default model-handle reads
-also recheck admission through `getTenantDatabase`.
+module batch BEFORE the first provider dispatch. All model-handle reads, including default-tenant reads, recheck effective
+configuration through `getTenantDatabase`.
 
-Default-tenant resolution is unchanged. No descriptor means NO derivation:
+Default-tenant configuration inheritance is unchanged. No descriptor means NO derivation:
 established explicit, distinct physical names remain unchanged; inherited or
 case-only aliases fail with `ERR_DATABASE_TENANT_NAMESPACE`. An existing alias
 must undergo separately approved migration, never receive a descriptor silently.
@@ -258,3 +323,10 @@ remain excluded and password rotation leaves endpoint fingerprints unchanged.
 These fixtures do NOT prove installed owner persistence or cluster identity.
 Installed provisioning, seed behavior,
 cross-runtime readiness and browser acceptance remain integration gates.
+
+
+Synchronous namespace admission reuses resolved destinations only within its current
+call, including nested peer and durable-pin checks. No approval survives a return,
+exception, await or later request. Preserve selected provider/service overrides,
+fresh configuration and pin refusal; never replace this with a process cache.
+The tenant physical namespace regression covers fresh-call drift and failure recovery.

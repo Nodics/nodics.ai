@@ -18,6 +18,86 @@
  */
 module.exports = {
     backoffice: {
+        backofficeRepairReceipt: {
+            super: 'base', schemaPolicies: ['administrator'], model: true,
+            isVersionedEnabled: false, cache: { enabled: false },
+            transaction: { enabled: true, sideEffects: 'none' },
+            backoffice: { concurrency: { managed: true, field: 'revision' } },
+            service: { enabled: true }, event: { enabled: false }, router: { enabled: false },
+            definition: {
+                scopeKey: { type: 'string', required: true },
+                revision: { type: 'int', required: true, default: 1 },
+                targetKey: { type: 'string', required: true },
+                requestHash: { type: 'string', required: true },
+                idempotencyKey: { type: 'string', required: true },
+                requestedBy: { type: 'string', required: true },
+                ownerModule: { type: 'string', required: true },
+                operation: { type: 'string', required: true },
+                action: { type: 'string', required: true },
+                targetIdentifiers: { type: 'object', required: true },
+                status: { type: 'string', required: true, description: 'READY, RUNNING, UNCERTAIN or COMPLETED; no expiry takeover' },
+                result: { type: 'object' },
+                createdAt: { type: 'date', required: true },
+                updatedAt: { type: 'date', required: true },
+                buildIdentity: { type: 'object', required: true }
+            },
+            indexes: { individual: {
+                repairReceiptCode: { name: 'code', enabled: true, options: { unique: true } },
+                repairReceiptScope: { name: 'scopeKey', enabled: true, options: { unique: false } }
+            } }
+        },
+        backofficeRepairTarget: {
+            super: 'base', schemaPolicies: ['administrator'], model: true,
+            isVersionedEnabled: false, cache: { enabled: false },
+            transaction: { enabled: true, sideEffects: 'none' },
+            backoffice: { concurrency: { managed: true, field: 'revision' } },
+            service: { enabled: true }, event: { enabled: false }, router: { enabled: false },
+            definition: {
+                scopeKey: { type: 'string', required: true },
+                revision: { type: 'int', required: true, default: 1 },
+                executionCode: { type: 'string', description: 'Exact durable execution holding this target, empty only after verified completion' },
+                updatedAt: { type: 'date', required: true }
+            },
+            indexes: { individual: {
+                repairTargetCode: { name: 'code', enabled: true, options: { unique: true } }
+            } }
+        },
+        backofficeReadinessSnapshot: {
+            super: 'base', schemaPolicies: ['administrator'], model: true,
+            service: { enabled: true }, event: { enabled: false }, router: { enabled: false },
+            definition: {
+                scopeKey: { type: 'string', required: true, description: 'Hash of tenant, deployment and authenticated observer authority' },
+                observedAt: { type: 'date', required: true },
+                expiresAt: { type: 'date', required: true },
+                snapshot: { type: 'object', required: true, description: 'Bounded owner-derived historical observation; never execution authority' }
+            },
+            indexes: { individual: {
+                readinessSnapshotCode: { name: 'code', enabled: true, options: { unique: true } },
+                readinessSnapshotScope: { name: 'scopeKey', enabled: true, options: { unique: false } },
+                readinessSnapshotExpiry: { name: 'expiresAt', enabled: true, options: { expireAfterSeconds: 0 } }
+            } }
+        },
+        backofficeStartupAcknowledgement: {
+            super: 'base', schemaPolicies: ['administrator'], model: true,
+            service: { enabled: true }, event: { enabled: false }, router: { enabled: false },
+            definition: {
+                scopeKey: { type: 'string', required: true, description: 'Tenant and deployment observation scope' },
+                findingCode: { type: 'string', required: true },
+                findingIdentity: { type: 'string', required: true, description: 'Non-secret rule, deployment and validated build binding' },
+                propertyPath: { type: 'string' },
+                acknowledgedAt: { type: 'date', required: true },
+                acknowledgedBy: { type: 'string', required: true },
+                reasonCode: { type: 'string', required: true },
+                reason: { type: 'string', required: true },
+                expiresAt: { type: 'date', required: true },
+                buildIdentity: { type: 'object', required: true }
+            },
+            indexes: { individual: {
+                startupAcknowledgementCode: { name: 'code', enabled: true, options: { unique: true } },
+                startupAcknowledgementScope: { name: 'scopeKey', enabled: true, options: { unique: false } },
+                startupAcknowledgementExpiry: { name: 'expiresAt', enabled: true, options: { expireAfterSeconds: 0 } }
+            } }
+        },
         backofficeFunctionalModuleRegistration: {
             super: 'base',
             schemaPolicies: ['contractReader'],
@@ -170,3 +250,10 @@ module.exports = {
         }
     }
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.backoffice.backofficeFunctionalModuleRegistration.backoffice = Object.assign({ description: "Registered functional-module presentation and activation policy for Axis. Registration does not install or start a runtime module." }, module.exports.backoffice.backofficeFunctionalModuleRegistration.backoffice);
+module.exports.backoffice.backofficeFunctionalModuleActivationReceipt.backoffice = Object.assign({ description: "Retained functional-module activation outcomes. Use Module Registry commands for lifecycle changes." }, module.exports.backoffice.backofficeFunctionalModuleActivationReceipt.backoffice);
+module.exports.backoffice.backofficeContractSnapshot.backoffice = Object.assign({ description: "Observed module API and capability contract snapshots used for compatibility review." }, module.exports.backoffice.backofficeContractSnapshot.backoffice);
+module.exports.backoffice.backofficeContractActivation.backoffice = Object.assign({ description: "Reviewed module-contract activation state. Use contract governance commands to activate a snapshot." }, module.exports.backoffice.backofficeContractActivation.backoffice);
+module.exports.backoffice.backofficeAxisPolicy.backoffice = Object.assign({ description: "Axis session and workspace policy records. Effective policy remains subject to BackOffice validation and permissions." }, module.exports.backoffice.backofficeAxisPolicy.backoffice);

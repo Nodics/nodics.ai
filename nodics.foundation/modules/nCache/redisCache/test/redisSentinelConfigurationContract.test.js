@@ -117,3 +117,40 @@ require('node:test')('module cache consumers inherit capabilities and later depl
         global.NODICS = previousNodics;
     }
 });
+
+require("node:test")("Sentinel readiness tracks connection loss and explicit shutdown", () => {
+    const provider = { status: "wait" };
+    const facade = adapter.adaptClient(provider);
+    assert.strictEqual(facade.isOpen, false);
+    assert.strictEqual(facade.isReady, false);
+    for (const status of ["connecting", "connect", "reconnecting", "close"]) {
+        provider.status = status;
+        assert.strictEqual(facade.isReady, false);
+    }
+    provider.status = "ready";
+    assert.strictEqual(facade.isOpen, true);
+    assert.strictEqual(facade.isReady, true);
+    provider.status = "end";
+    assert.strictEqual(facade.isOpen, false);
+    assert.strictEqual(facade.isReady, false);
+});
+
+require("node:test")("awaited Sentinel shutdown exposes closed state before the socket close event", async () => {
+    let disconnects = 0;
+    const provider = Object.assign(new (require('node:events').EventEmitter)(), {
+        status: 'ready', quit: async () => 'OK',
+        disconnect() { disconnects++; setImmediate(() => { this.status = 'end'; this.emit('end'); }); },
+        async connect() { assert.equal(this.status, 'end'); this.status = 'ready'; }
+    });
+    const client = adapter.adaptClient(provider);
+    assert.equal(await client.quit(), "OK");
+    assert.equal(client.isReady, false);
+    assert.equal(client.isOpen, false);
+    assert.equal(disconnects, 1);
+    assert.equal(provider.status, 'end', 'shutdown waits for the provider close event');
+    await client.connect();
+    assert.equal(client.isReady, true);
+    client.disconnect();
+    assert.equal(client.isReady, false);
+    assert.equal(client.isOpen, false);
+});

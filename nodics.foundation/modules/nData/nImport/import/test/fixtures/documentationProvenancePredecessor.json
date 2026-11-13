@@ -1,0 +1,77 @@
+{
+  "reason": "Immutable pre-provenance correction selection; not installed-runtime proof",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "import",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "95789792c0e7de33433345bc017734ca2c71d64ed1f19c0ec3cf304e7f991d3d",
+      "generatedHashes": {
+        "docs-v001/records/documentation/importDocumentationNodeData.js": "2df53cec6826f227547354c7dfb665a79b7a570657ed4129aad37646da5427e3",
+        "docs-v001/records/documentation/importDocumentationPageMetadataData.js": "08106a71097ce4b58e5b09b4dac4b5eacc82ca27221d8868e3b5f3c5f7e39d3f",
+        "docs-v001/records/documentation/importDocumentationPublicationStateData.js": "a1eb3240272fe5304685f1ee672a60761f85d6fb046b5cef750e6bf6720079cd",
+        "docs-v001/records/documentation/importDocumentationSearchMetadataData.js": "52d322597cb30e5fd7bbaaded83c72acb29691755389d16a61d229eebab8ff3c",
+        "docs-v001/records/documentation/importDocumentationComponentData.js": "423356983b8ccf5794602f9846c3d40bc4a8cb491b3c84366ff27c99e4ade403",
+        "docs-v001/records/documentation/importDocumentationPageData.js": "4c71d9198d74f63541668ee3ee69840f98672e013f1f86ff5ce1adba7a46f98d",
+        "docs-v001/records/documentation/importDocumentationRouteData.js": "b26d67645c32aa7066a856029103df3665a898969a7bd6ee446b304f4777866f",
+        "docs-v001/headers/100_importDocumentationContentPackHeader.js": "040e7e6c01568dcf1668ef5d2ae9142e5225dcaf289338a994d1ee1b207c68ad"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  },
+  "successorVersion": "0.0.2",
+  "articles": [
+    {
+      "id": "data.import-export-migration",
+      "componentCode": "nodicsDocsComponentdataImportExportMigration",
+      "previousFile": "docs-v001/records/documentation/importDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/importDocumentationRelease002ComponentData.js",
+      "blocksSha256": "9d0a67d1f43ae44e13d73ccd30c8a309c25dd3e4fea0fcf989547d74d444ef16",
+      "digestMode": "titled",
+      "sourceChecksum": "430a02385e8f395352f89fb9bf26109bf72d794f8b857bc3b0fbb2f55d2d97bd",
+      "sourceWordCount": 6509
+    },
+    {
+      "id": "data.import-export-provider-guides",
+      "componentCode": "nodicsDocsComponentdataImportExportProviderGuides",
+      "previousFile": "docs-v001/records/documentation/importDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/importDocumentationRelease002ComponentData.js",
+      "blocksSha256": "7b01c277944adf58a8811e0691e20394bd5a0c8d93c903a5dadd8d5d5fa065fd",
+      "digestMode": "titled",
+      "sourceChecksum": "3eb99341cf2ac2fb185f73ddd9d8539e5e2e6463d2041b41f1d0340b25cb1b12",
+      "sourceWordCount": 1441
+    }
+  ]
+}

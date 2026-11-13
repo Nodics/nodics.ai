@@ -17,9 +17,9 @@ A root Redis prefix therefore intentionally shares that namespace for modules
 using that engine and channel. Auth participants must agree on their selected
 auth namespace. Ordinary default local channels still use separate module names;
 ordinary Redis channels needing isolation must select distinct module-level
-prefix overrides. Item/search logical keys include schema/index and tenant, not
-module; using identical explicit prefixes and names can collide or share prefix
-invalidation. Never claim isolation solely from the presence of a root prefix,
+prefix overrides. Item logical keys include schema and tenant; structured search digests also
+bind their module, full query and current caller scope. Identical explicit prefixes
+and item names can still collide or share prefix invalidation. Never claim isolation solely from the presence of a root prefix,
 and do not silently introduce a new key format as a correction.
 
 Prefix correction never deletes/migrates retained keys or relaxes version guards.
@@ -63,3 +63,7 @@ Live provider qualification verifies the same central owner closes each client;
 a provider-specific test cleanup cannot stand in for runtime lifecycle coverage.
 
 Cross-node invalidation defaults to automatic selection from enabled remote event publishing. Explicit true/false remains supported. Shared distributed adapters skip duplicate broadcasts; single-node deployments do not emit unnecessary peer events. Strict authentication channels never gain local fallback.
+
+## Structured Search Isolation
+
+Structured search cache keys include the complete normalized query (text/vector, fields, source-policy filters, mode and bounds), raw DSL/query-string inputs, read options and current non-secret caller scope. Canonical object ordering preserves equivalent requests; credentials never enter key material. A source or permission change cannot reuse another query result. The derived digest is versioned; existing storage namespaces and TTLs remain unchanged and no retained-key migration is performed. Run `test/searchCacheKeyIsolation.test.js` with cache isolation and search pipeline coverage.

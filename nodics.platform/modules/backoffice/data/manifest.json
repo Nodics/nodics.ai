@@ -30,7 +30,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "backoffice",
-      "version": "0.0.2",
+      "version": "0.0.5",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -52,16 +52,16 @@
       "pages": 4,
       "components": 4,
       "routes": 4,
-      "releaseChecksum": "b973ac83b960aa5773ff7587a7ad77a41bb1b6070f57fcfde058fdaf79688bbf",
+      "releaseChecksum": "72bb063b858f965c87908e9ff6c5306526bc4680953065e37e9938ae10239444",
       "generatedHashes": {
         "docs-v001/records/documentation/backofficeDocumentationRelease002NodeData.js": "0a67722745e13eb90f2e1ed2fba73d4bafaf7c800c644185bd03ee34d86e0457",
-        "docs-v001/records/documentation/backofficeDocumentationRelease002PageMetadataData.js": "8b0e03f50010fc3a81416685ab4771bc08c133b596b76c23cc8087bec974a73e",
-        "docs-v001/records/documentation/backofficeDocumentationRelease002PublicationStateData.js": "9c54d259b79ce3441e2537613ae24d58a73d094e90e32a680c8b241826164120",
-        "docs-v001/records/documentation/backofficeDocumentationRelease002SearchMetadataData.js": "ce54760940d28b063725fa962cc0ac2b78f1fd9235443202d352213ecb3851aa",
-        "docs-v001/records/documentation/backofficeDocumentationRelease002ComponentData.js": "7e6b38d7e5f1aee8eef166a1850641c2354108df908cc180e868d31175ed0a54",
         "docs-v001/records/documentation/backofficeDocumentationPageData.js": "6b659fabcefc24463e74f03fa5c23bfed0407714c2d6b0ef506db47157258c7d",
         "docs-v001/records/documentation/backofficeDocumentationRouteData.js": "524c21a379fcee5d5b41fb2029bea0bb90b61121df093113bb468c971cfa4078",
-        "docs-v001/headers/101_backofficeDocumentationRelease002ContentPackHeader.js": "848dad826d9c3c47fb5af1a79c5f5dff60e49ffb8c22ad359b63510b0a16cb8e"
+        "docs-v001/records/documentation/backofficeDocumentationRelease005PageMetadataData.js": "9c2051e84d653b96c8dceced13cff3b0e59dffdbccbf1d8c20d79a2cabfab2a6",
+        "docs-v001/records/documentation/backofficeDocumentationRelease005PublicationStateData.js": "3f3f03ec9e8aa08b02683d597bd18f9610add10540bea0c127b40089216679d5",
+        "docs-v001/records/documentation/backofficeDocumentationRelease005SearchMetadataData.js": "468c7f74f6954cc9314cbe019a96662e6b9b0473e379364d79205a6eddce99f5",
+        "docs-v001/records/documentation/backofficeDocumentationRelease005ComponentData.js": "ad03f9dae2ec4fd9f07aa30799939cbc90e4b4a3f90d4aaec4da7caf660a4682",
+        "docs-v001/headers/102_backofficeDocumentationRelease005ContentPackHeader.js": "436caea6fa39c64259954f2f0261a97316d80117258901672344398cdcb9163c"
       },
       "includes": [
         {

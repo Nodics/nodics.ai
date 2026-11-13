@@ -85,16 +85,13 @@ module.exports = {
       ...scope,
     };
   },
-  /** Resolves generated persistence without creating another storage adapter. @returns {Object} Generated owner. */
+  /** Resolves the fixed owner-qualified manifest transport, never a second persistence adapter.
+   * @returns {Object} Manifest transport.
+   * @throws {Error} If canonical routing is unavailable.
+   */
   store: function () {
-    const store = SERVICE.DefaultDiscoveryGenerationService;
-    if (
-      !store ||
-      !["get", "save", "update"].every(
-        (key) => typeof store[key] === "function",
-      )
-    )
-      throw new Error("DISCOVERY_GENERATION_STORAGE_REQUIRED");
+    const store = SERVICE.DefaultDiscoveryGenerationTransportService;
+    if (!store) throw new Error("DISCOVERY_GENERATION_STORAGE_REQUIRED");
     return store;
   },
   /** Verifies returned manifest identity and bounded immutable generation descriptors. @param {Object} row Persisted manifest. @param {Object} scope Expected identity. @returns {Object} Manifest. */
@@ -476,7 +473,7 @@ module.exports = {
     return {
       bool: {
         filter: [
-          { term: { tenant: request.tenant } },
+          { term: { "tenant.keyword": request.tenant } },
           { term: { ownerType: scope.ownerType } },
           {
             term: {

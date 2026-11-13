@@ -33,14 +33,14 @@ function fixture(t) {
   global.CLASSES = { NodicsError: class extends Error {
     constructor(code, message) { super(message); this.code = code; }
   } };
-  global.CONFIG = { get: (key) => key === "runtimeRole" ? "COMMERCE" :
+  global.CONFIG = { get: (key) => key === "runtimeRole" ? { publication: "OPERATIONAL" } :
     key === "digitalCore" ? { merchantRedemption: { enabled: true } } : undefined };
   global.SERVICE = {
     DefaultSecuredRequestPipelineService: {
       getGrantedPermissions: () => ["commerce.coupon.pos.redeem"],
       isPermissionGranted: (permission, granted) => granted.includes(permission) || granted.includes("*"),
     },
-    DefaultModuleService: { invokeModule: async (request) => {
+    DefaultModuleService: { isLocalModuleActive: name => name === "digitalCore", invokeModule: async (request) => {
       state.calls.push(request); return state.respond();
     } },
     DefaultPromotionOperationService: { merchantCoupon: async () => {

@@ -149,3 +149,14 @@ selector. Leave that header absent when using canonical runtime transport so
 the actual outgoing service token supplies its namespace. A pipeline-normalized
 default principal may select a separately granted business enterprise in the body;
 neither a business header nor a rewritten token can substitute for that grant.
+
+### Local Wallet evidence ownership
+
+Both own-enterprise and delegated evidence require DMS local `loyaltyWallet`
+ownership and explicit OPERATIONAL publication before admission and around owner
+reads. A source-only/remote-only Wallet cannot read through another owner's schema.
+The local `readEvidence.runtimeRole` knob is removed; physical grouping labels are
+not authority. Exact signed caller grants, permission, tenant/Enterprise, privacy
+and policy-drift checks remain independent. Missing/STAGED/ONLINE publication
+refuses these operational APIs. Fixture tests exercise the actual DMS remoteOnly
+boundary, cohosting with an unrelated primary label and mid-read ownership loss.

@@ -96,3 +96,21 @@ origins, also replace `originEndpoints` and `originEndpointOverrides` with empty
 objects. No port wildcard or request-derived origin is needed.
 
 nRouter enables CORS by default for the standard Nodics localhost origins: Axis 3100, Nexus 3200, Agora Apparel 3300, Electronics 3400, Telco 3500 and Circa 3600. These shared API security defaults apply independently of Platform/accelerator activation and frontend health. Environments declare only different addresses or policy; server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.
+
+
+## Preserve exposure during category ownership correction
+
+Declare a previously unknown internal category in the implementing capability:
+
+```js
+module.exports = {
+  apiExposure: { categories: { moduleInternal: { inheritUnknown: true } } }
+};
+```
+
+With common exposure enabled and unknown exposure disabled, this category stays
+disabled. A later explicit `categories.moduleInternal.enabled` boolean is an
+intentional deployment override. Malformed inheritance or enablement denies.
+Service-token, permission and tenant checks remain independently mandatory.
+Use `apiExposureOwnershipContract.test.js` for the neutral/default/override matrix;
+source tests are not live service authorization evidence.

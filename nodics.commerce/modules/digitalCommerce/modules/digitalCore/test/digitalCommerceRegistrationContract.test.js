@@ -76,6 +76,7 @@ for (const qualified of [false, true]) {
     };
     global.NODICS = {
       getRawModule: () => rawModule,
+      getModule: () => rawModule,
       getServerName: () => "commerceStagedServer",
     };
     global.SERVICE = {

@@ -8,3 +8,8 @@
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Use the DMS fixed internal configuration read contracts for Discovery configuration.
+Keep target publication explicit and defaults owner-defined. Preserve local actor
+context, remote internal identity and denial propagation; never forward authData
+as a remote body or accept caller-selected service names. See the owner contract.

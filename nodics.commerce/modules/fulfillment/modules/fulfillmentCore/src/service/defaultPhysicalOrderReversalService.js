@@ -25,11 +25,11 @@ module.exports = {
     identity: function (value) { return typeof value === 'string' && value.length > 0 && value.length <= 192 && !/[\u0000-\u0020\u007f]/.test(value); },
     /** Reuses current Profile-backed employee scope and existing fulfillment-return permission. */
     operator: async function (input) {
-        const policy = this.policy(), role = CONFIG.get('runtimeRole');
+        const policy = this.policy();
         if (policy.enabled !== true || policy.evidenceMode !== 'MANUAL_ATTESTATION' ||
             !Number.isSafeInteger(policy.maximumLines) || policy.maximumLines < 1 || policy.maximumLines > 100 ||
             !Number.isSafeInteger(policy.maximumReceipts) || policy.maximumReceipts < 1 || policy.maximumReceipts > 100 ||
-            (typeof role === 'string' ? role : role?.code) !== 'COMMERCE') this.fail('Physical owner operations are unavailable');
+            SERVICE.DefaultModuleService?.isLocalModuleActive?.('fulfillmentCore') !== true || CONFIG.get('runtimeRole')?.publication !== 'OPERATIONAL') this.fail('Physical owner operations are unavailable');
         const r = await SERVICE.DefaultOrderDisputeService.staff(input, 'commerce.fulfillment.return', ['commerce','fulfillmentCore']), security = SERVICE.DefaultSecuredRequestPipelineService;
         if (!this.identity(r.tenant) || !this.identity(r.enterpriseCode) ||
             r.authData.tenant !== undefined && r.authData.tenant !== r.tenant ||

@@ -13,23 +13,44 @@
 module.exports = {
   data: {
     dataReleases: {
-      runtimeRoleProfiles: {
-        PLATFORM: {
-          contributions: [
-            {
-              moduleName: "loyaltyProgram",
-              sections: ["partnerEligibilityAdministrationPermission"],
-            },
-            {
-              moduleName: "loyaltyCore",
-              sections: ["core-enterprise-reference"],
-            },
-            {
-              moduleName: "loyaltyWallet",
-              sections: ["specialAccessGroups", "specialAccessRoles", "participantAccessGroups", "participantReadAccess", "participantTransactionAccess", "enterpriseParticipationAccess"],
-            },
-          ],
-        },
+      "contributions": {
+        "$config": "keyed",
+        "key": "moduleName",
+        "entries": [
+          {
+            "moduleName": "loyaltyProgram",
+            "sections": {
+              "$config": "replace",
+              "value": [
+                "partnerEligibilityAdministrationPermission"
+              ]
+            }
+          },
+          {
+            "moduleName": "loyaltyCore",
+            "sections": {
+              "$config": "replace",
+              "value": [
+                "sample-enterprises"
+              ]
+            }
+          },
+          {
+            "moduleName": "loyaltyWallet",
+            "sections": {
+              "$config": "replace",
+              "value": [
+                "specialAccessGroups",
+                "specialAccessRoles",
+                "participantAccessGroups",
+                "participantReadAccess",
+                "participantTransactionAccess",
+                "enterpriseParticipationAccess"
+              ]
+            }
+          }
+        ],
+        "remove": []
       },
     },
   },

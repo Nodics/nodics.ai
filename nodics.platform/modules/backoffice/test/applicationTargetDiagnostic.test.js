@@ -41,7 +41,7 @@ const profile = {
   target: {
     moduleName: "cms",
     connectionName: "contentStaged",
-    runtimeRole: "WCMS_STAGED",
+    publication: "STAGED",
   },
 };
 
@@ -78,7 +78,7 @@ test("target diagnostics preserve HTTP status and invocation phase without loggi
     baselineCode: "documentation",
     targetModule: "cms",
     targetConnection: "contentStaged",
-    targetRuntimeRole: "WCMS_STAGED",
+    targetRuntimeRole: "STAGED",
     phase: "transport",
     failureCode: "ERR_AUTH_00001",
     correlationId: "request-1",
@@ -120,23 +120,23 @@ test("unsafe correlation and provider exception text never enter the separate ro
   assert(!JSON.stringify(logs).includes("secret"));
 });
 
-test("canonical registry role selection accepts string Staged role and excludes Online", () => {
+test("canonical registry publication selection accepts Staged and excludes Online", () => {
   const options = {
     moduleName: "cms",
     connectionName: "contentStaged",
-    targetAuthority: { runtimeRole: "WCMS_STAGED" },
+    targetAuthority: { publication: "STAGED" },
   };
   const owners = [
     {
       moduleName: "cms",
       server: "contentOnlineServer",
-      runtimeRole: { code: "WCMS_ONLINE", publication: "ONLINE" },
+      runtimeRole: { code: "WCMS_ONLINE", roles: ["WCMS_ONLINE"], publication: "ONLINE" },
       endpoint: "https://online.example.test/nodics/cms",
     },
     {
       moduleName: "cms",
       server: "contentStagedServer",
-      runtimeRole: { code: "WCMS_STAGED", publication: "STAGED" },
+      runtimeRole: { code: "WCMS_STAGED", roles: ["WCMS_STAGED"], publication: "STAGED" },
       endpoint: "https://staged.example.test/nodics/cms",
     },
   ];

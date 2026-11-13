@@ -87,7 +87,7 @@ module.exports = {
       typeof target.connectionName !== "string" ||
       target.connectionName === "default" ||
       !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(target.connectionName) ||
-      target.targetAuthority?.runtimeRole !== "COMMERCE"
+      target.targetAuthority?.publication !== "OPERATIONAL"
     )
       this.fail();
     return {

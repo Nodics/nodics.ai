@@ -248,3 +248,12 @@ tests target-only hook resolution with empty source registries; it writes no con
 These do not establish native signature/stamp admission, database/provider calls, service
 deployment policy adoption or live financial qualification. Main owns the explicit
 native grant/configuration, later build/restart and live acceptance.
+
+The compiler consumes BackOffice target.publication (STAGED), rejecting retired
+target.runtimeRole and missing publication. Derived data-package descriptors use
+that publication default; explicit reviewed targetRuntimeRole pins remain intact.
+Canonical endpoint binding calls applicationTargetBinding(connectionName, moduleName)
+with moduleName publish. This consumer adoption does not migrate reviewed plan role
+identities, authorize a topology, or rewrite installed observation evidence.
+
+Read-only release review projections preserve nImport's canonical selectionPolicy, including EXPLICIT source selection. Dropping it cannot turn an explicitly selected Staged source into a default source. Review metadata remains inert: current destination/schema/source admission is independently enforced by nImport, and no observation grants import or publication authority.

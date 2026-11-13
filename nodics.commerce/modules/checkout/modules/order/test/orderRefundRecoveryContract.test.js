@@ -76,7 +76,7 @@ test.beforeEach(() => {
   global.CLASSES = { NodicsError: class extends Error {
     constructor(code) { super(require("../src/utils/statusDefinitions")[code]?.message || code); this.code = code; }
   } };
-  role = "COMMERCE";
+  role = { code: "COMMERCE", publication: "OPERATIONAL" };
   permissions = ["commerce.refund.execute"];
   scopeAllowed = true;
   phaseCalls = {};
@@ -127,7 +127,7 @@ test.beforeEach(() => {
     }
     return { status: "COMPLETED" };
   };
-  global.SERVICE = {
+  global.SERVICE = { DefaultModuleService: { isLocalModuleActive: moduleName => ["order"].includes(moduleName), },
     DefaultOrderLifecycleService: lifecycle,
     DefaultOrderLifecycleRequestService: store(rows),
     DefaultCommerceOrderService: store(orders),

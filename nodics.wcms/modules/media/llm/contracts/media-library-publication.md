@@ -79,7 +79,7 @@ receive original authenticated context, fixed scope and `skipcache:true`.
 - the existing Media storage facade's `publishEnabled` guard remains satisfied.
 
 The selected existing nPublish workflow provider must expose its configured
-Media policy, source-role assertion and explicit Process target. Using that
+Media policy, local module ownership with explicit STAGED publication and explicit Workflow/OPERATIONAL target. Using that
 target and the original human bearer, Media reads `/definitions/:code`, then
 `/definitions/:code/versions`, then rereads the definition. It requires an active
 PUBLISHED Media-owned definition, an exact active PUBLISHED current version,
@@ -109,6 +109,10 @@ inspection identity matches, as bounded plain text, retaining the fixed fallback
 for missing, malformed or oversized values. It has no authority influence.
 These diagnostics never enable commands.
 
+nService response-owned `metadata.remoteHttpFailure` takes precedence over local
+error normalization for this classification. A different or denied HTTP response
+cannot become absence merely because the local error catalogue maps it to 404.
+
 Only a completed Process read returning the recognized `ERR_PROCESS_00002`
 with HTTP 404 is classified as `PROCESS_MEDIA_DEFINITION_MISSING`. It names
 the separately selected `media:mediaPublicationWorkflow` release; installing
@@ -134,6 +138,11 @@ retained bytes and concurrency. A metadata change after the fresh read does not
 change the explicitly selected immutable version or permit latest-version
 substitution. Provider/Process uncertainty is not compensated by Media Library;
 reconcile through the existing nPublish operations and original reference.
+
+If the Staged activation response is lost, the Media version provider reads the
+Online receipt for the original operation. It reports success only when the
+current pointer and receipt match the publication, manifest, asset and captured
+predecessor. This read does not repair a pointer or resend deployment.
 
 The owner flow is controller -> library facade -> library service -> existing
 storage facade -> Media version provider -> nPublish create/validate/request
@@ -270,12 +279,67 @@ real Media createGoverned delegation, stable reference retry, no automatic
 approval/activation, callbacks and strict BackOffice metadata validation.
 
 The Media owner contributes Staged provider/transport registrations and source
-versioning through runtime role profiles. Registration does not enable retained
+versioning through explicit publication-context bindings in ordinary owner properties. Registration does not enable retained
 publication: `versionProviderEnabled` stays false, connections stay unselected,
 and installed storage/Process/target qualification remains mandatory. A deployment
-may explicitly keep versioning off in its role profile. No workflow/data import,
+may explicitly keep versioning off through an ordinary effective property override. No workflow/data import,
 metadata backfill, restart or certification follows from registration. CMS owns
 dependency coordination; BackOffice
 owns refreshed registry/permission projection; Axis owns route presentation and
 the joint visual acceptance. Canonical framework product documentation may be
 promoted by its documentation owner; that shared source is outside this batch.
+
+The publication workspace reuses the existing library listing as its default asset picker. A declared readSource parameter selects the inspection tab through the generic Axis workspace; command admission still requires the fresh owner DTO and explicit submission.
+
+### Acknowledged request handoff
+
+The request form declares `resultSummary` for state, publication reference, Media code and exact version, plus inert `resultNavigation` to `/process/tasks` mapped from the returned `workflowRef`. Axis displays only acknowledged own scalar values, including version zero. It offers the link only when Process tasks is authorized and the workflow reference exists. The destination still enforces its own access. Equivalent background metadata refresh cannot erase the receipt, regenerate its reference or re-enable the completed command. Explicit Refresh inspection performs a fresh owner read before any new intent; it never submits or approves. A different actor or source retires the prior receipt.
+
+
+## Exact retained review evidence
+
+Media exposes two read-only Staged endpoints for a publication's captured source:
+`GET /library/publications/:publicationCode/review?localeCode=en|ar` and
+`GET /library/publications/:publicationCode/review/image`. Both require human
+access tokens, the existing nPublish read access groups, `media.storage.policy.view`
+and `publish.lifecycle.view`; image bytes additionally require `media.content.read`.
+These are intersections of existing rights, not new grants or public delivery.
+The module retains `mediaManagement` exposure and independent API authorization.
+Unselected retained publication or Online source roles reject before inspection.
+
+The owner reads the exact nPublish Media root/source and uncached retained manifest,
+checks its full digest, tenant and existing library enterprise scope before provider
+IO, and projects only captured name, actual metadata version, MIME, byte count and
+SHA-256. It never reads current Media to stand in for an older reviewed source.
+Provider locators, filenames, URLs, private context and credentials do not enter
+this DTO. Metadata reads perform no provider IO and do not prove byte availability.
+`previewAvailable` reflects only configured bounds/type and the current permission;
+opening the image independently verifies exact retained bytes and checksum.
+
+Preview accepts only bounded PNG/JPEG/WebP/GIF, with no-store, nosniff, restrictive
+CSP and no public fallback. Unsupported types, excessive sizes or denied rights
+retain useful metadata without enabling inline preview. Storage reads preserve the
+original tenant/authentication context and narrow the provider read to that asset's
+exact byte count. Review does not create or update assets, approve a task, activate
+Online content or make a historical request current.
+
+Customize `media.library.review` inert EN/AR presentation, a narrower raster type
+subset and `maximumPreviewBytes` within the publication maximum. Media's provider,
+retained manifest and scope checks remain authoritative. Optional working-asset
+handoffs reuse the existing Media capability and frontend catalogue admission;
+opening them performs fresh current inspection and sends no publication command.
+The frontend correlates task publication/root/source identity, hashes preview bytes,
+retires old actor/source responses and revokes image URLs. Process's existing pinned
+review context and decision policy remain unchanged. Completed detail tasks already
+carry that bounded context; no workflow history or actor policy is rewritten.
+
+`mediaPublicationReviewContract.test.js` composes actual owner inspection, controller,
+facade and content handler with isolated generated-service/provider ports. It covers
+positive/negative acknowledgements, no current-row fallback, scope and permission
+denial before bytes, malformed identities, corrupt bytes, preview bounds and safe
+customization. Native roles, private-provider storage and deployment readiness remain
+separate acceptance gates; isolated checks do not certify a customer environment.
+
+## Retained image consumers
+
+`DefaultMediaDependencyReadinessService.inspectAssets(publication, selection, request)` accepts bounded exact saved asset selections under the original request authority. It verifies retained metadata, immutable versions, physical bytes and a fresh activation-pointer read. Unavailable providers and changed pointers do not qualify. It returns the existing exact Media inspection handoff without executing any stage. Legal hold is retained; it is not implicitly released or treated as a publication ban. CMS keeps sealed-bundle selection; Editorial keeps saved featured-image and revision selection.

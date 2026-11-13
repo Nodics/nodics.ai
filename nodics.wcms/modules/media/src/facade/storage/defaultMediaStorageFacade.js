@@ -188,11 +188,11 @@ module.exports = {
      * @param {Object} request Set-entry request.
      * @returns {Promise<Object>} Set-entry response.
      */
-    addMediaSetEntry: function (request) {
-        return Promise.resolve({
+    addMediaSetEntry: async function (request) {
+        return {
             code: 'SUC_MED_00013',
-            data: SERVICE.DefaultMediaSetEntryManagementService.addEntry(request)
-        });
+            data: await SERVICE.DefaultMediaSetEntryManagementService.addEntry(request)
+        };
     },
     /**
      * Updates a media set entry through media-owned set-entry operations.
@@ -382,6 +382,16 @@ module.exports = {
             data: result
         }));
     },
+    /** Delegates path-free Staged image listing. */
+    listDraftImages: function (request) {
+        return SERVICE.DefaultMediaDeliveryService.listDraftImages(request);
+    },
+
+    /** Delegates authenticated Staged raster delivery. */
+    previewDraftImage: function (request) {
+        return SERVICE.DefaultMediaDeliveryService.previewDraftImage(request);
+    },
+
     /**
      * Resolves an authorized media content delivery descriptor.
      *

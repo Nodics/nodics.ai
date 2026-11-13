@@ -47,7 +47,8 @@ function fixture(t, type = 'CERTIFICATES', enterpriseBuyer = false) {
     key === 'checkoutCore' ? require('../config/properties').checkoutCore : key === 'runtimeRole' ? { code: 'COMMERCE', publication: 'ONLINE' } : undefined };
   global.CLASSES = { NodicsError: class extends Error {} };
   global.FACADE = { DefaultCartCustomerFacade: { resolveContext: async r => ({ ...r, ownerRef, ownerId: 'buyer' }) } };
-  global.SERVICE = { DefaultCheckoutPlacementPortsService: portsOwner, DefaultCheckoutCompensationRecoveryService: recovery,
+  global.SERVICE = {
+      DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) }, DefaultCheckoutPlacementPortsService: portsOwner, DefaultCheckoutCompensationRecoveryService: recovery,
     DefaultCartMerchantScopeService: { retained: async r => {
       assert.equal(r.enterpriseCode, participantEnterpriseCode);
       return { ...r, enterpriseCode: 'shop' };

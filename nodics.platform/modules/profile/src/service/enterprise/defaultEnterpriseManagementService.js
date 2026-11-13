@@ -17,8 +17,174 @@
  * @override Later modules may tighten filters, bounds, or projection through layered configuration without creating another persistence path.
  */
 const crypto = require("node:crypto");
+const lifecycleErrors = new WeakSet();
 
 module.exports = {
+  /** Marks fixed lifecycle guidance without trusting provider error descriptions. @param {string} message Owner-controlled guidance. @returns {Error} Safe refusal. */
+  lifecycleError: function (message) {
+    const error = this.error(message);
+    lifecycleErrors.add(error);
+    return error;
+  },
+  /** Identifies the ordinary generated HTTP update, not a private domain/import/authentication mutation. @param {Object} request Verified generated request. @returns {boolean} Native browser/API lifecycle scope. */
+  isPublicLifecycleUpdate: function (request) {
+    const auth = request.authData || {};
+    return request.httpRequest?.method === "PATCH" && auth.tokenType === "access" && auth.principalType === "human" && auth.isSystem !== true;
+  },
+  /** Resolves complete Framework-owned bounds and ordinary editable fields. @returns {Object} Validated effective policy. */
+  lifecyclePolicy: function () {
+    const policy = CONFIG.get("enterpriseManagement")?.lifecycle;
+    if (!policy || !Number.isSafeInteger(policy.maximumPrincipals) || policy.maximumPrincipals < 1 || policy.maximumPrincipals > 1000 ||
+        !Number.isSafeInteger(policy.maximumGroups) || policy.maximumGroups < 1 || policy.maximumGroups > 100 ||
+        ![policy.employeeFields, policy.enterpriseFields].every(fields => Array.isArray(fields) && fields.length > 0 && fields.length <= 40 &&
+          new Set(fields).size === fields.length && fields.every(field => typeof field === "string" && /^[A-Za-z][A-Za-z0-9_]{0,127}$/.test(field) &&
+            !["code", "loginId", "tenant", "enterpriseCode", "authVersion", "identityMigrationVersion", "principalType", "userGroups", "authenticationIdentity", "password", "credentials", "registrationSuspended", "created", "createdBy", "updated", "updatedBy"].includes(field))))
+      throw this.lifecycleError("Identity lifecycle policy is unavailable");
+    return policy;
+  },
+  /** Reads a complete bounded native inventory through its existing generated owner. @param {string} owner Fixed generated owner. @param {string} tenant Existing partition. @param {Object} query Owner-built query. @param {number} maximum Declared bound. @param {Object} [authData] Original actor for an authorized same-context read. @param {Object} [original] Genuine originating public request for existing Employee read-scope admission. @returns {Promise<Object[]>} Fresh bounded rows. */
+  lifecycleRows: async function (owner, tenant, query, maximum, authData, original) {
+    const read = { tenant, authData: authData ? structuredClone(authData) : SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+      query, options: { recursive: false, skipItemCache: true }, searchOptions: { pageSize: maximum + 1, pageNumber: 1 } };
+    if (owner === "DefaultEmployeeService" && authData) {
+      const scope = SERVICE.DefaultEmployeeGetInterceptorService;
+      if (!original?.httpRequest || typeof scope?.restrictEnterpriseRead !== "function")
+        throw this.lifecycleError("Employee enterprise scope is unavailable");
+      read.httpRequest = original.httpRequest;
+      await scope.restrictEnterpriseRead(read);
+    }
+    const result = await SERVICE[owner].get(read);
+    if (!result || !/^SUC_/.test(result.code || "") || result.error || result.success === false ||
+        result.errors && (!Array.isArray(result.errors) || result.errors.length) || !Array.isArray(result.result) ||
+        result.result.length > maximum || Number.isSafeInteger(result.count) && result.count > result.result.length)
+      throw this.lifecycleError("Identity lifecycle inventory is unavailable or exceeds its bound");
+    return result.result;
+  },
+  /** Prevents native administrator status changes through ordinary record editing; Team handover remains separately qualified. @param {Object} person Fresh native employee. @param {string} tenant Current partition. @param {Object} policy Lifecycle bounds. @returns {Promise<void>} Ordinary non-administrator only. */
+  requireOrdinaryLifecycleEmployee: async function (person, tenant, policy) {
+    const configured = CONFIG.get("enterpriseManagement")?.teamAdministration?.genericMutationGuard;
+    if (!configured || ![configured.nativeSuperAdministratorGroupCodes, configured.superAdministratorRoleCodes].every(codes =>
+        Array.isArray(codes) && codes.length > 0 && codes.length <= 20 && codes.every(code => typeof code === "string" && /^[A-Za-z0-9_.:-]{1,128}$/.test(code))) ||
+        !Array.isArray(person.userGroups) || person.userGroups.length > policy.maximumGroups)
+      throw this.lifecycleError("Administrator status could not be confirmed");
+    const roles = await SERVICE.DefaultIdentityCatalogueService.roles();
+    const protectedGroups = new Set(configured.nativeSuperAdministratorGroupCodes);
+    for (const code of configured.superAdministratorRoleCodes) {
+      const groups = roles[code]?.groupCodes;
+      if (!Array.isArray(groups) || !groups.length || groups.length > policy.maximumGroups || groups.some(group => typeof group !== "string"))
+        throw this.lifecycleError("Administrator status could not be confirmed");
+      groups.forEach(group => protectedGroups.add(group));
+    }
+    const ancestry = await SERVICE.DefaultEnterpriseTeamAdministrationService.genericAdministratorGroups(tenant, {
+      ...configured, maximumRecords: policy.maximumGroups, nativeSuperAdministratorGroupCodes: person.userGroups, superAdministratorRoleCodes: [] });
+    if ([...ancestry].some(code => protectedGroups.has(code)))
+      throw this.lifecycleError("Administrator status requires the governed Team lifecycle and handover; it cannot be changed in record editing");
+  },
+  /** Preflights an exclusive native partition and invalidates every native principal through normal generated stamp hooks before deactivation. Shared/default or linked contexts are held rather than guessed. @param {Object} request Original verified update. @param {Object} enterprise Current exact record. @param {Object} policy Current bounds. @param {Function} bound Original request/policy check. @returns {Promise<void>} Session retirement acknowledged. */
+  retireEnterpriseLifecycleSessions: async function (request, enterprise, policy, bound) {
+    const tenant = typeof enterprise.tenant === "string" ? enterprise.tenant : enterprise.tenant?.code;
+    if (enterprise.code === CONFIG.get("defaultEnterprise") || !tenant || tenant === CONFIG.get("defaultTenant") ||
+        !this.isPlatformAdministrator(request.authData))
+      throw this.lifecycleError("Default or shared-tenant enterprise status requires a separately governed lifecycle; it cannot be changed here");
+    const placements = await this.lifecycleRows("DefaultEnterpriseService", CONFIG.get("defaultTenant"), { tenant }, 2);
+    if (placements.length !== 1 || placements[0].code !== enterprise.code)
+      throw this.lifecycleError("Enterprise status requires one exclusive native tenant");
+    const targets = [];
+    for (const [owner, kind] of [["DefaultEmployeeService", "EMPLOYEE"], ["DefaultCustomerService", "CUSTOMER"]]) {
+      const people = await this.lifecycleRows(owner, tenant, {}, policy.maximumPrincipals);
+      for (const person of people) {
+        if (!person.code || !person._id || !person.loginId || !Number.isSafeInteger(person.authVersion) || person.authVersion < 1)
+          throw this.lifecycleError("Principal session retirement requires current native evidence");
+        const fresh = await SERVICE.DefaultEnterpriseMembershipService.read(owner, tenant, { code: person.code });
+        if (!fresh || fresh.code !== person.code || fresh.authVersion !== person.authVersion ||
+            fresh.authenticationIdentity && (fresh.authenticationIdentity.tenantCode !== tenant || fresh.authenticationIdentity.recordKind !== kind || fresh.authenticationIdentity.recordId !== String(fresh._id)))
+          throw this.lifecycleError("Linked or changed identities require their separately governed lifecycle");
+        targets.push({ owner, person });
+      }
+    }
+    bound();
+    await SERVICE.DefaultEnterpriseMembershipService.verifyAuthenticatedActor(request);
+    bound();
+    for (const { owner, person } of targets) {
+      bound();
+      const result = await SERVICE[owner].update({ tenant, authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+        query: { code: person.code, authVersion: person.authVersion }, model: { authVersion: person.authVersion } });
+      if (!result || !/^SUC_/.test(result.code || "") || result.error || result.success === false ||
+          result.result?.acknowledged !== true || result.result?.matchedCount !== 1)
+        throw this.lifecycleError("Principal session retirement is unconfirmed; inspect enterprise status before another attempt");
+    }
+    bound();
+  },
+  /** Fences ordinary identity field/status updates with original actor, scope and domain-owned compare tokens; private owner commands remain unchanged. @param {Object} request Generated original PATCH. @param {string} kind Fixed interceptor schema. @returns {Promise<boolean>} Prepared single-record native mutation. */
+  prepareLifecycleUpdate: async function (request, kind) {
+    try {
+    if (!this.isPublicLifecycleUpdate(request)) return true;
+    if (!["employee", "enterprise"].includes(kind)) throw this.lifecycleError("Identity lifecycle owner is invalid");
+    const policy = this.lifecyclePolicy(), auth = request.authData, tenant = request.tenant;
+    if (auth.authenticationMethod !== "PASSWORD" || auth.sessionContext || auth.runtimeScope || auth.externalIdentityLinkCode)
+      throw this.lifecycleError("Native employee password authentication is required for this identity lifecycle; use the owning context lifecycle otherwise");
+    const pin = JSON.stringify([auth, request.query, request.model, policy]);
+    const bound = () => {
+      if (request.authData !== auth || request.tenant !== tenant || JSON.stringify([request.authData, request.query, request.model, this.lifecyclePolicy()]) !== pin)
+        throw this.lifecycleError("Identity lifecycle context changed; refresh before continuing");
+    };
+    const query = request.query, model = request.model;
+    const identityPattern = kind === "employee" ? /^[A-Za-z0-9][A-Za-z0-9._:@+-]{0,191}$/ : /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/;
+    if (!query || typeof query.code !== "string" || !identityPattern.test(query.code) ||
+        !model || ![Object.prototype, null].includes(Object.getPrototypeOf(model)) || Object.keys(model).some(key => key.startsWith("$")))
+      throw this.lifecycleError("Identity lifecycle requires one explicit record and ordinary fields");
+    const counter = kind === "employee" ? "authVersion" : "updated";
+    if (Object.keys(query).some(key => !["code", counter].includes(key)) || !Object.hasOwn(query, counter))
+      throw this.lifecycleError("Refresh the record before editing its current version");
+    await SERVICE.DefaultEnterpriseMembershipService.verifyAuthenticatedActor(request);
+    SERVICE.DefaultEnterpriseMembershipService.permission(request, "system.schema.manage");
+    bound();
+    const owner = kind === "employee" ? "DefaultEmployeeService" : "DefaultEnterpriseService";
+    const rows = await this.lifecycleRows(owner, tenant, { code: query.code }, 1, auth, request);
+    bound();
+    if (rows.length !== 1) throw this.lifecycleError("This identity record is unavailable in your current enterprise");
+    const current = rows[0];
+    if (kind === "enterprise" && current.code !== auth.entCode && !this.isPlatformAdministrator(auth))
+      throw this.lifecycleError("You can edit only your current enterprise unless Platform administration admits the target");
+    if (kind === "employee" ? !Number.isSafeInteger(query.authVersion) || query.authVersion !== current.authVersion :
+        !Number.isFinite(new Date(query.updated).getTime()) || new Date(query.updated).getTime() !== new Date(current.updated).getTime())
+      throw new CLASSES.NodicsError("ERR_CONCURRENCY_00001");
+    const allowed = new Set(kind === "employee" ? policy.employeeFields : policy.enterpriseFields);
+    const patch = {};
+    for (const [field, value] of Object.entries(model)) {
+      if (allowed.has(field)) patch[field] = value;
+      else if (!["authVersion", "identityMigrationVersion", "updatedBy", "createdBy", "principalType", "userGroups", "loginId"].includes(field) &&
+          (JSON.stringify(value) === JSON.stringify(current[field]) || current[field] === undefined && (value === "" || value === null || Array.isArray(value) && !value.length))) continue;
+      else throw this.lifecycleError("This field is maintained by its owner and cannot be changed in identity record editing");
+    }
+    if (!Object.keys(patch).length) throw this.lifecycleError("Choose an ordinary identity field to update");
+    if (Object.hasOwn(patch, "active")) {
+      if (typeof patch.active !== "boolean") throw this.lifecycleError("Identity status must be active or inactive");
+      if (patch.active !== current.active && kind === "employee") {
+        if (current.loginId === auth.loginId) throw this.lifecycleError("You cannot change your own account status here");
+        await this.requireOrdinaryLifecycleEmployee(current, tenant, policy);
+      }
+      if (patch.active !== current.active && kind === "enterprise") {
+        if (current.code === auth.entCode) throw this.lifecycleError("You cannot change the status of your current enterprise here");
+        if (!this.isPlatformAdministrator(auth)) throw this.lifecycleError("Enterprise status changes require a current Platform administrator");
+        if (patch.active === false) await this.retireEnterpriseLifecycleSessions(request, current, policy, bound);
+        else if (current.code === CONFIG.get("defaultEnterprise") || (typeof current.tenant === "string" ? current.tenant : current.tenant?.code) === CONFIG.get("defaultTenant"))
+          throw this.lifecycleError("Default or shared-tenant enterprise status requires its separately governed lifecycle");
+      }
+    }
+    bound();
+    await SERVICE.DefaultEnterpriseMembershipService.verifyAuthenticatedActor(request);
+    bound();
+    request.query = kind === "employee" ? { ...query, userGroups: current.userGroups, active: current.active } : { ...query, updated: new Date(current.updated), active: current.active };
+    request.model = { ...patch, updatedBy: auth.loginId };
+    return true;
+    } catch (error) {
+      if (lifecycleErrors.has(error)) throw error;
+      if (["ERR_CONCURRENCY_00001", "ERR_AUTH_00001", "ERR_AUTH_00002"].includes(error?.code))
+        throw new CLASSES.NodicsError(error.code);
+      throw this.lifecycleError("Identity lifecycle cannot be confirmed. Refresh the record and inspect its status before trying again");
+    }
+  },
   /** Sends only fixed Profile Communication commands inside a detached qualified private entry. Transport failures never expose proofs, addresses or provider diagnostics. @param {Object} invocation Owner-built transport options. @param {Object} policy Effective owner transport policy. @returns {Promise<Object>} Existing transport acknowledgement. */
   invokePrivateCommunication: async function (invocation, policy) {
     try {
@@ -50,7 +216,14 @@ module.exports = {
           });
         },
       );
-    } catch {
+    } catch (error) {
+      if (
+        invocation.apiName === "/internal/verification/commands" &&
+        ["ERR_COMMS_VERIFY_RATE", "ERR_COMMS_VERIFY_STATE", "ERR_COMMS_VERIFY_CONFLICT"].includes(error?.code)
+      ) {
+        // The caller maps this fixed transport refusal to its own loaded status vocabulary.
+        throw Object.assign(new Error(error.code), { code: error.code });
+      }
       throw new CLASSES.NodicsError("ERR_PRFL_00003");
     }
   },
@@ -64,8 +237,14 @@ module.exports = {
     const recovery = SERVICE.DefaultEmployeeRecoveryService;
     const recoveryContext = recovery && recovery.ownsContext(request);
     const configured = this.accessPolicy().registrationVerification;
+    // The admitted capability owns enablement and purpose; transport settings stay shared.
+    const recoveryPolicy = recoveryContext ? recovery.policy() : undefined;
     const policy = recoveryContext
-      ? { ...configured, purpose: recovery.policy().verificationPurpose }
+      ? {
+          ...configured,
+          enabled: recoveryPolicy.enabled,
+          purpose: recoveryPolicy.verificationPurpose,
+        }
       : configured;
     const admitted =
       SERVICE.DefaultEnterpriseRegistrationService &&
@@ -283,7 +462,13 @@ module.exports = {
 
   /** Resolves a valid explicit nomination or one unambiguous associated email before any creation. */
   resolveSetupAdministrator: async function (request, input) {
-    const policy = await this.setupAdministratorPolicy();
+    // This nomination is resolved before native creation, including when receipts are disabled.
+    let policy;
+    try {
+      policy = await this.setupAdministratorPolicy();
+    } catch (_) {
+      throw new CLASSES.NodicsError("ERR_PROFILE_ENTERPRISE_SETUP_NOT_READY");
+    }
     let email;
     if (
       input.adminEmail !== undefined &&
@@ -835,6 +1020,16 @@ module.exports = {
     ]);
   },
 
+  /** Returns one fresh management task bound to the original signed enterprise; no public or query-selected scope is admitted. */
+  getManagementWorkspace: async function (request) {
+    this.authorize(request);
+    const enterpriseCode = request.authData.entCode || request.authData.enterpriseCode;
+    if (request.publicOnly === true || Object.keys(request.query || {}).length ||
+        typeof enterpriseCode !== "string" || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(enterpriseCode))
+      throw this.error("Enterprise workspace requires the current authenticated scope without selectors");
+    return { contractVersion: 1, kind: "ENTERPRISE_MANAGEMENT", enterpriseCode,
+      workspace: await this.getAccessWorkspace(request) };
+  },
   /** Returns the authorised workspace with fresh persisted role choices. */
   getAccessWorkspace: async function (request) {
     if (request?.publicOnly === true) return SERVICE.DefaultEnterpriseRegistrationService.workspace();
@@ -843,16 +1038,53 @@ module.exports = {
     const roles = await SERVICE.DefaultIdentityCatalogueService.roles();
     const businessAreas = SERVICE.DefaultIdentityCatalogueService.businessAreas(roles);
     const presentation = CONFIG.get("enterpriseManagement").businessAccessPresentation;
-    if (!presentation || ["areaLabel", "levelLabel", "scopeLabel", "employeeLabel", "noAccess", "view", "edit", "fullControl"].some(key =>
+    if (!presentation || ["areaLabel", "levelLabel", "scopeLabel", "employeeLabel", "noAccess", "view", "edit", "fullControl", "advancedLabel"].some(key =>
       typeof presentation[key] !== "string" || !presentation[key].trim() || presentation[key].length > 192)) throw this.error("Business access presentation is unavailable");
-    workspace.businessAccess = { contractVersion: 1, businessAreas, presentation };
+    const responsibilities = Object.values(roles)
+      .filter(role => role.active === true && role.delegable === true &&
+        !SERVICE.DefaultIdentityCatalogueService.businessMetadata(role))
+      .map(role => ({ value: role.code, label: role.label || role.name }));
+    if (!businessAreas.length && !responsibilities.length)
+      throw new CLASSES.NodicsError("ERR_PROFILE_ENTERPRISE_SETUP_NOT_READY");
+    if (businessAreas.length) workspace.businessAccess = { contractVersion: 1, businessAreas, presentation };
+    else delete workspace.businessAccess;
+    const currentEnterprise = request.authData.entCode || request.authData.enterpriseCode;
+    const platformAdministrator = this.isPlatformAdministrator(request.authData);
+    const defaultScope = !platformAdministrator && typeof currentEnterprise === "string"
+      ? currentEnterprise : undefined;
+    // Setup inspection/resumption admits only native PASSWORD Platform humans.
+    // Scope and proof must be reflected before Axis offers that task.
+    if (!platformAdministrator || request.authData.principalType !== "human" ||
+        request.authData.authenticationMethod !== "PASSWORD") delete workspace.setupContinuation;
+    // Creation is admitted only from the Platform context by createFromModel.
+    // Publish the same boundary in the current human's task, before any form opens.
+    if (defaultScope) {
+      workspace.tabs.forEach(tab => {
+        tab.sections = tab.sections.filter(section =>
+          !(section.endpoint?.method === "POST" &&
+            section.endpoint.path === "/nodics/profile/v0/enterprises"));
+      });
+      workspace.tabs = workspace.tabs.filter(tab => tab.sections.length);
+    }
     const apply = value => {
       if (!value || typeof value !== "object") return;
       if (value.name === "roleCode") {
-        value.type = "BUSINESS_ACCESS";
-        value.businessAccess = workspace.businessAccess;
-        delete value.options;
+        if (businessAreas.length) {
+          value.type = "BUSINESS_ACCESS";
+          value.businessAccess = workspace.businessAccess;
+          delete value.options;
+        } else {
+          value.type = "SELECT";
+          value.label = presentation.advancedLabel;
+          value.options = responsibilities;
+          delete value.businessAccess;
+        }
+        const allowed = businessAreas.length
+          ? businessAreas.flatMap(area => area.levels.map(level => level.roleCode))
+          : responsibilities.map(option => option.value);
+        if (value.defaultValue !== undefined && !allowed.includes(value.defaultValue)) delete value.defaultValue;
       }
+      if (value.name === "enterpriseCode" && defaultScope) value.defaultValue = defaultScope;
       for (const nested of Object.values(value)) if (nested && typeof nested === "object") {
         if (Array.isArray(nested)) nested.forEach(apply); else apply(nested);
       }
@@ -861,7 +1093,8 @@ module.exports = {
       (section.filters || []).forEach(field => {
         if (field.name === "roleCode") {
           field.type = "SELECT";
-          field.options = Object.values(roles).map(role => ({ value: role.code, label: role.label || role.name }));
+          field.options = (field.options || []).filter(option => option.value === "")
+            .concat(Object.values(roles).map(role => ({ value: role.code, label: role.label || role.name })));
         }
       });
       if ((section.fields || []).some(field => field.name === "roleCode")) {
@@ -873,6 +1106,22 @@ module.exports = {
         section.fields = [...ordered, ...section.fields.filter(field => !ordered.includes(field))];
       }
     }));
+    if (businessAreas.length && responsibilities.length) {
+      const invitation = workspace.tabs.flatMap(tab => tab.sections)
+        .find(section => section.id === "assign-user" && section.type === "form");
+      if (invitation) {
+        const additional = JSON.parse(JSON.stringify(invitation));
+        additional.id = "assign-additional-user";
+        additional.title = presentation.advancedLabel;
+        const field = additional.fields.find(value => value.name === "roleCode");
+        field.type = "SELECT";
+        field.label = presentation.advancedLabel;
+        field.options = responsibilities;
+        delete field.businessAccess;
+        if (!responsibilities.some(option => option.value === field.defaultValue)) delete field.defaultValue;
+        workspace.tabs.push({ id: "additional-responsibilities", label: presentation.advancedLabel, sections: [additional] });
+      }
+    }
     return workspace;
   },
   /** Builds static registration metadata without requiring initialized identity storage. */
@@ -883,9 +1132,16 @@ module.exports = {
     if (!workspace)
       throw this.error("Enterprise access workspace is not configured");
     let effective = JSON.parse(JSON.stringify(workspace));
+    const applications = CONFIG.get("enterpriseManagement")?.applications;
+    if ((applications?.enabled === true || applications?.review?.enabled === true) && applications.reviewWorkspace)
+      effective.tabs = (effective.tabs || []).concat(JSON.parse(JSON.stringify(applications.reviewWorkspace)));
     const clearRoles = value => {
       if (!value || typeof value !== "object") return;
-      if (value.name === "roleCode") { value.type = "TEXT"; delete value.options; }
+      if (value.name === "roleCode") {
+        value.type = "TEXT";
+        const empty = (value.options || []).filter(option => option.value === "");
+        if (empty.length) value.options = empty; else delete value.options;
+      }
       for (const nested of Object.values(value)) if (nested && typeof nested === "object") {
         if (Array.isArray(nested)) nested.forEach(clearRoles); else clearRoles(nested);
       }
@@ -1067,8 +1323,18 @@ module.exports = {
    */
   createFromModel: async function (request) {
     if (CONFIG.get('commandReceipts')?.enabled === true && CONFIG.get('commandReceipts').owners?.profile === true) {
-      if (!SERVICE.DefaultEnterpriseCommandReceiptService) throw this.error('Native command receipts are unavailable');
-      return SERVICE.DefaultEnterpriseCommandReceiptService.execute(request, 'CREATE', () => this.createFromModelOriginal(request));
+      // A missing reference prerequisite must refuse before claiming a durable command.
+      // Native dispatch still repeats its fresh administrator checks after the claim.
+      const receipts = SERVICE.DefaultEnterpriseCommandReceiptService;
+      if (!receipts || typeof receipts.authorize !== "function")
+        throw this.error("Native command receipts are unavailable");
+      await receipts.authorize(request, "CREATE");
+      try {
+        await this.setupAdministratorPolicy();
+      } catch (_) {
+        throw new CLASSES.NodicsError("ERR_PROFILE_ENTERPRISE_SETUP_NOT_READY");
+      }
+      return receipts.execute(request, 'CREATE', () => this.createFromModelOriginal(request));
     }
     return this.createFromModelOriginal(request);
   },
@@ -1541,6 +1807,8 @@ module.exports = {
         );
     if (!Number.isFinite(expiresAt.getTime()))
       throw this.error("Enterprise access expiry is invalid");
+    if (expiresAt.getTime() <= Date.now())
+      throw this.error("Enterprise access expiry must be a future time");
     let message =
       body.message === undefined ? undefined : String(body.message).trim();
     if (

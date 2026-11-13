@@ -17,6 +17,39 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    ERR_IMP_MODEL_REQUEST: {
+        code: '500',
+        message: 'Import model execution could not be verified at REQUEST.'
+    },
+    ERR_IMP_MODEL_SCHEMA: {
+        code: '500',
+        message: 'Import model execution could not be verified at SCHEMA.'
+    },
+    ERR_IMP_MODEL_MEDIA: {
+        code: '500',
+        message: 'Import model execution could not be verified at MEDIA.'
+    },
+    ERR_IMP_MODEL_ACCESS: {
+        code: '500',
+        message: 'Import model execution could not be verified at ACCESS.'
+    },
+    ERR_IMP_MODEL_SCHEMA_REFERENCES: {
+        code: '500',
+        message: 'Import model execution could not be verified at SCHEMA_REFERENCES.'
+    },
+    ERR_IMP_MODEL_SEARCH_REFERENCES: {
+        code: '500',
+        message: 'Import model execution could not be verified at SEARCH_REFERENCES.'
+    },
+    ERR_IMP_MODEL_PERSIST: {
+        code: '500',
+        message: 'Import model execution could not be verified at PERSIST.'
+    },
+    ERR_IMP_MODEL_STAGE_UNAVAILABLE: {
+        code: '500',
+        message: 'Import model execution could not be verified at STAGE_UNAVAILABLE.'
+    },
+
     SUC_IMP_00000: {
         code: '200',
         message: 'Data successfully processed'
@@ -85,5 +118,13 @@ module.exports = {
     ERR_IMP_VALIDATE_00008: {
         code: '400',
         message: 'Import record is missing required data'
+    },
+    ERR_IMP_VALIDATE_00011: {
+        code: '400',
+        message: 'Import file contains a duplicate record identity'
+    },
+    ERR_IMP_VALIDATE_00012: {
+        code: '400',
+        message: 'Import file supplies a protected field'
     }
 };

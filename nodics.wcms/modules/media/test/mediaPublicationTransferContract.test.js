@@ -170,6 +170,51 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     assert.strictEqual(replicationRecords[0].publicationType, 'PRODUCT');
     assert.strictEqual(replicationRecords[0].ownerReference, 'linenWrapDress');
 
+    const retainedManifest = 'a'.repeat(64);
+    const retainedAsset = { ...assets[0], manifestCode: retainedManifest };
+    mediaConfig.publication.runtimeRole = 'ONLINE';
+    mediaConfig.publication.versionProviderEnabled = true;
+    mediaConfig.publication.topology.replicationEnabled = true;
+    mediaConfig.publication.topology.replicationProviderCode = 'dr-local';
+    mediaConfig.publication.topology.maxRetryAttempts = 5;
+    global.SERVICE.DefaultMediaRetainedPublicationService = {
+        one: async (owner, query) => query.code === retainedManifest ? { artifacts: { asset: retainedAsset } } : undefined
+    };
+    global.SERVICE.DefaultMediaPublicationTargetService = {
+        resolveDelivery: async () => ({ manifestCode: retainedManifest, media: retainedAsset, buffer })
+    };
+    global.SERVICE.DefaultMediaService.get = async () => assert.fail('Retained replication must use the active manifest');
+    const retainedReceipts = [];
+    global.SERVICE.DefaultMediaPublicationReceiptService = {};
+    global.SERVICE.DefaultMediaArtifactPublicationService = {
+        recordReceipt: async request => retainedReceipts.push(request)
+    };
+    let replicaAvailable = false;
+    const retainedKeys = [];
+    global.SERVICE.DefaultMediaStorageProviderRegistryService.transfer = async request => {
+        assert.strictEqual(request.sourceStorageKey, undefined);
+        assert.strictEqual(request.buffer, buffer);
+        if (!replicaAvailable) throw new NodicsError('DR_DOWN', 'Unavailable replica');
+        retainedKeys.push(request.mediaCode);
+        return { providerCode: 'dr-local', storageKey: 'replica/hero' };
+    };
+    global.SERVICE.DefaultMediaStorageProviderRegistryService.read = async () => buffer;
+    const failedRetained = await service.reconcileReplication([retainedAsset], { tenant: 'default' });
+    assert.strictEqual(failedRetained.queued, 1);
+    const retainedQueue = replicationRecords.at(-1);
+    assert.strictEqual(retainedQueue.failureCode, 'DR_DOWN');
+    genericQueueRecords = [retainedQueue];
+    replicaAvailable = true;
+    const recoveredRetained = await service.retryPendingReplication({ tenant: 'default' });
+    assert.strictEqual(recoveredRetained.synchronized, 1);
+    assert.strictEqual(replicationRecords.at(-1).code, retainedQueue.code);
+    assert.strictEqual(placements.at(-1).manifestCode, retainedManifest);
+    assert.strictEqual(retainedReceipts.at(-1).evidence.placementCode, placements.at(-1).code);
+    assert.strictEqual(retainedReceipts.at(-1).checksum, checksum);
+    await service.reconcileReplication([retainedAsset], { tenant: 'default' });
+    assert.deepStrictEqual(retainedKeys, Array(2).fill(service.recordCode(['hero', retainedManifest])));
+    mediaConfig.publication.versionProviderEnabled = false;
+
     let deleted = [];
     global.SERVICE.DefaultMediaService.get = async () => ({ result: [
         { code: 'active', businessPurpose: 'CMS_PUBLICATION', status: 'READY', retentionUntil: '2026-01-01T00:00:00.000Z' },

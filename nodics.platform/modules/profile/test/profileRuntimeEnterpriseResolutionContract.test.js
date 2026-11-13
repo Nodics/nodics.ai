@@ -32,13 +32,13 @@ function fixture(t) {
     const grant = { tenant: 'default', principalEnterpriseCode: 'default', serviceId: 'apiAdmin',
         projectCode: 'reviewed-project', environmentCode: 'reviewed-local', serverCode: 'commerceServer',
         instanceCode: 'commerce-1', assignmentCode: 'reviewed-commerce', enterpriseCodes: ['BUSINESS_ONLINE'] };
-    const policy = { enabled: true, runtimeRole: 'PLATFORM', callers: [grant] };
+    const policy = { enabled: true, callers: [grant] };
     const auth = { tenant: 'default', entCode: 'default', principalType: 'service', tokenType: 'service', serviceId: 'apiAdmin',
         runtimeInstanceId: grant.instanceCode, runtimeScope: Object.fromEntries(['projectCode', 'environmentCode', 'serverCode', 'instanceCode', 'assignmentCode'].map(k => [k, grant[k]])),
         modules: ['profile'], userGroups: [], permissions: ['profile.enterprise.search'] };
     const enterprise = { code: 'BUSINESS_ONLINE', active: true, tenant: { code: 'default', active: true }, revision: 4, privateData: 'excluded' };
     const tenant = { code: 'default', active: true, revision: 2, properties: { privateData: 'excluded' } };
-    const settings = { defaultTenant: 'default', profileModuleName: 'profile', runtimeRole: { code: 'PLATFORM' },
+    const settings = { defaultTenant: 'default', profileModuleName: 'profile', runtimeRole: { code: 'COHOST', publication: 'OPERATIONAL' },
         profileRuntimeEnterpriseResolution: policy, enterpriseResolution: { runtimeLookup: { enabled: true } },
         identityGovernance: { systemAccessGroups: ['serviceAccountUserGroup'] },
         authSecurity: { internalToken: { runtimeAccessGroups: ['serviceAccountUserGroup'] } },
@@ -47,9 +47,9 @@ function fixture(t) {
     global.CONFIG = { get: key => settings[key] };
     global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
     global.UTILS = { isBlank: value => !value || typeof value === 'object' && !Object.keys(value).length };
-    global.NODICS = { getSelectedEnvironmentName: () => grant.environmentCode, getServerState: () => 'started',
+    global.NODICS = { isModuleActive: name => name === "profile", getSelectedEnvironmentName: () => grant.environmentCode, getServerState: () => 'started',
         getInternalAuthToken: selected => { assert.equal(selected, 'default'); return 'isolated-runtime-token'; } };
-    global.SERVICE = {
+    global.SERVICE = { DefaultModuleService: require("../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService.js"),
         DefaultServiceTokenService: runtime, DefaultSchemaAccessHandlerService: access,
         DefaultRecordOwnershipPolicyService: ownership,
         DefaultIdentityGovernanceService: { ...identity, getSystemAuthData: function () {
@@ -80,10 +80,10 @@ function fixture(t) {
     const owner = { ...source, get: generated('enterprise') };
     SERVICE.DefaultEnterpriseService = owner; SERVICE.DefaultTenantService = { get: generated('tenant') };
     global.FACADE = { DefaultEnterpriseFacade: facade };
-    SERVICE.DefaultModuleService = { invokeModule: async invocation => {
+    SERVICE.DefaultModuleService = { ...require("../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleService.js"), invokeModule: async invocation => {
         state.calls.push(invocation);
         assert.equal(invocation.local, false); assert.equal(invocation.connectionName, 'profile');
-        assert.deepEqual(invocation.targetAuthority, { runtimeRole: 'PLATFORM' });
+        assert.deepEqual(invocation.targetAuthority, { publication: 'OPERATIONAL' });
         assert.deepEqual(invocation.header, { 'x-enterprise-code': auth.entCode });
         assert.equal(invocation.authToken, 'isolated-runtime-token');
         const request = { tenant: auth.tenant, entCode: auth.entCode, authData: structuredClone(auth), moduleName: 'profile', router: route,
@@ -121,7 +121,7 @@ test('strict runtime bootstrap enterprise lookup still refuses another business 
 test('explicit placement negatives refuse before any canonical authority or generated read', async t => {
     const mutations = {
         disabled: f => { f.policy.enabled = false; }, missingPolicy: f => { delete f.settings.profileRuntimeEnterpriseResolution; },
-        targetRole: f => { f.settings.runtimeRole.code = 'COMMERCE'; }, permission: f => { f.auth.permissions = []; },
+        publication: f => { f.settings.runtimeRole.publication = 'STAGED'; }, permission: f => { f.auth.permissions = []; },
         human: f => { f.auth.principalType = 'human'; f.auth.tokenType = 'access'; },
         anonymous: f => { f.auth.principalType = 'anonymous'; f.auth.tokenType = undefined; },
         system: f => { f.auth.isSystem = true; }, module: f => { f.auth.modules = []; },
@@ -178,4 +178,19 @@ test('nService independently rejects foreign or malformed remote owner evidence'
         SERVICE.DefaultModuleService.invokeModule = async () => ({ code: 'SUC_FIND_00000', result });
         await assert.rejects(provider.loadEnterprise({ entCode: f.enterprise.code }), { code: 'ERR_ENT_00000' });
     }
+});
+
+
+test("local ownership and explicit publication override physical role labels without bypassing admission", async t => {
+  const f = fixture(t);
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly: true }) }) };
+  await assert.rejects(f.owner.resolveRuntimeEnterprise(f.request()));
+  assert.equal(f.state.reads.length, 0);
+  SERVICE.DefaultRouterService = { getModuleServerConfig: () => ({ getOptions: () => ({ remoteOnly: false }) }) };
+  for (const publication of [undefined, "STAGED", "ONLINE"]) {
+    f.settings.runtimeRole.publication = publication;
+    await assert.rejects(f.owner.resolveRuntimeEnterprise(f.request()));
+  }
+  f.settings.runtimeRole = { code: "UNRELATED_PHYSICAL_NAME", publication: "OPERATIONAL" };
+  await f.owner.resolveRuntimeEnterprise(f.request());
 });

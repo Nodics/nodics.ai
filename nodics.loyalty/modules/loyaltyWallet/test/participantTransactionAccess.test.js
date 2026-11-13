@@ -44,3 +44,18 @@ test("explicit owner release preserves persisted definitions and pins every payl
     assert.ok(["userGroup", "enterpriseRole"].includes(header.options.schemaName));
   }
 });
+
+test("participant transactions declare transfer vocabulary before group creation", () => {
+  const manifest = require("../data/manifest.json");
+  const source = require("../../../../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService");
+  const owner = { ...source, configuration: () => ({}) };
+  for (const sectionCode of ["permissionCatalogue", "transferPermissions"]) {
+    const target = manifest.sections[sectionCode];
+    const reference = (section.prerequisites || [])
+      .find(value => value.moduleName === "loyaltyWallet" && value.sectionCode === sectionCode);
+    assert.ok(reference, sectionCode);
+    assert.equal(reference.version, target.version);
+    assert.equal(reference.checksum, owner.releaseFileChecksum(target.files, owner.validatePrerequisites(target.prerequisites)));
+    assert.equal(reference.partition, "DEFAULT");
+  }
+});

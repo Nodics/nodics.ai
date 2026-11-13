@@ -7,7 +7,7 @@ Defaults are disabled; operators must qualify the exact deployment and allowed
 Store/enterprise pairs. See [Deployment-bound placement reads](llm/contracts/README.md#deployment-bound-placement-reads).
 
 Store, Sales Channel and Point of Service delegate technical `revision` counters
-to generated nDatabase CRUD. Core data files omit the counter. Edits retain the
+to generated nDatabase CRUD. Sample data files omit the counter. Edits retain the
 original read token; no-op saves leave it unchanged. This does not change domain
 or publication versions. See the Foundation Data Modeling documentation for
 project customization and conflict recovery.
@@ -21,12 +21,10 @@ for isolated admission and actual generated-pipeline regressions, not native qua
 
 Store is its named Commerce capability boundary. Reusable contracts and behavior belong to this named capability boundary. Archived gComm is reference-only.
 
-Store owns the optional operational `store:core-reference` release declared in
-`data/manifest.json`, including Store, Sales Channel and Point of Service records
-under `data/core-v001`. The historical `baseCommerce*` filenames are retained for
-stable header prefixes; they do not make the composition-only parent the owner.
-Axis derives the release selection from this manifest and its COMMERCE destination.
-This business release does not install documentation or approve publication.
+Project sample packs supply operational Store, Sales Channel and Point of Service
+records through the Store schemas on COMMERCE. Projects select these releases
+separately from Staged catalogue publication. Store admits these release targets
+only on a locally owned OPERATIONAL runtime.
 
 Points of service may be online or physical. The `locationRef` association is
 optional for general records, so Commerce activation does not depend on Location.
@@ -59,3 +57,5 @@ including missing context, mismatches, independent stores and persisted IDs.
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Placement refusals are HTTP 403 and invalid selectors HTTP 400; they no longer appear as generic server failures. Existing provider failures remain separate.

@@ -26,35 +26,10 @@
         "init-v001/records/identity/storePermissionData.js": "67a760ea131a145f069cc8e293791a1b49926f7f0949945b4487debc4a00b180"
       }
     },
-    "core-reference": {
-      "kind": "DATA_RELEASE",
-      "dataType": "core",
-      "version": "0.0.1",
-      "displayName": "Store Core Reference",
-      "description": "Store-owned operational store, sales-channel and point-of-service defaults.",
-      "owningDomain": "commerce",
-      "lifecycle": "REFERENCE",
-      "destinationRole": "COMMERCE",
-      "environmentScope": [
-        "ALL"
-      ],
-      "sensitivity": "INTERNAL",
-      "versioningPolicy": "NONE",
-      "publicationPolicy": "NONE",
-      "initialPublicationPolicy": "NONE",
-      "removalPolicy": "RETAIN",
-      "files": {
-        "core-v001/records/store/baseCommercePointOfServiceData.js": "2b8791c8e09834b4f3fda3c10899b3986100852f582a7140f230a1f2b4c4fafd",
-        "core-v001/records/store/baseCommerceSalesChannelData.js": "1ab04a8dd52f629f6d08f2eaedc0f464132b2258c51e767239002a0648bdc285",
-        "core-v001/records/store/baseCommerceStoreData.js": "072ed70f21058dc87acab47edad643c5868ad43d8bbd6a982cf7e14fcfbd23e0",
-        "core-v001/headers/store/baseCommerceCoreReferenceHeader.js": "c8476162e75bcd13546dcf4030528bdf0f0d9ef0e558aa652bdaf3ee2aad056f"
-      },
-      "sourceRoot": "core-v001"
-    },
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "store accessGroups",
       "description": "Explicit store identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "store",
@@ -134,20 +109,20 @@
         {
           "moduleName": "product",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.2",
+          "version": "0.0.1",
           "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
         },
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "402b7ebffc05ac529f465c228700437b830cfb0f873a15ac92d5b7b5b9a3a9c8",
           "partition": "DEFAULT"
         },

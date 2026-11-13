@@ -49,6 +49,7 @@ module.exports = {
    * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
    */
   authorize: function (request) {
+    if (SERVICE.DefaultModuleService?.isLocalModuleActive?.("loyaltyWallet") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL") this.fail();
     if (invocations.getStore()?.active !== true || invocations.getStore().request !== request) this.fail();
     if (SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection?.(request) !== true) this.fail();
     const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, "loyaltyApi");
@@ -65,7 +66,7 @@ module.exports = {
         g.principalEnterpriseCode === auth.entCode && g.enterpriseCode === enterpriseCode && g.serviceId === auth.serviceId &&
         ["projectCode", "environmentCode", "serverCode", "instanceCode", "assignmentCode"].every(k => this.identifier(g[k]) && g[k] === auth.runtimeScope[k]) &&
         g.instanceCode === auth.runtimeInstanceId && g.environmentCode === NODICS.getSelectedEnvironmentName());
-      if (CONFIG.get("runtimeRole")?.code !== policy?.runtimeRole || grants.length !== 1) this.fail();
+      if (grants.length !== 1) this.fail();
     }
     const r = { tenant: auth.tenant, enterpriseCode, authData: structuredClone(auth) };
     admissions.set(r, { request, payload: structuredClone(request.payload), auth: structuredClone(auth), enterpriseCode, delegated, policy: structuredClone(policy) });
@@ -106,7 +107,8 @@ module.exports = {
    */
   rows: async function (r, serviceName, query, requireCount = false) {
     const admitted = admissions.get(r);
-    const unchanged = () => admitted && invocations.getStore()?.active === true && invocations.getStore().context === r &&
+    const unchanged = () => SERVICE.DefaultModuleService?.isLocalModuleActive?.("loyaltyWallet") === true &&
+      CONFIG.get("runtimeRole")?.publication === "OPERATIONAL" && admitted && invocations.getStore()?.active === true && invocations.getStore().context === r &&
       invocations.getStore().request === admitted.request && admitted.request.tenant === r.tenant && r.tenant === admitted.auth.tenant &&
       SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection?.(admitted.request) === true &&
       r.enterpriseCode === admitted.enterpriseCode && isDeepStrictEqual(admitted.request.payload, admitted.payload) &&
@@ -116,7 +118,7 @@ module.exports = {
       [admitted.request.enterpriseCode, admitted.request.entCode, admitted.request.httpRequest?.headers?.["x-enterprise-code"]]
         .every(value => value === undefined || value === admitted.auth.entCode) &&
       (!admitted.delegated || isDeepStrictEqual(CONFIG.get("loyalty")?.api?.readEvidence, admitted.policy) &&
-        CONFIG.get("runtimeRole")?.code === admitted.policy.runtimeRole && NODICS.getSelectedEnvironmentName() === admitted.auth.runtimeScope.environmentCode);
+        NODICS.getSelectedEnvironmentName() === admitted.auth.runtimeScope.environmentCode);
     if (!unchanged()) this.fail();
     const operation = SERVICE.DefaultLoyaltyRewardOperationService;
     const expectedQuery = structuredClone(query);

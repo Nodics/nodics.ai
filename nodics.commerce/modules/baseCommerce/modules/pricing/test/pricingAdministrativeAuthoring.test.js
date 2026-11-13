@@ -467,8 +467,13 @@ async function nativeRowLifecycleFixture(t) {
       storeCode: "store", sourceVersion: "0", targetVersion } };
   const workflow = require(foundation + "nPublish/src/service/defaultPublicationApprovalWorkflowService");
   SERVICE.DefaultPublicationApprovalWorkflowService = workflow;
+  SERVICE.DefaultModuleRegistrationAgentService = require(foundation + "nService/src/service/module/defaultModuleRegistrationAgentService");
+  const getModule = NODICS.getModule, getRawModule = NODICS.getRawModule;
+  NODICS.getModule = name => name === "pricing" ? { rawSchema: { priceRow: {} } } : getModule?.(name);
+  NODICS.getRawModule = name => name === "pricing" ? { metaData: { nodics: { runtime: { router: true } } } } : getRawModule?.(name);
+  SERVICE.DefaultModuleRegistrationAgentService = { ...SERVICE.DefaultModuleRegistrationAgentService, getLocalModules: () => ["pricing"] };
   f.config.publish.approvalWorkflow = { domains: structuredClone(properties.publish.approvalWorkflow.domains),
-    target: { connectionName: "process", connectionType: "abstract", runtimeRole: "PROCESS", timeoutMs: 1000 } };
+    target: { connectionName: "process", connectionType: "abstract", targetAuthority: { publication: "OPERATIONAL" }, timeoutMs: 1000 } };
   f.config.publish.providers.workflowProviders = { pricing: "DefaultPublicationApprovalWorkflowService" };
   const invoke = SERVICE.DefaultModuleService.invokeModule, starts = [];
   SERVICE.DefaultModuleService.invokeModule = async input => {

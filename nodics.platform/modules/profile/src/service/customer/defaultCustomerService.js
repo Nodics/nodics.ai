@@ -368,7 +368,8 @@ module.exports = {
           resolve(success);
         })
         .catch((error) => {
-          reject(new CLASSES.NodicsError(error, null, "ERR_PRFL_00006"));
+          reject(error?.code === "ERR_PRFL_00007"
+            ? error : new CLASSES.NodicsError(error, null, "ERR_PRFL_00006"));
         });
     });
   },

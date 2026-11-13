@@ -57,3 +57,5 @@ activating schemas. Missing/ambiguous selected source fails before URL assembly;
 never return a partial URL or guess its prefix. Existing endpoint selection and
 service-token/permission checks remain separate. No runtime registry snapshot is
 required for this static path. See `test/declaredRemoteModulePrefix.test.js`.
+
+Conditional published-resource reads use the Framework-owned `If-None-Match` request header and exposed `ETag` response header. CORS must admit this header only for already-approved origins; it grants no business permission. Retain override removal and denied-origin coverage in `httpHardeningContract.test.js`.

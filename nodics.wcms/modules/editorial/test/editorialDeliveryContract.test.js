@@ -13,7 +13,8 @@ const assert = require('assert');
 class NodicsError extends Error {}
 global.CLASSES = { NodicsError };
 global.CONFIG = { get: () => ({ delivery: { defaultLimit: 20, maximumLimit: 100, supportedLocales: ['en'], supportedChannels: ['web'] } }) };
-global.SERVICE = { DefaultEditorialOnlineArticleService: { get: request => Promise.resolve({ result: [{ slug: 'safe', payload: { title: 'Safe', slug: '/safe' } }].filter(item => !request.query.slug || item.slug === request.query.slug) }) } };
+global.SERVICE = {
+        ...require('./helpers/editorialOwnerServices.js'), DefaultEditorialOnlineArticleService: { get: request => Promise.resolve({ code: 'SUC_FIND_00000', result: [{ slug: 'safe', payload: { title: 'Safe', slug: '/safe' } }].filter(item => !request.query.slug || item.slug === request.query.slug) }) } };
 const delivery = require('../src/service/defaultEditorialDeliveryService');
 (async () => {
     let request = { tenant: 'default', delivery: { siteCode: 'main', localeCode: 'en', channel: 'web', limit: 1000 } };

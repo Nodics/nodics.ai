@@ -38,10 +38,13 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
-Keep approval bridge transport type and required Process target-role defaults in
+Keep approval bridge transport type and required Workflow publication selector defaults in
 nPublish properties. Keep actual connection names and provider opt-ins explicit
 in deployment configuration; never turn the default null connection into an
-inferred target. Preserve the service's source-role, scope and permission guards.
+inferred target. Require the policy's local DMS module owner and explicit STAGED sourcePublication.
+Route Workflow with targetAuthority.publication OPERATIONAL, preserving optional
+exact server/environment pins. Reject retired role selectors; preserve scope,
+signed requester/execution claims and permission guards.
 
 Approval is permission-based, including for the original requesting user.
 Shared deployment callbacks retain signed deployment identity; separately bind
@@ -93,6 +96,17 @@ the existing authority test and lifecycle/atomicity suites when changing this
 boundary; a domain retry must read or reuse the existing publication authority.
 
 Implementing domains register their standard adapter, version provider and this
-module's DefaultPublicationApprovalWorkflowService in Staged role profiles.
+module's DefaultPublicationApprovalWorkflowService through explicit STAGED publication context bindings.
 Online observer registrations are read-only and owner-scoped. Registration never
 enables observation, qualifies schemas, selects peers or grants publication.
+
+## Runtime ownership
+
+The canonical package declares `nodics.runtime.ownership: "runtimeLocal"`.
+Publication execution requests and audit receipts remain with the runtime executing the domain publication operation. Source/target domain owners, approvals, immutable versions and exact caller permissions remain independently enforced.
+Registration retains callable endpoints and schema/service claims. The shared
+nService ownership key includes the logical server for this explicit scope; no
+Foundation-wide exemption or caller-supplied classification is permitted.
+
+
+A provider may admit retry of a failed legacy rollback only through canRetryRejectedRollback returning exactly true after fresh owner checks. CMS admits only its transaction-scoped ERR_CMS_00116 rejection, a contiguous Online to Rolling Back to Failed journal, unchanged activation/predecessor identities and the same current Online pointer. Retry appends audit evidence and uses current pointer fencing; it never rewrites the old journal or activates a new revision. Timeouts, response loss, incomplete history and other failures remain blocked unless the existing qualified command receipt contract proves recovery.

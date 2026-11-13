@@ -74,3 +74,21 @@ Search readiness must not add custom-project configuration burden. Framework
 defaults and active module/runtime configuration define the policy, while later
 environment or persisted runtime configuration may override values through the
 normal layered configuration model.
+
+Policy summaries consume effective module/tenant settings through
+`getSearchConfiguration`, including provider overrides. They must not select or
+merge `runtimeRoleProfiles`: nConfig has already projected configuration.
+`enabledModuleCount` and `enabledModuleCodes` describe configured active modules;
+they replace the former role-profile counters. BackOffice projects this owner
+summary without a second configuration resolver. Source loading or readiness
+reporting never activates a provider or grants module ownership.
+
+Each participating capability defines its own `search.<module>.options.enabled`
+default in its framework module properties. nSearch owns generic provider and
+fallback mechanics; it must not enumerate business modules under runtime role
+labels. Relocation carries the owning module's defaults through ordinary
+configuration layering. Customer/runtime files contain only intentional changes,
+including an explicit `false` to disable participation.
+
+
+Readiness is configuration and connection evidence only. It never establishes index or projection freshness from an active client, promises database fallback from the fallback flag, or enables a repair command merely by naming it. Generic search repair entries remain unavailable until an owning command exists; use the application owner refresh/rebuild contract. Missing provider activity evidence is not healthy. Source and query visibility must be verified against the selected published revision.

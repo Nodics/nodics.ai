@@ -27,7 +27,7 @@ module.exports = {
     },
     wasteCarbon: {
         mock: { enabled: false },
-        profile: { connectionName: 'profile', targetAuthority: { runtimeRole: 'PLATFORM' }, timeoutMs: 10000 },
+        profile: { connectionName: 'profile', targetAuthority: { publication: 'OPERATIONAL' }, timeoutMs: 10000 },
         evidence: { providerService: null, qualificationRef: null, allowSynthetic: false },
         validation: {
             quantityScale: { minimum: 0, maximum: 8 }, quantityDigits: { minimum: 1, maximum: 100 },

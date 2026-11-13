@@ -15,3 +15,10 @@ authoritative lifecycle/repository services retain internal updates. Never let
 generic CRUD manufacture approval, Online state or transition evidence. Verify
 the existing authority test and lifecycle/atomicity suites when changing this
 boundary; a domain retry must read or reuse the existing publication authority.
+
+Qualified Online request inspection checks the current target even when the
+request has no retained predecessor. A superseded or withdrawn first publication
+remains readable history; its stored ONLINE state is not current delivery proof.
+Unknown/negative target evidence holds recovery. This read-only presentation adds
+no lifecycle transition or permission. Customize provider evidence through the
+existing contract, not caller flags or replacement history.

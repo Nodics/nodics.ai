@@ -15,14 +15,20 @@ module.exports = {
     send: function (operation, payload, request) {
         const settings = (CONFIG.get('tax') || {}).publication || {};
         const target = (operation === 'authorize' ? settings.sourceAuthority : settings.target) || {};
-        if (settings.runtimeRole !== (operation === 'authorize' ? 'ONLINE' : 'STAGED') || !target.moduleName || !target.runtimeRole ||
+        const authorizing = operation === 'authorize';
+        const runtime = CONFIG.get('runtimeRole') || {};
+        if (SERVICE.DefaultModuleService?.isLocalModuleActive?.('tax') !== true ||
+            !(authorizing ? ['OPERATIONAL', 'ONLINE'] : ['STAGED']).includes(runtime.publication) ||
+            settings.runtimeRole !== (authorizing ? 'ONLINE' : 'STAGED') || target.moduleName !== 'tax' ||
+            Object.hasOwn(target, 'runtimeRole') ||
+            !(authorizing ? ['STAGED'] : ['OPERATIONAL', 'ONLINE']).includes(target.publication) ||
             !target.connectionName || target.connectionName === 'default') throw new Error('Distinct Online policy connection required');
         const token = NODICS.getInternalAuthToken(request.tenant);
         if (!token) throw new Error('Runtime internal authentication unavailable');
         return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
             local: false, tenant: request.tenant,
             connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
-            targetAuthority: { runtimeRole: target.runtimeRole }, nodeId: target.nodeId,
+            targetAuthority: { publication: target.publication }, nodeId: target.nodeId,
             methodName: 'POST', apiName: '/publication/policy/' + operation,
             requestBody: payload, timeoutMs: target.timeoutMs, maxAttempts: target.maxAttempts,
             idempotencyKey: payload.operationKey || payload.release && payload.release.code,

@@ -39,7 +39,7 @@ test("module-owned bootstrap declares Copilot grants only for the runtime admini
   for (const group of groups.filter(group => group.code !== administrator.code))
     assert.deepEqual((group.permissions || []).filter(grant => added.includes(grant)).sort(),
       group.code === "adminGroup" ? [...historicalAdminReads].sort() : [], group.code + ' must preserve its exact historical boundary');
-  assert.equal(active.version, '0.0.8');
+  assert.equal(active.version, '0.0.1');
   assert(!Object.keys(active.files).some(file => file.includes('/records/groups/')));
   assert.equal(active.sourceRoot, "init-v001");
   assert.equal(manifest.retainedRoots, undefined);

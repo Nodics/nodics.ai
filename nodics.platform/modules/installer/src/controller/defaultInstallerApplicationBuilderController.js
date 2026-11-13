@@ -71,5 +71,16 @@ module.exports = {
     /** Builds a non-mutating setup plan for the requested workspace. */
     setupPlan: function (request, callback) { return this.execute('setupPlan', request, callback); },
     /** Reads allowlisted setup or qualification evidence. */
-    evidenceRead: function (request, callback) { return this.execute('evidenceRead', request, callback); }
+    evidenceRead: function (request, callback) { return this.execute('evidenceRead', request, callback); },
+
+    /** Admits only the named workflow command with the original request authority. */
+    buildCommand: function (request, callback) {
+        const prepared = this.prepareRequest(request);
+        const command = prepared.params.command;
+        const owner = require('../service/defaultInstallerLocalBuildService');
+        const promise = owner.execute(prepared, command)
+            .catch(error => responseService.failure(prepared, 'build', error));
+        if (!callback) return promise;
+        promise.then(value => callback(null, value)).catch(callback);
+    }
 };

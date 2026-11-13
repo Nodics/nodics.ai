@@ -28,6 +28,14 @@ const sampleHeaderComponents = require(path.join(root, 'modules/cms/data/sample-
 const validation = require(path.join(root, 'modules/cms/src/service/validation/defaultCmsContractValidationService'));
 const componentDetailInterceptor = require(path.join(root, 'modules/cms/src/service/interceptors/defaultCmsComponentDetailInterceptorService'));
 
+/** Emulates the affirmative complete generated read contract, including tenant model selection. */
+function associationRows(request, rows) {
+    request.schemaModel = { tenant: request.tenant };
+    const result = rows.filter(row => Object.entries(request.query || {}).every(([key, expected]) =>
+        expected && typeof expected === 'object' && Array.isArray(expected.$in) ? expected.$in.includes(row[key]) : row[key] === expected));
+    return { code: 'SUC_FIND_00000', query: request.query, count: result.length, result };
+}
+
 assert.strictEqual(Object.keys(initialTypes).length, new Set(Object.keys(initialTypes)).size);
 assert(Object.values(initialTypes).some(item => item.code === 'menuLinkComponentType'));
 assert(Object.values(initialTypes).some(item => item.code === 'navigationalComponentType'));
@@ -75,7 +83,7 @@ global.CONFIG = { get: () => undefined };
 global.SERVICE = {
     DefaultCmsComponentDetailInterceptorService: componentDetailInterceptor,
     DefaultCmsComponentDetailService: {
-        get: () => Promise.resolve({ result: [] }),
+        get: request => Promise.resolve(associationRows(request, [])),
         remove: () => Promise.resolve({ result: true }),
         update: () => Promise.resolve({ result: true })
     },
@@ -119,7 +127,7 @@ async function verifyNestedAssociationIdentity() {
             DefaultCmsComponentDetailInterceptorService: selected,
             DefaultModelService: nested,
             DefaultCmsComponentDetailService: {
-                get: async request => { reads.push(request); return { result: [] }; },
+                get: async request => { reads.push(request); return associationRows(request, []); },
                 saveAll: async request => {
                     assert.strictEqual(request.authData, auth);
                     assert.strictEqual(request.tenant, 'tenant-a');
@@ -185,12 +193,12 @@ async function verifyNestedAssociationIdentity() {
         assert.strictEqual(saved.length, beforeInvalidOverride, 'Selected helper failure stops before nested save');
         selected.generateCmsComponentDetailCode = customizedIdentity;
         const service = SERVICE.DefaultCmsComponentDetailService;
-        service.get = async () => ({ result: [{ code: 'occupied-placement', source: 'parent', slot: 'body', index: 0, active: true }] });
+        service.get = async request => associationRows(request, [{ code: 'occupied-placement', source: 'parent', slot: 'body', index: 0, active: true }]);
         const beforeCollision = saved.length;
         await assert.rejects(persist('cmsComponent', 'subComponents', { code: 'parent', subComponents: [{ target: 'hero', slot: 'body', index: 0 }] }),
             error => error.code === 'CMS_ASSOCIATION_POSITION_CONFLICT');
         assert.strictEqual(saved.length, beforeCollision, 'Project identity cannot bypass existing association collision validation');
-        service.get = async () => ({ result: [] });
+        service.get = async request => associationRows(request, []);
         await assert.rejects(persist('cmsPage', 'cmsComponents', { code: 'parent', cmsComponents: [{ target: 'hero', slot: 'body', index: -1 }] }),
             error => error.code === 'CMS_ASSOCIATION_INVALID');
         const removed = [];
@@ -221,13 +229,20 @@ async function verifyNestedAssociationIdentity() {
     let route = { model: { path: '//account///profile', routeType: 'PAGE' } };
     await validation.validateRoute(route);
     assert.strictEqual(route.model.path, '/account/profile');
-    await assert.rejects(validation.validateRoute({ model: { path: 'https://host/path', routeType: 'PAGE' } }), error => error.code === 'CMS_ROUTE_PATH_INVALID');
+    const status = require('../src/utils/statusDefinitions');
+    await assert.rejects(validation.validateRoute({ model: { path: 'https://host/path', routeType: 'PAGE' } }),
+        error => error.code === 'ERR_CMS_00112' && status[error.code].code === '400');
+    for (const redirectPath of ['//other.example/path', '/\\other.example/path', '/\t/other.example/path']) {
+        await assert.rejects(validation.validateRoute({ model: { path: '/old', routeType: 'REDIRECT', redirectPath } }),
+            error => error.code === 'ERR_CMS_00113' && status[error.code].code === '400');
+    }
+    await validation.validateRoute({ model: { path: '/old', routeType: 'REDIRECT', redirectPath: '/account/profile' } });
     await validation.validateAssociation({ tenant: 'tenant-a', model: { source: 'page', target: 'hero', index: 0 }, options: {} });
     let retiredCodes = [];
-    global.SERVICE.DefaultCmsComponentDetailService.get = () => Promise.resolve({ result: [
+    global.SERVICE.DefaultCmsComponentDetailService.get = request => Promise.resolve(associationRows(request, [
         { code: 'home2OldHero', source: 'home', target: 'oldHero', slot: 'main', index: 0, active: true },
         { code: 'home2NewHero', source: 'home', target: 'newHero', slot: 'main', index: 0, active: true }
-    ] });
+    ]));
     global.SERVICE.DefaultCmsComponentDetailService.remove = request => {
         retiredCodes.push(request.query.code);
         return Promise.resolve({ result: true });
@@ -236,9 +251,9 @@ async function verifyNestedAssociationIdentity() {
         model: { code: 'home', cmsComponents: [{ code: 'home2NewHero', target: 'newHero', slot: 'main', index: 0 }] } }, {});
     assert.deepStrictEqual(retiredCodes, ['home2OldHero']);
     retiredCodes = [];
-    global.SERVICE.DefaultCmsComponentDetailService.get = () => Promise.resolve({ result: [
+    global.SERVICE.DefaultCmsComponentDetailService.get = request => Promise.resolve(associationRows(request, [
         { code: 'home2OldHero', source: 'home', target: 'oldHero', slot: 'main', index: 0, active: true }
-    ] });
+    ]));
     await validation.validateAssociation({ tenant: 'tenant-a', options: { allowCmsAssociationReplacement: true },
         model: { code: 'home2NewHero', source: 'home', target: 'newHero', slot: 'main', index: 0 } });
     assert.deepStrictEqual(retiredCodes, ['home2OldHero']);

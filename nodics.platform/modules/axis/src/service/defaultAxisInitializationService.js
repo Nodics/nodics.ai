@@ -78,7 +78,9 @@ module.exports = {
         let configuration = this.configuration();
         let target = configuration.target || {};
         let baselineCode = String(configuration.baselineCode || 'axis');
-        if (!target.moduleName || !target.connectionName || target.connectionName === 'default') {
+        if (!target.moduleName || !target.connectionName || target.connectionName === 'default' ||
+            target.runtimeRole !== undefined || target.targetAuthority?.runtimeRole !== undefined ||
+            target.targetAuthority?.publication !== 'STAGED') {
             throw new CLASSES.NodicsError('AXIS_INITIALIZATION_TARGET_UNAVAILABLE', 'Axis WCMS Staged initialization target is unavailable');
         }
         if (SERVICE.DefaultInternalAuthenticationProviderService &&
@@ -96,7 +98,7 @@ module.exports = {
             correlationId: request.correlationId || request.requestId } : undefined;
         return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
             connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
-            targetAuthority: { runtimeRole: target.runtimeRole || 'WCMS_STAGED' },
+            targetAuthority: { ...target.targetAuthority },
             methodName: operation === 'initiate' ? 'POST' : 'GET',
             apiName: '/publication/baselines/' + encodeURIComponent(baselineCode) + (operation === 'initiate' ? '/initiate' : ''),
             requestBody: body, timeoutMs: target.timeoutMs, maxAttempts: target.maxAttempts,

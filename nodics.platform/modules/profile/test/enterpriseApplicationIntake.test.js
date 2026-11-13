@@ -1313,3 +1313,22 @@ test("callback route admits service handles only and no caller-owned approval fi
   assert.equal(manifest.installer, "PROCESS_DEFINITION");
   assert.equal(manifest.destinationRole, "PROCESS");
 });
+
+
+test("employee application callback declaration resolves through canonical Process publication authority", () => {
+  const registry = require("../../../../nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService");
+  const previous = global.NODICS;
+  global.NODICS = { getRawModule: name => name === "profile" ? { path: require("node:path").resolve(__dirname, "..") } : undefined };
+  try {
+    const definition = registry.ownerDefinition("profile.applyEmployeeApplicationDecision");
+    assert.equal(definition.moduleName, "profile");
+    assert.equal(definition.operation, "applyEmployeeApplicationDecision");
+    assert.equal(definition.remote.moduleName, "profile");
+    assert.equal(definition.remote.target, "profile");
+    assert.equal(definition.remote.apiName, "/enterprise-access/applications/process-decision");
+    assert.equal(definition.remote.requiresCompletedTask, true);
+    assert.deepEqual(definition.remote.targetAuthority, { publication: "OPERATIONAL" });
+    assert.equal(Object.hasOwn(definition.remote, "runtimeRole"), false);
+    assert.equal(registry.validRemoteAuthority({ ...definition.remote, runtimeRole: "PLATFORM" }), false);
+  } finally { global.NODICS = previous; }
+});

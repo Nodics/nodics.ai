@@ -45,6 +45,10 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_MED_00012', 'Media delivery is disabled by media policy');
         }
         let publication = (CONFIG.get('media') || {}).publication || {};
+        if (publication.runtimeRole === 'STAGED' && !request.download &&
+            request.authData?.tokenType !== 'access' && request.authData?.tokenType !== 'service') {
+            throw new CLASSES.NodicsError('ERR_MED_00012', 'Staged Media requires authenticated preview');
+        }
         if (publication.versionProviderEnabled === true && publication.runtimeRole === 'ONLINE') {
             let retained = await SERVICE.DefaultMediaPublicationTargetService.resolveDelivery(mediaCode, request);
             this.validateAccess(request, retained.media);
@@ -55,6 +59,60 @@ module.exports = {
         }
         let media = await this.loadMedia(request, mediaCode);
         this.validateAccess(request, media);
+        return this.describeFile(request, media, policy);
+    },
+
+    /** Admits original employee authority only on the Staged Media runtime. */
+    requireDraftAccess: function (request) {
+        const library = SERVICE.DefaultMediaLibraryService;
+        library.assertOperator(request, 'media.content.read');
+        if (request.authData.principalType !== 'human' || request.authData.isSystem ||
+            request.authData.runtimeScope || CONFIG.get('runtimeRole')?.publication !== 'STAGED' ||
+            this.policy().enabled !== true) library.fail();
+        library.currentModel(request);
+        return library;
+    },
+
+    /** Returns a bounded page of ready, scoped raster choices without delivery URLs or provider details. */
+    listDraftImages: async function (request) {
+        const library = this.requireDraftAccess(request);
+        const input = request.query || {};
+        library.assertInput(input, ['pageNumber']);
+        const pageNumber = library.integer(input.pageNumber, 1, 1, 10000);
+        const pageSize = 25;
+        const review = CONFIG.get('media')?.library?.review || {};
+        const query = { ...library.scope(request), mimeType: { $in: review.previewMimeTypes || [] },
+            status: { $in: this.policy().allowedStatuses }, sizeBytes: { $gt: 0, $lte: review.maximumPreviewBytes } };
+        const response = await SERVICE.DefaultMediaService.get({ tenant: request.tenant, authData: request.authData,
+            query, skipcache: true, searchOptions: { pageNumber, pageSize, limit: pageSize, sort: { code: 1 } } });
+        if (!Array.isArray(response?.result) || response.result.length > pageSize) library.fail();
+        const items = response.result.filter(asset => library.inScope(asset, request) && library.identifier(asset.code) &&
+            ['PUBLIC', 'PRIVATE'].includes(asset.access) && this.isDraftRaster(asset, request))
+            .map(asset => ({ code: asset.code, fileName: asset.originalFileName || asset.code }));
+        return { items, pageNumber, hasMore: response.result.length === pageSize };
+    },
+
+    /** Reuses the Media review raster and size contract. */
+    isDraftRaster: function (media, request) {
+        return Number.isSafeInteger(media.sizeBytes) && media.sizeBytes > 0 &&
+            SERVICE.DefaultMediaPublicationReviewService.previewAvailable(media, request);
+    },
+
+    /** Resolves one bounded raster from the original employee's Staged enterprise. */
+    previewDraftImage: async function (request) {
+        const library = this.requireDraftAccess(request);
+        const media = await this.loadMedia(request, this.resolveMediaCode(request));
+        if (!library.inScope(media, request) || !this.isDraftRaster(media, request)) library.fail();
+        this.validateAccess(request, media);
+        const result = this.describeFile(request, media, this.policy());
+        return { ...result, cacheControl: 'no-store', contentDisposition: 'inline', responseHeaders: {
+            ...result.responseHeaders, 'X-Content-Type-Options': 'nosniff',
+            'Content-Security-Policy': "sandbox; default-src 'none'"
+        } };
+    },
+
+    /** Resolves bytes through the existing Media storage provider. */
+    describeFile: function (request, media, policy) {
         let source = SERVICE.DefaultMediaStorageProviderRegistryService.resolveImportSource({
             tenant: request.tenant,
             authData: request.authData,

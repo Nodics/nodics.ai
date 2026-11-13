@@ -11,7 +11,9 @@
       "owningDomain": "commercialAgreement",
       "lifecycle": "REFERENCE",
       "destinationRole": "PLATFORM",
-      "environmentScope": ["ALL"],
+      "environmentScope": [
+        "ALL"
+      ],
       "sensitivity": "RESTRICTED",
       "versioningPolicy": "NONE",
       "publicationPolicy": "NONE",
@@ -105,14 +107,14 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "bb92fc43795bfa4de8e3b5f839160c8cb393fdcd1d978161f51d7f967c8ac090",
+      "releaseChecksum": "0a24c8c7778f21678ee3788baa0e12ee1d399e2d65556639127a9c1ebba8e37c",
       "generatedHashes": {
         "docs-v001/headers/100_commercialAgreementDocumentationContentPackHeader.js": "45dfa3a704f6e2801e88a3a159372d49890852b2c9850b8a7d0e23cb282eef58",
         "docs-v001/records/documentation/commercialAgreementDocumentationComponentData.js": "a106d666ab555f2e8d60bdaed53b8044351bcba37f68b7f94cc3eb7845eb8f49",
         "docs-v001/records/documentation/commercialAgreementDocumentationPageMetadataData.js": "9dcd178cc3f1e3142533b133f912c7625c39ff7b50ab40bc78bd4f62cc724380",
         "docs-v001/records/documentation/commercialAgreementDocumentationNodeData.js": "5d586f762dee18ee1448f05f306918bf574ec25f4825a22020c4496ad5dfa816",
         "docs-v001/records/documentation/commercialAgreementDocumentationPageData.js": "8afab1293ba3bc5b5871c256ad117ef7e037ed320f90be768f43f3663f878df2",
-        "docs-v001/records/documentation/commercialAgreementDocumentationRouteData.js": "8e6e98dad9b68c425bf51bfe635d2297dc2c1407ea75f351762935fe85c66746",
+        "docs-v001/records/documentation/commercialAgreementDocumentationRouteData.js": "2a87d3401fa0102ee32d9c9c7e9a404279e4d681455e35a23bd8f4f3a744b7b7",
         "docs-v001/records/documentation/commercialAgreementDocumentationSearchMetadataData.js": "dfe2fc1affcf33bd9866a03b93032f5a83f3184f93ed8058e99163a1da1952bd",
         "docs-v001/records/documentation/commercialAgreementDocumentationPublicationStateData.js": "346644ed4105b094506ed570fc9071fb5139a89fae26a1340a9ccc755edacc92"
       },

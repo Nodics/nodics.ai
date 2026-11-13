@@ -42,7 +42,7 @@ test('new tenant receives installation/history models before release lookup, wit
     };
     const owner = { ...builder, registerModelMiddleWare() {} };
     await owner.buildModelsForTenant(tenant);
-    assert.deepEqual(built.sort(), ['DataInstallationModel', 'ImportRunModel']);
+    assert.deepEqual(built.sort(), ['DataInstallationModel', 'DataReleaseExecutionRecordModel', 'ImportRunModel']);
     assert.equal(module.models[tenant].master.ImportDefinitionModel, undefined);
     assert.deepEqual(await releases.getInstallations(tenant), []);
     await owner.buildModelsForTenant('default');

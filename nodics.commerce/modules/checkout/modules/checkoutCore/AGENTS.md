@@ -256,3 +256,17 @@ allowlist through recovery checkpoint persistence and owner-qualified command st
 Never expose dependency messages, causes, arbitrary codes or unit references. Status
 reads never dispatch release or create retry authority; historical missing codes stay
 unknown. See the coupon release diagnostics contract in `llm/contracts/README.md`.
+
+Payment-method routing fixtures must retain the original typed owner/actor and
+pre-dispatch checkpoint. Exercise real journal claim/readback before Loyalty
+dispatch; a missing checkpoint or duplicate claim must not invoke the provider.
+Completion fixtures carry the placement results object, including any journal proof.
+
+Identity and cross-owner commands route through existing DMS with explicit logical
+module and `targetAuthority.publication`, never physical role codes. Operational
+identity, Store, scheduler, payment and notification owners use OPERATIONAL;
+Product/Pricing authoring references use STAGED. Optional server/environment pins
+remain exact. Reject missing publication and obsolete role selectors. Preserve
+original actor or internal credentials as specified by each API, signed caller
+grants, tenant/business binding, enablement and qualification. Routing descriptors
+do not activate owners or providers. Tests must express these boundaries explicitly.

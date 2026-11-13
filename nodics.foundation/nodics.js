@@ -278,6 +278,7 @@ module.exports = {
             });
         }).then(() => {
             return (async () => {
+                if (options.sourceOnly === true) return true;
                 const defaultTenant = CONFIG.get('defaultTenant') || 'default';
                 let originalError;
                 try {

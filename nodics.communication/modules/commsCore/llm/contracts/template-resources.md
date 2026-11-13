@@ -217,3 +217,14 @@ Browser previews and loopback MIME tests do not certify Outlook/Gmail rendering,
 live mailbox delivery, generated database persistence or full employee journeys.
 Those remain deployment acceptance gates. Template-management UI and executable
 email experiences are outside this resource contract.
+
+
+### Standard employee resource composition
+
+commsCore owns `activeModules.compositions.employeeMail`, its complete `none`
+default, the standard employee domain and the nConfig-selected Profile resource
+entry. Customer modules must not redefine the domain, supply the default selection
+or copy Profile resource wiring. Only actual deployment selections/overrides
+belong to customer environments. The resource entry defaults false when unselected.
+Selection grants no source trust, sending, credential, registration or recovery
+qualification; source allowlists remain separately governed deployment choices.

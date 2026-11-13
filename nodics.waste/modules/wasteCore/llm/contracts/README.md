@@ -289,3 +289,17 @@ intent, event identity, finality, owner/custody fields or recovery authority.
 Tests use the real records normalizer with the actual digitalCreate/digitalUpdate
 owners and cover reservation, consumption and early-release replay. No installed
 record migration or runtime recovery is implied.
+
+## Relocatable capability transport
+
+Select the actual logical module with `targetAuthority: { publication: "OPERATIONAL" }`.
+Optional exact `server` and `environment` pins belong inside that object; absent,
+malformed, foreign-publication and retired runtimeRole selectors fail closed.
+Connection aliases remain deployment-selected. Physical host names do not grant
+module ownership. Existing nService/DMS resolves the owner; no registry, activation,
+import or fallback host is introduced.
+
+Profile participant/scope reads retain the original signed bearer and enterprise.
+Settlement and certificate evidence retain internal credentials, exact APIs,
+operation keys and original source evidence. Relocation never widens permission,
+changes wallet ownership, rewrites receipts or authorizes a business operation.

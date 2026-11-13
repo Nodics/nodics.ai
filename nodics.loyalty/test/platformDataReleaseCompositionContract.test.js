@@ -14,11 +14,12 @@
 /** @module nodics.loyalty/test/platformDataReleaseCompositionContract @description Verifies exact Platform source-catalogue selectors without activating Loyalty capabilities. @layer test @owner nodics.loyalty */
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const properties = require("../config/properties");
+const bindings = require("../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService");
+const properties = bindings.merge({}, require("../config/properties"));
 
 test("Loyalty exposes owner permission definitions, Enterprise reference and selected Wallet role releases", () => {
   assert.deepEqual(
-    properties.data.dataReleases.runtimeRoleProfiles.PLATFORM.contributions,
+    properties.data.dataReleases.contributions,
     [
       {
         moduleName: "loyaltyProgram",
@@ -26,7 +27,7 @@ test("Loyalty exposes owner permission definitions, Enterprise reference and sel
       },
       {
         moduleName: "loyaltyCore",
-        sections: ["core-enterprise-reference"],
+        sections: ["sample-enterprises"],
       },
       {
         moduleName: "loyaltyWallet",
@@ -36,7 +37,7 @@ test("Loyalty exposes owner permission definitions, Enterprise reference and sel
   );
   const section = require("../modules/loyaltyWallet/data/manifest.json").sections
     .specialAccessRoles;
-  assert.equal(section.version, "0.0.3");
+  assert.equal(section.version, "0.0.1");
   assert.equal(section.destinationRole, "PLATFORM");
   assert.equal(section.selectionPolicy, "EXPLICIT");
   const participantSection = require("../modules/loyaltyWallet/data/manifest.json")

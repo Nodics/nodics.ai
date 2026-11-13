@@ -1,0 +1,1532 @@
+{
+  "formatVersion": 1,
+  "ownerModule": "publish",
+  "entries": [
+    {
+      "namespace": "publishing",
+      "key": "ui.inspect-a-publication",
+      "defaultMessage": "Inspect a publication",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص عملية نشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.open-the-request-from-its-source-workspace-to-see-its-current-state-exac",
+      "defaultMessage": "Open the request from its source workspace to see its current state, exact version, approval workflow and recorded history.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "افتح الطلب من مساحة العمل التي أنشأته للاطلاع على حالته الحالية ونسخته الدقيقة ومسار الموافقة وسجله."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.source-workspace",
+      "defaultMessage": "Source workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مساحة العمل المصدر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.select-where-the-request-was-created",
+      "defaultMessage": "Select where the request was created.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حدّد أين أُنشئ الطلب."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.choose-a-source-workspace",
+      "defaultMessage": "Choose a source workspace",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر مساحة عمل المصدر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.publication-code",
+      "defaultMessage": "Publication code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.enter-a-reference-or-choose-a-request-from-the-list-below",
+      "defaultMessage": "Enter a reference, or choose a request from the list below.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أدخل مرجعاً أو اختر طلباً من القائمة أدناه."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.open-request",
+      "defaultMessage": "Open request",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح الطلب"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.back-to-request-list",
+      "defaultMessage": "Back to request list",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "العودة إلى قائمة الطلبات"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.the-originating-publication-workspace-is-unavailable-refresh-availabilit",
+      "defaultMessage": "The originating publication workspace is unavailable. Refresh availability before inspecting this request again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مساحة عمل النشر الأصلية غير متاحة. حدّث حالة التوفر قبل فحص هذا الطلب مجدداً."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.no-publication-source-workspace-is-currently-available-refresh-module-av",
+      "defaultMessage": "No publication source workspace is currently available. Refresh module availability before continuing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا تتوفر حالياً مساحة عمل مصدر للنشر. حدّث توفر الوحدات قبل المتابعة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.checking-the-publication-with-its-owning-workspace",
+      "defaultMessage": "Checking the publication with its owning workspace…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التحقق من النشر لدى مساحة العمل المختصة…"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.publication-evidence-is-unavailable",
+      "defaultMessage": "Publication evidence is unavailable.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أدلة النشر غير متاحة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.refresh-request-evidence",
+      "defaultMessage": "Refresh request evidence",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث أدلة الطلب"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.publication-prerequisite-checks-passed-for-this-source-version",
+      "defaultMessage": "Publication prerequisite checks passed for this source version.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اجتازت نسخة المصدر هذه فحوص متطلبات النشر."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.publication-prerequisite-checks-reported-a-blocker-for-this-source-versi",
+      "defaultMessage": "Publication prerequisite checks reported a blocker for this source version.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أظهرت فحوص متطلبات النشر عائقاً لهذه النسخة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.this-request-completed-publication-check-the-working-record-and-website-",
+      "defaultMessage": "This request completed publication. Check the working record and website for current delivery before closing the task.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اكتمل نشر هذا الطلب. تحقّق من سجل العمل والموقع لمعرفة التسليم الحالي قبل إغلاق المهمة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.this-version-is-waiting-for-an-approval-decision-it-has-not-moved-online",
+      "defaultMessage": "This version is waiting for an approval decision. It has not moved Online.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تنتظر هذه النسخة قرار الموافقة. لم تنتقل إلى النشر العام."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.this-publication-reports-a-failure-confirm-its-target-state-and-workflow",
+      "defaultMessage": "This publication reports a failure. Confirm its target state and workflow history before retrying.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أبلغت عملية النشر عن فشل. تأكد من حالة الهدف وسجل سير العمل قبل إعادة المحاولة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.this-is-the-current-owner-confirmed-publication-state-review-its-history",
+      "defaultMessage": "This is the current owner-confirmed publication state. Review its history before taking another action.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "هذه حالة النشر الحالية المؤكدة من الخدمة المختصة. راجع السجل قبل اتخاذ إجراء آخر."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.open-working-article",
+      "defaultMessage": "Open working article",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح المقالة الجاري العمل عليها"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.review-this-workflow",
+      "defaultMessage": "Review this workflow",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة سير العمل هذا"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.recorded-history",
+      "defaultMessage": "Recorded history",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "السجل المسجّل"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.support-code",
+      "defaultMessage": "Support code:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز الدعم:"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.this-response-did-not-include-recorded-history",
+      "defaultMessage": "This response did not include recorded history.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تتضمن هذه الاستجابة سجلاً مسجّلاً."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.included-dependencies",
+      "defaultMessage": "Included dependencies",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التبعيات المضمّنة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.this-response-did-not-include-dependency-identities",
+      "defaultMessage": "This response did not include dependency identities.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تتضمن هذه الاستجابة معرّفات التبعيات."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.support-references",
+      "defaultMessage": "Support references",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجع الدعم"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.workflow",
+      "defaultMessage": "Workflow:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سير العمل:"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.correlation",
+      "defaultMessage": "Correlation:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الارتباط:"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.choose-a-source-workspace-and-open-a-publication-to-see-its-current-prog",
+      "defaultMessage": "Choose a source workspace and open a publication to see its current progress and recorded history.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر مساحة عمل مصدر وافتح طلب نشر للاطلاع على تقدمه الحالي وسجله."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.no-operation-will-be-replayed-refresh-request-evidence-inspect-the-recor",
+      "defaultMessage": "No operation will be replayed. Refresh request evidence, inspect the recorded outcome, then explicitly prepare a permitted operation.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لن تُعاد أي عملية. حدّث أدلة الطلب وافحص النتيجة المسجّلة، ثم جهّز عملية مسموحاً بها بشكل صريح."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.publication-revision",
+      "defaultMessage": "· Publication revision",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· مراجعة النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.source-version",
+      "defaultMessage": "· Source version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· نسخة المصدر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.retained-predecessor-to-restore",
+      "defaultMessage": "Retained predecessor to restore",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النسخة السابقة المحتفظ بها للاستعادة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.reason-optional",
+      "defaultMessage": "Reason (optional)",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "السبب (اختياري)"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.request-evidence-or-access-changed-cancel-and-refresh-before-continuing",
+      "defaultMessage": "Request evidence or access changed. Cancel and refresh before continuing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تغيّرت أدلة الطلب أو صلاحيات الوصول. ألغِ العملية وحدّث الأدلة قبل المتابعة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.waiting-for-owner-confirmation",
+      "defaultMessage": "Waiting for owner confirmation…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بانتظار تأكيد الخدمة المختصة…"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.confirm-restoration",
+      "defaultMessage": "Confirm restoration",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تأكيد الاستعادة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.confirm-withdrawal",
+      "defaultMessage": "Confirm withdrawal",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تأكيد السحب"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.confirm-retry",
+      "defaultMessage": "Confirm retry",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تأكيد إعادة المحاولة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.cancel-preparation",
+      "defaultMessage": "Cancel preparation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إلغاء التجهيز"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.inspecting-original-request",
+      "defaultMessage": "Inspecting original request…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ فحص الطلب الأصلي…"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.prepare-from-refreshed-evidence",
+      "defaultMessage": "Prepare from refreshed evidence",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التجهيز من الأدلة المحدّثة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.inspect-request",
+      "defaultMessage": "Inspect request",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص الطلب"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.publication-requests-in-selected-source",
+      "defaultMessage": "Publication requests in selected source",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طلبات النشر في المصدر المحدد"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.requests-in-this-source",
+      "defaultMessage": "Requests in this source",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الطلبات في هذا المصدر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.refresh-request-list",
+      "defaultMessage": "Refresh request list",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث قائمة الطلبات"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.find-a-request",
+      "defaultMessage": "Find a request",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "البحث عن طلب"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.publication-reference",
+      "defaultMessage": "Publication reference",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مرجع النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.search-requests",
+      "defaultMessage": "Search requests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بحث الطلبات"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.loading-this-source-s-publication-requests",
+      "defaultMessage": "Loading this source’s publication requests…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل طلبات النشر لهذا المصدر…"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.publication-requests-are-unavailable",
+      "defaultMessage": "Publication requests are unavailable.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طلبات النشر غير متاحة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.request",
+      "defaultMessage": "request",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طلب"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.requests",
+      "defaultMessage": "requests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طلبات"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.page",
+      "defaultMessage": "· page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· الصفحة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.no-requests-match-in-this-source",
+      "defaultMessage": "No requests match in this source.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد طلبات مطابقة في هذا المصدر."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.source-version-650334",
+      "defaultMessage": "Source version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نسخة المصدر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.revision",
+      "defaultMessage": "· revision",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· المراجعة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.previous-request-page",
+      "defaultMessage": "Previous request page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صفحة الطلبات السابقة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "ui.next-request-page",
+      "defaultMessage": "Next request page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صفحة الطلبات التالية"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.778e1248a2262660",
+      "defaultMessage": "Publication Requests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طلبات النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.e0723a86a5b9408a",
+      "defaultMessage": "Inspect",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.b839c82763cc285b",
+      "defaultMessage": "Review the governed request that was created after setup, import, or content submission.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع الطلب الخاضع للحوكمة الذي أُنشئ بعد الإعداد أو الاستيراد أو إرسال المحتوى."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.5c1032b5f8f9c3bd",
+      "defaultMessage": "Look for source version, target site or application, requested operation, generated manifest, and workflow reference.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع نسخة المصدر والموقع أو التطبيق المستهدف والعملية المطلوبة وبيان النشر ومرجع سير العمل."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.17523a28daa2f491",
+      "defaultMessage": "Review approval queue",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة قائمة الاعتماد"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.3ddeafa483870bc4",
+      "defaultMessage": "Open manifests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح بيانات النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.386bd22c01b23e3f",
+      "defaultMessage": "Staged-to-Online Operations",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الانتقال من الإعداد إلى النشر المباشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.eea2745e2867a677",
+      "defaultMessage": "Verify",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقق"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.aabfd1b596e701b5",
+      "defaultMessage": "Confirm whether the approved Staged content has moved the authoritative Online pointer.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقّق مما إذا كان المحتوى المعتمد قد حدّث مرجع النسخة المنشورة مباشرة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.2cfb82a6c32d447d",
+      "defaultMessage": "Look for Online pointer state, target version, publication revision, deployment status, and browser verification result.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع حالة مرجع النشر والنسخة المستهدفة ومراجعة النشر وحالة التنفيذ ونتيجة التحقق في المتصفح."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.a5932bc4ce515954",
+      "defaultMessage": "View history",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عرض السجل"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.b8e3db23f1af7029",
+      "defaultMessage": "Inspect audit",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص التدقيق"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.ea3ad18feaec77c1",
+      "defaultMessage": "Publication Manifests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بيانات النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.03867aea70acaf4c",
+      "defaultMessage": "Evidence",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الأدلة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.baae5995cb248346",
+      "defaultMessage": "Inspect the generated publishing payload before or after approval so operators know exactly what can move Online.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "افحص بيانات النشر المولّدة قبل الاعتماد أو بعده لتحديد المحتوى الذي يمكن نشره مباشرة بدقة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.58e0b8bc14da46f1",
+      "defaultMessage": "Look for source records, dependencies, target profile, release code, and generated hashes.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع سجلات المصدر والمتطلبات والملف المستهدف ورمز الإصدار وبصمات التحقق."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.47b9133042ef7669",
+      "defaultMessage": "View requests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عرض الطلبات"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.a0ced4e812cad24e",
+      "defaultMessage": "Check Online status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التحقق من حالة النشر المباشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.09385f95b481dbb7",
+      "defaultMessage": "Publishing History",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سجل النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.60a627df404ab04f",
+      "defaultMessage": "Receipts",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إيصالات التنفيذ"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.8a3cbe7afae5f258",
+      "defaultMessage": "Use deployment receipts to understand what was published, rejected, retired, or rolled back over time.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدم إيصالات التنفيذ لمعرفة ما نُشر أو رُفض أو أُوقف أو أُعيد إلى نسخة سابقة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.03c5f771850b6a0a",
+      "defaultMessage": "Look for deployment receipt, Online target version, completion time, reviewer, and rollback candidate.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع إيصال التنفيذ والنسخة المنشورة ووقت الاكتمال والمراجع والنسخة المرشحة للاستعادة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.efef40e4d5cd2bc9",
+      "defaultMessage": "Confirm Online state",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تأكيد حالة النشر المباشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.0f779dc654ff357c",
+      "defaultMessage": "Publishing Audit",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تدقيق النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.a14559df36aa03d3",
+      "defaultMessage": "Traceability",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التتبّع"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.553089815c5590f4",
+      "defaultMessage": "Use audit records when proving who requested, approved, rejected, retried, recovered, or retired a publication.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدم سجلات التدقيق لإثبات من طلب النشر أو اعتمده أو رفضه أو أعاد المحاولة أو استعاد العملية أو أوقفها."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.eba4b6b342c0682c",
+      "defaultMessage": "Look for actor, decision, reason, correlation id, workflow reference, and affected publication code.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع المنفّذ والقرار والسبب ومعرّف الارتباط ومرجع سير العمل ورمز النشر المعني."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.f823e55825563e23",
+      "defaultMessage": "Scheduled Publications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المنشورات المجدولة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.fb6f7c93e6bf3dfa",
+      "defaultMessage": "Planned",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مخطط"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.26ce995d94214dce",
+      "defaultMessage": "Prepare future publications without bypassing approval, audit, or final Online verification.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جهّز المنشورات المستقبلية مع الالتزام بالاعتماد والتدقيق والتحقق النهائي من النشر المباشر."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.fd4feeec76b95394",
+      "defaultMessage": "Look for schedule, target version, approval state, owner, and safe withdrawal path before activation time.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع الجدول والنسخة المستهدفة وحالة الاعتماد والمسؤول وطريقة السحب الآمن قبل وقت التفعيل."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.a48df62f7f899a16",
+      "defaultMessage": "Review requests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة الطلبات"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.3d21c61ff63ce01a",
+      "defaultMessage": "Withdrawals & rollbacks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "السحب واستعادة النسخ"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.0f763d24584ac40f",
+      "defaultMessage": "Online Publications",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المنشورات المباشرة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.b64ac05f17e64d03",
+      "defaultMessage": "Live",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مباشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.831119dc74d60f4e",
+      "defaultMessage": "Review what Online currently serves to Nexus, Agora, and other customer-facing channels.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع ما يُعرض مباشرة حالياً في Nexus وAgora وقنوات العملاء الأخرى."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.67689d480c3c3131",
+      "defaultMessage": "Look for live pointer, site or storefront, version, publication revision, and browser URL to verify.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع مرجع النسخة المباشرة والموقع أو المتجر والنسخة ومراجعة النشر وعنوان التحقق في المتصفح."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.69cd3590300a68c6",
+      "defaultMessage": "Check status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التحقق من الحالة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.96dc2cd81fba6b0e",
+      "defaultMessage": "Publication Dependencies",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متطلبات النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.d53d98c1774966ba",
+      "defaultMessage": "Readiness",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الجاهزية"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.26af7fb1225726bb",
+      "defaultMessage": "Inspect upstream content, media, localization, and commerce dependencies before approving Online movement.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "افحص متطلبات المحتوى والوسائط والترجمة والتجارة قبل اعتماد النشر المباشر."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.6b983ecc58ecc209",
+      "defaultMessage": "Look for missing references, inactive media, localization gaps, incompatible versions, and blocked target schemas.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع المراجع المفقودة والوسائط غير النشطة ونواقص الترجمة والنسخ غير المتوافقة والمخططات المستهدفة المحظورة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.49b166e0a8fc7da6",
+      "defaultMessage": "Failures & Recovery",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الإخفاقات والاستعادة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.0c5327fd45c72552",
+      "defaultMessage": "Recover",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استعادة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.923355aa1eb0dd67",
+      "defaultMessage": "Recover failed publication operations with audit-first discipline instead of repeating actions blindly.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استعد عمليات النشر المتعثرة بعد مراجعة أدلة التدقيق قبل تكرار أي إجراء."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.ecca2c6acbd7a139",
+      "defaultMessage": "Look for failed action, retry count, compensation state, correlation id, and whether Online changed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع الإجراء المتعثر وعدد المحاولات وحالة التعويض ومعرّف الارتباط وما إذا كانت النسخة المباشرة قد تغيّرت."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.0a58cee300b498c8",
+      "defaultMessage": "Withdrawals & Rollbacks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "السحب واستعادة النسخ"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.fae1c6f105d6fca1",
+      "defaultMessage": "Reverse",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تراجع"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.9979b65fadce2a9f",
+      "defaultMessage": "Withdraw pending work or roll back approved Online movement through explicit evidence and review.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اسحب العمل المعلّق أو استعد نسخة سابقة من النشر المعتمد استناداً إلى أدلة ومراجعة واضحة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.d5ddb49f06f9cef0",
+      "defaultMessage": "Look for current Online version, rollback candidate, business reason, requester, approver, and browser verification.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع النسخة المباشرة الحالية ونسخة الاستعادة والسبب العملي ومقدّم الطلب والمعتمد والتحقق في المتصفح."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.77401754adfe29be",
+      "defaultMessage": "Publishing Configuration",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعدادات النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.86f8a694159b712f",
+      "defaultMessage": "Governance",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحوكمة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.6cae01faf51a6c43",
+      "defaultMessage": "Review the publication policy surface before changing operational behavior, approval gates, or target mappings.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع سياسات النشر قبل تغيير سلوك العمليات أو بوابات الاعتماد أو ربط الأهداف."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.73f853ec50e8b1f5",
+      "defaultMessage": "Look for target profile, approval requirement, runtime role, schema ownership, and environment-specific constraints.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع الملف المستهدف ومتطلبات الاعتماد ودور التشغيل وملكية المخطط وقيود البيئة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.fff1a6802cf5dbff",
+      "defaultMessage": "Open Publishing",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.57b1bc1be43ff057",
+      "defaultMessage": "Module registry",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "سجل الوحدات"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.74e6410548d4025d",
+      "defaultMessage": "Publishing guide",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "دليل النشر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.dd33241313193303",
+      "defaultMessage": "Prepare the content, inspect the saved version, review its Process decision, then verify the website and recorded Online receipt.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جهّز المحتوى وافحص النسخة المحفوظة وراجع قرار سير العمل، ثم تحقّق من الموقع وإيصال النشر المباشر المسجل."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.650334cdb673ee30",
+      "defaultMessage": "Source version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نسخة المصدر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.15708277177c449e",
+      "defaultMessage": "Recorded target version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النسخة المستهدفة المسجلة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.b5a229ac8becc603",
+      "defaultMessage": "Website",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموقع"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.2f5a4c89b0499f91",
+      "defaultMessage": "Content catalog",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتالوج المحتوى"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.812187a5a0643e7d",
+      "defaultMessage": "Source record",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "السجل المصدر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.9199a054972b1489",
+      "defaultMessage": "Requested by",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مقدّم الطلب"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.d656e7ca1b51d6a0",
+      "defaultMessage": "Revision {revision, number}",
+      "parameters": [
+        "revision"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المراجعة {revision, number}"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.0f55c084a3f118d5",
+      "defaultMessage": "version {version, number}",
+      "parameters": [
+        "version"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النسخة {version, number}"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.35486886ad42ae59",
+      "defaultMessage": "revision {revision, number}",
+      "parameters": [
+        "revision"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المراجعة {revision, number}"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.cb6f77fc8ad9bc14",
+      "defaultMessage": "Recorded event",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حدث مسجل"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.e0e7d6b6ac59ac2c",
+      "defaultMessage": "STAGED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قيد الإعداد"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.eb0027f902ec7548",
+      "defaultMessage": "VALIDATING",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التحقق"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.3dac322c8372666c",
+      "defaultMessage": "VALIDATED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تم التحقق"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.92716d7641edd835",
+      "defaultMessage": "PENDING APPROVAL",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بانتظار الاعتماد"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.f1995216dcfbca4e",
+      "defaultMessage": "APPROVED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معتمد"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.1bc7b0a8c7b6ae95",
+      "defaultMessage": "ACTIVATING",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التفعيل"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.ac7e24813998d31d",
+      "defaultMessage": "ONLINE",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منشور مباشرة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.e68d04806422f2a3",
+      "defaultMessage": "ROLLING BACK",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ استعادة النسخة السابقة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.efd8fe31e2330eb9",
+      "defaultMessage": "ROLLED BACK",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تمت استعادة النسخة السابقة"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.04cc0e71ffcffb52",
+      "defaultMessage": "REJECTED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مرفوض"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.02bd349299173f7f",
+      "defaultMessage": "FAILED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متعثر"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.130c31a7c228fe13",
+      "defaultMessage": "WITHDRAWN",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسحوب"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.d1ca3344f05366aa",
+      "defaultMessage": "RETIRED",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متوقف"
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.e7455b33ea4f8117",
+      "defaultMessage": "Continue review and publishing from the source workspace. Recorded history remains available here.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تابع المراجعة والنشر من مساحة العمل المصدر. يظل السجل المسجّل متاحًا هنا."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.b5562386a8bfee2b",
+      "defaultMessage": "Resume the original failed operation. Its target receipt is retained; this does not activate another version.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استأنف العملية الأصلية الفاشلة. إيصالها المستهدف محفوظ؛ ولا يؤدي ذلك إلى تفعيل نسخة أخرى."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.f22a3e6be6a9bd6c",
+      "defaultMessage": "The owner confirmed this restore was rejected before changing Online content. Retry restores the same predecessor after checking the current release again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أكدت الخدمة المختصة رفض الاستعادة قبل تغيير المحتوى المنشور. تعيد المحاولة النسخة السابقة نفسها بعد التحقق مجددًا من الإصدار الحالي."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.3a37763f25e601fe",
+      "defaultMessage": "Retry revalidates the original request. Normal review and approval remain required before activation.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعيد المحاولة التحقق من الطلب الأصلي. تظل المراجعة والاعتماد مطلوبين قبل التفعيل."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.9387880d0bf13109",
+      "defaultMessage": "Restore the previous published version for this request. Restoration is blocked if another publication has replaced it.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استعد النسخة المنشورة السابقة لهذا الطلب. تُمنع الاستعادة إذا حلّ نشر آخر محلها."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.fe63ae393c9f2fd8",
+      "defaultMessage": "No previous published version is retained for this request. Check current delivery from its working record.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد نسخة منشورة سابقة محفوظة لهذا الطلب. تحقّق من المحتوى الحالي عبر سجل العمل."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.cca3cd7d6abe9395",
+      "defaultMessage": "A different version or no copy is currently deployed. Inspect current delivery in the source workspace; this historical request cannot replace it.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "توجد نسخة مختلفة منشورة حاليًا أو لا توجد نسخة. افحص المحتوى الحالي في مساحة العمل المصدر؛ ولا يمكن لهذا الطلب السابق استبداله."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.39cf00f6bd4bcfb4",
+      "defaultMessage": "Refresh Publishing and inspect the current Online release before restoring a version.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حدّث مساحة النشر وافحص الإصدار المنشور الحالي قبل استعادة نسخة."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.aafc0760ea25adf6",
+      "defaultMessage": "Resume only this retained in-flight operation. Its original target identity remains unchanged.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استأنف هذه العملية الجارية المحفوظة فقط. تظل هوية هدفها الأصلي دون تغيير."
+      }
+    },
+    {
+      "namespace": "publishing",
+      "key": "guide.copy.a6f0dc448ce9c337",
+      "defaultMessage": "Original operation evidence or its domain provider is unverified. Review the recorded history with the owning administrator; no recovery command is offered.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تُتحقّق أدلة العملية الأصلية أو الخدمة المختصة بها. راجع السجل مع المسؤول المختص؛ لا يتوفر أمر استعادة."
+      }
+    }
+  ]
+}

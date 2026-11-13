@@ -49,7 +49,7 @@ for (const entry of processCapability.navigation) {
     `${entry.id} must stay under Process and Automation group`,
   );
   assert(
-    entry.help?.documentationRoute?.startsWith("/docs/capabilities/process-workflow") ||
+    entry.help?.documentationRoute === "/docs/framework/process" ||
       entry.help?.documentationRoute?.startsWith("/docs/framework/process/"),
     `${entry.id} must point to process/workflow documentation`,
   );

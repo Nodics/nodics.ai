@@ -134,3 +134,16 @@ receipt in COMPLETED; replay is read-only, no financial/transfer/cleanup/reaward
 effects. Project CAPTURED and remove the purchase action. Preserve original completed
 Checkout replay after terminal round projection. Keep focused completed purchase
 reconciliation tests through real managed update/Mongo/BSON persistence.
+
+Auction recipient composition fixtures must model Profile native locator/anchor and
+exact assignment absence separately from linked membership resolution. Preserve
+real persisted permission and deny-scope evaluation; see the notification contract.
+
+Identity and cross-owner commands route through existing DMS with explicit logical
+module and `targetAuthority.publication`, never physical role codes. Operational
+identity, Store, scheduler, payment and notification owners use OPERATIONAL;
+Product/Pricing authoring references use STAGED. Optional server/environment pins
+remain exact. Reject missing publication and obsolete role selectors. Preserve
+original actor or internal credentials as specified by each API, signed caller
+grants, tenant/business binding, enablement and qualification. Routing descriptors
+do not activate owners or providers. Tests must express these boundaries explicitly.

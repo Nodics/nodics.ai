@@ -42,7 +42,7 @@ module.exports = {
     normalizeContext: function (request) {
         let input = request && request.experience ? request.experience : {};
         let defaults = (this.config().resolver || {});
-        return {
+        const context = {
             tenant: request && request.tenant,
             authData: request && request.authData,
             site: this.string(input.site),
@@ -57,6 +57,9 @@ module.exports = {
             previewMode: input.previewMode === true,
             now: input.now ? new Date(input.now) : new Date()
         };
+        // Original authority is private in-process evidence, never part of renderer or transport data.
+        Object.defineProperty(context, 'sourceRequest', { value: request });
+        return context;
     },
 
     /** Converts a value to a trimmed string. @param {*} value Candidate value. @returns {string} String. */
@@ -66,6 +69,8 @@ module.exports = {
 
     /** Validates normalized resolver context. @param {Object} context Resolver context. @returns {Object} Validation result. */
     validateContext: function (context) {
+        if (['site', 'pageType', 'targetType', 'targetCode', 'locale', 'channel', 'device', 'region'].some(field => context[field].length > 256)) return {valid: false, message: 'Resolver context fields must be at most 256 characters.'};
+        if (!['DEFAULT', 'CATEGORY', 'COLLECTION', 'BRAND'].includes(context.targetType)) return {valid: false, message: 'Unsupported experience target type.'};
         let required = ['site', 'pageType', 'targetType', 'targetCode'];
         let missing = required.filter(field => !context[field]);
         if (missing.length) return { valid: false, message: 'Missing resolver context: ' + missing.join(', ') };
@@ -79,6 +84,9 @@ module.exports = {
         let fallback = active.filter(placement => this.matchesFallback(context, placement));
         let selected = this.selectPlacements(exact, fallback);
         selected = selected.slice().sort((left, right) => this.comparePlacements(left, right));
+        const limits = this.config().resolver || {};
+        if (selected.length > Number(limits.maxComponents || 200) || new Set(selected.map(item=>item.slot)).size > Number(limits.maxSlots || 20))
+            throw this.error('ERR_WCMS_EXPERIENCE_INPUT_INVALID','Experience resolution exceeds configured bounds');
         return {
             site: context.site,
             pageType: context.pageType,
@@ -105,12 +113,15 @@ module.exports = {
         if (!placement) return false;
         if (placement.site !== context.site) return false;
         if (placement.pageType !== context.pageType) return false;
-        if (placement.deliveryStatus && placement.deliveryStatus !== 'ACTIVE') return false;
+        if (placement.deliveryStatus !== 'ACTIVE') return false;
         let expectedPublication = context.previewMode ? 'STAGED' : 'ONLINE';
-        if (placement.publicationStatus && placement.publicationStatus !== expectedPublication) return false;
+        if (placement.publicationStatus !== expectedPublication) return false;
         if (placement.locale && placement.locale !== context.locale) return false;
         if (placement.channel && placement.channel !== context.channel) return false;
         if (placement.device && placement.device !== context.device) return false;
+        if (placement.region && placement.region !== context.region) return false;
+        if (placement.customerSegments && (!Array.isArray(placement.customerSegments) || placement.customerSegments.length && !placement.customerSegments.some(segment => context.customerSegments.includes(segment)))) return false;
+        if ([placement.validFrom, placement.validTo].some(value => value && !Number.isFinite(new Date(value).getTime()))) return false;
         if (placement.validFrom && new Date(placement.validFrom) > context.now) return false;
         if (placement.validTo && new Date(placement.validTo) < context.now) return false;
         return true;
@@ -155,10 +166,20 @@ module.exports = {
             placementCode: placement.code,
             componentCode: placement.componentCode || placement.component,
             rendererKey: placement.rendererKey,
-            contractVersion: Number(placement.contractVersion || 1),
+            contractVersion: Number(placement.contractVersion ?? 1),
             properties: Object.assign({}, placement.properties || {}),
-            media: Array.isArray(placement.media) ? placement.media.slice() : []
+            media: Array.isArray(placement.media) ? placement.media.slice() : [],
+            components: this.projectChildren(placement.components || [], 0)
         };
+    },
+
+    /** Projects nested approved CMS components with bounded depth and renderer-safe fields only. */
+    projectChildren: function (items, depth) {
+        const limits=this.config().resolver || {};
+        if (!Array.isArray(items) || items.length > Number(limits.maxComponents || 200) || depth > Number(limits.maxDepth || 10))
+            throw this.error('ERR_WCMS_EXPERIENCE_INPUT_INVALID','Nested experience exceeds configured bounds');
+        return items.map(item=>({componentCode:item.code,rendererKey:item.renderer,contractVersion:Number(item.rendererContractVersion??1),
+            slot:item.slot,properties:{...(item.properties || {})},media:Array.isArray(item.media)?item.media:[],components:this.projectChildren(item.components || [],depth+1)}));
     },
 
     /** Resolves release from selected placements. @param {Array<Object>} placements Selected placements. @returns {string|null} Release. */

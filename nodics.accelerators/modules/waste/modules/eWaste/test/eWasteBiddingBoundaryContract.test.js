@@ -40,7 +40,7 @@ for (const kind of ['customer', 'human']) test(kind + ' history preserves origin
   assert.equal(f.calls[1].apiName, '/auctions?storeCode=store&afterCode=' + code('1'));
   for (const command of f.calls) {
     assert.equal(command.moduleName, 'bidding'); assert.equal(command.methodName, 'GET');
-    assert.deepEqual(command.targetAuthority, { runtimeRole: 'COMMERCE' });
+    assert.deepEqual(command.targetAuthority, { publication: 'OPERATIONAL' });
     assert.deepEqual(command.header, { Authorization: 'Bearer original', 'X-Enterprise-Code': 'owner' });
     assert.equal(command.tenant, 'tenant');
   }
@@ -85,4 +85,17 @@ test('legacy accepted bids have no eWaste fixed purchase adapter', () => {
   assert.equal(base.purchase, undefined);
   assert.equal(controller.purchase, undefined);
   assert.equal(experience.purchase, undefined);
+});
+
+
+test('auction history requires operational publication and preserves optional deployment pins',async t=>{
+ for(const target of [undefined,{}, {publication:'STAGED'},{publication:'ONLINE'}, {runtimeRole:'COMMERCE'},
+   {publication:'OPERATIONAL',runtimeRole:'COMMERCE'}]) {
+  const f=fixture(t,[]); f.settings.targetAuthorities.commerce=target;
+  await assert.rejects(f.read());assert.equal(f.calls.length,0);
+ }
+ const f=fixture(t,[{rounds:[],afterCode:null}]), signed=structuredClone(f.req.authData);
+ f.settings.targetAuthorities.commerce={publication:'OPERATIONAL',server:'regrouped-bidding',environment:'unit'};
+ await f.read();assert.deepEqual(f.calls[0].targetAuthority,f.settings.targetAuthorities.commerce);
+ assert.deepEqual(f.req.authData,signed);
 });

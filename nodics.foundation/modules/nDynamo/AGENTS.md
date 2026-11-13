@@ -57,3 +57,13 @@ Deployment selection, environment and tenant checks, confirmation and required s
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+## Logical-runtime ownership
+
+Canonical metadata declares runtimeLocal for governed runtime configuration,
+activation and audit state. Keep each runtime's existing database selection.
+Durable property row identity additionally uses the existing database owner's
+getTenantNamespaceBindingScope (project/environment/logical server) plus tenant;
+replica nodes share that identity, different runtimes do not. Missing trusted
+coordinates fail closed. No tenant-only fallback or legacy-row lookup is allowed.
+This source change does not migrate records or rename physical schemas.

@@ -29,7 +29,7 @@ const mediaOwner = require("../../../../nodics.wcms/modules/media/src/service/de
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const library = clone(require("../../../../nodics.wcms/modules/media/data/backoffice/mediaLibraryWorkspaceData"));
 const listing = library.workspace.tabs[0].sections[0];
-const form = library.publicationWorkspace.tabs[0].sections[0];
+const form = library.publicationWorkspace.tabs.find(tab => tab.id === "request").sections[0];
 listing.rowNavigation = {
   label: "Inspect publication",
   route: "/media/publication",
@@ -379,5 +379,18 @@ test("published JSON schema contains strict nested properties and renderer-type 
     section.properties.readSource.properties.fields.maxProperties,
     8,
   );
-  assert.equal(section.allOf.length, 2);
+  assert.equal(section.allOf.length, 3);
+  assert(section.allOf.some(rule => rule.if.anyOf && rule.then.properties.type.const === "form"));
+  assert.equal(section.properties.resultNavigation.additionalProperties, false);
+  assert.equal(section.properties.resultSummary.maxItems, 8);
+});
+
+test("form result presentation is bounded navigation and plain scalar summary, never permission or execution", () => {
+  const section = clone(form);
+  section.resultNavigation = { label: "Review this approval", route: "/process/tasks", parameters: { instanceCode: "workflowRef" } };
+  section.resultSummary = [{field:"state",label:"Publication status"},{field:"versionId",label:"Source version"}];
+  assert(service.validateBackendWorkspaceSection(section));
+  for (const mutate of [s=>{s.type="listing";},s=>{s.resultNavigation.route="https://other.test";},s=>{s.resultNavigation.route="//other.test";},s=>{s.resultNavigation.method="POST";},s=>{s.resultNavigation.parameters={instanceCode:"nested.workflowRef"};},s=>{s.resultSummary=[{field:"nested.state",label:"State"}];},s=>{s.resultSummary=[{field:"state",label:"State"},{field:"state",label:"Duplicate"}];},s=>{s.resultSummary=Array.from({length:9},(_,i)=>({field:"field"+i,label:"Too many"}));}]) {
+    const bad=clone(section);mutate(bad);assert.equal(service.validateBackendWorkspaceSection(bad),false);
+  }
 });

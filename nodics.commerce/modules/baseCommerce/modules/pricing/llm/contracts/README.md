@@ -52,3 +52,13 @@ Read the [complete contract section](pricing-lifecycle-and-publication.md#valida
 ## Configured Consumers And Process Callback
 
 Read the [complete contract section](pricing-lifecycle-and-publication.md#configured-consumers-and-process-callback).
+
+## Publication context defaults
+
+Standard publication providers and schema policies live in ordinary module
+properties. nConfig selects context-conditioned values from explicit STAGED,
+ONLINE or OPERATIONAL metadata, never a host role name. Missing or unknown context
+rejects configuration. Source/target credentials, connections, installed storage
+qualification, grants and approvals remain independent. Runtime overrides contain
+only intentional differences. The Commerce publication configuration test covers
+these boundaries and later overrides without starting providers.

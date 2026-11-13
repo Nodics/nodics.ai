@@ -29,8 +29,8 @@ module.exports = {
 
     /** Resolves trusted human stock authority, independently of import permission. @param {Object} request Authenticated context. @returns {Object} Scoped context. */
     context: function (request) {
-        const auth = request.authData || {}, role = CONFIG.get('runtimeRole'), security = SERVICE.DefaultSecuredRequestPipelineService;
-        if ((typeof role === 'string' ? role : role?.code) !== 'COMMERCE' ||
+        const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
+        if (SERVICE.DefaultModuleService?.isLocalModuleActive?.('inventory') !== true || CONFIG.get('runtimeRole')?.publication !== 'OPERATIONAL' ||
             CONFIG.get('inventory')?.publication?.runtimeRole !== 'ONLINE') this.fail('ERR_INVENTORY_OPENING_UNAVAILABLE');
         const enterpriseCode = auth.enterpriseCode || auth.entCode;
         const actorId = auth.principalId || auth.loginId || auth.code;

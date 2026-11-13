@@ -89,5 +89,13 @@ module.exports = {
     /** Completes provider lifecycle initialization. */
     postInit: function () { return Promise.resolve(true); },
     /** Returns this module owned BackOffice capability contract. */
-    getCapability: function () { return JSON.parse(JSON.stringify(capability)); }
+    getCapability: function () {
+        const result = JSON.parse(JSON.stringify(capability));
+        const labels = { create: 'Create in scheduler', run: 'Run now', start: 'Start', stop: 'Stop', pause: 'Pause', resume: 'Resume' };
+        const actions = Object.keys(labels).map((id, index) => ({ id: id, order: (index + 1) * 10, label: labels[id], intent: 'UPDATE', ownerModule: 'cronjob',
+            permission: 'cronjob.lifecycle.manage', httpMethod: 'POST', operationRoute: '/job/' + id + '/:jobCode', featureState: 'ACTIVE' }));
+        // Metadata advertises existing human routes; BackOffice filters each permission independently.
+        result.navigation.find(item => item.id === 'cronjob').lifecycleActions = actions;
+        return result;
+    }
 };

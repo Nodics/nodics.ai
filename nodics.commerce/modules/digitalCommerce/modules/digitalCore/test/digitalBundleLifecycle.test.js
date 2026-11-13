@@ -281,7 +281,7 @@ function scheduledFixture(t) {
     DefaultDigitalBundleAuthorityService: require("../src/service/defaultDigitalBundleAuthorityService"),
     DefaultServiceTokenService: require("../../../../../../nodics.foundation/modules/nAuth/src/service/identity/defaultServiceTokenService"),
     DefaultCronJobService: { assertOperational: async tenant => { assert.equal(tenant, "tenant"); return clone(auth); } },
-    DefaultModuleService: { invokeModule: async call => {
+    DefaultModuleService: {isLocalModuleActive: moduleName => ["digitalCore"].includes(moduleName),  invokeModule: async call => {
       calls.push(clone(call)); assert.equal(call.moduleName, "digitalCore"); assert.equal(call.apiName, "/internal/bundles/gifts/expire");
       assert.deepEqual(call.header, { Authorization: "Bearer original-cron-credential", tenant: "tenant" });
       assert.deepEqual(call.request, { tenant: "tenant" }); assert.equal(call.maxAttempts, 1); assert.equal(call.followRedirects, false);
@@ -378,7 +378,7 @@ function notificationFixture(t) {
   comms.trustedSourceModules = ["digitalCore"];
   comms.dispatchEligibilityOwners = clone(defaults.communication.dispatchEligibilityOwners);
   for (const template of Object.values(p.templates)) comms.templateResources.selections[template] = true;
-  global.CONFIG = { get: key => ({ digitalCore: f.config, communication: comms, runtimeRole: { code: "COMMERCE" } })[key] };
+  global.CONFIG = { get: key => ({ digitalCore: f.config, communication: comms, runtimeRole: { code: "COMMERCE", publication: "OPERATIONAL" } })[key] };
   const module = { name: "digitalCore", path: path.resolve(__dirname, "..") };
   Object.assign(NODICS, { getSelectedEnvironmentName: () => "unit", getIndexedModules: () => new Map([["digitalCore", module]]), getRawModule: () => module });
   Object.assign(SERVICE, {
@@ -418,7 +418,7 @@ function notificationFixture(t) {
     const r = trusted(body);
     return SERVICE.DefaultLoggerService.runSensitiveOperation(r, () => notices.source(r));
   };
-  SERVICE.DefaultModuleService = { invokeModule: async call => {
+  SERVICE.DefaultModuleService = {isLocalModuleActive: moduleName => ["digitalCore"].includes(moduleName),  invokeModule: async call => {
     calls.push(clone(call));
     assert.equal(call.requireInternalAuth, true); assert.equal(call.header, undefined); assert.equal(call.maxAttempts, 1);
     assert.deepEqual(call.request, { tenant: "tenant" }); assert.equal(call.secureTransport.required, true);
@@ -584,4 +584,15 @@ for (const field of ["sourceModule", "sourceType"]) test(`notification recipient
   assert.equal(f.stores.CommsIntent.size, 0);
   assert.equal((await notices.retry(f.r("sender"), { operationCode: pending.code, event: "PENDING", side: "SENDER" })).status, "UNCONFIRMED");
   assert.equal(f.stores.CommsIntent.size, 0);
+});
+
+
+test('gift scheduler requires explicit operational owner publication before any dispatch', async t => {
+ const f=scheduledFixture(t), policy=f.config.bundles.giftExpiryScheduler;
+ for(const targetAuthority of [undefined, {}, {publication:'ONLINE'}, {publication:'STAGED'},
+   {runtimeRole:'COMMERCE'}, {publication:'OPERATIONAL',runtimeRole:'COMMERCE'}]) {
+   policy.target.targetAuthority=targetAuthority;
+   await assert.rejects(f.run(), /binding/);
+ }
+ assert.equal(f.calls.length,0);
 });

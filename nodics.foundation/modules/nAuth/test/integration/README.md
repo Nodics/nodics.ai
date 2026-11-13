@@ -42,3 +42,5 @@ authentication state; single-member evidence does not prove partition behavior.
 Project and environment modules may supply different safe test tenant,
 database, cache, and topology values through environment configuration without
 editing these framework tests.
+
+Cross-module live tests construct clients through redisCache's test-only factory and clean their unique tenant namespaces through cache owner methods. The runtime worker accepts explicit test Sentinel options for isolated member-loss qualification; that test bridge is never a production connection or configuration path.

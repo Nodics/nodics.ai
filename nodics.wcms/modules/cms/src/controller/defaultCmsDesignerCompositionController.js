@@ -25,7 +25,12 @@ module.exports = {
 
     /** Invokes one designer facade operation and returns the standard route callback shape. */
     invoke: function (operation, request, callback) {
-        request.cmsDesigner = request.httpRequest && request.httpRequest.body || request.cmsDesigner || {};
+        request.cmsDesigner = request.httpRequest &&
+            (['getAuthoringModel', 'listDraftPages', 'getDraftComposition', 'getDocumentationDraftModel'].includes(operation) ? request.httpRequest.query : request.httpRequest.body) || request.cmsDesigner || {};
+        // nRouter authenticated this HTTP header; submitted body/wrapper fields
+        // cannot supply the bearer required by the CMS owner admission contract.
+        const headers = request.httpRequest && request.httpRequest.headers || {};
+        request.authorization = headers.authorization || headers.Authorization;
         let promise = FACADE.DefaultCmsDesignerCompositionFacade.invoke(operation, request);
         if (!callback) return promise;
         promise.then(result => callback(null, result)).catch(callback);
@@ -33,6 +38,15 @@ module.exports = {
 
     /** Returns the client-safe designer authoring model. */
     getAuthoringModel: function (request, callback) { return this.invoke('getAuthoringModel', request, callback); },
+
+    /** Resolves authoring references from the selected documentation product. */
+    getDocumentationDraftModel: function (request, callback) { return this.invoke('getDocumentationDraftModel', request, callback); },
+
+    /** Lists bounded saved page choices in the selected owner scope. */
+    listDraftPages: function (request, callback) { return this.invoke('listDraftPages', request, callback); },
+
+    /** Reopens one exact saved composition without mutating it. */
+    getDraftComposition: function (request, callback) { return this.invoke('getDraftComposition', request, callback); },
 
     /** Validates one complete draft composition. */
     validateDraftComposition: function (request, callback) { return this.invoke('validateDraftComposition', request, callback); },

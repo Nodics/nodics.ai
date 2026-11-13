@@ -217,14 +217,11 @@ module.exports = {
      * @throws {CLASSES.NodicsError} When Process runtime support or trigger
      * metadata is unavailable.
      */
-    executeProcessTriggerJob: function (definition, job, authData) {
+    executeProcessTriggerJob: async function (definition, job, authData) {
         let processTrigger = definition && definition.jobDetail && definition.jobDetail.processTrigger || {};
         let triggerCode = processTrigger.triggerCode || processTrigger.code;
         if (!triggerCode) {
             return Promise.reject(new CLASSES.NodicsError('ERR_JOB_00008', 'Cron process trigger code is missing'));
-        }
-        if (!SERVICE.DefaultProcessRuntimeLifecycleService || !SERVICE.DefaultProcessRuntimeLifecycleService.executeTrigger) {
-            return Promise.reject(new CLASSES.NodicsError('ERR_JOB_00008', 'Process trigger executor is unavailable'));
         }
         let startTime = definition.startTime instanceof Date ? definition.startTime.toISOString() : new Date().toISOString();
         let correlationId = processTrigger.correlationId || [
@@ -233,23 +230,37 @@ module.exports = {
             triggerCode,
             startTime
         ].join(':');
-        return SERVICE.DefaultProcessRuntimeLifecycleService.executeTrigger({
-            tenant: definition.tenant,
-            triggerCode: triggerCode,
-            authData: authData,
-            runtimeOperation: {
-                correlationId: correlationId,
-                instanceCode: processTrigger.instanceCode,
-                version: processTrigger.version,
-                context: Object.assign({}, processTrigger.context || {}, {
-                    source: 'cronjob',
-                    cronJobCode: definition.code,
-                    cronJobTenant: definition.tenant,
-                    scheduledExpression: definition.trigger && definition.trigger.expression,
-                    firedAt: startTime
-                })
-            },
-            job: job
+        const runtimeOperation = {
+            correlationId,
+            instanceCode: processTrigger.instanceCode,
+            version: processTrigger.version,
+            context: Object.assign({}, processTrigger.context || {}, {
+                source: 'cronjob',
+                cronJobCode: definition.code,
+                cronJobTenant: definition.tenant,
+                scheduledExpression: definition.trigger && definition.trigger.expression,
+                firedAt: startTime
+            })
+        };
+        const dms = SERVICE.DefaultModuleService;
+        const targetAuthority = { publication: 'OPERATIONAL' };
+        if (!dms?.isLocalModuleActive || !dms.isCurrentRuntimeAuthority)
+            throw new CLASSES.NodicsError('ERR_JOB_00008', 'Workflow routing authority is unavailable');
+        if (dms.isLocalModuleActive('workflow') && dms.isCurrentRuntimeAuthority(targetAuthority)) {
+            const lifecycle = SERVICE.DefaultProcessRuntimeLifecycleService;
+            if (!lifecycle?.executeTrigger)
+                throw new CLASSES.NodicsError('ERR_JOB_00008', 'Process trigger executor is unavailable');
+            return lifecycle.executeTrigger({ tenant: definition.tenant, triggerCode, authData, runtimeOperation, job });
+        }
+        const target = CONFIG.get('cronjob')?.processTriggerConnection;
+        if (!target || !authData?.entCode)
+            throw new CLASSES.NodicsError('ERR_JOB_00008', 'Remote Process trigger binding is unavailable');
+        return dms.invokeModule({
+            moduleName: 'workflow', connectionName: target, local: false, targetAuthority,
+            methodName: 'POST', apiName: '/internal/triggers/' + encodeURIComponent(triggerCode) + '/fire',
+            tenant: definition.tenant, requireInternalAuth: true, followRedirects: false,
+            header: { 'x-enterprise-code': authData.entCode },
+            requestBody: runtimeOperation, maxAttempts: 1
         });
     },
 
@@ -384,13 +395,14 @@ module.exports = {
         this.LOG.debug('Request has been processed successfully');
         response.success.msg = SERVICE.DefaultStatusService.get(response.success.code || 'SUC_SYS_00000').message;
         let jobDefinition = request.definition;
-        jobDefinition.state = ENUMS.CronJobState.ACTIVE.key;
+        jobDefinition.state = request.job.getIdleState();
         jobDefinition.status = ENUMS.CronJobStatus.SUCCESS.key;
         jobDefinition.endTime = new Date();
         SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
-            state: ENUMS.CronJobState.ACTIVE.key,
+            state: jobDefinition.state,
             status: ENUMS.CronJobStatus.SUCCESS.key,
-            endTime: jobDefinition.endTime
+            endTime: jobDefinition.endTime,
+            log: []
         }).then(success => {
             process.resolve(response.success);
         }).catch(error => {
@@ -443,15 +455,19 @@ module.exports = {
      */
     handleError: function (request, response, process) {
         let jobDefinition = request.definition;
-        jobDefinition.state = ENUMS.CronJobState.ACTIVE.key;
+        jobDefinition.state = request.job.getIdleState();
         jobDefinition.status = ENUMS.CronJobStatus.ERROR.key;
-        jobDefinition.log = response.error.toJson();
+        // Persist stable attribution only. Raw provider errors can contain payloads,
+        // URLs, credentials or stacks and must not become business-facing evidence.
+        const code = /^ERR_[A-Z0-9_]{1,64}$/.test(response.error?.code || '') ? response.error.code : 'ERR_JOB_00000';
+        const target = ['processTrigger', 'startNode', 'internal', 'external'].find(key => jobDefinition.jobDetail?.[key]) || 'unknown';
+        jobDefinition.log = [{ code, target, message: 'Scheduled execution failed. Inspect the target and its owner diagnostics before an explicit retry.' }];
         jobDefinition.endTime = new Date();
         SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
-            state: ENUMS.CronJobState.ACTIVE.key,
+            state: jobDefinition.state,
             status: ENUMS.CronJobStatus.ERROR.key,
             endTime: jobDefinition.endTime,
-            log: response.errors
+            log: jobDefinition.log
         }).then(success => {
             process.reject(response.error);
         }).catch(error => {

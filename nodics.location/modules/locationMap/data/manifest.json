@@ -29,34 +29,11 @@
       },
       "sourceRoot": "core-v001"
     },
-    "init-v001": {
-      "kind": "DATA_RELEASE",
-      "dataType": "init",
-      "sourceRoot": "init-v001",
-      "version": "0.0.1",
-      "displayName": "Location Map Initial Configuration",
-      "description": "Startup Location Map provider configurations for Axis map consumers.",
-      "owningDomain": "location",
-      "lifecycle": "REFERENCE",
-      "destinationRole": "LOCATION",
-      "environmentScope": [
-        "ALL"
-      ],
-      "sensitivity": "INTERNAL",
-      "versioningPolicy": "NONE",
-      "publicationPolicy": "NONE",
-      "initialPublicationPolicy": "NONE",
-      "removalPolicy": "RETAIN",
-      "files": {
-        "init-v001/headers/location/defaultLocationMapProviderConfigurationHeader.js": "a033bb127f621ff3e65f7668b6c71a9f0ac598a8b46bb1ec07d19c5a12f860eb",
-        "init-v001/records/location/defaultLocationMapProviderConfigurationData.js": "c2ff002d7f6efcc2bf3f36bba59459021cf23cfc52fc3d46925202612818a751"
-      }
-    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "locationMap",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -78,16 +55,16 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "1b5efe7fc4fad84f519fcdaaa4272e1fa5058627c96fa076aea5d687443fbdf6",
+      "releaseChecksum": "1dc70796a0b3e58b0358dfafb425f1179ca3990fd96369511136d1294c470aa1",
       "generatedHashes": {
-        "docs-v001/records/documentation/locationMapDocumentationComponentData.js": "aab6e663b05403ac1d8c3c1c50b67a29679344d39cdd5fd27d59f395fc194cbf",
-        "docs-v001/records/documentation/locationMapDocumentationPageMetadataData.js": "3746af81b94ce32c6064657c9027a7950b8166325ed5edffb10c5cb55170239c",
+        "docs-v001/records/documentation/locationMapDocumentationRelease002ComponentData.js": "ffec66e6fc88a1fd688690ff4971698b40e6c0595393b9ec8a7380c917c58364",
+        "docs-v001/records/documentation/locationMapDocumentationRelease002PageMetadataData.js": "1ec4f9c8f469f321deb395421cdd64afe9f3b129d18626e74c32179b43a815eb",
         "docs-v001/records/documentation/locationMapDocumentationNodeData.js": "f867e7dae9cebc4fe992944e0742f183631adbcac14e5903d4a5eaafb43c98fa",
         "docs-v001/records/documentation/locationMapDocumentationPageData.js": "19a2e6bfaf609803bb1b203554ff0e7d000c261cf8868ff628529b05fb1d8159",
         "docs-v001/records/documentation/locationMapDocumentationRouteData.js": "7453d1f109f1c4fb026ac90b78453448ab1d9a781920017baf93347406a7a98a",
-        "docs-v001/records/documentation/locationMapDocumentationSearchMetadataData.js": "54f13a190b1080516b2266d5a43e237161e802bf7f5e1badd905dfe60267a255",
-        "docs-v001/records/documentation/locationMapDocumentationPublicationStateData.js": "a02a4a4469a079f084fcd5f711563123c34d67f7a27020344ed71c5b616a047d",
-        "docs-v001/headers/100_locationMapDocumentationContentPackHeader.js": "f0417711f98fab45fa5561fa9ec38652c33150bc68583a6390eea57f8c3cdcc6"
+        "docs-v001/records/documentation/locationMapDocumentationSearchMetadataData.js": "a6d1d4e83465c326d16b0ad0fd8347b2594c4cb50786d51da318198a51fc474d",
+        "docs-v001/records/documentation/locationMapDocumentationRelease002PublicationStateData.js": "57922125d286cd603906142a0d7c20452e4e3711fb88836c35e8a202d5b11da7",
+        "docs-v001/headers/100_locationMapDocumentationRelease002ContentPackHeader.js": "2670b9459d9e5f0184c8bcd588b91c115fc8d68d0bb33dd5a05898be3890b8e5"
       },
       "includes": [
         {

@@ -21,29 +21,17 @@ module.exports = {
   hasService: function (name) {
     return !!(global.SERVICE && SERVICE[name]);
   },
-  /** Returns the supported masked credential stores used by local readiness checks. */
-  credentialStores: function () {
-    return [
-      this.config("runtimeConfiguration"),
-      this.config("secureConfiguration"),
-      this.config("application"),
-      this.config("policy"),
-      this.config("credentials"),
-      this.config("eWaste"),
-    ];
-  },
-  /** Resolves credential presence only; callers must never include the value in readiness output. */
-  readCredential: function (reference) {
-    if (typeof reference !== "string" || !reference) return undefined;
-    if (reference.startsWith("env:")) return process.env[reference.slice(4)];
-    for (const store of this.credentialStores()) {
-      const credentials = store && store.credentials;
-      if (!credentials) continue;
-      const value = credentials[reference];
-      if (typeof value === "string") return value;
-      if (value && typeof value.value === "string") return value.value;
+  /** Uses Copilot's pure reference resolver and returns status only, never secret material or resolver diagnostics. */
+  credentialReadiness: function (reference) {
+    if (typeof reference !== "string" || !reference) return "UNCONFIGURED";
+    const resolver = global.SERVICE && SERVICE.DefaultCopilotSecretResolverService;
+    if (typeof resolver?.resolveReference !== "function") return "INSPECTION_UNAVAILABLE";
+    try {
+      const value = resolver.resolveReference(reference);
+      return typeof value === "string" && value.length > 0 ? "CONFIGURED" : "UNCONFIGURED";
+    } catch {
+      return "INSPECTION_UNAVAILABLE";
     }
-    return undefined;
   },
   /** Builds one eWaste-owned readiness blocker with stable operator recovery fields. */
   blocker: function (code, severity, action, message, options) {
@@ -189,6 +177,7 @@ module.exports = {
     const adapter = openAi.adapter && (((copilot.providers || {}).adapters || {})[openAi.adapter]);
     const profile = openAi.profile && (((copilot.providers || {}).profiles || {})[openAi.profile]);
     const credentialRef = adapter && adapter.credential && adapter.credential.secretRef;
+    const credentialReadinessStatus = this.credentialReadiness(credentialRef);
     const blockers = [];
     [
       "DefaultEWasteSubmissionPreparationService",
@@ -236,12 +225,19 @@ module.exports = {
       "The configured OpenAI adapter is disabled.",
       { businessImpact: "Customer photo analysis can use manual review fallback, but AI-assisted environmental assessment is not ready." }
     ));
-    if (credentialRef && adapter && adapter.enabled === true && !this.readCredential(credentialRef)) blockers.push(this.blocker(
+    if (adapter && adapter.enabled === true && credentialReadinessStatus === "UNCONFIGURED") blockers.push(this.blocker(
       "EWASTE_OPENAI_CREDENTIAL_MISSING",
       "NEEDS_ATTENTION",
       "Configure the OpenAI credential reference",
       "The configured OpenAI credential reference is unresolved.",
       { recoveryHint: "Provide the configured secret reference through private layered configuration or persisted runtime configuration; readiness only reports presence." }
+    ));
+    if (adapter && adapter.enabled === true && credentialReadinessStatus === "INSPECTION_UNAVAILABLE") blockers.push(this.blocker(
+      "EWASTE_OPENAI_CREDENTIAL_INSPECTION_UNAVAILABLE",
+      "NEEDS_ATTENTION",
+      "Inspect credential resolution at the Copilot provider owner",
+      "The configured provider credential could not be inspected.",
+      { recoveryHint: "Restore the Copilot owner's credential resolver and inspect readiness again. No provider request was made." }
     ));
     return {
       configured: !blockers.some(blocker => blocker.severity === "BLOCKED"),
@@ -251,6 +247,7 @@ module.exports = {
       openAiProfileConfigured: !!openAi.adapter && !!openAi.profile && !!adapter && !!profile,
       openAiAdapterEnabled: adapter && adapter.enabled === true,
       openAiCredentialReferenceConfigured: !!credentialRef,
+      openAiCredentialReadinessStatus: credentialReadinessStatus,
       maximumPhotoBytesConfigured: Number.isSafeInteger(eWaste.preparation && eWaste.preparation.maximumPhotoBytes),
     };
   },
@@ -362,6 +359,7 @@ module.exports = {
         imageAnalysisConfigured: image.openAiProfileConfigured && image.openAiAdapterEnabled,
         manualReviewFallbackReady: image.manualReviewFallbackReady,
         openAiCredentialReferenceConfigured: image.openAiCredentialReferenceConfigured,
+        openAiCredentialReadinessStatus: image.openAiCredentialReadinessStatus,
         draftPhotoRetentionStatus: media.draftPhotoRetentionStatus,
         rejectedDraftCleanupStatus: media.rejectedDraftCleanupStatus,
         draftMediaCleanup: media.cleanup,

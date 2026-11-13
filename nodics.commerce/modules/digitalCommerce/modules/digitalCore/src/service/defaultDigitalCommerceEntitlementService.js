@@ -491,8 +491,7 @@ module.exports = {
     const auth = request?.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
     const enterpriseCode = auth.enterpriseCode || auth.entCode;
     const ownerId = auth.principalType === 'human' ? enterpriseCode : auth.principalId || auth.code || auth.loginId;
-    const role = CONFIG.get('runtimeRole');
-    if ((typeof role === 'string' ? role : role?.code) !== 'COMMERCE' ||
+    if (SERVICE.DefaultModuleService?.isLocalModuleActive?.('digitalCore') !== true || CONFIG.get('runtimeRole')?.publication !== 'OPERATIONAL' ||
         !['commerce.digital.own.read', 'commerce.digital.own.reveal'].includes(permission) ||
         auth.tokenType !== 'access' || !['customer', 'human'].includes(auth.principalType) || auth.isSystem ||
         [auth.tenant, enterpriseCode, ownerId].some(value => typeof value !== 'string' || !/^[A-Za-z0-9_.:@-]{1,128}$/.test(value)) ||
@@ -558,7 +557,7 @@ module.exports = {
     const auth = r.authData, p = CONFIG.get('digitalCore')?.couponAccess?.profile;
     const authorization = r.authorization || r.httpRequest?.headers?.authorization || r.httpRequest?.headers?.Authorization;
     const security = SERVICE.DefaultSecuredRequestPipelineService;
-    if (!authorization || !auth.loginId || !p?.connectionName || !p.targetAuthority ||
+    if (!authorization || !auth.loginId || !p?.connectionName || (p.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(p.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
         !Number.isSafeInteger(p.timeoutMilliseconds) || p.timeoutMilliseconds <= 0 || p.timeoutMilliseconds > 60000) this.refuseReveal();
     const snapshot = structuredClone({ auth, tenant: r.tenant, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId, payload: r.payload, p });
     let value = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: 'profile', connectionName: p.connectionName,

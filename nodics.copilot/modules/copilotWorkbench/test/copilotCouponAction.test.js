@@ -29,7 +29,7 @@ beforeEach(() => {
         enabled: true,
         moduleName: "digitalCore",
         connectionName: "commerce-owner",
-        targetAuthority: { runtimeRole: "COMMERCE" },
+        targetAuthority: { publication: "OPERATIONAL" },
       },
     },
   };
@@ -680,4 +680,18 @@ test("existing ordinary PRICED_CART validation and approved execution remain sup
   await approve();
   assert.equal((await core.executeConfirmation(request)).state, "CONSUMED");
   assert.equal(calls.filter(call => call.apiName.endsWith("/confirm")).length, 1);
+});
+
+
+test('coupon and notification targets reject legacy or wrong publication selectors', () => {
+  const order = require('../src/service/defaultCopilotOrderNotificationActionService');
+  for (const [owner, key] of [[coupon, 'couponTarget'], [order, 'orderNotificationTarget']]) {
+    const target = { enabled: true, moduleName: 'digitalCore', connectionName: 'renamed-owner', targetAuthority: { publication: 'OPERATIONAL' } };
+    const settings = { workbench: { [key]: target } };
+    assert.deepEqual(owner.target(settings).targetAuthority, { publication: 'OPERATIONAL' });
+    for (const authority of [{}, { runtimeRole: 'COMMERCE' }, { publication: 'ONLINE' }, { publication: 'STAGED' }]) {
+      target.targetAuthority = authority;
+      assert.throws(() => owner.target(settings));
+    }
+  }
 });

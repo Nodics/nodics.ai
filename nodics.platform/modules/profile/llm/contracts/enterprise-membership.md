@@ -1178,6 +1178,29 @@ an operator recovery path before runtime qualification.
 
 ## Current-Enterprise Team Workspace
 
+Unused native invitations are independently withdrawable without activating
+optional cross-enterprise membership. The Team workspace and withdrawal route
+use the Framework-owned `profileTeam` exposure category, default false; other
+membership commands retain `profileMembership`. Select Team enabled,
+serializedWritesQualified and invitationWithdrawalQualified only after their
+owner review. Native withdrawal reuses `verifyAdministrator`: current canonical
+human, security stamp, permission and exact target/Platform authority. Linked
+session contexts still require qualified membership validation.
+
+With memberships disabled, the existing Team renderer publishes only WITHDRAW
+for unused, active, non-designated invitations. Its fresh generated inventory is
+bounded to100 rows plus an overflow sentinel, with exact tenant/enterprise checks.
+Started registration, claimed identity, accepted membership and the designated
+administrator never receive this action. Disabling signup cannot prevent
+withdrawal. No new identity, credential or membership is created. The serialized
+command preserves expected revision, original operation ID, committed readback,
+stamp acknowledgement and same-command replay. A changed or uncertain operation
+must be inspected; do not auto-retry or clear its fence. Later Profile layers may
+tighten `withdrawalPolicy`, `withdrawalAdministrator` or `invitationWorkspace`;
+they must preserve these proofs and use the same Team owner. See
+`nativeInvitationWorkspace`, `invitationWithdrawalContract` and
+`teamWithdrawalRecoveryComposition` tests.
+
 `GET /enterprise-team/workspace` is an access-token, no-store Profile command.
 It requires fresh enterprise administration authority and
 `profile.enterpriseAccess.assign`; the enterprise comes from the signed access
@@ -1199,11 +1222,13 @@ permissions. `test/enterpriseTeamNativeAdministrator.test.js` composes the real
 canonical identity, null-context and registration checks with read-only storage
 doubles; it is not installed Team qualification.
 
-The existing `employees` capability becomes the native
-`profile.enterpriseTeam` workspace only when membership inventory, session binding,
-assignment-claim indexing, team serialization and API exposure are explicitly
-qualified. All switches remain disabled by default. Axis follows validated native
-workspace discovery, rather than inventing a menu or bypassing permissions.
+For membership lifecycle actions, the existing `employees` capability becomes
+the native `profile.enterpriseTeam` workspace only when membership inventory,
+session binding, assignment-claim indexing, team serialization and Team exposure
+are explicitly qualified. The independent unused-invitation mode above does not
+admit those actions. All switches remain disabled by default. Axis follows
+validated native workspace discovery, rather than inventing a menu or bypassing
+permissions.
 
 Team labels belong to layered
 `enterpriseManagement.teamAdministration.presentation` properties. Axis preserves

@@ -19,6 +19,17 @@ module.exports = {
     "renderer": "documentation.component.navigation",
     "accessMode": "PUBLIC",
     "properties": {
+      "readerGuide": {
+        "guide": "axis",
+        "label": "Nodics Axis",
+        "route": "/docs?guide=axis",
+        "navigation": {
+          "id": "documentation-guide-axis",
+          "label": "Axis guide",
+          "route": "/docs?guide=axis",
+          "order": 310
+        }
+      },
       "title": "Nodics Axis",
       "searchLabel": "Search Nodics Axis documentation",
       "searchPlaceholder": "Search setup, architecture, features, security, and troubleshooting",

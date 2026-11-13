@@ -55,7 +55,7 @@ module.exports = {
   defaults: function () {
     const policy = CONFIG.get("checkoutCore")?.participantSpend;
     if (!policy || policy.perPurchaseLimit !== null && typeof policy.perPurchaseLimit !== "string" ||
-        !policy.profile?.connectionName || !policy.profile.targetAuthority ||
+        !policy.profile?.connectionName || (policy.profile.targetAuthority?.publication !== "OPERATIONAL" || Object.entries(policy.profile.targetAuthority).some(([key, value]) => !["publication", "server", "environment"].includes(key) || typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value))) ||
         !Number.isSafeInteger(policy.profile.timeoutMs) || policy.profile.timeoutMs < 1)
       this.fail("Commerce spending policy is unavailable");
     this.limit(policy.perPurchaseLimit);

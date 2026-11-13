@@ -27,7 +27,7 @@ module.exports = {
   },
 
   /**
-   * Registers knowledge sources, then awaits explicitly selected startup ingestion.
+   * Registers knowledge sources, then schedules selected authenticated startup ingestion.
    * @param {Object} options Startup options.
    * @returns {Promise<boolean>} Resolves when post-initialization completes.
    */
@@ -47,6 +47,8 @@ module.exports = {
         SERVICE.DefaultCopilotRepositoryKnowledgeSourceProviderService,
       );
     });
-    return SERVICE.DefaultCopilotKnowledgeRuntimeService.ingestOnStart();
+    SERVICE.DefaultDiscoverySourceRegistryService.register('COPILOT_KNOWLEDGE', 'PUBLISHED_DOCUMENTATION',
+      SERVICE.DefaultCopilotPublishedKnowledgeSourceProviderService);
+    return SERVICE.DefaultCopilotKnowledgeRuntimeService.prepareStartup();
   },
 };

@@ -27,7 +27,7 @@ const expectedRoutes = [
     { key: '/employee/browser/logout', method: 'POST', handler: 'DefaultAuthenticationProviderController', operation: 'logoutEmployeeBrowser', secured: false },
     { key: '/customer/authenticate', method: 'POST', handler: 'DefaultAuthenticationProviderController', operation: 'authenticateCustomer', secured: false },
     { key: '/token/refresh', method: 'POST', handler: 'DefaultAuthenticationProviderController', operation: 'refreshToken', secured: false },
-    { key: '/token/logout', method: 'POST', handler: 'DefaultAuthenticationProviderController', operation: 'logout', secured: true },
+    { key: '/token/logout', method: 'POST', controller: 'DefaultAuthenticationProviderController', operation: 'logout', secured: true },
     { key: '/token/authorize', method: 'POST', handler: 'DefaultAuthorizationProviderController', operation: 'authorizeToken', secured: true },
     { key: '/identity/migration/preview', method: 'POST', controller: 'DefaultIdentityGovernanceController', operation: 'previewMigration', secured: true, permission: 'identity.migration.preview' },
     { key: '/identity/migration/apply', method: 'POST', controller: 'DefaultIdentityGovernanceController', operation: 'applyMigration', secured: true, permission: 'identity.migration.apply' },

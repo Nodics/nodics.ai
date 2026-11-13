@@ -211,8 +211,12 @@ module.exports = {
      * @throws Missing, ambiguous, invalid or escaping installed source.
      */
     resolveInstalledSourceDescriptor: function (moduleName) {
-        if (typeof moduleName !== 'string' || !/^[A-Za-z][A-Za-z0-9_.-]{0,191}$/.test(moduleName) ||
-            typeof NODICS === 'undefined' || typeof NODICS.getNodicsHome !== 'function' ||
+        return this.createInstalledSourceResolver()(moduleName);
+    },
+
+    /** Creates one bounded canonical installed-source snapshot for a graph traversal; never registers sources. */
+    createInstalledSourceResolver: function () {
+        if (typeof NODICS === 'undefined' || typeof NODICS.getNodicsHome !== 'function' ||
             typeof NODICS.getCustomHome !== 'function') {
             throw new Error('Invalid installed source owner selection');
         }
@@ -232,18 +236,23 @@ module.exports = {
             this.collectModuleRecords(root, records, null, discovery);
         }
         this.indexModuleRecords(records, modules);
-        if (records.filter(item => item.name === moduleName).length > 1) {
-            throw new Error('Ambiguous installed source owner: ' + moduleName);
-        }
-        const matches = Object.values(modules).filter(item => item.name === moduleName);
-        if (matches.length !== 1) {
-            throw new Error(matches.length ? 'Ambiguous installed source owner: ' + moduleName :
-                'Missing installed source owner: ' + moduleName);
-        }
-        if (!['application', 'capability', 'group', 'publish', 'template'].includes(this.getModuleKind(matches[0].metaData))) {
-            throw new Error('Installed source owner must not be a topology package: ' + moduleName);
-        }
-        return matches[0];
+        return moduleName => {
+            if (typeof moduleName !== 'string' || !/^[A-Za-z][A-Za-z0-9_.-]{0,191}$/.test(moduleName)) {
+                throw new Error('Invalid installed source owner selection');
+            }
+            if (records.filter(item => item.name === moduleName).length > 1) {
+                throw new Error('Ambiguous installed source owner: ' + moduleName);
+            }
+            const matches = Object.values(modules).filter(item => item.name === moduleName);
+            if (matches.length !== 1) {
+                throw new Error(matches.length ? 'Ambiguous installed source owner: ' + moduleName :
+                    'Missing installed source owner: ' + moduleName);
+            }
+            if (!['application', 'capability', 'group', 'publish', 'template'].includes(this.getModuleKind(matches[0].metaData))) {
+                throw new Error('Installed source owner must not be a topology package: ' + moduleName);
+            }
+            return matches[0];
+        };
     },
 
     /** Reads bounded package JSON only; nested links cannot redirect installed-source discovery. */

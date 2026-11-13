@@ -21,7 +21,19 @@ const initializer = require(path.join(importer, 'src/service/system/defaultSyste
 const processor = require(path.join(foundation, 'nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService'));
 
 /** Creates an isolated offline Waste scenario; only supplied owner directories are discovered. */
-module.exports = function createReferenceReleaseHarness(modules) {
+module.exports = function createReferenceReleaseHarness(sources, destinationGroups = {
+    'nodics.waste': ['wasteCore', 'wasteMaterial', 'wasteCollection', 'wasteVerification', 'wasteImpact']
+}) {
+    const modules = { ...sources };
+    for (const [group, names] of Object.entries(destinationGroups)) {
+        for (const name of names) {
+            const root = path.resolve(foundation, '../..', group, 'modules', name);
+            modules[name] = {
+                name, path: root, index: require(path.join(root, 'package.json')).index,
+                rawSchema: require(path.join(root, 'src/schemas/schemas'))[name]
+            };
+        }
+    }
     const quiet = { debug() {}, info() {}, warn() {}, error() {} };
     const prep = { ...initializer, LOG: quiet };
     const js = { ...processor, LOG: quiet };

@@ -92,7 +92,7 @@ global.CONFIG = {
     } : undefined
 };
 global.SERVICE = {
-    DefaultWcmsExperienceProjectionService: projection
+    DefaultWcmsExperienceProjectionService: {findPlacements: async () => CONFIG.get('wcmsExperience').fixturePlacements}
 };
 
 (async () => {

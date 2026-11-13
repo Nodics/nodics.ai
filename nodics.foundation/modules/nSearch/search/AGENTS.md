@@ -23,6 +23,11 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Database fallback defaults to false. A caller/deployment may intentionally select fallback through the existing search options. Search activation and provider selection remain explicit.
 
+Readiness must resolve module/provider settings through the existing Search
+configuration owner. Do not reconstruct role presets in Search consumers or
+BackOffice. Cover effective overrides with `test/searchEffectivePolicyContract.test.js`;
+readiness counts are not functional ownership evidence.
+
 Offline native Local maintenance resolves authored schema/index bindings through
 `DefaultSearchConfigurationService.readLocalResetBindings`, never engine startup
 or persisted-index expansion. This selects configuration, not exclusivity proof.
@@ -37,3 +42,14 @@ updating mappings or replacing an active schema's search pointer, even when the
 retirement declaration is malformed. The retirement owner validates eligibility;
 startup must never recreate erased data targets. Run
 `test/retirementBindingStartup.test.js` and logical/physical binding regressions.
+
+## Runtime ownership
+
+The canonical package declares `nodics.runtime.ownership: "runtimeLocal"`.
+Search engine execution, local index/indexer configuration and indexer logs support the selected runtime schemas. Discovery business configuration/projection modules remain functional owners.
+Registration retains callable endpoints and schema/service claims. The shared
+nService ownership key includes the logical server for this explicit scope; no
+Foundation-wide exemption or caller-supplied classification is permitted.
+
+
+Readiness is configuration and connection evidence only. It never establishes index or projection freshness from an active client, promises database fallback from the fallback flag, or enables a repair command merely by naming it. Generic search repair entries remain unavailable until an owning command exists; use the application owner refresh/rebuild contract. Missing provider activity evidence is not healthy. Source and query visibility must be verified against the selected published revision.

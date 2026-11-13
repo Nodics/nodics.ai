@@ -22,6 +22,7 @@ global.ENUMS = Object.fromEntries(
 );
 const bcrypt = require("bcryptjs");
 const recoverySource = require("../src/service/employee/defaultEmployeeRecoveryService");
+const authenticationSource = require("../src/service/authentication/defaultAuthenticationProviderService");
 const registrationSource = require("../src/service/enterprise/defaultEnterpriseRegistrationService");
 const managementSource = require("../src/service/enterprise/defaultEnterpriseManagementService");
 const verificationSource = require("../../../../nodics.communication/modules/commsVerification/src/service/defaultCommunicationVerificationService");
@@ -64,6 +65,7 @@ function fixture(managed = false) {
       loginId: "alex@example.test",
       active: true,
       principalType: "human",
+      enterpriseCode: "business",
       password: "password-alex",
       authVersion: 1,
       userGroups: ["operators"],
@@ -80,6 +82,10 @@ function fixture(managed = false) {
       password: oldHash,
       active: true,
     },
+  ];
+  f.enterprises = [
+    { code: "authority", tenant: "authority", active: true },
+    { code: "business", tenant: "business", active: true },
   ];
   if (managed) f.passwords[0].revision = 4;
   f.credentialWrites = [];
@@ -255,10 +261,7 @@ function fixture(managed = false) {
     },
     DefaultEnterpriseService: {
       get: async (request) => {
-        const records = [
-          { code: "authority", tenant: "authority", active: true },
-          { code: "business", tenant: "business", active: true },
-        ];
+        const records = f.enterprises;
         const size = request.searchOptions.pageSize,
           page = request.searchOptions.pageNumber;
         return {
@@ -334,6 +337,7 @@ function fixture(managed = false) {
     DefaultPrincipalSecurityStampService: { ...stampSource },
     DefaultAuthSecurityService: { ...authSecuritySource },
     DefaultAuthenticationProviderService: {
+      ...authenticationSource,
       addToken: async (module, exp, key, value, ttl) => {
         assert.equal(module, "profile");
         assert(ttl > 0);
@@ -466,11 +470,88 @@ test("active employee recovers through real purpose-bound verification and exist
   assert.deepEqual(Object.keys(f.outbox.at(-1).variables), ["completedAt"]);
 });
 
-test("normal recovery does not require enterprise registration or approval to be enabled", async () => {
+test("normal recovery does not require enterprise registration or its verification enablement", async () => {
   const f = fixture();
+  f.transportPolicy.enabled = false;
   assert.equal(CONFIG.get("enterpriseManagement").registration.enabled, false);
   assert.equal((await f.verify()).stage, "RESET_PASSWORD");
   assert.equal((await f.reset()).stage, "COMPLETE");
+});
+
+test("native recovery uses the persisted enterprise binding when several enterprises share a tenant", async () => {
+  const f = fixture();
+  f.enterprises.push({ code: "other-business", tenant: "business", active: true });
+  assert.equal((await f.verify()).stage, "RESET_PASSWORD");
+  assert.equal((await f.reset()).signInEnterpriseCode, "business");
+});
+
+test("contradictory or unbound foreign native identities cannot recover into a guessed enterprise", async () => {
+  for (const contradictory of [true, false]) {
+    const f = fixture();
+    if (contradictory) f.people[0].metadata = { enterpriseCode: "other-business" };
+    else delete f.people[0].enterpriseCode;
+    await assert.rejects(f.verify(), { code: "ERR_PROFILE_RECOVERY_ACCOUNT" });
+    assert.equal(f.calls.filter(value => value === "password.update").length, 0);
+  }
+});
+
+test("enterprise session-owner failures do not become a guessed recovery target", async () => {
+  const f = fixture();
+  SERVICE.DefaultAuthenticationProviderService.assertEmployeeRegistrationSession = async () => {
+    throw new Error("owner unavailable");
+  };
+  await assert.rejects(f.verify(), /owner unavailable/);
+  assert.equal(f.calls.filter(value => value === "password.update").length, 0);
+});
+
+test("recovery password guidance displays the effective policy without mutating configurable copy", () => {
+  const f = fixture();
+  const template = require("../config/properties").profileEmployeeRecovery.presentation.passwordHelp;
+  f.policy.presentation.passwordHelp = template;
+  f.policy.minimumPasswordLength = 14;
+  f.policy.maximumPasswordLength = 160;
+  const workspace = f.owner.workspace();
+  assert.equal(workspace.presentation.passwordHelp, "Use between 14 and 160 characters.");
+  assert.equal(workspace.constraints.minimumPasswordLength, 14);
+  assert.equal(workspace.constraints.maximumPasswordLength, 160);
+  assert.equal(f.policy.presentation.passwordHelp, template);
+  f.policy.presentation.passwordHelp = "Custom project guidance.";
+  assert.equal(f.owner.workspace().presentation.passwordHelp, "Custom project guidance.");
+});
+
+test("recovery resolves native BSON and populated credential references", async () => {
+  const { ObjectId } = require("mongodb");
+  const id = new ObjectId();
+  const f = fixture();
+  f.passwords[0]._id = id.toHexString();
+  for (const reference of [id, { _id: id }, id.toHexString()]) {
+    const credential = await f.owner.credential({
+      tenant: "business",
+      person: { ...f.people[0], password: reference },
+    });
+    assert.equal(String(credential._id), id.toHexString());
+  }
+  f.faults.directory = true;
+  await assert.rejects(
+    f.owner.credential({ tenant: "business", person: { ...f.people[0], password: { $ne: null } } }),
+    { code: "ERR_PROFILE_RECOVERY_ACCOUNT" },
+  );
+});
+
+test("resend cooldown and distributed admission return the recovery retry error", async () => {
+  const f = fixture();
+  const start = await f.execute("START", { email: "alex@example.test" });
+  await assert.rejects(
+    f.execute("RESEND", { continuation: start.continuation }),
+    { code: "ERR_PROFILE_RECOVERY_RATE" },
+  );
+  SERVICE.DefaultRateLimitService.enforce = async () => {
+    throw new CLASSES.NodicsError("ERR_CACHE_00011");
+  };
+  await assert.rejects(
+    f.execute("START", { email: "alex@example.test" }),
+    { code: "ERR_PROFILE_RECOVERY_RATE" },
+  );
 });
 
 test("old sessions fail the actual stamp validator after a successful reset", async () => {
@@ -758,4 +839,30 @@ test("origin, expiry, failed directory and missing qualification fail without cr
   f.now += 1801000;
   await assert.rejects(f.reset());
   assert.equal(f.calls.includes("password.update"), false);
+});
+
+
+test("a copied recovery context cannot select disabled verification transport", async () => {
+  const f = fixture();
+  f.transportPolicy.enabled = false;
+  const request = {
+    httpRequest: {
+      headers: { origin: "https://axis.example.test" },
+      ip: "192.0.2.5",
+    },
+  };
+  const context = await f.owner.context(request, "START");
+  const copied = { ...context, authData: { ...context.authData }, recovery: true };
+  assert.equal(f.owner.ownsContext(context), true);
+  assert.equal(f.owner.ownsContext(copied), false);
+  await assert.rejects(
+    SERVICE.DefaultEnterpriseManagementService.invokeRegistrationVerification(
+      copied,
+      { operation: "ISSUE", purpose: f.policy.verificationPurpose },
+    ),
+  );
+  assert.equal(f.challenges.size, 0);
+  assert.equal(f.outbox.length, 0);
+  assert.equal(f.credentialWrites.length, 0);
+  assert.equal(f.transportPolicy.enabled, false);
 });

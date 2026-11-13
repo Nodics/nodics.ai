@@ -6,7 +6,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "database",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -28,16 +28,16 @@
       "pages": 3,
       "components": 3,
       "routes": 3,
-      "releaseChecksum": "b0f5454c77e3f67add17221d4fbac6596771248d7ffa048f02293afc1be0dab8",
+      "releaseChecksum": "c91756e3564149d462ec00bfa7178fdfa7757ee87926ed3ee4b1a981f240f50b",
       "generatedHashes": {
         "docs-v001/records/documentation/databaseDocumentationNodeData.js": "25f28490a6fb3b0fafe9164b78ece800842a84fc8e9a841a8e21467e08b96e1d",
-        "docs-v001/records/documentation/databaseDocumentationPageMetadataData.js": "e8e3f3107d0badacdb1ebe0ed34a15bf20d167b84e35db142336a21ace7975d9",
-        "docs-v001/records/documentation/databaseDocumentationPublicationStateData.js": "855107cb6310c7e478d64f2e6810fb6f939e12740e44e86ebbd6a606d226a597",
-        "docs-v001/records/documentation/databaseDocumentationSearchMetadataData.js": "0e788b6cdd2af96df730eb6b98013689013714fed3d037b0196ef5a660b07077",
-        "docs-v001/records/documentation/databaseDocumentationComponentData.js": "4e0d66e56f538f6b3f8180a725447e30b997349baa587f67638783007266b93e",
+        "docs-v001/records/documentation/databaseDocumentationRelease002PageMetadataData.js": "225a87fa062d2574270bdc8a8002effdffff2ed84f9119d70a3d7664e9beef64",
+        "docs-v001/records/documentation/databaseDocumentationRelease002PublicationStateData.js": "05d982bb36c74fb8c6d27160482a4d189408d9ec5dfdaba4faf06c2cb7b0b656",
+        "docs-v001/records/documentation/databaseDocumentationRelease002SearchMetadataData.js": "cb0e474999e0435f969f479c6c2662af3f6db23072af113819e4db7ae0f71e16",
+        "docs-v001/records/documentation/databaseDocumentationRelease002ComponentData.js": "c82dced5b42327b9a87844584c0a97f2c44f2b9f3c3bc348f6af887ff229df83",
         "docs-v001/records/documentation/databaseDocumentationPageData.js": "ceed7041fc1b2fed42dec22eba924c936f3652c37578d0ccb48fb901d42bab24",
         "docs-v001/records/documentation/databaseDocumentationRouteData.js": "d3b56074a590992ffe1bf6e89eceff1ca2a83dbc854db9f6089101d937fbf06c",
-        "docs-v001/headers/100_databaseDocumentationContentPackHeader.js": "ea81a19b69d8b77db666e219f52cc5fc2ecf1f9962731dbe58de8df7d6de9d2b"
+        "docs-v001/headers/100_databaseDocumentationRelease002ContentPackHeader.js": "05c8c0815e59c0109fe430ad2438a67eed221591a50350548483bfd3a5597d44"
       },
       "includes": [
         {

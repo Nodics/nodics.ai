@@ -277,3 +277,14 @@ their real versioned writer. Profile's native-evidence suite composes Product
 with the actual proof and directory, rejecting adminGroup-only and inactive
 permission authority. Tests are source/local evidence, not installed HTTP,
 catalogue publication or checkout acceptance.
+
+
+### Store and identity routing
+
+`product.marketplaceAuthoring.storeSource` uses moduleName store, the existing
+abstract connection and `targetAuthority: { publication: "OPERATIONAL" }`;
+remove the old runtimeRole field. Keep timeoutMs and allowInsecureLoopback explicit.
+The fixed placement API, runtime credentials and exact Store/business evidence
+remain required. `administrativeAuthoring.identityTarget` and
+`marketplaceAuthoring.bundlePublication.source` also use OPERATIONAL destinations.
+This does not change Product authoring's STAGED context or grant publication.

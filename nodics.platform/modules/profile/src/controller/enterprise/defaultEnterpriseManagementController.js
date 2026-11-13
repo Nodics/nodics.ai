@@ -462,6 +462,15 @@ module.exports = {
   registerPreAssignedEmployee: function (request, callback) {
     return this.registrationAction(request, callback, "COMPLETE");
   },
+  /** Reads only the signed administrator's management task; public registration stays separate and uncached. */
+  getManagementWorkspace: function (request, callback) {
+    request.publicOnly = false;
+    request.query = request.httpRequest?.query || request.query || {};
+    request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+    const promise = FACADE.DefaultEnterpriseManagementFacade.getManagementWorkspace(request)
+      .then(data => ({ code: "SUC_PRFL_00000", data }));
+    return callback ? promise.then(value => callback(null, value)).catch(callback) : promise;
+  },
   /** Returns the public backend-driven registration workspace contract. */
   getPublicAccessWorkspace: function (request, callback) {
     request.publicOnly = true;

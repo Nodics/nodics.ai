@@ -156,8 +156,16 @@ test("fresh preparation completes the source batch before an independently sorte
         installed.add(item.code);
       }
     }
-    return { releases: group.steps.map(item => ({ releaseCode: item.code,
-      status: installed.has(item.code) ? "CURRENT" : "NOT_INSTALLED", version: "0.0.1" })) };
+    return {
+      releases: group.steps.map(item => ({
+        releaseCode: item.code,
+        status: installed.has(item.code) ? "CURRENT" : "NOT_INSTALLED",
+        version: "0.0.1",
+      })),
+      ...(mode === "execute" ? {
+        result: { releases: group.steps.map(item => ({ releaseCode: item.code, result: {} })) },
+      } : {}),
+    };
   };
   owner.status = async () => ({ readiness: "NOT_IMPORTED", preparation: await owner.preparationStatus(profile, request) });
   const result = await owner.prepareCapability(profile.code, request);

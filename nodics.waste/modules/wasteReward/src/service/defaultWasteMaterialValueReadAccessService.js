@@ -49,7 +49,9 @@ module.exports = {
         bound();
         const profile = { ...DEFAULTS, ...(CONFIG.get('wasteMaterialValue', tenant) || {}).profile };
         if (typeof profile.connectionName !== 'string' || !profile.connectionName ||
-            !profile.targetAuthority || typeof profile.targetAuthority.runtimeRole !== 'string' || !profile.targetAuthority.runtimeRole ||
+            !profile.targetAuthority || profile.targetAuthority.publication !== 'OPERATIONAL' ||
+            Object.keys(profile.targetAuthority).some(key => !['publication', 'server', 'environment'].includes(key)) ||
+            Object.values(profile.targetAuthority).some(value => typeof value !== 'string' || !value.trim() || value !== value.trim()) ||
             !domain.bounded(profile.timeoutMs, domain.settings(request).validation.timeoutMs))
             domain.fail('CONFIGURATION', 'Invalid Profile read transport');
         let value;

@@ -11,7 +11,7 @@
 
 /**
  * @module nConfig/test/runtimeRootDataReleaseProjectionContract
- * @description Checks declared inactive-owner release discovery after live and offline role-profile composition without installing data or starting providers.
+ * @description Checks declared inactive-owner release discovery after explicit live and offline configuration composition without installing data or starting providers.
  * @layer test
  * @owner nConfig
  */
@@ -22,21 +22,8 @@ const os = require("node:os");
 const path = require("node:path");
 const initializer = require("../src/service/DefaultFrameworkInitializerService");
 const bindings = require("../src/service/defaultConfigurationBindingService");
-const workflowProperties = require("../../../../nodics.process/modules/workflow/config/properties");
 const releases = require("../../nData/nImport/import/src/service/release/defaultDataReleaseService");
 const framework = path.resolve(__dirname, "../../../..");
-
-test("generated runtime initialization profiles declare their reusable template", () => {
-  const profile = initializer.defaultInitializationProfileForRole(
-    "WCMS_STAGED",
-    new Set(["init", "core"]),
-  );
-  assert.equal(profile.localWcmsFoundation.template, "foundation");
-  assert.deepEqual(profile.localWcmsFoundation.steps, [
-    { dataType: "init" },
-    { dataType: "core" },
-  ]);
-});
 
 function fixture(t) {
   const root = fs.mkdtempSync(
@@ -69,19 +56,21 @@ function fixture(t) {
       JSON.stringify(metadata),
     );
   }
+  // Synthetic owner input isolates nConfig layering from owner migration status.
+  const ownerProperties = {data: {dataReleases: {
+    installers: {PROCESS_DEFINITION: "DefaultProcessDefinitionContributionService"},
+    contributions: [
+      {moduleName: "cms", sections: ["cmsPublicationApproval"]},
+      {moduleName: "media", sections: ["mediaPublicationWorkflow"]},
+    ],
+    initializationProfiles: {selected: {template: "foundation", steps: [{dataType: "init"}]}},
+  }}};
   const projectProperties = {
-    runtimeRole: { code: "PROCESS" },
-    data: {
-      dataReleases: {
-        runtimeRoleProfiles: {
-          PROCESS: {
-            contributions: [
-              { moduleName: "editorial", sections: ["editorialWorkflows"] },
-            ],
-          },
-        },
-      },
-    },
+    runtimeRole: {code: "CUSTOM_WORKER", publication: "OPERATIONAL"},
+    data: {dataReleases: {contributions: {$config: "replace", value: [
+      ...ownerProperties.data.dataReleases.contributions,
+      {moduleName: "editorial", sections: ["editorialWorkflows"]},
+    ]}}},
   };
   const oldNodics = global.NODICS,
     oldConfig = global.CONFIG;
@@ -106,8 +95,7 @@ function fixture(t) {
           }
         : undefined,
   };
-  assert.equal(projectProperties.data.dataReleases.runtimeRoleProfiles.PROCESS.installers, undefined);
-  const properties = bindings.merge(structuredClone(workflowProperties), projectProperties);
+  const properties = bindings.merge(ownerProperties, bindings.resolve(projectProperties, ownerProperties));
   return { root, properties };
 }
 
@@ -136,6 +124,7 @@ for (const mode of ["live", "offline"]) {
       "DefaultProcessDefinitionContributionService",
     );
     assert.equal(policy.runtimeRoleProfiles, undefined);
+    assert.deepEqual(policy.initializationProfiles, original.data.dataReleases.initializationProfiles);
     assert.deepEqual(properties, original);
     assert.deepEqual(NODICS.getActiveModules(), ["workflow"]);
     global.CONFIG = { get: (key) => resolved[key] };

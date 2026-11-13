@@ -61,3 +61,30 @@ Read the [complete contract section](inventory-lifecycle-and-publication.md#vali
 ## Configured Consumers And Process Callback
 
 Read the [complete contract section](inventory-lifecycle-and-publication.md#configured-consumers-and-process-callback).
+
+## Publication context defaults
+
+Standard publication providers and schema policies live in ordinary module
+properties. nConfig selects context-conditioned values from explicit STAGED,
+ONLINE or OPERATIONAL metadata, never a host role name. Missing or unknown context
+rejects configuration. Source/target credentials, connections, installed storage
+qualification, grants and approvals remain independent. Runtime overrides contain
+only intentional differences. The Commerce publication configuration test covers
+these boundaries and later overrides without starting providers.
+
+
+### Stock mutation ownership
+
+Stock operations require local active Inventory ownership, runtime publication
+OPERATIONAL, and Inventory's internal ONLINE serving policy independently.
+A physical runtime code has no authority; absent ownership/publication refuses.
+Reference warehouse authoring remains separate from stock mutation/import gates.
+`inventoryImportAdmission.test.js` covers the ownership/publication/policy matrix.
+
+
+Merchant-bound Customer stock reservation and release re-admit the original
+participant through the existing Cart/Checkout facade and reread its retained
+merchant binding. Preserve the signed Customer namespace, typed owner and actor;
+never substitute merchant identity into the bearer. Changed owner, merchant,
+headers or in-flight context refuse before stock access. Same-enterprise legacy
+admission and atomic balance/hold/movement requirements remain unchanged.

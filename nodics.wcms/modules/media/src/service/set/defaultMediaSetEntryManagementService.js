@@ -27,12 +27,52 @@ module.exports = {
         return Promise.resolve(true);
     },
 
-    /** Adds one entry to a media set. */
-    addEntry: function (request) {
-        let model = this.normalizeEntry(request || {}, true);
-        this.assertMediaSetExists(model.mediaSetCode);
-        let service = this.getEntryService();
-        return this.saveEntry(service, model);
+    /** Adds an entry through the original tenant-scoped generated persistence contracts. */
+    addEntry: async function (request) {
+        const model = this.normalizeEntry(request);
+        const context = { tenant: request.tenant, authData: request.authData, options: { recursive: false } };
+        const set = await this.readScoped(this.getSetService(), context, { code: model.mediaSetCode });
+        if (!set || set.active !== true || set.status !== 'ACTIVE') {
+            throw new CLASSES.NodicsError('ERR_MED_00016', 'The selected Media set is unavailable or inactive');
+        }
+        const asset = await SERVICE.DefaultMediaLifecycleCoordinationService.load({ ...context, mediaCode: model.mediaCode });
+        if (!SERVICE.DefaultMediaLibraryService.inScope(asset, request) || asset.status !== 'READY') {
+            throw new CLASSES.NodicsError('ERR_MED_00014', 'Choose a ready Media item in the current enterprise');
+        }
+        const format = SERVICE.DefaultMediaStoragePolicyService.getFormatPolicy(model.formatCode || asset.formatCode);
+        if (format.code !== asset.formatCode) {
+            throw new CLASSES.NodicsError('ERR_MED_00010', 'The Media item does not contain the selected format');
+        }
+        model.formatCode = format.code;
+        const owner = this.getEntryService();
+        if (await this.readScoped(owner, context, { code: model.code })) {
+            throw new CLASSES.NodicsError('ERR_MED_00018', 'Media set entry already exists');
+        }
+        const saved = await owner.save({ ...context, model: { ...model }, options: { ...context.options, insertOnly: true } });
+        if (!this.acknowledged(saved)) {
+            throw new CLASSES.NodicsError('ERR_MED_00015', 'Media set entry save could not be confirmed');
+        }
+        const verified = await this.readScoped(owner, context, { code: model.code, mediaSetCode: model.mediaSetCode });
+        if (!verified || !Object.entries(model).every(([key, value]) => value === undefined || verified[key] === value)) {
+            throw new CLASSES.NodicsError('ERR_MED_00015', 'Inspect the Media set entry before saving again');
+        }
+        return verified;
+    },
+
+    /** Reads at most one exact row with the original actor and verifies its acknowledgement. */
+    readScoped: async function (service, context, query) {
+        const result = await service.get({ ...context, query, skipcache: true, searchOptions: { limit: 2 } });
+        if (!this.acknowledged(result) || !Array.isArray(result.result) || result.result.length > 1 ||
+            result.result.some(row => !row || !Object.entries(query).every(([key, value]) => row[key] === value))) {
+            throw new CLASSES.NodicsError('ERR_MED_00015', 'Scoped Media set read could not be confirmed');
+        }
+        return result.result[0];
+    },
+
+    /** Checks the owner response before the caller trusts persistence evidence. */
+    acknowledged: function (response) {
+        return /^SUC_/.test(response?.code || '') && !response.error && response.success !== false &&
+            response.acknowledged !== false && !response.errors?.length;
     },
 
     /** Updates one existing entry inside a media set. */
@@ -45,7 +85,7 @@ module.exports = {
         if (!existing || existing.mediaSetCode !== mediaSetCode) {
             throw new CLASSES.NodicsError('ERR_MED_00014', 'Invalid media set entry');
         }
-        let model = this.normalizeEntry(Object.assign({}, existing, request, { code: entryCode, mediaSetCode: mediaSetCode }), false);
+        let model = this.normalizeEntry(Object.assign({}, existing, request, { code: entryCode, mediaSetCode: mediaSetCode }));
         return this.saveEntry(this.getEntryService(), model);
     },
 
@@ -202,16 +242,13 @@ module.exports = {
     },
 
     /** Normalizes one entry request. */
-    normalizeEntry: function (request, creating) {
+    normalizeEntry: function (request) {
         let code = this.safeCode(request.code || request.entryCode, 'Media set entry code');
         let mediaSetCode = this.safeCode(request.mediaSetCode, 'Media set code');
         let mediaCode = this.safeCode(request.mediaCode, 'Media code');
         let status = request.status || 'ACTIVE';
         if (!['ACTIVE', 'INACTIVE'].includes(status)) {
             throw new CLASSES.NodicsError('ERR_MED_00017', 'Invalid media set entry status');
-        }
-        if (creating && this.getEntry(code)) {
-            throw new CLASSES.NodicsError('ERR_MED_00018', 'Media set entry already exists');
         }
         return {
             code: code,

@@ -22,6 +22,15 @@ import localRuntimeCredentialService from '../../../../../../nodics.foundation/m
 import configurationProbe from '../../../../../../nodics.foundation/modules/nTooling/src/service/project/defaultProjectConfigurationProbeService.js';
 import { runRuntimeDeploymentGrantAcceptance } from '../../../../profile/src/service/acceptance/defaultRuntimeDeploymentGrantAcceptanceService.mjs';
 
+/** Selects the unique receiver advertising the operator's map setup profile. */
+export function locationSetupRuntime(configuration, profileCode) {
+  if (!profileCode) return { role: 'LOCATION' };
+  const matches = configuration.topology.groups.backends.filter(runtime => runtime.enabled !== false &&
+    runtime.initializationProfiles?.some(profile => profile.code === profileCode));
+  if (matches.length !== 1) throw new Error('Select one runtime advertising the location initialization profile');
+  return { server: matches[0].server };
+}
+
 /** Validates customer selections before credentials, runtime startup or API mutation. */
 export function validateBootstrapSelection(selection = {}) {
   if (!selection.platformInitializationProfile || !selection.publicOriginKey)
@@ -66,7 +75,7 @@ export async function runApplicationBootstrapAcceptance({
   const wcmsOnlineUrl = environment.NEXUS_CMS_URL || projectEndpointUrl(environmentProfile, { role: 'WCMS_ONLINE' });
   const processUrl = environment.AXIS_PROCESS_URL || projectEndpointUrl(environmentProfile, { role: 'PROCESS' });
   const locationUrl = selection.locationInitializationProfile || selection.verifyDefaultLocationMap
-    ? environment.AXIS_LOCATION_URL || projectEndpointUrl(environmentProfile, { role: 'LOCATION' }) : undefined;
+    ? environment.AXIS_LOCATION_URL || projectEndpointUrl(environmentProfile, locationSetupRuntime(environmentProfile, selection.locationInitializationProfile)) : undefined;
   const operatorOrigin = environment.NODICS_ACCEPTANCE_ORIGIN || projectCorsOrigin(environmentProfile, 'axis');
   const enterpriseCode = environment.AXIS_ENTERPRISE || "default";
   const loginId = environment.AXIS_LOGIN_ID || "admin";

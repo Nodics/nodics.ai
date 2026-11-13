@@ -26,6 +26,7 @@ let defaultAuthDetail = {
 };
 let tooling = {
     acceptance: {
+        platformCommand: "acceptance:local",
         browserValidation: {
             enabled: true,
             reason: 'Local validation can run browser smoke checks against developer-visible applications.'
@@ -35,19 +36,30 @@ let tooling = {
 global.CONFIG = { get: key => key === 'backofficeRegistry' ? registry :
     key === 'bootstrapIdentity' ? bootstrapIdentity :
         key === 'defaultAuthDetail' ? defaultAuthDetail :
-            key === 'runtimeRole' ? { code: 'PLATFORM' } :
+            key === 'runtimeRole' ? { code: 'arbitrary-host', publication: 'OPERATIONAL' } :
                 key === 'tooling' ? tooling :
                     key === 'search' ? { default: { options: { enabled: false, fallback: false, engine: 'elastic' } },
-                        runtimeRoleProfiles: { PLATFORM: { discoveryProjection: { options: { enabled: true } } } } } : undefined };
+                        discoveryProjection: { options: { enabled: true } } } : undefined };
 let readinessContributor;
 let publishedAlerts = [];
 let auditEvents = [];
 let publishedEvents = [];
-global.SERVICE = { AuditPublisher: { record: () => Promise.resolve(true) },
+global.SERVICE = { DefaultDeploymentModuleOwnershipService: { runtimePlacements: () => [
+    { projectCode: 'test-project', environmentCode: 'kickoffLocal', serverCode: 'platformServer', instanceCode: 'platformServer:backoffice', modules: ['backoffice'] },
+    { projectCode: 'test-project', environmentCode: 'kickoffLocal', serverCode: 'processServer', instanceCode: 'processServer:workflow', modules: ['workflow'] }
+] }, AuditPublisher: { record: () => Promise.resolve(true) },
+    DefaultBackofficeReadinessEvidenceService: { loadAcknowledgements: async () => true, findAcknowledgement: () => undefined,
+        recordSnapshot: async (request, snapshot) => ({ ...snapshot, durable: true, evidenceCode: 'test-snapshot', history: [] }) },
     DefaultBackofficeAuditService: { record: event => { auditEvents.push(event); return Promise.resolve(event); } },
     AlertPublisher: { record: event => { publishedAlerts.push(event); return Promise.resolve(true); } },
     DefaultEventService: { publish: event => { publishedEvents.push(event); return Promise.resolve(true); } },
-    DefaultBackofficeApplicationInitializationService: { status: async profileCode => ({
+    DefaultBackofficeApplicationInitializationService: {
+        applicationTargetBinding: (connectionName, moduleName) => {
+            assert.strictEqual(connectionName, 'wcmsStaged');
+            assert.strictEqual(moduleName, 'import');
+            return { connectionName: 'wcmsStagedServer', targetAuthority: { server: 'wcmsStagedServer', publication: 'STAGED' } };
+        },
+        status: async profileCode => ({
         profileCode: profileCode,
         applicationCode: 'circa',
         siteCode: 'circaSite',
@@ -90,6 +102,9 @@ global.SERVICE = { AuditPublisher: { record: () => Promise.resolve(true) },
             engine: 'elastic',
             readSourcePolicy: 'SEARCH_ENGINE',
             configuredModuleCount: 1,
+            enabledModuleCount: 1,
+            defaultSearchEnabled: false,
+            defaultFallbackEnabled: false,
             initializedEngineCount: 1,
             inactiveEngineCount: 0,
             indexFreshness: 'OBSERVED',
@@ -157,24 +172,7 @@ assert.strictEqual(sampleKeyFinding.repair.actionCode, 'ROTATE_DEFAULT_CONFIGURA
 assert.strictEqual(sampleKeyFinding.repair.eligibility, 'MANUAL');
 assert.strictEqual(sampleKeyFinding.repair.requiresConfirmation, true);
 assert.strictEqual(startupReport.summary.acknowledged, 0);
-service.acknowledgeFinding({
-    tenant: 'default',
-    authData: { loginId: 'admin' },
-    correlationId: 'startup-ack-test',
-    startupFindingAcknowledgement: {
-        code: sampleKeyFinding.code,
-        propertyPath: sampleKeyFinding.propertyPath,
-        reason: 'Reviewed local development default before continuing.',
-        reasonCode: 'LOCAL_DEV_ACCEPTED'
-    }
-});
-let acknowledgedReport = service.startupValidationReport({ tenant: 'default' });
-let acknowledgedFinding = acknowledgedReport.findings.find(finding => finding.code === sampleKeyFinding.code);
-assert.strictEqual(acknowledgedReport.summary.acknowledged, 1);
-assert.strictEqual(acknowledgedFinding.acknowledgement.acknowledged, true);
-assert.strictEqual(acknowledgedFinding.acknowledgement.acknowledgedBy, 'admin');
-assert(auditEvents.some(event => event.eventType === 'backoffice.startupFinding.acknowledge'
-    && event.findingCode === sampleKeyFinding.code));
+// Durable acknowledgement and restart/failure behavior are exercised in backofficeReadinessEvidence.test.js.
 assert(!JSON.stringify(startupReport).includes(defaultAuthDetail.apiKey));
 assert(!JSON.stringify(startupReport).includes(bootstrapIdentity.adminPassword));
 let originalAdminPassword = bootstrapIdentity.adminPassword;
@@ -206,6 +204,7 @@ async function validateDeliveryAndProductionPolicy() {
     let originalEWasteReadinessService = global.SERVICE.DefaultEWasteAcceptanceReadinessService;
     global.SERVICE.DefaultModuleService = { invokeModule: async descriptor => {
         moduleInvocationCalls.push(descriptor);
+        if (descriptor.moduleName === 'eWaste') return SERVICE.DefaultEWasteAcceptanceReadinessService.readiness(descriptor.request);
         return [{ releaseCode: 'circa.ewaste:sample', moduleName: 'circa.ewaste',
             displayName: 'Circa sample release',
             readiness: { businessStatus: 'PREPARED_STAGED', blockers: [] } }];
@@ -231,8 +230,10 @@ async function validateDeliveryAndProductionPolicy() {
         startupValidation: missingReport,
         modules: { backoffice: [{ instanceId: 'platformServer:backoffice', moduleName: 'backoffice', state: 'ACTIVE',
             environment: 'kickoffLocal', server: 'platformServer', node: 'default',
-            runtimeRole: { code: 'PLATFORM', publication: 'OPERATIONAL' } }] },
-        availability: { backoffice: { state: 'UP' } },
+            runtimeRole: { code: 'PLATFORM', roles: ['PLATFORM'], publication: 'OPERATIONAL' } }],
+            workflow: [{ instanceId: 'processServer:workflow', moduleName: 'workflow', state: 'UP',
+                environment: 'kickoffLocal', server: 'processServer', node: 'default' }] },
+        availability: { backoffice: { state: 'UP' }, workflow: { state: 'UP' } },
         documentationSources: [{ id: 'framework.docs', label: 'Framework docs', type: 'CMS', route: '/docs/framework' }],
         documentationPublication: { bySourceId: { 'framework.docs': { readiness: 'READY', ready: true } } },
         applicationInitializationProfiles: [{ code: 'circaewaste', title: 'Circa eWaste',
@@ -240,8 +241,8 @@ async function validateDeliveryAndProductionPolicy() {
     });
     assert.strictEqual(aggregateReport.contractVersion, 1);
     assert.strictEqual(aggregateReport.state, 'NOT_READY');
-    assert.strictEqual(service._lastOperationalReadinessSnapshot.state, 'NOT_READY');
-    assert.strictEqual(service._lastOperationalReadinessSnapshot.source, 'backoffice.operationalReadiness.snapshot');
+    assert.strictEqual(aggregateReport.summary.latestSnapshot.state, 'NOT_READY');
+    assert.strictEqual(aggregateReport.summary.latestSnapshot.durable, true);
     assert(Array.isArray(aggregateReport.summary.timeline));
     assert(Array.isArray(aggregateReport.summary.recoveryMatrix));
     assert(aggregateReport.summary.recoveryMatrix.length >= 9);
@@ -261,7 +262,7 @@ async function validateDeliveryAndProductionPolicy() {
     assert(aggregateReport.summary.timeline.some(item => item.eventType === 'backoffice.operationalReadiness.snapshot'
         && item.state === 'NOT_READY'));
     assert(auditEvents.some(event => event.eventType === 'backoffice.operationalReadiness.snapshot'
-        && event.state === 'NOT_READY'));
+        && event.reasonCode === 'NOT_READY'));
     assert(aggregateReport.sections.some(section => section.key === 'imports'
         && section.businessStatus === 'READY'
         && section.summary.releaseCount === 1
@@ -270,6 +271,8 @@ async function validateDeliveryAndProductionPolicy() {
         && section.summary.operatorCommands.includes('Validate blocked release group')));
     assert.strictEqual(moduleInvocationCalls[0].moduleName, 'import');
     assert.strictEqual(moduleInvocationCalls[0].apiName, '/sample');
+    assert.strictEqual(moduleInvocationCalls[0].connectionName, 'wcmsStagedServer');
+    assert.deepStrictEqual(moduleInvocationCalls[0].targetAuthority, { server: 'wcmsStagedServer', publication: 'STAGED' });
     assert.strictEqual(moduleInvocationCalls[0].header.Authorization, 'Bearer operator-token');
     assert(aggregateReport.sections.some(section => section.key === 'publishing'
         && section.businessStatus === 'READY'
@@ -334,7 +337,7 @@ async function validateDeliveryAndProductionPolicy() {
         && section.summary.ownerProviderAvailable === true
         && section.summary.axisConfigurationVisible === true
         && section.summary.repairActions.some(action => action.operation === 'search.index.rebuild')
-        && section.summary.runtimeProfileCount === 1
+        && section.summary.enabledModuleCount === 1
         && section.summary.discoveryAttempts === 2));
     assert(aggregateReport.sections.some(section => section.key === 'assistant'
         && section.businessStatus === 'READY'
@@ -426,7 +429,7 @@ async function validateDeliveryAndProductionPolicy() {
     assert.strictEqual(bridgedSection.summary.browserValidationEvidenceFile,
         'envs/kickoffLocal/generated/acceptance/browser-validation-evidence.json');
     assert.deepStrictEqual(bridgedSection.summary.operatorCommands, [
-        'npm run docker-local:acceptance',
+        'npm run acceptance:local',
         'npm run project:post-reset-readiness -- --live --json',
         'Refresh Axis dashboard bootstrap'
     ]);
@@ -451,7 +454,8 @@ async function validateDeliveryAndProductionPolicy() {
     delete global.SERVICE.DefaultToolingAcceptanceEvidenceService;
     assert(aggregateReport.sections.find(section => section.key === 'bootstrap').blockers
         .some(blocker => blocker.code === 'MISSING_TEST_PROPERTY' && blocker.repair.operation === 'runtimeConfiguration.update'));
-    delete global.SERVICE.DefaultEWasteAcceptanceReadinessService;
+    global.SERVICE.DefaultEWasteAcceptanceReadinessService = { readiness() { throw new Error('Loaded source must not bypass DMS ownership'); } };
+    moduleInvocationCalls.length = 0;
     global.SERVICE.DefaultModuleService = { invokeModule: async descriptor => {
         moduleInvocationCalls.push(descriptor);
         if (descriptor.moduleName === 'eWaste' && descriptor.apiName === '/readiness/acceptance') return {
@@ -481,13 +485,15 @@ async function validateDeliveryAndProductionPolicy() {
     assert(remoteEWasteCall);
     assert.strictEqual(remoteEWasteCall.connectionName, undefined);
     assert.strictEqual(remoteEWasteCall.targetAuthority.server, undefined);
-    assert.deepStrictEqual(remoteEWasteCall.targetAuthority.runtimeRole, { code: 'WASTE' });
+    assert.deepStrictEqual(remoteEWasteCall.targetAuthority, { publication: 'OPERATIONAL' });
     assert.strictEqual(remoteEWasteCall.header.Authorization, 'Bearer operator-token');
     global.SERVICE.DefaultModuleService = originalModuleService;
     global.SERVICE.DefaultEWasteAcceptanceReadinessService = originalEWasteReadinessService;
 
+    Object.assign(global.SERVICE, require("./support/repairEvidenceHarness")().services);
     let repairCalls = [];
     let importRepairProvider = {
+        authorizeRepair: async () => true,
         repairCapability: () => ({
             repairContractVersion: 1,
             available: true,
@@ -497,6 +503,7 @@ async function validateDeliveryAndProductionPolicy() {
         executeRepair: async repair => {
             repairCalls.push(repair);
             return {
+                completionVerified: true,
                 state: repair.dryRun ? 'DRY_RUN' : 'COMPLETED',
                 changedCount: repair.dryRun ? 0 : 2,
                 skippedCount: 1,
@@ -542,7 +549,7 @@ async function validateDeliveryAndProductionPolicy() {
     assert(batchPlan.graph.nodes.some(node => node.type === 'DEPENDENCY'));
     let dryRunRepair = await service.executeRepair({
         tenant: 'default',
-        authData: { loginId: 'admin' },
+        authData: { loginId: 'admin', principalType: 'human', tokenType: 'access' },
         readinessRepair: {
             idempotencyKey: 'repair-dry-run-001',
             dryRun: true,
@@ -569,7 +576,7 @@ async function validateDeliveryAndProductionPolicy() {
     assert.strictEqual(repairCalls.length, 1);
     let executedRepair = await service.executeRepair({
         tenant: 'default',
-        authData: { loginId: 'admin' },
+        authData: { loginId: 'admin', principalType: 'human', tokenType: 'access' },
         readinessRepair: {
             idempotencyKey: 'repair-execute-001',
             dryRun: false,
@@ -593,7 +600,7 @@ async function validateDeliveryAndProductionPolicy() {
         && event.data.receiptCode === executedRepair.receipt.receiptCode));
     let replayedRepair = await service.executeRepair({
         tenant: 'default',
-        authData: { loginId: 'admin' },
+        authData: { loginId: 'admin', principalType: 'human', tokenType: 'access' },
         readinessRepair: {
             idempotencyKey: 'repair-execute-001',
             dryRun: false,
@@ -612,14 +619,13 @@ async function validateDeliveryAndProductionPolicy() {
     assert(service.repairHistory().some(item => item.idempotencyKey === 'repair-execute-001'
         && item.principal === 'admin'));
     assert.strictEqual(service.repairHistory({ ownerModule: 'import' }).length >= 1, true);
-    assert(service.repairReceipts().some(receipt => receipt.ownerModule === 'import'
-        && receipt.receiptType === 'OPERATIONAL_READINESS_REPAIR'));
+    assert.equal(executedRepair.receipt.durable, true);
     assert(auditEvents.some(event => event.eventType === 'backoffice.operationalReadiness.repair'
         && event.idempotencyKey === 'repair-execute-001'));
     service.unregisterRepairProvider('import');
     let lockedRepair = await service.executeRepair({
         tenant: 'default',
-        authData: { loginId: 'admin' },
+        authData: { loginId: 'admin', principalType: 'human', tokenType: 'access' },
         readinessRepair: {
             idempotencyKey: 'repair-locked-001',
             dryRun: false,

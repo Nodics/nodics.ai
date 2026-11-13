@@ -53,6 +53,31 @@ module.exports = {
         };
     },
 
+    /** Proves a stable public Online page for governed knowledge ingestion, without exposing private manifests or accepting an authenticated access override. */
+    publishedKnowledge: async function (request) {
+        const publication = (CONFIG.get('cms') || {}).publication || {};
+        if (publication.enabled !== true || publication.runtimeRole !== 'ONLINE')
+            throw this.error('ERR_CMS_00090', 'Published knowledge requires Online delivery');
+        const context = this.normalizeContext(request);
+        const publicRequest = { ...request, router: { ...request.router, publicAccess: true },
+            delivery: { ...context, accessMode: 'PUBLIC' } };
+        const read = async () => {
+            const value = (await this.resolvePublishedManifest(publicRequest, context, 'PUBLIC', undefined, true)).result;
+            if (!value || value.accessMode !== 'PUBLIC' || !value.page || !Array.isArray(value.page.components) ||
+                ['site','path','locale','channel'].some(key => value[key] !== context[key]))
+                throw this.error('ERR_CMS_00091', 'Public publication scope is invalid');
+            const json = JSON.stringify(value);
+            const maximum = this.settings().maximumKnowledgePageBytes;
+            if (!Number.isSafeInteger(maximum) || maximum < 1 || Buffer.byteLength(json) > maximum)
+                throw this.error('ERR_CMS_00091', 'Published page exceeds knowledge delivery bounds');
+            return { value, digest: require('node:crypto').createHash('sha256').update(json).digest('hex') };
+        };
+        const first = await read(), current = await read();
+        if (first.digest !== current.digest) throw this.error('ERR_CMS_00090', 'Publication changed during the read');
+        return { result: { contractVersion: 1, scope: context,
+            publication: { state: 'ONLINE', accessMode: 'PUBLIC', contentDigest: current.digest }, content: current.value } };
+    },
+
     /** Resolves the requested CMS delivery access boundary. */
     resolveAccessMode: function (request) {
         if (request.router && request.router.publicAccess === true &&
@@ -78,7 +103,7 @@ module.exports = {
     },
 
     /** Resolves delivery exclusively through the configured immutable Online manifest authority. */
-    resolvePublishedManifest: async function (request, context, accessMode, composition) {
+    resolvePublishedManifest: async function (request, context, accessMode, composition, requirePublicProof = false) {
         const read = (kind, service, query, code) => composition
             ? this.readEmployeeCompositionRecord(kind, composition, query, code)
             : this.getSingle(service, request, query, code);
@@ -91,6 +116,9 @@ module.exports = {
         }
         let manifest = await read('manifest', SERVICE.DefaultCmsPublicationManifestService,
             { code: pointer.manifestCode, active: true }, 'ERR_CMS_00091');
+        if (requirePublicProof && (pointer.active !== true || manifest.active !== true || manifest.code !== pointer.manifestCode ||
+            pointer.accessMode !== 'PUBLIC' || ['site', 'path', 'locale', 'channel'].some(key => pointer[key] !== context[key])))
+            throw this.error('ERR_CMS_00091', 'Public publication identity is invalid');
         let snapshot = manifest.snapshot;
         if (snapshot && [0, 2].includes(snapshot.contractVersion) && snapshot.bundleType === 'SITE') {
             if (composition && snapshot.site !== context.site) throw this.error('ERR_CMS_00091', 'shared composition Site is invalid');

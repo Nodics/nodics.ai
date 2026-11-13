@@ -112,7 +112,7 @@ module.exports = {
       !target ||
       !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(target.connectionName || "") ||
       target.connectionName === "default" ||
-      !/^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(target.runtimeRole || "") ||
+      target.publication !== "OPERATIONAL" ||
       !Number.isSafeInteger(target.timeoutMs) ||
       target.timeoutMs < 1 ||
       target.timeoutMs > 30000

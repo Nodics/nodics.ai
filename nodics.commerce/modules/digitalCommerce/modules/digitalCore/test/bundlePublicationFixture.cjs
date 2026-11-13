@@ -40,7 +40,7 @@ function fixture(t) {
   const loyaltyPolicy = clone(loyaltyDefaults.loyalty);
   policy.bundles.ownerAuthorityService = 'Authority'; policy.bundles.componentProviders.CERTIFICATE = 'Components';
   const rows = {}, effects = [], holds = new Map(); let failPublish = false, failWithdraw = false;
-  global.CONFIG = { get: k => k === 'digitalCore' ? policy : k === 'loyalty' ? loyaltyPolicy : k === 'authSecurity' ?
+  global.CONFIG = { get: k => k === 'runtimeRole' ? { publication: 'OPERATIONAL' } : k === 'digitalCore' ? policy : k === 'loyalty' ? loyaltyPolicy : k === 'authSecurity' ?
     { internalToken: { runtimeAccessGroups: ['serviceAccountUserGroup'] } } : undefined };
   global.UTILS = { createModelName: n => n };
   global.NODICS = { getInternalAuthToken: () => 'runtime', getModels: () => Object.fromEntries(['digitalBundleManifest', 'digitalBundleOperation']
@@ -108,7 +108,7 @@ function fixture(t) {
   SERVICE.DefaultBiddingAuctionService = { open: async () => {
     effects.push('open-round'); return { code: 'auction', publicationCode: row().code, productCode: 'product' };
   } };
-  SERVICE.DefaultModuleService = { invokeModule: async call => {
+  SERVICE.DefaultModuleService = { isLocalModuleActive: name => name === 'loyaltyWallet', invokeModule: async call => {
     if (call.apiName === '/reward-unit-evidence') {
       assert.equal(call.requireInternalAuth, true);
       // Transport authentication is isolated; canonical Loyalty admission, record reads and precision validation are real.

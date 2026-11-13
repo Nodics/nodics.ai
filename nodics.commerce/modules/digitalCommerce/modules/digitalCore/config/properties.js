@@ -40,16 +40,11 @@ module.exports = {
     },
   },
   communication: {
-    runtimeRoleProfiles: {
-      ENGAGEMENT: {
-        dispatchEligibilityOwners: {
-          digitalCore: { DIGITAL_COUPON_EXPIRING: { moduleName: "digitalCore", connectionName: "commerce",
-            runtimeRole: "COMMERCE", apiName: "/internal/coupons/reminder-dispatch-eligibility" } },
-        },
-      },
-    },
     dispatchEligibilityOwners: {
-      digitalCore: { DIGITAL_COUPON_EXPIRING: "DefaultDigitalCouponReminderDeliveryService",
+      digitalCore: { DIGITAL_COUPON_EXPIRING: {
+        moduleName: "digitalCore", serviceName: "DefaultDigitalCouponReminderDeliveryService",
+        targetAuthority: { publication: "OPERATIONAL" }, apiName: "/internal/coupons/reminder-dispatch-eligibility",
+      },
         DIGITAL_BUNDLE_GIFT_PENDING: "DefaultDigitalBundleGiftNotificationService",
         DIGITAL_BUNDLE_GIFT_CANCELLED: "DefaultDigitalBundleGiftNotificationService",
         DIGITAL_BUNDLE_GIFT_ACCEPTED: "DefaultDigitalBundleGiftNotificationService",
@@ -63,7 +58,7 @@ module.exports = {
         "digitalCore.couponExpirySweep": {
           moduleName: "digitalCore",
           operation: "couponExpirySweep",
-          remote: { target: "digitalCore", moduleName: "digitalCore", runtimeRole: "COMMERCE",
+          remote: { target: "digitalCore", moduleName: "digitalCore", targetAuthority: { publication: "OPERATIONAL" },
             apiName: "/workflow/actions/couponExpirySweep" },
         },
       },
@@ -87,12 +82,12 @@ module.exports = {
     enabled: true,
     couponAccess: {
       maximumOwnEntitlements: 100,
-      profile: { connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, timeoutMilliseconds: 15000 },
+      profile: { connectionName: "profile", targetAuthority: { publication: "OPERATIONAL" }, timeoutMilliseconds: 15000 },
     },
     bundleListings: {
       enabled: false,
       acceptance: { requestTimeoutMs: 30000 },
-      productTarget: { moduleName: "product", connectionName: "commerceStaged", targetAuthority: { runtimeRole: "COMMERCE_STAGED" },
+      productTarget: { moduleName: "product", connectionName: "commerceStaged", targetAuthority: { publication: "STAGED" },
         apiVersion: "v0", timeoutMs: 15000, maxAttempts: 1 },
       pricingService: "DefaultPricingBundleListingService",
       // Read-only composition projects governed bindings, never configured business IDs.
@@ -115,7 +110,7 @@ module.exports = {
       sourceCallers: [],
       sweepCallers: [],
       dispatchCallers: [],
-      actionAuthority: { connectionName: "workflow", runtimeRole: "PROCESS", timeoutMs: 10000, maxResponseBytes: 32768 },
+      actionAuthority: { connectionName: "workflow", targetAuthority: { publication: "OPERATIONAL" }, timeoutMs: 10000, maxResponseBytes: 32768 },
       delivery: {
         validation: { timeoutMs: { minimum: 1, maximum: 60000 }, maximumRecipients: { minimum: 1, maximum: 100 } },
         profileConnectionName: "profile", communicationConnectionName: "communication",
@@ -124,7 +119,7 @@ module.exports = {
       },
     },
     bundleSettlement: {
-      loyalty: { connectionName: "loyalty", targetAuthority: { runtimeRole: "LOYALTY" }, timeoutMs: 15000 },
+      loyalty: { connectionName: "loyalty", targetAuthority: { publication: "OPERATIONAL" }, timeoutMs: 15000 },
       maximumPaymentRecords: 16,
       feeAmount: "0",
       acceptance: { requestTimeoutMs: 30000 },
@@ -142,7 +137,7 @@ module.exports = {
       },
     },
     couponAcquisition: {
-      sourceProof: { enabled: false, runtimeRole: "COMMERCE", callers: [] },
+      sourceProof: { enabled: false, callers: [] },
       maximumCertificates: 100,
       sourcePageSize: 200,
       maximumSourcePages: 100,
@@ -181,17 +176,17 @@ module.exports = {
       giftExpirySweep: { maximumOperations: 100, pageSize: 50 },
       giftExpiryScheduler: {
         enabled: false, startNode: "DefaultDigitalGiftExpirySchedulerService.sweep", maximumBatches: 10,
-        target: { moduleName: "digitalCore", connectionName: "commerce", targetAuthority: { runtimeRole: "COMMERCE" },
+        target: { moduleName: "digitalCore", connectionName: "commerce", targetAuthority: { publication: "OPERATIONAL" },
           apiVersion: "v0", apiName: "/internal/bundles/gifts/expire", timeoutMs: 60000, maxAttempts: 1 },
       },
       ownerAuthorityService: "DefaultDigitalBundleAuthorityService",
       certificatePageSize: 25,
-      profile: { connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, timeoutMilliseconds: 15000 },
+      profile: { connectionName: "profile", targetAuthority: { publication: "OPERATIONAL" }, timeoutMilliseconds: 15000 },
       componentProviders: { CERTIFICATE: "DefaultDigitalCertificateComponentService", REALIZED_CARBON: "DefaultDigitalCarbonComponentService" },
       carbon: {
         qualified: false,
         connectionName: "waste",
-        targetAuthority: { runtimeRole: "WASTE" },
+        targetAuthority: { publication: "OPERATIONAL" },
         timeoutMilliseconds: 15000,
         maximumHoldingPages: 100,
       },
@@ -201,7 +196,6 @@ module.exports = {
     maximumCouponUnitsPerCheckout: 100,
     ownershipEvidence: {
       enabled: false,
-      runtimeRole: "COMMERCE",
       callers: [],
       bindingAdmission: {
         enabled: false,

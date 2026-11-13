@@ -305,6 +305,10 @@ error mappings. The provider normalizes original approval evidence and computes
 illustrative amounts; it does not issue credits, settle wallets or revalue prior
 settlements. Missing defensible carbon remains unavailable rather than invented.
 
+Photo-access and privacy questions take precedence over capture-help keywords.
+Retain conservative owner/reviewer access wording and never invent retention
+periods or perform deletion from guidance.
+
 The existing conversation service supplies reusable guidance orchestration and
 history persistence. Customer wording and intent selection remain in the adapter.
 Revision failures propagate; guidance never confirms a submission or discards its
@@ -356,8 +360,11 @@ waste managed. Incomplete carbon coverage rejects to the configured fallback cha
 The provider does not issue credits or alter rewards. Retrieved citations and AI
 estimates still require qualification before certified/public claims.
 
-Select providers in deployment/customer configuration; reusable eWaste defaults do
-not activate an external service. Future providers implement the same Waste protocol.
+The `eWasteEnvironmentalAssessment` Waste Impact provider profile defines the
+OpenAI primary, WARM fallback, per-attempt timeout and failed-result policy. A
+Waste runtime explicitly selects it with `wasteImpact.calculation.providerProfile`.
+The profile declaration does not configure credentials or activate the provider.
+Future providers implement the same Waste protocol.
 Preserve old assessments and use existing explicit reassessment operations.
 
 - eWaste is one domain accelerator: presets and reusable e-waste orchestration.
@@ -502,6 +509,14 @@ prepare a handoff, send a message or duplicate credential-store precedence in
 readiness. An absent/throwing resolver is `LOCAL_INSPECTION_UNAVAILABLE`, not a
 missing credential. Later provider services may override that same inspection
 member; exceptions and secret values never enter the readiness DTO.
+
+OpenAI credential presence delegates to the local Copilot owner's pure
+`DefaultCopilotSecretResolverService.resolveReference`, matching provider execution
+for environment and `credentials:` references and disabled entries. Readiness
+returns only `openAiCredentialReadinessStatus`: `CONFIGURED`, `UNCONFIGURED`, or
+`INSPECTION_UNAVAILABLE`. An absent or throwing resolver is unknown, never proof
+of a missing credential. No provider transport or private diagnostic is exposed;
+configuration presence does not establish provider health.
 
 BackOffice may aggregate this report for Axis as `eWasteAcceptance`, but the
 rules stay in eWaste. Custom projects should supply only later-layer deltas such

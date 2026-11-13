@@ -183,3 +183,38 @@ test("routing deltas reuse observed owner facts and cannot invent packages befor
     "Explicit custom descriptors retain their existing contract",
   );
 });
+
+test("remote activation resolves the declared import publication and refuses Online", async context => {
+  const initializer = require("../../../../nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService");
+  let publication = "OPERATIONAL";
+  context.mock.method(initializer, "getPropertyBindingContext", () => ({
+    readRuntimeProperty: (server, property) => {
+      assert.equal(server, "wasteServer");
+      assert.deepEqual(property, ["runtimeRole", "publication"]);
+      return publication;
+    },
+  }));
+  const original = global.SERVICE;
+  const calls = [];
+  const owner = { endpoint: "http://localhost:4370/nodics/system/v0" };
+  global.SERVICE = { DefaultBackofficeRegistryService: {
+    resolveRuntimeOwner: async options => {
+      calls.push(options);
+      return owner;
+    },
+  } };
+  try {
+    assert.equal(await definition.resolveActivationDataRuntimeOwner({ targetServer: "wasteServer" }), owner);
+    assert.deepEqual(calls, [{
+      moduleName: "system",
+      connectionName: "wasteServer",
+      targetAuthority: { server: "wasteServer", publication: "OPERATIONAL" },
+    }]);
+    publication = "ONLINE";
+    await assert.rejects(() => definition.resolveActivationDataRuntimeOwner({ targetServer: "wasteServer" }),
+      /requires an Operational or Staged import runtime/);
+    assert.equal(calls.length, 1);
+  } finally {
+    global.SERVICE = original;
+  }
+});

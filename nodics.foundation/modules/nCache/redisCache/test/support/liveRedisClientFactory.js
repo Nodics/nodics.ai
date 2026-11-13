@@ -20,7 +20,13 @@ const redis = require('redis');
  */
 module.exports = {
     /** Creates an unconnected Redis client for an explicitly supplied live-test endpoint. */
-    create: function (url) {
-        return redis.createClient({ url: url });
+    create: function (url, options = {}) {
+        const { sentinel, ...directOptions } = options;
+        if (sentinel) {
+            const engine = require('../../src/service/engine/defaultRedisCacheEngineService');
+            const adapter = require('../../src/service/engine/defaultSentinelRedisClientAdapterService');
+            return adapter.createSentinelClient(engine.buildSentinelOptions({ sentinel }));
+        }
+        return redis.createClient({ ...directOptions, url });
     }
 };

@@ -21,6 +21,11 @@ const persistence = require(root + "nodics.waste/modules/wasteCore/src/service/d
 
 function fixture(t) {
   const f = setup(t), calls = [];
+  const originalClasses = global.CLASSES;
+  global.CLASSES = { ...originalClasses, NodicsError: class extends Error {
+    constructor(code) { super(code); this.code = code; }
+  } };
+  t.after(() => { global.CLASSES = originalClasses; });
   const ownerRef = { module: "profile", schema: "customer", code: "seller" };
   const asset = { code: "asset", revision: 1, ownerRef, digitalOwnerRef: ownerRef, active: true, assetStatus: "OWNED",
     physicalOwnerRef: { module: "profile", schema: "enterprise", code: "custodian" },
@@ -120,6 +125,6 @@ test("unqualified publication owners and bad actual receipts never manufacture a
 test("new key cannot reuse scarce content from an uncertain prior publication", async t => {
   const f = fixture(t); f.failPublish(true); await assert.rejects(listing.list(f.request), /Activation unknown/);
   f.request.idempotencyKey = "replacement";
-  await assert.rejects(listing.list(f.request), /not available/);
+  await assert.rejects(listing.list(f.request), { code: "ERR_DIGITAL_BUNDLE_UNAVAILABLE" });
   assert.equal(f.holds.size, 1); assert.equal(f.effects.includes("release"), false);
 });

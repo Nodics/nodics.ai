@@ -30,17 +30,14 @@ function fixture(t) {
   const source = {
     cms: {
       publication: { baselines: { shell: { rootCode: "projectSite", employeeCompositionPaths: ["/home", "/lock"] } } },
-      runtimeRoleProfiles: {
-        WCMS_ONLINE: { publication: { baselines: { shell: { $config: "ref", path: ["cms", "publication", "baselines", "shell"] } } } },
-        WCMS_STAGED: { publication: { forbiddenStaged: true } },
-      },
+
     },
     activeModules: { modules: ["presentation"] },
     runtimeIdentity: { remoteModules: ["must-not-leak"] },
     unrelated: { enabled: true },
   };
   fs.writeFileSync(path.join(owner, "config/properties.js"), "module.exports = " + JSON.stringify(source));
-  const selector = { moduleName: "presentation", namespace: "cms", runtimeRole: "WCMS_ONLINE" };
+  const selector = { moduleName: "presentation", namespace: "cms" };
   const metadata = { nodics: { runtimeModuleRoots: ["domain"], runtimeConfigurationContributions: [selector] } };
   const saveMetadata = () => fs.writeFileSync(path.join(server, "package.json"), JSON.stringify(metadata));
   saveMetadata();
@@ -51,7 +48,7 @@ function fixture(t) {
   const context = { roots: { framework: path.join(root, "framework"), project: path.join(root, "project"), server } };
   const properties = { runtimeRole: { code: "WCMS_ONLINE" }, activeModules: { modules: ["cms"] },
     runtimeIdentity: { remoteModules: ["profile"] }, cms: { publication: { enabled: true } } };
-  const resolve = input => bindings.merge(initializer.readInactiveRuntimeRoleConfiguration(input || properties, context), input || properties);
+  const resolve = input => bindings.merge(initializer.readInactiveModuleConfiguration(input || properties, context), input || properties);
   return { root, owner, metadata, saveMetadata, selector, source, properties, context, resolve };
 }
 
@@ -73,7 +70,7 @@ test("selected inactive owner contributes only its selected namespace and role w
 
 test("absent selector and other runtime role do not leak owner configuration", t => {
   const f = fixture(t);
-  assert.equal(f.resolve({ ...f.properties, runtimeRole: { code: "WCMS_STAGED" } }).cms.publication.baselines, undefined);
+  assert.equal(f.resolve({ ...f.properties, runtimeRole: { code: "ANY_PARTNER_NAME" } }).cms.publication.baselines.shell.rootCode, "projectSite");
   delete f.metadata.nodics.runtimeConfigurationContributions;
   f.saveMetadata();
   assert.deepEqual(f.resolve(), f.properties);
@@ -190,7 +187,7 @@ for (const [name, change] of [
   ["activation namespace", f => { f.selector.namespace = "activeModules"; }],
   ["identity namespace", f => { f.selector.namespace = "runtimeIdentity"; }],
   ["unknown owner", f => { f.selector.moduleName = "missing"; }],
-  ["missing selected profile", f => { f.selector.runtimeRole = f.properties.runtimeRole.code = "MISSING"; }],
+  ["retired role selector", f => { f.selector.runtimeRole = "MISSING"; }],
   ["duplicate namespace role", f => { f.metadata.nodics.runtimeConfigurationContributions.push({ ...f.selector }); }],
   ["unbounded selectors", f => { f.metadata.nodics.runtimeConfigurationContributions = Array(33).fill(f.selector); }],
   ["undeclared root", f => { f.metadata.nodics.runtimeModuleRoots = []; }],
@@ -199,11 +196,11 @@ for (const [name, change] of [
   assert.throws(() => f.resolve(), /runtime configuration|Runtime configuration|Ambiguous runtime/);
 });
 
-test("unselected roles do not resolve unavailable owners or execute their configuration", t => {
+test("obsolete role selector is rejected rather than silently skipped", t => {
   const f = fixture(t);
   f.metadata.nodics.runtimeConfigurationContributions.push({ moduleName: "unavailable", namespace: "cms", runtimeRole: "WCMS_STAGED" });
   f.saveMetadata();
-  assert.equal(f.resolve().cms.publication.baselines.shell.rootCode, "projectSite");
+  assert.throws(() => f.resolve(), /Invalid runtime configuration selector/);
 });
 
 test("offline discovery does not depend on or mutate the current global module map", t => {

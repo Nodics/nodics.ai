@@ -646,3 +646,13 @@ module.exports = {
         }
     }
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.dynamo.classConfiguration.backoffice = Object.assign({ description: "Governed runtime class customizations. Activation is separate from saving a definition." }, module.exports.dynamo.classConfiguration.backoffice);
+module.exports.dynamo.routerConfiguration.backoffice = Object.assign({ description: "Governed runtime route definitions. Exposure, permission and activation checks remain mandatory." }, module.exports.dynamo.routerConfiguration.backoffice);
+module.exports.dynamo.pipeline.backoffice = Object.assign({ description: "Governed runtime pipeline definitions and ordered processing steps." }, module.exports.dynamo.pipeline.backoffice);
+module.exports.dynamo.configurationActivationLog.backoffice = Object.assign({ description: "Recorded runtime configuration activation outcomes and diagnostics." }, module.exports.dynamo.configurationActivationLog.backoffice);
+module.exports.dynamo.configurationActivationRequest.backoffice = Object.assign({ description: "Reviewed configuration activation requests. Use the activation workspace; generic record operations are unavailable." }, module.exports.dynamo.configurationActivationRequest.backoffice);
+module.exports.dynamo.runtimeConfigurationValue.backoffice = Object.assign({ description: "Committed runtime property values and revision evidence. Use Runtime Configuration to validate, review and apply changes." }, module.exports.dynamo.runtimeConfigurationValue.backoffice);
+module.exports.dynamo.schemaAccessPolicy.backoffice = Object.assign({ description: "Governed schema and property access policies. Active definitions are evaluated by the schema access owner." }, module.exports.dynamo.schemaAccessPolicy.backoffice);
+module.exports.dynamo.schemaConfiguration.backoffice = Object.assign({ description: "Governed runtime schema customizations. Native schema validation and explicit activation remain authoritative." }, module.exports.dynamo.schemaConfiguration.backoffice);

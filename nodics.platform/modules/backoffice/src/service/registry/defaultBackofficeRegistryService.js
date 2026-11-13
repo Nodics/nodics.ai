@@ -16,8 +16,37 @@
  * @owner backoffice
  * @override Later modules may replace storage or reconciliation while preserving lease, security, and client-safe projection contracts.
  */
+const registrationOwnership = require("../../../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleRegistrationAgentService");
+// Only locally constructed batch child requests share source discovery; wire fields cannot select it.
+const registrationOwnershipSources = new WeakMap();
 const readinessWork = require("../../utils/applicationReadinessWork");
 const { performance } = require("node:perf_hooks");
+const bootstrapTimingPhases = new Set([
+  "registry", "catalogueEligibility", "documentation", "axisPolicy",
+  "applicationStatus", "operationalReadiness", "baselineAdmission",
+  "operational.imports", "operational.media", "operational.acceptance", "operational.assistant",
+]);
+
+/** Measures one operation with numeric counters only; returns or throws its original outcome without retaining inputs, results or errors. */
+function measureOwnerPhase(phases, phase, operation) {
+  const metric = phases[phase] ||= { active: 0, completed: 0, rejected: 0,
+    lastDurationMs: 0, maxDurationMs: 0, totalDurationMs: 0 };
+  const started = performance.now();
+  metric.active++;
+  const finish = (rejected) => {
+    const elapsed = Math.max(0, Math.round(performance.now() - started));
+    metric.active--;
+    metric.completed++;
+    if (rejected) metric.rejected++;
+    metric.lastDurationMs = elapsed;
+    metric.maxDurationMs = Math.max(metric.maxDurationMs, elapsed);
+    metric.totalDurationMs += elapsed;
+  };
+  let result;
+  try { result = operation(); } catch (error) { finish(true); throw error; }
+  return Promise.resolve(result).then(value => { finish(false); return value; },
+    error => { finish(true); throw error; });
+}
 
 module.exports = {
   _sweepTimer: null,
@@ -161,6 +190,19 @@ module.exports = {
     return this._navigationCompositionState[scopeKey];
   },
 
+  /** Fences the original observed lifecycle, never a silently refreshed decision. */
+  assertNavigationCompositionPrecondition: function (request, state, checksum, draft) {
+    const body = request && (request.body || request.data || request.payload) || {};
+    if (!Number.isSafeInteger(body.expectedVersion) || body.expectedVersion < 0 ||
+        body.expectedVersion !== state.version ||
+        typeof body.expectedChecksum !== 'string' || !/^[a-f0-9]{64}$/.test(body.expectedChecksum) ||
+        body.expectedChecksum !== checksum ||
+        (draft && body.expectedDraftId !== draft.draftId)) {
+      throw new CLASSES.NodicsError('ERR_BOF_00000',
+        'Navigation composition precondition failed. Refresh and review the current owner state before another decision.');
+    }
+  },
+
   /** Validates required identity fields and an approved endpoint scheme. */
   validateRegistration: function (registration) {
     if (
@@ -189,6 +231,7 @@ module.exports = {
 
   /** Creates or renews an idempotent observed module-instance lease. */
   register: async function (request) {
+    const resolveOwnershipSource = registrationOwnershipSources.get(request) || registrationOwnership.createOwnershipSourceResolver();
     let registration = request.body || request;
     if (
       !request._identityValidated &&
@@ -230,7 +273,7 @@ module.exports = {
       environment: scope.environmentCode,
       server: scope.serverCode
     };
-    let key = registration.moduleName + ":" + registration.instanceId;
+    let key = JSON.stringify([scope.projectCode, scope.environmentCode, scope.serverCode, registration.moduleName, registration.instanceId]);
     let store = this.getStore();
     let existing = await store.get(key);
     let now = Date.now();
@@ -280,8 +323,24 @@ module.exports = {
       lastSeenAt: new Date(now).toISOString(),
       expiresAt: now + leaseTtlMs,
     };
-    await this.assertAuthorityClaimsAvailable(observed, key);
-    await store.set(key, observed, leaseTtlMs);
+    try {
+      const source = resolveOwnershipSource(observed.moduleName);
+      const owner = registrationOwnership.isOwningRegistration(observed, source);
+      if (owner) {
+        try { registrationOwnership.getModuleOwnershipKey(observed, observed, source); }
+        catch (error) { error.reasonCode = "OWNERSHIP_CONTEXT_INVALID"; throw error; }
+      }
+      await store.set(key, observed, leaseTtlMs, owner
+        ? entries => this.assertAuthorityClaimsAvailable(observed, entries, resolveOwnershipSource)
+        : undefined);
+    } catch (error) {
+      if (!error.reasonCode) throw error;
+      this._metrics.rejected++;
+      await this.audit({ eventType: "backoffice.registry.registration", outcome: "rejected",
+        reasonCode: error.reasonCode,
+        moduleName: observed.moduleName, instanceId: observed.instanceId });
+      throw new CLASSES.NodicsError("ERR_BOF_00000", error.message);
+    }
     if (SERVICE.DefaultBackofficeDiscoveryService)
       SERVICE.DefaultBackofficeDiscoveryService.scheduleDiscovery(
         observed,
@@ -316,24 +375,13 @@ module.exports = {
 
   /** Measures fixed owner phases without retaining requests, identities, results or errors. */
   measureRegistrationPhase: function (phase, operation) {
-    const phases = this._metrics.registrationTiming ||= {};
-    const metric = phases[phase] ||= { active: 0, completed: 0, rejected: 0,
-      lastDurationMs: 0, maxDurationMs: 0, totalDurationMs: 0 };
-    const started = performance.now();
-    metric.active++;
-    const finish = (rejected) => {
-      const elapsed = Math.max(0, Math.round(performance.now() - started));
-      metric.active--;
-      metric.completed++;
-      if (rejected) metric.rejected++;
-      metric.lastDurationMs = elapsed;
-      metric.maxDurationMs = Math.max(metric.maxDurationMs, elapsed);
-      metric.totalDurationMs += elapsed;
-    };
-    let result;
-    try { result = operation(); } catch (error) { finish(true); throw error; }
-    return Promise.resolve(result).then(value => { finish(false); return value; },
-      error => { finish(true); throw error; });
+    return measureOwnerPhase(this._metrics.registrationTiming ||= {}, phase, operation);
+  },
+
+  /** Measures fixed readiness phases for secured diagnostics; unsupported labels execute unmeasured and never become metric keys. */
+  measureBootstrapPhase: function (phase, operation) {
+    if (!bootstrapTimingPhases.has(phase)) return operation();
+    return measureOwnerPhase(this._metrics.bootstrapTiming ||= {}, phase, operation);
   },
 
   /** Registers one bounded runtime-instance batch while preserving per-module leases. */
@@ -380,10 +428,12 @@ module.exports = {
     }
     let functionalModuleIndex = SERVICE.DefaultFunctionalModuleCatalogueService
       .buildLeaseFunctionalModuleIndex(batch);
+    // One lazy source snapshot per validated batch, not a process-wide metadata cache.
+    const resolveOwnershipSource = registrationOwnership.createOwnershipSourceResolver();
     let snapshotRefreshed = false;
     return this.measureRegistrationPhase("batch", () => this.measureRegistrationPhase("leases", () => Promise.allSettled(
-      registrations.map((item) =>
-        this.register({
+      registrations.map((item) => {
+        const request = {
           body: item,
           _identityValidated: true,
           _batchRegistration: true,
@@ -402,8 +452,11 @@ module.exports = {
                 }
               : undefined,
           },
-        }),
-      ),
+        };
+        registrationOwnershipSources.set(request, resolveOwnershipSource);
+        return Promise.resolve().then(() => this.register(request))
+          .finally(() => registrationOwnershipSources.delete(request));
+      }),
     )).then(async (settled) => {
       // Wait for late sibling writes before publishing even a partial batch.
       let failure = settled.find(result => result.status === "rejected");
@@ -411,7 +464,9 @@ module.exports = {
       let results = settled.map(result => result.value);
       let functionalModules = await this.measureRegistrationPhase("catalogue", () =>
         SERVICE.DefaultFunctionalModuleCatalogueService.reconcileRuntimeBatch(batch, authData));
+      let catalogueSnapshotAt;
       let activeEntries = await this.measureRegistrationPhase("snapshot", async () => {
+        catalogueSnapshotAt = Date.now();
         const entries = await this.getStore().values();
         // Publish before yielding to timing or catalogue continuations.
         await this.refreshRuntimeRegistrySnapshot(entries.map(entry => entry.value));
@@ -420,7 +475,8 @@ module.exports = {
       snapshotRefreshed = true;
       await this.measureRegistrationPhase("activeCatalogue", () =>
         SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
-          activeEntries.map(entry => entry.value), [batch.project], { authData: authData }));
+          activeEntries.map(entry => entry.value), [batch.project], { authData: authData },
+          { completeSnapshot: this.getStore().isDistributed?.() === true, snapshotAt: catalogueSnapshotAt }));
       return this.measureRegistrationPhase("audit", () => this.audit({
         eventType: "backoffice.registry.registration",
         outcome: outcomes.every((outcome) => outcome === "renewed")
@@ -473,46 +529,43 @@ module.exports = {
     return normalized;
   },
 
-  /** Returns the logical runtime authority key for duplicate-owner validation. */
+  /** Identifies the signed logical server, independent of role labels and replica IDs. */
   getLogicalRuntimeAuthorityKey: function (instance) {
-    let role = instance.runtimeRole || {};
-    return [
-      instance.projectCode || "",
-      instance.environment || "",
-      instance.server || "",
-      typeof role === "string" ? role : [role.code || "", role.publication || ""].join("/")
-    ].join(":");
+    return JSON.stringify([instance.projectCode, instance.environment, instance.server]);
   },
 
-  /** Rejects duplicate authority claims from unrelated logical runtimes. */
-  assertAuthorityClaimsAvailable: async function (candidate, candidateStoreKey) {
-    let claims = candidate.authorityClaims || [];
-    if (claims.length === 0) return true;
-    let candidateAuthority = this.getLogicalRuntimeAuthorityKey(candidate);
-    let entries = await this.getStore().values();
-    for (let entry of entries) {
-      if (entry.key === candidateStoreKey) continue;
-      let existing = entry.value;
-      if (existing.expiresAt && existing.expiresAt <= Date.now()) continue;
-      let existingAuthority = this.getLogicalRuntimeAuthorityKey(existing);
-      if (existingAuthority === candidateAuthority) continue;
-      let existingClaims = existing.authorityClaims || [];
-      let duplicate = claims.find((claim) =>
-        existingClaims.some((existingClaim) => existingClaim.authorityKey === claim.authorityKey));
+  /** Pure admission check over the store's atomic snapshot; no scan-then-write path. */
+  assertAuthorityClaimsAvailable: function (candidate, entries, resolveOwnershipSource = registrationOwnership.createOwnershipSourceResolver()) {
+    const candidateSource = resolveOwnershipSource(candidate.moduleName);
+    const ownerKey = registrationOwnership.getModuleOwnershipKey(candidate, candidate, candidateSource);
+    const candidateAuthority = this.getLogicalRuntimeAuthorityKey(candidate);
+    if (!candidate.server) throw new Error("Module ownership requires an explicit logical server");
+    for (const entry of entries) {
+      const existing = entry.value;
+      if (existing.expiresAt <= Date.now()) continue;
+      if (existing.projectCode !== candidate.projectCode || existing.environment !== candidate.environment) continue;
+      // Claim contexts name semantic authorities, not physical storage. The publication
+      // coordinate scopes schema/service claims just as it scopes the module owner.
+      if (existing.runtimeRole?.publication !== candidate.runtimeRole?.publication) continue;
+      if (this.getLogicalRuntimeAuthorityKey(existing) === candidateAuthority) continue;
+      // Do not exempt the candidate storage key: a reused instance ID cannot steal a live owner.
+      const existingSource = resolveOwnershipSource(existing.moduleName);
+      if (registrationOwnership.isOwningRegistration(existing, existingSource) &&
+          registrationOwnership.getModuleOwnershipKey(existing, existing, existingSource) === ownerKey) {
+        const error = new Error("Duplicate functional module owner: " + ownerKey);
+        error.reasonCode = "DUPLICATE_MODULE_OWNER";
+        throw error;
+      }
+      // Local mechanical schemas are namespaced by the logical runtime, not shared
+      // functional authorities. Only trusted installed metadata grants this scope.
+      if (existing.moduleName === candidate.moduleName &&
+          registrationOwnership.getModuleOwnershipScope(candidate.moduleName, candidateSource) === "runtimeLocal") continue;
+      const duplicate = (candidate.authorityClaims || []).find(claim =>
+        (existing.authorityClaims || []).some(previous => previous.authorityKey === claim.authorityKey));
       if (duplicate) {
-        this._metrics.rejected++;
-        await this.audit({
-          eventType: "backoffice.registry.registration",
-          outcome: "rejected",
-          reasonCode: "DUPLICATE_AUTHORITY_CLAIM",
-          moduleName: candidate.moduleName,
-          instanceId: candidate.instanceId,
-          authorityKey: duplicate.authorityKey,
-        });
-        throw new CLASSES.NodicsError(
-          "ERR_BOF_00000",
-          "Duplicate runtime authority claim: " + duplicate.authorityKey,
-        );
+        const error = new Error("Duplicate runtime authority claim: " + duplicate.authorityKey);
+        error.reasonCode = "DUPLICATE_AUTHORITY_CLAIM";
+        throw error;
       }
     }
     return true;
@@ -564,6 +617,7 @@ module.exports = {
       );
     }
     let removed = 0;
+    const removedLeases = [];
     let affectedProjects = new Set();
     let entries = await this.getStore().values();
     await Promise.all(
@@ -571,10 +625,15 @@ module.exports = {
         let value = entry.value;
         if (
           value.instanceId === instanceId &&
+          value.projectCode === request.authData.runtimeScope.projectCode &&
+          value.environment === request.authData.runtimeScope.environmentCode &&
+          value.server === request.authData.runtimeScope.serverCode &&
+          (request.authData.modules || []).includes(value.moduleName) &&
           (!moduleName || value.moduleName === moduleName)
         ) {
           if (value.projectCode) affectedProjects.add(value.projectCode);
           await this.getStore().delete(entry.key);
+          removedLeases.push(value);
           removed++;
         }
       }),
@@ -590,9 +649,11 @@ module.exports = {
     this._metrics.deregistrations += removed;
     if (removed > 0 && SERVICE.DefaultFunctionalModuleCatalogueService &&
       SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases) {
+      const snapshotAt = Date.now();
       let remaining = await this.getStore().values();
       await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
-        remaining.map(entry => entry.value), Array.from(affectedProjects), { authData: request.authData });
+        remaining.map(entry => entry.value), Array.from(affectedProjects), { authData: request.authData },
+        { completeSnapshot: this.getStore().isDistributed?.() === true, removedLeases, snapshotAt });
       await this.refreshRuntimeRegistrySnapshot(remaining.map(entry => entry.value));
     }
     await this.audit({
@@ -743,17 +804,9 @@ module.exports = {
   resolveRuntimeOwner: async function (options) {
     await this.expireStale();
     let leases = (await this.getStore().values()).map((entry) => entry.value);
-    let resolver = SERVICE.DefaultRuntimeRegistryResolverService;
-    if (resolver && typeof resolver.resolveFromOwners === "function") {
-      return resolver.resolveFromOwners(options, leases);
-    }
-    return leases
-      .filter((item) => item.moduleName === options.moduleName)
-      .filter((item) => item.clientCallable === true && item.endpoint)
-      .filter((item) => item.state === "UP")
-      .sort((left, right) =>
-        String(right.lastSeenAt || "").localeCompare(String(left.lastSeenAt || "")),
-      )[0];
+    const resolver = SERVICE.DefaultRuntimeRegistryResolverService ||
+      require("../../../../../../nodics.foundation/modules/nService/src/service/module/defaultRuntimeRegistryResolverService");
+    return resolver.resolveFromOwners(options, leases);
   },
 
   /** Builds a service-to-service Runtime Registry owner projection. */
@@ -937,6 +990,42 @@ module.exports = {
         ids.add(source.id);
         return true;
       });
+  },
+
+  /** Projects optional reader links from visible documentation profiles without scheduling installation or readiness work. */
+  documentationReaderSources: function (registered, profiles, catalogue) {
+    const sourceId = this.getConfiguration().documentationReaderSource;
+    const base = registered.find(source => source.id === sourceId && source.type === "CMS");
+    const configured = base && profiles.length ? (CONFIG.get("backofficeApplicationInitialization") || {}).profiles || {} : {};
+    const declared = Object.values(catalogue).flatMap(module => module.documentation || []);
+    const boundProfiles = new Set(declared.map(source => source.initializationProfile));
+    const ids = new Set(declared.map(source => source.id));
+    const routes = new Set(declared.map(source => source.route));
+    const sources = registered.slice();
+    for (const profile of profiles) {
+      const reader = configured[profile.code]?.reader;
+      if (profile.type !== "DOCUMENTATION_BUNDLE" || !reader || !profile.contentPackCode ||
+          boundProfiles.has(profile.code) || ids.has(profile.code) || routes.has(reader.route)) continue;
+      const source = {
+        id: profile.code, label: profile.title, guide: reader.guide ?? "framework",
+        type: "CMS", route: reader.route, defaultPage: reader.route, order: profile.order,
+        connectionModule: base.connectionModule, catalog: base.catalog, site: profile.siteCode,
+        initializationProfile: profile.code, packCode: profile.contentPackCode,
+        dashboard: { summary: profile.summary }
+      };
+      for (const key of ["projectId", "projectLabel", "channelId", "channelLabel", "articleRoutes", "channelReferences"]) {
+        if (reader[key] !== undefined) source[key] = reader[key];
+      }
+      if (!SERVICE.DefaultBackofficeContractService.validateDocumentation([source])) continue;
+      ids.add(source.id);
+      routes.add(source.route);
+      sources.push(Object.assign(source, { ownerModule: base.ownerModule }));
+    }
+    const sharedIds = new Set(sources.filter(source => source.guide === "axis" || source.guide === "framework").map(source => source.id));
+    return sources.map(source => source.channelReferences ? {
+      ...source,
+      channelReferences: source.channelReferences.filter(ref => sharedIds.has(ref.sourceId))
+    } : source).sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
   },
 
   /**
@@ -1186,12 +1275,18 @@ module.exports = {
   /** Keeps documentation product routes disabled until their publication owner is Online-ready. */
   applyDocumentationPublicationState: function (item, publication) {
     if (!item || !item.group || item.group.id !== "documentation") return item;
+    let route = String(item.route || "");
     if (
       item.id === "documentation" ||
       item.id === "documentation-dashboard" ||
-      item.id === "documentation-management"
+      item.id === "documentation-management" ||
+      // Authoring must be available before the first Online publication.
+      // These owner-declared views retain their original permission and state.
+      (item.moduleName === "backoffice" &&
+        item.parentId === "documentation-management" &&
+        item.workbenchTarget?.moduleName === "cms" &&
+        route.startsWith("/docs/designer/"))
     ) return item;
-    let route = String(item.route || "");
     if (!route || route === "/docs") return item;
     let state = publication && publication.byRoute && publication.byRoute[route];
     let ready = state && state.ready === true;
@@ -1525,9 +1620,11 @@ module.exports = {
               : false,
           ),
         );
-        if (instances[0] && SERVICE.DefaultBackofficeDiscoveryService)
-          await SERVICE.DefaultBackofficeDiscoveryService.discover(
-            instances[0],
+        const discovery = SERVICE.DefaultBackofficeDiscoveryService;
+        const discoveryRegistration = discovery && instances.find(item => discovery.isDiscoveryEligible(item));
+        if (discoveryRegistration)
+          await discovery.discover(
+            discoveryRegistration,
             undefined,
             request.authData,
           );
@@ -1551,9 +1648,7 @@ module.exports = {
           data: {
             moduleName: moduleName,
             refreshedInstances: unique.length,
-            discoveryRequested: Boolean(
-              instances[0] && SERVICE.DefaultBackofficeDiscoveryService,
-            ),
+            discoveryRequested: Boolean(discoveryRegistration),
           },
         };
       },
@@ -1576,13 +1671,46 @@ module.exports = {
     }
   },
 
+  /** Validates the optional diagnostic projection before any read. It cannot suppress documentation, policy, eligibility or baseline admission. */
+  includeOperationalReadiness: function (request) {
+    const query = request && (request.query || request.httpRequest?.query) || {};
+    const value = query.includeOperationalReadiness;
+    if (value === undefined || value === true || value === "true") return true;
+    if (value === false || value === "false") return false;
+    throw new CLASSES.NodicsError("ERR_BOF_00000", "includeOperationalReadiness must be a boolean");
+  },
+
+  /** An explicit client view reduces duplicate transport only; every owner admission still runs. */
+  bootstrapProjection: function (request) {
+    const query = request && (request.query || request.httpRequest?.query) || {};
+    if (query.projection === undefined) return undefined;
+    if (query.projection === "axis-client-v1") return query.projection;
+    throw new CLASSES.NodicsError("ERR_BOF_00000", "Unsupported bootstrap projection");
+  },
+
+  /** Projects only after authorization and composition; never mutates leases or caches actor proof. */
+  projectAxisBootstrap: function (data) {
+    if (!Array.isArray(data.effectiveNavigationComposition?.navigation))
+      throw new CLASSES.NodicsError("ERR_BOF_00000", "Axis navigation projection is unavailable");
+    const fields = ["displayName", "parentModule", "canonicalIdentity", "moduleKind", "environment",
+      "clientCallable", "endpoint", "server", "runtimeRole", "instanceId", "state"];
+    const modules = Object.fromEntries(Object.entries(data.modules).map(([name, instances]) => [name,
+      instances.map(instance => Object.fromEntries(fields.filter(key => instance[key] !== undefined)
+        .map(key => [key, instance[key]])))]));
+    const { catalogue, ...retained } = data;
+    return { ...retained, modules, projection: "axis-client-v1" };
+  },
+
   /** Builds the permission-filtered Axis bootstrap from current registry and presentation eligibility. @param {Object} request Authenticated client contract and runtime scope. @returns {Promise<Object>} Authorized catalogue, availability and initialization summary. */
   bootstrap: async function (request) {
+    const includeOperationalReadiness = this.includeOperationalReadiness(request);
+    const projection = this.bootstrapProjection(request);
     let clientContractVersion = this.getClientContractVersion(request);
-    let result = await this.list(request);
+    let result = await this.measureBootstrapPhase("registry", () => this.list(request));
     let eligibility = SERVICE.DefaultFunctionalModuleCatalogueService &&
       typeof SERVICE.DefaultFunctionalModuleCatalogueService.getPresentationEligibility === "function"
-      ? await SERVICE.DefaultFunctionalModuleCatalogueService.getPresentationEligibility(request)
+      ? await this.measureBootstrapPhase("catalogueEligibility", () =>
+        SERVICE.DefaultFunctionalModuleCatalogueService.getPresentationEligibility(request))
       : undefined;
     let effectiveModules = SERVICE.DefaultBackofficeCapabilityRegistryService.applyFunctionalModuleEligibility(
       result.data.modules, eligibility);
@@ -1608,11 +1736,11 @@ module.exports = {
       request && request.authData,
     );
     const readApplicationStatus = this.applicationStatusReader(request);
-    let documentationPublication = await this.buildDocumentationPublicationState(
+    let documentationPublication = await this.measureBootstrapPhase("documentation", () => this.buildDocumentationPublicationState(
       documentationSources,
       request,
       readApplicationStatus,
-    );
+    ));
     let effectiveNavigationComposition = this.buildEffectiveNavigationComposition(
       catalogue,
       availability,
@@ -1630,7 +1758,7 @@ module.exports = {
       });
     }
     let axisPolicy = SERVICE.DefaultAxisExperiencePolicyService
-      ? await SERVICE.DefaultAxisExperiencePolicyService.getEffective(request)
+      ? await this.measureBootstrapPhase("axisPolicy", () => SERVICE.DefaultAxisExperiencePolicyService.getEffective(request))
       : undefined;
     if (!axisPolicy)
       throw new CLASSES.NodicsError(
@@ -1638,8 +1766,8 @@ module.exports = {
         "Axis employee policy is unavailable",
       );
     let startupValidation = SERVICE.DefaultBackofficeOperationalReadinessService &&
-      typeof SERVICE.DefaultBackofficeOperationalReadinessService.startupValidationReport === "function"
-      ? SERVICE.DefaultBackofficeOperationalReadinessService.startupValidationReport(request)
+      typeof SERVICE.DefaultBackofficeOperationalReadinessService.startupValidationWithEvidence === "function"
+      ? await SERVICE.DefaultBackofficeOperationalReadinessService.startupValidationWithEvidence(request)
       : {
           state: "READY",
           checkedAt: new Date().toISOString(),
@@ -1652,20 +1780,24 @@ module.exports = {
       typeof SERVICE.DefaultBackofficeApplicationInitializationService.profiles === "function"
       ? SERVICE.DefaultBackofficeApplicationInitializationService.profiles(request)
       : [];
-    let operationalReadiness = SERVICE.DefaultBackofficeOperationalReadinessService &&
-      typeof SERVICE.DefaultBackofficeOperationalReadinessService.operationalReadinessReport === "function"
-      ? await SERVICE.DefaultBackofficeOperationalReadinessService.operationalReadinessReport(request, {
+    let operationalReadiness;
+    const operationalReadinessAvailable = Boolean(SERVICE.DefaultBackofficeOperationalReadinessService &&
+      typeof SERVICE.DefaultBackofficeOperationalReadinessService.operationalReadinessReport === "function");
+    if (includeOperationalReadiness && operationalReadinessAvailable) {
+      const applicationProfileStatusReport = await this.measureBootstrapPhase("applicationStatus", () =>
+        this.applicationStatusReport(applicationInitializationProfiles, readApplicationStatus));
+      operationalReadiness = await this.measureBootstrapPhase("operationalReadiness", () =>
+        SERVICE.DefaultBackofficeOperationalReadinessService.operationalReadinessReport(request, {
           startupValidation: startupValidation,
           modules: effectiveModules,
           availability: availability,
           documentationSources: documentationSources,
           documentationPublication: documentationPublication,
           applicationInitializationProfiles: applicationInitializationProfiles,
-          applicationProfileStatusReport: await this.applicationStatusReport(
-            applicationInitializationProfiles, readApplicationStatus),
-        })
-      : undefined;
-    return {
+          applicationProfileStatusReport,
+        }));
+    }
+    const response = {
       code: "SUC_BOF_00004",
       data: {
         compatibility: Object.assign({}, configured, {
@@ -1676,17 +1808,23 @@ module.exports = {
         catalogue: catalogue,
         availability: availability,
         operationalReadiness: operationalReadiness,
+        ...(!includeOperationalReadiness && operationalReadinessAvailable
+          ? { operationalReadinessObservation: { contractVersion: 1, mode: "ON_DEMAND",
+              ...(SERVICE.DefaultBackofficeReadinessEvidenceService?.presentation
+                ? { presentation: SERVICE.DefaultBackofficeReadinessEvidenceService.presentation() } : {}) } } : {}),
         effectiveNavigationComposition: effectiveNavigationComposition,
         uiComposition: this.selectUiComposition(catalogue, availability),
         applicationInitializationProfiles: applicationInitializationProfiles,
         applicationReadinessScheduling: readinessWork.browserPolicy(),
-        documentationSources: documentationSources,
+        documentationSources: this.documentationReaderSources(documentationSources, applicationInitializationProfiles, catalogue),
         axisPolicy: axisPolicy,
         startupValidation: startupValidation,
-        axisInitializationAdmission: await this.axisInitializationAdmission(request),
+        axisInitializationAdmission: await this.measureBootstrapPhase("baselineAdmission", () => this.axisInitializationAdmission(request)),
         tenantCode: request.tenant,
       },
     };
+    if (projection) response.data = this.projectAxisBootstrap(response.data);
+    return response;
   },
 
   /** Returns the authorized effective Axis navigation composition without the full bootstrap payload. */
@@ -1733,8 +1871,8 @@ module.exports = {
       code: "SUC_BOF_00016",
       data: Object.assign({}, effective.data.authoring || {}, {
         lifecycle: ["DRAFT", "SUBMITTED", "APPROVED", "PUBLISHED", "SUPERSEDED", "REJECTED", "ROLLED_BACK"],
-        availableOperations: ["effective", "preview", "export", "importValidate", "createDraft", "submit", "approve", "publish", "rollback"],
-        blockedOperations: [],
+        availableOperations: this.navigationCompositionAllowedOperations(request),
+        blockedOperations: ["effective", "preview", "export", "importValidate", "createDraft", "submit", "approve", "publish", "rollback"].filter(operation => !this.navigationCompositionAllowedOperations(request).includes(operation)),
         blockingReason: undefined,
         scope: effective.data.scope,
         checksum: effective.data.checksum,
@@ -1758,6 +1896,19 @@ module.exports = {
     };
   },
 
+  /** Projects existing prepared-route permissions; this hint grants no execution authority. */
+  navigationCompositionAllowedOperations: function (request) {
+    const operations = { effective: 'effectiveNavigationComposition', preview: 'previewNavigationComposition',
+      export: 'getNavigationCompositionSnapshot', importValidate: 'validateNavigationCompositionImport',
+      createDraft: 'createNavigationCompositionDraft', submit: 'submitNavigationCompositionDraft',
+      approve: 'approveNavigationCompositionDraft', publish: 'publishNavigationCompositionDraft', rollback: 'rollbackNavigationComposition' };
+    const routes = Object.values(typeof NODICS !== 'undefined' && NODICS.getRouters ? NODICS.getRouters('backoffice') || {} : {});
+    const permissions = request?.authData?.permissions || [];
+    return Object.keys(operations).filter(operation => routes.some(route =>
+      route.controller === 'DefaultBackofficeRegistryController' && route.operation === operations[operation] && route.active !== false &&
+      (permissions.includes('*') || [].concat(route.permission || []).every(permission => permissions.includes(permission)))));
+  },
+
   /** Validates a candidate composition using the current effective navigation as authority, without persistence. */
   validateNavigationCompositionCandidate: function (candidate, effective) {
     let issues = [];
@@ -1774,7 +1925,18 @@ module.exports = {
         issues.push({ code: "MISSING_IDENTITY", severity: "ERROR", index: index, message: "Navigation items require stable moduleName and id." });
         return;
       }
+      if (identities.has(identity)) {
+        issues.push({ code: "DUPLICATE_IDENTITY", severity: "ERROR", item: identity, message: "Candidate composition repeats a stable navigation identity." });
+      }
       identities.add(identity);
+      const original = (effective.navigation || []).find(entry => entry && entry.moduleName === item.moduleName && entry.id === item.id);
+      const presentationKeys = new Set(['label', 'labelKey', 'order', 'group', 'help', 'sourceTrace', 'featureState']);
+      const executionMetadata = entry => this.cloneNavigationComposition(Object.fromEntries(Object.entries(entry).filter(([key]) => !presentationKeys.has(key))));
+      if (!original || !require('node:util').isDeepStrictEqual(executionMetadata(item), executionMetadata(original)) ||
+          (item.featureState !== original.featureState && !['HIDDEN', 'DISABLED'].includes(item.featureState))) {
+        issues.push({ code: 'OWNER_CONTRACT_CHANGED', severity: 'ERROR', item: identity,
+          message: 'Navigation presentation cannot add identities, change owner routing or execution metadata, or expand feature availability. Refresh the authorized owner composition.' });
+      }
       let route = item && item.route ? String(item.route) : "";
       if (route && route.indexOf("/") !== 0) {
         issues.push({ code: "INVALID_ROUTE", severity: "ERROR", item: identity, message: "Navigation routes must be application-relative unless an approved external-link contract is implemented." });
@@ -1797,7 +1959,21 @@ module.exports = {
     Object.keys(routes).sort().forEach((route) => {
       let owners = Array.from(new Set(routes[route]));
       if (owners.length > 1) {
-        issues.push({ code: "DUPLICATE_ROUTE", severity: "ERROR", route: route, owners: owners, message: "Candidate composition contains duplicate effective routes with different owners." });
+        // Current authorized module defaults may already expose grouping shortcuts.
+        // Preserve only their exact identity set and execution metadata; candidate
+        // labels/order are presentation. A submitted source trace grants no authority.
+        let baseline = (effective.navigation || []).filter((item) => item && item.route === route);
+        let baselineOwners = Array.from(new Set(baseline.map((item) => String(item.moduleName) + ":" + String(item.id))));
+        let protectedFields = ["requiredPermissions", "featureState", "availability", "workbenchTarget", "backendWorkspace", "lifecycleActions", "routeOwner", "parentId", "parentModuleName"];
+        let protectedMetadata = (item) => Object.fromEntries(protectedFields.map((key) => [key, item[key]]));
+        let inherited = baselineOwners.length === owners.length && owners.every((owner) => baselineOwners.includes(owner)) &&
+          navigation.filter((item) => item && item.route === route).every((item) => {
+            let original = baseline.find((entry) => entry.moduleName === item.moduleName && entry.id === item.id);
+            return original && require("node:util").isDeepStrictEqual(protectedMetadata(item), protectedMetadata(original));
+          });
+        if (!inherited) {
+          issues.push({ code: "DUPLICATE_ROUTE", severity: "ERROR", route: route, owners: owners, message: "Candidate composition contains new or changed conflicting route ownership. Refresh and preserve the authorized owner routing and execution metadata." });
+        }
       }
     });
     return {
@@ -1816,6 +1992,7 @@ module.exports = {
     if (!validation.valid)
       throw new CLASSES.NodicsError("ERR_BOF_00000", "Navigation composition draft is invalid");
     let state = this.getNavigationCompositionState(request);
+    this.assertNavigationCompositionPrecondition(request, state, effective.data.checksum);
     let composition = {
       groups: candidate.groups || effective.data.groups || [],
       navigation: candidate.navigation || effective.data.navigation || [],
@@ -1847,9 +2024,11 @@ module.exports = {
   /** Moves the current scoped navigation draft into checker review. */
   submitNavigationCompositionDraft: async function (request) {
     let state = this.getNavigationCompositionState(request);
+    this.assertNavigationCompositionPrecondition(request, state, state.draft && state.draft.checksum, state.draft);
     if (!state.draft || !["DRAFT", "REJECTED"].includes(state.draft.lifecycleState))
       throw new CLASSES.NodicsError("ERR_BOF_00000", "Navigation composition draft is not submittable");
     state.draft.lifecycleState = "SUBMITTED";
+    state.draft.version = ++state.version;
     state.draft.submittedAt = new Date().toISOString();
     state.draft.submittedBy = request && request.authData && request.authData.userName;
     state.updatedAt = state.draft.submittedAt;
@@ -1860,9 +2039,11 @@ module.exports = {
   /** Approves a submitted navigation draft without making it effective until publish is called. */
   approveNavigationCompositionDraft: async function (request) {
     let state = this.getNavigationCompositionState(request);
+    this.assertNavigationCompositionPrecondition(request, state, state.draft && state.draft.checksum, state.draft);
     if (!state.draft || state.draft.lifecycleState !== "SUBMITTED")
       throw new CLASSES.NodicsError("ERR_BOF_00000", "Navigation composition draft is not approvable");
     state.draft.lifecycleState = "APPROVED";
+    state.draft.version = ++state.version;
     state.draft.approvedAt = new Date().toISOString();
     state.draft.approvedBy = request && request.authData && request.authData.userName;
     state.updatedAt = state.draft.approvedAt;
@@ -1872,18 +2053,27 @@ module.exports = {
 
   /** Publishes the approved navigation draft to the effective composition used by Axis bootstrap. */
   publishNavigationCompositionDraft: async function (request) {
+    const effective = await this.effectiveNavigationComposition(request);
     let state = this.getNavigationCompositionState(request);
+    this.assertNavigationCompositionPrecondition(request, state, state.draft && state.draft.checksum, state.draft);
     if (!state.draft || state.draft.lifecycleState !== "APPROVED")
       throw new CLASSES.NodicsError("ERR_BOF_00000", "Navigation composition draft is not publishable");
+    if (!this.validateNavigationCompositionCandidate(state.draft.composition, effective.data).valid)
+      throw new CLASSES.NodicsError('ERR_BOF_00000', 'Navigation composition approved draft is invalid under the current owner contract');
     if (state.published) {
       state.published.lifecycleState = "SUPERSEDED";
       state.history.push(this.cloneNavigationComposition(state.published));
       state.history = state.history.slice(-20);
+    } else {
+      // Restore the native fallback, not a frozen copy of today's defaults.
+      state.history.push({ source: 'MODULE_DEFAULTS', version: state.version,
+        checksum: effective.data.checksum, lifecycleState: 'SUPERSEDED' });
     }
     state.published = Object.assign({}, this.cloneNavigationComposition(state.draft), {
       lifecycleState: "PUBLISHED",
       publishedAt: new Date().toISOString(),
       publishedBy: request && request.authData && request.authData.userName,
+      version: ++state.version,
     });
     state.draft = undefined;
     state.updatedAt = state.published.publishedAt;
@@ -1893,7 +2083,9 @@ module.exports = {
 
   /** Rolls back the effective navigation composition to the latest superseded published version. */
   rollbackNavigationComposition: async function (request) {
+    const effective = await this.effectiveNavigationComposition(request);
     let state = this.getNavigationCompositionState(request);
+    this.assertNavigationCompositionPrecondition(request, state, effective.data.checksum);
     let rollbackTarget = state.history.pop();
     if (!rollbackTarget)
       throw new CLASSES.NodicsError("ERR_BOF_00000", "Navigation composition rollback candidate is unavailable");
@@ -1904,14 +2096,19 @@ module.exports = {
       current.rolledBackBy = request && request.authData && request.authData.userName;
       state.history.push(current);
     }
-    state.published = Object.assign({}, this.cloneNavigationComposition(rollbackTarget), {
+    const rolledBackAt = new Date().toISOString();
+    const restoredVersion = ++state.version;
+    state.published = rollbackTarget.source === 'MODULE_DEFAULTS' ? undefined : Object.assign({}, this.cloneNavigationComposition(rollbackTarget), {
       lifecycleState: "PUBLISHED",
-      rolledBackAt: new Date().toISOString(),
+      version: restoredVersion,
+      rolledBackAt: rolledBackAt,
       rolledBackBy: request && request.authData && request.authData.userName,
     });
-    state.updatedAt = state.published.rolledBackAt;
-    await this.audit({ eventType: "backoffice.navigationComposition.rollback", outcome: "rolledBack", checksum: state.published.checksum, version: state.published.version });
-    return { code: "SUC_BOF_00027", data: state.published };
+    state.updatedAt = rolledBackAt;
+    const restored = state.published || { source: 'MODULE_DEFAULTS', lifecycleState: 'PUBLISHED',
+      version: restoredVersion, checksum: (await this.effectiveNavigationComposition(request)).data.checksum, rolledBackAt };
+    await this.audit({ eventType: "backoffice.navigationComposition.rollback", outcome: "rolledBack", checksum: restored.checksum, version: restored.version });
+    return { code: "SUC_BOF_00027", data: restored };
   },
 
   /** Performs a dry-run navigation composition preview without persistence or publication side effects. */
@@ -2203,6 +2400,7 @@ module.exports = {
     let now = Date.now();
     let entries = await this.getStore().values();
     let expired = 0;
+    const removedLeases = [];
     let affectedProjects = new Set();
     await Promise.all(
       entries.map(async (entry) => {
@@ -2215,6 +2413,7 @@ module.exports = {
           if (removed) {
             if (instance.projectCode) affectedProjects.add(instance.projectCode);
             this._metrics.expirations++;
+            removedLeases.push(instance);
             expired++;
           }
         }
@@ -2252,7 +2451,8 @@ module.exports = {
     if (expired > 0 && SERVICE.DefaultFunctionalModuleCatalogueService &&
       SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases) {
       await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
-        remaining.map(entry => entry.value), Array.from(affectedProjects), {});
+        remaining.map(entry => entry.value), Array.from(affectedProjects), {},
+        { completeSnapshot: this.getStore().isDistributed?.() === true, removedLeases, snapshotAt: now });
     }
     if (availabilityRemoved + discoveryRemoved > 0)
       await this.audit({

@@ -11,7 +11,6 @@
 
 const _ = require("lodash");
 const path = require("node:path");
-const roleCollectionOperations = Symbol("roleCollectionOperations");
 
 /**
  * @module config/service/DefaultConfigurationBindingService
@@ -23,13 +22,10 @@ const roleCollectionOperations = Symbol("roleCollectionOperations");
 module.exports = {
   /** Applies a resolved contribution atomically with explicit collection semantics; ordinary arrays retain positional compatibility. @param {Object|Array} inherited Earlier configuration. @param {Object|Array} contribution Resolved contribution. @returns {Object|Array} Independent effective configuration. */
   merge: function (inherited, contribution) {
-    const capabilityBlocks = new Set(Object.values(contribution || {}).filter(_.isPlainObject));
     return _.mergeWith(
       _.cloneDeep(inherited),
       contribution,
       (previous, next, key, object, source) => {
-        if (key === "runtimeRoleProfiles" && capabilityBlocks.has(source) && _.isPlainObject(next))
-          return this.mergeRoleProfiles(previous, next);
         if (
           !_.isPlainObject(next) ||
           !["replace", "keyed"].includes(next.$config)
@@ -40,30 +36,6 @@ module.exports = {
         return this.mergeKeyedCollection(previous, next);
       },
     );
-  },
-
-  /** Retains explicit role collection operations until the selected profile meets its effective base namespace. */
-  mergeRoleProfiles: function (inherited, contribution) {
-    return _.mergeWith(_.cloneDeep(inherited || {}), contribution, (previous, next) => {
-      const earlier = previous && previous[roleCollectionOperations];
-      const incoming = next && next[roleCollectionOperations];
-      const operation = _.isPlainObject(next) && ["replace", "keyed"].includes(next.$config);
-      if (!earlier && !incoming && !operation) return undefined;
-      const operations = earlier || (previous === undefined ? [] : [{ $config: "replace", value: previous }]);
-      return { [roleCollectionOperations]: _.cloneDeep(operations.concat(incoming || [next])) };
-    });
-  },
-
-  /** Identifies internal deferred collection state, never an authored binding operator. */
-  isRoleCollection: function (value) {
-    return Boolean(value && value[roleCollectionOperations]);
-  },
-
-  /** Applies deferred collection operations using the existing validated collection semantics. */
-  applyRoleCollection: function (inherited, contribution) {
-    const operations = contribution && contribution[roleCollectionOperations];
-    if (!operations) return undefined;
-    return operations.reduce((value, operation) => this.merge({ value }, { value: operation }).value, inherited);
   },
 
   /** Projects one property through the normal contribution boundaries, resolving only its dependencies. @param {Object[]} layers Authored contributions with their file directories. @param {string|string[]} property Bounded path. @param {Object} context Selected runtime binding context. @returns {*} Independent effective property. */
@@ -242,7 +214,7 @@ module.exports = {
       env: ["name", "fallback", "type"],
       ref: ["path", "fields"],
       runtime: ["name", "path", "node", "fields"],
-      context: ["name"],
+      context: ["name", "cases"],
       path: ["base", "relative"],
       composition: ["name", "field"],
       selected: ["name", "field", "includes", "value", "otherwise"],
@@ -337,6 +309,22 @@ module.exports = {
       );
     }
     if (binding.$config === "context") {
+      if (binding.name === "publication") {
+        const publication = typeof state.context.readRuntimeProperty === "function"
+          ? state.context.readRuntimeProperty(state.context.serverCode, ["runtimeRole", "publication"], state.context.nodeCode)
+          : undefined;
+        const contexts = ["STAGED", "ONLINE", "OPERATIONAL"];
+        if (!contexts.includes(publication)) throw new Error("Explicit valid publication context is required");
+        if (binding.cases === undefined) return publication;
+        if (!_.isPlainObject(binding.cases) || !Object.keys(binding.cases).length ||
+            Object.keys(binding.cases).some(key => !contexts.includes(key)) ||
+            !Object.prototype.hasOwnProperty.call(binding.cases, publication)) {
+          throw new Error("Publication context requires an explicit bounded case");
+        }
+        return resolve(binding.cases[publication]);
+      }
+      if (binding.cases !== undefined) throw new Error("Context cases require publication selection");
+
       if (
         ![
           "projectCode",
@@ -452,10 +440,18 @@ module.exports = {
         typeof state.context.readBootstrapCompositionDefinitions === "function"
           ? state.context.readBootstrapCompositionDefinitions()
           : {};
-      const effectiveDefinitions = this.merge(
-        bootstrapDefinitions,
-        definitions,
-      );
+      // A selected runtime's canonical bootstrap projection already includes
+      // later deployment choices. A Framework contribution must not overwrite
+      // them while its defaults are being loaded. Explicit layered readers keep
+      // their existing dependency boundary and precedence.
+      const selectedRuntimeBootstrap =
+        typeof state.context.readLayeredProperty !== "function" &&
+        typeof state.context.readBootstrapCompositionDefinitions === "function" &&
+        state.context.roots &&
+        ["project", "environment", "server", "node"].some(key => state.context.roots[key]);
+      const effectiveDefinitions = selectedRuntimeBootstrap
+        ? this.merge(definitions, bootstrapDefinitions)
+        : this.merge(bootstrapDefinitions, definitions);
       if (
         !Object.prototype.hasOwnProperty.call(
           effectiveDefinitions,

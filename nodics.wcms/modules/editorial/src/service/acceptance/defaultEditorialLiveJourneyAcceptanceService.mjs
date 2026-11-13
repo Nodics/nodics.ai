@@ -99,30 +99,22 @@ async function saveModel(path, model, headers) {
   );
 }
 
-async function updateModel(path, query, model, headers) {
-  return payload(
-    await requestJson(wcmsUrl, path, {
-      body: JSON.stringify({ options: { returnModified: true }, query, model }),
-      headers,
-      method: 'PATCH',
-    }),
-  );
-}
-
 /** Verifies definitions installed by the existing Process-owned contribution lifecycle. */
 async function ensureEditorialProcessDefinitions(headers) {
   const runtime = projectRuntime(environmentProfile, { role: 'PROCESS' });
-  const root = fs.realpathSync(path.join(projectRoot, 'envs', environmentProfile.environment, runtime.server));
   const readFixture = relative => {
+    const root = fs.realpathSync(path.join(projectRoot, 'envs', environmentProfile.environment, runtime.server));
     if (typeof relative !== 'string' || path.isAbsolute(relative) || relative.split(/[\\\\/]/).includes('..')) throw new Error('Select a runtime-relative Editorial contribution fixture');
     const file = fs.realpathSync(path.join(root, relative));
     const child = path.relative(root, file);
     if (!child || child.startsWith('..' + path.sep) || path.isAbsolute(child)) throw new Error('Editorial fixture escapes its runtime');
     return require(file);
   };
-  const contribution = readFixture(config.contributionPath);
-  const manifest = readFixture(config.manifestPath);
-  const release = manifest?.sections?.[config.contributionSection];
+  const canonical = config.contributionCode === 'editorial:editorialWorkflows';
+  const contribution = canonical ? require('../../../data/init-v001/records/process/editorialWorkflowDefinitionData')
+    : readFixture(config.contributionPath);
+  const release = canonical ? require('../../../data/manifest.json').sections.editorialWorkflows
+    : readFixture(config.manifestPath)?.sections?.[config.contributionSection];
   if (!release?.version || !Array.isArray(contribution?.definitions) || !contribution.definitions.length || !config.contributionCode)
     throw new Error('Editorial contribution provenance is required');
   for (const definition of contribution.definitions) {
@@ -163,12 +155,9 @@ async function main() {
   const articleCode = `editorial-live-${journeyId}`;
   const authorCode = `editorial-author-${journeyId}`;
   const taxonomyCode = `editorial-taxonomy-${journeyId}`;
-  const localizationCode = `${articleCode}-en`;
   const slug = `editorial-live-${journeyId}`;
   const article = {
     code: articleCode,
-    accessGroups: ['userGroup'],
-    active: true,
     contentTypeCode: 'BLOG',
     description: 'Generated Editorial live acceptance article.',
     internalName: 'Editorial live acceptance article',
@@ -176,22 +165,13 @@ async function main() {
     siteCodes: [config.siteCode],
     authorCodes: [authorCode],
     taxonomyTermCodes: [taxonomyCode],
-    status: 'DRAFT',
-    revision: 1,
   };
   const localization = {
-    code: localizationCode,
-    accessGroups: ['userGroup'],
-    active: true,
-    articleCode,
-    localeCode: 'en',
     title: 'Editorial live acceptance article',
     summary: 'Evidence that Editorial can move from authoring to Online delivery.',
     body: { blocks: [{ type: 'paragraph', text: 'Live acceptance content body.' }] },
     seo: { title: 'Editorial live acceptance article' },
     slug,
-    status: 'READY',
-    revision: 1,
   };
 
 
@@ -213,24 +193,44 @@ async function main() {
     name: 'Acceptance',
     slug: 'acceptance',
     }, headers);
-  await saveModel('/nodics/editorial/v0/editorialarticle', article, headers);
-  await saveModel('/nodics/editorial/v0/editorialarticlelocalization', localization, headers);
-  console.log('PASS 1 created Editorial Article and related records in Staged authoring');
+  const createCommandId = `editorial-create-${journeyId}`;
+  const created = payload(await requestJson(wcmsUrl, '/nodics/editorial/v0/authoring/articles/create', {
+    body: JSON.stringify({ model: article }),
+    headers: { ...headers, 'Idempotency-Key': createCommandId }, method: 'POST',
+  }));
+  if (created?.code !== articleCode || created.status !== 'DRAFT' || created.revision !== 1)
+    throw new Error('Editorial creation did not return the exact saved draft');
+  const saveCommandId = `editorial-save-${journeyId}`;
+  const saved = payload(await requestJson(wcmsUrl, '/nodics/editorial/v0/authoring/articles/save', {
+    body: JSON.stringify({ articleCode, expectedRevision: created.revision, changes: {},
+      localization: { localeCode: 'en', changes: localization } }),
+    headers: { ...headers, 'Idempotency-Key': saveCommandId }, method: 'POST',
+  }));
+  if (saved?.contractVersion !== 1 || saved.outcome !== 'SAVED_DRAFT' || saved.commandId !== saveCommandId ||
+      saved.fromRevision !== 1 || saved.toRevision !== 2 || saved.article?.code !== articleCode ||
+      saved.article.status !== 'DRAFT' || saved.article.revision !== 2 ||
+      !Array.isArray(saved.localizations) || saved.localizations.length !== 1 ||
+      saved.localizations[0].articleCode !== articleCode || saved.localizations[0].localeCode !== 'en' ||
+      saved.localizations[0].revision !== 2 || saved.localizations[0].status !== 'READY' ||
+      saved.localizations[0].title !== localization.title) throw new Error('Editorial atomic draft save could not be confirmed');
+  const savedArticle = saved.article;
+  const sourceRevision = savedArticle.revision;
+  console.log('PASS 1 created and saved Editorial copy through owner draft commands');
 
   const validation = payload(
     await requestJson(wcmsUrl, '/nodics/editorial/v0/authoring/articles/validate', {
-      body: JSON.stringify({ article, localizations: [localization] }),
+      body: JSON.stringify({ article: { code: articleCode, revision: sourceRevision } }),
       headers,
       method: 'POST',
     }),
   );
-  if (!validation?.valid || validation?.article?.status !== 'READY') throw new Error(`Editorial validation blocked: ${JSON.stringify(validation)}`);
-  const readyArticle = Object.assign({}, article, validation.article);
+  if (!validation?.valid || validation?.article?.status !== 'READY' || validation.article.code !== articleCode || validation.article.revision !== sourceRevision) throw new Error(`Editorial validation blocked: ${JSON.stringify(validation)}`);
+  const readyArticle = validation.article;
   console.log('PASS 2 validated Editorial content and marked article READY before workflow');
 
   const submitted = payload(
     await requestJson(wcmsUrl, `/nodics/editorial/v0/authoring/articles/${encodeURIComponent(articleCode)}/submit`, {
-      body: JSON.stringify({ article: readyArticle, localizations: [localization] }),
+      body: JSON.stringify({ article: { code: readyArticle.code, revision: readyArticle.revision } }),
       headers,
       method: 'POST',
     }),
@@ -263,7 +263,7 @@ async function main() {
     }),
   );
   const approvedArticle = Array.isArray(approvedRead) ? approvedRead[0] : approvedRead;
-  if (approvedArticle?.code !== articleCode || approvedArticle?.status !== 'APPROVED') throw new Error(`Editorial article was not approved by workflow: ${JSON.stringify(approvedArticle)}`);
+  if (approvedArticle?.code !== articleCode || approvedArticle?.status !== 'APPROVED' || approvedArticle.revision !== sourceRevision) throw new Error(`Editorial article was not approved by workflow: ${JSON.stringify(approvedArticle)}`);
   console.log('PASS 4 approved workflow and applied Editorial APPROVED status');
 
   const publication = payload(
@@ -271,17 +271,17 @@ async function main() {
       body: JSON.stringify({
         article: {
           code: articleCode,
-          revision: 1,
+          revision: sourceRevision,
           status: 'APPROVED',
           workflowInstanceCode,
         },
-        publicationCode: `editorial-${articleCode}-r1`,
+        publicationCode: `editorial-${articleCode}-r${sourceRevision}`,
       }),
       headers,
       method: 'POST',
     }),
   );
-  if (publication?.state !== 'ONLINE' || publication?.code !== `editorial-${articleCode}-r1` || !Number.isSafeInteger(publication?.revision) || publication.revision < 0) throw new Error(`nPublish did not move Editorial publication ONLINE with matching identity and revision: ${JSON.stringify(publication)}`);
+  if (publication?.state !== 'ONLINE' || publication?.code !== `editorial-${articleCode}-r${sourceRevision}` || !Number.isSafeInteger(publication?.revision) || publication.revision < 0) throw new Error(`nPublish did not move Editorial publication ONLINE with matching identity and revision: ${JSON.stringify(publication)}`);
   console.log(`PASS 5 published through nPublish to ONLINE publication ${publication.code}`);
 
   const list = payload(

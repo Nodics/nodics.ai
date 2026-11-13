@@ -1,0 +1,3403 @@
+{
+  "formatVersion": 1,
+  "ownerModule": "cms",
+  "entries": [
+    {
+      "namespace": "cms",
+      "key": "ui.edit-selected-page",
+      "defaultMessage": "Edit selected page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحرير الصفحة المحددة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.continue-a-saved-page",
+      "defaultMessage": "Continue a saved page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متابعة صفحة محفوظة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.open-a-saved-page-edit-its-content-blocks-and-languages-then-validate-an",
+      "defaultMessage": "Open a saved page, edit its content blocks and languages, then validate and save here. Shared components can also appear on other pages in the same catalog.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "افتح صفحة محفوظة وحرّر كتل المحتوى ولغاتها، ثم تحقّق منها واحفظها هنا. قد تظهر المكونات المشتركة أيضاً في صفحات أخرى ضمن الكتالوج نفسه."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.another-page-operation-is-in-progress-editing-will-resume-when-it-finish",
+      "defaultMessage": "Another page operation is in progress. Editing will resume when it finishes.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "هناك عملية أخرى على الصفحة قيد التنفيذ. سيُستأنف التحرير عند انتهائها."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.opening-the-saved-page",
+      "defaultMessage": "Opening the saved page…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ فتح الصفحة المحفوظة…"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.checking-the-saved-page-changes",
+      "defaultMessage": "Checking the saved page changes…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التحقق من تغييرات الصفحة المحفوظة…"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.saving-the-page-changes",
+      "defaultMessage": "Saving the page changes…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ حفظ تغييرات الصفحة…"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.requesting-publication-approval",
+      "defaultMessage": "Requesting publication approval…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ طلب الموافقة على النشر…"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.saved-page-catalog",
+      "defaultMessage": "Saved page catalog",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتالوج الصفحة المحفوظة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.saved-page-website",
+      "defaultMessage": "Saved page website",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "موقع الصفحة المحفوظة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.loading-saved-page-choices",
+      "defaultMessage": "Loading saved page choices…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل خيارات الصفحات المحفوظة…"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.saved-page-choices-could-not-be-loaded-you-can-open-an-exact-page-code-o",
+      "defaultMessage": "Saved page choices could not be loaded. You can open an exact page code, or refresh the choices.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر تحميل خيارات الصفحات. يمكنك فتح رمز صفحة محدد أو تحديث الخيارات."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.refresh-saved-pages",
+      "defaultMessage": "Refresh saved pages",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث الصفحات المحفوظة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.saved-page",
+      "defaultMessage": "Saved page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الصفحة المحفوظة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.there-are-no-editable-page-choices-in-this-website-yet-create-and-save-a",
+      "defaultMessage": "There are no editable page choices in this website yet. Create and save a new page below.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد صفحات قابلة للتحرير في هذا الموقع بعد. أنشئ صفحة جديدة واحفظها أدناه."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.exact-saved-page-code",
+      "defaultMessage": "Exact saved page code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز الصفحة المحفوظة المحدد"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.use-the-page-chooser-above-or-enter-the-identity-of-a-page-you-are-autho",
+      "defaultMessage": "Use the page chooser above, or enter the identity of a page you are authorized to inspect.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر الصفحة أعلاه أو أدخل معرّف صفحة تملك صلاحية فحصها."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.open-saved-page",
+      "defaultMessage": "Open saved page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح الصفحة المحفوظة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.discard-local-page-changes",
+      "defaultMessage": "Discard local page changes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تجاهل تغييرات الصفحة المحلية"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.editing-is-held-until-the-saved-result-is-inspected-opening-the-page-mak",
+      "defaultMessage": "Editing is held until the saved result is inspected. Opening the page makes a read request; it does not repeat the command.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التحرير معلّق حتى فحص نتيجة الحفظ. يؤدي فتح الصفحة إلى طلب قراءة فقط، ولا يعيد الأمر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.the-saved-owner-composition-has",
+      "defaultMessage": "The saved owner composition has",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتوي التكوين المحفوظ لدى الخدمة على"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.content-blocks-the-local-content-below-has-not-been-replaced",
+      "defaultMessage": "content blocks. The local content below has not been replaced.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتل محتوى. لم يُستبدل المحتوى المحلي أدناه."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.use-saved-version-and-discard-local-page-edits",
+      "defaultMessage": "Use saved version and discard local page edits",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدام النسخة المحفوظة وتجاهل التعديلات المحلية"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.inspect-publication-request",
+      "defaultMessage": "Inspect publication request",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص طلب النشر"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.content-block",
+      "defaultMessage": "content block",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتلة محتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.no-saved-web-address",
+      "defaultMessage": "No saved web address",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا يوجد عنوان ويب محفوظ"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.some-blocks-need-a-specialized-content-editor-this-composition-is-availa",
+      "defaultMessage": "Some blocks need a specialized content editor. This composition is available for inspection; saving here is disabled to preserve its content.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحتاج بعض الكتل إلى محرر متخصص. يمكنك فحص هذا التكوين؛ الحفظ هنا معطّل للحفاظ على محتواه."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.saved-page-authoring-language",
+      "defaultMessage": "Saved page authoring language",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لغة تأليف الصفحة المحفوظة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.mark-block",
+      "defaultMessage": "Mark block",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديد الكتلة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.ready",
+      "defaultMessage": "ready",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جاهزة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.move-block",
+      "defaultMessage": "Move block",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نقل الكتلة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.up",
+      "defaultMessage": "up",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لأعلى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.add-another-content-block",
+      "defaultMessage": "Add another content block",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة كتلة محتوى أخرى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.new-block-type",
+      "defaultMessage": "New block type",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نوع الكتلة الجديدة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.place-new-block-inside",
+      "defaultMessage": "Place new block inside",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "وضع الكتلة الجديدة داخل"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.page-section",
+      "defaultMessage": "Page section",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قسم الصفحة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.level",
+      "defaultMessage": "· Level",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· المستوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.new-block-slot",
+      "defaultMessage": "New block slot",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "منطقة الكتلة الجديدة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.add-content-block",
+      "defaultMessage": "Add content block",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة كتلة محتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.validate-saved-page-changes",
+      "defaultMessage": "Validate saved page changes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التحقق من تغييرات الصفحة المحفوظة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.save-page-changes",
+      "defaultMessage": "Save page changes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حفظ تغييرات الصفحة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.submit-saved-page-for-approval",
+      "defaultMessage": "Submit saved page for approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إرسال الصفحة المحفوظة للموافقة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.this-component-type-does-not-expose-editable-content-fields-choose-a-con",
+      "defaultMessage": "This component type does not expose editable content fields. Choose a configured content type before validating.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا يوفّر نوع المكوّن هذا حقول محتوى قابلة للتحرير. اختر نوع محتوى مهيأ قبل التحقق."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.page-content",
+      "defaultMessage": "Page content",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "محتوى الصفحة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.content",
+      "defaultMessage": "content",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.move-up",
+      "defaultMessage": "Move up",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نقل لأعلى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.move-down",
+      "defaultMessage": "Move down",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نقل لأسفل"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.remove",
+      "defaultMessage": "Remove",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إزالة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.add",
+      "defaultMessage": "Add",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.online-target",
+      "defaultMessage": "Online target",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "هدف النشر العام"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.changes-since-the-current-online-version",
+      "defaultMessage": "Changes since the current Online version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التغييرات منذ النسخة المنشورة الحالية"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.previous-page-name",
+      "defaultMessage": "Previous page name",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اسم الصفحة السابق"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.navigation-entry-changed",
+      "defaultMessage": "Navigation entry changed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تغيّر عنصر التنقل"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.updated",
+      "defaultMessage": "Updated",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "محدّث"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.added",
+      "defaultMessage": "Added",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مضاف"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.removed",
+      "defaultMessage": "Removed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مزال"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.online-before-this-review",
+      "defaultMessage": "Online before this review",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النسخة المنشورة قبل هذه المراجعة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.frozen-for-approval",
+      "defaultMessage": "Frozen for approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مجمّد للموافقة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.frozen-page-content",
+      "defaultMessage": "Frozen page content",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "محتوى الصفحة المجمّد"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.frozen-cms-review-evidence-is-unavailable",
+      "defaultMessage": "Frozen CMS review evidence is unavailable.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أدلة مراجعة المحتوى المجمّد غير متاحة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.loading-frozen-cms-review",
+      "defaultMessage": "Loading frozen CMS review…",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل مراجعة المحتوى المجمّد…"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.frozen-cms-review",
+      "defaultMessage": "Frozen CMS review",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة المحتوى المجمّد"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.source-version",
+      "defaultMessage": "Source version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نسخة المصدر"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.approval-revision",
+      "defaultMessage": "· Approval revision",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· مراجعة الموافقة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.catalog",
+      "defaultMessage": "· Catalog",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· الكتالوج"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.publication-prerequisites",
+      "defaultMessage": "Publication prerequisites",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متطلبات النشر"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.cms-validation-passed",
+      "defaultMessage": "CMS validation passed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اجتاز المحتوى التحقق"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.cms-validation-unverified",
+      "defaultMessage": "CMS validation unverified",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم يُتحقق من المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.frozen-dependencies",
+      "defaultMessage": "frozen dependencies",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تبعيات مجمّدة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.version",
+      "defaultMessage": "· Version",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· النسخة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.no-media-prerequisites",
+      "defaultMessage": "No Media prerequisites",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد متطلبات وسائط"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.this-review-shows-a-limited-content-summary",
+      "defaultMessage": "This review shows a limited content summary.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعرض هذه المراجعة ملخصاً محدوداً للمحتوى."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "comparison.new",
+      "defaultMessage": "New Online route",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسار منشور جديد"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "comparison.changed",
+      "defaultMessage": "Changes to the current Online page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تغييرات على الصفحة المنشورة الحالية"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "comparison.unchanged",
+      "defaultMessage": "No changes to the current Online page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد تغييرات على الصفحة المنشورة الحالية"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "comparison.unavailable",
+      "defaultMessage": "Online comparison unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المقارنة مع المحتوى المنشور غير متاحة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "field.heading",
+      "defaultMessage": "Heading",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "العنوان"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "field.body",
+      "defaultMessage": "Body text",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النص"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "field.introduction",
+      "defaultMessage": "Introductory text",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النص التمهيدي"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "field.cards",
+      "defaultMessage": "Cards",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "البطاقات"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "field.card",
+      "defaultMessage": "Card",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "بطاقة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "field.card-heading",
+      "defaultMessage": "Card heading",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عنوان البطاقة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "field.card-text",
+      "defaultMessage": "Card text",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نص البطاقة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.default-language-content",
+      "defaultMessage": "Default language content.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "محتوى اللغة الافتراضية."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.blank-translation-fallback",
+      "defaultMessage": "Leave a translation blank to use the default language.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اترك الترجمة فارغة لاستخدام اللغة الافتراضية."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.shared-across-languages",
+      "defaultMessage": "Shared across languages.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مشترك بين اللغات."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.item",
+      "defaultMessage": "Item",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عنصر"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.content-for-slot",
+      "defaultMessage": "Content for {slot}",
+      "parameters": [
+        "slot"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "محتوى {slot}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.move-item-up",
+      "defaultMessage": "Move {label} {position, number} up",
+      "parameters": [
+        "label",
+        "position"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نقل {label} {position, number} إلى أعلى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.move-item-down",
+      "defaultMessage": "Move {label} {position, number} down",
+      "parameters": [
+        "label",
+        "position"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نقل {label} {position, number} إلى أسفل"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.remove-item",
+      "defaultMessage": "Remove {label} {position, number}",
+      "parameters": [
+        "label",
+        "position"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إزالة {label} {position, number}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.add-item",
+      "defaultMessage": "Add {label}",
+      "parameters": [
+        "label"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة {label}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.8e6a6cca7aae1d1e",
+      "defaultMessage": "Step",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الخطوة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.d70fe0751e3f7b9c",
+      "defaultMessage": "Authoring contract",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عقد التأليف"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.52e84e55ace2ab35",
+      "defaultMessage": "Loading CMS Designer authoring contract",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل إعدادات تأليف المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.51bb66115a04169c",
+      "defaultMessage": "Check content access for this enterprise, then retry. Your draft entries remain available.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقّق من صلاحية الوصول إلى محتوى المؤسسة، ثم أعد المحاولة. ستبقى مدخلات المسودة محفوظة هنا."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a33902c134b0dc90",
+      "defaultMessage": "Retry content setup",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعادة التحقق من إعداد المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.19482abdd39713af",
+      "defaultMessage": "Supported operations:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "العمليات المتاحة:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.13127b6217e7bbb1",
+      "defaultMessage": "Generated catalog-first preview",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معاينة المسودة ضمن الكتالوج"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.35ef0314cf88dae2",
+      "defaultMessage": "Catalog:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الكتالوج:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.c9aa3fe9cc2efad7",
+      "defaultMessage": "Site:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموقع:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.3c8938774eb83dc5",
+      "defaultMessage": "Template:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القالب:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a7c0b8328e8f9e71",
+      "defaultMessage": "Page:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الصفحة:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.8ccda3046529c2ba",
+      "defaultMessage": "Route:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المسار:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.6ade7afbc2f37e11",
+      "defaultMessage": "Slot:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموضع:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.002a2d6f852ad71e",
+      "defaultMessage": "· Section",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "· القسم"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.749dd93ddca49867",
+      "defaultMessage": "Components:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المكونات:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.ca3dc612f47e3913",
+      "defaultMessage": "Locale",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اللغة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.998a88148db89cd0",
+      "defaultMessage": "Validate first. Save will unlock only after WCMS confirms this exact draft.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقّق من المسودة أولاً. يتاح الحفظ بعد تأكيد WCMS لهذه المسودة نفسها."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e7605fc99fc330f1",
+      "defaultMessage": "CMS publishing readiness and impact",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جاهزية نشر المحتوى وتأثيره"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e68652b59dc1ae56",
+      "defaultMessage": "Validate dependencies before submit. Publishing impact is the saved Staged draft plus route, component, template, media, and layout evidence that approvers should inspect before Online movement.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقّق من المتطلبات قبل الإرسال. يشمل تأثير النشر المسودة المحفوظة ومسارها ومكوناتها وقالبها ووسائطها وتخطيطها. يجب على المعتمدين مراجعتها قبل النشر المباشر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.935103d512b8dcdd",
+      "defaultMessage": "Approval impact summary: approvers should compare the saved Staged draft, route intent, template slots, components, media references, and target site before approving the publication request.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ملخص تأثير الاعتماد: راجع المسودة المحفوظة والمسار ومواضع القالب والمكونات ومراجع الوسائط والموقع المستهدف قبل اعتماد طلب النشر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.cdf88ac84d85101e",
+      "defaultMessage": "Content setup notes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ملاحظات إعداد المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.1fa88692c515c7cc",
+      "defaultMessage": "Save will create only the draft records. Publishing still checks:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ينشئ الحفظ سجلات المسودة فقط. ويتحقق النشر أيضاً من:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.85f65586fb26fc66",
+      "defaultMessage": "Create pages, arrange content, and review drafts before publishing.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أنشئ الصفحات ورتّب المحتوى وراجع المسودات قبل النشر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e1e32fb79c798707",
+      "defaultMessage": "Open an existing page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح صفحة موجودة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.c0be85e44bb16c3b",
+      "defaultMessage": "An existing page has local changes or a command awaiting inspection. Open the existing-page panel to continue.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "توجد تعديلات محلية أو عملية تنتظر التحقق لصفحة موجودة. افتح لوحة الصفحة للمتابعة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.250b09c67952858f",
+      "defaultMessage": "Choose a website, add your page content, then validate and save.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر موقعاً وأضف محتوى الصفحة، ثم تحقّق منها واحفظها."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.8cfc950bfdd3bbc2",
+      "defaultMessage": "The content authoring workspace is currently unavailable. Your page entries remain here while availability is refreshed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مساحة تأليف المحتوى غير متاحة حالياً. تبقى مدخلات الصفحة هنا أثناء تحديث حالة الإتاحة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.8fbe5392dffdf8db",
+      "defaultMessage": "Refresh workspace availability",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث إتاحة مساحة العمل"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.6f34d059fb0dc4d5",
+      "defaultMessage": "Refresh content setup",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديث إعداد المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.b7caf3d3e2d62fd2",
+      "defaultMessage": "Content setup details",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تفاصيل إعداد المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.632586e2da327cf6",
+      "defaultMessage": "Saving creates a draft version. Submit the saved version for approval when it is ready to publish.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ينشئ الحفظ نسخة مسودة. أرسل النسخة المحفوظة للاعتماد عندما تصبح جاهزة للنشر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.346ffc53508d50cf",
+      "defaultMessage": "Content Catalog",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتالوج المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.b5a229ac8becc603",
+      "defaultMessage": "Website",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموقع"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.86b531798d5dea64",
+      "defaultMessage": "Page template",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قالب الصفحة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.edd802cf988b9d41",
+      "defaultMessage": "Page code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز الصفحة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.783dc516d32b36e8",
+      "defaultMessage": "Page sections",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أقسام الصفحة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.7e4afca0c27c2958",
+      "defaultMessage": "Use a clean URL. If you omit the leading slash, Axis adds it for you.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدم عنواناً واضحاً. يضيف Axis الشرطة المائلة في البداية إذا لم تُدخلها."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.45099c5588497157",
+      "defaultMessage": "Web address",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عنوان الويب"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.2c3d22d568e0dc6e",
+      "defaultMessage": "Controls whether this route is publicly delivered or requires an authenticated CMS request.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحدد ما إذا كان المسار متاحاً للجميع أو يتطلب طلباً موثّقاً للمحتوى."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.12dbc75e826639b3",
+      "defaultMessage": "Delivery access",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صلاحية عرض المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.6f51cb0403204b19",
+      "defaultMessage": "Content type",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نوع المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.38656cbc3d95606b",
+      "defaultMessage": "Authoring language",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لغة التأليف"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.4acaa72ce90cb502",
+      "defaultMessage": "Enter content in each language you need. Fields marked as shared keep the same value in every language. Blank translations use the default language.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أدخل المحتوى باللغات المطلوبة. تبقى قيمة الحقول المشتركة واحدة في جميع اللغات، وتستخدم الترجمات الفارغة اللغة الافتراضية."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.2bc0b30bbeea761c",
+      "defaultMessage": "Complete the required headings, card details, and default language content before validating.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أكمل العناوين المطلوبة وتفاصيل البطاقات ومحتوى اللغة الافتراضية قبل التحقق."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.d7cda0ca2c8586e5",
+      "defaultMessage": "Mark",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحديد"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.acee35a9fde727e4",
+      "defaultMessage": "content ready",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المحتوى جاهز"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.238f5e7418b7a130",
+      "defaultMessage": "All entered translations must be reviewed and marked ready before publication. You can save unfinished content as a draft.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يجب مراجعة كل الترجمات المدخلة وتحديد جاهزيتها قبل النشر. يمكنك حفظ المحتوى غير المكتمل كمسودة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.7e716613a935dfc0",
+      "defaultMessage": "Draft preview and publication checks",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "معاينة المسودة وفحوص النشر"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.ce6fec951e77262b",
+      "defaultMessage": "Inspect publication request",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص طلب النشر"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.19c6f2442ee98584",
+      "defaultMessage": "Publication:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النشر:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.9d02566cee219d00",
+      "defaultMessage": "Inspect this request",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحص هذا الطلب"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e008054bd62544bb",
+      "defaultMessage": "Review this approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة هذا الاعتماد"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.5711358b949d1d31",
+      "defaultMessage": "Validate draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التحقق من المسودة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.3de100106dd4e52e",
+      "defaultMessage": "Save draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حفظ المسودة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.beec6c108c0009ae",
+      "defaultMessage": "Submit for approval",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إرسال للاعتماد"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.4542d49a520543f9",
+      "defaultMessage": "Reset defaults",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استعادة القيم الافتراضية"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.4bb1e6c61420ccd5",
+      "defaultMessage": "Choose media",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختيار الوسائط"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.0ef0852f5a38d5b6",
+      "defaultMessage": "Review publication requests",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة طلبات النشر"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.b635b4c21ed064d2",
+      "defaultMessage": "Verify Online status",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التحقق من حالة النشر المباشر"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e7e3d1f0914f4a1c",
+      "defaultMessage": "Manage existing content",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة المحتوى الموجود"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.c70acf282c8e0912",
+      "defaultMessage": "Website setup and reference workspaces",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعداد الموقع ومساحات المراجع"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.f982c55af33394df",
+      "defaultMessage": "Use these reference workspaces to manage reusable content and website settings. Create and validate your page in the draft above.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدم مساحات المراجع لإدارة المحتوى القابل لإعادة الاستخدام وإعدادات الموقع. أنشئ الصفحة وتحقّق منها في المسودة أعلاه."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.6a9f3591fbeab050",
+      "defaultMessage": "Content inventory",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قائمة المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.55fc448e0db27c62",
+      "defaultMessage": "Loading content inventory",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ تحميل قائمة المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.bc058f7e637dd348",
+      "defaultMessage": "Content inventory could not be checked. The content authoring commands remain independently validated by CMS.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر التحقق من قائمة المحتوى. يستمر CMS بالتحقق المستقل من أوامر تأليف المحتوى."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.0f6e3c590d9391d6",
+      "defaultMessage": "Readiness snapshot",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ملخص الجاهزية"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.7b32735609538522",
+      "defaultMessage": "These counts come from live workbench contracts. If one is unavailable, the designer can still explain the flow, but save actions must stay inside the owning workspace.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تأتي هذه الأعداد من مساحات العمل المتصلة. إذا تعذّر أحدها، تبقى خطوات التصميم واضحة وتُنفّذ عمليات الحفظ في مساحة العمل المسؤولة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.378435b062fa29e1",
+      "defaultMessage": "CMS Online verification card: after a publication request is approved, confirm Online status, deployment history, audit evidence, and browser rendering for",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "التحقق من النشر المباشر: بعد اعتماد الطلب، تحقّق من حالة النشر وسجله وأدلة التدقيق والعرض في المتصفح للمسار"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.ce29c305829bb6b7",
+      "defaultMessage": "before closing the content task.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قبل إغلاق مهمة المحتوى."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.32958ab3a0b9f983",
+      "defaultMessage": "Content workspace could not be checked.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر التحقق من مساحة المحتوى."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.c1ed96e3c8767fc2",
+      "defaultMessage": "Catalog first",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الكتالوج أولاً"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.18b85a39503555f9",
+      "defaultMessage": "Catalog rule unknown",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قاعدة الكتالوج غير معروفة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.3b887da22412704e",
+      "defaultMessage": "Template Slots: any number",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مواضع القالب: أي عدد"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.8e598b95bfc529e4",
+      "defaultMessage": "Slot flexibility unknown",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مرونة المواضع غير معروفة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a779822cece0fcec",
+      "defaultMessage": "Backend persistence only",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الحفظ عبر الخادم فقط"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.5de8ddc086d65c98",
+      "defaultMessage": "Persistence rule unknown",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "قاعدة الحفظ غير معروفة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.95985fac42ae421d",
+      "defaultMessage": "Content Catalog → Site → Template → Page → Slots → Sections → Components → Media → Route → Navigation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتالوج المحتوى ← الموقع ← القالب ← الصفحة ← المواضع ← الأقسام ← المكونات ← الوسائط ← المسار ← التنقل"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.dc937b59892604f5",
+      "defaultMessage": "None",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.90956b430c39b2df",
+      "defaultMessage": "loading from WCMS",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جارٍ التحميل من WCMS"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.7d27f08551993e86",
+      "defaultMessage": "This draft is validated and ready to save.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تم التحقق من هذه المسودة وهي جاهزة للحفظ."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.91fc7469a6d2188b",
+      "defaultMessage": "The draft changed after validation. Revalidate before saving.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تغيّرت المسودة بعد التحقق. أعد التحقق قبل الحفظ."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.43985024837bdbed",
+      "defaultMessage": "Content workspace readiness",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جاهزية مساحة المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.98efffde8d582609",
+      "defaultMessage": "WCMS validated this exact draft.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقّق WCMS من هذه المسودة نفسها."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.2de276553d14aba3",
+      "defaultMessage": "Validate this exact draft before save or submit.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقّق من هذه المسودة قبل حفظها أو إرسالها."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a84bfd76f65fa2ff",
+      "defaultMessage": "Template dependency",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متطلب القالب"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.56fb129bf29b5b17",
+      "defaultMessage": "Select a page template.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر قالباً للصفحة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.33bb7365bfaecdd2",
+      "defaultMessage": "Component dependency",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متطلب المكونات"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.45bc89eb257d7e2e",
+      "defaultMessage": "Every section has a component with a selected type.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتوي كل قسم على مكون ذي نوع محدد."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a493d611387a3ce2",
+      "defaultMessage": "Choose a component type for each section.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر نوع المكون لكل قسم."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a89a689f072fa641",
+      "defaultMessage": "Route dependency",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متطلب المسار"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.64773de9264fdf8d",
+      "defaultMessage": "Web address must start with a slash.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يجب أن يبدأ عنوان الويب بشرطة مائلة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.bd3d59c5fc2c68dc",
+      "defaultMessage": "Media dependency",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متطلب الوسائط"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a3ad8d7df86074ca",
+      "defaultMessage": "Linked assets will be checked by CMS before publication.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يتحقق CMS من الأصول المرتبطة قبل النشر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.c6e9a61f528012a5",
+      "defaultMessage": "No assets are linked to this draft. CMS checks required media before publication.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد أصول مرتبطة بهذه المسودة. يتحقق CMS من الوسائط المطلوبة قبل النشر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.b96d86640ad183dd",
+      "defaultMessage": "Layout-slot dependency",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متطلب مواضع التخطيط"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.8ed28bcc6c0cc9f3",
+      "defaultMessage": "Draft slots match the selected template.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تطابق مواضع المسودة القالب المحدد."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.372988efb6db25d0",
+      "defaultMessage": "Choose a template with defined slots and match each section to a slot.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر قالباً بمواضع محددة واربط كل قسم بموضع."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.d513a1ce4d25df11",
+      "defaultMessage": "Preview before submit",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المعاينة قبل الإرسال"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.9d3b52339c8df0c0",
+      "defaultMessage": "Draft preview has been validated and saved before publication submit.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تم التحقق من معاينة المسودة وحفظها قبل إرسال طلب النشر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.7942cbbe24e29fc7",
+      "defaultMessage": "Save the validated draft before submitting for publication.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "احفظ المسودة المتحقق منها قبل إرسالها للنشر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e1d089e1bf241c14",
+      "defaultMessage": "Required parts: WCMS default",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الأجزاء المطلوبة: القيم الافتراضية في WCMS"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.eb765127a3c59ecd",
+      "defaultMessage": "Media folders not loaded yet",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تُحمّل مجلدات الوسائط بعد"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.cdddbb69c8e85d56",
+      "defaultMessage": "Media types pending",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أنواع الوسائط قيد الانتظار"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.79b3209642f1bbf4",
+      "defaultMessage": "Navigation parents optional",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عناصر التنقل الأصلية اختيارية"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.739ac134b979820d",
+      "defaultMessage": "WCMS readiness",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "جاهزية WCMS"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.2aca45526372e6ea",
+      "defaultMessage": "CMS connection is not available",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الاتصال بخدمة المحتوى غير متاح"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.15c0bc55a36afb55",
+      "defaultMessage": "CMS did not authorize this operation",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تسمح خدمة المحتوى بهذه العملية"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.c5f06439c412f4bd",
+      "defaultMessage": "Choose the configured authoring references before validating a draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر مراجع التأليف المهيأة قبل التحقق من المسودة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.4a23e50bce98db41",
+      "defaultMessage": "Content Designer",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مصمم المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.45bb5b77eb9eb108",
+      "defaultMessage": "Page Designer",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مصمم الصفحات"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.dfa251e47d2a11da",
+      "defaultMessage": "Page draft",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسودة الصفحة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.9608da453f82099d",
+      "defaultMessage": "Choose your website and template, then enter the page details. Validate the complete draft before saving.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر الموقع والقالب ثم أدخل تفاصيل الصفحة. تحقّق من المسودة كاملة قبل الحفظ."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.d5788de9546d4c52",
+      "defaultMessage": "Content setup can be checked after the authoring workspace reconnects.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يمكن التحقق من إعداد المحتوى بعد عودة الاتصال بمساحة التأليف."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.1fb8839f4b5378e4",
+      "defaultMessage": "Content setup is incomplete. An editable website, template, and component types are required for this enterprise before a draft can be validated.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعداد المحتوى غير مكتمل. يلزم موقع قابل للتحرير وقالب وأنواع مكونات لهذه المؤسسة قبل التحقق من المسودة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.6aeffc98031a5953",
+      "defaultMessage": "Choose the content boundary first. Sites are filtered by this catalog.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر نطاق المحتوى أولاً. تُعرض المواقع التابعة لهذا الكتالوج."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.421cef39ed9b25cd",
+      "defaultMessage": "Only sites available for the selected catalog are shown.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تُعرض المواقع المتاحة ضمن الكتالوج المحدد فقط."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.7c67175f2966cd1a",
+      "defaultMessage": "Selecting a template updates the suggested slot list below.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يؤدي اختيار القالب إلى تحديث قائمة المواضع المقترحة أدناه."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.98c9330621a71044",
+      "defaultMessage": "Use up to 128 letters, numbers, hyphens or underscores, starting with a letter or number.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدم حتى 128 حرفاً أو رقماً أو شرطة أو شرطة سفلية، وابدأ بحرف أو رقم."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.b199a7c651282082",
+      "defaultMessage": "Enter a unique page code. The web address is suggested from this code.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أدخل رمزاً فريداً للصفحة. يُقترح عنوان الويب من هذا الرمز."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.28cacf51a53c6a3e",
+      "defaultMessage": "One slot per line or comma. Designer supports any template-defined slots.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "موضع واحد في كل سطر أو افصل بينها بفواصل. يدعم المصمم المواضع التي يحددها القالب."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.bc301c7a8ef5b4df",
+      "defaultMessage": "Validation result:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نتيجة التحقق:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.9b34dcf380cfc48c",
+      "defaultMessage": "Earlier draft validation:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقق سابق من المسودة:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.6da468b6906a3822",
+      "defaultMessage": "CMS validation completed",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اكتمل التحقق من المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.f8075ba21b52a0bc",
+      "defaultMessage": "Save result:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نتيجة الحفظ:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.cf8ab132ce114c61",
+      "defaultMessage": "Earlier draft save:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حفظ سابق للمسودة:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e10507bf7757a340",
+      "defaultMessage": "Draft saved. Reopen the saved page to inspect the result and continue.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حُفظت المسودة. أعد فتح الصفحة المحفوظة لفحص النتيجة والمتابعة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.095fe7c2a2b647c2",
+      "defaultMessage": "Continue in the saved-page editor to change this saved page.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تابع في محرر الصفحة المحفوظة لتعديلها."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.d00045d39ccabc40",
+      "defaultMessage": "The form changed after its saved version. These entries remain here while the saved copy is inspected.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تغيّر النموذج بعد النسخة المحفوظة. تبقى هذه المدخلات هنا أثناء فحص النسخة المحفوظة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.092dd5adac38fbab",
+      "defaultMessage": "Open saved page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح الصفحة المحفوظة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.877168e1b3b8f26f",
+      "defaultMessage": "The publication request was not confirmed. Inspect Publishing before another command.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم يتأكد طلب النشر. افحص مساحة النشر قبل تنفيذ أمر آخر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.3151a4d984348fdb",
+      "defaultMessage": "Publishing result:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نتيجة النشر:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e1ca5f35e0da20f2",
+      "defaultMessage": "Earlier draft publishing result:",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نتيجة نشر سابقة للمسودة:"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.f3de26614fce1b80",
+      "defaultMessage": "CMS publication request submitted",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أُرسل طلب نشر المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e674447337e83c13",
+      "defaultMessage": "Available",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "متاح"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.ca184496974204a0",
+      "defaultMessage": "Unavailable",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "غير متاح"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e46fa44ff4b6e7f2",
+      "defaultMessage": "No component types are configured for this authoring application.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم تُهيأ أنواع مكونات لتطبيق التأليف هذا."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.6842722165f7e88d",
+      "defaultMessage": "CMS draft saved as governed Staged records.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حُفظت مسودة المحتوى كسجلات خاضعة للحوكمة في بيئة الإعداد."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.18a74de6b24ceffb",
+      "defaultMessage": "not assigned",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "غير محدد"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.3a7f9a96cb7be213",
+      "defaultMessage": "Validate the draft to see backend evidence.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تحقّق من المسودة للاطلاع على أدلة الخادم."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.4fbc6f490fc0e190",
+      "defaultMessage": "Validation evidence could not be rendered as text.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تعذّر عرض أدلة التحقق كنص."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.62ca76648d716d4a",
+      "defaultMessage": "Heading not entered",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لم يُدخل العنوان"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.40126b0e9d2e5f2f",
+      "defaultMessage": "New page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صفحة جديدة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.25f322d147d35f80",
+      "defaultMessage": "Page name",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اسم الصفحة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.f7fe3de76dceb607",
+      "defaultMessage": "Use a name your team will recognise in the page library.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدم اسماً يتعرف عليه فريقك في مكتبة الصفحات."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.68185199c8c96f20",
+      "defaultMessage": "Page draft saved. Continue with the saved page to edit it and prepare it for publication.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حُفظت مسودة الصفحة. تابع في الصفحة المحفوظة لتحريرها وإعدادها للنشر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.3a78663884acd537",
+      "defaultMessage": "Continue with saved page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المتابعة في الصفحة المحفوظة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.6954329ce794e4a8",
+      "defaultMessage": "This form has edits after the saved version. These entries remain here while you inspect the saved copy.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يحتوي النموذج على تعديلات بعد النسخة المحفوظة. تبقى المدخلات هنا أثناء فحص النسخة المحفوظة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.5453bbb3566dbc12",
+      "defaultMessage": "The publication outcome is unconfirmed. Inspect the original request in Publishing before taking another action.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نتيجة النشر غير مؤكدة. افحص الطلب الأصلي في مساحة النشر قبل اتخاذ إجراء آخر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.c6f3b3293cfa35cd",
+      "defaultMessage": "Enter the content for {name} below. Your changes remain a draft until approved.",
+      "parameters": [
+        "name"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أدخل محتوى {name} أدناه. تبقى التغييرات مسودة حتى اعتمادها."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.f1c88cf3b8a93035",
+      "defaultMessage": "One slot per line or comma. Selected template exposes: {slots}.",
+      "parameters": [
+        "slots"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "موضع واحد في كل سطر أو افصل بينها بفواصل. المواضع المتاحة في القالب المحدد: {slots}."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.b3ba244fb4b30532",
+      "defaultMessage": "CMS draft saved as immutable Staged version {version}.",
+      "parameters": [
+        "version"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حُفظت مسودة المحتوى كنسخة ثابتة {version} في بيئة الإعداد."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.5add8ad3d20b87b7",
+      "defaultMessage": "Template {template} is selected for this draft.",
+      "parameters": [
+        "template"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القالب {template} محدد لهذه المسودة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.2753a339a65b6ba0",
+      "defaultMessage": "Web address {route} is browser-addressable.",
+      "parameters": [
+        "route"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يمكن الوصول إلى عنوان الويب {route} من المتصفح."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e66d86405e33a0ca",
+      "defaultMessage": "Catalog: {catalog}",
+      "parameters": [
+        "catalog"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الكتالوج: {catalog}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.37a69f69700812fd",
+      "defaultMessage": "Site: {site}",
+      "parameters": [
+        "site"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموقع: {site}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.5e7f094206851964",
+      "defaultMessage": "Template: {template}",
+      "parameters": [
+        "template"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القالب: {template}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.f00059023e686da4",
+      "defaultMessage": "Route: {route}",
+      "parameters": [
+        "route"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المسار: {route}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.b31ae22213109b0c",
+      "defaultMessage": "Required parts: {parts}",
+      "parameters": [
+        "parts"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الأجزاء المطلوبة: {parts}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a5efb5a1b8bcb84d",
+      "defaultMessage": "{count, number} media folders available",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عدد مجلدات الوسائط المتاحة: {count, number}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.eab7790190b40e4c",
+      "defaultMessage": "Media types: {types}",
+      "parameters": [
+        "types"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أنواع الوسائط: {types}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.3cb7754c9156ba78",
+      "defaultMessage": "{count, number} navigation parents",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "عدد عناصر التنقل الأصلية: {count, number}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.4f95a172591fdee1",
+      "defaultMessage": "Content catalogs",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتالوجات المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.4512dec79b0c0bac",
+      "defaultMessage": "Catalog containers that sit above sites, templates, and pages.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتالوجات تنظم المواقع والقوالب والصفحات."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.9d7690937436d9e3",
+      "defaultMessage": "Sites",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المواقع"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.b6386f72da35173d",
+      "defaultMessage": "Website containers available for page composition.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مواقع متاحة لإنشاء الصفحات."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.56b564b75c7fdb48",
+      "defaultMessage": "Templates",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "القوالب"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.beee7b9b58f0052d",
+      "defaultMessage": "Reusable page structures and allowed dynamic slots.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "هياكل صفحات قابلة لإعادة الاستخدام ومواضع ديناميكية مسموحة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.9046da16aea909ba",
+      "defaultMessage": "Pages",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الصفحات"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e55f32a065c3e34d",
+      "defaultMessage": "Authorable pages that connect catalog, site, template, slots, and components.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صفحات قابلة للتأليف تربط الكتالوج والموقع والقالب والمواضع والمكونات."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a150ce2216025931",
+      "defaultMessage": "Components",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المكونات"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a99b4a64af9e341f",
+      "defaultMessage": "Reusable content blocks with text, media, and renderer data.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "كتل محتوى قابلة لإعادة الاستخدام تتضمن النصوص والوسائط وبيانات العرض."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.dc600f6490d8f08c",
+      "defaultMessage": "Media links",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "روابط الوسائط"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.14934e91f423363a",
+      "defaultMessage": "Governed links from components to media records.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "روابط خاضعة للحوكمة بين المكونات وسجلات الوسائط."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.2c5b669bcdeb51bf",
+      "defaultMessage": "Routes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المسارات"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.f98ac281734050b9",
+      "defaultMessage": "Browser paths mapped to governed CMS pages.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مسارات المتصفح المرتبطة بصفحات المحتوى الخاضعة للحوكمة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.97ac9e582b5d6d51",
+      "defaultMessage": "Choose catalog",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختيار الكتالوج"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.779784fc36eb9e9f",
+      "defaultMessage": "Start with the content catalog. A site, template, page, route, and component composition must belong to a catalog boundary.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ابدأ بكتالوج المحتوى. يجب أن ينتمي الموقع والقالب والصفحة والمسار وتكوين المكونات إلى نطاق الكتالوج."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e751756eca3f3991",
+      "defaultMessage": "Manage catalogs",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة الكتالوجات"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.28f33bc46a568a76",
+      "defaultMessage": "Choose or create site",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختيار موقع أو إنشاؤه"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.888e8f884385eeb8",
+      "defaultMessage": "Pick the business site: brand portal, documentation site, storefront, or internal workspace.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر موقع العمل: بوابة العلامة التجارية أو موقع الوثائق أو المتجر أو مساحة العمل الداخلية."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.ef6b688f0247af5a",
+      "defaultMessage": "Manage sites",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة المواقع"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.8e56330b72291e92",
+      "defaultMessage": "Select template",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختيار القالب"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.6e6934059662d8e5",
+      "defaultMessage": "Pick the page structure and its governed dynamic slots before adding page-specific sections.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر هيكل الصفحة ومواضعه الديناميكية المعتمدة قبل إضافة أقسام الصفحة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.cb930c763b0b9428",
+      "defaultMessage": "Manage templates",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة القوالب"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.29a809193ae613aa",
+      "defaultMessage": "Create page",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إنشاء صفحة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e6c180b632feea40",
+      "defaultMessage": "Create the page record, connect it with catalog/site/template, and keep lifecycle state visible.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أنشئ سجل الصفحة واربطه بالكتالوج والموقع والقالب، مع إبقاء حالة دورة الحياة واضحة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.102cd0c01bbdcea6",
+      "defaultMessage": "Manage pages",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة الصفحات"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.bb3c3e76cd177ad8",
+      "defaultMessage": "Arrange sections and slots",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ترتيب الأقسام والمواضع"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e3d727d3089c8dca",
+      "defaultMessage": "Use any allowed template slot to arrange hero, body, gallery, call-to-action, or documentation sections.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدم مواضع القالب المسموحة لترتيب المقدمة أو النص أو المعرض أو الدعوة إلى إجراء أو أقسام الوثائق."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.2a703283ee4b9da3",
+      "defaultMessage": "Manage slots",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة المواضع"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.5434570a72a8145f",
+      "defaultMessage": "Add text/components",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إضافة نصوص ومكونات"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.97ae7265bd5ec9f1",
+      "defaultMessage": "Create reusable components for titles, rich text, cards, banners, documentation blocks, and dashboard widgets.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أنشئ مكونات قابلة لإعادة الاستخدام للعناوين والنصوص المنسقة والبطاقات واللافتات والوثائق وعناصر لوحة المعلومات."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.2a49994007509daa",
+      "defaultMessage": "Manage components",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة المكونات"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.87ed88d550924900",
+      "defaultMessage": "Associate media",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ربط الوسائط"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.1de8aab518000e05",
+      "defaultMessage": "Select governed media records or upload new assets through nMedia before linking them to components.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر سجلات وسائط معتمدة أو ارفع أصولاً جديدة عبر nMedia قبل ربطها بالمكونات."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.de81e912dbeb435b",
+      "defaultMessage": "Open media",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فتح الوسائط"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.69f0a2ca070e1252",
+      "defaultMessage": "Publish route intent",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إعداد مسار النشر"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a40d6ab98edcc9d9",
+      "defaultMessage": "Map clean browser routes and navigation nodes after the page structure is ready.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اربط مسارات المتصفح الواضحة وعناصر التنقل بعد اكتمال هيكل الصفحة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a77172d32a69c57a",
+      "defaultMessage": "Manage routes",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إدارة المسارات"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.2bcddf74bd6bc2fe",
+      "defaultMessage": "Content in {locale} is marked ready. Editing it requires another review.",
+      "parameters": [
+        "locale"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "محتوى اللغة {locale} محدد كجاهز. يتطلب تعديله مراجعة أخرى."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.fbf9451f4fbb38b9",
+      "defaultMessage": "Review the content in {locale}, then mark it ready before submitting for publication.",
+      "parameters": [
+        "locale"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجع محتوى اللغة {locale}، ثم حدد جاهزيته قبل إرساله للنشر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.577b4bffe68c9264",
+      "defaultMessage": "Retire content",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إيقاف المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.5f6934824c3e9323",
+      "defaultMessage": "Record kind",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "نوع السجل"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.23b720ffa7c23c7a",
+      "defaultMessage": "Record code",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "رمز السجل"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.3877d14889a9909b",
+      "defaultMessage": "Catalog",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الكتالوج"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.fa7955814e32aed3",
+      "defaultMessage": "Site",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الموقع"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.3fbe5ed156f14993",
+      "defaultMessage": "Enterprise",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المؤسسة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.5580a46b38ab0651",
+      "defaultMessage": "Review retirement",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة الإيقاف"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.7d1e79ce3431cde6",
+      "defaultMessage": "Review content retirement",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مراجعة إيقاف المحتوى"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.b0550ce6f88daa24",
+      "defaultMessage": "Confirm retirement",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تأكيد الإيقاف"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.337f911f9b4aad88",
+      "defaultMessage": "Close review",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إغلاق المراجعة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.53d7b57e06411a49",
+      "defaultMessage": "I reviewed this record, scope and consequence",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "راجعت هذا السجل ونطاقه ونتيجة الإجراء"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.dbd36d5d3e8a181a",
+      "defaultMessage": "I inspected the current CMS record after this outcome",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فحصت سجل المحتوى الحالي بعد هذه النتيجة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.179316ae5337fdeb",
+      "defaultMessage": "The outcome is uncertain. Inspect the current record through its CMS owner before another submission. This command will not be replayed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النتيجة غير مؤكدة. افحص السجل الحالي عبر خدمة المحتوى المسؤولة قبل إرسال طلب آخر. لن يُعاد تنفيذ هذا الأمر تلقائياً."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.d750ba14f370db33",
+      "defaultMessage": "Retirement saved as an inactive version. Publication remains a separate governed action.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "حُفظ الإيقاف كنسخة غير نشطة. يبقى النشر إجراءً مستقلاً خاضعاً للحوكمة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.0fe138f9c7e15856",
+      "defaultMessage": "Authority or scope changed. Close this review and review the current selection again.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "تغيّرت الصلاحيات أو النطاق. أغلق المراجعة وراجع التحديد الحالي من جديد."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.c0f56c6d23a00fd7",
+      "defaultMessage": "History is retained. This does not remove references, delete Media assets or deploy a publication.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يُحتفظ بالسجل التاريخي. لا يزيل هذا الإجراء المراجع ولا يحذف أصول الوسائط ولا ينشر المحتوى."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.0d7f3ffd670ef609",
+      "defaultMessage": "Section placement",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "موضع القسم"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.c3c78ecf27ca9072",
+      "defaultMessage": "Retires only this placement, not its target component. Page placements retain their Site; nested component placements belong to the shared Catalog.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يوقف هذا الموضع فقط ويبقي المكون المرتبط به. تحتفظ مواضع الصفحات بموقعها، وتنتمي مواضع المكونات المتداخلة إلى الكتالوج المشترك."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.bfa14c41bd3b2b4d",
+      "defaultMessage": "Shared component",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "مكون مشترك"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.f736213e9bcab993",
+      "defaultMessage": "Retires this component in the selected enterprise and Catalog. It may be reused by multiple Sites in that Catalog; their references are not removed.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يوقف هذا المكون في المؤسسة والكتالوج المحددين. قد تستخدمه مواقع متعددة ضمن الكتالوج؛ ولن تُحذف مراجعها."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.3899bbbefacae23d",
+      "defaultMessage": "Media association",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "ارتباط الوسائط"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e76b106f06c141cf",
+      "defaultMessage": "Retires only this component-to-Media association. The Media asset and component remain; the association may be shared across Sites in this Catalog.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "يوقف هذا الارتباط بين المكون والوسائط فقط. يبقى الأصل والمكون، وقد يكون الارتباط مشتركاً بين مواقع الكتالوج."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "ui.content-block-count",
+      "defaultMessage": "{count, plural, one {# content block} other {# content blocks}}",
+      "parameters": [
+        "count"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "{count, plural, one {كتلة محتوى واحدة} two {كتلتا محتوى} few {# كتل محتوى} many {# كتلة محتوى} other {# كتلة محتوى}}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.fcedcb5edd38a849",
+      "defaultMessage": "Replace image",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استبدال الصورة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.2eacc5e02758c0b0",
+      "defaultMessage": "Attach image",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إرفاق صورة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.290bb8ff80b270b1",
+      "defaultMessage": "Choose a ready image from this enterprise’s Staged Media. Save the page to keep the change.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختر صورة جاهزة من وسائط هذه المؤسسة في بيئة التجهيز. احفظ الصفحة للاحتفاظ بالتغيير."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.e4ba9885161724e4",
+      "defaultMessage": "No other eligible images on this page.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "لا توجد صور أخرى مؤهلة في هذه الصفحة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.83c4e2f49cc08345",
+      "defaultMessage": "Staged image",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صورة من بيئة التجهيز"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.b53f3ff91b5b7904",
+      "defaultMessage": "Alternative text",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "النص البديل"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a233c1b293af9001",
+      "defaultMessage": "Describe the image for people using a screen reader.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "صِف الصورة للأشخاص الذين يستخدمون قارئ الشاشة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.ede9db7dbebfe229",
+      "defaultMessage": "Use replacement",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدام الصورة البديلة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a4f1c009e958256a",
+      "defaultMessage": "Use image",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "استخدام الصورة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.19766ed6ccb2f4a3",
+      "defaultMessage": "Cancel",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "إلغاء"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.fa96cc95351c426a",
+      "defaultMessage": "Previous images",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "الصور السابقة"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.abd7532494afb81b",
+      "defaultMessage": "More images",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "المزيد من الصور"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.c3bd4a3a227c4fd2",
+      "defaultMessage": " · Inside {parent}",
+      "parameters": [
+        "parent"
+      ],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": " · داخل {parent}"
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a5a6ca4611c609d5",
+      "defaultMessage": "Saved composition opened. Publication remains a separate action.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "فُتح المحتوى المحفوظ. يظل النشر إجراءً منفصلاً."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.84383c58d5de3be2",
+      "defaultMessage": "This exact composition is valid.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "هذا المحتوى المحدد صالح."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.348807313fe48117",
+      "defaultMessage": "Publication requested. Inspect the request in Publishing before taking another action.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "طُلب النشر. افحص الطلب في مساحة النشر قبل إجراء آخر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.79818e9d1f5faf30",
+      "defaultMessage": "Local changes discarded. The saved page is unchanged.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أُلغيت التغييرات المحلية. لم تتغير الصفحة المحفوظة."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a22e25b5cc267f7e",
+      "defaultMessage": "Saved version selected. Local page edits were explicitly discarded; validate again before another command.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "اختيرت النسخة المحفوظة وأُلغيت التعديلات المحلية صراحةً؛ تحقّق مجددًا قبل إجراء آخر."
+      }
+    },
+    {
+      "namespace": "cms",
+      "key": "designer.copy.a814dc5e5dc57243",
+      "defaultMessage": "New block added locally. Complete its content before validating.",
+      "parameters": [],
+      "exposure": "PUBLIC",
+      "translations": {
+        "ar": "أُضيفت كتلة جديدة محليًا. أكمل محتواها قبل التحقق."
+      }
+    }
+  ]
+}

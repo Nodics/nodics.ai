@@ -231,6 +231,24 @@ module.exports = {
         timer?.running !== true &&
         timer?.isActive !== true);
     if (!lifecycle && !inactive) this.fail();
+    const state =
+      lifecycle?.state === "ACTIVE" && row.active === true && active
+        ? "ACTIVE"
+        : lifecycle?.state === "INACTIVE" && row.active === false && inactive
+          ? "INACTIVE"
+          : lifecycle
+            ? "OUTCOME_UNKNOWN"
+            : "SAVED_INACTIVE";
+    let nextRunAt = null;
+    if (state === "ACTIVE" && timer.nextDate) {
+      try {
+        const next = timer.nextDate();
+        if (!row.end || Number(next) <= new Date(row.end).getTime())
+          nextRunAt = next.toISOString();
+      } catch {
+        // The lifecycle receipt remains valid when the timer cannot compute another tick.
+      }
+    }
     return {
       code: "SUC_JOB_00000",
       data: {
@@ -240,16 +258,12 @@ module.exports = {
         revision,
         intent: lifecycle?.intent || null,
         reviewDigest: lifecycle?.reviewDigest || null,
-        state:
-          lifecycle?.state === "ACTIVE" && row.active === true && active
-            ? "ACTIVE"
-            : lifecycle?.state === "INACTIVE" &&
-                row.active === false &&
-                inactive
-              ? "INACTIVE"
-              : lifecycle
-                ? "OUTCOME_UNKNOWN"
-                : "SAVED_INACTIVE",
+        state,
+        timing: {
+          expression: row.trigger.expression,
+          timeZone: timer?.cronTime?.zone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+          nextRunAt,
+        },
       },
     };
   },

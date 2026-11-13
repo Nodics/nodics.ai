@@ -41,6 +41,7 @@ module.exports = {
         for (const tenant of tenants) {
             const schemas = CONFIG.get('runtimeConfigurationSchemas', tenant) || {};
             for (const schemaCode of Object.keys(schemas).sort()) {
+                this.assertSchemaContract(schemaCode, schemas[schemaCode]);
                 const request = { tenant };
                 const code = this.runtimeRecordCode(request, schemaCode);
                 const response = await store.get({ tenant, query: { code }, pageSize: 2, searchOptions: { limit: 2 } });
@@ -156,7 +157,9 @@ module.exports = {
         let values = payload.values || payload.configuration || {};
         let validation = this.validateValues(schema, values);
         return Promise.resolve({
-            code: validation.valid ? 'SUC_SYS_00000' : 'ERR_SYS_00002',
+            // A completed validation is an observation, not a save or an outage.
+            // Preserve unavailable secret-persistence prerequisites separately.
+            code: validation.secretPersistence.ready ? 'SUC_SYS_00000' : 'ERR_SYS_00002',
             message: validation.valid ? 'Runtime configuration update is valid' : 'Runtime configuration update is invalid',
             data: validation
         });
@@ -239,6 +242,44 @@ module.exports = {
         return (CONFIG && typeof CONFIG.get === 'function' && CONFIG.get('runtimeConfigurationSchemas')) || {};
     },
 
+    /** Rejects incomplete owner declarations before metadata, values or persisted records can be consumed. */
+    assertSchemaContract: function (schemaCode, schema) {
+        const invalid = () => { throw new CLASSES.NodicsError('ERR_SYS_00002', 'Runtime configuration schema contract is invalid'); };
+        const identity = value => typeof value === 'string' && /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(value) &&
+            !['__proto__', 'prototype', 'constructor'].includes(value);
+        if (!identity(schemaCode) || !_.isPlainObject(schema) || !identity(schema.ownerModule) ||
+            schema.code !== undefined && schema.code !== schemaCode ||
+            !Array.isArray(schema.fields) || schema.fields.length === 0) invalid();
+        const codes = new Set();
+        for (const field of schema.fields) {
+            if (!_.isPlainObject(field) || !identity(field.code) || codes.has(field.code) ||
+                !['string', 'number', 'boolean'].includes(field.type) ||
+                ['required', 'sensitive', 'restartRequired'].some(key => field[key] !== undefined && typeof field[key] !== 'boolean')) invalid();
+            codes.add(field.code);
+            const path = this.resolveFieldPath(field);
+            const parts = Array.isArray(path) ? path : typeof path === 'string' ? path.split('.') : [];
+            if (parts.length === 0 || parts.some(part => typeof part !== 'string' || !part ||
+                ['__proto__', 'prototype', 'constructor'].includes(part))) invalid();
+            this.assertCredentialSensitivity(field);
+            if (field.pattern !== undefined) {
+                if (typeof field.pattern !== 'string') invalid();
+                try { new RegExp(field.pattern); } catch (error) { invalid(); }
+            }
+        }
+        return schema;
+    },
+
+    /** Credential selectors and explicit credential sources cannot lose masking through a partial override. */
+    assertCredentialSensitivity: function (field) {
+        const path = this.resolveFieldPath(field);
+        const first = Array.isArray(path) ? path[0] : typeof path === 'string' ? path.split('.')[0] : undefined;
+        const credential = field.credentialReference !== undefined || first === 'credentials' ||
+            Array.isArray(field.sources) && field.sources.some(source => source && source.root === 'credentials');
+        if (credential && field.sensitive !== true) {
+            throw new CLASSES.NodicsError('ERR_SYS_00002', 'Runtime credential fields require explicit sensitivity');
+        }
+    },
+
     /** Resolves one schema or raises the stable system error. */
     resolveSchema: function (schemaCode) {
         let schemas = this.getSchemaRegistry();
@@ -246,11 +287,12 @@ module.exports = {
         if (!schema) {
             throw new CLASSES.NodicsError('ERR_SYS_00001', 'Runtime configuration schema is not available: ' + (schemaCode || 'unknown'));
         }
-        return schema;
+        return this.assertSchemaContract(schemaCode, schema);
     },
 
     /** Projects a schema for API output without sample or placeholder values. */
     describeSchema: function (schemaCode, schema) {
+        this.assertSchemaContract(schemaCode, schema);
         let described = _.cloneDeep(schema || {});
         described.code = described.code || schemaCode;
         described.fields = (described.fields || []).map(field => {
@@ -271,6 +313,7 @@ module.exports = {
      * @returns {Object} Content-free prerequisite status, not an authorization grant.
      */
     getSecretPersistenceReadiness: function (schema, values) {
+        (schema.fields || []).forEach(field => this.assertCredentialSensitivity(field));
         let required = (schema.fields || []).some(field =>
             field.sensitive === true &&
             (values === undefined || Object.prototype.hasOwnProperty.call(values || {}, field.code))
@@ -300,6 +343,7 @@ module.exports = {
 
     /** Resolves one field from runtime, secure, or credential configuration sources. */
     resolveFieldValue: function (field) {
+        this.assertCredentialSensitivity(field);
         const fieldPath = this.resolveFieldPath(field);
         let runtime = CONFIG.get('runtimeConfiguration') || {};
         let secure = CONFIG.get('secureConfiguration') || {};

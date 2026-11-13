@@ -227,10 +227,10 @@ module.exports = {
    * evidence checks described above.
    */
   scheduler: function (input) {
-    const auth = input.authData || {}, policy = CONFIG.get("bidding"), runtime = CONFIG.get("runtimeRole");
+    const auth = input.authData || {}, policy = CONFIG.get("bidding");
     const groups = (auth.userGroups || auth.groups || []).map((g) => typeof g === "string" ? g : g.code);
     const router = SERVICE.DefaultSecuredRequestPipelineService;
-    if (!policy.enabled || policy.runtimeRoles?.[typeof runtime === "string" ? runtime : runtime?.code] !== true ||
+    if (!policy.enabled || SERVICE.DefaultModuleService?.isLocalModuleActive?.("bidding") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL" ||
         auth.principalType !== "service" || auth.tokenType !== "service" || auth.tenant !== input.tenant ||
         !groups.includes("serviceAccountUserGroup") || !input.tenant ||
         !auth.loginId || !(auth.enterpriseCode || auth.entCode) ||

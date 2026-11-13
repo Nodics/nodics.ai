@@ -68,3 +68,28 @@ Reviewed Local sample credits use the independent `LOYALTY_SAMPLE_CREDITS`
 nImport contribution. See [sample credit admission](sample-credit-admission.md).
 It requires the selected fail-closed Loyalty transaction provider. It never
 imports a wallet/balance/ledger snapshot or funds carbon units.
+
+
+## Notification transport placement
+
+Notification source proof, recipient resolution and inbox identity target the
+logical implementing module in explicit `OPERATIONAL` publication context.
+Physical runtime role labels do not authorize or route these calls. Preserve
+configured connections and the fixed API, tenant/Enterprise scope, source digest,
+permissions and recipient preferences. Private notification proof/dispatch uses
+runtime authentication; employee inbox identity forwards the original validated
+employee bearer. Neither path may substitute the other's credential authority.
+
+## Relocatable capability transport
+
+Select the actual logical module with `targetAuthority: { publication: "OPERATIONAL" }`.
+Optional exact `server` and `environment` pins belong inside that object; absent,
+malformed, foreign-publication and retired runtimeRole selectors fail closed.
+Connection aliases remain deployment-selected. Physical host names do not grant
+module ownership. Existing nService/DMS resolves the owner; no registry, activation,
+import or fallback host is introduced.
+
+Profile participant/scope reads retain the original signed bearer and enterprise.
+Settlement and certificate evidence retain internal credentials, exact APIs,
+operation keys and original source evidence. Relocation never widens permission,
+changes wallet ownership, rewrites receipts or authorizes a business operation.

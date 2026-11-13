@@ -135,6 +135,17 @@ test("fixed CMS approval projects recorded site/source/requester without changin
   assert.equal(result.decisionContract, undefined);
   assert.equal(result.reviewerEligibility, undefined);
   assert.equal(f.instance.context.password, "private");
+  const node = f.version.graph.nodes[0];
+  const task = { ...f.task, approvalPolicy: {} };
+  assert.throws(
+    () => f.owner.assertTaskCompletionPolicy(f.request, task, f.instance, f.version, node, {}),
+    { code: "ERR_PROCESS_00029" },
+  );
+  assert.doesNotThrow(
+    () => f.owner.assertTaskCompletionPolicy(f.request, task, f.instance, f.version, node, {
+      decision: { approved: true },
+    }),
+  );
   for (const patch of [
     { version: 99 },
     { status: "DRAFT" },

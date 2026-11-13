@@ -25,24 +25,9 @@ module.exports = {
     /** Completes the standard service post-initialization contract. */
     postInit: function () { return Promise.resolve(true); },
 
-    /** Normalizes runtime role metadata into comparable uppercase tokens. */
-    runtimeRoleTokens: function (role) {
-        let tokens = [];
-        if (!role) return tokens;
-        if (typeof role === 'string') {
-            tokens.push(role);
-        } else if (typeof role === 'object' && !Array.isArray(role)) {
-            ['code', 'publication', 'runtimeRole'].forEach(key => {
-                if (role[key]) tokens.push(role[key]);
-            });
-        }
-        return tokens.map(token => String(token).toUpperCase()).filter(Boolean);
-    },
-
-    /** Normalizes caller target authority into one bounded comparison object. */
+    /** Validates authority using the existing DMS contract, without role aliases. */
     normalizeTargetAuthority: function (targetAuthority) {
-        if (!targetAuthority) return {};
-        return typeof targetAuthority === 'string' ? { runtimeRole: targetAuthority } : targetAuthority;
+        return require('./defaultModuleService').normalizeTargetAuthority(targetAuthority);
     },
 
     /** Stores a complete local owner snapshot, used by tests or embedded runtimes without BackOffice. */
@@ -102,6 +87,7 @@ module.exports = {
         if (!owner || !owner.moduleName || !owner.endpoint) return undefined;
         return {
             moduleName: String(owner.moduleName),
+            projectCode: owner.projectCode ? String(owner.projectCode) : undefined,
             connectionName: owner.connectionName ? String(owner.connectionName) : undefined,
             instanceId: owner.instanceId ? String(owner.instanceId) : undefined,
             environment: owner.environment ? String(owner.environment) : undefined,
@@ -127,13 +113,7 @@ module.exports = {
         if (authority.environment && String(authority.environment) !== String(owner.environment || '')) return false;
         if (authority.server && String(authority.server) !== String(owner.server || '')) return false;
         if (authority.node && String(authority.node) !== String(owner.node || '')) return false;
-        if (authority.runtimeRole || authority.code || authority.publication) {
-            let requestedTokens = this.runtimeRoleTokens(authority.runtimeRole || authority);
-            if (authority.code) requestedTokens = requestedTokens.concat(this.runtimeRoleTokens({ code: authority.code }));
-            if (authority.publication) requestedTokens = requestedTokens.concat(this.runtimeRoleTokens({ publication: authority.publication }));
-            let ownerTokens = this.runtimeRoleTokens(owner.runtimeRole);
-            if (!requestedTokens.some(token => ownerTokens.includes(token))) return false;
-        }
+        if (authority.publication && authority.publication !== owner.runtimeRole?.publication) return false;
         if (options.connectionName && options.connectionName !== options.moduleName &&
             owner.connectionName && owner.connectionName !== options.connectionName &&
             owner.server !== options.connectionName) {
@@ -154,17 +134,35 @@ module.exports = {
 
     /** Resolves a module owner from a supplied lease snapshot. */
     resolveFromOwners: function (options, owners) {
+        this.normalizeTargetAuthority(options.targetAuthority);
         let candidates = [].concat(owners || [])
             .map(owner => this.normalizeOwner(owner))
             .filter(owner => this.ownerMatches(options, owner))
             .sort((left, right) =>
                 this.scoreOwner(options, right) - this.scoreOwner(options, left) ||
                 String(right.lastSeenAt || '').localeCompare(String(left.lastSeenAt || '')));
+        const registration = require("./defaultModuleRegistrationAgentService");
+        const runtimeLocal = registration.getModuleOwnershipScope(options.moduleName) === "runtimeLocal";
+        if (runtimeLocal && candidates.length && !this.normalizeTargetAuthority(options.targetAuthority).server) {
+            throw new Error('Runtime-local module resolution requires an explicit logical server: ' + options.moduleName);
+        }
+        const ownership = new Map();
+        for (const candidate of candidates) {
+            const key = JSON.stringify([candidate.projectCode || '', candidate.environment || '', candidate.moduleName,
+                candidate.runtimeRole?.publication || '', ...(runtimeLocal ? [candidate.server] : [])]);
+            const server = candidate.server || candidate.instanceId || candidate.endpoint;
+            const previous = ownership.get(key);
+            if (previous && previous !== server) throw new Error('Ambiguous runtime module owner: ' + candidate.moduleName);
+            ownership.set(key, server);
+        }
+        const contexts = new Set(candidates.map(candidate => candidate.runtimeRole?.publication || ''));
+        if (contexts.size > 1) throw new Error('Module resolution requires an explicit publication context: ' + options.moduleName);
         return candidates[0];
     },
 
     /** Resolves a runtime owner, delegating to BackOffice when it is available. */
     resolveOwner: function (options) {
+        this.normalizeTargetAuthority(options.targetAuthority);
         let registry = SERVICE.DefaultBackofficeRegistryService;
         if (registry && registry !== this && typeof registry.resolveRuntimeOwner === 'function') {
             return registry.resolveRuntimeOwner(options);

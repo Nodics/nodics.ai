@@ -29,6 +29,12 @@ const crypto = require('crypto');
  * @property {Object} UTILS Provides directory removal and schema generation helpers.
  */
 module.exports = {
+    _validatedBuildIdentities: new WeakMap(),
+    /** Returns only the build digest validated for this running instance, never current disk claims. */
+    getValidatedBuildIdentity: function () {
+        const identity = this._validatedBuildIdentities.get(NODICS);
+        return identity ? Object.assign({}, identity) : undefined;
+    },
     /**
      * Initializes the infrastructure service.
      *
@@ -337,6 +343,7 @@ module.exports = {
 
     /** Rejects missing, changed or stale server generation before runtime entities are loaded. */
     validateBuildManifest: function () {
+        this._validatedBuildIdentities.delete(NODICS);
         const file = NODICS.getGeneratedArtifactPath('buildManifest');
         const rebuild = 'Run the selected project server build before startup';
         if (fs.existsSync(file + '.lock')) throw new Error('Selected server generation is locked; startup requires a completed build');
@@ -350,6 +357,8 @@ module.exports = {
                 throw new Error('Generated server ' + type + ' output is missing or changed. ' + rebuild);
             }
         }
+        this._validatedBuildIdentities.set(NODICS, { contractVersion: 1, inputDigest: manifest.inputDigest,
+            validatedAt: new Date().toISOString(), project: NODICS.getEnvironmentName(), environment: NODICS.getSelectedEnvironmentName(), server: NODICS.getServerName() });
         return true;
     },
 

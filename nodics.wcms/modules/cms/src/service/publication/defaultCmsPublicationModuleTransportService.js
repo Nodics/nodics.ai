@@ -39,7 +39,7 @@ module.exports = {
     invoke: function (operation, payload, request, internalToken, target) {
         return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
             connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
-            targetAuthority: { runtimeRole: target.runtimeRole || 'WCMS_ONLINE' },
+            targetAuthority: { publication: target.publication }, local: false,
             nodeId: target.nodeId, methodName: 'POST',
             apiName: '/publication/target/' + operation, requestBody: Object.assign({ tenant: request.tenant,
                 correlationId: request.correlationId || request.requestId }, payload),
@@ -53,10 +53,13 @@ module.exports = {
     send: async function (operation, payload, request) {
         let publication = (CONFIG.get('cms') || {}).publication || {};
         let target = publication.target || {};
-        if (publication.runtimeRole !== 'STAGED') {
+        if (publication.runtimeRole !== 'STAGED' ||
+            !SERVICE.DefaultModuleService?.isLocalModuleActive('cms') ||
+            !SERVICE.DefaultModuleService.isCurrentRuntimeAuthority({ publication: 'STAGED' })) {
             throw new CLASSES.NodicsError('CMS_PUBLICATION_SOURCE_ROLE_INVALID', 'CMS publication transport is available only on a Staged runtime');
         }
-        if (!target.moduleName || !target.connectionName || target.connectionName === 'default') {
+        if (target.moduleName !== 'cms' || target.publication !== 'ONLINE' ||
+            !target.connectionName || target.connectionName === 'default') {
             throw new CLASSES.NodicsError('CMS_PUBLICATION_TARGET_UNAVAILABLE', 'A distinct Online CMS target module connection is required');
         }
         let internalToken = NODICS.getInternalAuthToken(request.tenant);

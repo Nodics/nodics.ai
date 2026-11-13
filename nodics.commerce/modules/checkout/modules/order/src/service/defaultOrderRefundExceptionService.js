@@ -39,12 +39,11 @@ module.exports = {
   /** Requires explicit layered selection and exact canonical environment admission, never a deployment class or name suffix. */
   settings: function () {
     const policy = (CONFIG.get("order") || {}).refunds || {}, config = policy.policyExceptions || {};
-    const role = CONFIG.get("runtimeRole");
     const name = typeof NODICS !== "undefined" &&
       (typeof NODICS.getSelectedEnvironmentName === "function" ? NODICS.getSelectedEnvironmentName() :
         typeof NODICS.getEnvironmentName === "function" ? NODICS.getEnvironmentName() : undefined);
     if (policy.enabled !== true || config.enabled !== true ||
-        (typeof role === "string" ? role : role?.code) !== "COMMERCE" ||
+        SERVICE.DefaultModuleService?.isLocalModuleActive?.("order") !== true || CONFIG.get("runtimeRole")?.publication !== "OPERATIONAL" ||
         !Array.isArray(config.environmentNames) || !config.environmentNames.length || config.environmentNames.length > 16 ||
         new Set(config.environmentNames).size !== config.environmentNames.length ||
         Array.from(config.environmentNames).some(value => typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value)) ||
@@ -77,7 +76,7 @@ module.exports = {
         [auth.entCode, auth.enterpriseCode, input.enterpriseCode].some(value => value !== undefined && value !== r.enterpriseCode) ||
         permissions.some(permission => !router.isPermissionGranted(permission, router.getGrantedPermissions(r), {}))) this.fail();
     let scope = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: "profile", connectionName: "profile",
-      targetAuthority: { runtimeRole: "PLATFORM" }, apiName: "/identity/scopes/me", methodName: "GET",
+      targetAuthority: { publication: "OPERATIONAL" }, apiName: "/identity/scopes/me", methodName: "GET",
       tenant: r.tenant, request: { tenant: r.tenant }, header: { Authorization: r.authorization, "X-Enterprise-Code": r.enterpriseCode },
       timeoutMs: 10000, maxAttempts: 1 });
     for (let n = 0; n < 8; n++) {

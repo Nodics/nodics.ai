@@ -77,8 +77,8 @@ privately retained binding only for its exact sender/port. The test-only
 selected project/environment/server command; every other child is stripped.
 It provides restricted Local-only
 capture, not a provider replacement. It binds IPv4 loopback exclusively, accepts
-only a private generated AUTH PLAIN binding and exact reserved test sender and
-recipient envelope, limits one recipient per message and never opens outbound
+only a private generated AUTH PLAIN binding and exact approved `.test`/`.local`
+test/demo sender and recipient envelope, limits one recipient per message and never opens outbound
 transport. Storage is confined to a pre-admitted private directory, using new
 owner-only files without overwrite. Bounds cover sockets, idle time, command and
 message bytes and total messages. Binding readback refuses symlinks, foreign

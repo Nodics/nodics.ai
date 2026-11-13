@@ -100,8 +100,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
-    "sourceChecksum": "b89ad75aa0dd26fc2b1ef4a03a8536a979994f22dc0278b336f8564bda786397",
-    "sourceWordCount": 1009,
+    "sourceChecksum": "b7cc47da664bcb743c71bc593afb6d98bca2d388177603edf7a6affde5964e40",
+    "sourceWordCount": 1011,
     "audience": [
       "business",
       "architect",
@@ -126,7 +126,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 1009,
+    "wordCount": 1011,
     "sourceEvidence": [
       "../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json",
@@ -212,8 +212,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
-    "sourceChecksum": "f740a1b4473541a72fbd1bf393a83ff8d09d70bf3725bf40149ffe31124724b2",
-    "sourceWordCount": 1036,
+    "sourceChecksum": "8834d6e22ca863d0f5a3b04d31df6702bcdd7e554ba692b92ccf979800d85812",
+    "sourceWordCount": 1066,
     "audience": [
       "business",
       "architect",
@@ -238,10 +238,10 @@ module.exports = {
     "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 1036,
+    "wordCount": 1066,
     "sourceEvidence": [
       "../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
-      "../../../../../nodics.waste/modules/wasteCore/data/core-v001/records/profile/wasteCoreEnterpriseCoreData.js",
+      "../../../../../nodics.platform/modules/profile/llm/contracts/enterprise-membership.md",
       "package.json",
       "src/service"
     ]
@@ -401,8 +401,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
-    "sourceChecksum": "936948176c6b888751fcb1342cc7580bb99b8cb720ce0e2a41370643d64dfffd",
-    "sourceWordCount": 4853,
+    "sourceChecksum": "a333e007db824a308ed44aacbdcc0531c44fec493885a80a12d1ae7802097b99",
+    "sourceWordCount": 4883,
     "audience": [
       "business",
       "architect",
@@ -427,7 +427,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 4853,
+    "wordCount": 4883,
     "sourceEvidence": [
       "../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json",
@@ -772,8 +772,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
-    "sourceChecksum": "0986aaf10c699bf7f59b61ea7a2331e9bcf269aa77ff09d650c181df7d32097e",
-    "sourceWordCount": 1110,
+    "sourceChecksum": "c0733fee9ba16c1b414867b9a10747375749215cd08e9ce445b10e336864dbdd",
+    "sourceWordCount": 1133,
     "audience": [
       "business",
       "architect",
@@ -798,7 +798,7 @@ module.exports = {
     "lifecycleState": "STAGED",
     "maturityState": "IMPLEMENTED",
     "active": true,
-    "wordCount": 1110,
+    "wordCount": 1133,
     "sourceEvidence": [
       "../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
       "../../../../../../nodics.kickoff/modules/circa.ewaste/config/properties.js",
@@ -1053,7 +1053,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.ai",
     "sourcePath": "data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
-    "sourceChecksum": "4ff23616e0aac69284283fc5e900a689a7fa624509cfe122dc4aaba29254485e",
+    "sourceChecksum": "9db09f53411427e850e06b5e13a82bcc3f20c1b598914d42cc34f6057b2e84ee",
     "sourceWordCount": 1322,
     "audience": [
       "business",

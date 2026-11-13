@@ -32,3 +32,10 @@
 ## Required validation
 
 Run the module syntax and contract tests plus affected Foundation/BackOffice/Process/eWaste tests before completion.
+
+
+Keep release discovery in the existing ordinary `data.dataReleases.contributions`
+list using keyed module identities and explicit section replacement. Do not
+restore role profiles, duplicate source owners, alter manifest activation policy,
+or install definitions from configuration. Qualify actual owner/publication
+admission and preserve unselected sources. See the local release composition contract.

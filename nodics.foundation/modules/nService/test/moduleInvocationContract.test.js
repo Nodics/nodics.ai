@@ -118,7 +118,7 @@ const service = Object.assign({}, definition, {
 	    let authorityRemote = await service.invokeModule({
 	        moduleName: 'inventory',
 	        connectionName: 'inventoryOnline',
-	        targetAuthority: { runtimeRole: 'INVENTORY_ONLINE' },
+	        targetAuthority: { publication: 'ONLINE' },
 	        serviceName: 'DefaultInventoryService',
 	        operationName: 'reserve',
 	        apiName: '/inventory/reservations',
@@ -127,7 +127,7 @@ const service = Object.assign({}, definition, {
 	    });
 	    assert.deepStrictEqual(authorityRemote, { code: 'ENT' });
 	    assert.strictEqual(capturedRequest.connectionName, 'inventoryOnline');
-	    assert.strictEqual(capturedRequest.targetAuthority.runtimeRole, 'INVENTORY_ONLINE');
+	    assert.strictEqual(capturedRequest.targetAuthority.publication, 'ONLINE');
 	    assert.strictEqual(fetchedRequest.uri, 'http://remote.test/nodics/inventory/v0/inventory/reservations');
 	    assert.strictEqual(service.getTransportDiagnostics().moduleInvocation.staticFallback, 1);
 
@@ -169,14 +169,14 @@ const service = Object.assign({}, definition, {
     try {
         await service.invokeModule({
             moduleName: 'checkout',
-            targetAuthority: { runtimeRole: 'CHECKOUT_ONLINE' },
+            targetAuthority: { publication: 'ONLINE' },
             apiName: '/cart',
             request: { tenant: 'default' }
         });
         assert.fail('Unavailable endpoint should expose runtime invocation diagnostics');
     } catch (error) {
         assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.targetModule, 'checkout');
-        assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.targetRuntimeRole, 'CHECKOUT_ONLINE');
+        assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.targetPublication, 'ONLINE');
         assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.phase, 'runtimeResolution');
         assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.failureCode, 'REMOTE_ENDPOINT_UNAVAILABLE');
     }
@@ -185,12 +185,12 @@ const service = Object.assign({}, definition, {
         moduleName: 'checkout',
         instanceId: 'checkout-online-1',
         endpoint: 'http://registry.test/nodics/checkout',
-        runtimeRole: { code: 'CHECKOUT_ONLINE' },
+        runtimeRole: { code: 'CHECKOUT_ONLINE', publication: 'ONLINE' },
         state: 'UP'
     }];
     let registryRemote = await service.invokeModule({
         moduleName: 'checkout',
-        targetAuthority: { runtimeRole: 'CHECKOUT_ONLINE' },
+        targetAuthority: { publication: 'ONLINE' },
         apiName: '/cart',
         methodName: 'GET',
         request: { tenant: 'default' },

@@ -1,0 +1,108 @@
+{
+  "reason": "Immutable pre-provenance correction selection; not installed-runtime proof",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "config",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 5,
+      "components": 5,
+      "routes": 5,
+      "releaseChecksum": "7483d5296f0877a30372ca34b1ee2b27308213fe29b14e794bfa06fc15ecf46e",
+      "generatedHashes": {
+        "docs-v001/records/documentation/configDocumentationNodeData.js": "9a319d8cadc2a318b9d58f76978ecafbd38e671d2381e37ae1ad2a893fa97013",
+        "docs-v001/records/documentation/configDocumentationPageMetadataData.js": "13cce9cbbebabd5e62b78508f25fb03681b26dbe1dce313bc9912c7e785881e1",
+        "docs-v001/records/documentation/configDocumentationPublicationStateData.js": "f407a59fccce173c3250525c3e23a660001d0b29f02c6e39aaada3893dad6c2c",
+        "docs-v001/records/documentation/configDocumentationSearchMetadataData.js": "466cf00c992a614d4f9f50b87c0f2f1c6c1089044a6501bdfe2693f0bb1e0d26",
+        "docs-v001/records/documentation/configDocumentationComponentData.js": "218cea021d5f15882dc86c492b2466e6bdc9167ad15e5620a2664ad69f987386",
+        "docs-v001/records/documentation/configDocumentationPageData.js": "be5c9f2074639a07d158e20a1d5f12108bb89b18c6983c2c54f73343c8058827",
+        "docs-v001/records/documentation/configDocumentationRouteData.js": "3dfa3d3938b9d7030029a51ec9fa460f3afb335ad1b4da3f47ddb4094125826b",
+        "docs-v001/headers/100_configDocumentationContentPackHeader.js": "d74a609bb5d4125ca035bef56158f4ae5f767c1d928db05a4b23ce4a56dc0882"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  },
+  "successorVersion": "0.0.2",
+  "articles": [
+    {
+      "id": "framework.runtime-server-composition",
+      "componentCode": "nodicsDocsComponentframeworkRuntimeServerComposition",
+      "previousFile": "docs-v001/records/documentation/configDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/configDocumentationRelease002ComponentData.js",
+      "blocksSha256": "6de39a835053b2fa3f0a939d5250bbdd2b61000bbeae0c03a8fd929982730938",
+      "digestMode": "titled",
+      "sourceChecksum": "1324b171c3f261bda0d82e217be0c82ec26728f8ac858b893b903d0ccb9f0adf",
+      "sourceWordCount": 517
+    },
+    {
+      "id": "framework.module-loading-service-precedence",
+      "componentCode": "nodicsDocsComponentframeworkModuleLoadingServicePrecedence",
+      "previousFile": "docs-v001/records/documentation/configDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/configDocumentationRelease002ComponentData.js",
+      "blocksSha256": "35331ab136034e25507c5e8c0f82a5309882d2b63c29b601770cbbed54712574",
+      "digestMode": "titled",
+      "sourceChecksum": "a133e75dd0bb45c7209193d20b44628b7f61decb7955e993c58490743518d2b5",
+      "sourceWordCount": 755
+    },
+    {
+      "id": "configuration.runtime-behavior-management",
+      "componentCode": "nodicsDocsComponentconfigurationRuntimeBehaviorManagement",
+      "previousFile": "docs-v001/records/documentation/configDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/configDocumentationRelease002ComponentData.js",
+      "blocksSha256": "e35f3ec9b9f844b9014228c373607d04c5acf40ad9cb947986fed55678adc3d5",
+      "digestMode": "titled",
+      "sourceChecksum": "63b4496953c460cea12714020083b5061e07a3a1a0271f0028fb49fb0d7f5219",
+      "sourceWordCount": 4397
+    },
+    {
+      "id": "configuration.framework-startup-lifecycle",
+      "componentCode": "nodicsDocsComponentconfigurationFrameworkStartupLifecycle",
+      "previousFile": "docs-v001/records/documentation/configDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/configDocumentationRelease002ComponentData.js",
+      "blocksSha256": "6bb8535904f5534dd216dabc479d1270688f2e7663f69f44c6cf7367f81417f6",
+      "digestMode": "titled",
+      "sourceChecksum": "c5bc1401f1771e8a44956c2205735bde6c3278d5ca7e17191e2d9d003d3dbba2",
+      "sourceWordCount": 3402
+    },
+    {
+      "id": "runtime.governed-change",
+      "componentCode": "nodicsDocsComponentruntimeGovernedChange",
+      "previousFile": "docs-v001/records/documentation/configDocumentationComponentData.js",
+      "currentFile": "docs-v001/records/documentation/configDocumentationRelease002ComponentData.js",
+      "blocksSha256": "fa7ee6157ce327083af4ad400a08e40a07542f99c410d5421308afe99939bcf1",
+      "digestMode": "titled",
+      "sourceChecksum": "07fba0e1d51410d70ad61804682e02408a941f6b3158741d5c517c8c895cbf94",
+      "sourceWordCount": 1282
+    }
+  ],
+  "successorSnapshot": "test/fixtures/documentationAdoptionPredecessor"
+}

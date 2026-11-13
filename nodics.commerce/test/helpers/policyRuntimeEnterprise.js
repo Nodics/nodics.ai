@@ -38,10 +38,11 @@ module.exports = function register({ domain, setup, request }) {
     const release = await f.source.getVersion(publication, request);
     const policy = { enabled: true, enterpriseCodes: [request.enterpriseCode] };
     const settings = { runtimeRole: "ONLINE", sourceAuthority: { moduleName: domain,
-      connectionName: "reviewed-staged", runtimeRole: "COMMERCE_STAGED" },
-      target: { moduleName: domain, connectionName: "reviewed-online", runtimeRole: "COMMERCE" } };
+      connectionName: "reviewed-staged", publication: "STAGED" },
+      target: { moduleName: domain, connectionName: "reviewed-online", publication: "OPERATIONAL" } };
     global.CONFIG = { get: name => name === "publish" ? { approvalWorkflow: { runtimeEnterpriseScope: policy } } :
       name === "identityGovernance" ? { systemAccessGroups: ["serviceAccountUserGroup"] } :
+      name === "runtimeRole" ? { code: "arbitrary-host", publication: settings.runtimeRole === "STAGED" ? "STAGED" : "OPERATIONAL" } :
       name === domain ? { publication: settings } : {} };
     global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message || code); this.code = code; } } };
     const authData = { tenant: request.tenant, entCode: "default", enterpriseCode: "default",
@@ -74,11 +75,11 @@ module.exports = function register({ domain, setup, request }) {
     global.NODICS.getInternalAuthToken = tenant => {
       assert.equal(tenant, request.tenant); return "isolated-runtime-token";
     };
-    global.SERVICE.DefaultModuleService = { invokeModule: async invocation => {
+    global.SERVICE.DefaultModuleService = { isLocalModuleActive: name => name === domain, invokeModule: async invocation => {
       state.transports.push({ ...invocation, header: structuredClone(invocation.header), requestBody: structuredClone(invocation.requestBody) });
       assert.equal(invocation.local, false);
       assert.equal(invocation.connectionName, "reviewed-staged");
-      assert.deepEqual(invocation.targetAuthority, { runtimeRole: "COMMERCE_STAGED" });
+      assert.deepEqual(invocation.targetAuthority, { publication: "STAGED" });
       assert.equal(invocation.apiName, "/publication/policy/authorize");
       assert.deepEqual(invocation.header, { Authorization: "Bearer isolated-runtime-token", tenant: request.tenant });
       const command = structuredClone(invocation.requestBody);
@@ -184,9 +185,27 @@ module.exports = function register({ domain, setup, request }) {
     });
   });
 
+  test("policy transport rejects legacy selectors, wrong publication and nonowner execution", async t => {
+    const f = await fixture(t);
+    f.settings.runtimeRole = "STAGED";
+    const originalTarget = structuredClone(f.settings.target);
+    f.settings.target.runtimeRole = "COMMERCE";
+    assert.throws(() => transport.getTargetStatus({}, request), /Distinct Online/);
+    f.settings.target = { ...originalTarget, publication: "STAGED" };
+    assert.throws(() => transport.getTargetStatus({}, request), /Distinct Online/);
+    f.settings.target = originalTarget;
+    SERVICE.DefaultModuleService.isLocalModuleActive = () => false;
+    assert.throws(() => transport.getTargetStatus({}, request), /Distinct Online/);
+    SERVICE.DefaultModuleService.isLocalModuleActive = name => name === domain;
+    const originalGet = CONFIG.get;
+    CONFIG.get = name => name === "runtimeRole" ? { code: "COMMERCE_STAGED", publication: "UNKNOWN" } : originalGet(name);
+    assert.throws(() => transport.getTargetStatus({}, request), /Distinct Online/);
+    assert.equal(f.state.transports.length, 0);
+  });
+
   test("all policy transport directions preserve body business identity without forwarding human enterprise headers", async t => {
     const f = await fixture(t), sent = [];
-    SERVICE.DefaultModuleService = { invokeModule: async input => { sent.push(input); return {}; } };
+    SERVICE.DefaultModuleService = { isLocalModuleActive: name => name === domain, invokeModule: async input => { sent.push(input); return {}; } };
     const human = { tenant: request.tenant, enterpriseCode: request.enterpriseCode,
       authData: { tokenType: "access", principalType: "human", entCode: request.enterpriseCode },
       httpRequest: { headers: { authorization: "Bearer isolated-human-token", "x-enterprise-code": request.enterpriseCode } } };

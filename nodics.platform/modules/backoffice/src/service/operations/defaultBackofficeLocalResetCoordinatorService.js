@@ -64,18 +64,25 @@ module.exports = {
       );
     return providers.map((provider) => {
       provider = Object.assign({}, policy.providerDefaults || {}, provider);
+      const authority = provider.targetAuthority;
+      const identifier = value => typeof value === "string" && /^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(value);
       if (
         !provider ||
         !/^[a-z][A-Za-z0-9]{1,63}$/.test(String(provider.code || "")) ||
         !/^[a-z][A-Za-z0-9]{1,63}$/.test(String(provider.moduleName || "")) ||
-        !/^[a-z][A-Za-z0-9]{1,63}$/.test(String(provider.connectionName || ""))
+        !/^[a-z][A-Za-z0-9]{1,63}$/.test(String(provider.connectionName || "")) ||
+        !authority || typeof authority !== "object" || Array.isArray(authority) ||
+        !identifier(authority.server) ||
+        !["STAGED", "ONLINE", "OPERATIONAL"].includes(authority.publication) ||
+        Object.keys(authority).some(key => !["server", "publication", "environment", "node"].includes(key)) ||
+        ["environment", "node"].some(key => Object.hasOwn(authority, key) && !identifier(authority[key]))
       ) {
         throw new CLASSES.NodicsError(
           "ERR_BOF_00091",
           "Local reset provider is unavailable",
         );
       }
-      return provider;
+      return { ...provider, targetAuthority: { ...authority } };
     });
   },
   /** Executes the documented bounded module operation. */

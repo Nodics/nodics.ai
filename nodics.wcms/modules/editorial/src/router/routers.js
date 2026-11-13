@@ -19,6 +19,36 @@
 module.exports = {
     editorial: {
         editorialAuthoring: {
+            createDraft: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permission: 'editorial.backoffice.manage', apiExposure: 'editorialAuthoring',
+                key: '/authoring/articles/create', method: 'POST',
+                controller: 'DefaultEditorialAuthoringController', operation: 'createDraft',
+            },
+            workspace: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permission: 'editorial.backoffice.read', apiExposure: 'editorialAuthoring',
+                key: '/authoring/articles/workspace', method: 'POST',
+                controller: 'DefaultEditorialAuthoringController', operation: 'workspace', cache: { enabled: false },
+            },
+            saveDraft: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permission: 'editorial.backoffice.manage', apiExposure: 'editorialAuthoring',
+                key: '/authoring/articles/save', method: 'POST',
+                controller: 'DefaultEditorialAuthoringController', operation: 'saveDraft',
+            },
+            inspectCommand: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permission: 'editorial.backoffice.manage', apiExposure: 'editorialAuthoring',
+                key: '/authoring/articles/inspect-command', method: 'POST',
+                controller: 'DefaultEditorialAuthoringController', operation: 'inspectCommand', cache: { enabled: false },
+            },
+            archive: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permission: 'editorial.backoffice.manage', apiExposure: 'editorialAuthoring',
+                key: '/authoring/articles/archive', method: 'POST',
+                controller: 'DefaultEditorialAuthoringController', operation: 'archive',
+            },
             validate: {
                 secured: true,
                 authTokenTypes: ['access'],

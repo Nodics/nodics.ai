@@ -66,3 +66,6 @@ module.exports = {
         }
     }
 };
+
+// Model-purpose presentation belongs to this schema owner; it grants no operations.
+module.exports.wcmsExperience.cmsExperiencePlacement.backoffice = Object.assign({ description: "Rules selecting where and when a CMS component appears. Private preview and public Online delivery retain separate owner gates." }, module.exports.wcmsExperience.cmsExperiencePlacement.backoffice);

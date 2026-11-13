@@ -56,11 +56,9 @@ contracts.
   Commerce core-reference import or general activation. Optional
   `operatorEnterpriseRef` identifies an operator differing from the parent store.
 - Waste Collection Point uses required `locationRef` and required
-  `operatorEnterpriseRef`; accepted material policy remains Waste-owned. Legacy
-  collection-centre imports should reference the Waste Core contributed
-  `NODICS_WASTE_MANAGEMENT_CO` demo operator until the true operator enterprise
-  is confirmed. Use the Profile `default` platform owner only as a bootstrap
-  fallback.
+  `operatorEnterpriseRef`; accepted material policy remains Waste-owned. Circa Sample installs
+  its operator enterprise before the network locations and collection points.
+  Other applications supply their own operator references.
 
 ## Validation
 

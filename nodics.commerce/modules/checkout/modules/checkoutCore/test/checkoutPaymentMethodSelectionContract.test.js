@@ -25,6 +25,7 @@ const ports = require("../src/service/defaultCheckoutPlacementPortsService");
 
 test.beforeEach(() => {
   global.SERVICE = {
+      DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) }, DefaultModuleService: { isLocalModuleActive: moduleName => ["checkoutCore"].includes(moduleName), },
     DefaultCardPaymentMethodService: {
       prepare: (request) => Object.assign({ methodCode: "CARD" }, request),
     },
@@ -120,7 +121,7 @@ test("Checkout payment selection supports card, wallet, and cash-on-delivery met
   assert.equal(recorded.evidence.providerRequired, false);
 });
 
-test("Checkout authorization routes Loyalty reward payment through the Loyalty reward provider", async () => {
+test("Checkout authorization routes Loyalty reward payment through the Loyalty reward provider", async t => {
   const calls = [];
   global.CONFIG = { get: () => ({ enabled: true }) };
   global.SERVICE.DefaultPaymentExecutionService = {
@@ -153,24 +154,56 @@ test("Checkout authorization routes Loyalty reward payment through the Loyalty r
     result: [],
   });
 
-  const created = ports.create();
-  const authorization = await created.authorizePayment(
-    {
-      tenant: "default",
-      ownerId: "customer-1",
-      idempotencyKey: "checkout-1",
-      correlationId: "corr-1",
-      authData: { tenant: "default" },
-      payload: {
-        orderCode: "order-1",
-        cartCode: "cart-1",
-        paymentMethod: "LOYALTY_REWARD",
-        walletCode: "wallet-1",
-        rewardAmount: "25.00",
-      },
+  const previous = { NODICS: global.NODICS, UTILS: global.UTILS };
+  t.after(() => Object.assign(global, previous));
+  const rows = [];
+  global.UTILS = { createModelName: name => name };
+  global.NODICS = { getModels: () => ({ checkoutCheckpoint: { primaryKey: "code",
+    rawSchema: { definition: { revision: { type: "int" } } }, compareAndSetItem() {}, updateItems() {} } }) };
+  SERVICE.DefaultModelConcurrencyService = { getField: () => undefined };
+  SERVICE.DefaultDatabaseModelHandlerService = { inspectIndexes: async () => ({ versioned: false,
+    indexes: [{ unique: true, key: { code: 1 } }] }) };
+  SERVICE.DefaultCheckoutCheckpointService = {
+    save: async r => {
+      assert.equal(r.options.insertOnly, true);
+      if (rows.some(row => row.code === r.model.code)) throw new Error("duplicate journal");
+      rows.push(structuredClone(r.model));
+      return { code: "SUC_SAVE", result: { acknowledged: true } };
     },
-    { totalAmount: "141.00", currency: "USD" },
-  );
+    get: async r => {
+      const result = rows.filter(row => Object.entries(r.query).every(([key, value]) => row[key] === value));
+      return { code: "SUC_READ", count: result.length, result: structuredClone(result) };
+    },
+  };
+  SERVICE.DefaultCheckoutPlacementPortsService = ports;
+  SERVICE.DefaultCheckoutCompensationRecoveryService = require("../src/service/defaultCheckoutCompensationRecoveryService");
+  const created = ports.create();
+  const request = {
+    tenant: "default", enterpriseCode: "merchant", ownerId: "customer-1",
+    ownerRef: { module: "profile", schema: "customer", code: "customer-1" },
+    actorRef: { principalType: "customer", code: "customer-1" }, participantEnterpriseCode: "participant",
+    idempotencyKey: "checkout-1", correlationId: "corr-1",
+    authData: { tenant: "default", enterpriseCode: "participant" },
+    payload: { orderCode: "order-1", cartCode: "cart-1", paymentMethod: "LOYALTY_REWARD",
+      walletCode: "wallet-1", programCode: "rewards", rewardTypeCode: "points", rewardAmount: "25.00" },
+  };
+  const checkpoint = { ...structuredClone(request), completed: ["VALIDATED", "CALCULATED", "RESERVED", "DIGITAL_RESERVED"],
+    results: { reservation: [] } };
+  const calculation = { totalAmount: "141.00", currency: "USD" };
+  await assert.rejects(created.authorizePayment(request, calculation), /Original Payment checkpoint/);
+  assert.equal(calls.length, 0); assert.equal(rows.length, 0);
+  const execute = SERVICE.DefaultPaymentExecutionService.execute;
+  SERVICE.DefaultPaymentExecutionService.execute = async (...args) => {
+    assert.equal(rows.length, 1, "original journal must precede provider dispatch");
+    assert.equal(rows[0].evidence.originalPaymentDispatch.paymentKey, "checkout-1:payment");
+    assert.deepEqual(rows[0].evidence.ownerRef, request.ownerRef);
+    assert.deepEqual(rows[0].evidence.actorRef, request.actorRef);
+    assert.equal(rows[0].evidence.originalAuthorization.amount, "25.00");
+    return execute(...args);
+  };
+  const authorization = await created.authorizePayment(request, calculation, [], checkpoint);
+  await assert.rejects(created.authorizePayment(request, calculation, [], checkpoint), /duplicate journal/);
+  assert.equal(calls.length, 1, "a duplicate journal cannot redispatch Payment");
 
   assert.equal(calls[0].adapter.code, "loyalty-reward-points");
   assert.equal(calls[0].request.methodCode, "LOYALTY_REWARD");
@@ -333,6 +366,7 @@ test("Checkout completion retires customer Cart intake and active entries", asyn
       authData: { tenant: "default" },
       idempotencyKey: "checkout-1",
       correlationId: "corr-1",
+      results: {},
       completed: [
         "CALCULATED",
         "RESERVED",

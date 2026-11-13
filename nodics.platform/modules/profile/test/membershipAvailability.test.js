@@ -21,7 +21,11 @@ test('Profile projects existing defaults and independent qualified opt-ins witho
     global.CONFIG = { get: () => ({ categories: { profileMembership: { enabled: exposure } } }) };
     const memberships = { ...properties.enterpriseManagement.memberships };
     const owner = { ...provider, getEnterpriseManagementConfig: () => ({ memberships }) };
-    const read = () => owner.getCapability().publicFeatureAvailability.features;
+    const read = () => {
+      const { invitedEmployeeRegistration, ...memberships } = owner.getCapability().publicFeatureAvailability.features;
+      assert.equal(invitedEmployeeRegistration, false);
+      return memberships;
+    };
     assert.deepEqual(read(), { enterpriseMembershipDiscovery: false, enterpriseMembershipSwitch: false });
     Object.assign(memberships, { enabled: true, inventoryQualified: true, sessionBindingQualified: true,
       assignmentClaimIndexQualified: true, browserContextSwitchQualified: true });

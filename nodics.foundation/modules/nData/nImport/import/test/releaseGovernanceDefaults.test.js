@@ -8,59 +8,18 @@
     root LICENSE file or a separate written agreement with Nodics.
 
  */
-/** @module import/test/releaseGovernanceDefaults @description Proves required lifecycle and destination defaults, explicit legacy compatibility and Online denial. @layer test @owner import */
+/** @module import/test/releaseGovernanceDefaults @description Proves required lifecycle and destination defaults, retired selector refusal and owner templates. @layer test @owner import */
 const assert = require('node:assert/strict');
 const test = require('node:test');
 const definition = require('../src/service/release/defaultDataReleaseService');
 const defaults = require('../config/properties').data.dataReleases;
-test('release safeguards inherit from nImport while runtime roles and exceptions remain deployment-owned', () => {
-    let policy = { ...defaults },
-        role = { code: 'WAREHOUSE' };
-    const service = {
-        ...definition,
-        configuration: () => policy,
-        error: (code, message) => Object.assign(new Error(message), { code }),
-    };
-    global.CONFIG = { get: (key) => (key === 'runtimeRole' ? role : key === 'environment' ? {class:'QA'} : undefined) };
+test('release safeguards are owner defaults and retired destination allowances fail closed', () => {
+    const policy = { ...defaults, allowedDestinationRoles: [] };
+    const service = { ...definition, configuration: () => policy,
+        error: (code, message) => Object.assign(new Error(message), { code }) };
     assert.equal(policy.lifecycleMetadataRequired, true);
-    assert.equal(policy.destinationEnforced, true);
     assert.throws(() => service.validateLifecycleMetadata({}, 'warehouse', 'core'), /incomplete/);
-    assert.throws(() => service.validateDestination({ environmentScope: ['QA'] }), /metadata/);
-    assert.equal(
-        service.validateDestination({
-            destinationRole: 'WAREHOUSE',
-            environmentScope: ['QA'],
-        }),
-        true,
-    );
-    assert.throws(
-        () =>
-            service.validateDestination({
-                destinationRole: 'CONTENT',
-                environmentScope: ['QA'],
-            }),
-        /destination/,
-    );
-    assert.throws(
-        () =>
-            service.validateDestination({
-                destinationRole: 'WAREHOUSE',
-                environmentScope: ['PROD'],
-            }),
-        /environment/,
-    );
-    role = { code: 'WCMS_ONLINE' };
-    policy.allowedDestinationRoles = [];
-    assert.throws(
-        () =>
-            service.validateDestination({
-                destinationRole: 'WCMS_ONLINE',
-                environmentScope: ['QA'],
-            }),
-        /destination/,
-    );
-    policy.lifecycleMetadataRequired = false;
-    assert.equal(service.validateLifecycleMetadata({}, 'legacy', 'core'), undefined);
+    assert.throws(() => service.validateDestination({}), /retired/);
 });
 
 test('profile mechanics inherit from an inert owner template and later explicit steps replace it', () => {
@@ -134,7 +93,9 @@ test('catalogue items expose backend-owned preparation readiness guidance', () =
 
 test('public catalogue response includes release readiness projection', async () => {
     const previousNodics = global.NODICS;
+    const previousService = global.SERVICE;
     global.NODICS = { getSelectedEnvironmentName: () => 'kickoffLocal' };
+    global.SERVICE = {};
     const release = {
         releaseCode: 'circa.ewaste:content',
         sectionCode: 'content',
@@ -176,6 +137,8 @@ test('public catalogue response includes release readiness projection', async ()
         assert.equal(response.data[0].readiness.blockers[0].repair.action, 'PREPARE_CAPABILITY');
     } finally {
         global.NODICS = previousNodics;
+        if (previousService === undefined) delete global.SERVICE;
+        else global.SERVICE = previousService;
     }
 });
 

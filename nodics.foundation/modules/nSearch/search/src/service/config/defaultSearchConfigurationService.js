@@ -205,7 +205,7 @@ module.exports = {
     getSearchReadiness: function () {
         return Object.keys(this.searchEngines).every(moduleName => Object.keys(this.searchEngines[moduleName]).every(tenant => {
             let engine = this.searchEngines[moduleName][tenant];
-            return !engine || typeof engine.isActive !== 'function' || engine.isActive() === true;
+            return Boolean(engine && typeof engine.isActive === 'function' && engine.isActive() === true);
         }));
     },
 
@@ -226,35 +226,30 @@ module.exports = {
         return Object.keys(modules).filter(moduleName => !!search[moduleName]);
     },
 
-    /** Summarizes database/search read-source policy owned by nSearch configuration. */
+    /**
+     * Reports effective module search policy after configuration projection.
+     * Uses the canonical module/tenant resolver; never recomposes role presets.
+     * @returns {Object} Credential-free policy summary for operator projections.
+     */
     readSourcePolicy: function () {
-        let search = {};
-        let runtimeRoleConfig = {};
-        try {
-            search = CONFIG && typeof CONFIG.get === 'function' ? CONFIG.get('search') || {} : {};
-            runtimeRoleConfig = CONFIG && typeof CONFIG.get === 'function' ? CONFIG.get('runtimeRole') || {} : {};
-        } catch (error) {
-            search = {};
-            runtimeRoleConfig = {};
-        }
-        let defaultOptions = (search.default || {}).options || {};
-        let runtimeRole = runtimeRoleConfig.code || runtimeRoleConfig.name || runtimeRoleConfig.roleCode || undefined;
-        let runtimeProfile = runtimeRole && search.runtimeRoleProfiles ? search.runtimeRoleProfiles[String(runtimeRole)] : undefined;
-        let profileEntries = Object.entries(runtimeProfile || {}).filter(entry => {
-            let value = entry[1] || {};
-            return value.options && value.options.enabled === true;
-        });
-        let defaultEnabled = defaultOptions.enabled === true;
-        let fallbackEnabled = defaultOptions.fallback === true;
+        const tenant = CONFIG.get('defaultTenant') || 'default';
+        const search = CONFIG.get('search', tenant) || {};
+        const defaultOptions = search.default?.options || {};
+        const modules = this.configuredSearchModules();
+        const enabledModuleCodes = modules.filter(moduleName =>
+            this.getSearchConfiguration(moduleName, tenant).options?.enabled === true);
+        const defaultEnabled = defaultOptions.enabled === true;
+        const fallbackEnabled = defaultOptions.fallback === true;
         return {
-            runtimeRole: runtimeRole ? String(runtimeRole) : 'UNKNOWN',
+            runtimeRole: CONFIG.get('runtimeRole')?.code || 'UNKNOWN',
             engine: String(defaultOptions.engine || 'database'),
             defaultSearchEnabled: defaultEnabled,
             defaultFallbackEnabled: fallbackEnabled,
-            runtimeProfileCount: profileEntries.length,
-            runtimeProfileCodes: profileEntries.map(entry => String(entry[0])),
-            readSourcePolicy: fallbackEnabled ? 'SEARCH_WITH_DATABASE_FALLBACK' :
-                defaultEnabled || profileEntries.length > 0 ? 'SEARCH_ENGINE' : 'DATABASE_OR_OWNER_DEFAULT',
+            enabledModuleCount: enabledModuleCodes.length,
+            enabledModuleCodes,
+            readSourcePolicy: defaultEnabled || enabledModuleCodes.length > 0 ? 'SEARCH_ENGINE' : 'DATABASE_OR_OWNER_DEFAULT',
+            policyEvidence: 'CONFIGURATION_ONLY',
+            fallbackExecution: 'OWNER_DEFINED',
         };
     },
 
@@ -265,7 +260,7 @@ module.exports = {
             let moduleName = entry[0];
             Object.entries(entry[1] || {}).forEach(tenantEntry => {
                 let engine = tenantEntry[1];
-                let active = !engine || typeof engine.isActive !== 'function' || engine.isActive() === true;
+                let active = Boolean(engine && typeof engine.isActive === 'function' && engine.isActive() === true);
                 result.push({ moduleName: moduleName, tenant: tenantEntry[0], active: active });
             });
             return result;
@@ -273,9 +268,9 @@ module.exports = {
         let inactive = engineEntries.filter(entry => entry.active !== true);
         let configuredModules = this.configuredSearchModules();
         let repairActions = [
-            { action: 'REFRESH_SEARCH_ENGINE', operation: 'search.refreshEngines', label: 'Refresh search engine', available: true },
-            { action: 'REBUILD_SEARCH_INDEX', operation: 'search.index.rebuild', label: 'Rebuild search index', available: true },
-            { action: 'REFRESH_SEARCH_PROJECTIONS', operation: 'search.projection.refresh', label: 'Refresh search projections', available: true },
+            { action: 'REFRESH_SEARCH_ENGINE', operation: 'search.refreshEngines', label: 'Refresh search engine', available: false, reason: 'OWNER_COMMAND_REQUIRED' },
+            { action: 'REBUILD_SEARCH_INDEX', operation: 'search.index.rebuild', label: 'Rebuild search index', available: false, reason: 'OWNER_COMMAND_REQUIRED' },
+            { action: 'REFRESH_SEARCH_PROJECTIONS', operation: 'search.projection.refresh', label: 'Refresh search projections', available: false, reason: 'OWNER_COMMAND_REQUIRED' },
         ];
         let blockers = inactive.length ? [{
             code: 'SEARCH_ENGINE_UNAVAILABLE',
@@ -295,15 +290,15 @@ module.exports = {
                 configuredModuleCodes: configuredModules,
                 initializedEngineCount: engineEntries.length,
                 inactiveEngineCount: inactive.length,
-                projectionFreshness: 'OWNER_REFRESH_AVAILABLE',
-                indexFreshness: engineEntries.length ? 'OBSERVED' : 'UNKNOWN',
+                projectionFreshness: 'UNKNOWN',
+                indexFreshness: 'UNKNOWN',
                 axisConfigurationVisible: true,
                 configurationRoute: '/discovery',
                 repairActions: repairActions,
             }),
             blockers: blockers,
-            nextAction: blockers.length ? 'Open Discovery/Search controls and refresh or rebuild the unavailable search engines.' :
-                'Search engine and read-source policy readiness are clear.',
+            nextAction: blockers.length ? 'Open Discovery/Search controls and use the owning application to inspect and recover its configured provider.' :
+                'Search connections are ready. Verify source and index freshness with the owning application.',
         };
     },
 

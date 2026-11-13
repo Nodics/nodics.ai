@@ -66,6 +66,19 @@ function invoke(operation, request) {
     });
     assert.strictEqual(directResult.code, 'eWaste.reward');
 
+    FACADE.DefaultRuleDefinitionFacade.submitForApproval = request => ({ authorization: request.authorization });
+    const forwarded = await invoke('submitForApproval', {
+        httpRequest: { headers: { authorization: 'Bearer original-requester' },
+            body: { authorization: 'Bearer body-forgery' }, query: { authorization: 'Bearer query-forgery' } }
+    });
+    assert.strictEqual(forwarded.authorization, 'Bearer original-requester');
+    const absent = await invoke('submitForApproval', {
+        authorization: 'Bearer stale-context',
+        httpRequest: { body: { authorization: 'Bearer body-forgery' }, query: {} }
+    });
+    assert.strictEqual(absent.authorization, undefined, 'missing HTTP credentials cannot use payload or stale context');
+    const internal = await controller.submitForApproval({ authorization: 'Bearer trusted-internal' });
+    assert.strictEqual(internal.authorization, 'Bearer trusted-internal');
     console.log('Rules definition controller invoke contract validated');
 })().catch(error => {
     console.error(error);

@@ -540,14 +540,17 @@ module.exports = {
       }),
     );
   },
-  /** Invokes an explicitly contributed remote domain owner; no local fallback or caller-selected transport. */
-  remoteSourceEligibility: async function (request, owner, input) {
+  /** Uses canonical DMS local/remote ownership routing for an explicitly contributed domain owner; no catch/fallback or caller-selected transport. */
+  moduleSourceEligibility: async function (request, owner, input) {
     const p = CONFIG.get('communication')?.sourceEligibilityTransport;
     const bytes = p?.validation?.responseBytes;
-    if (!owner || Object.keys(owner).sort().join(',') !== 'apiName,connectionName,moduleName,runtimeRole' ||
+    const authority = owner?.targetAuthority;
+    if (!owner || Object.keys(owner).sort().join(',') !== 'apiName,moduleName,serviceName,targetAuthority' ||
         owner.moduleName !== input.sourceModule || !/^[A-Za-z][A-Za-z0-9]*$/.test(owner.moduleName) ||
-        !/^[A-Za-z][A-Za-z0-9_.-]*$/.test(owner.connectionName) || owner.connectionName === 'default' ||
-        !/^[A-Z][A-Z0-9_]{0,63}$/.test(owner.runtimeRole) ||
+        !/^Default[A-Za-z0-9]+Service$/.test(owner.serviceName) ||
+        !authority || typeof authority !== 'object' || Array.isArray(authority) || authority.publication !== 'OPERATIONAL' ||
+        Object.keys(authority).some(key => !['publication', 'server', 'environment'].includes(key)) ||
+        ['server', 'environment'].some(key => authority[key] !== undefined && (typeof authority[key] !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(authority[key]))) ||
         !/^\/internal\/[A-Za-z0-9/-]+$/.test(owner.apiName) || owner.apiName.includes('..') ||
         !p || !Number.isSafeInteger(p.validation?.minimum) || !Number.isSafeInteger(p.validation?.maximum) ||
         p.validation.minimum < 1 || p.validation.minimum > p.validation.maximum ||
@@ -557,8 +560,8 @@ module.exports = {
         !Number.isSafeInteger(p.maxResponseBytes) || p.maxResponseBytes < bytes.minimum || p.maxResponseBytes > bytes.maximum ||
         typeof p.allowInsecureLoopback !== 'boolean') throw new Error('COMMUNICATION_SOURCE_ELIGIBILITY_UNCONFIRMED');
     const { tenant, authData, ...body } = input;
-    const call = { local: false, moduleName: owner.moduleName, connectionName: owner.connectionName,
-      targetAuthority: { runtimeRole: owner.runtimeRole }, tenant, request: { tenant }, requireInternalAuth: true,
+    const call = { moduleName: owner.moduleName, serviceName: owner.serviceName, operationName: 'isDispatchEligible',
+      targetAuthority: structuredClone(authority), tenant, request: { ...body, tenant, authData }, requireInternalAuth: true,
       methodName: 'POST', apiName: owner.apiName, requestBody: body, timeoutMs: p.timeoutMs,
       maxAttempts: 1, followRedirects: false, maxResponseBytes: p.maxResponseBytes,
       secureTransport: { required: true, allowInsecureLoopback: p.allowInsecureLoopback } };
@@ -588,7 +591,7 @@ module.exports = {
         throw new Error('COMMUNICATION_SOURCE_ELIGIBILITY_UNCONFIRMED');
       evidence = await SERVICE[ownerName].isDispatchEligible(input);
     } else {
-      evidence = await this.remoteSourceEligibility(request, ownerName, input);
+      evidence = await this.moduleSourceEligibility(request, ownerName, input);
     }
     if (!evidence || typeof evidence.eligible !== 'boolean' || evidence.tenant !== intent.tenant ||
         evidence.sourceCode !== intent.sourceCode || evidence.recipientId !== intent.recipientId ||

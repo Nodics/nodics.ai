@@ -55,7 +55,8 @@ function fixture(t, enterprise = false) {
   global.UTILS = { createModelName: value => value };
   global.NODICS = { getModels: () => ({ checkoutAuctionCommitment: { primaryKey: "code", compareAndSetItem() {}, rawSchema: {} } }) };
   global.FACADE = { DefaultCartCustomerFacade: participant };
-  global.SERVICE = { DefaultCheckoutAuctionService: checkout, DefaultCheckoutPlacementPortsService: portsOwner,
+  global.SERVICE = {
+      DefaultPaymentProviderSelectionService: { resolve: (...args) => require('../../../../payment/modules/paymentCore/src/service/defaultPaymentProviderSelectionService').resolve.call({ configuration: () => require('../../../../payment/modules/paymentCore/config/properties').paymentCore }, ...args) }, DefaultCheckoutAuctionService: checkout, DefaultCheckoutPlacementPortsService: portsOwner,
     DefaultOrderPlacementService: placement, DefaultCartOperationService: cart, DefaultNegotiatedPriceService: pricing,
     DefaultCheckoutCompensationRecoveryService: require("../src/service/defaultCheckoutCompensationRecoveryService"),
     DefaultExactAmountService: exact, DefaultBiddingAuctionService: auctions, DefaultBiddingService: bidOwner,

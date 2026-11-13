@@ -96,7 +96,9 @@ module.exports = {
     /** Validates a complete governed offer and preserves optional lifetime caps as explicit records. */
     validate: function (value) {
         const limits = this.settings();
-        this.object(value, ['version', 'supply', 'ownerLimit', 'expiry', 'requirements', 'terms']);
+        this.object(value, ['version', 'supply', 'ownerLimit', 'expiry', 'requirements', 'terms', 'expiryReminderEnabled']);
+        if (value.expiryReminderEnabled !== undefined && (typeof value.expiryReminderEnabled !== 'boolean' ||
+            value.expiryReminderEnabled && value.expiry?.mode !== 'FIXED')) this.fail();
         if (value.version !== 1) this.fail();
         const supply = this.object(value.supply, ['mode', 'quantity']);
         if (supply.mode === 'LIMITED') {
@@ -107,6 +109,7 @@ module.exports = {
             typeof line !== 'string' || !line.trim() || line.length > limits.maximumTermLength)) this.fail();
         const result = { version: 1, supply: structuredClone(supply), expiry: this.expiry(value.expiry),
             requirements: this.requirements(value.requirements), terms: value.terms.slice(),
+            ...(value.expiryReminderEnabled !== undefined ? { expiryReminderEnabled: value.expiryReminderEnabled } : {}),
             ...(value.ownerLimit !== undefined ? { ownerLimit: value.ownerLimit } : {}) };
         if (Buffer.byteLength(JSON.stringify(result)) > limits.maximumPolicyBytes) this.fail();
         return result;

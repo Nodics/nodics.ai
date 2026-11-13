@@ -12,6 +12,7 @@
 const _ = require('lodash');
 const managedImportSnapshots = new WeakMap();
 const admittedOperationMetadata = new WeakMap();
+const modelFailureStages = new WeakMap();
 
 /**
  * @module nodics.foundation/modules/nData/nImport/import/src/service/process/model/defaultModelImportProcessService
@@ -21,6 +22,13 @@ const admittedOperationMetadata = new WeakMap();
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    /** Consumes a content-free stage recorded only by the exact model pipeline request; no caller field is authority. */
+    takeModelFailureStage: function (request) {
+        const stage = modelFailureStages.get(request);
+        modelFailureStages.delete(request);
+        return stage;
+    },
+
     /** Returns private content-free placement only for the exact currently awaited generated operation request. @param {Object} request Exact schema-service request. @returns {Object|undefined} Frozen metadata. @override Preserve request identity and transient lifetime; never accept body markers. */
     readAdmittedOperationMetadata: function (request) {
         return request && typeof request === 'object' ? admittedOperationMetadata.get(request) : undefined;
@@ -47,6 +55,8 @@ module.exports = {
         try {
             if (metadata) admittedOperationMetadata.set(operationRequest, metadata);
             const releases = SERVICE.DefaultDataReleaseService;
+            if (typeof releases?.executeStagedSourceOperation === 'function')
+                return await releases.executeStagedSourceOperation(request, operationRequest, schemaService);
             if (typeof releases?.executeIdentityAuthorityOperation === 'function')
                 return await releases.executeIdentityAuthorityOperation(request, operationRequest, schemaService);
             return await schemaService[operation](operationRequest);
@@ -93,6 +103,7 @@ module.exports = {
      */
 
     validateRequest: function (request, response, process) {
+        modelFailureStages.set(request, "REQUEST");
         this.LOG.debug('Validating request');
         if (!request.header) {
             process.error(request, response, new CLASSES.DataImportError('ERR_IMP_00003', 'Please validate request. Mandate property header not have valid value'));
@@ -122,6 +133,7 @@ module.exports = {
      */
 
     loadRawSchema: function (request, response, process) {
+        modelFailureStages.set(request, "SCHEMA");
         this.LOG.debug('Loading raw schema for header');
         let header = request.header;
         if (header.options.schemaName) {
@@ -145,6 +157,7 @@ module.exports = {
      * @returns {undefined}
      */
     hydrateMediaReleaseAsset: function (request, response, process) {
+        modelFailureStages.set(request, "MEDIA");
         if (!SERVICE.DefaultMediaReleaseAssetHydrationService ||
             typeof SERVICE.DefaultMediaReleaseAssetHydrationService.hydrateRequest !== 'function') {
             process.nextSuccess(request, response);
@@ -188,6 +201,7 @@ module.exports = {
      * @returns {undefined}
      */
     enforceImportAccessPolicies: function (request, response, process) {
+        modelFailureStages.set(request, "ACCESS");
         this.LOG.debug('Applying import access policies');
         let header = request.header;
         if (!header.options.schemaName || !header.rawSchema ||
@@ -292,6 +306,7 @@ module.exports = {
      */
 
     populateSchemaDependancies: function (request, response, process) {
+        modelFailureStages.set(request, "SCHEMA_REFERENCES");
         this.LOG.debug('Populating all schema dependancies');
         let header = request.header;
         if (header.macros && header.rawSchema) {
@@ -577,6 +592,7 @@ module.exports = {
      */
 
     populateSearchDependancies: function (request, response, process) {
+        modelFailureStages.set(request, "SEARCH_REFERENCES");
         this.LOG.debug('Populating all search dependancies');
         process.nextSuccess(request, response);
     },
@@ -598,6 +614,7 @@ module.exports = {
      */
 
     insertModel: function (request, response, process) {
+        modelFailureStages.set(request, "PERSIST");
         let header = request.header;
         let models = [];
         if (UTILS.isArray(request.dataModel)) {

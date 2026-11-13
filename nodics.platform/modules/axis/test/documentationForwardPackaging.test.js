@@ -89,6 +89,11 @@ test('selected articles preserve reviewed blocks and derive exact owner source m
 });
 
 test('selected target seals remain unpublished without invented approvals or runtime adoption', () => {
+    const routeSchema = require('../../../../nodics.wcms/modules/cms/src/schemas/schemas').cms.cmsPageRoute;
+    for (const route of groups.Route) {
+        assert.ok(routeSchema.definition.deliveryState.enum.includes(route.deliveryState), route.code);
+        assert.equal(route.deliveryState, 'DRAFT', route.code + ': source routes must remain unpublished');
+    }
     const targets = new Map(Object.entries(groups).filter(([kind]) => kind !== 'PublicationState')
         .flatMap(([, rows]) => rows.map(row => [row.code, row])));
     for (const row of groups.PublicationState) {

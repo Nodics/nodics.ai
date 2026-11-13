@@ -38,7 +38,7 @@
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "displayName": "promotion permissionCatalogue",
       "description": "Explicit promotion identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "promotion",
@@ -62,7 +62,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.4",
+      "version": "0.0.1",
       "displayName": "promotion enterpriseRoles",
       "description": "Explicit promotion identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "promotion",
@@ -86,8 +86,8 @@
         {
           "moduleName": "promotion",
           "sectionCode": "accessGroups",
-          "version": "0.0.4",
-          "checksum": "642958f362319e7b5457ac5270630f19c6b30800e1e3df1e584ed7c7677ed245"
+          "version": "0.0.1",
+          "checksum": "2c567ae1d59b95a605afedabb614752b2c4a9971f111e9d3405403e67dc2d0d1"
         }
       ]
     },
@@ -117,14 +117,14 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "489029f4930f9e37f558f5d1f72bdadb804e5227690d7be921da6dd526dfff4d",
+      "releaseChecksum": "b7ef42002cd0438cc54678b4e025e27c1dafb8ec75a91fd6c176d777f3cc01a6",
       "generatedHashes": {
         "docs-v001/records/documentation/promotionDocumentationRelease003NodeData.js": "cbecdaff8f193a36f1d99c88528853568319ed872782a042844941f75666aab9",
         "docs-v001/records/documentation/promotionDocumentationRelease003PageMetadataData.js": "14db24bb2f4a9ef858b1eeb1446760bb97bbe670b2f129701b4f70bd1ed1bcad",
         "docs-v001/records/documentation/promotionDocumentationRelease003SearchMetadataData.js": "b92e92f82f7dc6c2dc2b933c6ac086904c16cf6e622081991a939abdb1a6cc9f",
         "docs-v001/records/documentation/promotionDocumentationRelease003ComponentData.js": "786b349b5c39cfc9f499375304e4bf92f8b1cf3f76542a99cdf7b1de7d400e07",
         "docs-v001/records/documentation/promotionDocumentationRelease003PageData.js": "aecc25e90613da55fd644c230556b109d9204a2a145a921cfd616ce2d69c989c",
-        "docs-v001/records/documentation/promotionDocumentationRelease003RouteData.js": "8589314cf9db9f3f961aa3baa5da2df8bf657603c9e27a6efce1d372322e958b",
+        "docs-v001/records/documentation/promotionDocumentationRelease003RouteData.js": "867ccb2000c80b835b76a3f6bd3b6a48cd79c3f43390f3278b84310b48ca6f5c",
         "docs-v001/records/documentation/promotionDocumentationRelease003PublicationStateData.js": "3e7f17ba41a4a5c0052ed20bcc434f3b8c98bcc7b70cb56e50bf964f4e99e829",
         "docs-v001/headers/100_promotionDocumentationRelease003ContentPackHeader.js": "c795ae53745e1d77f410a36cdbd9f688fdbf8693668cc419bceb4d65138e1666"
       },
@@ -205,7 +205,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.4",
+      "version": "0.0.1",
       "displayName": "promotion accessGroups",
       "description": "Explicit promotion identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "promotion",
@@ -250,20 +250,20 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "1b0ca2b9d8970005795d1da4e6dc20d225f30fac4f470608803a82ddb9889dc7"
+          "version": "0.0.1",
+          "checksum": "e1457ac1bab12d45866b6deae73980cc6708cea378991d93e17893b03e1d3660"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "402b7ebffc05ac529f465c228700437b830cfb0f873a15ac92d5b7b5b9a3a9c8",
           "partition": "DEFAULT"
         }
@@ -272,7 +272,7 @@
     "businessAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Promotions business access groups",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "promotion",
@@ -296,20 +296,20 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.3",
-          "checksum": "5c9b06168b5e571dc6bfc2c6160e2aba6ff1f2448c433bedb0ce4d2670ac5cbc"
+          "version": "0.0.1",
+          "checksum": "8eba020540491b01e5ddf9fb85ae3d4f7c8d9bdae5cea4d77e584a60851f03de"
         },
         {
           "moduleName": "profile",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "b37fbb6fcdab6399de2e4feb50eab3c9e0cd73626db22ae920553269c945daf4",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.3",
+          "version": "0.0.1",
           "checksum": "402b7ebffc05ac529f465c228700437b830cfb0f873a15ac92d5b7b5b9a3a9c8",
           "partition": "DEFAULT"
         }
@@ -318,7 +318,7 @@
     "businessAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.1",
       "displayName": "Promotions business access roles",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "promotion",
@@ -342,8 +342,8 @@
         {
           "moduleName": "promotion",
           "sectionCode": "businessAccessGroups",
-          "version": "0.0.2",
-          "checksum": "070c871c1a5ede568ab3665b258b7104cdc3b0f42acb0644b7ef0355aa4c1d64"
+          "version": "0.0.1",
+          "checksum": "64aec518e1a063c2c8b4305a42c60a8fa868666a4c57a7f4f2dfc8b24510c963"
         }
       ]
     }

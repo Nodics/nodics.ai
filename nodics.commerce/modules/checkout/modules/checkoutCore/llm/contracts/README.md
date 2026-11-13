@@ -440,3 +440,8 @@ owner completion. No new API, grant, runtime property or customer definition exi
 Focused regressions in checkoutCommandStatusContract and checkoutPaymentDenialRecovery
 cover exact code persistence/projection, unknown-code filtering, wrong-scope refusal,
 and repeated no-effect reads of the original failed recovery.
+
+Checkout resolves payment adapters through Payment Core’s configured provider selector.
+Always pass the original provider code for capture or compensation; a later project
+selection must not redirect an existing payment. Activation and payment authority
+remain independently enforced by the existing owners.

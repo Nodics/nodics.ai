@@ -55,6 +55,12 @@ failure cases are documented in
 `nodics.foundation/modules/nDatabase/database/llm/contracts/schema-authoring-authority.md`
 and the canonical Foundation schema-data-modeling guide.
 
+Reference schemas may additionally restrict generic authoring through strict
+`backoffice.mutationPolicy.allowedStages` metadata. This intersects existing
+publishable/read-only restrictions; it never relaxes them. For example, Editorial
+content-type policy remains Staged-only reference data, so its governed reference
+initialization is admissible without pretending it is a public article release.
+
 Database owns Nodics model registration, provider-neutral data access, tenant/module database configuration, schema workbench support, and database adapter boundaries.
 
 ## Responsibility
@@ -83,6 +89,8 @@ and `system.schema.manage`, with exposure category `schemaApi`.
 
 Customize schema `backoffice` metadata first, then existing Utility helpers through
 module inheritance when needed. No second schema registry or loader is permitted.
+Relationship selectors inherit the same field's configured label and description;
+an explicit relationship label or description remains the higher-priority override.
 Generated controllers protect the secured request and project writable fields.
 Selective update/delete accept one primary identity and its required revision.
 Missing/malformed/stale managed tokens keep 428/400/409 semantics. Counts are not
@@ -122,7 +130,7 @@ original revision; no client or project may disable these checks for editing.
 
 Deep documentation lives in:
 
-- `nodics.foundation/modules/nDatabase/database/data/docs-v001/records/documentation/databaseDocumentationComponentData.js`
+- `nodics.foundation/modules/nDatabase/database/data/docs-v001/records/documentation/databaseDocumentationRelease002ComponentData.js`
 
 ## Verification
 
@@ -184,3 +192,65 @@ Bulk-save errors retain capability-owner metadata. The failed record is cloned
 under `metadata.failedModel`, not flattened into the error's authority fields.
 Consumers previously reading `metadata.code` for the failed record must use
 `metadata.failedModel.code`. See the [metadata boundary contract](llm/contracts/README.md#bulk-failure-metadata-boundary).
+
+Database reads and readiness share a default handle only when the requested
+module's complete effective configuration matches that tenant's default and the
+handle's acquisition configuration. Malformed overrides and stale handles fail
+closed, including for the default tenant. Configuration drift never authorizes
+automatic reconnection or migration; retained handles remain available for cleanup.
+See [acquired handle admission](llm/contracts/tenant-physical-namespace.md#acquired-handle-admission)
+for registration, customization, recovery and isolated test evidence.
+
+Documentation provenance release 0.0.2 preserves article bodies and stable routes while correcting source integrity/navigation metadata. The [manifest](data/manifest.json) selects it; prior exact bytes remain in test fixtures. Source validation does not install, approve or publish this release.
+
+Public safe-search retains [private generated-read provenance](llm/contracts/README.md#generated-public-read-provenance) through the existing read policy owner. This keeps domain scope checks effective after translation without forwarding HTTP body fields or changing private business-owner authority.
+
+## Preserve placement during generated updates
+
+`DefaultSchemaUtilityService.buildGeneratedMutationModel` receives a trusted
+create/update operation from the controller. Creation may inject authenticated
+`tenant` and `enterpriseCode` defaults. Update normalization excludes these
+placement fields and does not inject current-actor placement or fixed scope values.
+The existing record retains its placement; authenticated request scope still
+controls access, provider routing and attribution. This is not a migration API.
+Body fields cannot select the normalization operation. Preserve original domain
+counters and verify `schemaMutationScopePreservation.test.js` plus generated
+mutation parity and Workbench contracts.
+
+## Operation-specific update fields
+
+An effective schema may declare `backoffice.updateFields` as a bounded list of
+ordinary root field names, or `{ configurationPath: 'owner.policy.fields' }`
+referencing its existing Framework configuration list. This is authored source
+metadata; HTTP input never selects a configuration path. A missing/malformed
+selected policy refuses metadata instead of exposing every field. Deleted schema
+fields disappear. An admitted structured root includes its inline child fields;
+partial nested authorization remains with native field/access validators.
+
+The shared field projection marks other fields `readOnlyOnUpdate: true` without
+making required creation inputs globally read-only. Axis omits these fields from
+update forms and update payloads while preserving original identity/CAS in the
+query. Generated HTTP update normalization excludes them and cannot inject their
+fixed values. Original managed counters retain their existing owner contract.
+Creation, aggregate setup, private service/import and domain authorization remain
+independent. This optional metadata does not create authorization or replay rights.
+
+Profile references its existing `enterpriseManagement.lifecycle.employeeFields`
+and `enterpriseFields` lists; no duplicate list belongs in Kickoff. Custom projects
+may extend the owning list for actual custom schema fields through supported
+layering, within native immutable identity/credential/placement/grant guards.
+
+Schema discovery also preserves the model constructor's declared `tenants`: models restricted to another tenant are omitted before operation/field projection. The verified request tenant is authoritative; body scope cannot make an unprepared global model available. Domain management APIs retain their separate authority and storage contracts. This prevents advertising default-only models as callable business-tenant record workspaces.
+
+Schema discovery distinguishes inspectable metadata from explicitly disabled generic record routers. See [the owner contract](llm/contracts/README.md#independently-inspectable-schemas-with-disabled-record-apis); no schema discovery response enables an internal or business API.
+
+Nullable native field unions with one concrete type retain that presentation type in shared schema metadata; native validation remains unchanged. See [business form metadata](llm/contracts/schema-workbench-business-forms.md#nullable-native-field-types) and `test/schemaUtilityContract.test.js`.
+
+Schema directives containing a `$`-prefixed path segment are excluded from client field/form metadata. They are not business inputs; HTTP mutation normalization independently refuses operator-like keys, and safe-search projection applies its own field-path guard.
+
+
+Synchronous namespace admission reuses resolved destinations only within its current
+call, including nested peer and durable-pin checks. No approval survives a return,
+exception, await or later request. Preserve selected provider/service overrides,
+fresh configuration and pin refusal; never replace this with a process cache.
+The tenant physical namespace regression covers fresh-call drift and failure recovery.

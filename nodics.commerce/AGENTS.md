@@ -24,3 +24,10 @@ existing data-release contribution alongside its identity groups and roles. Keep
 Promotion inactive on Platform; discovery does not install definitions or grant
 authority. Preserve the actual nImport detached-owner regression and refusal of
 unselected sections in platformDataReleaseCompositionContract.test.js.
+
+
+Keep release discovery in the existing ordinary `data.dataReleases.contributions`
+list using keyed module identities and explicit section replacement. Do not
+restore role profiles, duplicate source owners, alter manifest activation policy,
+or install definitions from configuration. Qualify actual owner/publication
+admission and preserve unselected sources. See the local release composition contract.

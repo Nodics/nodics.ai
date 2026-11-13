@@ -141,6 +141,28 @@ module.exports = {
             return saved;
         });
     },
+    /** Reads exact retained metadata with positive uncached owner evidence and no provider access. */
+    inspectMetadata: async function (code, mediaCode, request) {
+        this.assertScope(request, 'STAGED');
+        if (!/^[a-f0-9]{64}$/.test(code || '') || typeof mediaCode !== 'string' ||
+            !/^[A-Za-z0-9][A-Za-z0-9._-]{0,191}$/.test(mediaCode)) throw this.invalid('Exact Media review identity is required');
+        const response = await SERVICE.DefaultMediaTransferManifestService.get({ tenant: request.tenant,
+            authData: request.authData, query: { code }, options: { recursive: false }, skipcache: true,
+            searchOptions: { limit: 2 } });
+        if (!response || typeof response.code !== 'string' || !/^SUC_/.test(response.code) ||
+            response.success === false || response.valid === false || response.confirmed === false || response.acknowledged === false || response.error ||
+            response.errors !== undefined && (!Array.isArray(response.errors) || response.errors.length) ||
+            !Array.isArray(response.result) || response.result.length !== 1) throw this.invalid('Media review evidence is unconfirmed');
+        const manifest = response.result[0], asset = manifest?.artifacts?.asset;
+        if (manifest.code !== code || manifest.status !== 'READY' || manifest.artifactCount !== 1 ||
+            !asset || asset.code !== mediaCode || this.digest(asset) !== code ||
+            !Number.isSafeInteger(asset.versionId) || asset.versionId < 0 ||
+            !Number.isSafeInteger(asset.sizeBytes) || asset.sizeBytes < 1 || asset.sizeBytes !== manifest.totalBytes ||
+            asset.sizeBytes > Number(this.policy().maximumAssetBytes || 52428800) ||
+            asset.checksumAlgorithm !== 'sha256' || !/^[a-f0-9]{64}$/.test(asset.checksum || '') ||
+            !['PUBLIC', 'PRIVATE', 'SIGNED'].includes(asset.access)) throw this.invalid('Media review identity is unverified');
+        return manifest;
+    },
     /** Loads a manifest whose identity is bound to exact metadata; no latest-record fallback is allowed. */
     load: async function (code, mediaCode, request) {
         this.assertScope(request);
@@ -151,15 +173,18 @@ module.exports = {
         return manifest;
     },
     /** Reads only retained storage and checks both metadata and bytes on every export/delivery/rollback. */
-    readBytes: async function (manifest, request) {
+    readBytes: async function (manifest, request, maximumBytes) {
         this.assertScope(request);
         let asset = manifest && manifest.artifacts && manifest.artifacts.asset;
         let retained = manifest && manifest.evidence && manifest.evidence.retained;
         if (!asset || this.digest(asset) !== manifest.code || !retained || !retained.providerCode || !retained.storageKey) {
             throw this.invalid('Retained Media manifest integrity failed');
         }
-        let bytes = await SERVICE.DefaultMediaStorageProviderRegistryService.read({ providerCode: retained.providerCode,
-            storageKey: retained.storageKey, maximumBytes: Number(this.policy().maximumAssetBytes || 52428800) });
+        const policyMaximum = Number(this.policy().maximumAssetBytes || 52428800);
+        const maximum = maximumBytes === undefined ? policyMaximum : maximumBytes;
+        if (!Number.isSafeInteger(maximum) || maximum < 1 || maximum > policyMaximum) throw this.invalid('Media read boundary is invalid');
+        let bytes = await SERVICE.DefaultMediaStorageProviderRegistryService.read({ tenant: request.tenant, authData: request.authData,
+            providerCode: retained.providerCode, storageKey: retained.storageKey, maximumBytes: maximum });
         this.validateBytes(asset, bytes);
         return bytes;
     },

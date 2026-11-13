@@ -110,6 +110,8 @@ beforeEach(async () => {
       doRemoveByQuery: () => assert.fail("Retirement deleted data"),
     },
   };
+  // This domain-unit fixture mocks the manifest transport; Discovery tests exercise actual DMS and owner CAS.
+  SERVICE.DefaultDiscoveryGenerationTransportService = SERVICE.DefaultDiscoveryGenerationService;
   scope = recovery.authorize(request).scope;
   let published = await owner.begin(scope, {
     digest: "a".repeat(64),

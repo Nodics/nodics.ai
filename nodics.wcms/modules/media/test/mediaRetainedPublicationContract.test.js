@@ -103,10 +103,12 @@ test('exact version capture pins bytes and metadata; latest source mutation is i
     await assert.rejects(manifests.exportPackage(manifest, f.context));
 });
 
-test('metadata versioning is owner opt-in only and capture verifies the installed model before any version lookup', async () => {
+test('metadata versioning follows explicit publication context and capture verifies the installed model before any version lookup', async () => {
     const f = fixture();
     const schemas = require('../src/schemas/schemas').media;
-    const properties = require('../config/properties');
+    const bindings = require('../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService');
+    const rawProperties = require('../config/properties');
+    const properties = bindings.resolve(rawProperties, {}, { readRuntimeProperty: () => 'OPERATIONAL' });
     const schemaHandler = require('../../../../nodics.foundation/modules/nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService');
     const originalGet = CONFIG.get;
     const policies = structuredClone(properties.schemaPolicies);
@@ -116,8 +118,9 @@ test('metadata versioning is owner opt-in only and capture verifies the installe
         if (name !== 'media') assert(![].concat(schema.schemaPolicies || []).includes('publicationVersioned'));
     }
     assert.equal(schemaHandler.applyNamedSchemaPolicies('media', structuredClone(schemas)).media.isVersionedEnabled, false);
-    // Qualified migration opts into both settings through the existing layered policy.
-    policies.media.publicationVersioned = { isVersionedEnabled: true, versionedReadMode: 'CURRENT' };
+    // Staged selects CURRENT source metadata; installed storage and provider qualification remain independent gates.
+    const stagedProperties = bindings.resolve(rawProperties, {}, { readRuntimeProperty: () => 'STAGED' });
+    policies.media.publicationVersioned = structuredClone(stagedProperties.schemaPolicies.media.publicationVersioned);
     const effective = schemaHandler.applyNamedSchemaPolicies('media', structuredClone(schemas));
     assert.equal(effective.media.isVersionedEnabled, true); assert.equal(effective.media.versionedReadMode, 'CURRENT');
     for (const name of ['mediaTransferManifest', 'mediaPlacement', 'mediaPublicationReceipt']) assert.equal(effective[name].isVersionedEnabled, false);
@@ -231,6 +234,25 @@ test('failed receipt rolls back activation, malformed bytes fail before storage 
     assert.equal(sent.operationKey, 'stable-original-key');
     assert.equal(sent.expectedVersion, null);
     assert.equal(provider.targetReceiptContract, 'v1');
+    const approval = { code: 'pub', domain: 'media', rootType: 'media', rootCode: 'hero',
+        sourceVersion: manifest.code, activationOperation: { key: 'stable-original-key', previousOnlineVersion: null } };
+    const failure = new Error('activation acknowledgement lost');
+    let sends = 0;
+    SERVICE.TargetTransport.deploy = async () => { sends++; throw failure; };
+    const receipt = { publicationCode: 'pub', operationKey: 'stable-original-key', sourceVersion: manifest.code,
+        targetVersion: manifest.code, previousOnlineVersion: null };
+    const evidence = { status: 'ACTIVE', repaired: false, mediaCode: 'hero', manifestCode: manifest.code,
+        version: manifest.code, operationKey: 'stable-original-key', publicationCode: 'pub', receipt };
+    SERVICE.TargetTransport.reconcile = async input => {
+        assert.equal(input.operationKey, 'stable-original-key');
+        return evidence;
+    };
+    assert.deepEqual(await provider.activate(approval, f.context), {
+        version: manifest.code, previousOnlineVersion: null, receipt
+    });
+    assert.equal(sends, 1);
+    SERVICE.TargetTransport.reconcile = async () => ({ ...evidence, receipt: { ...receipt, previousOnlineVersion: 'another' } });
+    await assert.rejects(provider.activate(approval, f.context), failure);
     const publication = { domain: 'media', rootType: 'media', rootCode: 'hero', sourceVersion: manifest.code };
     assert.deepEqual(provider.resolveDependencies(publication, manifest), [{ schema: 'media', code: 'hero', version: 0 }]);
     assert.equal((await provider.validate(publication, manifest, f.context)).valid, true);

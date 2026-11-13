@@ -34,7 +34,7 @@ function fixture() {
   config.process.actionAdapters.allowedActions = [{ moduleName: "digitalCore", operation: "couponExpirySweep",
     service: "DefaultDigitalCommerceCouponReminderService", method: "sweep" }];
   const policy = { version: 2, purchasedAt: new Date(now - 7200000).toISOString(),
-    originalOwnerRef: { type: "CUSTOMER", code: "buyer" }, couponOffer: { expiry: { mode: "FIXED", at: expiresAt } },
+    originalOwnerRef: { type: "CUSTOMER", code: "buyer" }, couponOffer: { expiryReminderEnabled: true, expiry: { mode: "FIXED", at: expiresAt } },
     finality: { refundable: false, transferable: false, singleUse: true } };
   const item = { tenant: "t", enterpriseCode: "shop", ownerId: "login", code: "e1", status: "ACTIVE", active: true,
     digitalDeliveryType: "COUPON_CODE", providerOwner: "promotion", claimStatus: "UNCLAIMED", providerCode: "coupon",
@@ -56,7 +56,7 @@ function fixture() {
   const reads = [];
   global.CONFIG = { get: name => config[name] };
   global.CLASSES = { NodicsError: class extends Error {} };
-  global.SERVICE = { DefaultDigitalCommerceCouponReminderService: reminder,
+  global.SERVICE = { DefaultModuleService: { isLocalModuleActive: moduleName => ["digitalCore", "profile"].includes(moduleName), }, DefaultDigitalCommerceCouponReminderService: reminder,
     DefaultDigitalCouponReminderDeliveryService: { notify: async (_r, c) => ({ occurrenceKey: c.occurrenceKey, status: "SKIPPED", deliveryAttempted: false }) },
     DefaultDigitalCommerceCouponAcquisitionService: source, DefaultDigitalCommerceEntitlementService: lifecycle,
     DefaultCouponOfferService: { validate: value => value },
@@ -83,7 +83,7 @@ function composed() {
   const f = fixture(), cfg = f.config;
   global.UTILS = { isObject: value => value !== null && typeof value === "object" };
   cfg.defaultTenant = "master";
-  cfg.runtimeRole = { code: "COMMERCE" };
+  cfg.runtimeRole = { code: "COMMERCE", publication: "OPERATIONAL" };
   cfg.profileCouponNotifications = structuredClone(require(path.join(root, "nodics.platform/modules/profile/config/properties")).profileCouponNotifications);
   cfg.profileCouponNotifications.enabled = true;
   cfg.profileNotificationRecipients = structuredClone(require(path.join(root, "nodics.platform/modules/profile/config/properties")).profileNotificationRecipients);
@@ -122,7 +122,24 @@ function composed() {
     DefaultEnterpriseMembershipService: {
       resolve: async row => { if (f.locked) throw new Error("identity locked"); return { person: row,
         identity: { tenantCode: "t", recordKind: row.principalType === "human" ? "EMPLOYEE" : "CUSTOMER", recordId: row.code } }; },
-      authority: () => "master", inventory: async () => [],
+      locator: (tenant, kind, row) => {
+        assert.equal(tenant, "t"); assert.equal(kind, "EMPLOYEE"); assert.equal(row.code, employee.code);
+        return { tenantCode: tenant, recordKind: kind, recordId: row.code };
+      },
+      anchor: async identity => {
+        calls.push({ operation: "nativeAnchor", identity });
+        if (f.locked) throw new Error("identity locked");
+        return { identity, person: structuredClone(employee) };
+      },
+      read: async (name, tenant, query) => {
+        assert.equal(name, "DefaultEnterpriseAccessAssignmentService"); assert.equal(tenant, "master");
+        assert.deepEqual(query, { enterpriseCode: enterprise.code, "membership.identity.recordId": employee.code,
+          "membership.identity.tenantCode": "t", "membership.identity.recordKind": "EMPLOYEE" });
+        calls.push({ operation: "nativeAssignment" });
+        if (f.assignmentFailure) throw new Error("assignment lookup unavailable");
+        return undefined;
+      },
+      authority: () => "master", inventory: async () => { throw new Error("Native identity must use exact assignment lookup"); },
     },
     DefaultEnterpriseRegistrationService: { read: async (name, partition, query) => {
       calls.push({ name, partition, query });
@@ -183,7 +200,11 @@ function composed() {
     if (f.lostAck) throw new Error("lost acknowledgement");
     return { data: result };
   };
-  SERVICE.DefaultModuleService = { invokeModule: transport };
+  SERVICE.DefaultModuleService = {isLocalModuleActive: moduleName => ["digitalCore", "profile"].includes(moduleName),  invokeModule: call => {
+    if (!call.serviceName) return transport(call);
+    const dms = require(path.join(root, "nodics.foundation/modules/nService/src/service/module/defaultModuleService"));
+    return dms.invokeModule.call({ ...dms, invokeRemoteModule: transport }, call);
+  } };
   return Object.assign(f, { customer, enterprise, employee, groups, permissions, assignments, stores, calls, trusted, transport });
 }
 
@@ -208,6 +229,8 @@ test("Enterprise reminders target only explicitly selected currently authorized 
   const result = await registry.execute(f.r, f.execution);
   assert.equal(result.output.outcomes[0].outcomes[0].status, "DELIVERED");
   assert.equal([...f.stores.CommsInboxMessage.values()][0].recipientId, "profile-employee:staff");
+  assert.ok(f.calls.some(call => call.operation === "nativeAnchor"));
+  assert.ok(f.calls.some(call => call.operation === "nativeAssignment"));
   assert.equal(JSON.stringify(result).includes("staff-login"), false);
   assert.ok(f.calls.some(call => call.name === "DefaultUserGroupService" && call.query.code === "digital-reader"));
 });
@@ -300,6 +323,16 @@ test("selected Process action scans persisted units and returns stable typed sou
   f.item.purchasePolicy.originalOwnerRef = f.coupon.purchasePolicy.originalOwnerRef = { type: "ENTERPRISE", code: "owner-enterprise" };
   assert.equal((await registry.execute(f.r, f.execution)).output.candidates[0].ownerRef.code, "owner-enterprise");
 });
+test("a retained offer must expressly select expiry reminders", async () => {
+  for (const choice of [undefined, false, "true"]) {
+    const f = fixture();
+    for (const item of [f.item, f.coupon]) {
+      if (choice === undefined) delete item.purchasePolicy.couponOffer.expiryReminderEnabled;
+      else item.purchasePolicy.couponOffer.expiryReminderEnabled = choice;
+    }
+    assert.deepEqual((await registry.execute(f.r, f.execution)).output.candidates, []);
+  }
+});
 test("no-expiry, used, expired and outside-window coupons never produce reminders", async () => {
   for (const mode of ["NONE", "USED", "EXPIRED", "LATER"]) {
     const f = fixture();
@@ -344,4 +377,17 @@ test("bounded pagination includes later pages, refuses truncation, and catches l
 test("invalid and missing framework defaults reject rather than enabling fallback values", async () => {
   const f = fixture(); delete f.config.digitalCore.couponReminders.maximumCandidates;
   await assert.rejects(registry.execute(f.r, f.execution));
+});
+
+
+test("native recipient lock or uncertain assignment lookup cannot queue an Enterprise reminder", async () => {
+  for (const failure of ["locked", "assignmentFailure"]) {
+    const f = composed();
+    f.item.purchasePolicy.originalOwnerRef = f.coupon.purchasePolicy.originalOwnerRef = { type: "ENTERPRISE", code: f.enterprise.code };
+    f[failure] = true;
+    const result = (await registry.execute(f.r, f.execution)).output.outcomes[0];
+    assert.equal(result.status, "UNCONFIRMED", failure);
+    assert.equal(f.stores.CommsIntent.size, 0);
+    assert.equal(f.stores.CommsInboxMessage.size, 0);
+  }
 });

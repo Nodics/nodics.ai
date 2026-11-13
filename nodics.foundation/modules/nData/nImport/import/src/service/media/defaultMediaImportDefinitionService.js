@@ -59,6 +59,7 @@ module.exports = {
                 errorPath: stageResult.inputPath.rootPath + '/finalized/error'
             },
             mediaSource: stageResult.mediaSource,
+            genericSchemaImport: definition.genericSchemaImport === true,
             importDefinition: this.projectDefinition(definition),
             headerFile: {
                 fileName: path.basename(headerPath)

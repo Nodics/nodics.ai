@@ -227,10 +227,10 @@ function installGlobals() {
                 return {
                     result: request.query.productCode === 'agoraLeatherTote'
                         ? [{
-                            code: 'agoraLeatherTote|agoraMainStore|en',
+                            code: 'agoraLeatherTote|agoraApparelStore|en',
                             tenant: request.tenant,
                             productCode: 'agoraLeatherTote',
-                            storeCode: 'agoraMainStore',
+                            storeCode: 'agoraApparelStore',
                             locale: 'en',
                             status: 'CURRENT',
                             payload: { variantSkuMap: { agoraLeatherToteTanOne: 'AGORA-ACC-TOTE-TAN-ONE' } }
@@ -386,7 +386,7 @@ test('Cart customer calculation creates stable snapshot code when browser payloa
 
 test('Cart customer API creates a cart and manages active entries for the authenticated owner', async () => {
     let authData = { tenant: 'default', principalId: 'customer-1' };
-    let created = await controller.create({ authData, httpRequest: { body: { cartCode: 'cart1', storeCode: 'agoraMainStore' } } });
+    let created = await controller.create({ authData, httpRequest: { body: { cartCode: 'cart1', storeCode: 'agoraApparelStore' } } });
     assert.equal(created.data.cart.code, 'cart1');
     assert.equal(created.data.cart.ownerId, 'customer-1');
     assert.equal(created.data.cart.active, true);
@@ -412,7 +412,7 @@ test('Cart customer API creates a cart and manages active entries for the authen
 
 test('Cart customer API accepts Product variant identity and resolves internal SKU server-side', async () => {
     let authData = { tenant: 'default', principalId: 'customer-1' };
-    await controller.create({ authData, httpRequest: { body: { cartCode: 'cartVariant', storeCode: 'agoraMainStore' } } });
+    await controller.create({ authData, httpRequest: { body: { cartCode: 'cartVariant', storeCode: 'agoraApparelStore' } } });
 
     let added = await controller.addEntry({
         authData,
@@ -434,7 +434,7 @@ test('Cart customer API accepts Product variant identity and resolves internal S
 
 test('Cart customer API derives runtime tenant from enterprise and scopes business reads by enterpriseCode', async () => {
     const authData = { enterpriseCode: 'enterpriseX', principalId: 'customer-1' };
-    const created = await controller.create({ authData, httpRequest: { body: { cartCode: 'cartEnterprise', storeCode: 'agoraMainStore' } } });
+    const created = await controller.create({ authData, httpRequest: { body: { cartCode: 'cartEnterprise', storeCode: 'agoraApparelStore' } } });
     const added = await controller.addEntry({ authData, httpRequest: { params: { cartCode: 'cartEnterprise' }, body: { productCode: 'agoraLinenWrapDress', sku: 'AGORA-DRESS-S', quantity: '1' } } });
 
     assert.equal(created.data.cart.tenant, 'default');
@@ -446,7 +446,7 @@ test('Cart customer API derives runtime tenant from enterprise and scopes busine
 
 test('Cart customer API resolves SKU from internal Product search projection when raw variants are unavailable online', async () => {
     let authData = { tenant: 'default', principalId: 'customer-1' };
-    await controller.create({ authData, httpRequest: { body: { cartCode: 'cartProjection', storeCode: 'agoraMainStore', locale: 'en' } } });
+    await controller.create({ authData, httpRequest: { body: { cartCode: 'cartProjection', storeCode: 'agoraApparelStore', locale: 'en' } } });
 
     let added = await controller.addEntry({
         authData,
@@ -458,7 +458,7 @@ test('Cart customer API resolves SKU from internal Product search projection whe
 
     assert.equal(added.data.entries.length, 1);
     assert.equal(added.data.entries[0].sku, 'AGORA-ACC-TOTE-TAN-ONE');
-    assert.equal(productProjectionLookups[0].query.storeCode, 'agoraMainStore');
+    assert.equal(productProjectionLookups[0].query.storeCode, 'agoraApparelStore');
     assert.equal(productProjectionLookups[0].query.locale, 'en');
     assert.equal(productProjectionLookups[0].authData.principalType, 'service');
     assert.deepEqual(productProjectionLookups[0].authData.userGroups, ['serviceAccountUserGroup']);
@@ -510,7 +510,7 @@ test('Cart calculation ports read owner services with internal service groups', 
 
     let ports = calculationPorts.create({ tenant: 'default', code: 'cart1', jurisdiction: 'AE', correlationId: 'corr-1' });
     await ports.inventory({ tenant: 'default', sku: 'AGORA-DRESS-S', quantity: '1' });
-    let price = await ports.pricing({ tenant: 'default', storeCode: 'agoraMainStore', productCode: 'agoraDress', quantity: '1', currency: 'USD' });
+    let price = await ports.pricing({ tenant: 'default', storeCode: 'agoraApparelStore', productCode: 'agoraDress', quantity: '1', currency: 'USD' });
     await ports.promotion({ tenant: 'default', cartCode: 'cart1', subtotal: '129.00', currency: 'USD' });
     await ports.tax({ tenant: 'default', taxableAmount: '119.00', currency: 'USD' });
 
@@ -553,7 +553,7 @@ test('Cart customer calculation forwards coupon context through the Promotion ow
     global.SERVICE.DefaultCartCalculationService = {
         save: async request => ({ result: request.model })
     };
-    carts.push({ code: 'cartCoupon', tenant: 'default', ownerId: 'customer-1', storeCode: 'agoraMainStore', jurisdiction: 'AE', revision: 2, currency: 'USD' });
+    carts.push({ code: 'cartCoupon', tenant: 'default', ownerId: 'customer-1', storeCode: 'agoraApparelStore', jurisdiction: 'AE', revision: 2, currency: 'USD' });
     entries.push({ code: 'entry-1', tenant: 'default', ownerId: 'customer-1', cartCode: 'cartCoupon', productCode: 'agoraDress', sku: 'AGORA-DRESS-S', quantity: '1', status: 'ACTIVE' });
 
     const calculated = await service.calculateDirect({

@@ -77,7 +77,9 @@ module.exports = {
   source: async function (r, command, phase) {
     this.authorize(r);
     const p = CONFIG.get("waste")?.certificateCoupons?.commerce;
-    if (!p?.connectionName || !p.targetAuthority || !Number.isSafeInteger(p.timeoutMs) || p.timeoutMs < 1)
+    if (!p?.connectionName || !p.targetAuthority || p.targetAuthority.publication !== 'OPERATIONAL' ||
+            Object.keys(p.targetAuthority).some(key => !['publication', 'server', 'environment'].includes(key)) ||
+            Object.values(p.targetAuthority).some(value => typeof value !== 'string' || !value.trim() || value !== value.trim()) || !Number.isSafeInteger(p.timeoutMs) || p.timeoutMs < 1)
       throw new Error("Certificate coupon evidence target is unavailable");
     let value;
     try {
