@@ -60,6 +60,9 @@
   corrections in `test/evidence/semantic-documentation-closure.json`. Changed or
   incomplete evidence reopens the item. Coverage keywords and Online state do not
   close editorial gaps or prove provider/live acceptance.
+  Source references must match the exact casing of every directory and filename,
+  including on case-insensitive developer filesystems; source hashes alone cannot
+  qualify a path that fails on a clean case-sensitive checkout.
 - Bind historical release regressions to recoverable, hash-qualified snapshots,
   including their original metadata and citations. Validate current source
   independently; a later approved source change must not be compared to an old

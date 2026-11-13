@@ -47,6 +47,12 @@ test('manual review closure binds scope, canonical identity, anchors and exact s
     reject(value => value.canonicalDocuments[document.id].owner = 'foreign');
     reject(value => value.canonicalDocuments[document.id].articleBlocksSha256 = 'stale');
     reject(value => value.sourceFileSha256[sourceFiles[0]] = 'stale');
+    for (const spelling of ['module/src/FIRST.js', 'MODULE/src/first.js']) {
+        reject(value => {
+            value.items[0].sourceFiles[0] = spelling;
+            value.sourceFileSha256[spelling] = value.sourceFileSha256[sourceFiles[0]];
+        });
+    }
     reject(value => value.items[0].sourceFiles = ['../outside.js', sourceFiles[1]]);
     reject(value => value.items[0].requestedAction = 'A different review scope');
     reject(value => value.items[0].requestedExplanationSatisfied = false);

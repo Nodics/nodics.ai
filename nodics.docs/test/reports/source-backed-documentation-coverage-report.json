@@ -308,7 +308,7 @@
         "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js",
         "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService.js",
         "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js",
-        "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEwasteDigitalSaleService.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteDigitalSaleService.js",
         "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalOwnershipDocumentationContract.test.js"
       ],
       "reviewRationale": "Compared the current creation-lane and stock-boundary guide with Product listing scope, price publication and Inventory admission; compared Digital final-sale, issuer consent, simulation and original-command recovery paragraphs with the current ownership/merchant contracts. Generic Commerce refunds remain distinct from retired completed eWaste/bundle reversals. Changes to transport publication selectors and stricter original authorization do not make private owner reads public or qualify physical delivery. The guides preserve publication versus stock, receipt versus settlement, simulation labels and separate browser/provider qualification.",

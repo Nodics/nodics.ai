@@ -36,7 +36,8 @@
     "semantic-documentation-shopping-list-example-revalidation-2026-11-04.json",
     "semantic-documentation-shopping-list-provenance-revalidation-2026-11-04.json",
     "semantic-documentation-closure-before-2026-11-13.json",
-    "semantic-documentation-source-revalidation-2026-11-13.json"
+    "semantic-documentation-source-revalidation-2026-11-13.json",
+    "semantic-documentation-path-case-revalidation-2026-11-13.json"
   ],
   "boundary": "Manual source-editorial review only. The audit independently reopens stale canonical sections or source bytes. This artifact grants no publication approval and does not certify browser, provider or business acceptance.",
   "items": [
@@ -467,7 +468,7 @@
         "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js",
         "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService.js",
         "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js",
-        "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEwasteDigitalSaleService.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteDigitalSaleService.js",
         "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalOwnershipDocumentationContract.test.js"
       ],
       "sourceFindings": [
@@ -3738,7 +3739,6 @@
     "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService.js": "e0a73632719b6979efaa512c35228ddf3088e6e2cc02973a8852db2c496082bd",
     "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js": "8efb2772375c1e984c6e15713f4e9350478282c7ee011a05a3be1938e107cbea",
     "nodics.foundation/modules/nTooling/test/applicationDocumentationContract.test.js": "ba77aa38958542a9a1488c2bb88773a784a02d976304e7f2da8d5ada8180a101",
-    "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEwasteDigitalSaleService.js": "6d77dae0ba1e4a03a7980295a43a657ef719a9e5592ef2e90498f86a6f534838",
     "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchBenefitService.js": "5a6e190832447721fbe3313d3d537bedf138504581b886c0fbd055aee03d3769",
     "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPolicyService.js": "fdb24c94f4900d7326b5f4b4f409f86f8537cc199a6df0a47498420896df4317",
     "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/config/properties.js": "d4a526827c494020724afaccd75cba57a3db437841123629d93d652746d41bb6",
@@ -3751,7 +3751,8 @@
     "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalOwnershipDocumentationContract.test.js": "019b7cb5af024751bfc12e646f606e03539e08f87e0085e2e457ca8895e96742",
     "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/facade/defaultShoppingListCustomerFacade.js": "7a2d24fbe5af5a769537425bc69eb1891d030f8f767fbd8788029cbf8f96a3a1",
     "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/schemas/schemas.js": "341e00298f55c495060d11d54e5575a3fe43aeb5bb3d98db393c8a722dcfdacd",
-    "nodics.commerce/modules/baseCommerce/modules/store/src/service/defaultStoreContextService.js": "47aa52c6c42b382d294adc57981c55bad54732425e496babf43c70f46e943aed"
+    "nodics.commerce/modules/baseCommerce/modules/store/src/service/defaultStoreContextService.js": "47aa52c6c42b382d294adc57981c55bad54732425e496babf43c70f46e943aed",
+    "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteDigitalSaleService.js": "6d77dae0ba1e4a03a7980295a43a657ef719a9e5592ef2e90498f86a6f534838"
   },
   "summary": {
     "totalItems": 22,

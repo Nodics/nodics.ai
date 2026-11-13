@@ -11,10 +11,20 @@
 
 /** @module nodics.docs/scripts/semantic-review-contract @description Binds manual semantic review dispositions to exact canonical sections and inspected source bytes; never performs semantic review itself. @layer tooling @owner nodics.docs */
 import { createHash } from 'node:crypto';
-import { readFileSync, realpathSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, realpathSync, statSync } from 'node:fs';
 import { isAbsolute, relative, resolve, sep } from 'node:path';
 
 const digest = value => createHash('sha256').update(value).digest('hex');
+
+/** Requires canonical filename spelling even on a case-insensitive developer filesystem. */
+function hasExactSourcePath(root, file) {
+    let directory = root;
+    return file.split(/[\\/]/).every(segment => {
+        if (!readdirSync(directory).includes(segment)) return false;
+        directory = resolve(directory, segment);
+        return true;
+    });
+}
 
 /** Reopens absent, incomplete or stale manual evidence without turning keyword matches into closure. */
 export function qualifySemanticReview(definition, bundle, documents, root) {
@@ -46,6 +56,7 @@ export function qualifySemanticReview(definition, bundle, documents, root) {
         for (const file of review.sourceFiles) {
             if (typeof file !== 'string' || isAbsolute(file) || file.split(/[\\/]/).some(segment => ['..', 'data', 'node_modules', '.git'].includes(segment)))
                 throw Error('SOURCE_BOUNDARY_INVALID');
+            if (!hasExactSourcePath(canonicalRoot, file)) throw Error('SOURCE_PATH_CASE_MISMATCH');
             const absolute = realpathSync(resolve(root, file));
             if (!absolute.startsWith(canonicalRoot + sep) || !statSync(absolute).isFile() ||
                 bundle.sourceFileSha256?.[file] !== digest(readFileSync(absolute))) throw Error('STALE_SOURCE_BYTES');

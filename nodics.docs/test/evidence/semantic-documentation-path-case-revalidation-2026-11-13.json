@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-11-13",
+  "reviewType": "SOURCE_REFERENCE_SPELLING_REVALIDATION",
+  "previousCommit": "9b2d9ab70d2c39569bf776afecfbea1e0f6e2366",
+  "items": [
+    "Commerce product, price, inventory, and fulfillment authoring"
+  ],
+  "oldReference": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEwasteDigitalSaleService.js",
+  "canonicalReference": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteDigitalSaleService.js",
+  "sourceSha256": "6d77dae0ba1e4a03a7980295a43a657ef719a9e5592ef2e90498f86a6f534838",
+  "sourceBytes": "UNCHANGED",
+  "articleBlocks": "UNCHANGED",
+  "finding": "macOS resolved the wrong filename case; Linux GitHub CI correctly refused the missing path. Exact Git filename inspection found this sole noncanonical active reference among 251 reviewed files.",
+  "correction": "Use the exact tracked source path and reject incorrectly cased directory or file names on every filesystem. The source still enforces final-sale refusal and original-command recovery; no owner behavior or editorial claim changes.",
+  "validation": "The new negative test reproduced false closure on the unmodified macOS validator before the fix. Historical review files are preserved; this correction grants no publication or runtime approval."
+}
